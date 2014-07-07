@@ -1,0 +1,204 @@
+$package=cmm.compiler
+
+/*-------------------------------------------------------------------------
+CMM Compiler description for C--
+=== ============================
+-------------------------------------------------------------------------*/
+
+COMPILER CMM
+
+  public  Tab       tab;                     // symbol table
+  
+//--- LL(1) conflict resolvers
+
+	// Returns true if a VarDecl comes next in the input
+	boolean isVarDecl() { 
+		if (la.kind == _ident || la.val.equals("int") || la.val.equals("float") || la.val.equals("char")) {
+			Token x = scanner.Peek();
+			while (x.kind != _semicolon) {
+				if (x.kind == _EOF || x.kind == _lpar || x.kind == _assign) return false;
+				x = scanner.Peek();
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	// Returns true if the next input is an Expr and not a '(' Condition ')'
+	boolean isExpr() { 
+		if (la.kind == _bang) return false;
+		else if (la.kind == _lpar) {
+			Token x = scanner.Peek();
+			while (x.kind != _rpar && x.kind != _EOF) {
+				if (x.kind == _eql || x.kind == _neq || x.kind == _lss || x.kind == _leq || x.kind == _gtr || x.kind == _geq) return false;
+				x = scanner.Peek();
+			}
+			return x.kind == _rpar;
+		} else return true;
+	}
+	
+	// Returns true if the next input is a type cast (requires symbol table)
+	boolean isCast() {
+		Token x = scanner.Peek();
+		if (x.kind != _ident) return false;
+		Obj obj = tab.find(x.val);
+		return obj.kind == Obj.TYPE;
+	}
+
+/*-------------------------------------------------------------------------*/
+
+CHARACTERS
+  letter    = 'A'..'Z' + 'a'..'z'.
+  digit     = '0'..'9'.
+  charCh    = ANY - '\r' - '\n' - '\t' - '\'' - '\\'.
+
+TOKENS
+  ident     = letter { letter | digit }.
+  intCon    = digit { digit }.
+  floatCon  = digit {digit} '.' {digit} ['E' ['+'|'-'] digit {digit}].
+  charCon   = '\'' ( charCh | '\\' ('r' | 'n' | 't' | '\'' | '\\' )) '\''.
+  
+  //--- token definitions for lookahead peeking
+  lpar      = "(".
+  rpar      = ")".
+  semicolon = ";".
+  assign    = '='.
+  eql       = "==".
+  neq       = "!=".
+  lss       = "<".
+  leq       = "<=".
+  gtr       = ">".
+  geq       = ">=".
+  bang      = "!".
+
+COMMENTS FROM "/*" TO "*/" NESTED
+COMMENTS FROM "//" TO '\n'
+
+IGNORE "\t\r\n"
+
+//-------------------------------------------------------------------------
+
+PRODUCTIONS
+
+CMM
+=	                                (. tab = new Tab(this); .)
+{ ConstDecl 
+| StructDecl 
+| IF(isVarDecl()) VarDecl 
+| ProcDecl 
+}                                 (. if (debug[0]) tab.dumpScope(tab.curScope.locals, 0); .)
+.
+//-------------------------------------------------------------------------
+ConstDecl
+= 
+"const" Type ident "=" (intCon | floatCon | charCon) ";".
+//-------------------------------------------------------------------------
+VarDecl
+= 
+Type ident {"," ident} ";".
+//-------------------------------------------------------------------------
+StructDecl
+= 
+"struct" ident "{" { VarDecl} "}".
+//-------------------------------------------------------------------------
+ProcDecl                          (. Obj curProc; .)
+= 
+(Type | "void") ident "(" [ FormPars ] ")"
+( "{"
+{ ConstDecl 
+| IF(isVarDecl()) VarDecl 
+| Statement
+} 
+"}"                               (. if (debug[1]) Node.dump(curProc.ast, 0); .)
+| ";" "forward" ";"
+).
+//-------------------------------------------------------------------------
+FormPars
+= 
+FormPar {"," FormPar}.
+//-------------------------------------------------------------------------
+FormPar
+= 
+["ref"] Type ident.
+//-------------------------------------------------------------------------
+Type
+= 
+ident {"[" intCon "]"}.
+//-------------------------------------------------------------------------
+Statement
+=
+( Designator
+  ( "=" Expr
+  | ActPars
+  ) ";"
+| "if" "(" Condition ")" Statement ["else" Statement]
+| "while" "(" Condition ")" Statement
+| "print" "(" Expr ")" ";"
+| "{" {Statement} "}"
+| "return" Expr ";"
+| ";"
+).
+//-------------------------------------------------------------------------
+ActPars
+= 
+"(" [ActPar {"," ActPar}] ")".
+//-------------------------------------------------------------------------
+ActPar
+=
+Expr | "ref" Expr.
+//-------------------------------------------------------------------------
+Condition
+= 
+CondTerm {"||" CondTerm}.
+//-------------------------------------------------------------------------
+CondTerm
+= 
+CondFact {"&&" CondFact}.
+//-------------------------------------------------------------------------
+CondFact
+=
+( IF (isExpr()) Expr //<out e1> 
+  Relop
+  Expr
+| "!" "(" Condition ")"
+| "(" Condition ")"
+).
+//-------------------------------------------------------------------------
+Relop
+= 
+"==" | "!=" | ">" | ">=" | "<" | "<=".
+//-------------------------------------------------------------------------
+Expr
+= 
+Term {Addop Term}.
+//-------------------------------------------------------------------------
+Term
+= 
+Factor {Mulop Factor}.
+//-------------------------------------------------------------------------
+Factor
+=
+( Designator [ActPars]
+| intCon
+| floatCon
+| charCon
+| "read" "(" ")"
+| "-" Factor
+| IF (isCast())
+  "(" Type ")" Factor
+| "(" Expr ")"
+).
+//-------------------------------------------------------------------------
+Designator
+= 
+ident {"." ident | "[" Expr/*<out e>*/ "]"}.
+//-------------------------------------------------------------------------
+Addop
+=
+"+" | "-".
+//-------------------------------------------------------------------------
+Mulop
+=
+"*" | "/" | "%".
+
+END CMM.
