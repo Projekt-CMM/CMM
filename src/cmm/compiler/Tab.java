@@ -44,24 +44,66 @@ public class Tab {
 	// Create a new object with the given kind, name and type
 	// and insert it into the current scope.
 	public Obj insert(int kind, String name, Struct type) {
-		// TODO
+		//--- erzeugen
+		Obj obj = new Obj(kind, name, type);
+		if (kind == Obj.VAR) {
+			obj.adr = curScope.size;
+			curScope.size += type.size;
+			obj.level = curLevel;
+		}
+		//--- einfügen
+		Obj p = curScope.locals, last = null;
+		while (p != null) {
+			if (p.name.equals(name))
+				parser.SemErr(name + " declared twice");
+			last = p;
+			p = p.next;
+		}
+		if (last == null)
+			curScope.locals = obj;
+		else
+			last.next = obj;
+		return obj;
 	}
 
 	// Look up the object with the given name in all open scopes.
 	// Report an error if not found.
 	public Obj find(String name) {
-		// TODO
+		for(Scope scp = curScope; scp.outer!= null; scp = curScope.outer) {
+			for (Obj p = scp.locals; p != null ; p = p.next) {
+				if (p.name.equals(name))
+					return p;
+			}
+		}
+		parser.SemErr(name + " not found");
+		return noObj;
 	}
 
 	// Retrieve a struct field with the given name from the fields of "type"
 	public Obj findField(String name, Struct type) {
-		// TODO
+		if(type.kind != Struct.STRUCT) {
+			// TODO
+			parser.SemErr(name + " is not in a struct");
+			return noObj;
+		}
+		
+		for (Obj f = type.fields; f != null ; f = f.next) {
+			if (f.name.equals(name))
+				return f;
+		}
+		parser.SemErr(name + " not found");
+		return noObj;
 	}
 
 	// Look up the object with the given name in the current scope.
 	// Return noObj if not found.
 	public Obj lookup(String name) {
-		// TODO
+		for (Obj p = curScope.locals; p != null ; p = p.next) {
+			if (p.name.equals(name))
+				return p;
+		}
+		parser.SemErr(name + " not found in current scope");
+		return noObj;
 	}
 
 	//----------------- handling of forward declaration  -----------------
@@ -80,17 +122,20 @@ public class Tab {
 
 	// Convert a digit string into an int
 	public int intVal(String s) {
-		// TODO
+		// TODO incorrect string?
+		return Integer.parseInt(s);
 	}
 
 	// Convert a string representation of a float constant into a float value
 	public float floatVal(String s) {
-		// TODO
+		// TODO incorrect string?
+		return Float.parseFloat(s);
 	}
 
 	// Convert a string representation of a char constant into a char value
 	public char charVal(String s) {
-		// TODO
+		// TODO no character at 0
+		return s.charAt(0);
 	}
 
 	//---------------- methods for dumping the symbol table --------------
@@ -137,7 +182,7 @@ public class Tab {
 			case Obj.TYPE:
 			  System.out.print("Type " + o.name);
 			  break;
-			case Obj.PROC:
+			case Obj.PROC:t.val
 			  System.out.println("Proc " + o.name + " size=" + o.size + " nPars=" + o.nPars + " isForw=" + o.isForward + " {");
 			  dumpScope(o.locals, indent + 1);
 			  System.out.print("}");

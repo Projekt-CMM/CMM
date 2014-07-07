@@ -31,6 +31,9 @@ public class Parser {
 	public Errors errors;
 
 	public  Tab       tab;                     // symbol table
+  public  boolean[] debug;
+  
+  Obj curProc;
   
 //--- LL(1) conflict resolvers
 
@@ -132,6 +135,7 @@ public class Parser {
 	
 	void CMM() {
 		tab = new Tab(this); 
+		     tab.openScope(); 
 		while (StartOf(1)) {
 			if (la.kind == 16) {
 				ConstDecl();
@@ -147,51 +151,69 @@ public class Parser {
 	}
 
 	void ConstDecl() {
+		Struct type; 
 		Expect(16);
-		Type();
+		type = Type();
 		Expect(1);
+		Obj curCon = tab.insert(Obj.CON, t.val, type); 
 		Expect(8);
 		if (la.kind == 2) {
 			Get();
+			curCon.val = tab.intVal(t.val); 
+			                   if (type != Tab.intType) SemErr("int constant not allowed here"); 
 		} else if (la.kind == 3) {
 			Get();
+			curCon.fval = tab.floatVal(t.val); 
 		} else if (la.kind == 4) {
 			Get();
+			curCon.val = tab.charVal(t.val); 
 		} else SynErr(41);
 		Expect(7);
 	}
 
 	void StructDecl() {
 		Expect(18);
+		Struct type = new Struct(Struct.STRUCT); 
 		Expect(1);
+		tab.insert(Obj.TYPE, t.val, type); 
 		Expect(19);
+		tab.openScope(); 
 		while (la.kind == 1) {
 			VarDecl();
 		}
 		Expect(20);
+		type.fields = tab.curScope.locals;
+		type.size = tab.curScope.size;
+		tab.closeScope(); 
 	}
 
 	void VarDecl() {
-		Type();
+		Struct type; 
+		type = Type();
 		Expect(1);
+		tab.insert(Obj.VAR, t.val, type); 
 		while (la.kind == 17) {
 			Get();
 			Expect(1);
+			tab.insert(Obj.VAR, t.val, type); 
 		}
 		Expect(7);
 	}
 
 	void ProcDecl() {
-		Obj curProc; 
+		Struct type; 
 		if (la.kind == 1) {
-			Type();
+			type = Type();
 		} else if (la.kind == 21) {
 			Get();
+			type = Tab.noType; 
 		} else SynErr(42);
 		Expect(1);
+		curProc = tab.insert(Obj.PROC, t.val, type); 
 		Expect(5);
+		tab.openScope(); 
 		if (la.kind == 1 || la.kind == 23) {
-			FormPars();
+			curProc.nPars = FormPars();
 		}
 		Expect(6);
 		if (la.kind == 19) {
@@ -205,6 +227,9 @@ public class Parser {
 					Statement();
 				}
 			}
+			curProc.locals = tab.curScope.locals;
+			curProc.size = tab.curScope.size;
+			tab.closeScope(); 
 			Expect(20);
 			if (debug[1]) Node.dump(curProc.ast, 0); 
 		} else if (la.kind == 7) {
@@ -214,21 +239,29 @@ public class Parser {
 		} else SynErr(43);
 	}
 
-	void Type() {
+	Struct  Type() {
+		Struct  type;
 		Expect(1);
+		Obj obj = tab.find(t.val);
+		 type = obj.type; 
 		while (la.kind == 24) {
 			Get();
 			Expect(2);
 			Expect(25);
 		}
+		return type;
 	}
 
-	void FormPars() {
+	int  FormPars() {
+		int  n;
 		FormPar();
+		n = 1; 
 		while (la.kind == 17) {
 			Get();
 			FormPar();
+			n++; 
 		}
+		return n;
 	}
 
 	void Statement() {
@@ -295,19 +328,27 @@ public class Parser {
 	}
 
 	void FormPar() {
+		Struct type; 
+		bool isRef = false; 
 		if (la.kind == 23) {
 			Get();
+			isRef = true; 
 		}
-		Type();
+		type = Type();
 		Expect(1);
+		Obj curRef = tab.insert(Obj.VAR, t.val, type); 
+		curRef.isRef = isRef; 
 	}
 
 	void Designator() {
 		Expect(1);
+		String name = t.val;
+		                      Obj objStruct = tab.find(name); 
 		while (la.kind == 24 || la.kind == 35) {
 			if (la.kind == 35) {
 				Get();
 				Expect(1);
+				Obj objField = tab.findField(t.val,objStruct.type); 
 			} else {
 				Get();
 				Expr();
@@ -425,6 +466,7 @@ public class Parser {
 	}
 
 	void Factor() {
+		Struct type; 
 		if (la.kind == 1) {
 			Designator();
 			if (la.kind == 5) {
@@ -445,7 +487,7 @@ public class Parser {
 			Factor();
 		} else if (isCast()) {
 			Expect(5);
-			Type();
+			type = Type();
 			Expect(6);
 			Factor();
 		} else if (la.kind == 5) {

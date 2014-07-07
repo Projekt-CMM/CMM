@@ -8,7 +8,10 @@ CMM Compiler description for C--
 COMPILER CMM
 
   public  Tab       tab;                     // symbol table
+  public  boolean[] debug;
   
+  Obj curProc;
+
 //--- LL(1) conflict resolvers
 
 	// Returns true if a VarDecl comes next in the input
@@ -81,49 +84,96 @@ IGNORE "\t\r\n"
 PRODUCTIONS
 
 CMM
-=	                                (. tab = new Tab(this); .)
+=	                          		(. tab = new Tab(this); 
+                                       tab.openScope(); .)
 { ConstDecl 
 | StructDecl 
 | IF(isVarDecl()) VarDecl 
 | ProcDecl 
-}                                 (. if (debug[0]) tab.dumpScope(tab.curScope.locals, 0); .)
+}                                 	(. if (debug[0]) tab.dumpScope(tab.curScope.locals, 0); .)
 .
 //-------------------------------------------------------------------------
-ConstDecl
+ConstDecl							(. Struct type; .)
 = 
-"const" Type ident "=" (intCon | floatCon | charCon) ";".
+"const"
+Type<out type>
+ident								(. Obj curCon = tab.insert(Obj.CON, t.val, type); .)
+"=" 
+( intCon 							(. curCon.val = tab.intVal(t.val); 
+                                       if (type != Tab.intType) SemErr("int constant not allowed here"); .)
+| floatCon 							(. curCon.fval = tab.floatVal(t.val); .)
+| charCon 							(. curCon.val = tab.charVal(t.val); .)
+)
+";"	
+.
 //-------------------------------------------------------------------------
-VarDecl
+VarDecl                          	(. Struct type; .)
 = 
-Type ident {"," ident} ";".
+Type<out type>
+ident                             	(. tab.insert(Obj.VAR, t.val, type); .)
+{ "," 
+  ident								(. tab.insert(Obj.VAR, t.val, type); .)
+} ";"		
+.
 //-------------------------------------------------------------------------
 StructDecl
 = 
-"struct" ident "{" { VarDecl} "}".
-//-------------------------------------------------------------------------
-ProcDecl                          (. Obj curProc; .)
-= 
-(Type | "void") ident "(" [ FormPars ] ")"
-( "{"
-{ ConstDecl 
-| IF(isVarDecl()) VarDecl 
-| Statement
+"struct"                          	(. Struct type = new Struct(Struct.STRUCT); .)
+ident                             	(. tab.insert(Obj.TYPE, t.val, type); .)
+"{"                               	(. tab.openScope(); .)
+{ VarDecl
 } 
-"}"                               (. if (debug[1]) Node.dump(curProc.ast, 0); .)
+"}"                                	(. type.fields = tab.curScope.locals;
+                                       type.size = tab.curScope.size;
+                                       tab.closeScope(); .)
+.
+//-------------------------------------------------------------------------
+ProcDecl                          	(. Struct type; .)
+= 
+( Type<out type>
+| "void"							(. type = Tab.noType; .)
+)
+ident								(. curProc = tab.insert(Obj.PROC, t.val, type); .)
+"("									(. tab.openScope(); .)
+[ FormPars<out curProc.nPars>
+]
+")"
+( "{"
+  { ConstDecl 
+  | IF(isVarDecl()) VarDecl 
+  | Statement
+  } 								(. curProc.locals = tab.curScope.locals;
+									   curProc.size = tab.curScope.size;
+									   tab.closeScope(); .)
+  "}"                               (. if (debug[1]) Node.dump(curProc.ast, 0); .)
 | ";" "forward" ";"
 ).
 //-------------------------------------------------------------------------
-FormPars
+FormPars<out int n>
 = 
-FormPar {"," FormPar}.
+FormPar                              (. n = 1; .)
+{ "," 
+  FormPar                            (. n++; .)
+}.
 //-------------------------------------------------------------------------
-FormPar
+FormPar								(. Struct type; 
+									   bool isRef = false; .)
 = 
-["ref"] Type ident.
+[ "ref"								(. isRef = true; .)
+]
+Type<out type>
+ident								(. Obj curRef = tab.insert(Obj.VAR, t.val, type); 
+									   curRef.isRef = isRef; .)
+.
 //-------------------------------------------------------------------------
-Type
+Type<out Struct type>
 = 
-ident {"[" intCon "]"}.
+ident                            	(. Obj obj = tab.find(t.val);
+                                       type = obj.type; .)
+{ "[" 
+  intCon 
+  "]"
+}.
 //-------------------------------------------------------------------------
 Statement
 =
@@ -176,7 +226,7 @@ Term
 = 
 Factor {Mulop Factor}.
 //-------------------------------------------------------------------------
-Factor
+Factor								(. Struct type; .)
 =
 ( Designator [ActPars]
 | intCon
@@ -185,13 +235,24 @@ Factor
 | "read" "(" ")"
 | "-" Factor
 | IF (isCast())
-  "(" Type ")" Factor
+  "(" 
+  Type<out type>
+  ")"
+  Factor
 | "(" Expr ")"
 ).
 //-------------------------------------------------------------------------
 Designator
 = 
-ident {"." ident | "[" Expr/*<out e>*/ "]"}.
+ident								(. String name = t.val;
+                                       Obj objStruct = tab.find(name); .)
+{ "."
+  ident								(. Obj objField = tab.findField(t.val,objStruct.type); .)
+| "["
+  Expr/*<out e>*/
+  "]"
+}
+.
 //-------------------------------------------------------------------------
 Addop
 =
