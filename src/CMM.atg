@@ -101,7 +101,7 @@ ident								(. Obj curCon = tab.insert(Obj.CON, t.val, type); .)
 "=" 
 ( intCon 							(. curCon.val = tab.intVal(t.val); 
                                        if (type != Tab.intType) SemErr("int constant not allowed here"); .)
-| floatCon 							(. curCon.fval = tab.floatVal(t.val); .)
+| floatCon 							(. curCon.fVal = tab.floatVal(t.val); .)
 | charCon 							(. curCon.val = tab.charVal(t.val); .)
 )
 ";"	

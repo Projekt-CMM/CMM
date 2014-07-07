@@ -163,7 +163,7 @@ public class Parser {
 			                   if (type != Tab.intType) SemErr("int constant not allowed here"); 
 		} else if (la.kind == 3) {
 			Get();
-			curCon.fval = tab.floatVal(t.val); 
+			curCon.fVal = tab.floatVal(t.val); 
 		} else if (la.kind == 4) {
 			Get();
 			curCon.val = tab.charVal(t.val); 

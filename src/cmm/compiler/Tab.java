@@ -138,7 +138,7 @@ public class Tab {
 	// Convert a string representation of a char constant into a char value
 	public char charVal(String s) {
 		// TODO no character at 0
-		return s.charAt(0);
+		return  s.charAt(1);
 	}
 
 	//---------------- methods for dumping the symbol table --------------
