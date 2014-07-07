@@ -31,7 +31,10 @@ public class Tab {
 	//------------------ scope management ---------------------
 
 	public void openScope() {
-		// TODO
+		Scope s = new Scope();
+		s.outer = curScope;
+		curScope = s;
+		curLevel++;
 	}
 
 	public void closeScope() {
@@ -69,7 +72,7 @@ public class Tab {
 	// Look up the object with the given name in all open scopes.
 	// Report an error if not found.
 	public Obj find(String name) {
-		for(Scope scp = curScope; scp.outer!= null; scp = curScope.outer) {
+		for(Scope scp = curScope; scp != null; scp = scp.outer) {
 			for (Obj p = scp.locals; p != null ; p = p.next) {
 				if (p.name.equals(name))
 					return p;
@@ -182,7 +185,7 @@ public class Tab {
 			case Obj.TYPE:
 			  System.out.print("Type " + o.name);
 			  break;
-			case Obj.PROC:t.val
+			case Obj.PROC:
 			  System.out.println("Proc " + o.name + " size=" + o.size + " nPars=" + o.nPars + " isForw=" + o.isForward + " {");
 			  dumpScope(o.locals, indent + 1);
 			  System.out.print("}");

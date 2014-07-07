@@ -128,10 +128,10 @@ ident                             	(. tab.insert(Obj.TYPE, t.val, type); .)
                                        tab.closeScope(); .)
 .
 //-------------------------------------------------------------------------
-ProcDecl                          	(. Struct type; .)
+ProcDecl                          	(. Struct type = Tab.noType; .)
 = 
 ( Type<out type>
-| "void"							(. type = Tab.noType; .)
+| "void"
 )
 ident								(. curProc = tab.insert(Obj.PROC, t.val, type); .)
 "("									(. tab.openScope(); .)

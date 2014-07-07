@@ -34,7 +34,7 @@ public class Parser {
   public  boolean[] debug;
   
   Obj curProc;
-  
+
 //--- LL(1) conflict resolvers
 
 	// Returns true if a VarDecl comes next in the input
@@ -201,12 +201,11 @@ public class Parser {
 	}
 
 	void ProcDecl() {
-		Struct type; 
+		Struct type = Tab.noType; 
 		if (la.kind == 1) {
 			type = Type();
 		} else if (la.kind == 21) {
 			Get();
-			type = Tab.noType; 
 		} else SynErr(42);
 		Expect(1);
 		curProc = tab.insert(Obj.PROC, t.val, type); 
