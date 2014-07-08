@@ -127,13 +127,25 @@ public class Tab {
 
 	// Convert a digit string into an int
 	public int intVal(String s) {
-		// convert decimal, hex and octal string into integer
-		return Integer.decode(s);
+		try {
+			// convert decimal, hex and octal string into integer
+			return Integer.decode(s);
+		}
+		catch ( java.lang.NumberFormatException e) {
+			parser.SemErr(s + " is not an integer");
+			return 0;
+		}
 	}
 
 	// Convert a string representation of a float constant into a float value
 	public float floatVal(String s) {
-		return Float.parseFloat(s);
+		try {
+			return Float.parseFloat(s);
+		}
+		catch ( java.lang.NumberFormatException e) {
+			parser.SemErr(s + " is not a float");
+			return 0;
+		}
 	}
 
 	// Convert a string representation of a char constant into a char value
