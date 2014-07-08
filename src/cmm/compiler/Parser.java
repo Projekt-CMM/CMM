@@ -290,12 +290,12 @@ public class Parser {
 		switch (la.kind) {
 		case 1: {
 			design = Designator();
-			if(design.type.kind != Struct.NONE ) SemErr("only void is allowed"); 
 			if (la.kind == 8) {
 				Get();
 				Expr();
 			} else if (la.kind == 5) {
 				ActPars();
+				if(design.type != Tab.noType) SemErr("only void is allowed"); 
 			} else SynErr(44);
 			Expect(7);
 			break;
@@ -499,10 +499,10 @@ public class Parser {
 		Struct type; Obj design; 
 		if (la.kind == 1) {
 			design = Designator();
-			if(design.kind != Obj.PROC ) SemErr("designator is not a procedure"); 
-			if(design.type.kind == Struct.NONE ) SemErr("type of procedure is void"); 
 			if (la.kind == 5) {
 				ActPars();
+				if(design.kind != Obj.PROC ) SemErr("name is not a procedure"); 
+				if(design.type == Tab.noType) SemErr("function call of a void procedure"); 
 			}
 		} else if (la.kind == 2) {
 			Get();

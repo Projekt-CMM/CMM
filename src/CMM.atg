@@ -195,9 +195,9 @@ ident                            	(. Obj obj = tab.find(t.val);
 //-------------------------------------------------------------------------
 Statement							(. Obj design; .)
 =
-( Designator<out design>			(. if(design.type.kind != Struct.NONE ) SemErr("only void is allowed"); .) 				
+( Designator<out design>			 				
   ( "=" Expr
-  | ActPars
+  | ActPars                         (. if(design.type != Tab.noType) SemErr("only void is allowed"); .)
   ) ";"
 | "if" "(" Condition ")" Statement ["else" Statement]
 | "while" "(" Condition ")" Statement
@@ -246,9 +246,10 @@ Factor {Mulop Factor}.
 //-------------------------------------------------------------------------
 Factor								(. Struct type; Obj design; .)
 =
-( Designator<out design>			(. if(design.kind != Obj.PROC ) SemErr("designator is not a procedure"); 
-									   if(design.type.kind == Struct.NONE ) SemErr("type of procedure is void"); .)
-	[ActPars]
+( Designator<out design>			
+	[ ActPars                       (. if(design.kind != Obj.PROC ) SemErr("name is not a procedure"); 
+									   if(design.type == Tab.noType) SemErr("function call of a void procedure"); .)
+	]
 | intCon
 | floatCon
 | charCon
