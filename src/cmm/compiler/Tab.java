@@ -59,8 +59,12 @@ public class Tab {
 		//--- einfügen
 		Obj p = curScope.locals, last = null;
 		while (p != null) {
-			if (p.name.equals(name))
+			if (p.name.equals(name)) {
+				if(p.isForward) {
+					return p;
+				}
 				parser.SemErr(name + " declared twice");
+			}
 			last = p;
 			p = p.next;
 		}
@@ -115,7 +119,22 @@ public class Tab {
 
 	// Check if parameters of forward declaration and actual declaration match
 	public void checkForwardParams(Obj oldPar, Obj newPar) {
-		// TODO
+		while(oldPar != null && newPar != null) {
+			if(oldPar.type != newPar.type) {
+				parser.SemErr("parameter of function and forward declaration has not the same type");
+			}
+			if(oldPar.isRef != newPar.isRef) {
+				parser.SemErr("parameter of function or forward declaration is ref, in the other not");
+			}
+			oldPar = oldPar.next;
+			newPar = newPar.next;
+		}
+		if(oldPar != null) {
+			parser.SemErr("forward-declaration of function has more parameter as function itself");
+		}
+		if(newPar != null) {
+			parser.SemErr("function has more parameters as forward-declaration declare");
+		}
 	}
 
 	// Check if all forward declarations were resolved at the end of the program

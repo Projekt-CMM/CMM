@@ -231,6 +231,12 @@ public class Parser {
 		Expect(6);
 		if (la.kind == 19) {
 			Get();
+			if(curProc.isForward) {
+			tab.checkForwardParams(curProc.locals,tab.curScope.locals);
+			if(curProc.type != type)
+			SemErr("return value of forware declaration does not match declaration");
+			curProc.isForward = false;
+			} 
 			while (StartOf(2)) {
 				if (la.kind == 16) {
 					ConstDecl();
@@ -240,16 +246,18 @@ public class Parser {
 					Statement();
 				}
 			}
-			curProc.locals = tab.curScope.locals;
-			curProc.size = tab.curScope.size;
-			tab.closeScope(); 
 			Expect(20);
 			if (debug[1]) Node.dump(curProc.ast, 0); 
 		} else if (la.kind == 7) {
 			Get();
 			Expect(22);
 			Expect(7);
+			if(curProc.isForward) SemErr("function is already forward declared");
+			curProc.isForward = true; 
 		} else SynErr(43);
+		curProc.locals = tab.curScope.locals;
+		curProc.size = tab.curScope.size;
+		tab.closeScope(); 
 	}
 
 	Struct  Type() {

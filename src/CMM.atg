@@ -147,16 +147,23 @@ ident								(. curProc = tab.insert(Obj.PROC, t.val, type);
 [ FormPars<out curProc.nPars>
 ]
 ")"
-( "{"
+( "{"								(. if(curProc.isForward) {
+											tab.checkForwardParams(curProc.locals,tab.curScope.locals);
+									   		if(curProc.type != type)
+									   			SemErr("return value of forware declaration does not match declaration");
+									   		curProc.isForward = false;
+									   } .)
   { ConstDecl 
   | IF(isVarDecl()) VarDecl 
   | Statement
-  } 								(. curProc.locals = tab.curScope.locals;
+  } 								
+  "}"                               (. if (debug[1]) Node.dump(curProc.ast, 0); .)
+| ";" "forward" ";"					(. if(curProc.isForward) SemErr("function is already forward declared");
+									   curProc.isForward = true; .)
+)									(. curProc.locals = tab.curScope.locals;
 									   curProc.size = tab.curScope.size;
 									   tab.closeScope(); .)
-  "}"                               (. if (debug[1]) Node.dump(curProc.ast, 0); .)
-| ";" "forward" ";"
-).
+.
 //-------------------------------------------------------------------------
 FormPars<out int n>
 = 
