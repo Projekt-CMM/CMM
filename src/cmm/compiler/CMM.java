@@ -18,7 +18,12 @@ class CMM {
 
 public static void main(String[] args) {
 	FileInputStream in = null;
+	boolean occuringError = false;
 	try {
+		if(args.length < 1) {
+			System.out.println("no file specified");
+			System.exit(1);
+		}
 		in = new FileInputStream(args[0]);
 		byte[] code = new byte[in.available()];
 		in.read(code);
@@ -31,22 +36,28 @@ public static void main(String[] args) {
 			}
 		}
 		compiler.compile(new String(code));
-
-		Error e = compiler.getError();
 		int errCount = 0;
+		Error e = compiler.getError();
+		
 		while (e != null) {
 			System.out.println("line " + e.line + ", col " + e.col + ": " + e.msg);
 			errCount++;
+			occuringError = true;
 			e = e.next;
 		}
 		System.out.println(errCount + " errors detected");
 	} catch (IOException e) {
 		System.out.println("could not open file " + args[0]);
+		occuringError = true;
 	} finally {
 		try {
 			if (in != null) in.close();
 		} catch (IOException e) {}
 	}
+	if(occuringError) {
+		System.exit(1);
+	}
+	System.exit(0);
 }
 
 }
