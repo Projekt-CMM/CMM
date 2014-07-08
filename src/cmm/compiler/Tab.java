@@ -32,6 +32,9 @@ public class Tab {
 
 	//------------------ scope management ---------------------
 
+	/**
+	 * open a new Scope
+	 */
 	public void openScope() {
 		Scope s = new Scope();
 		s.outer = curScope;
@@ -39,6 +42,9 @@ public class Tab {
 		curLevel++;
 	}
 
+	/**
+	 * close the current Scope
+	 */
 	public void closeScope() {
 		curScope = curScope.outer;
 		curLevel--;
@@ -46,8 +52,16 @@ public class Tab {
 
 	//------------- Object insertion and retrieval --------------
 
-	// Create a new object with the given kind, name and type
-	// and insert it into the current scope.
+	/**
+	 *  Create a new object with the given kind, name and type 
+	 *  and insert it into the current scope.
+	 *  
+	 *  @param kind kind of object
+	 *  @param name name of object
+	 *  @param type type of object
+	 *  
+	 *  @return return created object or forward declared procedure
+	 */
 	public Obj insert(int kind, String name, Struct type) {
 		//--- erzeugen
 		Obj obj = new Obj(kind, name, type);
@@ -75,8 +89,14 @@ public class Tab {
 		return obj;
 	}
 
-	// Look up the object with the given name in all open scopes.
-	// Report an error if not found.
+	/** 
+	 * Look up the object with the given name in all open scopes.
+	 * Report an error if not found.
+	 * 
+	 * @param name name of object
+	 * 
+	 * @return return found object or tab.noObj if no object is found
+	 */
 	public Obj find(String name) {
 		for(Scope scp = curScope; scp != null; scp = scp.outer) {
 			for (Obj p = scp.locals; p != null ; p = p.next) {
@@ -88,7 +108,14 @@ public class Tab {
 		return noObj;
 	}
 
-	// Retrieve a struct field with the given name from the fields of "type"
+	/**
+	 * Retrieve a struct field with the given name from the fields of "type"
+	 * 
+	 * @param name name of field
+	 * @param type type of struct
+	 * 
+	 * @return return field or tab.noObj if no field is found
+	 */
 	public Obj findField(String name, Struct type) {
 		if(type.kind != Struct.STRUCT) {
 			// TODO
@@ -104,8 +131,13 @@ public class Tab {
 		return noObj;
 	}
 
-	// Look up the object with the given name in the current scope.
-	// Return noObj if not found.
+	/**
+	 * Look up the object with the given name in the current scope.
+	 *  
+	 * @param name name of object
+	 * 
+	 * @return return noObj if not found.
+	 */
 	public Obj lookup(String name) {
 		for (Obj p = curScope.locals; p != null ; p = p.next) {
 			if (p.name.equals(name))
@@ -117,7 +149,12 @@ public class Tab {
 
 	//----------------- handling of forward declaration  -----------------
 
-	// Check if parameters of forward declaration and actual declaration match
+	/**
+	 * Check if parameters of forward declaration and actual declaration match
+	 * 
+	 * @param oldPar first old parameter
+	 * @param newPar first new parameter
+	 */
 	public void checkForwardParams(Obj oldPar, Obj newPar) {
 		while(oldPar != null && newPar != null) {
 			if(oldPar.type != newPar.type) {
@@ -137,7 +174,11 @@ public class Tab {
 		}
 	}
 
-	// Check if all forward declarations were resolved at the end of the program
+	/**
+	 * Check if all forward declarations were resolved at the end of the program
+	 * 
+	 * @param scope scope to check the declarations (normaly global scope)
+	 */
 	public void checkIfForwardsResolved(Scope scope) {
 		for(Obj f = scope.locals; f != null; f = f.next) {
 			if(f.isForward) {
@@ -148,7 +189,13 @@ public class Tab {
 
 	//---------------- conversion of strings to constants ----------------
 
-	// Convert a digit string into an int
+	/**
+	 * Convert a digit string into an int
+	 * 
+	 * @param s string which would be converted
+	 * 
+	 * @return return converted integer
+	 */
 	public int intVal(String s) {
 		try {
 			// convert decimal, hex and octal string into integer
@@ -160,7 +207,13 @@ public class Tab {
 		}
 	}
 
-	// Convert a string representation of a float constant into a float value
+	/**
+	 * Convert a string representation of a float constant into a float value
+	 * 
+	 * @param s string which would be converted
+	 * 
+	 * @return return converted float
+	 */
 	public float floatVal(String s) {
 		try {
 			return Float.parseFloat(s);
@@ -171,12 +224,18 @@ public class Tab {
 		}
 	}
 
-	// Convert a string representation of a char constant into a char value
+	/**
+	 * Convert a string representation of a char constant into a char value
+	 * 
+	 * @param s string which would be converted
+	 * 
+	 * @return return converted char
+	 */
 	public char charVal(String s) {
 		if(s.matches("^'.'$")) {
 			return  s.charAt(1);
 		} else {
-			// s.charAt(1) == '\' so I parse the second character
+			//--- s.charAt(1) == '\' so I parse the second character to get it usage
 			switch(s.charAt(2))
 			{
 				case 'r':
@@ -197,7 +256,12 @@ public class Tab {
 
 	//---------------- methods for dumping the symbol table --------------
 
-	// Print a type
+	/**
+	 * Print a type
+	 * 
+	 * @param type
+	 * @param indent
+	 */
 	public void dumpStruct(Struct type, int indent) {
 		switch (type.kind) {
 			case Struct.INT:
@@ -223,7 +287,12 @@ public class Tab {
 		}
 	}
 
-	// Print an object
+	/**
+	 * Print an object
+	 * 
+	 * @param o
+	 * @param indent
+	 */
 	public void dumpObj(Obj o, int indent) {
 		for (int i = 0; i < indent; i++) System.out.print("  ");
 		switch (o.kind) {
@@ -253,7 +322,12 @@ public class Tab {
 		System.out.println();
 	}
 
-	// Print all objects of a scope
+	/**
+	 * Print all objects of a scope
+	 *  
+	 * @param head
+	 * @param indent
+	 */
 	public void dumpScope(Obj head, int indent) {
 		for (Obj o = head; o != null; o = o.next) dumpObj(o, indent);
 	}

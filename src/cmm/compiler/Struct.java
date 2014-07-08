@@ -41,7 +41,11 @@ public class Struct {
 		size = elements * elemType.size;
 	}
 
-	// Checks whether this type is a primitive type
+	/**
+	 * Checks whether this type is a primitive type
+	 * 
+	 * @return true if kind is a primitive
+	 */
 	public boolean isPrimitive() {
 		return kind == INT || kind == FLOAT || kind == CHAR || kind == BOOL;
 	}
