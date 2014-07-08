@@ -1,5 +1,7 @@
 $package=cmm.compiler
 
+import java.util.ArrayList;
+
 /*-------------------------------------------------------------------------
 CMM Compiler description for C--
 === ============================
@@ -169,11 +171,15 @@ ident								(. Obj curRef = tab.insert(Obj.VAR, t.val, type);
 Type<out Struct type>
 = 
 ident                            	(. Obj obj = tab.find(t.val);
-                                       type = obj.type; .)
+                                       type = obj.type; 
+                                       ArrayList<Integer> dimensions = new ArrayList(); .)
 { "[" 
-  intCon 
-  "]"
-}.
+  intCon 							(. dimensions.add(tab.intVal(t.val)); .)
+  "]" }
+									(. for(int i = dimensions.size()-1; i>=0;i--) {
+									       type = new Struct(Struct.ARR, dimensions.get(i), type);
+									   } .)
+.
 //-------------------------------------------------------------------------
 Statement
 =

@@ -1,5 +1,14 @@
 package cmm.compiler;
 
+import java.util.ArrayList;
+
+/*-------------------------------------------------------------------------
+CMM Compiler description for C--
+=== ============================
+-------------------------------------------------------------------------*/
+
+
+
 public class Parser {
 	public static final int _EOF = 0;
 	public static final int _ident = 1;
@@ -243,11 +252,16 @@ public class Parser {
 		Expect(1);
 		Obj obj = tab.find(t.val);
 		 type = obj.type; 
+		 ArrayList<Integer> dimensions = new ArrayList(); 
 		while (la.kind == 24) {
 			Get();
 			Expect(2);
+			dimensions.add(tab.intVal(t.val)); 
 			Expect(25);
 		}
+		for(int i = dimensions.size()-1; i>=0;i--) {
+		   type = new Struct(Struct.ARR, dimensions.get(i), type);
+		} 
 		return type;
 	}
 
