@@ -286,9 +286,11 @@ public class Parser {
 	}
 
 	void Statement() {
+		Obj design; 
 		switch (la.kind) {
 		case 1: {
-			Designator();
+			design = Designator();
+			if(design.type.kind != Struct.NONE ) SemErr("only void is allowed"); 
 			if (la.kind == 8) {
 				Get();
 				Expr();
@@ -338,6 +340,7 @@ public class Parser {
 			Get();
 			Expr();
 			Expect(7);
+			if(curProc.kind != Obj.PROC) SemErr("return is only allowed in procedure"); 
 			break;
 		}
 		case 7: {
@@ -363,21 +366,25 @@ public class Parser {
 		curRef.isRef = isRef; 
 	}
 
-	void Designator() {
+	Obj  Designator() {
+		Obj  obj;
 		Expect(1);
 		String name = t.val;
-		                      Obj objStruct = tab.find(name); 
+		                      obj = tab.find(name); 
 		while (la.kind == 24 || la.kind == 35) {
 			if (la.kind == 35) {
 				Get();
+				if(obj.type.kind != Struct.STRUCT) SemErr(name + " is not a struct"); 
 				Expect(1);
-				Obj objField = tab.findField(t.val,objStruct.type); 
+				obj = tab.findField(t.val,obj.type); 
 			} else {
 				Get();
+				if(obj.type.kind != Struct.ARR) SemErr(name + " is not an array"); 
 				Expr();
 				Expect(25);
 			}
 		}
+		return obj;
 	}
 
 	void Expr() {
@@ -489,9 +496,11 @@ public class Parser {
 	}
 
 	void Factor() {
-		Struct type; 
+		Struct type; Obj design; 
 		if (la.kind == 1) {
-			Designator();
+			design = Designator();
+			if(design.kind != Obj.PROC ) SemErr("designator is not a procedure"); 
+			if(design.type.kind == Struct.NONE ) SemErr("type of procedure is void"); 
 			if (la.kind == 5) {
 				ActPars();
 			}

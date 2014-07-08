@@ -193,9 +193,9 @@ ident                            	(. Obj obj = tab.find(t.val);
 									   } .)
 .
 //-------------------------------------------------------------------------
-Statement
+Statement							(. Obj design; .)
 =
-( Designator
+( Designator<out design>			(. if(design.type.kind != Struct.NONE ) SemErr("only void is allowed"); .) 				
   ( "=" Expr
   | ActPars
   ) ";"
@@ -203,7 +203,7 @@ Statement
 | "while" "(" Condition ")" Statement
 | "print" "(" Expr ")" ";"
 | "{" {Statement} "}"
-| "return" Expr ";"
+| "return" Expr ";"					(. if(curProc.kind != Obj.PROC) SemErr("return is only allowed in procedure"); .)
 | ";"
 ).
 //-------------------------------------------------------------------------
@@ -244,9 +244,11 @@ Term
 = 
 Factor {Mulop Factor}.
 //-------------------------------------------------------------------------
-Factor								(. Struct type; .)
+Factor								(. Struct type; Obj design; .)
 =
-( Designator [ActPars]
+( Designator<out design>			(. if(design.kind != Obj.PROC ) SemErr("designator is not a procedure"); 
+									   if(design.type.kind == Struct.NONE ) SemErr("type of procedure is void"); .)
+	[ActPars]
 | intCon
 | floatCon
 | charCon
@@ -260,13 +262,13 @@ Factor								(. Struct type; .)
 | "(" Expr ")"
 ).
 //-------------------------------------------------------------------------
-Designator
+Designator<out Obj obj>
 = 
 ident								(. String name = t.val;
-                                       Obj objStruct = tab.find(name); .)
-{ "."
-  ident								(. Obj objField = tab.findField(t.val,objStruct.type); .)
-| "["
+                                       obj = tab.find(name); .)
+{ "."								(. if(obj.type.kind != Struct.STRUCT) SemErr(name + " is not a struct"); .)
+  ident								(. obj = tab.findField(t.val,obj.type); .)
+| "["								(. if(obj.type.kind != Struct.ARR) SemErr(name + " is not an array"); .)
   Expr/*<out e>*/
   "]"
 }
