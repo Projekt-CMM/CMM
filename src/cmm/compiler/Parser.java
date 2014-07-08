@@ -173,9 +173,11 @@ public class Parser {
 		} else if (la.kind == 3) {
 			Get();
 			curCon.fVal = tab.floatVal(t.val); 
+			if (type != Tab.floatType) SemErr("float constant not allowed here"); 
 		} else if (la.kind == 4) {
 			Get();
 			curCon.val = tab.charVal(t.val); 
+			if (type != Tab.charType) SemErr("char constant not allowed here"); 
 		} else SynErr(41);
 		Expect(7);
 	}
