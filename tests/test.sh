@@ -13,6 +13,13 @@ NC='\e[0m' # No Color
 
 # count occouring failes
 failes=0
+outputAll=0
+
+if [ $# > 1 ];then
+    if [ $1 = "1" ];then
+        outputAll=1
+    fi
+fi 
 
 # Check code that is written to fail
 echo "----------------------------------------------------------------"
@@ -25,10 +32,13 @@ do
         cmmOutput=$(testCode "$entry")
 
         if [ $? != 0 ];then
-            echo -e "${green}$entry \tERROR DETECTED${NC}"
+            printf "${green} %-70s ERROR DETECTED${NC}\n" $entry
+            if [ $outputAll = 1 ];then
+                echo -e "${yellow}$cmmOutput${NC}"
+            fi
         else
             failes=`expr $failes + 1`
-            echo -e "${red}$entry \tERROR NOT DETECTED -> FAILED${NC}"
+            printf "${red} %-70s ERROR NOT DETECTED${NC}\n" $entry
             echo -e "${yellow}$cmmOutput${NC}"
         fi 
     fi
@@ -46,10 +56,13 @@ do
 
         if [ $? != 0 ];then
             failes=`expr $failes + 1`
-            echo -e "${red}$entry \tERROR DETECTED -> FAILED${NC}"
+            printf "${red} %-70s ERROR DETECTED -> FAILED${NC}\n" $entry
             echo -e "${yellow}$cmmOutput${NC}"
         else
-            echo -e "${green}$entry \tNO ERROR${NC}"
+            printf "${green} %-70s NO ERROR${NC}\n" $entry
+            if [ $outputAll = 1 ];then
+                echo -e "${yellow}$cmmOutput${NC}"
+            fi
         fi 
     fi
 done
