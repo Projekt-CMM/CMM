@@ -465,7 +465,7 @@ public class Scanner {
 				case 4:
 					recEnd = pos; recKind = 3;
 					if (ch >= '0' && ch <= '9') {AddCh(); state = 4; break;}
-					else if (ch == 'E') {AddCh(); state = 5; break;}
+					else if (ch == 'E' || ch == 'e') {AddCh(); state = 5; break;}
 					else {t.kind = 3; break loop;}
 				case 5:
 					if (ch >= '0' && ch <= '9') {AddCh(); state = 7; break;}

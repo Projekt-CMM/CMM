@@ -155,8 +155,10 @@ public class Parser {
 			} else {
 				ProcDecl();
 			}
+			while (!(StartOf(2))) {SynErr(41); Get();}
 		}
-		if (debug[0]) tab.dumpScope(tab.curScope.locals, 0); 
+		if (debug[0]) tab.dumpScope(tab.curScope.locals, 0);
+		tab.checkIfForwardsResolved(tab.curScope); 
 	}
 
 	void ConstDecl() {
@@ -178,7 +180,7 @@ public class Parser {
 			Get();
 			curCon.val = tab.charVal(t.val); 
 			if (type != Tab.charType) SemErr("char constant not allowed here"); 
-		} else SynErr(41);
+		} else SynErr(42);
 		Expect(7);
 	}
 
@@ -218,7 +220,7 @@ public class Parser {
 			type = Type();
 		} else if (la.kind == 21) {
 			Get();
-		} else SynErr(42);
+		} else SynErr(43);
 		Expect(1);
 		curProc = tab.insert(Obj.PROC, t.val, type); 
 		if(type != Tab.noType && !type.isPrimitive()) 
@@ -237,7 +239,7 @@ public class Parser {
 			SemErr("return value of forware declaration does not match declaration");
 			curProc.isForward = false;
 			} 
-			while (StartOf(2)) {
+			while (StartOf(3)) {
 				if (la.kind == 16) {
 					ConstDecl();
 				} else if (isVarDecl()) {
@@ -254,7 +256,7 @@ public class Parser {
 			Expect(7);
 			if(curProc.isForward) SemErr("function is already forward declared");
 			curProc.isForward = true; 
-		} else SynErr(43);
+		} else SynErr(44);
 		curProc.locals = tab.curScope.locals;
 		curProc.size = tab.curScope.size;
 		tab.closeScope(); 
@@ -304,7 +306,7 @@ public class Parser {
 			} else if (la.kind == 5) {
 				ActPars();
 				if(design.type != Tab.noType) SemErr("only void is allowed"); 
-			} else SynErr(44);
+			} else SynErr(45);
 			Expect(7);
 			break;
 		}
@@ -338,7 +340,7 @@ public class Parser {
 		}
 		case 19: {
 			Get();
-			while (StartOf(3)) {
+			while (StartOf(4)) {
 				Statement();
 			}
 			Expect(20);
@@ -348,14 +350,14 @@ public class Parser {
 			Get();
 			Expr();
 			Expect(7);
-			if(curProc.kind != Obj.PROC) SemErr("return is only allowed in procedure"); 
+			if(curProc.type.kind == Struct.NONE) SemErr("procedure has void as return type"); 
 			break;
 		}
 		case 7: {
 			Get();
 			break;
 		}
-		default: SynErr(45); break;
+		default: SynErr(46); break;
 		}
 	}
 
@@ -405,7 +407,7 @@ public class Parser {
 
 	void ActPars() {
 		Expect(5);
-		if (StartOf(4)) {
+		if (StartOf(5)) {
 			ActPar();
 			while (la.kind == 17) {
 				Get();
@@ -424,12 +426,12 @@ public class Parser {
 	}
 
 	void ActPar() {
-		if (StartOf(5)) {
+		if (StartOf(6)) {
 			Expr();
 		} else if (la.kind == 23) {
 			Get();
 			Expr();
-		} else SynErr(46);
+		} else SynErr(47);
 	}
 
 	void CondTerm() {
@@ -454,7 +456,7 @@ public class Parser {
 			Get();
 			Condition();
 			Expect(6);
-		} else SynErr(47);
+		} else SynErr(48);
 	}
 
 	void Relop() {
@@ -483,7 +485,7 @@ public class Parser {
 			Get();
 			break;
 		}
-		default: SynErr(48); break;
+		default: SynErr(49); break;
 		}
 	}
 
@@ -500,7 +502,7 @@ public class Parser {
 			Get();
 		} else if (la.kind == 34) {
 			Get();
-		} else SynErr(49);
+		} else SynErr(50);
 	}
 
 	void Factor() {
@@ -534,7 +536,7 @@ public class Parser {
 			Get();
 			Expr();
 			Expect(6);
-		} else SynErr(50);
+		} else SynErr(51);
 	}
 
 	void Mulop() {
@@ -544,7 +546,7 @@ public class Parser {
 			Get();
 		} else if (la.kind == 39) {
 			Get();
-		} else SynErr(51);
+		} else SynErr(52);
 	}
 
 
@@ -559,8 +561,9 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
+		{T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,T,x, x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
 		{x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,T,x, x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
+		{T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,T,x, x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
 		{x,T,x,x, x,x,x,T, x,x,x,x, x,x,x,x, T,x,x,T, x,x,x,x, x,x,T,x, T,T,T,x, x,x,x,x, x,x,x,x, x,x},
 		{x,T,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,T,x, T,T,T,x, x,x,x,x, x,x,x,x, x,x},
 		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,T,T,x, x,x,x,x, x,x},
@@ -624,17 +627,18 @@ class Errors {
 			case 38: s = "\"/\" expected"; break;
 			case 39: s = "\"%\" expected"; break;
 			case 40: s = "??? expected"; break;
-			case 41: s = "invalid ConstDecl"; break;
-			case 42: s = "invalid ProcDecl"; break;
+			case 41: s = "this symbol not expected in CMM"; break;
+			case 42: s = "invalid ConstDecl"; break;
 			case 43: s = "invalid ProcDecl"; break;
-			case 44: s = "invalid Statement"; break;
+			case 44: s = "invalid ProcDecl"; break;
 			case 45: s = "invalid Statement"; break;
-			case 46: s = "invalid ActPar"; break;
-			case 47: s = "invalid CondFact"; break;
-			case 48: s = "invalid Relop"; break;
-			case 49: s = "invalid Addop"; break;
-			case 50: s = "invalid Factor"; break;
-			case 51: s = "invalid Mulop"; break;
+			case 46: s = "invalid Statement"; break;
+			case 47: s = "invalid ActPar"; break;
+			case 48: s = "invalid CondFact"; break;
+			case 49: s = "invalid Relop"; break;
+			case 50: s = "invalid Addop"; break;
+			case 51: s = "invalid Factor"; break;
+			case 52: s = "invalid Mulop"; break;
 			default: s = "error " + n; break;
 		}
 		storeError(line, col, s);

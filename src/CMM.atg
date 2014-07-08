@@ -62,7 +62,7 @@ TOKENS
   ident     = letter { letter | digit }.
   intCon    = digit { digit }
             | ('0'('x'|'X') | '#') hex {hex}.
-  floatCon  = digit {digit} '.' {digit} ['E' ['+'|'-'] digit {digit}].
+  floatCon  = digit {digit} '.' {digit} [('E'|'e') ['+'|'-'] digit {digit}].
   charCon   = '\'' ( charCh | '\\' ('r' | 'n' | 't' | '\'' | '\\' )) '\''.
   
   //--- token definitions for lookahead peeking
@@ -90,15 +90,18 @@ PRODUCTIONS
 CMM
 =	                          		(. tab = new Tab(this); 
                                        tab.openScope(); .)
-{ ConstDecl 
+{ 
+( ConstDecl 
 | StructDecl 
 | IF(isVarDecl()) VarDecl 
 | ProcDecl 
-}                                 	(. if (debug[0]) tab.dumpScope(tab.curScope.locals, 0); .)
+) SYNC
+}                                 	(. if (debug[0]) tab.dumpScope(tab.curScope.locals, 0);
+									   tab.checkIfForwardsResolved(tab.curScope); .)
 .
 //-------------------------------------------------------------------------
 ConstDecl							(. Struct type; .)
-= 
+=
 "const"
 Type<out type>
 ident								(. Obj curCon = tab.insert(Obj.CON, t.val, type); .)
@@ -210,7 +213,7 @@ Statement							(. Obj design; .)
 | "while" "(" Condition ")" Statement
 | "print" "(" Expr ")" ";"
 | "{" {Statement} "}"
-| "return" Expr ";"					(. if(curProc.kind != Obj.PROC) SemErr("return is only allowed in procedure"); .)
+| "return" Expr ";"					(. if(curProc.type.kind == Struct.NONE) SemErr("procedure has void as return type"); .)
 | ";"
 ).
 //-------------------------------------------------------------------------

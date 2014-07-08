@@ -139,7 +139,11 @@ public class Tab {
 
 	// Check if all forward declarations were resolved at the end of the program
 	public void checkIfForwardsResolved(Scope scope) {
-		// TODO
+		for(Obj f = scope.locals; f != null; f = f.next) {
+			if(f.isForward) {
+				parser.SemErr(f.name + " has only a forward-declaration");
+			}
+		}
 	}
 
 	//---------------- conversion of strings to constants ----------------
