@@ -1,5 +1,7 @@
 package cmm.compiler;
 
+import java.util.regex.*;
+
 /*--------------------------------------------------------------------------------
 Tab   Symbol table for C--
 ===   ====================
@@ -125,20 +127,37 @@ public class Tab {
 
 	// Convert a digit string into an int
 	public int intVal(String s) {
-		// TODO incorrect string?
-		return Integer.parseInt(s);
+		// convert decimal, hex and octal string into integer
+		return Integer.decode(s);
 	}
 
 	// Convert a string representation of a float constant into a float value
 	public float floatVal(String s) {
-		// TODO incorrect string?
 		return Float.parseFloat(s);
 	}
 
 	// Convert a string representation of a char constant into a char value
 	public char charVal(String s) {
-		// TODO no character at 0
-		return  s.charAt(1);
+		if(s.matches("^'.'$")) {
+			return  s.charAt(1);
+		} else {
+			// s.charAt(1) == '\' so I parse the second character
+			switch(s.charAt(2))
+			{
+				case 'r':
+					return '\r';
+				case 'n':
+					return '\n';
+				case 't':
+					return '\t';
+				case '\'':
+					return '\'';
+				case '\\':
+					return '\\';
+			default:
+					return 	'\0';
+			}
+		}
 	}
 
 	//---------------- methods for dumping the symbol table --------------

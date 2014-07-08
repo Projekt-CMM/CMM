@@ -55,11 +55,13 @@ COMPILER CMM
 CHARACTERS
   letter    = 'A'..'Z' + 'a'..'z'.
   digit     = '0'..'9'.
+  hex       = digit + 'a'..'f' + 'A'..'F'.
   charCh    = ANY - '\r' - '\n' - '\t' - '\'' - '\\'.
 
 TOKENS
   ident     = letter { letter | digit }.
-  intCon    = digit { digit }.
+  intCon    = digit { digit }
+            | ('0'('x'|'X') | '#') hex {hex}.
   floatCon  = digit {digit} '.' {digit} ['E' ['+'|'-'] digit {digit}].
   charCon   = '\'' ( charCh | '\\' ('r' | 'n' | 't' | '\'' | '\\' )) '\''.
   
