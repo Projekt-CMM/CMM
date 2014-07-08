@@ -131,6 +131,7 @@ ident                             	(. tab.insert(Obj.TYPE, t.val, type); .)
 } 
 "}"                                	(. type.fields = tab.curScope.locals;
                                        type.size = tab.curScope.size;
+                                       if(type.fields==null) SemErr("struct must contain at least one variable");
                                        tab.closeScope(); .)
 .
 //-------------------------------------------------------------------------
@@ -139,7 +140,9 @@ ProcDecl                          	(. Struct type = Tab.noType; .)
 ( Type<out type>
 | "void"
 )
-ident								(. curProc = tab.insert(Obj.PROC, t.val, type); .)
+ident								(. curProc = tab.insert(Obj.PROC, t.val, type); 
+									   if(type != Tab.noType && !type.isPrimitive()) 
+									   		SemErr("procedure must return a primitive type or void"); .)
 "("									(. tab.openScope(); .)
 [ FormPars<out curProc.nPars>
 ]
@@ -163,22 +166,27 @@ FormPar                              (. n = 1; .)
 }.
 //-------------------------------------------------------------------------
 FormPar								(. Struct type; 
-									   bool isRef = false; .)
+									   boolean isRef = false; .)
 = 
 [ "ref"								(. isRef = true; .)
 ]
 Type<out type>
 ident								(. Obj curRef = tab.insert(Obj.VAR, t.val, type); 
+									   if(curRef.isRef && !type.isPrimitive()) 
+									   		SemErr("ref must be a primitive type");
 									   curRef.isRef = isRef; .)
 .
 //-------------------------------------------------------------------------
 Type<out Struct type>
 = 
 ident                            	(. Obj obj = tab.find(t.val);
+									   if(obj.kind != Obj.TYPE) SemErr(obj.name + " is not a type");
                                        type = obj.type; 
                                        ArrayList<Integer> dimensions = new ArrayList(); .)
 { "[" 
-  intCon 							(. dimensions.add(tab.intVal(t.val)); .)
+  intCon 							(. int arraySize = tab.intVal(t.val);
+  									   dimensions.add(arraySize); 
+  									   if(arraySize <= 0) SemErr("array-size must be 1 or higher"); .)
   "]" }
 									(. for(int i = dimensions.size()-1; i>=0;i--) {
 									       type = new Struct(Struct.ARR, dimensions.get(i), type);

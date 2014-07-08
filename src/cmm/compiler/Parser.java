@@ -195,6 +195,7 @@ public class Parser {
 		Expect(20);
 		type.fields = tab.curScope.locals;
 		type.size = tab.curScope.size;
+		if(type.fields==null) SemErr("struct must contain at least one variable");
 		tab.closeScope(); 
 	}
 
@@ -220,6 +221,8 @@ public class Parser {
 		} else SynErr(42);
 		Expect(1);
 		curProc = tab.insert(Obj.PROC, t.val, type); 
+		if(type != Tab.noType && !type.isPrimitive()) 
+		SemErr("procedure must return a primitive type or void"); 
 		Expect(5);
 		tab.openScope(); 
 		if (la.kind == 1 || la.kind == 23) {
@@ -253,12 +256,15 @@ public class Parser {
 		Struct  type;
 		Expect(1);
 		Obj obj = tab.find(t.val);
+		if(obj.kind != Obj.TYPE) SemErr(obj.name + " is not a type");
 		 type = obj.type; 
 		 ArrayList<Integer> dimensions = new ArrayList(); 
 		while (la.kind == 24) {
 			Get();
 			Expect(2);
-			dimensions.add(tab.intVal(t.val)); 
+			int arraySize = tab.intVal(t.val);
+			dimensions.add(arraySize); 
+			if(arraySize <= 0) SemErr("array-size must be 1 or higher"); 
 			Expect(25);
 		}
 		for(int i = dimensions.size()-1; i>=0;i--) {
@@ -344,7 +350,7 @@ public class Parser {
 
 	void FormPar() {
 		Struct type; 
-		bool isRef = false; 
+		boolean isRef = false; 
 		if (la.kind == 23) {
 			Get();
 			isRef = true; 
@@ -352,6 +358,8 @@ public class Parser {
 		type = Type();
 		Expect(1);
 		Obj curRef = tab.insert(Obj.VAR, t.val, type); 
+		if(curRef.isRef && !type.isPrimitive()) 
+		SemErr("ref must be a primitive type");
 		curRef.isRef = isRef; 
 	}
 
