@@ -298,8 +298,8 @@ public class Scanner {
 		start.set(124, 30); 
 		start.set(38, 32); 
 		start.set(45, 34); 
-		start.set(46, 35); 
-		start.set(43, 36); 
+		start.set(43, 35); 
+		start.set(46, 36); 
 		start.set(42, 37); 
 		start.set(47, 38); 
 		start.set(37, 39); 

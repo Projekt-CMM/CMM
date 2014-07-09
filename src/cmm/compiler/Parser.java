@@ -414,8 +414,8 @@ public class Parser {
 		String name = t.val;
 		                      obj = tab.find(name); 
 		                      n = new Node(obj); 
-		while (la.kind == 24 || la.kind == 35) {
-			if (la.kind == 35) {
+		while (la.kind == 24 || la.kind == 36) {
+			if (la.kind == 36) {
 				Get();
 				if(obj.type.kind != Struct.STRUCT) SemErr(name + " is not a struct"); 
 				Expect(1);
@@ -425,6 +425,7 @@ public class Parser {
 				Get();
 				if(obj.type.kind != Struct.ARR) SemErr(name + " is not an array"); 
 				e = Expr();
+				if(e.type.kind != Struct.INT) SemErr("index must be an int");
 				n = new Node(Node.INDEX, n, e, obj.type); 
 				Expect(25);
 			}
@@ -437,7 +438,7 @@ public class Parser {
 		int kind;
 		Node n; 
 		res = Term();
-		while (la.kind == 34 || la.kind == 36) {
+		while (la.kind == 34 || la.kind == 35) {
 			kind = Addop();
 			n = Term();
 			if(!res.type.isPrimitive() || !n.type.isPrimitive())
@@ -582,7 +583,7 @@ public class Parser {
 	int  Addop() {
 		int  kind;
 		kind=Node.PLUS; 
-		if (la.kind == 36) {
+		if (la.kind == 35) {
 			Get();
 		} else if (la.kind == 34) {
 			Get();
@@ -596,14 +597,16 @@ public class Parser {
 		Struct type; 
 		Node design; 
 		n = null; 
+		int line = la.line; 
 		if (la.kind == 1) {
 			design = Designator();
 			if (la.kind == 5) {
 				n = ActPars();
 				if(design.obj.kind != Obj.PROC ) SemErr("name is not a procedure"); 
 				if(design.obj.type == Tab.noType) SemErr("function call of a void procedure"); 
+				n = new Node(Node.CALL,n,null,line); 
 			}
-			n = design; 
+			if (n == null) n = design; 
 		} else if (la.kind == 2) {
 			Get();
 			n = new Node(tab.intVal(t.val)); 
@@ -622,6 +625,10 @@ public class Parser {
 			Get();
 			n = Factor();
 			n = new Node(Node.MINUS,n,null,n.type); 
+		} else if (la.kind == 35) {
+			Get();
+			n = Factor();
+			n = new Node(Node.PLUS,n,null,n.type); 
 		} else if (isCast()) {
 			Expect(5);
 			type = Type();
@@ -685,8 +692,8 @@ public class Parser {
 		{T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,T,x, x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
 		{x,T,x,x, x,x,x,T, x,x,x,x, x,x,x,x, T,x,x,T, x,x,x,x, x,x,T,x, T,T,T,x, x,x,x,x, x,x,x,x, x,x},
 		{x,T,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,T,x, T,T,T,x, x,x,x,x, x,x,x,x, x,x},
-		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,T,T,x, x,x,x,x, x,x},
-		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,T,x, x,x,x,x, x,x}
+		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,T,T,T, x,x,x,x, x,x},
+		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,T,T, x,x,x,x, x,x}
 
 	};
 } // end Parser
@@ -740,8 +747,8 @@ class Errors {
 			case 32: s = "\"&&\" expected"; break;
 			case 33: s = "\"read\" expected"; break;
 			case 34: s = "\"-\" expected"; break;
-			case 35: s = "\".\" expected"; break;
-			case 36: s = "\"+\" expected"; break;
+			case 35: s = "\"+\" expected"; break;
+			case 36: s = "\".\" expected"; break;
 			case 37: s = "\"*\" expected"; break;
 			case 38: s = "\"/\" expected"; break;
 			case 39: s = "\"%\" expected"; break;

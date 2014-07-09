@@ -224,7 +224,7 @@ Statement<out Node st>				(. Node design;
 ( Designator<out design>			 				
   ( "=" Expr<out e> 				(. st = new Node(Node.ASSIGN,design,e,line); .)
   | ActPars<out e>                  (. if(design.type != Tab.noType) SemErr("only void is allowed"); 
-  									   st = new Node(Node.CALL,e,null,line); .) // TODO
+  									   st = new Node(Node.CALL,e,null,line); .) 
   ) ";"
 | "if" "(" 							(. Node ifYes, ifNo; .)
 	Condition<out con>
@@ -321,16 +321,19 @@ Factor<out res>
 //-------------------------------------------------------------------------
 Factor<out Node n>					(. Struct type; 
                   					   Node design; .)
-=									(. n = null; .)
+=									(. n = null; 
+									   int line = la.line; .)
 ( Designator<out design>			
-	[ ActPars<out n> /* TODO */				(. if(design.obj.kind != Obj.PROC ) SemErr("name is not a procedure"); 
-									   if(design.obj.type == Tab.noType) SemErr("function call of a void procedure"); .)
-	]								(. n = design; .)
+	[ ActPars<out n> 				(. if(design.obj.kind != Obj.PROC ) SemErr("name is not a procedure"); 
+									   if(design.obj.type == Tab.noType) SemErr("function call of a void procedure"); 
+									   n = new Node(Node.CALL,n,null,line); .)
+	]								(. if (n == null) n = design; .)
 | intCon							(. n = new Node(tab.intVal(t.val)); .)
 | floatCon							(. n = new Node(tab.floatVal(t.val)); .)
 | charCon							(. n = new Node(tab.charVal(t.val)); .)
 | "read" "(" ")"					(. n = new Node(Node.READ,null,null, tab.charType); .)
 | "-" Factor<out n> 				(. n = new Node(Node.MINUS,n,null,n.type); .)
+| "+" Factor<out n> 				(. n = new Node(Node.PLUS,n,null,n.type); .)
 | IF (isCast())						
   "(" 
   Type<out type>
@@ -367,7 +370,8 @@ ident								(. String name = t.val;
   ident								(. obj = tab.findField(t.val,obj.type); 
   									   n = new Node(Node.DOT, n, new Node(obj.adr), obj.type); .)
 | "["								(. if(obj.type.kind != Struct.ARR) SemErr(name + " is not an array"); .)
-  Expr<out e> 						(. n = new Node(Node.INDEX, n, e, obj.type); .)
+  Expr<out e> 						(. if(e.type.kind != Struct.INT) SemErr("index must be an int");
+  									   n = new Node(Node.INDEX, n, e, obj.type); .)
   "]"
 }
 .
