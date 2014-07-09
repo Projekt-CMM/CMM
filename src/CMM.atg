@@ -182,9 +182,9 @@ FormPar								(. Struct type;
 ]
 Type<out type>
 ident								(. Obj curRef = tab.insert(Obj.VAR, t.val, type); 
+									   curRef.isRef = isRef;
 									   if(curRef.isRef && !type.isPrimitive()) 
-									   		SemErr("ref must be a primitive type");
-									   curRef.isRef = isRef; .)
+									   		SemErr("ref must be a primitive type"); .)
 .
 //-------------------------------------------------------------------------
 Type<out Struct type>

@@ -371,9 +371,9 @@ public class Parser {
 		type = Type();
 		Expect(1);
 		Obj curRef = tab.insert(Obj.VAR, t.val, type); 
+		curRef.isRef = isRef;
 		if(curRef.isRef && !type.isPrimitive()) 
-		SemErr("ref must be a primitive type");
-		curRef.isRef = isRef; 
+		SemErr("ref must be a primitive type"); 
 	}
 
 	Obj  Designator() {
