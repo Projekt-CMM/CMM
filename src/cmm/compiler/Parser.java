@@ -325,9 +325,9 @@ public class Parser {
 				e = Expr();
 				st = new Node(Node.ASSIGN,new Node(design.obj),e,line); 
 			} else if (la.kind == 5) {
-				ActPars();
+				e = ActPars();
 				if(design.type != Tab.noType) SemErr("only void is allowed"); 
-				st = new Node(Node.CALL,null,null,line); 
+				st = new Node(Node.CALL,e,null,line); 
 			} else SynErr(45);
 			Expect(7);
 			break;
@@ -369,7 +369,7 @@ public class Parser {
 			Get();
 			while (StartOf(4)) {
 				st = Statement();
-				st = new Node(Node.TRAP,null,null,line); 
+				st = new Node(Node.STATSEQ,st,null,line); 
 			}
 			Expect(20);
 			break;
@@ -384,7 +384,7 @@ public class Parser {
 		}
 		case 7: {
 			Get();
-			st = new Node(Node.TRAP,null,null,line); 
+			st = null; 
 			break;
 		}
 		default: SynErr(46); break;
@@ -447,38 +447,47 @@ public class Parser {
 		return res;
 	}
 
-	void ActPars() {
+	Node  ActPars() {
+		Node  outPar;
+		Node par, curPar = null; 
+		outPar = null; 
 		Expect(5);
 		if (StartOf(5)) {
-			ActPar();
+			outPar = ActPar();
 			while (la.kind == 17) {
 				Get();
-				ActPar();
+				par = ActPar();
+				curPar.next = par;
+				curPar = par; 
 			}
 		}
 		Expect(6);
+		return outPar;
 	}
 
 	Node  Condition() {
 		Node  con;
+		Node newCon; 
 		con = CondTerm();
 		while (la.kind == 31) {
 			Get();
-			Node con2; 
-			con2 = CondTerm();
-			con = new Node(Node.OR, con, con2, Tab.boolType); 
+			newCon = CondTerm();
+			con = new Node(Node.OR, con, newCon, Tab.boolType); 
 		}
 		return con;
 	}
 
-	void ActPar() {
-		Node e; 
+	Node  ActPar() {
+		Node  e;
+		e = null; 
 		if (StartOf(6)) {
 			e = Expr();
 		} else if (la.kind == 23) {
 			Get();
 			e = Expr();
+			e = new Node(Node.REF, e, null, e.obj.type); 
 		} else SynErr(47);
+		return e;
 	}
 
 	Node  CondTerm() {
@@ -496,6 +505,7 @@ public class Parser {
 	Node  CondFact() {
 		Node  con;
 		Node e; int kind; 
+		con = null; 
 		if (isExpr()) {
 			con = Expr();
 			kind = Relop();
@@ -517,9 +527,9 @@ public class Parser {
 
 	int  Relop() {
 		int  kind;
+		kind = Node.EQL; 
 		switch (la.kind) {
 		case 9: {
-			kind = Node.EQL; 
 			Get();
 			kind = Node.EQL; 
 			break;
@@ -589,11 +599,11 @@ public class Parser {
 		if (la.kind == 1) {
 			design = Designator();
 			if (la.kind == 5) {
-				ActPars();
+				n = ActPars();
 				if(design.obj.kind != Obj.PROC ) SemErr("name is not a procedure"); 
 				if(design.obj.type == Tab.noType) SemErr("function call of a void procedure"); 
 			}
-			n = new Node(design.obj); 
+			n = design; 
 		} else if (la.kind == 2) {
 			Get();
 			n = new Node(tab.intVal(t.val)); 
@@ -615,9 +625,26 @@ public class Parser {
 		} else if (isCast()) {
 			Expect(5);
 			type = Type();
-			System.out.println("do cast"); 
 			Expect(6);
 			n = Factor();
+			if(type.kind == n.obj.type.kind) n = n;
+			else if(type == Tab.intType && n.obj.type == Tab.floatType) 
+			n = new Node(Node.F2I, n, null, Tab.intType);
+			else if(type == Tab.floatType && n.obj.type == Tab.intType) 
+			n = new Node(Node.I2F, n, null, Tab.floatType);
+			else if(type == Tab.intType && n.obj.type == Tab.charType) 
+			n = new Node(Node.C2I, n, null, Tab.intType);
+			else if(type == Tab.charType && n.obj.type == Tab.intType) 
+			n = new Node(Node.I2C, n, null, Tab.charType);
+			else if(type == Tab.charType && n.obj.type == Tab.floatType) {
+			n = new Node(Node.F2I, n, null, Tab.intType);
+			n = new Node(Node.I2C, n, null, Tab.charType);
+			} else if(type == Tab.floatType && n.obj.type == Tab.charType) {
+			n = new Node(Node.C2I, n, null, Tab.intType);
+			n = new Node(Node.I2F, n, null, Tab.floatType);
+			}
+			else SemErr("no known cast");
+			
 		} else if (la.kind == 5) {
 			Get();
 			System.out.println("c"); 
