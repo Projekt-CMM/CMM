@@ -222,7 +222,7 @@ Statement<out Node st>				(. Node design;
 =                                   (. st = null; 
                                        int line = la.line; .)
 ( Designator<out design>			 				
-  ( "=" Expr<out e> 				(. st = new Node(Node.ASSIGN,new Node(design.obj),e,line); .)
+  ( "=" Expr<out e> 				(. st = new Node(Node.ASSIGN,design,e,line); .)
   | ActPars<out e>                  (. if(design.type != Tab.noType) SemErr("only void is allowed"); 
   									   st = new Node(Node.CALL,e,null,line); .) // TODO
   ) ";"

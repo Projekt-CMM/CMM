@@ -323,7 +323,7 @@ public class Parser {
 			if (la.kind == 8) {
 				Get();
 				e = Expr();
-				st = new Node(Node.ASSIGN,new Node(design.obj),e,line); 
+				st = new Node(Node.ASSIGN,design,e,line); 
 			} else if (la.kind == 5) {
 				e = ActPars();
 				if(design.type != Tab.noType) SemErr("only void is allowed"); 
@@ -647,7 +647,6 @@ public class Parser {
 			
 		} else if (la.kind == 5) {
 			Get();
-			System.out.println("c"); 
 			n = Expr();
 			Expect(6);
 		} else SynErr(51);
