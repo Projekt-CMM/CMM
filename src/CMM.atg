@@ -139,7 +139,7 @@ ident                             	(. tab.insert(Obj.TYPE, t.val, type); .)
 .
 //-------------------------------------------------------------------------
 ProcDecl                          	(. Struct type = Tab.noType; .)
-= 
+= 									(. int line = la.line; .)
 ( Type<out type>
 | "void"
 )
@@ -155,12 +155,26 @@ ident								(. curProc = tab.insert(Obj.PROC, t.val, type);
 									   		if(curProc.type != type)
 									   			SemErr("return value of forware declaration does not match declaration");
 									   		curProc.isForward = false;
-									   } .)
-  { ConstDecl 
-  | IF(isVarDecl()) VarDecl 
-  | Statement
-  } 								
-  "}"                               (. if (debug[1]) Node.dump(curProc.ast, 0); .)
+									   }
+									   Node startNode = null, curNode = null, newNode; .)
+  { ConstDecl
+  | IF(isVarDecl()) VarDecl
+  | Statement<out newNode> 			(. if(startNode == null) {
+  									       startNode = newNode;
+  									   } else {
+  									       curNode.next = newNode;  
+  									   } 
+  									   curNode = newNode; .)
+  }
+  "}"                               (. if(curProc.type != Tab.noType) {
+  									       if(startNode == null) {
+	  									       startNode = new Node(Node.TRAP,null,null,t.line);
+	  									   } else {
+	  									       curNode.next = new Node(Node.TRAP,null,null,t.line);
+	  									   }
+  									   }
+  									   curProc.ast = new Node(Node.STATSEQ,startNode,null,line); 
+  									   if (debug[1]) Node.dump(curProc.ast, 0); .)
 | ";" "forward" ";"					(. if(curProc.isForward) SemErr("function is already forward declared");
 									   curProc.isForward = true; .)
 )									(. curProc.locals = tab.curScope.locals;
@@ -183,8 +197,8 @@ FormPar								(. Struct type;
 Type<out type>
 ident								(. Obj curRef = tab.insert(Obj.VAR, t.val, type); 
 									   curRef.isRef = isRef;
-									   if(curRef.isRef && !type.isPrimitive()) 
-									   		SemErr("ref must be a primitive type"); .)
+									   if(!type.isPrimitive()) 
+									   		SemErr("var must be a primitive type"); .)
 .
 //-------------------------------------------------------------------------
 Type<out Struct type>
@@ -203,94 +217,147 @@ ident                            	(. Obj obj = tab.find(t.val);
 									   } .)
 .
 //-------------------------------------------------------------------------
-Statement							(. Obj design; .)
-=
+Statement<out Node st>				(. Node design; 
+                      				   Node e, con; .)
+=                                   (. st = null; 
+                                       int line = la.line; .)
 ( Designator<out design>			 				
-  ( "=" Expr
-  | ActPars                         (. if(design.type != Tab.noType) SemErr("only void is allowed"); .)
+  ( "=" Expr<out e> 				(. st = new Node(Node.ASSIGN,new Node(design.obj),e,line); .)
+  | ActPars                         (. if(design.type != Tab.noType) SemErr("only void is allowed"); 
+  									   st = new Node(Node.CALL,null,null,line); .) // TODO
   ) ";"
-| "if" "(" Condition ")" Statement ["else" Statement]
-| "while" "(" Condition ")" Statement
-| "print" "(" Expr ")" ";"
-| "{" {Statement} "}"
-| "return" Expr ";"					(. if(curProc.type.kind == Struct.NONE) SemErr("procedure has void as return type"); .)
-| ";"
+| "if" "(" 							(. Node ifYes, ifNo; .)
+	Condition<out con>
+	")" 
+	Statement<out ifYes> 			(. st = new Node(Node.IF,con,ifYes,line); .)
+	["else" Statement<out ifNo> 	(. st = new Node(Node.IFELSE,st,ifNo,line); .)
+	]
+| "while" "(" Condition<out con>
+	")" Statement<out st> 			(. st = new Node(Node.WHILE,con,st,line); .)
+| "print" "(" Expr<out e> 			(. st = new Node(Node.PRINT,e,null,line); .)
+ ")" ";"
+| "{" {Statement<out st> 			(. st = new Node(Node.TRAP,null,null,line); .) // TODO
+	} "}"
+| "return" Expr<out e>
+ ";"								(. if(curProc.type.kind == Struct.NONE) SemErr("procedure has void as return type"); 
+ 						   			   st = new Node(Node.RETURN,e,null,line); .)
+| ";"								(. st = new Node(Node.TRAP,null,null,line); .) // TODO
 ).
 //-------------------------------------------------------------------------
 ActPars
 = 
 "(" [ActPar {"," ActPar}] ")".
 //-------------------------------------------------------------------------
-ActPar
+ActPar								(. Node e; .)
 =
-Expr | "ref" Expr.
+	Expr<out e> // TODO
+| "ref" 
+	Expr<out e> // TODO
+.
 //-------------------------------------------------------------------------
-Condition
+Condition<out Node con>				
 = 
-CondTerm {"||" CondTerm}.
+CondTerm<out con>
+{ "||"								(. Node con2; .)
+  CondTerm<out con2>				(. con = new Node(Node.OR, con, con2, Tab.boolType); .)
+}.
 //-------------------------------------------------------------------------
-CondTerm
+CondTerm<out Node con>	
 = 
-CondFact {"&&" CondFact}.
+CondFact<out con> 					
+{ "&&" 								(. Node con2; .)
+  CondFact<out con2>				(. con = new Node(Node.AND, con, con2, Tab.boolType); .)
+}.
 //-------------------------------------------------------------------------
-CondFact
+CondFact<out Node con>				(. Node e; int kind; .)
 =
-( IF (isExpr()) Expr //<out e1> 
-  Relop
-  Expr
-| "!" "(" Condition ")"
-| "(" Condition ")"
-).
-//-------------------------------------------------------------------------
-Relop
-= 
-"==" | "!=" | ">" | ">=" | "<" | "<=".
-//-------------------------------------------------------------------------
-Expr
-= 
-Term {Addop Term}.
-//-------------------------------------------------------------------------
-Term
-= 
-Factor {Mulop Factor}.
-//-------------------------------------------------------------------------
-Factor								(. Struct type; Obj design; .)
-=
-( Designator<out design>			
-	[ ActPars                       (. if(design.kind != Obj.PROC ) SemErr("name is not a procedure"); 
-									   if(design.type == Tab.noType) SemErr("function call of a void procedure"); .)
-	]
-| intCon
-| floatCon
-| charCon
-| "read" "(" ")"
-| "-" Factor
-| IF (isCast())
-  "(" 
-  Type<out type>
+( IF (isExpr()) Expr<out con>
+  Relop<out kind>
+  Expr<out e>						(. con = new Node(kind,con,e,Tab.boolType); .)
+| "!" "(" 
+  Condition<out con> 				(. con = new Node(Node.NOT, con, null, Tab.boolType); .)
   ")"
-  Factor
-| "(" Expr ")"
+| "(" Condition<out con> ")"
 ).
 //-------------------------------------------------------------------------
-Designator<out Obj obj>
+Relop<out int kind>
+=									(. kind = Node.EQL; .)
+"=="								(. kind = Node.EQL; .)
+| "!=" 								(. kind = Node.NEQ; .)
+| ">" 								(. kind = Node.GTR; .)
+| ">=" 								(. kind = Node.GEQ; .)
+| "<" 								(. kind = Node.LSS; .)
+| "<="								(. kind = Node.LEQ; .)
+.
+//-------------------------------------------------------------------------
+Expr<out Node res>					(. int kind;
+                  					   Node n; .)
+=
+Term<out res>
+{ Addop<out kind>
+  Term<out n>						(. if(!res.type.isPrimitive() || !n.type.isPrimitive())
+             						   		SemErr("type is not a primitive");
+             						   res = new Node(kind, res, n , res.type); .)
+}
+.
+//-------------------------------------------------------------------------
+Term<out Node res>					(. int kind; 
+                					   Node n; .)
+= 
+Factor<out res> 
+{ Mulop<out kind>
+  Factor<out n>						(. if(!res.type.isPrimitive() || !n.type.isPrimitive())
+             						   		SemErr("type is not a primitive");
+  									   res = new Node(kind, res, n, n.type); .)
+}
+.
+//-------------------------------------------------------------------------
+Factor<out Node n>					(. Struct type; 
+                  					   Node design; .)
+=									(. n = null; .)
+( Designator<out design>			
+	[ ActPars /* TODO */                       (. if(design.obj.kind != Obj.PROC ) SemErr("name is not a procedure"); 
+									   if(design.obj.type == Tab.noType) SemErr("function call of a void procedure"); .)
+	]								(. n = new Node(design.obj); .)
+| intCon							(. n = new Node(tab.intVal(t.val)); .)
+| floatCon							(. n = new Node(tab.floatVal(t.val)); .)
+| charCon							(. n = new Node(tab.charVal(t.val)); .)
+| "read" "(" ")"					(. n = new Node(Node.READ,null,null, tab.charType); .)
+| "-" Factor<out n> 				(. n = new Node(Node.MINUS,n,null,n.type); .)
+| IF (isCast())						
+  "(" 
+  Type<out type>					(. System.out.println("do cast"); .)	// TODO
+  ")"
+  Factor<out n> // TODO
+| "(" 								(. System.out.println("c"); .)
+	Expr<out n> // TODO
+ ")"
+).
+//-------------------------------------------------------------------------
+Designator<out Node n>				(. Obj obj; Node e; .)
 = 
 ident								(. String name = t.val;
-                                       obj = tab.find(name); .)
+                                       obj = tab.find(name); 
+                                       n = new Node(obj); .)
 { "."								(. if(obj.type.kind != Struct.STRUCT) SemErr(name + " is not a struct"); .)
-  ident								(. obj = tab.findField(t.val,obj.type); .)
+  ident								(. obj = tab.findField(t.val,obj.type); 
+  									   n = new Node(Node.DOT, n, new Node(obj.adr), obj.type); .)
 | "["								(. if(obj.type.kind != Struct.ARR) SemErr(name + " is not an array"); .)
-  Expr/*<out e>*/
+  Expr<out e> 						(. n = new Node(Node.INDEX, n, e, obj.type); .)
   "]"
 }
 .
 //-------------------------------------------------------------------------
-Addop
-=
-"+" | "-".
+Addop<out int kind>
+=									(. kind=Node.PLUS; .) 
+( "+"									
+| "-"								(. kind=Node.MINUS; .) 
+).
 //-------------------------------------------------------------------------
-Mulop
-=
-"*" | "/" | "%".
-
+Mulop<out int kind>
+=									(. kind=Node.TIMES; .) 
+( "*" 								
+| "/" 								(. kind=Node.DIV; .) 
+| "%"								(. kind=Node.REM; .) 
+).
 END CMM.

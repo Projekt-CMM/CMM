@@ -216,6 +216,7 @@ public class Parser {
 
 	void ProcDecl() {
 		Struct type = Tab.noType; 
+		int line = la.line; 
 		if (la.kind == 1) {
 			type = Type();
 		} else if (la.kind == 21) {
@@ -238,17 +239,32 @@ public class Parser {
 			if(curProc.type != type)
 			SemErr("return value of forware declaration does not match declaration");
 			curProc.isForward = false;
-			} 
+			}
+			Node startNode = null, curNode = null, newNode; 
 			while (StartOf(3)) {
 				if (la.kind == 16) {
 					ConstDecl();
 				} else if (isVarDecl()) {
 					VarDecl();
 				} else {
-					Statement();
+					newNode = Statement();
+					if(startNode == null) {
+					startNode = newNode;
+					} else {
+					curNode.next = newNode;  
+					} 
+					curNode = newNode; 
 				}
 			}
 			Expect(20);
+			if(curProc.type != Tab.noType) {
+			if(startNode == null) {
+			startNode = new Node(Node.TRAP,null,null,t.line);
+			} else {
+			curNode.next = new Node(Node.TRAP,null,null,t.line);
+			}
+			}
+			curProc.ast = new Node(Node.STATSEQ,startNode,null,line); 
 			if (debug[1]) Node.dump(curProc.ast, 0); 
 		} else if (la.kind == 7) {
 			Get();
@@ -295,17 +311,23 @@ public class Parser {
 		return n;
 	}
 
-	void Statement() {
-		Obj design; 
+	Node  Statement() {
+		Node  st;
+		Node design; 
+		Node e, con; 
+		st = null; 
+		int line = la.line; 
 		switch (la.kind) {
 		case 1: {
 			design = Designator();
 			if (la.kind == 8) {
 				Get();
-				Expr();
+				e = Expr();
+				st = new Node(Node.ASSIGN,new Node(design.obj),e,line); 
 			} else if (la.kind == 5) {
 				ActPars();
 				if(design.type != Tab.noType) SemErr("only void is allowed"); 
+				st = new Node(Node.CALL,null,null,line); 
 			} else SynErr(45);
 			Expect(7);
 			break;
@@ -313,27 +335,32 @@ public class Parser {
 		case 26: {
 			Get();
 			Expect(5);
-			Condition();
+			Node ifYes, ifNo; 
+			con = Condition();
 			Expect(6);
-			Statement();
+			ifYes = Statement();
+			st = new Node(Node.IF,con,ifYes,line); 
 			if (la.kind == 27) {
 				Get();
-				Statement();
+				ifNo = Statement();
+				st = new Node(Node.IFELSE,st,ifNo,line); 
 			}
 			break;
 		}
 		case 28: {
 			Get();
 			Expect(5);
-			Condition();
+			con = Condition();
 			Expect(6);
-			Statement();
+			st = Statement();
+			st = new Node(Node.WHILE,con,st,line); 
 			break;
 		}
 		case 29: {
 			Get();
 			Expect(5);
-			Expr();
+			e = Expr();
+			st = new Node(Node.PRINT,e,null,line); 
 			Expect(6);
 			Expect(7);
 			break;
@@ -341,24 +368,28 @@ public class Parser {
 		case 19: {
 			Get();
 			while (StartOf(4)) {
-				Statement();
+				st = Statement();
+				st = new Node(Node.TRAP,null,null,line); 
 			}
 			Expect(20);
 			break;
 		}
 		case 30: {
 			Get();
-			Expr();
+			e = Expr();
 			Expect(7);
 			if(curProc.type.kind == Struct.NONE) SemErr("procedure has void as return type"); 
+			st = new Node(Node.RETURN,e,null,line); 
 			break;
 		}
 		case 7: {
 			Get();
+			st = new Node(Node.TRAP,null,null,line); 
 			break;
 		}
 		default: SynErr(46); break;
 		}
+		return st;
 	}
 
 	void FormPar() {
@@ -372,37 +403,48 @@ public class Parser {
 		Expect(1);
 		Obj curRef = tab.insert(Obj.VAR, t.val, type); 
 		curRef.isRef = isRef;
-		if(curRef.isRef && !type.isPrimitive()) 
-		SemErr("ref must be a primitive type"); 
+		if(!type.isPrimitive()) 
+		SemErr("var must be a primitive type"); 
 	}
 
-	Obj  Designator() {
-		Obj  obj;
+	Node  Designator() {
+		Node  n;
+		Obj obj; Node e; 
 		Expect(1);
 		String name = t.val;
 		                      obj = tab.find(name); 
+		                      n = new Node(obj); 
 		while (la.kind == 24 || la.kind == 35) {
 			if (la.kind == 35) {
 				Get();
 				if(obj.type.kind != Struct.STRUCT) SemErr(name + " is not a struct"); 
 				Expect(1);
 				obj = tab.findField(t.val,obj.type); 
+				n = new Node(Node.DOT, n, new Node(obj.adr), obj.type); 
 			} else {
 				Get();
 				if(obj.type.kind != Struct.ARR) SemErr(name + " is not an array"); 
-				Expr();
+				e = Expr();
+				n = new Node(Node.INDEX, n, e, obj.type); 
 				Expect(25);
 			}
 		}
-		return obj;
+		return n;
 	}
 
-	void Expr() {
-		Term();
+	Node  Expr() {
+		Node  res;
+		int kind;
+		Node n; 
+		res = Term();
 		while (la.kind == 34 || la.kind == 36) {
-			Addop();
-			Term();
+			kind = Addop();
+			n = Term();
+			if(!res.type.isPrimitive() || !n.type.isPrimitive())
+				SemErr("type is not a primitive");
+			res = new Node(kind, res, n , res.type); 
 		}
+		return res;
 	}
 
 	void ActPars() {
@@ -417,136 +459,187 @@ public class Parser {
 		Expect(6);
 	}
 
-	void Condition() {
-		CondTerm();
+	Node  Condition() {
+		Node  con;
+		con = CondTerm();
 		while (la.kind == 31) {
 			Get();
-			CondTerm();
+			Node con2; 
+			con2 = CondTerm();
+			con = new Node(Node.OR, con, con2, Tab.boolType); 
 		}
+		return con;
 	}
 
 	void ActPar() {
+		Node e; 
 		if (StartOf(6)) {
-			Expr();
+			e = Expr();
 		} else if (la.kind == 23) {
 			Get();
-			Expr();
+			e = Expr();
 		} else SynErr(47);
 	}
 
-	void CondTerm() {
-		CondFact();
+	Node  CondTerm() {
+		Node  con;
+		con = CondFact();
 		while (la.kind == 32) {
 			Get();
-			CondFact();
+			Node con2; 
+			con2 = CondFact();
+			con = new Node(Node.AND, con, con2, Tab.boolType); 
 		}
+		return con;
 	}
 
-	void CondFact() {
+	Node  CondFact() {
+		Node  con;
+		Node e; int kind; 
 		if (isExpr()) {
-			Expr();
-			Relop();
-			Expr();
+			con = Expr();
+			kind = Relop();
+			e = Expr();
+			con = new Node(kind,con,e,Tab.boolType); 
 		} else if (la.kind == 15) {
 			Get();
 			Expect(5);
-			Condition();
+			con = Condition();
+			con = new Node(Node.NOT, con, null, Tab.boolType); 
 			Expect(6);
 		} else if (la.kind == 5) {
 			Get();
-			Condition();
+			con = Condition();
 			Expect(6);
 		} else SynErr(48);
+		return con;
 	}
 
-	void Relop() {
+	int  Relop() {
+		int  kind;
 		switch (la.kind) {
 		case 9: {
+			kind = Node.EQL; 
 			Get();
+			kind = Node.EQL; 
 			break;
 		}
 		case 10: {
 			Get();
+			kind = Node.NEQ; 
 			break;
 		}
 		case 13: {
 			Get();
+			kind = Node.GTR; 
 			break;
 		}
 		case 14: {
 			Get();
+			kind = Node.GEQ; 
 			break;
 		}
 		case 11: {
 			Get();
+			kind = Node.LSS; 
 			break;
 		}
 		case 12: {
 			Get();
+			kind = Node.LEQ; 
 			break;
 		}
 		default: SynErr(49); break;
 		}
+		return kind;
 	}
 
-	void Term() {
-		Factor();
+	Node  Term() {
+		Node  res;
+		int kind; 
+		Node n; 
+		res = Factor();
 		while (la.kind == 37 || la.kind == 38 || la.kind == 39) {
-			Mulop();
-			Factor();
+			kind = Mulop();
+			n = Factor();
+			if(!res.type.isPrimitive() || !n.type.isPrimitive())
+			SemErr("type is not a primitive");
+			res = new Node(kind, res, n, n.type); 
 		}
+		return res;
 	}
 
-	void Addop() {
+	int  Addop() {
+		int  kind;
+		kind=Node.PLUS; 
 		if (la.kind == 36) {
 			Get();
 		} else if (la.kind == 34) {
 			Get();
+			kind=Node.MINUS; 
 		} else SynErr(50);
+		return kind;
 	}
 
-	void Factor() {
-		Struct type; Obj design; 
+	Node  Factor() {
+		Node  n;
+		Struct type; 
+		Node design; 
+		n = null; 
 		if (la.kind == 1) {
 			design = Designator();
 			if (la.kind == 5) {
 				ActPars();
-				if(design.kind != Obj.PROC ) SemErr("name is not a procedure"); 
-				if(design.type == Tab.noType) SemErr("function call of a void procedure"); 
+				if(design.obj.kind != Obj.PROC ) SemErr("name is not a procedure"); 
+				if(design.obj.type == Tab.noType) SemErr("function call of a void procedure"); 
 			}
+			n = new Node(design.obj); 
 		} else if (la.kind == 2) {
 			Get();
+			n = new Node(tab.intVal(t.val)); 
 		} else if (la.kind == 3) {
 			Get();
+			n = new Node(tab.floatVal(t.val)); 
 		} else if (la.kind == 4) {
 			Get();
+			n = new Node(tab.charVal(t.val)); 
 		} else if (la.kind == 33) {
 			Get();
 			Expect(5);
 			Expect(6);
+			n = new Node(Node.READ,null,null, tab.charType); 
 		} else if (la.kind == 34) {
 			Get();
-			Factor();
+			n = Factor();
+			n = new Node(Node.MINUS,n,null,n.type); 
 		} else if (isCast()) {
 			Expect(5);
 			type = Type();
+			System.out.println("do cast"); 
 			Expect(6);
-			Factor();
+			n = Factor();
 		} else if (la.kind == 5) {
 			Get();
-			Expr();
+			System.out.println("c"); 
+			n = Expr();
 			Expect(6);
 		} else SynErr(51);
+		return n;
 	}
 
-	void Mulop() {
+	int  Mulop() {
+		int  kind;
+		kind=Node.TIMES; 
 		if (la.kind == 37) {
 			Get();
 		} else if (la.kind == 38) {
 			Get();
+			kind=Node.DIV; 
 		} else if (la.kind == 39) {
 			Get();
+			kind=Node.REM; 
 		} else SynErr(52);
+		return kind;
 	}
 
 
