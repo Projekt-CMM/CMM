@@ -95,7 +95,7 @@ public final class Node {
 	public Node(float fValue) {
 		this.kind = FLOATCON;
 		this.type = Tab.floatType;
-		this.fVal = fVal;
+		this.fVal = fValue;
 	}
 
 	public Node(char ch) {
