@@ -13,45 +13,63 @@ public final class Node {
 
 	public static final int  // node kinds
 		//-----------  statements
-		STATSEQ  =  0,   // statement sequence
-		ASSIGN   =  1,   // assignment
-		CALL     =  2,   // procedure or function call
-		IF       =  3,   // if statement without else branch
-		IFELSE   =  4,   // if statement with else branch
-		WHILE    =  5,   // while statement
-		PRINT    =  6,   // print statement
-		RETURN   =  7,   // return statement
-		TRAP     =  8,   // trap if a function reaches its end without a return
+		STATSEQ  	= 0, 	// statement sequence
+		ASSIGN   	= 1, 	// assignment
+		ASSIGNPLUS		= 2,	// +=
+		ASSIGNMINUS 	= 3,	// -=
+		ASSIGNTIMES 	= 4,	// *=
+		ASSIGNDIV 		= 5,	// /=
+		ASSIGNREM 		= 6,	// %=
+		ASSIGNLEFTSHIFT = 7,	// <<=
+		ASSIGNRIGHTSHIFT = 8,	// >>=
+		ASSIGNBITAND 	= 9,	// &=
+		ASSIGNBITXOR 	= 10,	// ^=
+		ASSIGNBITOR 	= 11,	// |=
+		CALL     	= 12,	// procedure or function call
+		IF       	= 13,  	// if statement without else branch
+		IFELSE   	= 14,  	// if statement with else branch
+		WHILE    	= 15,  	// while statement
+		PRINT    	= 16,  	// print statement
+		RETURN   	= 17,  	// return statement
+		TRAP     	= 18,  	// trap if a function reaches its end without a return
 		//------------ leaf expressions
-		IDENT    =  9,   // identifier
-		INTCON   = 10,   // int constant
-		FLOATCON = 11,   // float constant
-		CHARCON  = 12,   // char constant
+		IDENT    	= 19,   // identifier
+		INTCON   	= 20,   // int constant
+		FLOATCON 	= 21,   // float constant
+		CHARCON  	= 22,   // char constant
 		//------------ designators and ref parameters
-		DOT      = 13,   // field selection (x.y)
-		INDEX    = 14,   // array element (a[i])
-		REF      = 15,   // ref parameter
+		DOT      	= 23,   // field selection (x.y)
+		INDEX    	= 24,   // array element (a[i])
+		REF      	= 25,   // ref parameter
 		//------------ expressions
-		PLUS     = 16,   // +
-		MINUS    = 17,   // -
-		TIMES    = 18,   // *
-		DIV      = 19,   // /
-		REM      = 20,   // %
-		READ     = 21,   // read operation
-		I2F      = 22,   // conversion from int to float
-		F2I      = 23,   // conversion from float to int
-		I2C      = 24,   // conversion from int to char
-		C2I      = 25,   // conversion from char to int
+		PLUS     	= 26,  	// +
+		MINUS    	= 27,   // -
+		TIMES    	= 28,   // *
+		DIV      	= 29,   // /
+		REM      	= 30,   // %
+		BITNEQ		= 31,	// ~
+		BITAND		= 32,	// &
+		BITOR		= 33,	// |
+		BITXOR		= 34,	// ^
+		LEFTSHIFT 	= 35,	// <<
+		RIGHTSHIFT 	= 36,	// >>
+		INC			= 37,	// ++
+		DEC			= 38,	// --
+		READ     	= 39,   // read operation
+		I2F      	= 40,   // conversion from int to float
+		F2I      	= 41,   // conversion from float to int
+		I2C      	= 42,   // conversion from int to char
+		C2I      	= 43,   // conversion from char to int
 		//------------ conditionals
-		EQL      = 26,   // ==
-		NEQ      = 27,   // !=
-		LSS      = 28,   // <
-		LEQ      = 29,   // <=
-		GTR      = 30,   // >
-		GEQ      = 31,   // >=
-		NOT      = 32,   // !
-		OR       = 33,   // ||
-		AND      = 34;   // &&
+		EQL      	= 44,  	// ==
+		NEQ      	= 45,  	// !=
+		LSS      	= 46,  	// <
+		LEQ      	= 47,  	// <=
+		GTR      	= 48,  	// >
+		GEQ      	= 49,  	// >=
+		NOT      	= 50,  	// !
+		OR       	= 51,  	// ||
+		AND      	= 52;  	// &&
 
 	public int kind;        // STATSEQ, ASSIGN, ...
 	public Struct type;     // only used in expressions
@@ -107,10 +125,13 @@ public final class Node {
 	//----------------------- for dumping ASTs -----------------------------------
 
 	static String[] name = {
-		"STATSEQ", "ASSIGN", "CALL", "IF", "IFELSE", "WHILE", "PRINT", "RETURN", "TRAP",
+		"STATSEQ", "ASSIGN", "ASSIGNPLUS", "ASSIGNMINUS", "ASSIGNTIMES", "ASSIGNDIV","ASSIGNREM",
+		"ASSIGNLEFTSHIFT", "ASSIGNRIGHTSHIFT", "ASSIGNBITAND", "ASSIGNBITXOR", "ASSIGNBITOR",
+		"CALL", "IF", "IFELSE", "WHILE", "PRINT", "RETURN", "TRAP",
 		"IDENT", "INTCON", "FLOATCON", "CHARCON",
 		"DOT", "INDEX", "REF",
-		"PLUS", "MINUS", "TIMES", "DIV", "REM", "READ", "I2F", "F2I", "I2C", "C2I",
+		"PLUS", "MINUS", "TIMES", "DIV", "REM", "BITNEQ", "BITAND", "BITOR", "BITXOR", 
+		"LEFTSHIFT", "RIGHTSHIFT", "INC", "DEC", "READ", "I2F", "F2I", "I2C", "C2I",
 		"EQL", "NEQ", "LSS", "LEQ", "GTR", "GEQ", "NOT", "OR", "AND"
 	};
 

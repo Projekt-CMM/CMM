@@ -21,7 +21,10 @@ COMPILER CMM
 		if (la.kind == _ident || la.val.equals("int") || la.val.equals("float") || la.val.equals("char")) {
 			Token x = scanner.Peek();
 			while (x.kind != _semicolon) {
-				if (x.kind == _EOF || x.kind == _lpar || x.kind == _assign) return false;
+				if (x.kind == _EOF || x.kind == _lpar || x.kind == _assign || x.kind == _assignplus
+					|| x.kind == _assignminus || x.kind == _assigntimes  || x.kind == _assigndiv  
+					|| x.kind == _assignrem || x.kind == _assignleftshift || x.kind == _assignrightshift
+					|| x.kind == _assignbitand || x.kind == _assignbitxor || x.kind == _assignbitor) return false;
 				x = scanner.Peek();
 			}
 			return true;
@@ -70,6 +73,16 @@ TOKENS
   rpar      = ")".
   semicolon = ";".
   assign    = '='.
+  assignplus 	= "+=".
+  assignminus 	= "-=".
+  assigntimes 	= "*=".
+  assigndiv 	= "/=".
+  assignrem 	= "%=".
+  assignleftshift 	= "<<=".
+  assignrightshift 	= ">>=".
+  assignbitand 	= "&=".
+  assignbitxor 	= "^=".
+  assignbitor 	= "|=".
   eql       = "==".
   neq       = "!=".
   lss       = "<".
@@ -220,15 +233,17 @@ ident                            	(. Obj obj = tab.find(t.val);
 .
 //-------------------------------------------------------------------------
 Statement<out Node st>				(. Node design; 
-                      				   Node e, con; .)
+                      				   Node e, con; 
+                      				   int kind;.)
 =                                   (. st = null; 
                                        int line = la.line; .)
 ( Designator<out design>				
-  ( "=" Expr<out e> 				(. if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
+  ( Assignment<out kind> 
+  Expr<out e> 						(. if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
   									       SemErr("name must be an identifier");
   									   if(design.type == null || !design.type.isPrimitive()) SemErr("type is not a primitive");
   									   else e = tab.impliciteTypeCon(e, design.type);
-  									   st = new Node(Node.ASSIGN,design,e,line); .)
+  									   st = new Node(kind,design,e,line); .)
   | ActPars<out e>                  (. if(design.type != Tab.noType) SemErr("only void is allowed"); 
   									   st = new Node(Node.CALL,e,null,line);
   									   st.obj = design.obj;
@@ -253,6 +268,22 @@ Statement<out Node st>				(. Node design;
  						   			   st = new Node(Node.RETURN,e,null,line); .)
 | ";"								(. st = null; .)
 ).
+//-------------------------------------------------------------------------
+Assignment<out int kind>
+=									(. kind=Node.ASSIGN; .)
+( "="
+| "+="								(. kind=Node.ASSIGNPLUS; .)
+| "-="								(. kind=Node.ASSIGNMINUS; .)
+| "*="								(. kind=Node.ASSIGNTIMES; .)
+| "/="								(. kind=Node.ASSIGNDIV; .)
+| "%="								(. kind=Node.ASSIGNREM; .)
+| "<<"								(. kind=Node.ASSIGNLEFTSHIFT; .)
+| ">>"								(. kind=Node.ASSIGNRIGHTSHIFT; .)
+| "&="								(. kind=Node.ASSIGNBITAND; .)
+| "^="								(. kind=Node.ASSIGNBITXOR; .)
+| "|="								(. kind=Node.ASSIGNBITOR; .)
+).	
+
 //-------------------------------------------------------------------------
 ActPars<out Node outPar>			(. Node par, curPar = null; .)
 = 									(. outPar = null; .)
