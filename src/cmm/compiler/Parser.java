@@ -329,7 +329,8 @@ public class Parser {
 			} else if (la.kind == 5) {
 				e = ActPars();
 				if(design.type != Tab.noType) SemErr("only void is allowed"); 
-				st = new Node(Node.CALL,e,null,line); 
+				st = new Node(Node.CALL,e,null,line);
+				st.obj = design.obj;
 				tab.checkFunctionParams(design.obj,st);
 			} else SynErr(45);
 			Expect(7);
@@ -620,6 +621,7 @@ public class Parser {
 				if(design.obj.type == Tab.noType) SemErr("function call of a void procedure"); 
 				n = new Node(Node.CALL,n,null,line); 
 				n.type = design.obj.type; 
+				n.obj = design.obj;
 				tab.checkFunctionParams(design.obj,n); 
 			}
 			if (n == null) n = design; 
