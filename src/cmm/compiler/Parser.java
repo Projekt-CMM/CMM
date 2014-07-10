@@ -642,6 +642,7 @@ public class Parser {
 		} else if (la.kind == 34) {
 			Get();
 			n = Factor();
+			if(!n.type.isPrimitive()) SemErr("type is not a primitive");
 			n = new Node(Node.MINUS,n,null,n.type); 
 		} else if (la.kind == 35) {
 			Get();

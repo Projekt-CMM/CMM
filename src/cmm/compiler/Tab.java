@@ -375,6 +375,8 @@ public class Tab {
 			} else {
 				element = impliciteTypeCon(element, type2);
 			}
+		} else if(type1 == Tab.charType) {
+			element = impliciteTypeCon(element, Tab.intType);	// TODO warum?
 		}
 		return element;
 	}
