@@ -323,11 +323,14 @@ public class Parser {
 			if (la.kind == 8) {
 				Get();
 				e = Expr();
+				if(design.kind != Node.IDENT) SemErr("name must be an identifier"); 
+				e = tab.impliciteTypeCon(e, design.type);
 				st = new Node(Node.ASSIGN,design,e,line); 
 			} else if (la.kind == 5) {
 				e = ActPars();
 				if(design.type != Tab.noType) SemErr("only void is allowed"); 
 				st = new Node(Node.CALL,e,null,line); 
+				tab.checkFunctionParams(design.obj,st);
 			} else SynErr(45);
 			Expect(7);
 			break;
@@ -360,6 +363,7 @@ public class Parser {
 			Get();
 			Expect(5);
 			e = Expr();
+			e = tab.impliciteTypeCon(e, Tab.charType);
 			st = new Node(Node.PRINT,e,null,line); 
 			Expect(6);
 			Expect(7);
@@ -378,7 +382,8 @@ public class Parser {
 			Get();
 			e = Expr();
 			Expect(7);
-			if(curProc.type.kind == Struct.NONE) SemErr("procedure has void as return type"); 
+			if(curProc.type.kind == Struct.NONE) SemErr("procedure has void as return type");
+			e = tab.impliciteTypeCon(e, curProc.type);
 			st = new Node(Node.RETURN,e,null,line); 
 			break;
 		}
@@ -443,6 +448,8 @@ public class Parser {
 			n = Term();
 			if(!res.type.isPrimitive() || !n.type.isPrimitive())
 				SemErr("type is not a primitive");
+			res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
+			n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
 			res = new Node(kind, res, n , res.type); 
 		}
 		return res;
@@ -486,7 +493,8 @@ public class Parser {
 		} else if (la.kind == 23) {
 			Get();
 			e = Expr();
-			e = new Node(Node.REF, e, null, e.obj.type); 
+			if(tab.isCastOperator(e.kind)) SemErr("there is no type-conversation for ref-parameter(s) allowed"); 
+			else e = new Node(Node.REF, e, null, e.obj.type); 
 		} else SynErr(47);
 		return e;
 	}
@@ -511,6 +519,10 @@ public class Parser {
 			con = Expr();
 			kind = Relop();
 			e = Expr();
+			if(!con.type.isPrimitive() || !e.type.isPrimitive())
+				SemErr("type is not a primitive");
+			con = tab.doImplicitCastByAritmetic(con, con.type, e.type);
+			e = tab.doImplicitCastByAritmetic(e, con.type, e.type);
 			con = new Node(kind,con,e,Tab.boolType); 
 		} else if (la.kind == 15) {
 			Get();
@@ -575,6 +587,8 @@ public class Parser {
 			n = Factor();
 			if(!res.type.isPrimitive() || !n.type.isPrimitive())
 			SemErr("type is not a primitive");
+			res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
+			n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
 			res = new Node(kind, res, n, n.type); 
 		}
 		return res;
@@ -605,6 +619,8 @@ public class Parser {
 				if(design.obj.kind != Obj.PROC ) SemErr("name is not a procedure"); 
 				if(design.obj.type == Tab.noType) SemErr("function call of a void procedure"); 
 				n = new Node(Node.CALL,n,null,line); 
+				n.type = design.obj.type; 
+				tab.checkFunctionParams(design.obj,n); 
 			}
 			if (n == null) n = design; 
 		} else if (la.kind == 2) {
@@ -634,24 +650,7 @@ public class Parser {
 			type = Type();
 			Expect(6);
 			n = Factor();
-			if(type.kind == n.obj.type.kind) n = n;
-			else if(type == Tab.intType && n.obj.type == Tab.floatType) 
-			n = new Node(Node.F2I, n, null, Tab.intType);
-			else if(type == Tab.floatType && n.obj.type == Tab.intType) 
-			n = new Node(Node.I2F, n, null, Tab.floatType);
-			else if(type == Tab.intType && n.obj.type == Tab.charType) 
-			n = new Node(Node.C2I, n, null, Tab.intType);
-			else if(type == Tab.charType && n.obj.type == Tab.intType) 
-			n = new Node(Node.I2C, n, null, Tab.charType);
-			else if(type == Tab.charType && n.obj.type == Tab.floatType) {
-			n = new Node(Node.F2I, n, null, Tab.intType);
-			n = new Node(Node.I2C, n, null, Tab.charType);
-			} else if(type == Tab.floatType && n.obj.type == Tab.charType) {
-			n = new Node(Node.C2I, n, null, Tab.intType);
-			n = new Node(Node.I2F, n, null, Tab.floatType);
-			}
-			else SemErr("no known cast");
-			
+			n = tab.expliciteTypeCon(n, type); 
 		} else if (la.kind == 5) {
 			Get();
 			n = Expr();

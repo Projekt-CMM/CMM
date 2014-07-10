@@ -221,10 +221,13 @@ Statement<out Node st>				(. Node design;
                       				   Node e, con; .)
 =                                   (. st = null; 
                                        int line = la.line; .)
-( Designator<out design>			 				
-  ( "=" Expr<out e> 				(. st = new Node(Node.ASSIGN,design,e,line); .)
+( Designator<out design>				
+  ( "=" Expr<out e> 				(. if(design.kind != Node.IDENT) SemErr("name must be an identifier"); 
+  									   e = tab.impliciteTypeCon(e, design.type);
+  									   st = new Node(Node.ASSIGN,design,e,line); .)
   | ActPars<out e>                  (. if(design.type != Tab.noType) SemErr("only void is allowed"); 
-  									   st = new Node(Node.CALL,e,null,line); .) 
+  									   st = new Node(Node.CALL,e,null,line); 
+  									   tab.checkFunctionParams(design.obj,st);.) 
   ) ";"
 | "if" "(" 							(. Node ifYes, ifNo; .)
 	Condition<out con>
@@ -234,12 +237,14 @@ Statement<out Node st>				(. Node design;
 	]
 | "while" "(" Condition<out con>
 	")" Statement<out st> 			(. st = new Node(Node.WHILE,con,st,line); .)
-| "print" "(" Expr<out e> 			(. st = new Node(Node.PRINT,e,null,line); .)
+| "print" "(" Expr<out e> 			(. e = tab.impliciteTypeCon(e, Tab.charType);
+									   st = new Node(Node.PRINT,e,null,line); .)
  ")" ";"
 | "{" {Statement<out st> 			(. st = new Node(Node.STATSEQ,st,null,line); .)
 	} "}"
 | "return" Expr<out e>
- ";"								(. if(curProc.type.kind == Struct.NONE) SemErr("procedure has void as return type"); 
+ ";"								(. if(curProc.type.kind == Struct.NONE) SemErr("procedure has void as return type");
+ 						   			   e = tab.impliciteTypeCon(e, curProc.type);
  						   			   st = new Node(Node.RETURN,e,null,line); .)
 | ";"								(. st = null; .)
 ).
@@ -259,7 +264,8 @@ ActPar<out Node e>
 = 									(. e = null; .)
 (Expr<out e>
 | "ref"
-  Expr<out e> 						(. e = new Node(Node.REF, e, null, e.obj.type); .)
+  Expr<out e> 						(. if(tab.isCastOperator(e.kind)) SemErr("there is no type-conversation for ref-parameter(s) allowed"); 
+  									   else e = new Node(Node.REF, e, null, e.obj.type); .)
 ).
 //-------------------------------------------------------------------------
 Condition<out Node con>				(. Node newCon; .)
@@ -280,7 +286,11 @@ CondFact<out Node con>				(. Node e; int kind; .)
 =									(. con = null; .)
 ( IF (isExpr()) Expr<out con>
   Relop<out kind>
-  Expr<out e>						(. con = new Node(kind,con,e,Tab.boolType); .)
+  Expr<out e>						(. if(!con.type.isPrimitive() || !e.type.isPrimitive())
+             						   		SemErr("type is not a primitive");
+  									   con = tab.doImplicitCastByAritmetic(con, con.type, e.type);
+  									   e = tab.doImplicitCastByAritmetic(e, con.type, e.type);
+  									   con = new Node(kind,con,e,Tab.boolType); .)
 | "!" "(" 
   Condition<out con> 				(. con = new Node(Node.NOT, con, null, Tab.boolType); .)
   ")"
@@ -304,6 +314,8 @@ Term<out res>
 { Addop<out kind>
   Term<out n>						(. if(!res.type.isPrimitive() || !n.type.isPrimitive())
              						   		SemErr("type is not a primitive");
+             						   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
+             						   n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
              						   res = new Node(kind, res, n , res.type); .)
 }
 .
@@ -315,6 +327,8 @@ Factor<out res>
 { Mulop<out kind>
   Factor<out n>						(. if(!res.type.isPrimitive() || !n.type.isPrimitive())
              						   		SemErr("type is not a primitive");
+             						   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
+             						   n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
   									   res = new Node(kind, res, n, n.type); .)
 }
 .
@@ -326,7 +340,9 @@ Factor<out Node n>					(. Struct type;
 ( Designator<out design>			
 	[ ActPars<out n> 				(. if(design.obj.kind != Obj.PROC ) SemErr("name is not a procedure"); 
 									   if(design.obj.type == Tab.noType) SemErr("function call of a void procedure"); 
-									   n = new Node(Node.CALL,n,null,line); .)
+									   n = new Node(Node.CALL,n,null,line); 
+									   n.type = design.obj.type; 
+									   tab.checkFunctionParams(design.obj,n); .)
 	]								(. if (n == null) n = design; .)
 | intCon							(. n = new Node(tab.intVal(t.val)); .)
 | floatCon							(. n = new Node(tab.floatVal(t.val)); .)
@@ -338,24 +354,7 @@ Factor<out Node n>					(. Struct type;
   "(" 
   Type<out type>
   ")"
-  Factor<out n> 					(. if(type.kind == n.obj.type.kind) n = n;
-  									   else if(type == Tab.intType && n.obj.type == Tab.floatType) 
-  									       n = new Node(Node.F2I, n, null, Tab.intType);
-  									   else if(type == Tab.floatType && n.obj.type == Tab.intType) 
-  									       n = new Node(Node.I2F, n, null, Tab.floatType);
-  									   else if(type == Tab.intType && n.obj.type == Tab.charType) 
-  									       n = new Node(Node.C2I, n, null, Tab.intType);
-  									   else if(type == Tab.charType && n.obj.type == Tab.intType) 
-  									       n = new Node(Node.I2C, n, null, Tab.charType);
-  									   else if(type == Tab.charType && n.obj.type == Tab.floatType) {
-  									       n = new Node(Node.F2I, n, null, Tab.intType);
-  									       n = new Node(Node.I2C, n, null, Tab.charType);
-  									   } else if(type == Tab.floatType && n.obj.type == Tab.charType) {
-  									       n = new Node(Node.C2I, n, null, Tab.intType);
-  									       n = new Node(Node.I2F, n, null, Tab.floatType);
-  									   }
-  									   else SemErr("no known cast");
-  									.)
+  Factor<out n> 					(. n = tab.expliciteTypeCon(n, type); .)
 | "("
 	Expr<out n>
  ")"

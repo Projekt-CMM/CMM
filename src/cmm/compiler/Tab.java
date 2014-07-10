@@ -254,8 +254,161 @@ public class Tab {
 		}
 	}
 
+	//---------------- implicit and explicit type conversation and check -----------
+	
+	/**
+	 * Return true if operator is a type-cast
+	 * 
+	 * @param kind id of operation
+	 * 
+	 * @return true if operation is a cast
+	 */
+	public boolean isCastOperator(int kind) {
+		switch(kind) {
+			case Node.I2F:
+			case Node.F2I:
+			case Node.I2C:
+			case Node.C2I:
+				return true;
+			default:
+				return false;
+		}
+	}
+	
+	/**
+	 * check function parameter and do implicite type conversation if needed
+	 * 
+	 * @param declFunction declared function
+	 * @param buildFunction your function with call-parameters
+	 */
+	public void checkFunctionParams(Obj declFunction, Node buildFunction) {		
+		Obj declObj = declFunction.locals;
+		Node buildNode = buildFunction.left;
+		
+		for(int i = 0; i < declFunction.nPars;i++) {
+		
+			while(declObj != null && buildNode != null) {
+				// check if ref is correct declared
+				if(declObj.isRef == true && buildNode.kind != Node.REF) {
+					parser.SemErr("parameter of function is declared as ref, but not in the call");
+				}else if(declObj.isRef == false && buildNode.kind == Node.REF) {
+					parser.SemErr("parameter of function is not declared as ref, but in the call");
+				}
+				
+				// implicit type conversation
+				if(declObj.isRef == true && buildNode.kind == Node.REF) {
+					if(buildNode.left.type != declObj.type)
+						parser.SemErr("there is no type-conversation for ref-parameter(s) allowed");
+					//buildNode.left = impliciteTypeCon(buildNode.left, declObj.type);
+				} else {
+					if(buildFunction.left == buildNode) {					
+						Node newNode = impliciteTypeCon(buildNode, declObj.type);
+						newNode.next = buildNode.next;
+						buildNode = newNode;
+						buildFunction.left = buildNode;
+					} else {
+						Node newNode = impliciteTypeCon(buildNode, declObj.type);
+						newNode.next = buildNode.next;
+						buildNode = newNode;
+					}
+				}
+				
+				declObj = declObj.next;
+				buildNode = buildNode.next;
+			}
+			if(declObj != null) {
+				parser.SemErr("declaration of function has more parameter as using of itself");
+			}
+		}
+		if(buildNode != null) {
+			parser.SemErr("using of function has more parameters as the declaration");
+		}
+	}
+	
+	/**
+	 * make implicit type conversation if possible
+	 * 
+	 * @param element current Node
+	 * @param type type which is to convert
+	 * 
+	 * @return converted type or make SemError
+	 */
+	public Node impliciteTypeCon(Node element, Struct type) {
+		if(type == element.type) 
+			return element;
+		else if(type == Tab.intType && element.type == Tab.floatType) 
+			return new Node(Node.F2I, element, null, Tab.intType);
+		else if(type == Tab.floatType && element.type == Tab.intType) 
+			return new Node(Node.I2F, element, null, Tab.floatType);
+		else if(type.kind == Struct.INT && element.type == Tab.charType)
+			return new Node(Node.C2I, element, null, Tab.intType); 
+		else if(type == Tab.charType && element.type == Tab.intType) 
+			return new Node(Node.I2C, element, null, Tab.charType);
+		else if(type == Tab.floatType && element.type == Tab.charType) {
+			element =new Node(Node.C2I, element, null, Tab.intType);
+			return new Node(Node.I2F, element, null, Tab.floatType);
+		} else parser.SemErr("no known cast from " + getNameOfType(element.type) + " to " + getNameOfType(type));
+			return element;
+	}
+	
+	/**
+	 * make explicit type conversation if possible
+	 * 
+	 * @param element current Node
+	 * @param type type which is to convert
+	 * 
+	 * @return converted type or make SemError
+	 */
+	public Node expliciteTypeCon(Node element, Struct type) {
+		if(type == Tab.charType && element.type == Tab.floatType) {
+			element = new Node(Node.F2I, element, null, Tab.intType);
+			return new Node(Node.I2C, element, null, Tab.charType);
+		} else {
+			return impliciteTypeCon(element, type);
+		}
+	}
+	
+	public Node doImplicitCastByAritmetic(Node element, Struct type1, Struct type2) {
+		if(type1 != type2) {
+			if(type1.size > type2.size) {
+				element = impliciteTypeCon(element, type1);
+			} else {
+				element = impliciteTypeCon(element, type2);
+			}
+		}
+		return element;
+	}
+	
 	//---------------- methods for dumping the symbol table --------------
 
+	/**
+	 * Return the name of a type
+	 * 
+	 * @param type type of which we would get the name
+	 * @return name of type
+	 */
+	public String getNameOfType(Struct type) {
+		if(type == null) return "null";
+		switch(type.kind) {
+			case Struct.NONE:
+				return "void";
+			case Struct.INT:
+				return "int";
+			case Struct.FLOAT:
+				return "float";
+			case Struct.CHAR:
+				return "char";
+			case Struct.BOOL:
+				return "bool";
+			case Struct.ARR:
+				return "arr";
+			case Struct.STRUCT:
+				return "struct";
+			default:
+				return "unkow";
+		}
+	}
+	
 	/**
 	 * Print a type
 	 * 
