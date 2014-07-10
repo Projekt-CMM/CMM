@@ -159,6 +159,8 @@ public class Parser {
 		}
 		if (debug[0]) tab.dumpScope(tab.curScope.locals, 0);
 		tab.checkIfForwardsResolved(tab.curScope); 
+		Obj obj = tab.find("main"); 
+		if(obj == Tab.noObj || obj.kind != Obj.PROC) SemErr("main is not declared as function");
 	}
 
 	void ConstDecl() {
