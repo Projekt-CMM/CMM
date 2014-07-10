@@ -324,8 +324,9 @@ public class Parser {
 				Get();
 				e = Expr();
 				if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
-				SemErr("name must be an identifier"); 
-				e = tab.impliciteTypeCon(e, design.type);
+				SemErr("name must be an identifier");
+				if(design.type == null || !design.type.isPrimitive()) SemErr("type is not a primitive");
+				else e = tab.impliciteTypeCon(e, design.type);
 				st = new Node(Node.ASSIGN,design,e,line); 
 			} else if (la.kind == 5) {
 				e = ActPars();
