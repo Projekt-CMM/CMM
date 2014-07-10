@@ -222,7 +222,8 @@ Statement<out Node st>				(. Node design;
 =                                   (. st = null; 
                                        int line = la.line; .)
 ( Designator<out design>				
-  ( "=" Expr<out e> 				(. if(design.kind != Node.IDENT) SemErr("name must be an identifier"); 
+  ( "=" Expr<out e> 				(. if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
+  									       SemErr("name must be an identifier"); 
   									   e = tab.impliciteTypeCon(e, design.type);
   									   st = new Node(Node.ASSIGN,design,e,line); .)
   | ActPars<out e>                  (. if(design.type != Tab.noType) SemErr("only void is allowed"); 
@@ -373,7 +374,7 @@ ident								(. String name = t.val;
   									   n = new Node(Node.DOT, n, new Node(obj.adr), obj.type); .)
 | "["								(. if(obj.type.kind != Struct.ARR) SemErr(name + " is not an array"); .)
   Expr<out e> 						(. if(e.type.kind != Struct.INT) SemErr("index must be an int");
-  									   n = new Node(Node.INDEX, n, e, obj.type); .)
+  									   n = new Node(Node.INDEX, n, e, obj.type.elemType); .)
   "]"
 }
 .

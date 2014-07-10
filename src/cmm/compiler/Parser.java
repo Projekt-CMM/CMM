@@ -323,7 +323,8 @@ public class Parser {
 			if (la.kind == 8) {
 				Get();
 				e = Expr();
-				if(design.kind != Node.IDENT) SemErr("name must be an identifier"); 
+				if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
+				SemErr("name must be an identifier"); 
 				e = tab.impliciteTypeCon(e, design.type);
 				st = new Node(Node.ASSIGN,design,e,line); 
 			} else if (la.kind == 5) {
@@ -432,7 +433,7 @@ public class Parser {
 				if(obj.type.kind != Struct.ARR) SemErr(name + " is not an array"); 
 				e = Expr();
 				if(e.type.kind != Struct.INT) SemErr("index must be an int");
-				n = new Node(Node.INDEX, n, e, obj.type); 
+				n = new Node(Node.INDEX, n, e, obj.type.elemType); 
 				Expect(25);
 			}
 		}
