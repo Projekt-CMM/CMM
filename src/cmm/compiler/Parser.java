@@ -276,7 +276,8 @@ public class Parser {
 			if(startNode == null) {
 			startNode = new Node(Node.TRAP,null,null,t.line);
 			} else {
-			curNode.next = new Node(Node.TRAP,null,null,t.line);
+			if(curNode == null) SemErr("invalide statement");
+			else curNode.next = new Node(Node.TRAP,null,null,t.line);
 			}
 			}
 			curProc.ast = new Node(Node.STATSEQ,startNode,null,line); 
@@ -601,10 +602,14 @@ public class Parser {
 			con = BinExpr();
 			kind = Relop();
 			e = BinExpr();
+			if(e == null)
+			SemErr("please check condition");
+			else {
 			if(!con.type.isPrimitive() || !e.type.isPrimitive())
-			SemErr("type is not a primitive");
+			     SemErr("type is not a primitive");
 			con = tab.doImplicitCastByAritmetic(con, con.type, e.type);
 			e = tab.doImplicitCastByAritmetic(e, con.type, e.type);
+			}
 			con = new Node(kind,con,e,Tab.boolType); 
 		} else if (la.kind == 25) {
 			Get();
