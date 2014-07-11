@@ -18,7 +18,7 @@ class CMM {
 
 public static void main(String[] args) {
 	FileInputStream in = null;
-	boolean occuringError = false;
+	int state = 0;
 	try {
 		if(args.length < 1) {
 			System.out.println("no file specified");
@@ -42,22 +42,20 @@ public static void main(String[] args) {
 		while (e != null) {
 			System.out.println("line " + e.line + ", col " + e.col + ": " + e.msg);
 			errCount++;
-			occuringError = true;
+			state = 2;
 			e = e.next;
 		}
 		System.out.println(errCount + " errors detected");
 	} catch (IOException e) {
 		System.out.println("could not open file " + args[0]);
-		occuringError = true;
+		state = 2;
 	} finally {
 		try {
 			if (in != null) in.close();
 		} catch (IOException e) {}
 	}
-	if(occuringError) {
-		System.exit(1);
-	}
-	System.exit(0);
+	System.out.println("exit "+ state);
+	System.exit(state);
 }
 
 }
