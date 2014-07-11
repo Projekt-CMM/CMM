@@ -457,7 +457,7 @@ ident								(. String name = t.val;
   ident								(. obj = tab.findField(t.val,obj.type); 
   									   n = new Node(Node.DOT, n, new Node(obj.adr), obj.type); .)
 | "["								(. if(obj.type.kind != Struct.ARR) SemErr(name + " is not an array"); .)
-  BinExpr<out e> 						(. if(e.type.kind != Struct.INT) SemErr("index must be an int");
+  BinExpr<out e> 						(. if(e == null || e.type.kind != Struct.INT) SemErr("index must be an int");
   									   n = new Node(Node.INDEX, n, e, obj.type.elemType); .)
   "]"
 }

@@ -361,7 +361,10 @@ public class Tab {
 	 * @return converted type or make SemError
 	 */
 	public Node expliciteTypeCon(Node element, Struct type) {
-		if(type == Tab.charType && element.type == Tab.floatType) {
+		if(element == null) {
+			parser.SemErr("cast from null to " +  getNameOfType(type) + " not allowed");
+			return element;
+		}else if(type == Tab.charType && element.type == Tab.floatType) {
 			element = new Node(Node.F2I, element, null, Tab.intType);
 			return new Node(Node.I2C, element, null, Tab.charType);
 		} else if(type == Tab.charType && element.type == Tab.intType) 

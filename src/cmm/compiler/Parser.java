@@ -450,7 +450,7 @@ public class Parser {
 				Get();
 				if(obj.type.kind != Struct.ARR) SemErr(name + " is not an array"); 
 				e = BinExpr();
-				if(e.type.kind != Struct.INT) SemErr("index must be an int");
+				if(e == null || e.type.kind != Struct.INT) SemErr("index must be an int");
 				n = new Node(Node.INDEX, n, e, obj.type.elemType); 
 				Expect(34);
 			}
