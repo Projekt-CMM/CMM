@@ -249,6 +249,8 @@ Statement<out Node st>				(. Node design;
   									   st = new Node(Node.CALL,e,null,line);
   									   st.obj = design.obj;
   									   tab.checkFunctionParams(design.obj,st);.) 
+ /* | IncDecop<out kind>				(. if(design.type == null || !design.type.isPrimitive()) SemErr("type is not a primitive"); 
+  									   n = new Node(kind,n,null,n.type); .)*/
   ) ";"
 | "if" "(" 							(. Node ifYes, ifNo; .)
 	Condition<out con>
@@ -278,8 +280,8 @@ Assignment<out int kind>
 | "*="								(. kind=Node.ASSIGNTIMES; .)
 | "/="								(. kind=Node.ASSIGNDIV; .)
 | "%="								(. kind=Node.ASSIGNREM; .)
-| "<<"								(. kind=Node.ASSIGNLEFTSHIFT; .)
-| ">>"								(. kind=Node.ASSIGNRIGHTSHIFT; .)
+| "<<="								(. kind=Node.ASSIGNLEFTSHIFT; .)
+| ">>="								(. kind=Node.ASSIGNRIGHTSHIFT; .)
 | "&="								(. kind=Node.ASSIGNBITAND; .)
 | "^="								(. kind=Node.ASSIGNBITXOR; .)
 | "|="								(. kind=Node.ASSIGNBITOR; .)
@@ -397,7 +399,8 @@ Factor<out res>
 .
 //-------------------------------------------------------------------------
 Factor<out Node n>					(. Struct type; 
-                  					   Node design; .)
+                  					   Node design; 
+                  					   int kind; .)
 =									(. n = null; 
 									   int line = la.line; .)
 ( Designator<out design>			
@@ -416,8 +419,8 @@ Factor<out Node n>					(. Struct type;
 									   n = new Node(Node.MINUS,n,null,n.type); .)
 | "+" Factor<out n> 				(. n = new Node(Node.PLUS,n,null,n.type); .)
 | "~" Factor<out n>					(. n = new Node(Node.BITNEQ,n,null,n.type); .)
-| "++" Factor<out n>				(. n = new Node(Node.INC,n,null,n.type); .)
-| "--" Factor<out n>				(. n = new Node(Node.DEC,n,null,n.type); .)
+| IncDecop<out kind>
+ Factor<out n>						(. n = new Node(kind,n,null,n.type); .)
 | IF (isCast())						
   "(" 
   Type<out type>
@@ -442,6 +445,12 @@ ident								(. String name = t.val;
   "]"
 }
 .
+//-------------------------------------------------------------------------
+IncDecop<out int kind>
+=									(. kind=Node.INC; .) 
+( "++"									
+| "--"								(. kind=Node.DEC; .)
+).
 //-------------------------------------------------------------------------
 Binop<out int kind>
 =									(. kind=Node.BITAND; .) 
