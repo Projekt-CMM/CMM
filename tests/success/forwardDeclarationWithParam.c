@@ -6,7 +6,7 @@
 */
 
 
-void foo(int x, ref int y); forward;
+void foo(int x, ref int y);
 
 void foo(int x, ref int y) {
 }

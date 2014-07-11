@@ -6,7 +6,7 @@
 */
 
 // generate the error, to much parameters
-void foo(int x, int y); forward;
+void foo(int x, int y);
 
 int foo(int x) {
 }

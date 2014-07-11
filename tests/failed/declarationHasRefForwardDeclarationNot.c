@@ -5,7 +5,7 @@
 * @date 8 July 2014
 */
 
-void foo(int x); forward;
+void foo(int x);
 
 // ref not in forward-declaration
 int foo(ref int x) {

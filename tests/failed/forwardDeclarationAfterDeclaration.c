@@ -9,7 +9,7 @@ void foo() {
 }
 
 // generate the error, object already declared
-void foo(); forward;
+void foo();
 
 void main() {
 }

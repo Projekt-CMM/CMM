@@ -6,7 +6,7 @@
 */
 
 
-void foo(); forward;
+void foo();
 
 void foo() {
 }

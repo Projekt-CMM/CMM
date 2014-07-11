@@ -6,7 +6,7 @@
 */
 
 // generate the error, no finish declaration
-void foo(); forward;
+void foo();
 
 int foo() {
 }

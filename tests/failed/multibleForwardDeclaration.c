@@ -6,10 +6,10 @@
 */
 
 
-void foo(); forward;
+void foo();
 
 // generate the error, second forward-declaration
-void foo(); forward;
+void foo();
 
 void foo() {
 }
