@@ -342,6 +342,7 @@ public class Parser {
 				if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
 				SemErr("name must be an identifier");
 				if(design.type == null || !design.type.isPrimitive()) SemErr("type is not a primitive");
+				else if(e == null) SemErr("right operator is not defined"); 
 				else e = tab.impliciteTypeCon(e, design.type);
 				st = new Node(kind,design,e,line); 
 			} else if (la.kind == 5) {
