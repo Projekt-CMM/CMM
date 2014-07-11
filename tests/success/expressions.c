@@ -19,6 +19,14 @@ void main() {
 	x = x*y;
 	x = x/y;
 	x = x%y;
+	x = ~y;
+	x = y >> 5;
+	x = y << 5;
+	x = y | 5;
+	x = y & 5;
+	x = y ^ 5;
+	x = ++y;
+	x = --y;
 	
 	f = x+y*z;
 	f = (x+y)*foo();
