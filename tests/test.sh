@@ -16,7 +16,7 @@ failes=0
 outputAll=0
 
 if [ $# > 1 ];then
-    if [ $1 = "1" ];then
+    if [ "$1" == "1" ];then
         outputAll=1
     fi
 fi 
