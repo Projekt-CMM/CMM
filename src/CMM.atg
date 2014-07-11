@@ -291,7 +291,7 @@ Assignment<out int kind>
 ActPars<out Node outPar>			(. Node par, curPar = null; .)
 = 									(. outPar = null; .)
 "(" 
-[ ActPar<out outPar> 
+[ ActPar<out outPar> 				(. curPar = outPar; .)
   { "," 
   ActPar<out par> 					(. curPar.next = par;
   									   curPar = par; .)
@@ -303,7 +303,7 @@ ActPar<out Node e>
 = 									(. e = null; .)
 (BinExpr<out e>
 | "ref"
-  BinExpr<out e> 						(. if(tab.isCastOperator(e.kind)) SemErr("there is no type-conversation for ref-parameter(s) allowed"); 
+  BinExpr<out e> 					(. if(tab.isCastOperator(e.kind)) SemErr("there is no type-conversation for ref-parameter(s) allowed"); 
   									   else e = new Node(Node.REF, e, null, e.obj.type); .)
 ).
 //-------------------------------------------------------------------------

@@ -545,6 +545,7 @@ public class Parser {
 		Expect(5);
 		if (StartOf(6)) {
 			outPar = ActPar();
+			curPar = outPar; 
 			while (la.kind == 27) {
 				Get();
 				par = ActPar();
