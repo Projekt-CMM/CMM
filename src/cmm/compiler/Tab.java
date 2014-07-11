@@ -334,7 +334,10 @@ public class Tab {
 	 * @return converted type or make SemError
 	 */
 	public Node impliciteTypeCon(Node element, Struct type) {
-		if(type == element.type) 
+		if(element == null) {
+			parser.SemErr("cast from null to " +  getNameOfType(type) + " not allowed");
+			return element;
+		} else if(type == element.type) 
 			return element;
 		else if(type == Tab.intType && element.type == Tab.floatType) 
 			return new Node(Node.F2I, element, null, Tab.intType);

@@ -266,7 +266,8 @@ public class Parser {
 					if(startNode == null) {
 					startNode = newNode;
 					} else {
-					curNode.next = newNode;  
+					if(curNode == null) SemErr("invalide statement");
+					else curNode.next = newNode;  
 					} 
 					curNode = newNode; 
 				}
@@ -528,10 +529,12 @@ public class Parser {
 		while (la.kind == 49 || la.kind == 50 || la.kind == 51) {
 			kind = Binop();
 			n = Shift();
-			if(!res.type.isPrimitive() || !n.type.isPrimitive())
+			if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive())
 			SemErr("type is not a primitive");
-			res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
-			n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
+			else {
+			  res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
+			  n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
+			}
 			res = new Node(kind, res, n , res.type); 
 		}
 		return res;
@@ -602,7 +605,7 @@ public class Parser {
 			con = BinExpr();
 			kind = Relop();
 			e = BinExpr();
-			if(e == null)
+			if(con == null || e == null)
 			SemErr("please check condition");
 			else {
 			if(!con.type.isPrimitive() || !e.type.isPrimitive())
@@ -672,10 +675,12 @@ public class Parser {
 		while (la.kind == 52 || la.kind == 53) {
 			kind = Shiftop();
 			n = Expr();
-			if(!res.type.isPrimitive() || !n.type.isPrimitive())
+			if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive())
 				SemErr("type is not a primitive");
-			res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
-			n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
+			else {
+			   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
+			   n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
+			}
 			res = new Node(kind, res, n , res.type); 
 		}
 		return res;
@@ -704,10 +709,12 @@ public class Parser {
 		while (la.kind == 43 || la.kind == 44) {
 			kind = Addop();
 			n = Term();
-			if(!res.type.isPrimitive() || !n.type.isPrimitive())
+			if(!res.type.isPrimitive() || n==null || !n.type.isPrimitive())
 				SemErr("type is not a primitive");
-			res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
-			n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
+			else {
+			   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
+			   n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
+			}
 			res = new Node(kind, res, n , res.type); 
 		}
 		return res;
@@ -733,10 +740,12 @@ public class Parser {
 		while (la.kind == 54 || la.kind == 55 || la.kind == 56) {
 			kind = Mulop();
 			n = Factor();
-			if(!res.type.isPrimitive() || !n.type.isPrimitive())
+			if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive())
 			SemErr("type is not a primitive");
-			res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
-			n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
+			else {
+			 res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
+			 n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
+			}
 			res = new Node(kind, res, n, n.type); 
 		}
 		return res;
