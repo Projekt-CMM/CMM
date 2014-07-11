@@ -6,8 +6,8 @@ function testCode {
 }
 
 function generateWord {
-    # generate random-number from 0-39
-    r=$(( $RANDOM %40 ));
+    # generate random-number from 0-44
+    r=$(( $RANDOM %45 ));
     # get word
     case "$r" in
         0)  printf "void" ;;
@@ -43,6 +43,14 @@ function generateWord {
         30) printf "}";;
         31) printf "}";;
         32) printf "}";;
+        33) printf "[";;
+        34) printf "]";;
+        35) printf ".";;
+        36) printf "Struct";;
+        34) printf "ref";;
+        35) printf "++";;
+        36) printf "--";;
+        36) printf "ä";;
         *) printf ";" ;;
     esac
 }
@@ -71,6 +79,8 @@ if [ $# > 1 ];then
     fi
 fi 
 
+printf "${yellow}Start Bruteforce-Test${NC}\n\n"
+
 while [ true ]
 do
     date=$(date)
@@ -93,7 +103,9 @@ do
         echo 
        cp bruteforce.c "bruteforce_success/$date.c"
     elif [ $cmmstate == 2 ]; then
-        printf "" # printf "${yellow} $code \n ${green}ERROR FOUND${NC}\n"
+        if [ $outputAll == 1 ]; then
+            printf "${yellow} $code \n ${green}ERROR FOUND${NC}\n"
+        fi
     else
         echo "----------------------------------------------------------------"
         printf "${yellow} $code \n ${red}FAILED${NC}\n"
