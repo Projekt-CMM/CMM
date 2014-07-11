@@ -18,7 +18,6 @@ void main() {
 	char ch;
 	
 	f = x;
-	ch = x;
 	
 	x = ch;
 	x = f;
@@ -29,5 +28,4 @@ void main() {
 	
 	x = bar();
 	f = bar();
-	ch = bar();
 }

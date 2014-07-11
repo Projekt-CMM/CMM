@@ -31,5 +31,5 @@ void main() {
 	f = x+y*z;
 	f = (x+y)*foo();
 	
-	ch = x+y-z;
+	ch = (char)(x+y-z);
 }

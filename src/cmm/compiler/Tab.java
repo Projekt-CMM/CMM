@@ -342,8 +342,6 @@ public class Tab {
 			return new Node(Node.I2F, element, null, Tab.floatType);
 		else if(type.kind == Struct.INT && element.type == Tab.charType)
 			return new Node(Node.C2I, element, null, Tab.intType); 
-		else if(type == Tab.charType && element.type == Tab.intType) 
-			return new Node(Node.I2C, element, null, Tab.charType);
 		else if(type == Tab.floatType && element.type == Tab.charType) {
 			element =new Node(Node.C2I, element, null, Tab.intType);
 			return new Node(Node.I2F, element, null, Tab.floatType);
@@ -363,7 +361,9 @@ public class Tab {
 		if(type == Tab.charType && element.type == Tab.floatType) {
 			element = new Node(Node.F2I, element, null, Tab.intType);
 			return new Node(Node.I2C, element, null, Tab.charType);
-		} else {
+		} else if(type == Tab.charType && element.type == Tab.intType) 
+			return new Node(Node.I2C, element, null, Tab.charType);
+		else {
 			return impliciteTypeCon(element, type);
 		}
 	}

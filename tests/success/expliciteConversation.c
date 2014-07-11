@@ -18,7 +18,6 @@ void main() {
 	char ch;
 	
 	ch = (char) f;
-	ch = (int) f;
 
 	f = (char)f;
 	x = (float)ch;
@@ -26,8 +25,6 @@ void main() {
 	x = (int)(float)(char)(int)ch;
 	
 	foo((char) f);
-	foo((int) f);
 	
 	ch = (char)bar();
-	ch = (int)bar();
 }
