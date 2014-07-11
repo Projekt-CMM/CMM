@@ -790,20 +790,23 @@ public class Parser {
 		} else if (la.kind == 43) {
 			Get();
 			n = Factor();
-			if(!n.type.isPrimitive()) SemErr("type is not a primitive");
-			n = new Node(Node.MINUS,n,null,n.type); 
+			if(n == null || !n.type.isPrimitive()) SemErr("type is not a primitive");
+			else n = new Node(Node.MINUS,n,null,n.type); 
 		} else if (la.kind == 44) {
 			Get();
 			n = Factor();
-			n = new Node(Node.PLUS,n,null,n.type); 
+			if(n == null || !n.type.isPrimitive()) SemErr("type is not a primitive");
+			else n = new Node(Node.PLUS,n,null,n.type); 
 		} else if (la.kind == 45) {
 			Get();
 			n = Factor();
-			n = new Node(Node.BITNEQ,n,null,n.type); 
+			if(n == null || !n.type.isPrimitive()) SemErr("type is not a primitive");
+			else n = new Node(Node.BITNEQ,n,null,n.type); 
 		} else if (la.kind == 47 || la.kind == 48) {
 			kind = IncDecop();
 			n = Factor();
-			n = new Node(kind,n,null,n.type); 
+			if(n == null || !n.type.isPrimitive()) SemErr("type is not a primitive");
+			else n = new Node(kind,n,null,n.type); 
 		} else if (isCast()) {
 			Expect(5);
 			type = Type();

@@ -420,12 +420,15 @@ Factor<out Node n>					(. Struct type;
 | floatCon							(. n = new Node(tab.floatVal(t.val)); .)
 | charCon							(. n = new Node(tab.charVal(t.val)); .)
 | "read" "(" ")"					(. n = new Node(Node.READ,null,null, tab.charType); .)
-| "-" Factor<out n> 				(. if(!n.type.isPrimitive()) SemErr("type is not a primitive");
-									   n = new Node(Node.MINUS,n,null,n.type); .)
-| "+" Factor<out n> 				(. n = new Node(Node.PLUS,n,null,n.type); .)
-| "~" Factor<out n>					(. n = new Node(Node.BITNEQ,n,null,n.type); .)
+| "-" Factor<out n> 				(. if(n == null || !n.type.isPrimitive()) SemErr("type is not a primitive");
+									   else n = new Node(Node.MINUS,n,null,n.type); .)
+| "+" Factor<out n> 				(. if(n == null || !n.type.isPrimitive()) SemErr("type is not a primitive");
+									   else n = new Node(Node.PLUS,n,null,n.type); .)
+| "~" Factor<out n>					(. if(n == null || !n.type.isPrimitive()) SemErr("type is not a primitive");
+									   else n = new Node(Node.BITNEQ,n,null,n.type); .)
 | IncDecop<out kind>
- Factor<out n>						(. n = new Node(kind,n,null,n.type); .)
+ Factor<out n>						(. if(n == null || !n.type.isPrimitive()) SemErr("type is not a primitive");
+ 									   else n = new Node(kind,n,null,n.type); .)
 | IF (isCast())						
   "(" 
   Type<out type>
