@@ -239,7 +239,7 @@ Statement<out Node st>				(. Node design;
                                        int line = la.line; .)
 ( Designator<out design>				
   ( Assignment<out kind> 
-  Expr<out e> 						(. if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
+  BinExpr<out e> 						(. if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
   									       SemErr("name must be an identifier");
   									   if(design.type == null || !design.type.isPrimitive()) SemErr("type is not a primitive");
   									   else if(e == null) SemErr("right operator is not defined"); 
@@ -258,12 +258,12 @@ Statement<out Node st>				(. Node design;
 	]
 | "while" "(" Condition<out con>
 	")" Statement<out st> 			(. st = new Node(Node.WHILE,con,st,line); .)
-| "print" "(" Expr<out e> 			(. e = tab.impliciteTypeCon(e, Tab.charType);
+| "print" "(" BinExpr<out e> 			(. e = tab.impliciteTypeCon(e, Tab.charType);
 									   st = new Node(Node.PRINT,e,null,line); .)
  ")" ";"
 | "{" {Statement<out st> 			(. st = new Node(Node.STATSEQ,st,null,line); .)
 	} "}"
-| "return" Expr<out e>
+| "return" BinExpr<out e>
  ";"								(. if(curProc.type.kind == Struct.NONE) SemErr("procedure has void as return type");
  						   			   e = tab.impliciteTypeCon(e, curProc.type);
  						   			   st = new Node(Node.RETURN,e,null,line); .)
@@ -299,9 +299,9 @@ ActPars<out Node outPar>			(. Node par, curPar = null; .)
 //-------------------------------------------------------------------------
 ActPar<out Node e>
 = 									(. e = null; .)
-(Expr<out e>
+(BinExpr<out e>
 | "ref"
-  Expr<out e> 						(. if(tab.isCastOperator(e.kind)) SemErr("there is no type-conversation for ref-parameter(s) allowed"); 
+  BinExpr<out e> 						(. if(tab.isCastOperator(e.kind)) SemErr("there is no type-conversation for ref-parameter(s) allowed"); 
   									   else e = new Node(Node.REF, e, null, e.obj.type); .)
 ).
 //-------------------------------------------------------------------------
@@ -321,9 +321,9 @@ CondFact<out con>
 //-------------------------------------------------------------------------
 CondFact<out Node con>				(. Node e; int kind; .)
 =									(. con = null; .)
-( IF (isExpr()) Expr<out con>
+( IF (isExpr()) BinExpr<out con>
   Relop<out kind>
-  Expr<out e>						(. if(!con.type.isPrimitive() || !e.type.isPrimitive())
+  BinExpr<out e>						(. if(!con.type.isPrimitive() || !e.type.isPrimitive())
              						   		SemErr("type is not a primitive");
   									   con = tab.doImplicitCastByAritmetic(con, con.type, e.type);
   									   e = tab.doImplicitCastByAritmetic(e, con.type, e.type);
@@ -343,6 +343,32 @@ Relop<out int kind>
 | "<" 								(. kind = Node.LSS; .)
 | "<="								(. kind = Node.LEQ; .)
 ).
+//-------------------------------------------------------------------------
+BinExpr<out Node res>				(. int kind;
+                  					   Node n; .)
+=
+Shift<out res>
+{ Binop<out kind>
+  Shift<out n>						(. if(!res.type.isPrimitive() || !n.type.isPrimitive())
+             						   		SemErr("type is not a primitive");
+             						   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
+             						   n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
+             						   res = new Node(kind, res, n , res.type); .)
+}
+.
+//-------------------------------------------------------------------------
+Shift<out Node res>					(. int kind;
+                  					   Node n; .)
+=
+Expr<out res>
+{ Shiftop<out kind>
+  Expr<out n>						(. if(!res.type.isPrimitive() || !n.type.isPrimitive())
+             						   		SemErr("type is not a primitive");
+             						   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
+             						   n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
+             						   res = new Node(kind, res, n , res.type); .)
+}
+.
 //-------------------------------------------------------------------------
 Expr<out Node res>					(. int kind;
                   					   Node n; .)
@@ -389,13 +415,16 @@ Factor<out Node n>					(. Struct type;
 | "-" Factor<out n> 				(. if(!n.type.isPrimitive()) SemErr("type is not a primitive");
 									   n = new Node(Node.MINUS,n,null,n.type); .)
 | "+" Factor<out n> 				(. n = new Node(Node.PLUS,n,null,n.type); .)
+| "~" Factor<out n>					(. n = new Node(Node.BITNEQ,n,null,n.type); .)
+| "++" Factor<out n>				(. n = new Node(Node.INC,n,null,n.type); .)
+| "--" Factor<out n>				(. n = new Node(Node.DEC,n,null,n.type); .)
 | IF (isCast())						
   "(" 
   Type<out type>
   ")"
   Factor<out n> 					(. n = tab.expliciteTypeCon(n, type); .)
 | "("
-	Expr<out n>
+	BinExpr<out n>
  ")"
 ).
 //-------------------------------------------------------------------------
@@ -408,11 +437,24 @@ ident								(. String name = t.val;
   ident								(. obj = tab.findField(t.val,obj.type); 
   									   n = new Node(Node.DOT, n, new Node(obj.adr), obj.type); .)
 | "["								(. if(obj.type.kind != Struct.ARR) SemErr(name + " is not an array"); .)
-  Expr<out e> 						(. if(e.type.kind != Struct.INT) SemErr("index must be an int");
+  BinExpr<out e> 						(. if(e.type.kind != Struct.INT) SemErr("index must be an int");
   									   n = new Node(Node.INDEX, n, e, obj.type.elemType); .)
   "]"
 }
 .
+//-------------------------------------------------------------------------
+Binop<out int kind>
+=									(. kind=Node.BITAND; .) 
+( "&"									
+| "^"								(. kind=Node.BITXOR; .)
+| "|"								(. kind=Node.BITOR; .) 
+).
+//-------------------------------------------------------------------------
+Shiftop<out int kind>
+=									(. kind=Node.LEFTSHIFT; .) 
+( "<<"									
+| ">>"								(. kind=Node.RIGHTSHIFT; .) 
+).
 //-------------------------------------------------------------------------
 Addop<out int kind>
 =									(. kind=Node.PLUS; .) 

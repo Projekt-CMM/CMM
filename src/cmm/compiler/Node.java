@@ -53,8 +53,8 @@ public final class Node {
 		BITXOR		= 34,	// ^
 		LEFTSHIFT 	= 35,	// <<
 		RIGHTSHIFT 	= 36,	// >>
-		INC			= 37,	// ++
-		DEC			= 38,	// --
+		INC			= 37,	// ++	// Todo x++
+		DEC			= 38,	// --	// Todo x--
 		READ     	= 39,   // read operation
 		I2F      	= 40,   // conversion from int to float
 		F2I      	= 41,   // conversion from float to int
