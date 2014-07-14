@@ -619,7 +619,7 @@ public class Tab {
 		readProc = insert(Obj.PROC, "read", charType);
 		
 		lengthProc = insert(Obj.PROC, "length", intType);
-		lengthProc.locals = new Obj(Obj.VAR,"character",stringType);
+		lengthProc.locals = new Obj(Obj.VAR,"string",stringType);
 		lengthProc.size = stringType.size;
 		lengthProc.nPars = stringType.size;
 	}

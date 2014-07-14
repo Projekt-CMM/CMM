@@ -342,7 +342,7 @@ public class Parser {
 		case 1: {
 			design = Designator();
 			if (StartOf(4)) {
-				kind = Assignment();
+				kind = AssignOp();
 				e = BinExpr();
 				if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
 				SemErr("name must be an designator");
@@ -470,7 +470,7 @@ public class Parser {
 		return n;
 	}
 
-	int  Assignment() {
+	int  AssignOp() {
 		int  kind;
 		kind=Node.ASSIGN; 
 		switch (la.kind) {
@@ -988,7 +988,7 @@ class Errors {
 			case 62: s = "invalid ProcDecl"; break;
 			case 63: s = "invalid Statement"; break;
 			case 64: s = "invalid Statement"; break;
-			case 65: s = "invalid Assignment"; break;
+			case 65: s = "invalid AssignOp"; break;
 			case 66: s = "invalid CondFact"; break;
 			case 67: s = "invalid Relop"; break;
 			case 68: s = "invalid Binop"; break;
