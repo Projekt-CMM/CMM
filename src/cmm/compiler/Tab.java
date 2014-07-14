@@ -288,15 +288,22 @@ public class Tab {
 		}
 		Obj declObj = declFunction.locals;
 		Node buildNode = buildFunction.left;
-		
+		Node oldNode = buildNode;
 		for(int i = 0; i < declFunction.nPars;i++) {
 		
 			while(declObj != null && buildNode != null) {
-				// check if ref is correct declared
-				if(declObj.isRef == true && buildNode.kind != Node.REF) {
-					parser.SemErr("parameter of function is declared as ref, but not in the call");
-				}else if(declObj.isRef == false && buildNode.kind == Node.REF) {
-					parser.SemErr("parameter of function is not declared as ref, but in the call");
+				// edit function parameter to ref, if it is declared as ref
+				if(declObj.isRef == true) {
+					Node newNode = new Node(Node.REF, buildNode, null, declObj.type);
+					newNode.next = buildNode.next;
+					buildNode.next = null;
+					if(buildFunction.left == buildNode) {
+						buildNode = newNode;
+						buildFunction.left = newNode;
+					} else {
+						buildNode = newNode;
+						oldNode.next = newNode;
+					}
 				}
 				
 				// implicit type conversation
@@ -305,19 +312,20 @@ public class Tab {
 						parser.SemErr("there is no type-conversation for ref-parameter(s) allowed");
 					//buildNode.left = impliciteTypeCon(buildNode.left, declObj.type);
 				} else {
+					Node newNode = impliciteTypeCon(buildNode, declObj.type);
+					newNode.next = buildNode.next;
+					buildNode.next = null;
 					if(buildFunction.left == buildNode) {					
-						Node newNode = impliciteTypeCon(buildNode, declObj.type);
-						newNode.next = buildNode.next;
 						buildNode = newNode;
 						buildFunction.left = buildNode;
 					} else {
-						Node newNode = impliciteTypeCon(buildNode, declObj.type);
-						newNode.next = buildNode.next;
 						buildNode = newNode;
+						oldNode.next = newNode;
 					}
 				}
 				
 				declObj = declObj.next;
+				oldNode = buildNode;
 				buildNode = buildNode.next;
 			}
 			if(declObj != null) {

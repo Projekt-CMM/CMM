@@ -6,9 +6,9 @@
 */
 
 
-void foo(int x, ref int y);
+void foo(int x, int &y);
 
-void foo(int x, ref int y) {
+void foo(int x, int &y) {
 }
 
 void main() {

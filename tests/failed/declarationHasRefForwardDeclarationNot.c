@@ -8,7 +8,7 @@
 void foo(int x);
 
 // ref not in forward-declaration
-int foo(ref int x) {
+int foo(int &x) {
 }
 
 void main() {

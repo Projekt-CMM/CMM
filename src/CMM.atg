@@ -209,9 +209,9 @@ FormPar                              (. n = 1; .)
 FormPar								(. Struct type; 
 									   boolean isRef = false; .)
 = 
-[ "ref"								(. isRef = true; .)
-]
 Type<out type>
+[ "&"								(. isRef = true; .)
+]
 ident								(. Obj curRef = tab.insert(Obj.VAR, t.val, type); 
 									   curRef.isRef = isRef;
 									   if(!type.isPrimitive()) 
@@ -304,9 +304,6 @@ ActPars<out Node outPar>			(. Node par, curPar = null; .)
 ActPar<out Node e>
 = 									(. e = null; .)
 (BinExpr<out e>
-| "ref"
-  BinExpr<out e> 					(. if(tab.isCastOperator(e.kind)) SemErr("there is no type-conversation for ref-parameter(s) allowed"); 
-  									   else e = new Node(Node.REF, e, null, e.obj.type); .)
 ).
 //-------------------------------------------------------------------------
 Condition<out Node con>				(. Node newCon; .)
