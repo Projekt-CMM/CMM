@@ -287,8 +287,8 @@ public class Tab {
 					case 't':
 						returnStr += '\t';
 						break;
-					case '\'':
-						returnStr += '\'';
+					case '\"':
+						returnStr += '"';
 						break;
 					case '\\':
 						returnStr += '\\';
@@ -551,7 +551,7 @@ public class Tab {
 			  if (o.type == Tab.floatType) 
 				  System.out.print(" fVal=" + o.fVal);
 			  else if (o.type == Tab.stringType) 
-				  System.out.print(" val=" + o.val + " string=\"" + parser.strings.get(o.val) + "");
+				  System.out.print(" val=" + o.val + " string=\"" + parser.strings.get(o.val) + "\"");
 			  else 
 				  System.out.print(" val=" + o.val);
 			  break;
