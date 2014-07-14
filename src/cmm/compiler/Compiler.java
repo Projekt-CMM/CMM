@@ -31,6 +31,11 @@ public final class Compiler {
 		return parser.tab;
 	}
 
+	// Retrieve the string storage
+	public Strings getStringStorage() {
+		return parser.strings;
+	}
+		
 	// Retrieve the first error (or null)
 	// More errors are linked via a "next" pointer
 	public Error getError() {

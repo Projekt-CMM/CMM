@@ -51,10 +51,10 @@ public class Parser {
 	public Errors errors;
 
 	public  Tab       tab;                     // symbol table
-  public  boolean[] debug;
+	public  boolean[] debug;
   
-  Obj curProc;
-
+  	Obj curProc;
+	Strings strings = new Strings();
 //--- LL(1) conflict resolvers
 
 	// Returns true if a VarDecl comes next in the input
@@ -198,7 +198,7 @@ public class Parser {
 			if (type != Tab.charType) SemErr("char constant not allowed here"); 
 		} else if (la.kind == 5) {
 			Get();
-			tab.stringVal(t.val);  // TODO
+			curCon.val = strings.put(tab.stringVal(t.val));  // TODO
 			if (type != Tab.stringType) SemErr("string constant not allowed here"); 
 		} else SynErr(59);
 		Expect(8);
@@ -346,8 +346,9 @@ public class Parser {
 				e = BinExpr();
 				if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
 				SemErr("name must be an identifier");
-				// TODO stringelement?
 				if(design.type == null || (!design.type.isPrimitive() && design.type != Tab.stringType)) SemErr("type is not a primitive or string");
+				else if(design.kind == Node.INDEX && design.left.type == Tab.stringType)
+				SemErr("stringmanipulation not allowed"); 
 				else if(e == null) SemErr("right operator is not defined"); 
 				else if(design.type == Tab.stringType && !(kind == Node.ASSIGN || kind == Node.ASSIGNPLUS)) 
 				SemErr("only = or += is allowed for string assignements"); 
@@ -456,10 +457,11 @@ public class Parser {
 				n = new Node(Node.DOT, n, new Node(obj.adr), obj.type); 
 			} else {
 				Get();
-				if(obj.type.kind != Struct.ARR) SemErr(name + " is not an array"); 
+				if(obj.type.kind != Struct.ARR && obj.type.kind != Struct.STRING) SemErr(name + " is not an array"); 
 				e = BinExpr();
 				if(e == null || e.type.kind != Struct.INT) SemErr("index must be an int");
-				n = new Node(Node.INDEX, n, e, obj.type.elemType); 
+				if(obj.type.kind == Struct.STRING) n = new Node(Node.INDEX, n, e, Tab.charType);
+				else n = new Node(Node.INDEX, n, e, obj.type.elemType); 
 				Expect(35);
 			}
 		}

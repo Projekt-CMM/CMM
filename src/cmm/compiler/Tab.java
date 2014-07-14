@@ -263,6 +263,10 @@ public class Tab {
 	 * @return return converted string
 	 */
 	public String stringVal(String s) {
+		if(s.matches("^\".*\"$")) {
+			s = s.substring(1, s.length()-1);
+		} else 
+			parser.SemErr(s + "string doesn't have \" at start end endpoint");
 		String returnStr = new String();
 		while(s.length() != 0) {
 			if(s.charAt(0) != '\\') {
@@ -539,8 +543,12 @@ public class Tab {
 		switch (o.kind) {
 			case Obj.CON:
 			  System.out.print("Con " + o.name);
-			  if (o.type == Tab.floatType) System.out.print(" fVal=" + o.fVal);
-			  else System.out.print(" val=" + o.val);
+			  if (o.type == Tab.floatType) 
+				  System.out.print(" fVal=" + o.fVal);
+			  else if (o.type == Tab.stringType) 
+				  System.out.print(" val=" + o.val + " string=\"" + parser.strings.get(o.val) + "");
+			  else 
+				  System.out.print(" val=" + o.val);
 			  break;
 			case Obj.VAR:
 			  System.out.print("Var " + o.name + " adr=" + o.adr + " level=" + o.level);

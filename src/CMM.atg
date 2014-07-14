@@ -9,11 +9,11 @@ CMM Compiler description for C--
 
 COMPILER CMM
 
-  public  Tab       tab;                     // symbol table
-  public  boolean[] debug;
+	public  Tab       tab;                     // symbol table
+	public  boolean[] debug;
   
-  Obj curProc;
-
+  	Obj curProc;
+	Strings strings = new Strings();
 //--- LL(1) conflict resolvers
 
 	// Returns true if a VarDecl comes next in the input
@@ -128,7 +128,7 @@ ident								(. Obj curCon = tab.insert(Obj.CON, t.val, type); .)
 									   if (type != Tab.floatType) SemErr("float constant not allowed here"); .)
 | charCon 							(. curCon.val = tab.charVal(t.val); 
 									   if (type != Tab.charType) SemErr("char constant not allowed here"); .)
-| stringCon 						(. /*curCon.val =*/ tab.stringVal(t.val);  // TODO
+| stringCon 						(. curCon.val = strings.put(tab.stringVal(t.val));  // TODO
 									   if (type != Tab.stringType) SemErr("string constant not allowed here"); .)
 )
 ";"	
@@ -246,8 +246,9 @@ Statement<out Node st>				(. Node design;
   ( Assignment<out kind> 
   BinExpr<out e> 					(. if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
   									       SemErr("name must be an identifier");
-  									       // TODO stringelement?
   									   if(design.type == null || (!design.type.isPrimitive() && design.type != Tab.stringType)) SemErr("type is not a primitive or string");
+  									   else if(design.kind == Node.INDEX && design.left.type == Tab.stringType)
+  									   		SemErr("charactermanipulation is not allowed"); 
   									   else if(e == null) SemErr("right operator is not defined"); 
   									   else if(design.type == Tab.stringType && !(kind == Node.ASSIGN || kind == Node.ASSIGNPLUS)) 
   									       SemErr("only = or += is allowed for string assignements"); 
@@ -467,9 +468,10 @@ ident								(. String name = t.val;
 { "."								(. if(obj.type.kind != Struct.STRUCT) SemErr(name + " is not a struct"); .)
   ident								(. obj = tab.findField(t.val,obj.type); 
   									   n = new Node(Node.DOT, n, new Node(obj.adr), obj.type); .)
-| "["								(. if(obj.type.kind != Struct.ARR) SemErr(name + " is not an array"); .)
-  BinExpr<out e> 						(. if(e == null || e.type.kind != Struct.INT) SemErr("index must be an int");
-  									   n = new Node(Node.INDEX, n, e, obj.type.elemType); .)
+| "["								(. if(obj.type.kind != Struct.ARR && obj.type.kind != Struct.STRING) SemErr(name + " is not an array"); .)
+  BinExpr<out e> 					(. if(e == null || e.type.kind != Struct.INT) SemErr("index must be an int");
+  									   if(obj.type.kind == Struct.STRING) n = new Node(Node.INDEX, n, e, Tab.charType);
+  									   else n = new Node(Node.INDEX, n, e, obj.type.elemType); .)
   "]"
 }
 .

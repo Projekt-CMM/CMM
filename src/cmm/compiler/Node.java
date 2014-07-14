@@ -158,7 +158,7 @@ public final class Node {
 			else if (x.kind == INTCON) System.out.print(" " + x.val);
 			else if (x.kind == FLOATCON) System.out.print(" " + x.fVal);
 			else if (x.kind == CHARCON) System.out.print(" \'" + (char)x.val + "\'");
-			// TODO string
+			else if (x.kind == STRINGCON) System.out.print(" \"" + x.val + "\"");
 			else if (x.kind == CALL && x.obj != null) System.out.print(" " + x.obj.name);
 			if (x.type != null) System.out.print(" type=" + typ[x.type.kind]);
 			if (x.kind >= STATSEQ && x.kind <= TRAP) System.out.print(" line=" + x.line);
