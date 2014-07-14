@@ -374,15 +374,34 @@ public class Tab {
 		}
 	}
 	
+	/**
+	 * do implicite cast if necessary for aritmetic operation
+	 * 
+	 * @param element Element on which the conversation work
+	 * @param type1 one datatype of the aritmetic operation
+	 * @param type2 other datatype of the aritmetic operation
+	 * 
+	 * @return implicite cast element or original element
+	 */
 	public Node doImplicitCastByAritmetic(Node element, Struct type1, Struct type2) {
 		if(type1 != type2) {
-			if(type1.size > type2.size) {
+			if(type1.size == type2.size) {
+				if(type1 == Tab.floatType || type2 == Tab.floatType) {
+					element = impliciteTypeCon(element, Tab.floatType);
+				} else if(type1 == Tab.intType || type2 == Tab.intType) {
+					element = impliciteTypeCon(element, Tab.intType);
+				} else if(type1 == Tab.charType || type2 == Tab.charType) {
+					// char must be converted to int
+					element = impliciteTypeCon(element, Tab.intType);
+				}
+			}
+			else if(type1.size > type2.size) {
 				element = impliciteTypeCon(element, type1);
 			} else {
 				element = impliciteTypeCon(element, type2);
 			}
 		} else if(type1 == Tab.charType) {
-			element = impliciteTypeCon(element, Tab.intType);	// TODO warum?
+			element = impliciteTypeCon(element, Tab.intType);
 		}
 		return element;
 	}
