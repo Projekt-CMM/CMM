@@ -25,6 +25,7 @@ public class Tab {
 	public static Struct floatType;
 	public static Struct charType;
 	public static Struct boolType;
+	public static Struct stringType;
 	public static Struct noType;
 	public static Obj noObj;		     // predefined objects
 
@@ -249,11 +250,53 @@ public class Tab {
 				case '\\':
 					return '\\';
 			default:
-					return 	'\0';
+					return 	'\0';	// TODO
 			}
 		}
 	}
 
+	/**
+	 * Convert a string representation of a string constant into a string value
+	 * 
+	 * @param s string which would be converted
+	 * 
+	 * @return return converted string
+	 */
+	public String stringVal(String s) {
+		String returnStr = new String();
+		while(s.length() != 0) {
+			if(s.charAt(0) != '\\') {
+				returnStr += s.charAt(0);
+				s = s.substring(1); // remove 1 letter
+			} else if(s.length() >= 2) {
+				switch(s.charAt(1))
+				{
+					case 'r':
+						returnStr += '\r';
+						break;
+					case 'n':
+						returnStr += '\n';
+						break;
+					case 't':
+						returnStr += '\t';
+						break;
+					case '\'':
+						returnStr += '\'';
+						break;
+					case '\\':
+						returnStr += '\\';
+						break;
+				default:
+						break;
+				}
+				s = s.substring(2);	// remove 2 letters
+			} else {
+				parser.SemErr(s + "no single \\ at the end of a string allowed");
+			}
+		}
+		return returnStr;
+	}
+	
 	//---------------- implicit and explicit type conversation and check -----------
 	
 	/**
@@ -376,11 +419,13 @@ public class Tab {
 		if(element == null) {
 			parser.SemErr("cast from null to " +  getNameOfType(type) + " not allowed");
 			return element;
-		}else if(type == Tab.charType && element.type == Tab.floatType) {
+		} else if(type == Tab.charType && element.type == Tab.floatType) {
 			element = new Node(Node.F2I, element, null, Tab.intType);
 			return new Node(Node.I2C, element, null, Tab.charType);
 		} else if(type == Tab.charType && element.type == Tab.intType) 
 			return new Node(Node.I2C, element, null, Tab.charType);
+		else if(type == Tab.stringType && element.type.kind == Struct.ARR && element.type.elemType == Tab.charType) 
+			return new Node(Node.A2S, element, null, Tab.stringType);
 		else {
 			return impliciteTypeCon(element, type);
 		}
@@ -443,6 +488,8 @@ public class Tab {
 				return "arr";
 			case Struct.STRUCT:
 				return "struct";
+			case Struct.STRING:
+				return "string";
 			default:
 				return "unkow";
 		}
@@ -464,6 +511,8 @@ public class Tab {
 			  System.out.print("Char(" + type.size + ")"); break;
 			case Struct.BOOL:
 				System.out.print("Bool(" + type.size + ")"); break;
+			case Struct.STRING:
+				System.out.print("String(" + type.size + ")"); break;
 			case Struct.ARR:
 			  System.out.print("Arr[" + type.elements + "(" + type.size + ")] of ");
 			  dumpStruct(type.elemType, indent);
@@ -538,6 +587,7 @@ public class Tab {
 		floatType = new Struct(Struct.FLOAT);
 		charType  = new Struct(Struct.CHAR);
 		boolType  = new Struct(Struct.BOOL);
+		stringType= new Struct(Struct.STRING);
 		noType    = new Struct(Struct.NONE);
 		noObj     = new Obj(Obj.VAR, "???", noType);
 
@@ -545,5 +595,6 @@ public class Tab {
 		insert(Obj.TYPE, "int", intType);
 		insert(Obj.TYPE, "float", floatType);
 		insert(Obj.TYPE, "char", charType);
+		insert(Obj.TYPE, "string", stringType);
 	}
 }

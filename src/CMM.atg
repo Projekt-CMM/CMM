@@ -67,6 +67,7 @@ TOKENS
             | ('0'('x'|'X') | '#') hex {hex}.
   floatCon  = digit {digit} '.' {digit} [('E'|'e') ['+'|'-'] digit {digit}].
   charCon   = '\'' ( charCh | '\\' ('r' | 'n' | 't' | '\'' | '\\' )) '\''.
+  stringCon = '"' {( charCh | '\\' ('r' | 'n' | 't' | '\'' | '\\' ))} '"'.
   
   //--- token definitions for lookahead peeking
   lpar      = "(".
@@ -127,6 +128,8 @@ ident								(. Obj curCon = tab.insert(Obj.CON, t.val, type); .)
 									   if (type != Tab.floatType) SemErr("float constant not allowed here"); .)
 | charCon 							(. curCon.val = tab.charVal(t.val); 
 									   if (type != Tab.charType) SemErr("char constant not allowed here"); .)
+| stringCon 						(. /*curCon.val =*/ tab.stringVal(t.val);  // TODO
+									   if (type != Tab.stringType) SemErr("string constant not allowed here"); .)
 )
 ";"	
 .
@@ -159,8 +162,8 @@ ProcDecl                          	(. Struct type = Tab.noType; .)
 | "void"
 )
 ident								(. curProc = tab.insert(Obj.PROC, t.val, type); 
-									   if(type != Tab.noType && !type.isPrimitive()) 
-									   		SemErr("procedure must return a primitive type or void"); .)
+									   if(type != Tab.noType && type != Tab.stringType && !type.isPrimitive()) 
+									   		SemErr("procedure must return a primitive type ,a string or is void"); .)
 "("									(. tab.openScope(); .)
 [ FormPars<out curProc.nPars>
 ]
@@ -214,8 +217,8 @@ Type<out type>
 ]
 ident								(. Obj curRef = tab.insert(Obj.VAR, t.val, type); 
 									   curRef.isRef = isRef;
-									   if(!type.isPrimitive()) 
-									   		SemErr("var must be a primitive type"); .)
+									   if(!type.isPrimitive() && type != Tab.stringType) 
+									   		SemErr("var must be a primitive type or string"); .)
 .
 //-------------------------------------------------------------------------
 Type<out Struct type>
@@ -243,8 +246,11 @@ Statement<out Node st>				(. Node design;
   ( Assignment<out kind> 
   BinExpr<out e> 					(. if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
   									       SemErr("name must be an identifier");
-  									   if(design.type == null || !design.type.isPrimitive()) SemErr("type is not a primitive");
+  									       // TODO stringelement?
+  									   if(design.type == null || (!design.type.isPrimitive() && design.type != Tab.stringType)) SemErr("type is not a primitive or string");
   									   else if(e == null) SemErr("right operator is not defined"); 
+  									   else if(design.type == Tab.stringType && !(kind == Node.ASSIGN || kind == Node.ASSIGNPLUS)) 
+  									       SemErr("only = or += is allowed for string assignements"); 
   									   else e = tab.impliciteTypeCon(e, design.type);
   									   st = new Node(kind,design,e,line); .)
   | ActPars<out e>                  (. if(design.type != Tab.noType) SemErr("only void is allowed"); 
@@ -327,8 +333,11 @@ CondFact<out Node con>				(. Node e; int kind; .)
   BinExpr<out e>					(. if(con == null || e == null)
   									       SemErr("please check condition");
   									   else {
-  									       if(!con.type.isPrimitive() || !e.type.isPrimitive())
-             						           SemErr("type is not a primitive");
+  									       if((!con.type.isPrimitive() && con.type != Tab.stringType) || (!e.type.isPrimitive() && e.type != Tab.stringType))
+             						           SemErr("type is not a primitive or string");
+             						       else if((con.type.isPrimitive() != e.type.isPrimitive()) || ((con.type == Tab.stringType) != (e.type == Tab.stringType)))
+             						           SemErr("you cannot mix primitive and string in expression");
+             						       
   									       con = tab.doImplicitCastByAritmetic(con, con.type, e.type);
   									       e = tab.doImplicitCastByAritmetic(e, con.type, e.type);
   									   }
@@ -384,8 +393,12 @@ Expr<out Node res>					(. int kind;
 =
 Term<out res>
 { Addop<out kind>
-  Term<out n>						(. if(!res.type.isPrimitive() || n==null || !n.type.isPrimitive())
-             						   		SemErr("type is not a primitive");
+  Term<out n>						(. if((!res.type.isPrimitive() && res.type !=Tab.stringType) || n==null || (!n.type.isPrimitive() && n.type !=Tab.stringType))
+             						       SemErr("type is not a primitive or string");
+             						   else if(res.type == Tab.stringType && n.type == Tab.stringType && kind != Node.PLUS)
+             						       SemErr("for string operations, only + is allowed");
+             						   else if((res.type.isPrimitive() != n.type.isPrimitive()) || ((res.type == Tab.stringType) != (n.type == Tab.stringType)))
+             						           SemErr("you cannot mix primitive and string in expression");
              						   else {
              						       res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
              						       n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
@@ -425,6 +438,7 @@ Factor<out Node n>					(. Struct type;
 | intCon							(. n = new Node(tab.intVal(t.val)); .)
 | floatCon							(. n = new Node(tab.floatVal(t.val)); .)
 | charCon							(. n = new Node(tab.charVal(t.val)); .)
+| stringCon							(. n = new Node(tab.stringVal(t.val)); .)
 | "read" "(" ")"					(. n = new Node(Node.READ,null,null, tab.charType); .)
 | "-" Factor<out n> 				(. if(n == null || !n.type.isPrimitive()) SemErr("type is not a primitive");
 									   else n = new Node(Node.MINUS,n,null,n.type); .)

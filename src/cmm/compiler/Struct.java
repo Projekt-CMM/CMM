@@ -16,8 +16,9 @@ public class Struct {
 		CHAR   = 3,
 		BOOL   = 4,
 		ARR    = 5,
-		STRUCT = 6;
-	public int    kind;		  // NONE, INT, FLOAT, CHAR, ARR, STRUCT
+		STRUCT = 6,
+		STRING = 7;
+	public int    kind;		  // NONE, INT, FLOAT, CHAR, ARR, STRUCT, STRING
 	public int    size;     // size of this type in bytes
 	public int    elements; // ARR: number of elements
 	public Struct elemType; // ARR: element type
@@ -30,6 +31,7 @@ public class Struct {
 			case FLOAT: size = 4; break;
 			case CHAR:  size = 1; break;
 			case BOOL:  size = 1; break;
+			case STRING:size = 4; break;	// TODO korrekt?
 			default:    size = 0; break;
 		}
 	}

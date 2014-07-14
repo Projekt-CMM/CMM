@@ -37,39 +37,41 @@ public final class Node {
 		INTCON   	= 20,   // int constant
 		FLOATCON 	= 21,   // float constant
 		CHARCON  	= 22,   // char constant
+		STRINGCON  	= 23,   // char constant
 		//------------ designators and ref parameters
-		DOT      	= 23,   // field selection (x.y)
-		INDEX    	= 24,   // array element (a[i])
-		REF      	= 25,   // ref parameter
+		DOT      	= 24,   // field selection (x.y)
+		INDEX    	= 25,   // array element (a[i])
+		REF      	= 26,   // ref parameter
 		//------------ expressions
-		PLUS     	= 26,  	// +
-		MINUS    	= 27,   // -
-		TIMES    	= 28,   // *
-		DIV      	= 29,   // /
-		REM      	= 30,   // %
-		BITNEQ		= 31,	// ~
-		BITAND		= 32,	// &
-		BITOR		= 33,	// |
-		BITXOR		= 34,	// ^
-		LEFTSHIFT 	= 35,	// <<
-		RIGHTSHIFT 	= 36,	// >>
-		INC			= 37,	// ++	// Todo x++
-		DEC			= 38,	// --	// Todo x--
-		READ     	= 39,   // read operation
-		I2F      	= 40,   // conversion from int to float
-		F2I      	= 41,   // conversion from float to int
-		I2C      	= 42,   // conversion from int to char
-		C2I      	= 43,   // conversion from char to int
+		PLUS     	= 27,  	// +
+		MINUS    	= 28,   // -
+		TIMES    	= 29,   // *
+		DIV      	= 30,   // /
+		REM      	= 31,   // %
+		BITNEQ		= 32,	// ~
+		BITAND		= 33,	// &
+		BITOR		= 34,	// |
+		BITXOR		= 35,	// ^
+		LEFTSHIFT 	= 36,	// <<
+		RIGHTSHIFT 	= 37,	// >>
+		INC			= 38,	// ++	// Todo x++
+		DEC			= 39,	// --	// Todo x--
+		READ     	= 40,   // read operation
+		I2F      	= 41,   // conversion from int to float
+		F2I      	= 42,   // conversion from float to int
+		I2C      	= 43,   // conversion from int to char
+		C2I      	= 44,   // conversion from char to int
+		A2S      	= 45,   // conversion from char-array to string
 		//------------ conditionals
-		EQL      	= 44,  	// ==
-		NEQ      	= 45,  	// !=
-		LSS      	= 46,  	// <
-		LEQ      	= 47,  	// <=
-		GTR      	= 48,  	// >
-		GEQ      	= 49,  	// >=
-		NOT      	= 50,  	// !
-		OR       	= 51,  	// ||
-		AND      	= 52;  	// &&
+		EQL      	= 46,  	// ==
+		NEQ      	= 47,  	// !=
+		LSS      	= 48,  	// <
+		LEQ      	= 49,  	// <=
+		GTR      	= 50,  	// >
+		GEQ      	= 51,  	// >=
+		NOT      	= 52,  	// !
+		OR       	= 53,  	// ||
+		AND      	= 54;  	// &&
 
 	public int kind;        // STATSEQ, ASSIGN, ...
 	public Struct type;     // only used in expressions
@@ -121,6 +123,14 @@ public final class Node {
 		this.type = Tab.charType;
 		this.val = ch;
 	}
+	
+	public Node(String str) {
+		this.kind = STRINGCON;
+		this.type = Tab.stringType;
+		//this.val = ch;	// TODO
+	}
+	
+	// TODO string
 
 	//----------------------- for dumping ASTs -----------------------------------
 
@@ -128,15 +138,15 @@ public final class Node {
 		"STATSEQ", "ASSIGN", "ASSIGNPLUS", "ASSIGNMINUS", "ASSIGNTIMES", "ASSIGNDIV","ASSIGNREM",
 		"ASSIGNLEFTSHIFT", "ASSIGNRIGHTSHIFT", "ASSIGNBITAND", "ASSIGNBITXOR", "ASSIGNBITOR",
 		"CALL", "IF", "IFELSE", "WHILE", "PRINT", "RETURN", "TRAP",
-		"IDENT", "INTCON", "FLOATCON", "CHARCON",
+		"IDENT", "INTCON", "FLOATCON", "CHARCON", "STRINGCON",
 		"DOT", "INDEX", "REF",
 		"PLUS", "MINUS", "TIMES", "DIV", "REM", "BITNEQ", "BITAND", "BITOR", "BITXOR", 
-		"LEFTSHIFT", "RIGHTSHIFT", "INC", "DEC", "READ", "I2F", "F2I", "I2C", "C2I",
+		"LEFTSHIFT", "RIGHTSHIFT", "INC", "DEC", "READ", "I2F", "F2I", "I2C", "C2I", "A2S",
 		"EQL", "NEQ", "LSS", "LEQ", "GTR", "GEQ", "NOT", "OR", "AND"
 	};
 
 	static String[] typ = {
-		"None", "Int", "Float", "Char", "Bool", "Arr", "Struct"
+		"None", "Int", "Float", "Char", "Bool", "Arr", "Struct", "String"
 	};
 
 	static void dump(Node x, int indent) {
@@ -148,6 +158,7 @@ public final class Node {
 			else if (x.kind == INTCON) System.out.print(" " + x.val);
 			else if (x.kind == FLOATCON) System.out.print(" " + x.fVal);
 			else if (x.kind == CHARCON) System.out.print(" \'" + (char)x.val + "\'");
+			// TODO string
 			else if (x.kind == CALL && x.obj != null) System.out.print(" " + x.obj.name);
 			if (x.type != null) System.out.print(" type=" + typ[x.type.kind]);
 			if (x.kind >= STATSEQ && x.kind <= TRAP) System.out.print(" line=" + x.line);
