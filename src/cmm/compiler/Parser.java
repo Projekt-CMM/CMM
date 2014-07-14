@@ -348,7 +348,7 @@ public class Parser {
 				SemErr("name must be an identifier");
 				if(design.type == null || (!design.type.isPrimitive() && design.type != Tab.stringType)) SemErr("type is not a primitive or string");
 				else if(design.kind == Node.INDEX && design.left.type == Tab.stringType)
-				SemErr("stringmanipulation not allowed"); 
+				SemErr("charactermanipulation is not allowed"); 
 				else if(e == null) SemErr("right operator is not defined"); 
 				else if(design.type == Tab.stringType && !(kind == Node.ASSIGN || kind == Node.ASSIGNPLUS)) 
 				SemErr("only = or += is allowed for string assignements"); 
@@ -459,7 +459,7 @@ public class Parser {
 				Get();
 				if(obj.type.kind != Struct.ARR && obj.type.kind != Struct.STRING) SemErr(name + " is not an array"); 
 				e = BinExpr();
-				if(e == null || e.type.kind != Struct.INT) SemErr("index must be an int");
+				if(e == null || e.type == null || e.type.kind != Struct.INT) SemErr("index must be an int");
 				if(obj.type.kind == Struct.STRING) n = new Node(Node.INDEX, n, e, Tab.charType);
 				else n = new Node(Node.INDEX, n, e, obj.type.elemType); 
 				Expect(35);
@@ -784,12 +784,13 @@ public class Parser {
 			design = Designator();
 			if (la.kind == 6) {
 				n = ActPars();
-				if(design.obj.kind != Obj.PROC ) SemErr("name is not a procedure"); 
-				if(design.obj.type == Tab.noType) SemErr("function call of a void procedure"); 
-				n = new Node(Node.CALL,n,null,line); 
+				if(design.obj == null || design.obj.kind != Obj.PROC ) SemErr("name is not a procedure"); 
+				else if(design.obj.type == Tab.noType) SemErr("function call of a void procedure"); 
+				else {n = new Node(Node.CALL,n,null,line); 
 				n.type = design.obj.type; 
 				n.obj = design.obj;
 				tab.checkFunctionParams(design.obj,n); 
+				}
 			}
 			if (n == null) n = design; 
 		} else if (la.kind == 2) {

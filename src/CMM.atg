@@ -429,12 +429,13 @@ Factor<out Node n>					(. Struct type;
 =									(. n = null; 
 									   int line = la.line; .)
 ( Designator<out design>			
-	[ ActPars<out n> 				(. if(design.obj.kind != Obj.PROC ) SemErr("name is not a procedure"); 
-									   if(design.obj.type == Tab.noType) SemErr("function call of a void procedure"); 
-									   n = new Node(Node.CALL,n,null,line); 
+	[ ActPars<out n> 				(. if(design.obj == null || design.obj.kind != Obj.PROC ) SemErr("name is not a procedure"); 
+									   else if(design.obj.type == Tab.noType) SemErr("function call of a void procedure"); 
+									   else {n = new Node(Node.CALL,n,null,line); 
 									   n.type = design.obj.type; 
 									   n.obj = design.obj;
-									   tab.checkFunctionParams(design.obj,n); .)
+									   tab.checkFunctionParams(design.obj,n); 
+									   }.)
 	]								(. if (n == null) n = design; .)
 | intCon							(. n = new Node(tab.intVal(t.val)); .)
 | floatCon							(. n = new Node(tab.floatVal(t.val)); .)
@@ -469,7 +470,7 @@ ident								(. String name = t.val;
   ident								(. obj = tab.findField(t.val,obj.type); 
   									   n = new Node(Node.DOT, n, new Node(obj.adr), obj.type); .)
 | "["								(. if(obj.type.kind != Struct.ARR && obj.type.kind != Struct.STRING) SemErr(name + " is not an array"); .)
-  BinExpr<out e> 					(. if(e == null || e.type.kind != Struct.INT) SemErr("index must be an int");
+  BinExpr<out e> 					(. if(e == null || e.type == null || e.type.kind != Struct.INT) SemErr("index must be an int");
   									   if(obj.type.kind == Struct.STRING) n = new Node(Node.INDEX, n, e, Tab.charType);
   									   else n = new Node(Node.INDEX, n, e, obj.type.elemType); .)
   "]"

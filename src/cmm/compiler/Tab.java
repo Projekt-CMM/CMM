@@ -445,7 +445,9 @@ public class Tab {
 	 * @return implicite cast element or original element
 	 */
 	public Node doImplicitCastByAritmetic(Node element, Struct type1, Struct type2) {
-		if(type1 != type2) {
+		if(type1 == null || type2==null)
+			parser.SemErr("one aritmetic operator is null");
+		else if(type1 != type2) {
 			if(type1.size == type2.size) {
 				if(type1 == Tab.floatType || type2 == Tab.floatType) {
 					element = impliciteTypeCon(element, Tab.floatType);
