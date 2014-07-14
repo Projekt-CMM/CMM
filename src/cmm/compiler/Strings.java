@@ -22,18 +22,23 @@ public class Strings {
 	// the existing string is returned.
 	// s may still contain escape sequences (such as \t or \r) that must be converted first.
 	public int put(String s) {
+		// make bigger array if nessesary
+		if(top+s.length()+1 >= data.length) {
+			char[] oldData = data;
+			data = new char[data.length+4096];
+			data = oldData.clone();
+		}
+		
 		if(!map.containsKey(s)) {
-			int i = top;
+			int j = top;
 			map.put(s, top);
 			top += s.length()+1;
 			
-			String tempS = s;
-			while(tempS.length() != 0) {
-				data[i] = tempS.charAt(0);
-				tempS = tempS.substring(1);	// cut first character of string
-				i++;
+			for(int i=0;i< s.length();i++,j++) {
+				data[j] = s.charAt(i);
 			}
-			data[i] = '\0';	// set 0-terminator
+
+			data[j] = '\0';	// set 0-terminator
 		}
 		
 		return map.get(s);
@@ -41,6 +46,9 @@ public class Strings {
 
 	// Returns the string that is stored at adr in the string storage
 	public String get(int adr) {
+		if(!checkAdr(adr)) {
+			return new String();
+		}
 		String returnStr = new String();
 		while(data[adr] != '\0') {
 			returnStr += data[adr];
@@ -52,6 +60,19 @@ public class Strings {
 
 	// Returns the character at adr in the string storage
 	public char charAt(int adr) {
-		return data[adr];
+		if(checkAdr(adr)) {
+			return data[adr];
+		} else {
+			return ' ';
+		}
+	}
+	
+	public boolean checkAdr(int adr) {
+		if(adr < 0 || adr > data.length) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 }

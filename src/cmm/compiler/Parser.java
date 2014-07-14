@@ -345,11 +345,11 @@ public class Parser {
 				kind = Assignment();
 				e = BinExpr();
 				if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
-				SemErr("name must be an identifier");
+				SemErr("name must be an designator");
 				if(design.type == null || (!design.type.isPrimitive() && design.type != Tab.stringType)) 
 				SemErr("type is not a primitive or string");
 				else if(design.kind == Node.INDEX && design.left.type == Tab.stringType)
-				SemErr("charactermanipulation is not allowed"); 
+				SemErr("string manipulation is not allowed"); 
 				else if(e == null) SemErr("right operator is not defined"); 
 				else if(design.type == Tab.stringType && !(kind == Node.ASSIGN || kind == Node.ASSIGNPLUS)) 
 				SemErr("only = or += is allowed for string assignements"); 
