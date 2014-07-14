@@ -258,7 +258,7 @@ Statement<out Node st>				(. Node design;
   | ActPars<out e>                  (. if(design.type != Tab.noType) SemErr("only void is allowed"); 
   									   st = new Node(Node.CALL,e,null,line);
   									   st.obj = design.obj;
-					  				   tab.checkFunctionParams(design.obj,st);.) 
+					  				   tab.checkFunctionParams(design.obj,st); .) 
  /* | IncDecop<out kind>				(. if(design.type == null || !design.type.isPrimitive()) SemErr("type is not a primitive"); 
   									   n = new Node(kind,n,null,n.type); .)*/
   ) ";"
@@ -270,8 +270,9 @@ Statement<out Node st>				(. Node design;
 	]
 | "while" "(" Condition<out con>
 	")" Statement<out st> 			(. st = new Node(Node.WHILE,con,st,line); .)
-| "print" "(" BinExpr<out e> 			(. e = tab.impliciteTypeCon(e, Tab.charType);
-									   st = new Node(Node.PRINT,e,null,line); .)
+| "print" "(" BinExpr<out e> 		(. st = new Node(Node.CALL,e,null,line); 
+									   st.obj = Tab.printProc;
+					  				   tab.checkFunctionParams(Tab.printProc,st); .)	// TODO
  ")" ";"
 | "{" {Statement<out st> 			(. st = new Node(Node.STATSEQ,st,null,line); .)
 	} "}"
@@ -425,7 +426,7 @@ Factor<out res>
 .
 //-------------------------------------------------------------------------
 Factor<out Node n>					(. Struct type; 
-                  					   Node design; 
+                  					   Node design, arrDesign; 
                   					   int kind; .)
 =									(. n = null; 
 									   int line = la.line; .)
@@ -443,7 +444,19 @@ Factor<out Node n>					(. Struct type;
 | charCon							(. n = new Node(tab.charVal(t.val)); .)
 | stringCon							(. n = new Node(tab.stringVal(t.val)); 
 									   n.val = strings.put(tab.stringVal(t.val));.) // TODO
-| "read" "(" ")"					(. n = new Node(Node.READ,null,null, tab.charType); .)
+| "read" "(" ")"					(. n = new Node(Node.CALL,null,null,line);
+									   n.type = tab.charType;
+									   n.obj = Tab.readProc;
+					  				   tab.checkFunctionParams(Tab.readProc,n); .)
+| "length" 
+  "(" 
+  Designator<out arrDesign>
+  ")"								(. //if(arrDesign.obj.type != Tab.stringType)
+  									     //  SemErr("can only get length of string");
+  									   n = new Node(Node.CALL,arrDesign,null,line);
+									   n.type = tab.intType;
+									   n.obj = Tab.lengthProc;
+					  				   tab.checkFunctionParams(Tab.lengthProc,n); .)
 | "-" Factor<out n> 				(. if(n == null || !n.type.isPrimitive()) SemErr("type is not a primitive");
 									   else n = new Node(Node.MINUS,n,null,n.type); .)
 | "+" Factor<out n> 				(. if(n == null || !n.type.isPrimitive()) SemErr("type is not a primitive");

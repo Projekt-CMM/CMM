@@ -28,7 +28,10 @@ public class Tab {
 	public static Struct stringType;
 	public static Struct noType;
 	public static Obj noObj;		     // predefined objects
-
+	public static Obj printProc;
+	public static Obj readProc;
+	public static Obj lengthProc;
+	
 	private Parser parser;           // for error messages
 
 	//------------------ scope management ---------------------
@@ -600,11 +603,24 @@ public class Tab {
 		stringType= new Struct(Struct.STRING);
 		noType    = new Struct(Struct.NONE);
 		noObj     = new Obj(Obj.VAR, "???", noType);
-
+		
 		// insert predeclared types into universe
 		insert(Obj.TYPE, "int", intType);
 		insert(Obj.TYPE, "float", floatType);
 		insert(Obj.TYPE, "char", charType);
 		insert(Obj.TYPE, "string", stringType);
+		
+		// declare important-functions in universe
+		printProc = insert(Obj.PROC, "print", noType);
+		printProc.locals = new Obj(Obj.VAR,"character",charType);
+		printProc.size = charType.size;
+		printProc.nPars = charType.size;
+		
+		readProc = insert(Obj.PROC, "read", charType);
+		
+		lengthProc = insert(Obj.PROC, "length", intType);
+		lengthProc.locals = new Obj(Obj.VAR,"character",stringType);
+		lengthProc.size = stringType.size;
+		lengthProc.nPars = stringType.size;
 	}
 }

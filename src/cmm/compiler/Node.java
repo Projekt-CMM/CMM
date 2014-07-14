@@ -31,7 +31,7 @@ public final class Node {
 		IF       	= 13,  	// if statement without else branch
 		IFELSE   	= 14,  	// if statement with else branch
 		WHILE    	= 15,  	// while statement
-		PRINT    	= 16,  	// print statement
+		FOR    	= 16,  	// print statement
 		RETURN   	= 17,  	// return statement
 		TRAP     	= 18,  	// trap if a function reaches its end without a return
 		//------------ leaf expressions
@@ -58,22 +58,21 @@ public final class Node {
 		RIGHTSHIFT 	= 37,	// >>
 		INC			= 38,	// ++	// Todo x++
 		DEC			= 39,	// --	// Todo x--
-		READ     	= 40,   // read operation
-		I2F      	= 41,   // conversion from int to float
-		F2I      	= 42,   // conversion from float to int
-		I2C      	= 43,   // conversion from int to char
-		C2I      	= 44,   // conversion from char to int
-		A2S      	= 45,   // conversion from char-array to string
+		I2F      	= 40,   // conversion from int to float
+		F2I      	= 41,   // conversion from float to int
+		I2C      	= 42,   // conversion from int to char
+		C2I      	= 43,   // conversion from char to int
+		A2S      	= 44,   // conversion from char-array to string
 		//------------ conditionals
-		EQL      	= 46,  	// ==
-		NEQ      	= 47,  	// !=
-		LSS      	= 48,  	// <
-		LEQ      	= 49,  	// <=
-		GTR      	= 50,  	// >
-		GEQ      	= 51,  	// >=
-		NOT      	= 52,  	// !
-		OR       	= 53,  	// ||
-		AND      	= 54;  	// &&
+		EQL      	= 45,  	// ==
+		NEQ      	= 46,  	// !=
+		LSS      	= 47,  	// <
+		LEQ      	= 48,  	// <=
+		GTR      	= 49,  	// >
+		GEQ      	= 50,  	// >=
+		NOT      	= 51,  	// !
+		OR       	= 52,  	// ||
+		AND      	= 53;  	// &&
 
 	public int kind;        // STATSEQ, ASSIGN, ...
 	public Struct type;     // only used in expressions
@@ -139,11 +138,11 @@ public final class Node {
 	static String[] name = {
 		"STATSEQ", "ASSIGN", "ASSIGNPLUS", "ASSIGNMINUS", "ASSIGNTIMES", "ASSIGNDIV","ASSIGNREM",
 		"ASSIGNLEFTSHIFT", "ASSIGNRIGHTSHIFT", "ASSIGNBITAND", "ASSIGNBITXOR", "ASSIGNBITOR",
-		"CALL", "IF", "IFELSE", "WHILE", "PRINT", "RETURN", "TRAP",
+		"CALL", "IF", "IFELSE", "WHILE", "FOR", "RETURN", "TRAP",
 		"IDENT", "INTCON", "FLOATCON", "CHARCON", "STRINGCON",
 		"DOT", "INDEX", "REF",
 		"PLUS", "MINUS", "TIMES", "DIV", "REM", "BITNEQ", "BITAND", "BITOR", "BITXOR", 
-		"LEFTSHIFT", "RIGHTSHIFT", "INC", "DEC", "READ", "I2F", "F2I", "I2C", "C2I", "A2S",
+		"LEFTSHIFT", "RIGHTSHIFT", "INC", "DEC", "I2F", "F2I", "I2C", "C2I", "A2S",
 		"EQL", "NEQ", "LSS", "LEQ", "GTR", "GEQ", "NOT", "OR", "AND"
 	};
 
