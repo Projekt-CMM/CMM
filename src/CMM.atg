@@ -246,7 +246,8 @@ Statement<out Node st>				(. Node design;
   ( Assignment<out kind> 
   BinExpr<out e> 					(. if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
   									       SemErr("name must be an identifier");
-  									   if(design.type == null || (!design.type.isPrimitive() && design.type != Tab.stringType)) SemErr("type is not a primitive or string");
+  									   if(design.type == null || (!design.type.isPrimitive() && design.type != Tab.stringType)) 
+  									       SemErr("type is not a primitive or string");
   									   else if(design.kind == Node.INDEX && design.left.type == Tab.stringType)
   									   		SemErr("charactermanipulation is not allowed"); 
   									   else if(e == null) SemErr("right operator is not defined"); 
@@ -440,7 +441,8 @@ Factor<out Node n>					(. Struct type;
 | intCon							(. n = new Node(tab.intVal(t.val)); .)
 | floatCon							(. n = new Node(tab.floatVal(t.val)); .)
 | charCon							(. n = new Node(tab.charVal(t.val)); .)
-| stringCon							(. n = new Node(tab.stringVal(t.val)); .)
+| stringCon							(. n = new Node(tab.stringVal(t.val)); 
+									   n.val = strings.put(tab.stringVal(t.val));.) // TODO
 | "read" "(" ")"					(. n = new Node(Node.READ,null,null, tab.charType); .)
 | "-" Factor<out n> 				(. if(n == null || !n.type.isPrimitive()) SemErr("type is not a primitive");
 									   else n = new Node(Node.MINUS,n,null,n.type); .)

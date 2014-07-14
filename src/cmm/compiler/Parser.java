@@ -346,7 +346,8 @@ public class Parser {
 				e = BinExpr();
 				if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
 				SemErr("name must be an identifier");
-				if(design.type == null || (!design.type.isPrimitive() && design.type != Tab.stringType)) SemErr("type is not a primitive or string");
+				if(design.type == null || (!design.type.isPrimitive() && design.type != Tab.stringType)) 
+				SemErr("type is not a primitive or string");
 				else if(design.kind == Node.INDEX && design.left.type == Tab.stringType)
 				SemErr("charactermanipulation is not allowed"); 
 				else if(e == null) SemErr("right operator is not defined"); 
@@ -805,6 +806,7 @@ public class Parser {
 		} else if (la.kind == 5) {
 			Get();
 			n = new Node(tab.stringVal(t.val)); 
+			n.val = strings.put(tab.stringVal(t.val));
 		} else if (la.kind == 43) {
 			Get();
 			Expect(6);
