@@ -281,7 +281,11 @@ public class Tab {
 	 * @param declFunction declared function
 	 * @param buildFunction your function with call-parameters
 	 */
-	public void checkFunctionParams(Obj declFunction, Node buildFunction) {		
+	public void checkFunctionParams(Obj declFunction, Node buildFunction) {
+		if(declFunction == null) {
+			parser.SemErr("no function declared");
+			return;
+		}
 		Obj declObj = declFunction.locals;
 		Node buildNode = buildFunction.left;
 		
