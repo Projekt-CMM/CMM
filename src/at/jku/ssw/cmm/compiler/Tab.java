@@ -1,4 +1,4 @@
-package at.jku.cmm.compiler;
+package at.jku.ssw.cmm.compiler;
 
 /*--------------------------------------------------------------------------------
 Tab   Symbol table for C--

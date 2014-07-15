@@ -2,7 +2,7 @@
 
 # run cmm-compiler
 function testCode {
-    java -classpath ../bin at.jku.cmm.compiler.CMM $1
+    java -classpath ../bin at.jku.ssw.cmm.compiler.CMM $1
 }
 
 function generateWord {
