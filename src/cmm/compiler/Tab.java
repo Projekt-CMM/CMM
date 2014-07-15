@@ -229,6 +229,20 @@ public class Tab {
 	}
 
 	/**
+	 * Convert a string representation of a bool constant into a bool value
+	 * 
+	 * @param s string which would be converted
+	 * @return return converted bool
+	 */
+	public boolean boolVal(String s) {
+		if(s.matches("^(false|FALSE|0)$")) {
+			return false;
+		} else{
+			return true;
+		}
+	}
+	
+	/**
 	 * Convert a string representation of a char constant into a char value
 	 * 
 	 * @param s string which would be converted

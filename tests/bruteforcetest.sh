@@ -51,6 +51,7 @@ function generateWord {
         35) printf "++";;
         36) printf "--";;
         36) printf "ä";;
+        37) printf "string";;
         *) printf ";" ;;
     esac
 }

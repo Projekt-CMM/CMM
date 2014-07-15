@@ -60,7 +60,7 @@ CHARACTERS
   digit     = '0'..'9'.
   hex       = digit + 'a'..'f' + 'A'..'F'.
   charCh    = ANY - '\r' - '\n' - '\t' - '\'' - '\\'.
-  stringCh    = ANY - '\r' - '\n' - '\t' - '"' - '\\'.
+  stringCh  = ANY - '\r' - '\n' - '\t' - '"' - '\\'.
 
 TOKENS
   ident     = letter { letter | digit }.
