@@ -3,6 +3,7 @@
  *
  * https://de.wikipedia.org/wiki/Math.h
  * http://www.acm.uiuc.edu/webmonkeys/book/c_guide/2.7.html
+ * http://www.cplusplus.com/reference/cmath/
  */
 
 //------------------- const declarations
@@ -66,7 +67,7 @@ float acos(float x) {
     float result;
     result = M_PI_2-asin(x);
     result -= result*(int)((result)/M_PI);
-    return result;
+    return result; // TODO
 }
 
 // Arkussinus 	\arcsin x
@@ -80,8 +81,7 @@ float asin(float x) {
         result += fak(2*n)/(pow(4,n)*pow(fak(n),2)*(2*n+1));
         n += 1;
     }
-    result -= result*(int)((result)/M_PI);
-    return result;
+    return result; // TODO
 }
 
 // Arkustangens 	\arctan x
@@ -96,8 +96,7 @@ float atan(float x) {
         result += pow(-1,n)*1/(2*n+1)*pow(x,2*n+1);
         n += 1;
     }
-    result -= result*(int)((result)/M_PI);
-    return result;
+    return result;  // TODO
 }
 
 // „Arkustangens“ mit zwei Argumenten 	\operatorname{atan2}(y, x)
@@ -118,6 +117,7 @@ float ceil(float x) {
 // Kosinus 	\cos x
 // https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
 float cos(float x) {
+    x = fmod(x, M_PI);
     float result;
     int n;
     result = 0;
@@ -126,7 +126,6 @@ float cos(float x) {
         result += pow(-1.,n) * pow(x,2*n)/fak(2*n);
         n += 1;
     }
-    result -= result*(int)((result)/M_PI);
     return result;
 }
 
@@ -181,12 +180,17 @@ float fabs(float x) {
 
 // Ganzteilfunktion 	\lfloor x \rfloor
 float floor(float x) {
-    return 0.;
+    if((int)x <= x) {
+        return (float)((int)x);
+    } else {
+        return (float)((int)x)-1;
+    }
 }
 
 // Führt die Modulo Funktion für Gleitkommazahlen durch 	x \bmod y
 float fmod(float x, float y) {
-    return 0.;
+    x -= y*floor((x)/y);
+    return x;
 }
 
 // Teilt eine Gleitkommazahl in Faktor und Potenz mit der Basis 2 auf 	
@@ -227,13 +231,13 @@ float pow(float x, int y)  {
         y >>= 1 ;
         x *= x;
     }
-
     return result;
 }
 
 // Sinus 	\sin x
 // https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
 float sin(float x) {
+    x = fmod(x, M_PI);
     float result;
     int n;
     result = 0;
@@ -242,7 +246,6 @@ float sin(float x) {
         result += pow(-1.,n) * pow(x,2*n+1)/fak(2*n+1);
         n += 1;
     }
-    result -= result*(int)((result)/M_PI);
     return result;
 }
 

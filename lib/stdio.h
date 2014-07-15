@@ -26,6 +26,7 @@ void prints(string s) {
     }
 }
 
+// convert int to string
 string itoa(int x) {
     string s;
     char[1] ch;
