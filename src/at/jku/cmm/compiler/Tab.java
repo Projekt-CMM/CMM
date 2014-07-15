@@ -1,6 +1,4 @@
-package cmm.compiler;
-
-import java.util.regex.*;
+package at.jku.cmm.compiler;
 
 /*--------------------------------------------------------------------------------
 Tab   Symbol table for C--
@@ -122,7 +120,6 @@ public class Tab {
 	 */
 	public Obj findField(String name, Struct type) {
 		if(type.kind != Struct.STRUCT) {
-			// TODO
 			parser.SemErr(name + " is not in a struct");
 			return noObj;
 		}
@@ -603,7 +600,6 @@ public class Tab {
 	//-------------- initialization of the symbol table ------------
 
 	public Tab(Parser parser) {
-		Obj o;
 		this.parser = parser;
 		curScope = new Scope();
 		curScope.outer = null;

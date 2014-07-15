@@ -1,4 +1,4 @@
-package cmm.compiler;
+package at.jku.cmm.compiler;
 
 /*--------------------------------------------------------------------------------
 Node   Node of the abstract syntax tree (AST) of a C-- program

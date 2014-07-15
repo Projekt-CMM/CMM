@@ -1,4 +1,4 @@
-package cmm.compiler;
+package at.jku.cmm.compiler;
 
 /*--------------------------------------------------------------------------------
 CMM   Main program of the C-- compiler

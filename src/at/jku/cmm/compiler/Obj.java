@@ -1,4 +1,4 @@
-package cmm.compiler;
+package at.jku.cmm.compiler;
 
 /*--------------------------------------------------------------------------------
 Obj   Object node of the C-- symbol table

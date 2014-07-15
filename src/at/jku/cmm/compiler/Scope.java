@@ -1,4 +1,4 @@
-package cmm.compiler;
+package at.jku.cmm.compiler;
 
 /*--------------------------------------------------------------------------------
 Scope   Scope in the C-- symbol table

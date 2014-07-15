@@ -1,4 +1,4 @@
-package cmm.compiler;
+package at.jku.cmm.compiler;
 
 import java.io.InputStream;
 import java.io.IOException;
