@@ -511,9 +511,9 @@ Binop<out int kind>
 ).
 //-------------------------------------------------------------------------
 Shiftop<out int kind>
-=									(. kind=Node.LEFTSHIFT; .) 
+=									(. kind=Node.SHIFTLEFT; .) 
 ( "<<"									
-| ">>"								(. kind=Node.RIGHTSHIFT; .) 
+| ">>"								(. kind=Node.SHIFTRIGHT; .) 
 ).
 //-------------------------------------------------------------------------
 Addop<out int kind>

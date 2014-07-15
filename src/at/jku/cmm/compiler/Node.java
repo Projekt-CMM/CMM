@@ -54,8 +54,8 @@ public final class Node {
 		BITAND		= 33,	// &
 		BITOR		= 34,	// |
 		BITXOR		= 35,	// ^
-		LEFTSHIFT 	= 36,	// <<
-		RIGHTSHIFT 	= 37,	// >>
+		SHIFTLEFT 	= 36,	// <<
+		SHIFTRIGHT 	= 37,	// >>
 		INC			= 38,	// ++	// Todo x++
 		DEC			= 39,	// --	// Todo x--
 		I2F      	= 40,   // conversion from int to float
@@ -142,7 +142,7 @@ public final class Node {
 		"IDENT", "INTCON", "FLOATCON", "CHARCON", "STRINGCON",
 		"DOT", "INDEX", "REF",
 		"PLUS", "MINUS", "TIMES", "DIV", "REM", "BITNEQ", "BITAND", "BITOR", "BITXOR", 
-		"LEFTSHIFT", "RIGHTSHIFT", "INC", "DEC", "I2F", "F2I", "I2C", "C2I", "A2S",
+		"SHIFTLEFT", "SHIFTRIGHT", "INC", "DEC", "I2F", "F2I", "I2C", "C2I", "A2S",
 		"EQL", "NEQ", "LSS", "LEQ", "GTR", "GEQ", "NOT", "OR", "AND"
 	};
 

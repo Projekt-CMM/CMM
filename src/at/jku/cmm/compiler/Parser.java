@@ -734,12 +734,12 @@ public class Parser {
 
 	int  Shiftop() {
 		int  kind;
-		kind=Node.LEFTSHIFT; 
+		kind=Node.SHIFTLEFT; 
 		if (la.kind == 53) {
 			Get();
 		} else if (la.kind == 54) {
 			Get();
-			kind=Node.RIGHTSHIFT; 
+			kind=Node.SHIFTRIGHT; 
 		} else SynErr(69);
 		return kind;
 	}
