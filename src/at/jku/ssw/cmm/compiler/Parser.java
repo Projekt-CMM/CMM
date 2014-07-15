@@ -354,7 +354,27 @@ public class Parser {
 				else if(design.type == Tab.stringType && !(kind == Node.ASSIGN || kind == Node.ASSIGNPLUS)) 
 				SemErr("only = or += is allowed for string assignements"); 
 				else e = tab.impliciteTypeCon(e, design.type);
-				st = new Node(kind,design,e,line); 
+				   if(kind == Node.ASSIGNPLUS)
+				e = new Node(Node.PLUS, design, e, design.type);
+				else if(kind == Node.ASSIGNMINUS)
+				e = new Node(Node.MINUS, design, e, design.type);
+				else if(kind == Node.ASSIGNTIMES)
+				e = new Node(Node.TIMES, design, e, design.type);
+				else if(kind == Node.ASSIGNDIV)
+				e = new Node(Node.DIV, design, e, design.type);
+				else if(kind == Node.ASSIGNREM)
+				e = new Node(Node.REM, design, e, design.type);
+				else if(kind == Node.ASSIGNSHIFTLEFT)
+				e = new Node(Node.SHIFTLEFT, design, e, design.type);
+				else if(kind == Node.ASSIGNSHIFTRIGHT)
+				e = new Node(Node.SHIFTRIGHT, design, e, design.type);
+				else if(kind == Node.ASSIGNBITAND)
+				e = new Node(Node.BITAND, design, e, design.type);
+				else if(kind == Node.ASSIGNBITXOR)
+				e = new Node(Node.BITXOR, design, e, design.type);
+				else if(kind == Node.ASSIGNBITOR)
+				e = new Node(Node.BITOR, design, e, design.type);							       
+								   st = new Node(Node.ASSIGN,design,e,line); 
 			} else if (la.kind == 6) {
 				e = ActPars();
 				if(design.type != Tab.noType) SemErr("only void is allowed"); 
@@ -505,12 +525,12 @@ public class Parser {
 		}
 		case 15: {
 			Get();
-			kind=Node.ASSIGNLEFTSHIFT; 
+			kind=Node.ASSIGNSHIFTLEFT; 
 			break;
 		}
 		case 16: {
 			Get();
-			kind=Node.ASSIGNRIGHTSHIFT; 
+			kind=Node.ASSIGNSHIFTRIGHT; 
 			break;
 		}
 		case 17: {
