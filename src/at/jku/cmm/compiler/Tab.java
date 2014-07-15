@@ -351,51 +351,52 @@ public class Tab {
 		Node buildNode = buildFunction.left;
 		Node oldNode = buildNode;
 		for(int i = 0; i < declFunction.nPars;i++) {
-		
-			while(declObj != null && buildNode != null) {
-				// edit function parameter to ref, if it is declared as ref
-				if(declObj.isRef == true) {
-					Node newNode = new Node(Node.REF, buildNode, null, declObj.type);
-					newNode.next = buildNode.next;
-					if(newNode != buildNode) {
-						buildNode.next = null;
-					}
-					if(buildFunction.left == buildNode) {
-						buildNode = newNode;
-						buildFunction.left = newNode;
-					} else {
-						buildNode = newNode;
-						oldNode.next = newNode;
-					}
-				}
-				
-				// implicit type conversation
-				if(declObj.isRef == true && buildNode.kind == Node.REF) {
-					if(buildNode.left.type != declObj.type)
-						parser.SemErr("there is no type-conversation for ref-parameter(s) allowed");
-					//buildNode.left = impliciteTypeCon(buildNode.left, declObj.type);
-				} else {
-					Node newNode = impliciteTypeCon(buildNode, declObj.type);
-					newNode.next = buildNode.next;
-					if(newNode != buildNode) {
-						buildNode.next = null;
-					}
-					if(buildFunction.left == buildNode) {					
-						buildNode = newNode;
-						buildFunction.left = buildNode;
-					} else {
-						buildNode = newNode;
-						oldNode.next = newNode;
-					}
-				}
-				
-				declObj = declObj.next;
-				oldNode = buildNode;
-				buildNode = buildNode.next;
-			}
-			if(declObj != null) {
+
+			if(buildNode == null) {
+				System.out.println(declObj.name);
 				parser.SemErr("declaration of function has more parameter as using of itself");
+				break;
 			}
+			
+			// edit function parameter to ref, if it is declared as ref
+			if(declObj.isRef == true) {
+				Node newNode = new Node(Node.REF, buildNode, null, declObj.type);
+				newNode.next = buildNode.next;
+				if(newNode != buildNode) {
+					buildNode.next = null;
+				}
+				if(buildFunction.left == buildNode) {
+					buildNode = newNode;
+					buildFunction.left = newNode;
+				} else {
+					buildNode = newNode;
+					oldNode.next = newNode;
+				}
+			}
+			
+			// implicit type conversation
+			if(declObj.isRef == true && buildNode.kind == Node.REF) {
+				if(buildNode.left.type != declObj.type)
+					parser.SemErr("there is no type-conversation for ref-parameter(s) allowed");
+				//buildNode.left = impliciteTypeCon(buildNode.left, declObj.type);
+			} else {
+				Node newNode = impliciteTypeCon(buildNode, declObj.type);
+				newNode.next = buildNode.next;
+				if(newNode != buildNode) {
+					buildNode.next = null;
+				}
+				if(buildFunction.left == buildNode) {					
+					buildNode = newNode;
+					buildFunction.left = buildNode;
+				} else {
+					buildNode = newNode;
+					oldNode.next = newNode;
+				}
+			}
+			
+			declObj = declObj.next;
+			oldNode = buildNode;
+			buildNode = buildNode.next;
 		}
 		if(buildNode != null) {
 			parser.SemErr("using of function has more parameters as the declaration");
