@@ -7,13 +7,11 @@
 
 //------------------- const declarations
 
-const float HUGE    = ; //-- The maximum value of a single-precision floating-point number. 
-
 const float M_E     = 2.718281828;      //-- The base of natural logarithms (e).
-const float M_LOG2E =;//-- The base-2 logarithm of e.
-const float M_LOG10E    =;//-- The base-10 logarithm of e.
-const float M_LN2   =;//-- The natural logarithm of 2.
-const float M_LN10  =;//-- The natural logarithm of 10.
+const float M_LOG2E = 1.442695040;      //-- The base-2 logarithm of e.
+const float M_LOG10E= 0.434294482;      //-- The base-10 logarithm of e.
+const float M_LN2   = 0.693147181;      //-- The natural logarithm of 2.
+const float M_LN10  = 2.302585093;      //-- The natural logarithm of 10.
 
 const float M_PI    = 3.141592654;      //-- pi.
 const float M_PI_2  = 1.570796327;      //-- pi/2
@@ -22,14 +20,15 @@ const float M_PI_4  = 0.785398164;      //-- pi/4
 const float M_1_PI  = 0.318309886;      //-- 1/pi
 const float M_2_PI  = 0.636619772;      //-- 2/pi
 
-const float M_2_SQRTPI  = 1,128379167   //-- 2/sqrt(pi)
+const float M_2_SQRTPI  = 1.128379167;  //-- 2/sqrt(pi)
 
 const float M_SQRT2     = 1.414213562;  //-- sqrt(2)
 const float M_SQRT1_2   = 0.707106781;  //-- sqrt(1/2)
 
-const float MAXFLOAT    =;//-- The maximum value of a non-infinite single- precision floating point number.
-
-const float HUGE_VAL    =;//-- positive infinity. 
+// TODO
+const float MAXFLOAT    = 1.E+2000000;  //-- The maximum value of a non-infinite single- precision floating point number.
+const float HUGE        = 1.E+2000000;  //-- The maximum value of a single-precision floating-point number. 
+const float HUGE_VAL    = 1.E+2000000;  //-- positive infinity. 
 
 
 //------------------- Forward declarations
@@ -57,6 +56,7 @@ float sinh(float x);
 float sqrt(float x);
 float tan(float x);
 float tanh(float x);
+
 
 //------------------- declarations
 
@@ -93,9 +93,9 @@ float cos(float x) {
     result = 0;
     n=0;
     while(n<=100) { // TODO
-        result += pow(-1.,n) * pow(x,2*n)/fak(2*n);
+        result = result + (pow(-1.,n) * pow(x,2*n)/fak(2*n));
     }
-    result -= result*(int)((result)/M_PI_2);
+    result = result - (result*(int)((result)/M_PI_2));
     return result;
 }
 
@@ -112,7 +112,7 @@ float exp(float x) {
     result = 0;
     n=0;
     while(n<=100) { // TODO
-        result += pow(x,n)/fak(n);
+        result = result + (pow(x,n)/fak(n));
     }
     return result;
 }
@@ -123,7 +123,7 @@ int fak(int x) {
     result = 1;
     n = 1;
     while(n <= x) {
-        result += n;
+        result = result + n;
         n = n+1;    
     }
     return result;
@@ -175,12 +175,12 @@ float pow(float x, int y)  {
     int result;
     result = 1;
 
-    while (y) {
+    while (y != 0) {
         if (y&1 == 1) {
-            result *= x;
+            result = result * x;
         }
-        y >>=1 ;
-        x *= x;
+        y = y >> 1 ;
+        x = x*x;
     }
 
     return result;
@@ -194,9 +194,9 @@ float sin(float x) {
     result = 0;
     n=0;
     while(n<=100) { // TODO
-        result += pow(-1.,n) * pow(x,2*n+1)/fak(2*n+1);
+        result = result + (pow(-1.,n) * pow(x,2*n+1)/fak(2*n+1));
     }
-    result -= result*(int)((result)/M_PI_2);
+    result = result - (result*(int)((result)/M_PI_2));
     return result;
 }
 

@@ -7,6 +7,8 @@
 void putc(char ch);
 void prints(string s);
 
+string itoa(int x);
+
 //------------------- declarations
 
 // print character
@@ -22,4 +24,16 @@ void prints(string s) {
         putc(s[i];
         i = i+1;    
     }
+}
+
+string itoa(int x) {
+    string s;
+    s = "";
+
+    while(x != 0) {
+        s = (string)((x%10)+48) + s;
+        x = x % 10;
+    }
+
+    return s;
 }
