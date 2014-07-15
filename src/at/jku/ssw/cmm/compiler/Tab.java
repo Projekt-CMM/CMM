@@ -353,7 +353,6 @@ public class Tab {
 		for(int i = 0; i < declFunction.nPars;i++) {
 
 			if(buildNode == null) {
-				System.out.println(declObj.name);
 				parser.SemErr("declaration of function has more parameter as using of itself");
 				break;
 			}
@@ -629,13 +628,13 @@ public class Tab {
 		printProc = insert(Obj.PROC, "print", noType);
 		printProc.locals = new Obj(Obj.VAR,"character",charType);
 		printProc.size = charType.size;
-		printProc.nPars = charType.size;
+		printProc.nPars = 1;
 		
 		readProc = insert(Obj.PROC, "read", charType);
 		
 		lengthProc = insert(Obj.PROC, "length", intType);
 		lengthProc.locals = new Obj(Obj.VAR,"string",stringType);
 		lengthProc.size = stringType.size;
-		lengthProc.nPars = stringType.size;
+		lengthProc.nPars = 1;
 	}
 }
