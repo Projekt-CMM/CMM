@@ -46,7 +46,7 @@ float fabs(float x);
 float floor(float x);
 float fmod(float x, float y);
 float frexp(float x);
-float ldexp(float x, float y);
+float ldexp(float x, int y);
 float log(float x);
 float log10(float x);
 float modf();  // TODO
@@ -61,47 +61,87 @@ float tanh(float x);
 //------------------- declarations
 
 // Arkuskosinus \arccos x
+// https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
 float acos(float x) {
-    return 0.;
+    float result;
+    result = M_PI_2-asin(x);
+    result -= result*(int)((result)/M_PI);
+    return result;
 }
 
 // Arkussinus 	\arcsin x
+// https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
 float asin(float x) {
-    return 0.;
+    float result;
+    int n;
+    result = 0;
+    n=0;
+    while(n<=100) { // TODO
+        result += fak(2*n)/(pow(4,n)*pow(fak(n),2)*(2*n+1));
+        n += 1;
+    }
+    result -= result*(int)((result)/M_PI);
+    return result;
 }
 
 // Arkustangens 	\arctan x
+// https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
 float atan(float x) {
-    return 0.;
+    
+    float result;
+    int n;
+    result = 0;
+    n=0;
+    while(n<=100) { // TODO
+        result += pow(-1,n)*1/(2*n+1)*pow(x,2*n+1);
+        n += 1;
+    }
+    result -= result*(int)((result)/M_PI);
+    return result;
 }
 
 // „Arkustangens“ mit zwei Argumenten 	\operatorname{atan2}(y, x)
+// https://en.wikipedia.org/wiki/Atan2#Definition_and_computation
 float atan2(float y, float x) {
-    return 0.;
+    return (2*atan(y/(sqrt(pow(x,2)+pow(y,2))+x));
 }
 
 // Aufrundungsfunktion 	\lceil x \rceil
 float ceil(float x) {
-    return 0.;
+    if((int)x >= x) {
+        return (float)((int)x);
+    } else {
+        return (float)((int)x)+1;
+    }
 }
 
 // Kosinus 	\cos x
-// https://de.wikipedia.org/wiki/Taylorreihe#Exponentialfunktionen_und_Logarithmen
+// https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
 float cos(float x) {
     float result;
     int n;
     result = 0;
     n=0;
     while(n<=100) { // TODO
-        result = result + (pow(-1.,n) * pow(x,2*n)/fak(2*n));
+        result += pow(-1.,n) * pow(x,2*n)/fak(2*n);
+        n += 1;
     }
-    result = result - (result*(int)((result)/M_PI_2));
+    result -= result*(int)((result)/M_PI);
     return result;
 }
 
 // Kosinus Hyperbolicus 	\cosh x
+// https://de.wikipedia.org/wiki/Sinus_Hyperbolicus_und_Kosinus_Hyperbolicus#Reihenentwicklungen
 float cosh(float x) {
-    return 0.;
+    float result;
+    int n;
+    result = 0;
+    n=0;
+    while(n<=100) { // TODO
+        result += pow(x,2*n) / fak(2*n);
+        n += 1;
+    }
+    return result;
 }
 
 // Exponentialfunktion 	e^x
@@ -112,7 +152,8 @@ float exp(float x) {
     result = 0;
     n=0;
     while(n<=100) { // TODO
-        result = result + (pow(x,n)/fak(n));
+        result += pow(x,n)/fak(n);
+        n += 1;
     }
     return result;
 }
@@ -123,15 +164,19 @@ int fak(int x) {
     result = 1;
     n = 1;
     while(n <= x) {
-        result = result + n;
-        n = n+1;    
+        result += n;
+        n += 1;    
     }
     return result;
 }
 
 // Betragsfunktion |x|
 float fabs(float x) {
-    return 0.;
+    if(x >= 0) {
+        return x;    
+    } else {
+        return x * -1;
+    }
 }
 
 // Ganzteilfunktion 	\lfloor x \rfloor
@@ -150,8 +195,8 @@ float frexp(float x) {
 }
 
 // Multipliziert den ersten Parameter mit 2 um den zweiten Parameter potenziert 	x 2^y
-float ldexp(float x, float y) {
-    return 0.;
+float ldexp(float x, int y) {
+    return pow(x*2,y);
 }
 
 // Natürlicher Logarithmus 	\ln x
@@ -177,37 +222,56 @@ float pow(float x, int y)  {
 
     while (y != 0) {
         if (y&1 == 1) {
-            result = result * x;
+            result *= x;
         }
-        y = y >> 1 ;
-        x = x*x;
+        y >>= 1 ;
+        x *= x;
     }
 
     return result;
 }
 
 // Sinus 	\sin x
-// https://de.wikipedia.org/wiki/Taylorreihe#Exponentialfunktionen_und_Logarithmen
+// https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
 float sin(float x) {
     float result;
     int n;
     result = 0;
     n=0;
     while(n<=100) { // TODO
-        result = result + (pow(-1.,n) * pow(x,2*n+1)/fak(2*n+1));
+        result += pow(-1.,n) * pow(x,2*n+1)/fak(2*n+1);
+        n += 1;
     }
-    result = result - (result*(int)((result)/M_PI_2));
+    result -= result*(int)((result)/M_PI);
     return result;
 }
 
 // Sinus Hyperbolicus 	\sinh x
+// https://de.wikipedia.org/wiki/Sinus_Hyperbolicus_und_Kosinus_Hyperbolicus#Reihenentwicklungen
 float sinh(float x) {
-    return 0.;
+    float result;
+    int n;
+    result = 0;
+    n=0;
+    while(n<=100) { // TODO
+        result += pow(x,2*n+1) / fak(2*n+1);
+        n += 1;
+    }
+    return result;
 }
 
 // Quadratwurzel 	\sqrt x
+// https://de.wikipedia.org/wiki/Babylonisches_Wurzelziehen
 float sqrt(float x) {
-    return 0.;
+    float xn;
+    int n;
+    xn = (x+1)/2; // TODO
+    n = 0;
+    while(n<=50) {
+        xn += (xn + (x/xn)) / 2;
+        n += 1;
+    }
+    return xn;
 }
 
 // Tangens 	\tan x

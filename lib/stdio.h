@@ -21,18 +21,18 @@ void prints(string s) {
     int i;
     i = 0;    
     while(i < length(s)) {
-        putc(s[i];
-        i = i+1;    
+        putc(s[i]);
+        i += 1;    
     }
 }
 
 string itoa(int x) {
     string s;
-    s = "";
-
+    char[1] ch;
     while(x != 0) {
-        s = (string)((x%10)+48) + s;
-        x = x % 10;
+        ch[0] = (char)((x%10)+48);
+        s = (string)ch + s;
+        x %= 10;
     }
 
     return s;
