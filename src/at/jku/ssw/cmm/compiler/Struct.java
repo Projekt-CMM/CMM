@@ -29,7 +29,7 @@ public class Struct {
 		switch (kind) {
 			case INT:   size = 4; break;
 			case FLOAT: size = 4; break;
-			case CHAR:  size = 1; break;
+			case CHAR:  size = 2; break;
 			case BOOL:  size = 1; break;
 			case STRING:size = 4; break;	// TODO korrekt?
 			default:    size = 0; break;
