@@ -357,7 +357,9 @@ public class Tab {
 				if(declObj.isRef == true) {
 					Node newNode = new Node(Node.REF, buildNode, null, declObj.type);
 					newNode.next = buildNode.next;
-					buildNode.next = null;
+					if(newNode != buildNode) {
+						buildNode.next = null;
+					}
 					if(buildFunction.left == buildNode) {
 						buildNode = newNode;
 						buildFunction.left = newNode;
@@ -375,7 +377,9 @@ public class Tab {
 				} else {
 					Node newNode = impliciteTypeCon(buildNode, declObj.type);
 					newNode.next = buildNode.next;
-					buildNode.next = null;
+					if(newNode != buildNode) {
+						buildNode.next = null;
+					}
 					if(buildFunction.left == buildNode) {					
 						buildNode = newNode;
 						buildFunction.left = buildNode;
