@@ -75,4 +75,28 @@ public class Strings {
 			return true;
 		}
 	}
+	
+	public void dump() {
+		System.out.println("Strings:");
+		for(int i=0; i < top;i++) {
+			String curChar = ""+charAt(i);
+			switch(curChar.charAt(0)) {
+				case '\0':
+					curChar = "\\0";
+					break;
+				case '\n':
+					curChar = "\\n";
+					break;
+				case '\r':
+					curChar = "\\r";
+					break;
+				case '\t':
+					curChar = "\\t";
+					break;
+				default:
+					break;
+			}
+			System.out.println("  char[" + i + "]='" + curChar + "'");
+		}
+	}
 }
