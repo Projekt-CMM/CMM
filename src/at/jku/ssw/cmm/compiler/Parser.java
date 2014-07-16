@@ -178,9 +178,9 @@ public class Parser {
 			while (!(StartOf(2))) {SynErr(59); Get();}
 		}
 		if (debug[0]) tab.dumpScope(tab.curScope.locals, 0);
+		if (debug[3]) strings.dump();
 		tab.checkIfForwardsResolved(tab.curScope); 
 		Obj obj = tab.find("main");
-		strings.dump();
 		if(obj == Tab.noObj || obj.kind != Obj.PROC) SemErr("main is not declared as function");
 	}
 
