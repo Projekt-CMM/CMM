@@ -58,14 +58,18 @@ public class Parser {
 //--- LL(1) conflict resolvers
 
 	// Returns true if a VarDecl comes next in the input
-	boolean isVarDecl() { 
-		if (la.kind == _ident || la.val.equals("int") || la.val.equals("float") || la.val.equals("char")) {
+	boolean isVarDecl() {
+		if (la.kind != _ident) return false;
+		Obj obj = tab.find(la.val);
+		if (obj.kind == Obj.TYPE){
 			Token x = scanner.Peek();
 			while (x.kind != _semicolon) {
-				if (x.kind == _EOF || x.kind == _lpar || x.kind == _assign || x.kind == _assignplus
+				if (x.kind == _EOF || x.kind == _lpar  || x.kind == _assignplus
 					|| x.kind == _assignminus || x.kind == _assigntimes  || x.kind == _assigndiv  
 					|| x.kind == _assignrem || x.kind == _assignleftshift || x.kind == _assignrightshift
 					|| x.kind == _assignbitand || x.kind == _assignbitxor || x.kind == _assignbitor) return false;
+				else if(x.kind == _assign)
+					return true;
 				x = scanner.Peek();
 			}
 			return true;
@@ -159,13 +163,15 @@ public class Parser {
 	void CMM() {
 		tab = new Tab(this); 
 		     tab.openScope(); 
+		     Node e;
 		while (StartOf(1)) {
 			if (la.kind == 27) {
 				ConstDecl();
 			} else if (la.kind == 29) {
 				StructDecl();
 			} else if (isVarDecl()) {
-				VarDecl();
+				e = VarDecl();
+				if(e != null) SemErr("variable assigment is not allowed for global variables"); 
 			} else {
 				ProcDecl();
 			}
@@ -205,6 +211,7 @@ public class Parser {
 	}
 
 	void StructDecl() {
+		Node e; 
 		Expect(29);
 		Struct type = new Struct(Struct.STRUCT); 
 		Expect(1);
@@ -212,7 +219,8 @@ public class Parser {
 		Expect(30);
 		tab.openScope(); 
 		while (la.kind == 1) {
-			VarDecl();
+			e = VarDecl();
+			if(e!=null) SemErr("variable assigment is not allowed in struct"); 
 		}
 		Expect(31);
 		type.fields = tab.curScope.locals;
@@ -221,17 +229,45 @@ public class Parser {
 		tab.closeScope(); 
 	}
 
-	void VarDecl() {
+	Node  VarDecl() {
+		Node  e;
 		Struct type; 
+		Node curNode = null, newNode; 
+		Obj curObj; 
+		e = null; 
+		                        int line = la.line; 
 		type = Type();
 		Expect(1);
-		tab.insert(Obj.VAR, t.val, type); 
+		curObj = tab.insert(Obj.VAR, t.val, type); 
+		if (la.kind == 9) {
+			Get();
+			e = BinExpr();
+			if(type == null || (!type.isPrimitive() && type != Tab.stringType)) 
+			SemErr("type is not a primitive or string");
+			else if(e == null) SemErr("right operator is not defined"); 
+			else e = tab.impliciteTypeCon(e, type);
+			e = new Node(Node.ASSIGN,new Node(curObj),e,line); 
+			curNode = e; 
+		}
 		while (la.kind == 28) {
 			Get();
 			Expect(1);
-			tab.insert(Obj.VAR, t.val, type); 
+			curObj = tab.insert(Obj.VAR, t.val, type); 
+			if (la.kind == 9) {
+				Get();
+				newNode = BinExpr();
+				if(curNode == null) {
+				e = new Node(Node.ASSIGN,new Node(curObj),newNode,line);
+				curNode = e;
+				}
+				else {
+				curNode.next = new Node(Node.ASSIGN,new Node(curObj),newNode,line); 
+				curNode = curNode.next; 
+				} 
+			}
 		}
 		Expect(8);
+		return e;
 	}
 
 	void ProcDecl() {
@@ -265,7 +301,19 @@ public class Parser {
 				if (la.kind == 27) {
 					ConstDecl();
 				} else if (isVarDecl()) {
-					VarDecl();
+					newNode = VarDecl();
+					if(newNode != null) { 
+					if(startNode == null) {
+					startNode = newNode;
+					} else {
+					if(curNode == null) SemErr("invalide statement");
+					else curNode.next = newNode;  
+					}
+					curNode = newNode; 
+					while(curNode.next != null) {
+					curNode = curNode.next; 
+					} 
+					} 
 				} else {
 					newNode = Statement();
 					if(startNode == null) {
@@ -317,6 +365,25 @@ public class Parser {
 		   type = new Struct(Struct.ARR, dimensions.get(i), type);
 		} 
 		return type;
+	}
+
+	Node  BinExpr() {
+		Node  res;
+		int kind;
+		Node n; 
+		res = Shift();
+		while (la.kind == 33 || la.kind == 51 || la.kind == 52) {
+			kind = Binop();
+			n = Shift();
+			if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive())
+			SemErr("type is not a primitive");
+			else {
+			  res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
+			  n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
+			}
+			res = new Node(kind, res, n , res.type); 
+		}
+		return res;
 	}
 
 	int  FormPars() {
@@ -551,25 +618,6 @@ public class Parser {
 		default: SynErr(65); break;
 		}
 		return kind;
-	}
-
-	Node  BinExpr() {
-		Node  res;
-		int kind;
-		Node n; 
-		res = Shift();
-		while (la.kind == 33 || la.kind == 51 || la.kind == 52) {
-			kind = Binop();
-			n = Shift();
-			if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive())
-			SemErr("type is not a primitive");
-			else {
-			  res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
-			  n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
-			}
-			res = new Node(kind, res, n , res.type); 
-		}
-		return res;
 	}
 
 	Node  ActPars() {
