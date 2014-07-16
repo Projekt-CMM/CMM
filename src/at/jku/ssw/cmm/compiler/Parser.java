@@ -256,6 +256,10 @@ public class Parser {
 			if (la.kind == 9) {
 				Get();
 				newNode = BinExpr();
+				if(type == null || (!type.isPrimitive() && type != Tab.stringType)) 
+				SemErr("type is not a primitive or string");
+				else if(newNode == null) SemErr("right operator is not defined"); 
+				else newNode = tab.impliciteTypeCon(newNode, type);
 				if(curNode == null) {
 				e = new Node(Node.ASSIGN,new Node(curObj),newNode,line);
 				curNode = e;
@@ -401,7 +405,7 @@ public class Parser {
 	Node  Statement() {
 		Node  st;
 		Node design; 
-		Node e, con; 
+		Node e, con, curStat, newStat; 
 		int kind;
 		st = null; 
 		int line = la.line; 
@@ -489,11 +493,20 @@ public class Parser {
 		}
 		case 30: {
 			Get();
+			curStat = null; con=null; 
 			while (StartOf(5)) {
-				st = Statement();
-				st = new Node(Node.STATSEQ,st,null,line); 
+				newStat = Statement();
+				if(curStat == null) {
+				curStat = newStat;
+				con = curStat;
+				}
+				else {
+				curStat.next = newStat;
+				curStat = curStat.next;
+				} 
 			}
 			Expect(31);
+			st = new Node(Node.STATSEQ,con,null,line); 
 			break;
 		}
 		case 40: {

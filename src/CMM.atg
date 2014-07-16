@@ -284,7 +284,7 @@ ident                            	(. Obj obj = tab.find(t.val);
 .
 //-------------------------------------------------------------------------
 Statement<out Node st>				(. Node design; 
-                      				   Node e, con; 
+                      				   Node e, con, curStat, newStat; 
                       				   int kind;.)
 =                                   (. st = null; 
                                        int line = la.line; .)
@@ -346,8 +346,16 @@ Statement<out Node st>				(. Node design;
 									   st.obj = Tab.printProc;
 					  				   tab.checkFunctionParams(Tab.printProc,st); .)	// TODO
  ")" ";"
-| "{" {Statement<out st> 			(. st = new Node(Node.STATSEQ,st,null,line); .)
-	} "}"
+| "{" 								(. curStat = null; con=null; .)
+  {Statement<out newStat> 			(. if(curStat == null) {
+  									       curStat = newStat;
+  									       con = curStat;
+  									   }
+  									   else {
+  									       curStat.next = newStat;
+  									       curStat = curStat.next;
+  									   } .)
+	} "}"							(. st = new Node(Node.STATSEQ,con,null,line); .)
 | "return" BinExpr<out e>
  ";"								(. if(curProc.type.kind == Struct.NONE) SemErr("procedure has void as return type");
  						   			   e = tab.impliciteTypeCon(e, curProc.type);
