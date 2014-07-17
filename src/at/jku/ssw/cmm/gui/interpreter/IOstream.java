@@ -12,54 +12,55 @@ import at.jku.ssw.cmm.gui.mod.GUImainMod;
  * @author fabian
  *
  */
-public class IOstream implements StdInOut{
-	
+public class IOstream implements StdInOut {
+
 	/**
 	 * Connects the I/O functions of the Interpreter with the GUI
 	 * 
-	 * @param modifier Interface for main GUI manipulations
+	 * @param modifier
+	 *            Interface for main GUI manipulations
 	 */
-	public IOstream( GUImainMod modifier ){
+	public IOstream(GUImainMod modifier) {
 		this.modifier = modifier;
-		
-		//Get input stream characters
+
+		// Get input stream characters
 		this.inputStream = new LinkedList<>();
-		for( char c : this.modifier.getInputStream().toCharArray() ){
+		for (char c : this.modifier.getInputStream().toCharArray()) {
 			this.inputStream.add(c);
 		}
 	}
-	
-	//Interface for main GUI manipulations
+
+	// Interface for main GUI manipulations
 	private final GUImainMod modifier;
-	
-	//List with all input stream characters
+
+	// List with all input stream characters
 	private final List<Character> inputStream;
 
 	@Override
 	public char in() {
-		
+
 		char c;
-		
-		try{
+
+		try {
 			c = this.inputStream.get(0);
-		}catch( Exception e ){
+		} catch (Exception e) {
 			return '\0';
 		}
-		
+
 		this.inputStream.remove(0);
 		this.modifier.increaseInputHighlighter();
 		return c;
 	}
 
 	@Override
-	public void out(char arg0) {
-		
-		System.out.println("Stream from interpreter: "+arg0);
-		
+	public void out(final char arg0) {
+
+		System.out.println("Stream from interpreter: " + arg0);
+
 		java.awt.EventQueue.invokeLater(new Runnable() {
-	        public void run() {
-	        	modifier.outputStream( "" + arg0 );
-	        }
+			public void run() {
+				modifier.outputStream("" + arg0);
+			}
 		});
 	}
 
