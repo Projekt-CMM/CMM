@@ -8,6 +8,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
@@ -90,6 +91,9 @@ public class GUImain implements GUImainMod {
 	 * <hr>
 	 */
 	private void start() {
+		
+		if( SwingUtilities.isEventDispatchThread() )
+			System.out.println("GUI runnung on EDT.");
 
 		// Initialize the window
 		this.jFrame = new JFrame("C-- Entwicklungsumgebung");

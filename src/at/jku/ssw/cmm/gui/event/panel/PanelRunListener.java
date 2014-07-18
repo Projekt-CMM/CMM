@@ -326,58 +326,13 @@ public class PanelRunListener implements Debugger {
 		/* --- Node #4: Pause or Run mode --- */
 		if (this.isPauseMode()) {
 			/* --- Node #5: Create Buttons --- */
-			switch (arg0.kind) {
-			case Node.ASSIGN:
-				// Call with assignment, for example | i = add( i, 1 );
-				if (arg0.right.kind == Node.CALL) {
-					// Calling a function from include file -> step over by
-					// default
-					if (arg0.obj.ast != null
-							&& arg0.right.obj.ast.line <= this.master
-									.getBeginLine())
-						this.master.setStepOverButtonAlone();
-					// Calling a local function -> show step over button
-					else
-						this.master.setStepOverButton();
-				}
-				// Assignment without function call -> reset buttons
-				else
-					this.master.unsetStepOverButton();
-				break;
-			case Node.CALL:
-				// Calling a function from include file -> step over by default
-				if (arg0.obj.ast != null
-						&& arg0.obj.ast.line <= this.master.getBeginLine())
-					this.master.setStepOverButtonAlone();
-				// Calling a local function -> show step over button
-				else if (arg0.obj.ast != null)
-					this.master.setStepOverButton();
-				else
-					this.master.unsetStepOverButton();
-				break;
-			default:
-				// No function call possible -> show normal step button
-				this.master.unsetStepOverButton();
-				break;
-			}
+			
 		}
 		/* --- Node #4: Pause or Run mode --- */
 		else if (this.isRunMode() && this.delay > 0) {
 
 			/* --- Node #5: Step over if external function call --- */
-			if (arg0.kind == Node.ASSIGN && arg0.right.kind == Node.CALL) {
-				if (arg0.obj.ast != null
-						&& arg0.right.obj.ast.line <= this.master
-								.getBeginLine()) {
-					System.out.println("Special call: " + arg0.right.kind
-							+ ", line 0" + arg0.right.obj.ast.line);
-					this.master.stepOver();
-				}
-			}
-			if (arg0.obj.ast != null && arg0.kind == Node.CALL
-					&& arg0.obj.ast.line <= this.master.getBeginLine()) {
-				this.master.stepOver();
-			}
+			
 
 			this.timer = new Timer();
 			// Start timer
@@ -403,7 +358,6 @@ public class PanelRunListener implements Debugger {
 
 		return keepRunning;
 	}
-
 	/* --- thread synchronization --- */
 	/**
 	 * This method blocks the program until another thread invokes the method
