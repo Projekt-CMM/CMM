@@ -12,7 +12,6 @@ public final class Memory {
 	// 4: start global space
 	// ...
 	// MEMORY_SIZE: top of stack
-	
 
 	private static final ByteBuffer memory = ByteBuffer.allocate(MEMORY_SIZE);
 	{
@@ -26,6 +25,7 @@ public final class Memory {
 	private static int globalPointer;
 
 	private static int returnValue;
+	private static float floatreturnValue;
 
 	public static void initialize() {
 		framePointer = MEMORY_SIZE / 2;
@@ -33,38 +33,40 @@ public final class Memory {
 		globalPointer = 0;
 	}
 
-	
 	/*
 	 * Call Stack Using, Line Number, Frame Size + Frame Pointer + ProcID
 	 */
-	public static void openStackFrame(int lineNumber, int procId, int frameSize)throws StackOverflowException {		
-		memory.putInt(stackPointer, lineNumber); 	// Line Nummer
+	public static void openStackFrame(int lineNumber, int procId, int frameSize)
+			throws StackOverflowException {
+		memory.putInt(stackPointer, lineNumber); // Line Nummer
 		stackPointer += 4;
-		memory.putInt(stackPointer, procId);		 	// Methoden ID: name?
+		memory.putInt(stackPointer, procId); // Methoden ID: name?
 		stackPointer += 4;
-		memory.putInt(stackPointer, framePointer); 	// Dynamic Link
+		memory.putInt(stackPointer, framePointer); // Dynamic Link
 		stackPointer += 4;
-		
+
 		framePointer = stackPointer;
-		stackPointer += frameSize; //Variablen Size 
-		
+		stackPointer += frameSize; // Variablen Size
+
 	}
 
-	
+	@SuppressWarnings("unused")
 	private static void assertStackOverflow() throws StackOverflowException {
-		if(stackPointer >= MEMORY_SIZE)
+		if (stackPointer >= MEMORY_SIZE)
 			throw new StackOverflowException();
-		
+
 	}
+
 	public static void closeStackFrame() throws StackUnderflowException {
 		stackPointer = framePointer;
 		stackPointer -= 4;
 		framePointer = memory.getInt(stackPointer);
 		stackPointer -= 8;
 	}
-	
+
+	@SuppressWarnings("unused")
 	private static void assertStackUnderflow() throws StackUnderflowException {
-		if(framePointer <= 0)
+		if (framePointer <= 0)
 			throw new StackUnderflowException();
 	}
 
@@ -83,7 +85,7 @@ public final class Memory {
 	public static void storeChar(int address, char value) {
 		memory.putChar(address, value);
 	}
-	
+
 	public static float loadFloat(int address) {
 		return memory.getFloat(address);
 	}
@@ -91,16 +93,16 @@ public final class Memory {
 	public static void storeFloat(int address, float value) {
 		memory.putFloat(address, value);
 	}
-	
-	public static void storeStringAdress(int address, int value){
-		
+
+	public static void storeStringAdress(int address, int value) {
+
 		memory.putInt(address, value);
 	}
 
-	public static int loadStringAdress(int address){
+	public static int loadStringAdress(int address) {
 		return memory.getInt(address);
 	}
-	
+
 	public static void setIntReturnValue(int value) {
 		returnValue = value;
 	}
@@ -110,8 +112,8 @@ public final class Memory {
 	}
 
 	public static void setFloatReturnValue(float value) {
-		returnValue = (int) value;
-	}	
+		floatreturnValue = value;
+	}
 
 	public static int getIntReturnValue() {
 		return returnValue;
@@ -122,14 +124,15 @@ public final class Memory {
 	}
 
 	public static float getFloatReturnValue() {
-		return (float) returnValue;
+		return floatreturnValue;
 	}
 
-	//TODO 
-	/*private static void assertAddress(int offset) {
-		
-	return false;
-	}*/
+	// TODO
+	/*
+	 * private static void assertAddress(int offset) {
+	 * 
+	 * return false; }
+	 */
 
 	public static int getFramePointer() {
 		return framePointer;

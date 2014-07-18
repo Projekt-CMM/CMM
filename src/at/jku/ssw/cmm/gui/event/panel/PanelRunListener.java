@@ -10,7 +10,6 @@ import javax.swing.event.ChangeListener;
 
 import at.jku.ssw.cmm.debugger.Debugger;
 import at.jku.ssw.cmm.gui.GUIrightPanel;
-import at.jku.ssw.cmm.gui.exception.InvalidRunModeException;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.compiler.Node;
 
@@ -326,58 +325,19 @@ public class PanelRunListener implements Debugger {
 		/* --- Node #4: Pause or Run mode --- */
 		if (this.isPauseMode()) {
 			/* --- Node #5: Create Buttons --- */
-			switch (arg0.kind) {
-			case Node.ASSIGN:
-				// Call with assignment, for example | i = add( i, 1 );
-				if (arg0.right.kind == Node.CALL) {
-					// Calling a function from include file -> step over by
-					// default
-					if (arg0.obj.ast != null
-							&& arg0.right.obj.ast.line <= this.master
-									.getBeginLine())
-						this.master.setStepOverButtonAlone();
-					// Calling a local function -> show step over button
-					else
-						this.master.setStepOverButton();
-				}
-				// Assignment without function call -> reset buttons
-				else
-					this.master.unsetStepOverButton();
-				break;
-			case Node.CALL:
-				// Calling a function from include file -> step over by default
-				if (arg0.obj.ast != null
-						&& arg0.obj.ast.line <= this.master.getBeginLine())
-					this.master.setStepOverButtonAlone();
-				// Calling a local function -> show step over button
-				else if (arg0.obj.ast != null)
-					this.master.setStepOverButton();
-				else
-					this.master.unsetStepOverButton();
-				break;
-			default:
-				// No function call possible -> show normal step button
-				this.master.unsetStepOverButton();
-				break;
-			}
+			if( arg0.kind == Node.ASSIGN )
+				this.doStepOverButtonCheck(arg0.right);
+			else
+				this.doStepOverButtonCheck(arg0);
 		}
 		/* --- Node #4: Pause or Run mode --- */
 		else if (this.isRunMode() && this.delay > 0) {
 
 			/* --- Node #5: Step over if external function call --- */
-			if (arg0.kind == Node.ASSIGN && arg0.right.kind == Node.CALL) {
-				if (arg0.obj.ast != null
-						&& arg0.right.obj.ast.line <= this.master
-								.getBeginLine()) {
-					System.out.println("Special call: " + arg0.right.kind
-							+ ", line 0" + arg0.right.obj.ast.line);
-					this.master.stepOver();
-				}
-			}
-			if (arg0.obj.ast != null && arg0.kind == Node.CALL
-					&& arg0.obj.ast.line <= this.master.getBeginLine()) {
-				this.master.stepOver();
-			}
+			if( arg0.kind == Node.ASSIGN )
+				this.doStepOverRunCheck(arg0.right);
+			else
+				this.doStepOverRunCheck(arg0);
 
 			this.timer = new Timer();
 			// Start timer
@@ -390,11 +350,7 @@ public class PanelRunListener implements Debugger {
 		}
 		/* --- Node #4: Default exit --- */
 		else {
-			try {
-				throw new InvalidRunModeException();
-			} catch (InvalidRunModeException e) {
-				e.printStackTrace();
-			}
+			throw new IllegalStateException();
 		}
 
 		waitForUserReply();
@@ -403,7 +359,29 @@ public class PanelRunListener implements Debugger {
 
 		return keepRunning;
 	}
-
+	
+	private void doStepOverButtonCheck( Node n ){
+		//Is function call? (NOT predefined function)
+		if( n.kind == Node.CALL && n.obj.ast != null ){
+			//Calls function from include
+			if( n.obj.ast.line <= this.master.getBeginLine() )
+				this.master.setStepOverButtonAlone();
+			//Calls local function
+			else
+				this.master.setStepOverButton();
+		}
+		//No valid function call -> no step over button
+		else
+			this.master.unsetStepOverButton();
+	}
+	
+	private void doStepOverRunCheck( Node n ){
+		//Is function call? (NOT predefined function) from external file
+		if( n.kind == Node.CALL && n.obj.ast != null && n.obj.ast.line <= this.master.getBeginLine() ){
+			this.master.stepOver();
+		}
+	}
+	
 	/* --- thread synchronization --- */
 	/**
 	 * This method blocks the program until another thread invokes the method
@@ -565,23 +543,17 @@ public class PanelRunListener implements Debugger {
 		public void mouseClicked(MouseEvent e) {
 
 			master.stepOut();
+			userReply();
 		}
 
 		@Override
-		public void mousePressed(MouseEvent e) {
-		}
-
+		public void mousePressed(MouseEvent e) {}
 		@Override
-		public void mouseReleased(MouseEvent e) {
-		}
-
+		public void mouseReleased(MouseEvent e) {}
 		@Override
-		public void mouseEntered(MouseEvent e) {
-		}
-
+		public void mouseEntered(MouseEvent e) {}
 		@Override
-		public void mouseExited(MouseEvent e) {
-		}
+		public void mouseExited(MouseEvent e) {}
 	};
 
 	/**

@@ -1,9 +1,8 @@
 package at.jku.ssw.cmm.gui.interpreter;
 
+import at.jku.ssw.cmm.compiler.Node;
 import at.jku.ssw.cmm.gui.GUIrightPanel;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
-import at.jku.ssw.cmm.compiler.Node;
-
 /**
  * UNUSED
  * 

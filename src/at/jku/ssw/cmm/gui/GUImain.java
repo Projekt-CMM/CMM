@@ -8,6 +8,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
@@ -63,6 +64,7 @@ public class GUImain implements GUImainMod {
 
 	private SaveDialog saveDialog;
 
+	//TODO make codeRegister thread safe
 	private List<Object[]> codeRegister;
 
 	private int inputHighlightOffset;
@@ -90,6 +92,9 @@ public class GUImain implements GUImainMod {
 	 * <hr>
 	 */
 	private void start() {
+		
+		if( SwingUtilities.isEventDispatchThread() )
+			System.out.println("GUI runnung on EDT.");
 
 		// Initialize the window
 		this.jFrame = new JFrame("C-- Entwicklungsumgebung");
@@ -203,7 +208,9 @@ public class GUImain implements GUImainMod {
 	@Override
 	public String getWorkingDirectory() {
 		File f = new File(this.settings.getPath());
-		return f.getParentFile().getAbsolutePath();
+		if( f.getParentFile() != null )
+			return f.getParentFile().getAbsolutePath();
+		return null;
 	}
 
 	@Override
