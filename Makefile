@@ -20,6 +20,9 @@ all: CMM.jar
 CMM.jar: $(JAVA_CLASSES)
 	jar cf CMM.jar $(JAVA_CLASSES)
 
+coco: src/at/jku/ssw/cmm/compiler/CMM.atg
+	cocoj src/at/jku/ssw/cmm/compiler/CMM.atg
+
 #default: build
 
 #build: 
@@ -28,3 +31,5 @@ CMM.jar: $(JAVA_CLASSES)
 clean: 
 	$(RM) -rv bin/*
 	$(RM) -f CMM.jar
+	$(RM) -f src/at/jku/ssw/cmm/compiler/Parser.java
+	$(RM) -f src/at/jku/ssw/cmm/compiler/Scanner.java
