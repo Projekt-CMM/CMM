@@ -1,0 +1,47 @@
+Testfälle:
+
+file01:
+	- Variablendeklarationen + Print Funktion:
+		- int
+		- char
+		- float 
+
+file02:
+	- Plus, Minus, Mal, Dividiert + print Function:
+		-int
+
+file03:
+	- Array, Print Array:
+		- int[]
+
+file04:
+	- Array, Print Array:
+		- char[]
+
+file05:
+	- Strukturen Test + Print:
+		- Struct:
+			- int
+			- char
+			- int
+
+file06:
+	- if, else Bedingungen + Print:
+		- int
+
+file07;
+	- While Schleife + Print:
+		- int
+
+file08:
+	- Strings Deklaration + Typumwandlung + print:
+		- string
+		- char
+
+file09:
+	- Int Funktionen mit Return Wert: (add, min)
+		- int
+
+file10:
+	- Int Funktionen mit Return-Wert: (mul / div mit 0)
+		- int

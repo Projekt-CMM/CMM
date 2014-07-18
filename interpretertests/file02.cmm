@@ -1,0 +1,19 @@
+void main(){
+		int a;
+		int b;
+		int c;
+		int d;
+		int e;
+	
+		a = 5;
+		b = 5 + a;	 //10
+		c = a - b;	//5
+		d = c * b; //20
+		e = b / c; //2
+
+		print((char) a);
+		print((char) b);
+		print((char) c);
+		print((char) d);
+		print((char) e);
+}

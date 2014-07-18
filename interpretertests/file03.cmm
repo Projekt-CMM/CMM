@@ -1,0 +1,15 @@
+void main(){
+	int[5] a;
+
+	a[0] = 10;
+	a[1] = 20;
+	a[2] = 30;
+	a[3] = 40;
+	a[4] = 50;
+
+	print((char) a[0]);
+	print((char) a[1]);
+	print((char) a[2]);
+	print((char) a[3]);
+	print((char) a[4]);
+}

@@ -1,0 +1,15 @@
+int main(){
+	int a;
+	int b;
+
+	a = 0;
+
+	while ( a != 10){
+		a++;
+		print((char) a);		
+	}
+
+	b = a;
+
+	print((char) b);
+}
