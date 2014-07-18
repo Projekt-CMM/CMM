@@ -4,7 +4,5 @@
 #
 # fork-repository is defined as origin
 
-main_url="https://github.com/Projekt-CMM/CMM.git"
-
-git pull --rebase $main master
+git pull --rebase https://github.com/Projekt-CMM/CMM.git master
 git push origin master
