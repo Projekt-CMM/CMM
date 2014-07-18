@@ -706,7 +706,7 @@ public class GUIrightPanel implements GUIrPanelMod {
 	 * variables of the given function.
 	 * 
 	 * <hr>
-	 * <i>THREAD SAFE by default </i>
+	 * <i>THREAD SAFE, asynchronously invoked. </i>Exception may stop EDT!
 	 * <hr>
 	 * 
 	 * @param name
@@ -722,6 +722,11 @@ public class GUIrightPanel implements GUIrPanelMod {
 					StructureContainer.FUNC, index));
 			this.updateLocals();
 		}
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				jButtonB2.setVisible(false);
+			}
+		});
 	}
 
 	/**
@@ -731,17 +736,21 @@ public class GUIrightPanel implements GUIrPanelMod {
 	 * top of the call stack.
 	 * 
 	 * <hr>
-	 * <i>THREAD SAFE by default </i>
+	 * <i>THREAD SAFE, asynchronously invoked. </i>Exception may stop EDT!
 	 * <hr>
 	 */
 	public void selectFunction() {
 		synchronized (localVarLock) {
 			this.localVarBrowser.clear();
 			this.localVarBrowser.push(new StructureContainer(
-					MethodContainer.getMethodName(Memory.loadInt(Memory
-							.getFramePointer() - 8)), StructureContainer.FUNC,
-					0));
+					MethodContainer.getMethodName(Memory.loadInt(Memory.getFramePointer() - 8)),
+					StructureContainer.FUNC, 0));
 		}
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				jButtonB2.setVisible(false);
+			}
+		});
 	}
 
 	/**
@@ -790,7 +799,7 @@ public class GUIrightPanel implements GUIrPanelMod {
 	 * safe by default.
 	 * 
 	 * <hr>
-	 * <i>THREAD SAFE by default </i>
+	 * <i>THREAD SAFE, asynchronously invoked. </i>Exception may stop EDT!
 	 * <hr>
 	 */
 	public void globalSelectRoot() {
@@ -800,6 +809,12 @@ public class GUIrightPanel implements GUIrPanelMod {
 					"Global variables", StructureContainer.GLOBAL, Memory
 							.getGlobalPointer()));
 		}
+		
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				jButtonB1.setVisible(false);
+			}
+		});
 	}
 
 	/**

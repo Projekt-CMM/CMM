@@ -117,8 +117,7 @@ public class GUImain implements GUImainMod {
 		jPanelLeft.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		// Text area (text pane) for source code
-		this.jSourcePane = InitLeftPanel
-				.initCodePane(jPanelLeft, this.settings);
+		this.jSourcePane = InitLeftPanel.initCodePane(jPanelLeft, this.settings);
 		if (this.settings.hasPath())
 			this.jSourcePane.setText(FileManagerCode.readSourceCode(new File(
 					this.settings.getPath())));
