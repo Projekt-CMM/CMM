@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<project default="build" name="CMM">
+<!-- https://de.wikipedia.org/wiki/Apache_Ant -->
+	<property name="build.classes" value="bin" />
+  	<property name="build.lib" value="lib" />
+  	<property name="java.dir" value="src" />
+  	<property name="name" value="CMM" />
+  	<property name="manifest" value="manifest.txt" />
+
+	<path id="classpath">
+    	<pathelement location="." />
+   	</path>
+
+	<target name="coco" description="generate Parser.java and Scanner.java from CMM.atg" >
+		<exec executable="cocoj">
+    		<arg value="src/at/jku/ssw/cmm/compiler/CMM.atg"/>
+  		</exec>
+  	</target>
+
+    <target name="build" depends="coco">
+
+		<!-- Verzeichis anlegen -->
+		<mkdir dir="${build.classes}"/>
+
+		<!-- Quelltext kompilieren -->
+		<javac srcdir="${java.dir}"
+			destdir="${build.classes}"
+			classpath="${build.lib}/rsyntaxtextarea.jar"
+			debug="false"
+			deprecation="true"
+			optimize="true" >
+		  	<classpath refid="classpath" />
+		</javac>
+
+		<!-- Kopiert notwendige Dateien -->
+		<copy todir="${build.classes}">
+		 	<fileset dir="${java.dir}">
+		 	</fileset>
+		</copy>
+	 
+		<!-- Baut die JAR-Datei -->
+		<jar jarfile="${name}.jar" manifest="${manifest}">
+		  	<fileset dir="${build.classes}"/>
+			<zipgroupfileset dir="${build.lib}" includes="*.jar"/>
+		</jar>
+    </target>
+
+	<!-- Aufräumen  -->
+  	<target name="clean" description="Räumt die temporär angelegten Dateien weg">
+    <!-- Löscht Dateien -->
+		<delete dir="${build.classes}" />
+		<delete> 
+		  	<fileset dir="." includes="**/*~" defaultexcludes="no"/>
+		</delete>
+  	</target>
+
+</project>
