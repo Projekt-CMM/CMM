@@ -3,5 +3,5 @@ jdk:
   - openjdk7
 before_install:
  - sudo apt-get -qq update
- - sudo apt-get -qq coco-java
+ - sudo apt-get -qq install coco-java
 script: ant build
