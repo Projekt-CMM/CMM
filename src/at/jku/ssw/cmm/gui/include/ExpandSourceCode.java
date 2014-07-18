@@ -74,7 +74,7 @@ public class ExpandSourceCode {
 				    String include;
 				    
 				    if( localDirectory )
-				    	include = FileManagerCode.readSourceCode(new File(m.group(1)));
+				    	include = FileManagerCode.readSourceCode(new File("lib/" + m.group(1)));
 				    else
 				    	include = FileManagerCode.readSourceCode(new File(workingDirectory + "/" + m.group(1)));
 				    

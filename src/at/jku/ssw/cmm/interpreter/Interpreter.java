@@ -17,6 +17,7 @@ import at.jku.ssw.cmm.interpreter.excpetions.ReturnException;
 import at.jku.ssw.cmm.interpreter.excpetions.StackOverflowException;
 import at.jku.ssw.cmm.interpreter.excpetions.StackUnderflowException;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
+import at.jku.ssw.cmm.interpreter.memory.MethodContainer;
 import at.jku.ssw.cmm.compiler.Node;
 
 public final class Interpreter {
@@ -481,7 +482,7 @@ public final class Interpreter {
 
 			// New Memory Frame
 			try {
-				Memory.openStackFrame(p.line, 0, p.obj.size);
+				Memory.openStackFrame(p.line, MethodContainer.getMethodId(p.obj.name), p.obj.size);
 			} catch (StackOverflowException e) {
 				debugger.abort("StackOverFlow", p);
 				throw new IllegalStateException("Kind" + p.kind);

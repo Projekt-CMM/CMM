@@ -10,7 +10,6 @@ import javax.swing.event.ChangeListener;
 
 import at.jku.ssw.cmm.debugger.Debugger;
 import at.jku.ssw.cmm.gui.GUIrightPanel;
-import at.jku.ssw.cmm.gui.exception.InvalidRunModeException;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.compiler.Node;
 
@@ -326,13 +325,19 @@ public class PanelRunListener implements Debugger {
 		/* --- Node #4: Pause or Run mode --- */
 		if (this.isPauseMode()) {
 			/* --- Node #5: Create Buttons --- */
-			
+			if( arg0.kind == Node.ASSIGN )
+				this.doStepOverButtonCheck(arg0.right);
+			else
+				this.doStepOverButtonCheck(arg0);
 		}
 		/* --- Node #4: Pause or Run mode --- */
 		else if (this.isRunMode() && this.delay > 0) {
 
 			/* --- Node #5: Step over if external function call --- */
-			
+			if( arg0.kind == Node.ASSIGN )
+				this.doStepOverRunCheck(arg0.right);
+			else
+				this.doStepOverRunCheck(arg0);
 
 			this.timer = new Timer();
 			// Start timer
@@ -345,11 +350,7 @@ public class PanelRunListener implements Debugger {
 		}
 		/* --- Node #4: Default exit --- */
 		else {
-			try {
-				throw new InvalidRunModeException();
-			} catch (InvalidRunModeException e) {
-				e.printStackTrace();
-			}
+			throw new IllegalStateException();
 		}
 
 		waitForUserReply();
@@ -358,6 +359,29 @@ public class PanelRunListener implements Debugger {
 
 		return keepRunning;
 	}
+	
+	private void doStepOverButtonCheck( Node n ){
+		//Is function call? (NOT predefined function)
+		if( n.kind == Node.CALL && n.obj.ast != null ){
+			//Calls function from include
+			if( n.obj.ast.line <= this.master.getBeginLine() )
+				this.master.setStepOverButtonAlone();
+			//Calls local function
+			else
+				this.master.setStepOverButton();
+		}
+		//No valid function call -> no step over button
+		else
+			this.master.unsetStepOverButton();
+	}
+	
+	private void doStepOverRunCheck( Node n ){
+		//Is function call? (NOT predefined function) from external file
+		if( n.kind == Node.CALL && n.obj.ast != null && n.obj.ast.line <= this.master.getBeginLine() ){
+			this.master.stepOver();
+		}
+	}
+	
 	/* --- thread synchronization --- */
 	/**
 	 * This method blocks the program until another thread invokes the method
@@ -519,23 +543,17 @@ public class PanelRunListener implements Debugger {
 		public void mouseClicked(MouseEvent e) {
 
 			master.stepOut();
+			userReply();
 		}
 
 		@Override
-		public void mousePressed(MouseEvent e) {
-		}
-
+		public void mousePressed(MouseEvent e) {}
 		@Override
-		public void mouseReleased(MouseEvent e) {
-		}
-
+		public void mouseReleased(MouseEvent e) {}
 		@Override
-		public void mouseEntered(MouseEvent e) {
-		}
-
+		public void mouseEntered(MouseEvent e) {}
 		@Override
-		public void mouseExited(MouseEvent e) {
-		}
+		public void mouseExited(MouseEvent e) {}
 	};
 
 	/**
