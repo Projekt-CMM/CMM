@@ -63,7 +63,7 @@ public final class Interpreter {
 	 * Statements: assign, stateseq, if, ifelse, while, return, trap, call
 	 */
 	void Statement(Node p) throws ReturnException, AbortException { // b = a;
-		if (!debugger.step(p))//TODO step
+		if (!debugger.step(p))
 			throw new AbortException();
 
 		switch (p.kind) {
@@ -428,8 +428,7 @@ public final class Interpreter {
 		switch (p.obj.name) {
 		case "print":
 			inout.out(CharExpr(p.left));
-			// System.out.print("I:"+ (int)CharExpr(p.left) + " C:"+
-			// CharExpr(p.left)+"\n"); break;
+			break;
 		case "read":
 			Memory.setCharReturnValue(inout.in());
 			break; // Memory.setCharReturnValue(value); break;
@@ -530,8 +529,6 @@ public final class Interpreter {
 			}
 			break;
 		}
-
-		// if(!debugger.step(p))
 	}
 
 	/*

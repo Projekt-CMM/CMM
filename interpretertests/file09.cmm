@@ -1,0 +1,24 @@
+int add(int a, int b){
+	return a + b;
+}
+
+int dec(int a, int b){
+	return a - b;
+}
+
+void main(){
+	int x;
+	int y;
+
+	x = 20;
+	y = 5;
+
+	int z;
+	int w;
+
+	z = add(x, y);
+	print((char) z);
+	
+	w = dec(x , y);
+	print((char) y);
+}

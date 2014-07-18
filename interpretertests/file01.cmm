@@ -1,0 +1,13 @@
+void main(){
+
+	int i;
+	char c;
+	float f;
+
+	i = 10;
+	c = 'c';
+	f = 1.4;
+
+	print((char) i);
+
+}

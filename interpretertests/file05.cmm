@@ -1,0 +1,18 @@
+Struct Hallo{
+	int a;
+	char b;
+	int c;
+}
+
+void main(){
+	
+	Hallo test;
+
+	test.a = 5;
+	test.b = 'a';
+
+	test.c = test.a + 5;
+
+	print((char) test.c);
+	print(test.b);
+}
