@@ -57,44 +57,95 @@ public class Parser {
 	Strings strings = new Strings();
 //--- LL(1) conflict resolvers
 
-	// Returns true if a VarDecl comes next in the input
+	/** 
+	 * Check if a VarDecl comes next in the input
+	 *
+	 * @return true if a var-declaration follow
+	 */
 	boolean isVarDecl() {
-		if (la.kind != _ident) return false;
+		// is the next kind an identifier?
+		if (la.kind != _ident) 
+			return false;
+		// get identifier and check if it represent a type
 		Obj obj = tab.find(la.val);
 		if (obj.kind == Obj.TYPE){
+			// get next token
 			Token x = scanner.Peek();
+			
+			// if the current token is a semicolon, it doesn't reach a wrong token, so it would be a declaration
 			while (x.kind != _semicolon) {
+				// this token cannot follow direct after a declaration
 				if (x.kind == _EOF || x.kind == _lpar  || x.kind == _assignplus
 					|| x.kind == _assignminus || x.kind == _assigntimes  || x.kind == _assigndiv  
 					|| x.kind == _assignrem || x.kind == _assignleftshift || x.kind == _assignrightshift
-					|| x.kind == _assignbitand || x.kind == _assignbitxor || x.kind == _assignbitor) return false;
+					|| x.kind == _assignbitand || x.kind == _assignbitxor || x.kind == _assignbitor) 
+					return false;
+					
+				// return true because it is a assignment
 				else if(x.kind == _assign)
 					return true;
+					
+				// get next token
 				x = scanner.Peek();
 			}
+			// token is semicolon
 			return true;
 		}
+		// identifier is not a type
 		return false;
 	}
 	
-	// Returns true if the next input is an Expr and not a '(' Condition ')'
-	boolean isExpr() { 
-		if (la.kind == _bang) return false;
+	/**
+	 * check if next input is an Expression, and not a '(' Condition ')'
+	 *
+	 * @return true if the next input is an Expr
+	 */
+	boolean isExpr() {
+		// if the next token is a "!", it is sure a condition
+		if (la.kind == _bang) 
+			return false;
+			
+		// the next token is a "(", so it can be an expression or a condition
 		else if (la.kind == _lpar) {
+			// get next token
 			Token x = scanner.Peek();
+			
+			// if one of the following tokens occour, it would be a condition
 			while (x.kind != _rpar && x.kind != _EOF) {
-				if (x.kind == _eql || x.kind == _neq || x.kind == _lss || x.kind == _leq || x.kind == _gtr || x.kind == _geq) return false;
+				if (x.kind == _eql || x.kind == _neq || x.kind == _lss 
+					|| x.kind == _leq || x.kind == _gtr || x.kind == _geq) 
+					return false;
+					
+				// get next token
 				x = scanner.Peek();
 			}
+			// if last readed character is a ")", it is a expression, otherwise we reached end of file
 			return x.kind == _rpar;
-		} else return true;
+		} 
+		// anything else is an Expression
+		else 
+			return true;
 	}
 	
-	// Returns true if the next input is a type cast (requires symbol table)
+	/**
+	 * Check if the next input is a type cast
+	 *
+	 * @return true if the next input is a type cast 
+	 *
+	 * @info requires symbol table
+	 */
 	boolean isCast() {
+		// get next token
 		Token x = scanner.Peek();
-		if (x.kind != _ident) return false;
+		
+		// if it is not an identifier, it cannot be a cast
+		if (x.kind != _ident) 
+			return false;
+			
+		// get the identifier
 		Obj obj = tab.find(x.val);
+		
+		// check if the identfier declare a type
 		return obj.kind == Obj.TYPE;
 	}
 
@@ -161,9 +212,11 @@ public class Parser {
 	}
 	
 	void CMM() {
-		tab = new Tab(this); 
-		     tab.openScope(); 
-		     Node e;
+		tab = new Tab(this);
+		// open global scope
+		    	tab.openScope(); 
+		    	
+		    	Node e; 
 		while (StartOf(1)) {
 			if (la.kind == 27) {
 				ConstDecl();
@@ -171,17 +224,25 @@ public class Parser {
 				StructDecl();
 			} else if (isVarDecl()) {
 				e = VarDecl();
-				if(e != null) SemErr("variable assigment is not allowed for global variables"); 
+				if(e != null) 
+				SemErr("variable assigment is not allowed for global variables"); 
 			} else {
 				ProcDecl();
 			}
 			while (!(StartOf(2))) {SynErr(59); Get();}
 		}
-		if (debug[0]) tab.dumpScope(tab.curScope.locals, 0);
-		if (debug[3]) strings.dump();
-		tab.checkIfForwardsResolved(tab.curScope); 
-		Obj obj = tab.find("main");
-		if(obj == Tab.noObj || obj.kind != Obj.PROC) SemErr("main is not declared as function");
+		if (debug[0]) 
+		tab.dumpScope(tab.curScope.locals, 0);
+		 	if (debug[2])
+		 		strings.dump();
+		 
+		// check if all forward-declarations resolved
+		 	tab.checkIfForwardsResolved(tab.curScope); 
+		 	
+		 	// check if main-function is declared
+		 	Obj obj = tab.find("main");
+		 	if(obj == Tab.noObj || obj.kind != Obj.PROC) 
+		 		SemErr("main is not declared as function"); 
 	}
 
 	void ConstDecl() {
@@ -194,19 +255,23 @@ public class Parser {
 		if (la.kind == 2) {
 			Get();
 			curCon.val = tab.intVal(t.val); 
-			                   if (type != Tab.intType) SemErr("int constant not allowed here"); 
+			                  	if (type != Tab.intType) 
+			                  		SemErr("int constant not allowed here"); 
 		} else if (la.kind == 3) {
 			Get();
 			curCon.fVal = tab.floatVal(t.val); 
-			if (type != Tab.floatType) SemErr("float constant not allowed here"); 
+			if (type != Tab.floatType) 
+			SemErr("float constant not allowed here"); 
 		} else if (la.kind == 4) {
 			Get();
 			curCon.val = tab.charVal(t.val); 
-			if (type != Tab.charType) SemErr("char constant not allowed here"); 
+			if (type != Tab.charType) 
+			SemErr("char constant not allowed here"); 
 		} else if (la.kind == 5) {
 			Get();
 			curCon.val = strings.put(tab.stringVal(t.val));  // TODO
-			if (type != Tab.stringType) SemErr("string constant not allowed here"); 
+			if (type != Tab.stringType) 
+			SemErr("string constant not allowed here"); 
 		} else SynErr(60);
 		Expect(8);
 	}
@@ -221,13 +286,20 @@ public class Parser {
 		tab.openScope(); 
 		while (la.kind == 1) {
 			e = VarDecl();
-			if(e!=null) SemErr("variable assigment is not allowed in struct"); 
+			if(e!=null) 
+			SemErr("variable assigment is not allowed in struct"); 
 		}
 		Expect(31);
 		type.fields = tab.curScope.locals;
-		type.size = tab.curScope.size;
-		if(type.fields==null) SemErr("struct must contain at least one variable");
-		tab.closeScope(); 
+		// copy size
+		                           		type.size = tab.curScope.size;
+		                           		
+		                           		// check if no variable is declared
+		                           		if(type.fields==null) 
+		                           			SemErr("struct must contain at least one variable");
+		                           		
+		                           		// close current scope
+		                           		tab.closeScope(); 
 	}
 
 	Node  VarDecl() {
@@ -236,7 +308,7 @@ public class Parser {
 		Node curNode = null, newNode; 
 		Obj curObj; 
 		e = null; 
-		                        int line = la.line; 
+		                       	int line = la.line; 
 		type = Type();
 		Expect(1);
 		curObj = tab.insert(Obj.VAR, t.val, type); 
@@ -244,11 +316,19 @@ public class Parser {
 			Get();
 			e = BinExpr();
 			if(type == null || (!type.isPrimitive() && type != Tab.stringType)) 
-			SemErr("type is not a primitive or string");
-			else if(e == null) SemErr("right operator is not defined"); 
-			else e = tab.impliciteTypeCon(e, type);
-			e = new Node(Node.ASSIGN,new Node(curObj),e,line); 
-			curNode = e; 
+					SemErr("type is not a primitive or string");
+					
+				// check if Expression is not null
+				else if(e == null) 
+					SemErr("right operator is not defined");
+					
+				// make implicit type conversation
+				else 
+					e = tab.impliciteTypeCon(e, type);
+										// add assignment
+			 	e = new Node(Node.ASSIGN,new Node(curObj),e,line);
+			 	
+			 	curNode = e; 
 		}
 		while (la.kind == 28) {
 			Get();
@@ -258,17 +338,26 @@ public class Parser {
 				Get();
 				newNode = BinExpr();
 				if(type == null || (!type.isPrimitive() && type != Tab.stringType)) 
-				SemErr("type is not a primitive or string");
-				else if(newNode == null) SemErr("right operator is not defined"); 
-				else newNode = tab.impliciteTypeCon(newNode, type);
-				if(curNode == null) {
-				e = new Node(Node.ASSIGN,new Node(curObj),newNode,line);
-				curNode = e;
-				}
-				else {
-				curNode.next = new Node(Node.ASSIGN,new Node(curObj),newNode,line); 
-				curNode = curNode.next; 
-				} 
+				   	SemErr("type is not a primitive or string");
+				 
+				 // check if Expression is not null
+					else if(newNode == null) 
+						SemErr("right operator is not defined");
+					
+					// make implicite type conversation
+					else 
+						newNode = tab.impliciteTypeCon(newNode, type);
+					
+					// if no assignment has occour yet, do the following
+				 	if(curNode == null) {
+				     	e = new Node(Node.ASSIGN,new Node(curObj),newNode,line);
+				     	curNode = e;
+				 	}
+				 	// otherwise that
+				 	else {
+				     	curNode.next = new Node(Node.ASSIGN,new Node(curObj),newNode,line); 
+				     	curNode = curNode.next; 
+				 	} 
 			}
 		}
 		Expect(8);

@@ -352,6 +352,11 @@ public class Tab {
 		Node oldNode = buildNode;
 		for(int i = 0; i < declFunction.nPars;i++) {
 
+			if(declObj == null) {
+				parser.SemErr("parameter not declared");
+				return;
+			}
+			
 			if(buildNode == null) {
 				parser.SemErr("declaration of function has more parameter as using of itself");
 				break;
