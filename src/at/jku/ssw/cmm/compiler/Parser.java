@@ -214,9 +214,9 @@ public class Parser {
 	void CMM() {
 		tab = new Tab(this);
 		// open global scope
-		    	tab.openScope(); 
+			 tab.openScope(); 
 		    	
-		    	Node e; 
+		 	Node e; 
 		while (StartOf(1)) {
 			if (la.kind == 27) {
 				ConstDecl();
@@ -234,7 +234,7 @@ public class Parser {
 		if (debug[0]) 
 		tab.dumpScope(tab.curScope.locals, 0);
 		 	if (debug[2])
-		 		strings.dump();
+					strings.dump();
 		 
 		// check if all forward-declarations resolved
 		 	tab.checkIfForwardsResolved(tab.curScope); 
@@ -242,7 +242,7 @@ public class Parser {
 		 	// check if main-function is declared
 		 	Obj obj = tab.find("main");
 		 	if(obj == Tab.noObj || obj.kind != Obj.PROC) 
-		 		SemErr("main is not declared as function"); 
+					SemErr("main is not declared as function"); 
 	}
 
 	void ConstDecl() {
@@ -255,8 +255,8 @@ public class Parser {
 		if (la.kind == 2) {
 			Get();
 			curCon.val = tab.intVal(t.val); 
-			                  	if (type != Tab.intType) 
-			                  		SemErr("int constant not allowed here"); 
+			          	    	if (type != Tab.intType) 
+			             	 		SemErr("int constant not allowed here"); 
 		} else if (la.kind == 3) {
 			Get();
 			curCon.fVal = tab.floatVal(t.val); 
@@ -292,14 +292,14 @@ public class Parser {
 		Expect(31);
 		type.fields = tab.curScope.locals;
 		// copy size
-		                           		type.size = tab.curScope.size;
+		                        		type.size = tab.curScope.size;
 		                           		
-		                           		// check if no variable is declared
-		                           		if(type.fields==null) 
-		                           			SemErr("struct must contain at least one variable");
-		                           		
-		                           		// close current scope
-		                           		tab.closeScope(); 
+		                        		// check if no variable is declared
+		                        		if(type.fields==null) 
+		                        			SemErr("struct must contain at least one variable");
+		                          		
+		                        		// close current scope
+		                        		tab.closeScope(); 
 	}
 
 	Node  VarDecl() {
@@ -307,8 +307,9 @@ public class Parser {
 		Struct type; 
 		Node curNode = null, newNode; 
 		Obj curObj; 
-		e = null; 
-		                       	int line = la.line; 
+		e = null;
+		// get current line
+		              	     	int line = la.line; 
 		type = Type();
 		Expect(1);
 		curObj = tab.insert(Obj.VAR, t.val, type); 
@@ -317,17 +318,17 @@ public class Parser {
 			e = BinExpr();
 			if(type == null || (!type.isPrimitive() && type != Tab.stringType)) 
 					SemErr("type is not a primitive or string");
-					
+				
 				// check if Expression is not null
 				else if(e == null) 
 					SemErr("right operator is not defined");
-					
+				
 				// make implicit type conversation
 				else 
 					e = tab.impliciteTypeCon(e, type);
-										// add assignment
+									// add assignment
 			 	e = new Node(Node.ASSIGN,new Node(curObj),e,line);
-			 	
+				
 			 	curNode = e; 
 		}
 		while (la.kind == 28) {
@@ -339,15 +340,15 @@ public class Parser {
 				newNode = BinExpr();
 				if(type == null || (!type.isPrimitive() && type != Tab.stringType)) 
 				   	SemErr("type is not a primitive or string");
-				 
+				
 				 // check if Expression is not null
 					else if(newNode == null) 
 						SemErr("right operator is not defined");
-					
-					// make implicite type conversation
+				
+					// make implicit type conversation
 					else 
 						newNode = tab.impliciteTypeCon(newNode, type);
-					
+				
 					// if no assignment has occour yet, do the following
 				 	if(curNode == null) {
 				     	e = new Node(Node.ASSIGN,new Node(curObj),newNode,line);
@@ -373,9 +374,10 @@ public class Parser {
 			Get();
 		} else SynErr(61);
 		Expect(1);
-		curProc = tab.insert(Obj.PROC, t.val, type); 
-		if(type != Tab.noType && type != Tab.stringType && !type.isPrimitive()) 
-		SemErr("procedure must return a primitive type ,a string or is void"); 
+		curProc = tab.insert(Obj.PROC, t.val, type);
+												// check if it return the correct type
+		 	if(type != Tab.noType && type != Tab.stringType && !type.isPrimitive()) 
+		 		SemErr("procedure must return a primitive type ,a string or is void"); 
 		Expect(6);
 		tab.openScope(); 
 		if (la.kind == 1) {
@@ -385,59 +387,94 @@ public class Parser {
 		if (la.kind == 30) {
 			Get();
 			if(curProc.isForward) {
+			// check if forward-declaration match with the current declaration
 			tab.checkForwardParams(curProc.locals,tab.curScope.locals);
-			if(curProc.type != type)
-			SemErr("return value of forware declaration does not match declaration");
-			curProc.isForward = false;
-			}
-			Node startNode = null, curNode = null, newNode; 
+			
+			// check return type
+			 		if(curProc.type != type)
+			 			SemErr("return value of forware declaration does not match declaration");
+			 		
+			 		// remove forward-flag
+			 		curProc.isForward = false;
+			 	}
+			 	Node startNode = null, curNode = null, newNode; 
 			while (StartOf(3)) {
 				if (la.kind == 27) {
 					ConstDecl();
 				} else if (isVarDecl()) {
 					newNode = VarDecl();
 					if(newNode != null) { 
-					if(startNode == null) {
-					startNode = newNode;
-					} else {
-					if(curNode == null) SemErr("invalide statement");
-					else curNode.next = newNode;  
-					}
-					curNode = newNode; 
-					while(curNode.next != null) {
-					curNode = curNode.next; 
-					} 
+					     	if(startNode == null) {
+					     		// if that is the first statment in the procedure, set start node
+					  		startNode = newNode;
+					  	} else {
+					  		//otherwise check if current node is correct
+					      	if(curNode == null) 
+					      		SemErr("invalide statement");
+					      		
+					      	// add statment to list if possible
+					     	else 
+					     		curNode.next = newNode;  
+						   	}
+						   	
+						   	// set new current node
+					  	curNode = newNode;
+					  	
+					  	// go forward in the list, if more than one statment occour while the declaration
+					  	while(curNode.next != null) {
+					      	curNode = curNode.next; 
+					  	} 
 					} 
 				} else {
 					newNode = Statement();
 					if(startNode == null) {
+					// if that is the first statment in the procedure, set start node
 					startNode = newNode;
 					} else {
-					if(curNode == null) SemErr("invalide statement");
-					else curNode.next = newNode;  
-					} 
+					//otherwise check if current node is correct
+					if(curNode == null) 
+					SemErr("invalide statement");
+					   	// add statment to list if possible
+					else 
+					curNode.next = newNode;  
+					}
+					// set new current node
 					curNode = newNode; 
 				}
 			}
 			Expect(31);
 			if(curProc.type != Tab.noType) {
-			if(startNode == null) {
-			startNode = new Node(Node.TRAP,null,null,t.line);
-			} else {
-			if(curNode == null) SemErr("invalide statement");
-			else curNode.next = new Node(Node.TRAP,null,null,t.line);
-			}
-			}
-			curProc.ast = new Node(Node.STATSEQ,startNode,null,line); 
-			if (debug[1]) Node.dump(curProc.ast, 0); 
+			// add Node.TRAP at end of procedure if possible
+			     	if(startNode == null) {
+			      	startNode = new Node(Node.TRAP,null,null,t.line);
+			  	} else {
+			      	if(curNode == null) 
+			      		SemErr("invalide statement");
+			      	else 
+			      		curNode.next = new Node(Node.TRAP,null,null,t.line);
+			  	}
+			 	}
+			 	
+			 	// add created syntax-tree to procedure
+			 	curProc.ast = new Node(Node.STATSEQ,startNode,null,line);
+			 	
+			 	// generate debug-output if the correct flags are set
+			 	if (debug[1]) 
+			 		Node.dump(curProc.ast, 0); 
 		} else if (la.kind == 8) {
 			Get();
-			if(curProc.isForward) SemErr("function is already forward declared");
-			curProc.isForward = true; 
+			if(curProc.isForward) 
+			SemErr("function is already forward declared");
+			
+			// set forward-flag
+			 	curProc.isForward = true; 
 		} else SynErr(62);
 		curProc.locals = tab.curScope.locals;
-		curProc.size = tab.curScope.size;
-		tab.closeScope(); 
+												// copy variable size of lcurrent scope into procedure
+		 	curProc.size = tab.curScope.size;
+		 	
+		 	// close current scope
+		 	tab.closeScope(); 
 	}
 
 	Struct  Type() {
@@ -445,8 +482,8 @@ public class Parser {
 		Expect(1);
 		Obj obj = tab.find(t.val);
 		if(obj.kind != Obj.TYPE) SemErr(obj.name + " is not a type");
-		 type = obj.type; 
-		 ArrayList<Integer> dimensions = new ArrayList(); 
+			type = obj.type; 
+			ArrayList<Integer> dimensions = new ArrayList(); 
 		while (la.kind == 34) {
 			Get();
 			Expect(2);
@@ -456,7 +493,7 @@ public class Parser {
 			Expect(35);
 		}
 		for(int i = dimensions.size()-1; i>=0;i--) {
-		   type = new Struct(Struct.ARR, dimensions.get(i), type);
+		  		type = new Struct(Struct.ARR, dimensions.get(i), type);
 		} 
 		return type;
 	}
@@ -627,33 +664,46 @@ public class Parser {
 			isRef = true; 
 		}
 		Expect(1);
-		Obj curRef = tab.insert(Obj.VAR, t.val, type); 
-		curRef.isRef = isRef;
-		if(!type.isPrimitive() && type != Tab.stringType) 
-		SemErr("var must be a primitive type or string"); 
+		Obj curPar = tab.insert(Obj.VAR, t.val, type);
+		// copy reference-flag
+		 	curPar.isRef = isRef;
+		 
+		 	// check if parameter is primitive or string
+		 	if(!type.isPrimitive() && type != Tab.stringType) 
+		 		SemErr("var must be a primitive type or string"); 
 	}
 
 	Node  Designator() {
 		Node  n;
-		Obj obj; Node e; 
+		Obj obj; 
+		Node e; 
+		Struct type; 
 		Expect(1);
 		String name = t.val;
-		                      obj = tab.find(name); 
-		                      n = new Node(obj); 
+		                     	obj = tab.find(name); 
+		                     	n = new Node(obj);
+		                     	type = obj.type; 
 		while (la.kind == 34 || la.kind == 48) {
 			if (la.kind == 48) {
 				Get();
-				if(obj.type.kind != Struct.STRUCT) SemErr(name + " is not a struct"); 
+				if(obj.type.kind != Struct.STRUCT) 
+				SemErr(name + " is not a struct"); 
 				Expect(1);
 				obj = tab.findField(t.val,obj.type); 
 				n = new Node(Node.DOT, n, new Node(obj.adr), obj.type); 
 			} else {
 				Get();
-				if(obj.type.kind != Struct.ARR && obj.type.kind != Struct.STRING) SemErr(name + " is not an array"); 
+				if(obj.type.kind != Struct.ARR && obj.type.kind != Struct.STRING) 
+				SemErr(name + " is not an array"); 
 				e = BinExpr();
-				if(e == null || e.type == null || e.type.kind != Struct.INT) SemErr("index must be an int");
-				if(obj.type.kind == Struct.STRING) n = new Node(Node.INDEX, n, e, Tab.charType);
-				else n = new Node(Node.INDEX, n, e, obj.type.elemType); 
+				if(e == null || e.type == null || e.type.kind != Struct.INT)
+				SemErr("index must be an int");
+				   	if(obj.type.kind == Struct.STRING) 
+				n = new Node(Node.INDEX, n, e, Tab.charType);
+				else {
+				n = new Node(Node.INDEX, n, e, type.elemType);
+				type = type.elemType;
+				} 
 				Expect(35);
 			}
 		}

@@ -429,18 +429,18 @@ ident								(. 	// add parameter to current scope
 //-------------------------------------------------------------------------
 Type<out Struct type>
 = 
-ident                            	(. Obj obj = tab.find(t.val);
-									   if(obj.kind != Obj.TYPE) SemErr(obj.name + " is not a type");
-                                       type = obj.type; 
-                                       ArrayList<Integer> dimensions = new ArrayList(); .)
+ident                            	(. 	Obj obj = tab.find(t.val);
+									   	if(obj.kind != Obj.TYPE) SemErr(obj.name + " is not a type");
+                                       	type = obj.type; 
+                                       	ArrayList<Integer> dimensions = new ArrayList(); .)
 { "[" 
-  intCon 							(. int arraySize = tab.intVal(t.val);
-  									   dimensions.add(arraySize); 
-  									   if(arraySize <= 0) SemErr("array-size must be 1 or higher"); .)
+  intCon 							(. 	int arraySize = tab.intVal(t.val);
+  									   	dimensions.add(arraySize); 
+  									   	if(arraySize <= 0) SemErr("array-size must be 1 or higher"); .)
   "]" }
-									(. for(int i = dimensions.size()-1; i>=0;i--) {
-									       type = new Struct(Struct.ARR, dimensions.get(i), type);
-									   } .)
+									(. 	for(int i = dimensions.size()-1; i>=0;i--) {
+									       		type = new Struct(Struct.ARR, dimensions.get(i), type);
+									  	} .)
 .
 //-------------------------------------------------------------------------
 Statement<out Node st>				(. Node design; 
@@ -716,18 +716,29 @@ Factor<out Node n>					(. Struct type;
  ")"
 ).
 //-------------------------------------------------------------------------
-Designator<out Node n>				(. Obj obj; Node e; .)
+Designator<out Node n>				(. 	Obj obj; 
+                      				   	Node e; 
+                      				   	Struct type; .)
 = 
-ident								(. String name = t.val;
-                                       obj = tab.find(name); 
-                                       n = new Node(obj); .)
-{ "."								(. if(obj.type.kind != Struct.STRUCT) SemErr(name + " is not a struct"); .)
-  ident								(. obj = tab.findField(t.val,obj.type); 
-  									   n = new Node(Node.DOT, n, new Node(obj.adr), obj.type); .)
-| "["								(. if(obj.type.kind != Struct.ARR && obj.type.kind != Struct.STRING) SemErr(name + " is not an array"); .)
-  BinExpr<out e> 					(. if(e == null || e.type == null || e.type.kind != Struct.INT) SemErr("index must be an int");
-  									   if(obj.type.kind == Struct.STRING) n = new Node(Node.INDEX, n, e, Tab.charType);
-  									   else n = new Node(Node.INDEX, n, e, obj.type.elemType); .)
+ident								(. 	String name = t.val;
+                                       	obj = tab.find(name); 
+                                       	n = new Node(obj);
+                                       	type = obj.type; .)
+{ "."								(. 	if(obj.type.kind != Struct.STRUCT) 
+											SemErr(name + " is not a struct"); .)
+  ident								(. 	obj = tab.findField(t.val,obj.type); 
+  									   	n = new Node(Node.DOT, n, new Node(obj.adr), obj.type); .)
+| "["								(. 	if(obj.type.kind != Struct.ARR && obj.type.kind != Struct.STRING) 
+											SemErr(name + " is not an array"); .)
+  BinExpr<out e> 					(. 	if(e == null || e.type == null || e.type.kind != Struct.INT)
+  											SemErr("index must be an int");
+  									   	
+  									   	if(obj.type.kind == Struct.STRING) 
+  									   		n = new Node(Node.INDEX, n, e, Tab.charType);
+  									   	else {
+  									   		n = new Node(Node.INDEX, n, e, type.elemType);
+  									   		type = type.elemType;
+  									   	} .)
   "]"
 }
 .
