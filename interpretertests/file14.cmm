@@ -1,0 +1,40 @@
+void main() {
+	int[2][3][4] arr;
+	int i, j, k;
+	i = 0;
+	j = 0;
+	k = 0;
+	int count;
+	count = 0;
+	while (i < 2) {
+		j = 0;
+		while (j < 3) {
+			k = 0;
+			while (k < 4) {
+				arr[i][j][k] = count;
+				count = count + 1;
+				k = k + 1;
+			}
+			j = j + 1;
+		}
+		i = i + 1;
+	}
+
+	int sum;
+	sum = 0;
+	i = 0;
+	j = 0;
+	while (i < 2) {
+		j = 0;
+		while (j < 3) {
+			k = 0;
+			while (k < 4) {
+				sum = sum + arr[i][j][k];
+				k = k + 1;
+			}
+			j = j + 1;
+		}
+		i = i + 1;
+	}
+	print((char) sum);
+}

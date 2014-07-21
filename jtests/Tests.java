@@ -75,7 +75,8 @@ public class Tests implements StdInOut {
 
 	@Test
 	public void test1() throws Exception {
-		String[] a = { "interpretertests/file01.cmm", "-debug", "1", "1" };
+		String[] a = { "interpretertests/file01.cmm"};//, "-debug", "1", "1" };
+		System.out.println("\n" + a[0] + ":");
 		run(a);
 		Assert.assertEquals(1,(char) ref.get(0));
 		Assert.assertEquals('c',(char) ref.get(1));
@@ -90,6 +91,7 @@ public class Tests implements StdInOut {
 	@Test
 	public void test2() throws Exception {
 		String[] a = { "interpretertests/file02.cmm" };
+		System.out.println("\n" + a[0] + ":");
 		run(a);
 
 		Assert.assertEquals(5,(char) ref.get(0));
@@ -106,6 +108,7 @@ public class Tests implements StdInOut {
 	@Test
 	public void test3() throws Exception{
 		String[] a = { "interpretertests/file03.cmm" };
+		System.out.println("\n" + a[0] + ":");
 		run(a);
 
 		Assert.assertEquals(10,(char) ref.get(0));
@@ -123,6 +126,7 @@ public class Tests implements StdInOut {
 	@Test
 	public void test4() throws Exception{
 		String[] a = { "interpretertests/file04.cmm" };
+		System.out.println("\n" + a[0] + ":");
 		run(a);
 
 		Assert.assertEquals('a',(char) ref.get(0));
@@ -140,6 +144,7 @@ public class Tests implements StdInOut {
 	@Test
 	public void test5() throws Exception{
 		String[] a = { "interpretertests/file05.cmm" };
+		System.out.println("\n" + a[0] + ":");
 		run(a);
 
 		Assert.assertEquals(10,(char) ref.get(0));
@@ -153,6 +158,7 @@ public class Tests implements StdInOut {
 	@Test
 	public void test6() throws Exception{
 		String[] a = { "interpretertests/file06.cmm" };
+		System.out.println("\n" + a[0] + ":");
 		run(a);
 
 		Assert.assertEquals(20,(char) ref.get(0));
@@ -165,6 +171,7 @@ public class Tests implements StdInOut {
 	@Test
 	public void test7() throws Exception{
 		String[] a = { "interpretertests/file07.cmm" };
+		System.out.println("\n" + a[0] + ":");
 		run(a);
 
 		Assert.assertEquals(11,(char) ref.get(0));
@@ -177,6 +184,7 @@ public class Tests implements StdInOut {
 	@Test
 	public void test8() throws Exception{
 		String[] a = { "interpretertests/file08.cmm" };
+		System.out.println("\n" + a[0] + ":");
 		run(a);
 
 		Assert.assertEquals('l',(char) ref.get(0));
@@ -191,6 +199,7 @@ public class Tests implements StdInOut {
 	@Test
 	public void test9() throws Exception{
 		String[] a = { "interpretertests/file09.cmm" };
+		System.out.println("\n" + a[0] + ":");
 		run(a);
 
 		Assert.assertEquals(25,(char) ref.get(0));
@@ -206,6 +215,7 @@ public class Tests implements StdInOut {
 	@Test
 	public void test10() throws Exception{
 		String[] a = { "interpretertests/file10.cmm" };
+		System.out.println("\n" + a[0] + ":");
 		run(a);
 
 		Assert.assertEquals(0,(char) ref.get(0));
@@ -219,6 +229,7 @@ public class Tests implements StdInOut {
 	@Test
 	public void test11() throws Exception{
 		String[] a = { "interpretertests/file11.cmm" };
+		System.out.println("\n" + a[0] + ":");
 		run(a);
 
 		Assert.assertEquals(6,(char) ref.get(0));
@@ -236,12 +247,75 @@ public class Tests implements StdInOut {
 	@Test
 	public void test12() throws Exception{
 		String[] a = { "interpretertests/file12.cmm" , "-debug", "1", "1" };
+		System.out.println("\n" + a[0] + ":");
 		run(a);
 		
 		Assert.assertEquals(11,(char) ref.get(0));
 		ref.clear();
 	}
 	
+	/*
+	 * Globale Variablen
+	 * multidimensional Arrays + while
+	 */
+	
+	@Test
+	public void test13() throws Exception{
+		String[] a = { "interpretertests/file13.cmm"};
+		System.out.println("\n" + a[0] + ":");
+		run(a);
+		
+		Assert.assertEquals(354,(char) ref.get(0));
+		ref.clear();
+	}	
+	
+	/*
+	 * Without Global Variable
+	 * multidimensional Array + while
+	 */
+	@Test
+	public void test14() throws Exception{
+		String[] a = { "interpretertests/file14.cmm"};
+		System.out.println("\n" + a[0] + ":");
+		run(a);
+		
+		Assert.assertEquals(734,(char) ref.get(0));
+		ref.clear();
+	}
+	
+	/*
+	 * Without Global Variable
+	 * multidimensional Array + while
+	 */
+	@Test
+	public void test15() throws Exception{
+		String[] a = { "interpretertests/file15.cmm"};
+		System.out.println("\n" + a[0] + ":");
+		run(a);
+		
+		Assert.assertEquals(5,(char) ref.get(0));
+		ref.clear();
+	}
+	
+	@Test
+	public void test16() throws Exception{
+		String[] a = { "interpretertests/file16.cmm"};
+		System.out.println("\n" + a[0] + ":");
+		run(a);
+		
+		Assert.assertEquals(10,(char) ref.get(0));
+		ref.clear();
+	}
+	
+	@Test
+	public void test17() throws Exception{
+		String[] a = { "interpretertests/file17.cmm"};
+		System.out.println("\n" + a[0] + ":");
+		run(a);
+		
+		Assert.assertEquals(10,(char) ref.get(0));
+		ref.clear();
+	}
 	
 	@Override
 	public char in() {
