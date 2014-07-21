@@ -4,10 +4,12 @@ void main(){
 	char c;
 	float f;
 
-	i = 10;
+	i = 1;
 	c = 'c';
 	f = 1.4;
 
 	print((char) i);
+	print(c);
+	print((char) f);
 
 }
