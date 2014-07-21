@@ -20,5 +20,5 @@ void main(){
 	print((char) z);
 	
 	w = dec(x , y);
-	print((char) y);
+	print((char) w);
 }

@@ -1,15 +1,12 @@
-int main(){
+void main(){
 	int a;
 	int b;
 
 	a = 0;
 
-	while ( a != 10){
-		a++;
-		print((char) a);		
+	while ( a <= 10){
+		a = a + 1;	
 	}
 
-	b = a;
-
-	print((char) b);
+	print((char) a);
 }

@@ -1,4 +1,4 @@
-Struct Hallo{
+struct Hallo{
 	int a;
 	char b;
 	int c;

@@ -6,10 +6,10 @@ void main(){
 		int e;
 	
 		a = 5;
-		b = 5 + a;	 //10
-		c = a - b;	//5
-		d = c * b; //20
-		e = b / c; //2
+		b = 5 + a;	 
+		c = 10 - 5;	
+		d = c * b; 
+		e = b / c; 
 
 		print((char) a);
 		print((char) b);

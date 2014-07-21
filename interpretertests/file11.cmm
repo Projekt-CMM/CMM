@@ -1,0 +1,33 @@
+void main() {
+	char[5] a;
+	int[5] i;
+	char c;
+	int x;
+	int y;
+
+	x = 1;
+	y = 5;
+
+	while(x <= y){
+
+	x = x + 1;
+	}
+	print((char) x);
+
+	c = 'c';
+	print((char)c);
+
+	
+	i[0] = 155;
+	i[1] = 55;
+
+	print((char)i[0]);
+	print((char)i[1]); 	
+
+	a[0] = 'g';
+	a[1] = 'c';
+	
+	print((char) a[0]);
+	print((char) a[1]);
+}
+

@@ -1,11 +1,12 @@
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
-import at.jku.ssw.cmm.StdInoutMock;
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Error;
 import at.jku.ssw.cmm.compiler.Obj;
@@ -19,9 +20,11 @@ import at.jku.ssw.cmm.debugger.StdInOut;
 @SuppressWarnings("deprecation")
 public class Tests implements StdInOut {
 
-	public char ref = 1;
+	List<Character> ref = new ArrayList<Character>(); 
+	
+//public char ref;
 
-	public static void run(String[] args) throws Exception {
+	public void run(String[] args) throws Exception {
 		FileInputStream in = null;
 		try {
 			in = new FileInputStream(args[0]);
@@ -50,8 +53,8 @@ public class Tests implements StdInOut {
 			Memory.initialize();
 
 			Strings strings = compiler.getStringStorage();
-			Interpreter interpreter = new Interpreter(new DebuggerMock(),
-					new StdInoutMock(), strings);
+			Interpreter interpreter = new Interpreter(new DebuggerMock(), this,
+					strings);
 			Obj main = compiler.getSymbolTable().find("main");
 			try {
 				Memory.openStackFrame(main.ast.line, 0, main.size);
@@ -72,36 +75,174 @@ public class Tests implements StdInOut {
 
 	@Test
 	public void test1() throws Exception {
-		String[] a = { "interpretertests/file01.cmm" };
+		String[] a = { "interpretertests/file01.cmm", "-debug", "1", "1" };
 		run(a);
-
-		Assert.assertEquals(10, ref);
+		Assert.assertEquals(1,(char) ref.get(0));
+		Assert.assertEquals('c',(char) ref.get(1));
+		Assert.assertEquals(1,(char) ref.get(2));
+		
+		ref.clear();
 	}
 
+	/*
+	 * +  - *  / - Operatoren
+	 */
 	@Test
 	public void test2() throws Exception {
 		String[] a = { "interpretertests/file02.cmm" };
 		run(a);
 
-		Assert.assertEquals(true, true);
+		Assert.assertEquals(5,(char) ref.get(0));
+		Assert.assertEquals(10,(char) ref.get(1));
+		Assert.assertEquals(5,(char) ref.get(2));
+		Assert.assertEquals(50,(char) ref.get(3));
+		Assert.assertEquals(2,(char) ref.get(4));
+		ref.clear();
 	}
-
+	
+	/*
+	 * INT Array
+	 */
 	@Test
-	public void test3() throws Exception {
+	public void test3() throws Exception{
 		String[] a = { "interpretertests/file03.cmm" };
 		run(a);
 
-		Assert.assertEquals(true, true);
+		Assert.assertEquals(10,(char) ref.get(0));
+		Assert.assertEquals(20,(char) ref.get(1));
+		Assert.assertEquals(30,(char) ref.get(2));
+		Assert.assertEquals(40,(char) ref.get(3));
+		Assert.assertEquals(50,(char) ref.get(4));
+		ref.clear();
 	}
-
+	
+	/*
+	 * Char Array
+	 */
+	
 	@Test
-	public void test4() throws Exception {
-		String[] a = { "interpretertests/file04.cmm", "-debug", "1", "1" };
+	public void test4() throws Exception{
+		String[] a = { "interpretertests/file04.cmm" };
 		run(a);
 
-		Assert.assertEquals(true, true);
+		Assert.assertEquals('a',(char) ref.get(0));
+		Assert.assertEquals('b',(char) ref.get(1));
+		Assert.assertEquals('c',(char) ref.get(2));
+		Assert.assertEquals('d',(char) ref.get(3));
+		Assert.assertEquals('e',(char) ref.get(4));
+		ref.clear();
 	}
 
+	/*
+	 * struct
+	 */
+	
+	@Test
+	public void test5() throws Exception{
+		String[] a = { "interpretertests/file05.cmm" };
+		run(a);
+
+		Assert.assertEquals(10,(char) ref.get(0));
+		Assert.assertEquals('a',(char) ref.get(1));
+		ref.clear();
+	}	
+
+	/*
+	 * If - Else
+	 */
+	@Test
+	public void test6() throws Exception{
+		String[] a = { "interpretertests/file06.cmm" };
+		run(a);
+
+		Assert.assertEquals(20,(char) ref.get(0));
+		ref.clear();
+	}	
+
+	/*
+	 * While
+	 */
+	@Test
+	public void test7() throws Exception{
+		String[] a = { "interpretertests/file07.cmm" };
+		run(a);
+
+		Assert.assertEquals(11,(char) ref.get(0));
+		ref.clear();
+	}	
+	
+	/*
+	 * String
+	 */
+	@Test
+	public void test8() throws Exception{
+		String[] a = { "interpretertests/file08.cmm" };
+		run(a);
+
+		Assert.assertEquals('l',(char) ref.get(0));
+		ref.clear();
+	}
+	
+	/*
+	 * methods:
+	 * Minus Plus Inc. Return 
+	 */
+	
+	@Test
+	public void test9() throws Exception{
+		String[] a = { "interpretertests/file09.cmm" };
+		run(a);
+
+		Assert.assertEquals(25,(char) ref.get(0));
+		Assert.assertEquals(15,(char) ref.get(1));
+		ref.clear();
+	}
+	
+	/*
+	 * methods
+	 * multiply divide
+	 */
+	
+	@Test
+	public void test10() throws Exception{
+		String[] a = { "interpretertests/file10.cmm" };
+		run(a);
+
+		Assert.assertEquals(0,(char) ref.get(0));
+		Assert.assertEquals(0,(char) ref.get(1));
+		ref.clear();
+	}
+/*
+ * While, Arrays, Etc
+ */
+	
+	@Test
+	public void test11() throws Exception{
+		String[] a = { "interpretertests/file11.cmm" };
+		run(a);
+
+		Assert.assertEquals(6,(char) ref.get(0));
+		Assert.assertEquals('c',(char) ref.get(1));
+		Assert.assertEquals(155,(char) ref.get(2)); 
+		Assert.assertEquals(55,(char) ref.get(3));
+		Assert.assertEquals('g',(char) ref.get(4));	
+		Assert.assertEquals('c',(char) ref.get(5));	
+		ref.clear();
+	}
+	
+	/*
+	 * If, Return + Recursion
+	 */
+	@Test
+	public void test12() throws Exception{
+		String[] a = { "interpretertests/file12.cmm" , "-debug", "1", "1" };
+		run(a);
+		
+		Assert.assertEquals(11,(char) ref.get(0));
+		ref.clear();
+	}
+	
+	
 	@Override
 	public char in() {
 		return 0;
@@ -109,6 +250,8 @@ public class Tests implements StdInOut {
 
 	@Override
 	public void out(char arg0) {
-		ref = arg0;
+		ref.add(arg0);
+		// System.out.println("Test" + arg0);
 	}
+
 }
