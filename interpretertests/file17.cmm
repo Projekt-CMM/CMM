@@ -1,0 +1,10 @@
+//Name Testing
+
+void main(){
+	int[5] test;
+
+	test[1] = 10;
+		
+	print((char) test[1]);
+
+}
