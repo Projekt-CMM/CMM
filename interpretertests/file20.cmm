@@ -1,0 +1,18 @@
+void reftest(int &a, char &b, float &c){
+
+	a = 1;
+	b = 'a';
+	c = 2;
+}
+
+void main(){
+	int a = 4;
+	char b = 'c';
+	float c = 5;
+
+	reftest(a, b, c);
+
+	print((char) a);
+	print((char) b);
+	print((char) c);
+}

@@ -60,7 +60,7 @@ public final class Interpreter {
 	}
 
 	/*
-	 * Statements: assign, stateseq, if, ifelse, while, return, trap, call
+	 * Statements: assign, stateseq, if, ifelse, while, return, trap, call TODO
 	 */
 	void Statement(Node p) throws ReturnException, AbortException { // b = a;
 		if (!debugger.step(p))
@@ -95,7 +95,7 @@ public final class Interpreter {
 			break;
 		case Node.TRAP: // For a Function with return!
 			debugger.abort("Return Statement missing", p);
-			throw new IllegalStateException("Kind" + p.kind); // Exception
+			throw new IllegalStateException("Kind" + p.kind); 
 
 		case Node.IF:
 			if (Condition(p.left))
@@ -111,14 +111,6 @@ public final class Interpreter {
 			while (Condition(p.left))
 				Statement(p.right);
 			break;
-		// case Node.PRINT: System.out.print("I:"+ (int)CharExpr(p.left) +
-		// " C:"+ CharExpr(p.left)+"\n");break;
-		/*
-		 * switch(p.left.type.kind){ case Struct.INT:
-		 * System.out.println(IntExpr(p.left));break; //Type Convertierung case
-		 * Struct.CHAR: System.out.println(CharExpr(p.left));break; case
-		 * Struct.FLOAT: System.out.println(FloatExpr(p.left));break; }
-		 */
 		case Node.RETURN:
 			switch (p.left.type.kind) {
 			case Struct.INT:
@@ -148,10 +140,14 @@ public final class Interpreter {
 	 * IntExpr: intcon, plus, minus, times, div, rem, call, ref, f2i, c2i,
 	 * ident, dot, index
 	 */
-	int IntExpr(Node p) throws ReturnException, AbortException {
+	int IntExpr(Node p) throws ReturnException, AbortException { //TODO
 		switch (p.kind) {
 		case Node.INTCON:
-			return p.val; // OK
+			return p.val; // Returns a Constante
+			
+		/*
+		 * For calculation
+		 */
 		case Node.PLUS:
 			return IntExpr(p.left) + IntExpr(p.right);
 		case Node.MINUS:
@@ -167,6 +163,9 @@ public final class Interpreter {
 		case Node.REM:
 			return IntExpr(p.left) % IntExpr(p.right);
 
+		/*
+		 * Bit Operators
+		 */
 		case Node.BITAND:
 			return IntExpr(p.left) & IntExpr(p.right);
 		case Node.BITNEQ:
@@ -179,25 +178,23 @@ public final class Interpreter {
 			return IntExpr(p.left) << IntExpr(p.right);
 		case Node.SHIFTRIGHT:
 			return IntExpr(p.left) >> IntExpr(p.right);
-
-		case Node.CALL:
+			
+		case Node.CALL:								//Opens new Integer c-- Function
 			Call(p);
-			return Memory.getIntReturnValue();
-		case Node.REF:
-			return Adr(p);
-		case Node.F2I:
+			return Memory.getIntReturnValue();		//getting return Value
+		case Node.REF:								//returning only the Address
+			return Adr(p);							
+			
+		case Node.F2I:								//casting float to Integer
 			return (int) FloatExpr(p.left);
-		case Node.C2I:
+		case Node.C2I:								//casting char to Integer
 			return (int) CharExpr(p.left);
-
-		case Node.IDENT:
+		case Node.IDENT:							//more at @Adr
 			return Memory.loadInt(IdentAdr(p.obj));
-
-		case Node.DOT:
+		case Node.DOT:								//more at @Adr
+			return Memory.loadInt(Adr(p));			
+		case Node.INDEX:							//more at @Adr
 			return Memory.loadInt(Adr(p));
-		case Node.INDEX:
-			return Memory.loadInt(Adr(p));
-			// case Node.READ: return Memory.loadInt(Adr(p));
 		default:
 			debugger.abort("Not supportet intexpr node kind", p);
 			throw new IllegalStateException("Kind" + p.kind);
@@ -209,10 +206,14 @@ public final class Interpreter {
 	 * ident, dot, index
 	 */
 
-	float FloatExpr(Node p) throws AbortException, ReturnException {
+	float FloatExpr(Node p) throws AbortException, ReturnException { //TODO
 		switch (p.kind) {
-		case Node.FLOATCON:
+		case Node.FLOATCON:						//returning the Constant value
 			return p.fVal;
+			
+		/*
+		 * For calculation
+		 */
 		case Node.PLUS:
 			return FloatExpr(p.left) + FloatExpr(p.right);
 		case Node.MINUS:
@@ -224,21 +225,20 @@ public final class Interpreter {
 		case Node.REM:
 			return FloatExpr(p.left) % FloatExpr(p.right);
 
-		case Node.I2F:
-			return (float) IntExpr(p.left);
-
-		case Node.CALL:
+			
+		case Node.I2F:							//Casts an Integer into an Float
+			return (float) IntExpr(p.left);		
+		case Node.CALL:							//Opens a new C-- Function and returns the Return Value
 			Call(p);
 			return Memory.getFloatReturnValue();
-		case Node.REF:
-			return Adr(p);
-		case Node.IDENT:
+		case Node.REF:							//Returning the Address of the main Variable
+			return Adr(p);						
+		case Node.IDENT:						//more at @Adr
+			return Memory.loadFloat(Adr(p));	
+		case Node.DOT:							//more at @Adr
 			return Memory.loadFloat(Adr(p));
-		case Node.DOT:
+		case Node.INDEX:						//more at @Adr
 			return Memory.loadFloat(Adr(p));
-		case Node.INDEX:
-			return Memory.loadFloat(Adr(p));
-			// case Node.READ: return Memory.loadFloat(Adr(p));
 
 		default:
 			debugger.abort("Not supportet floatexpr node kind", p);
@@ -251,33 +251,30 @@ public final class Interpreter {
 	 * Char Expressions: Charcon, i2c, ident, dot, index
 	 */
 
-	char CharExpr(Node p) throws AbortException, ReturnException {
+	char CharExpr(Node p) throws AbortException, ReturnException { //TODO
 		switch (p.kind) {
 		case Node.CHARCON:
-			return (char) p.val;
+			return (char) p.val;					//Returning an Char constant
 		case Node.I2C:
-			if (Memory.loadInt(Adr(p.left)) >= 0)
-				return (char) IntExpr(p.left);
+			if (IntExpr(p.left) >= 0)
+				return (char) IntExpr(p.left);		//Casting an IntExpression to Char
 
-			// case Node.REF: return Adr(p);
-
+		case Node.REF: 
+			return (char) Adr(p);					//Returning the Address of the main Variable
 		case Node.IDENT:
-			return Memory.loadChar(Adr(p));
+			return Memory.loadChar(Adr(p));			//more at @Adr
 		case Node.DOT:
-			return Memory.loadChar(Adr(p));
+			return Memory.loadChar(Adr(p));			//more at @Adr
 		case Node.INDEX:
 			if (p.left.type.kind != Struct.STRING)
-				return Memory.loadChar(Adr(p));
-			else
+				return Memory.loadChar(Adr(p));		//Normal way of getting Arrays -> more at @Adr
+			else									//Getting a String and look at a special Position
 				try {
-					return strings.get(StringExpr(p.left)).charAt(
-							IntExpr(p.right));
+					return strings.get(StringExpr(p.left)).charAt(IntExpr(p.right));
 				} catch (BufferOverflowException e) {
 					debugger.abort("Too high index choosen", p);
-					// throw new BufferOverflowException();
+					throw new IllegalStateException("Kind" + p.kind);
 				}
-			// case Node.READ: return Memory.loadChar(Adr(p));
-
 		case Node.CALL:
 			Call(p);
 			return Memory.getCharReturnValue();
@@ -290,31 +287,28 @@ public final class Interpreter {
 	}
 
 	@SuppressWarnings("unused")
-	int StringExpr(Node p) throws AbortException, ReturnException {
+	int StringExpr(Node p) throws AbortException, ReturnException { //TODO
 		switch (p.kind) {
 		case Node.IDENT:
 			return Memory.loadStringAdress(Adr(p));
-		case Node.PLUS:
-			return strings.put(strings.get(StringExpr(p.left))
-					+ strings.get(StringExpr(p.right)));
+			
+		case Node.PLUS:		//Reads the left and the right String and putting them together
+			return strings.put(strings.get(StringExpr(p.left))+ strings.get(StringExpr(p.right)));
 		case Node.STRINGCON:
-			return p.val;
+			return p.val;	//Returns the Address of the String
 		case Node.CALL:
 			Call(p);
 			return Memory.getIntReturnValue();
-			// case Node.INDEX: throw new IllegalStateException("Kind" +
-			// p.kind);
 		case Node.A2S:
 			String s = "";
 			char ref;
 
-			for (int a = 0; a <= p.left.type.size; a++) {
-				ref = Memory.loadChar(Adr(p.left) + p.left.type.elemType.size
-						* a);
+			for (int a = 0; a <= p.left.type.size; a++) { 
+				ref = Memory.loadChar(Adr(p.left) + p.left.type.elemType.size* a); //Left side * CharSize + Main Address 
 				if (ref != '0') {
-					s += ref;
+					s += ref;			//Putting the Array, together to an String
 				}
-				return strings.put(s); // TODO a2s
+				return strings.put(s);	//Saving the new String and returns Int Adress
 			}
 
 		default:
@@ -324,7 +318,7 @@ public final class Interpreter {
 	}
 
 	/*
-	 * Boolean Expressions: Have to be implementet in Compiler
+	 * Boolean Expressions: Have to be implemented in Compiler
 	 */
 
 	/*
@@ -423,21 +417,20 @@ public final class Interpreter {
 	 * Call Function working
 	 */
 
-	void Call(Node p) throws AbortException, ReturnException {
+	void Call(Node p) throws AbortException, ReturnException { //TODO
 
 		switch (p.obj.name) {
-		case "print":
+		case "print":	//Our Print, can only print Characters
 			inout.out(CharExpr(p.left));
 			break;
-		case "read":
+		case "read":	//Read, can read in Characters
 			Memory.setCharReturnValue(inout.in());
-			break; // Memory.setCharReturnValue(value); break;
-		case "length":
+			break; 
+		case "length": 	//
 			switch (p.left.type.kind) {
-			case Struct.STRING:
-				Memory.setIntReturnValue(strings.get(StringExpr(p.left))
-						.length());
-				break; // Size of elements
+			case Struct.STRING: // Size of elements in String
+				Memory.setIntReturnValue(strings.get(StringExpr(p.left)).length());
+				break; 
 			default:
 				debugger.abort("Not supportet length node kind", p);
 				throw new IllegalStateException("Kind" + p.kind);
@@ -456,7 +449,7 @@ public final class Interpreter {
 			Object[] object = new Object[a];
 			a = 0;
 
-			// Buffer in Object[]
+			// Buffering the Data in an object[]
 			for (ref = p.left; ref != null; ref = ref.next, form = form.next) {
 				if (form.isRef) {
 					object[a] = Adr(ref);
@@ -464,13 +457,13 @@ public final class Interpreter {
 					switch (form.type.kind) {
 					case Struct.INT:
 						object[a] = IntExpr(ref);
-						break; // 4 Byte
+						break; 
 					case Struct.CHAR:
 						object[a] = CharExpr(ref);
-						break; // 1 Byte
+						break; 
 					case Struct.FLOAT:
 						object[a] = FloatExpr(ref);
-						break; // 4 Byte
+						break;
 					case Struct.STRING:
 						object[a] = StringExpr(ref);
 						break;
@@ -479,50 +472,48 @@ public final class Interpreter {
 				a++;
 			}
 
-			// New Memory Frame
+			// New Memory Frame for C-- Function
 			try {
-				Memory.openStackFrame(p.line, MethodContainer.getMethodId(p.obj.name), p.obj.size);
+				Memory.openStackFrame(p.line,MethodContainer.getMethodId(p.obj.name), p.obj.size);
 			} catch (StackOverflowException e) {
 				debugger.abort("StackOverFlow", p);
 				throw new IllegalStateException("Kind" + p.kind);
 			}
 
-			// Saving the Object into the Memory
+			// Saving the Object into the new C-- Function Memory Frame.
 			form = p.obj.locals;
 			a = 0;
 			for (ref = p.left; ref != null; ref = ref.next, form = form.next) {
-
-				switch (form.type.kind) {
-				case Struct.INT:
-					Memory.storeInt(Memory.getFramePointer() + form.adr,
-							(int) object[a]);
-					break; // 4 Byte
-				case Struct.CHAR:
-					Memory.storeChar(Memory.getFramePointer() + form.adr,
-							(char) object[a]);
-					break; // 1 Byte
-				case Struct.FLOAT:
-					Memory.storeFloat(Memory.getFramePointer() + form.adr,
-							(float) object[a]);
-					break; // 4 Byte
-				case Struct.STRING:
-					Memory.storeStringAdress(Memory.getFramePointer()
-							+ form.adr, (int) object[a]);
-					break;
-				default:
-					debugger.abort("Not supportet node kind", p);
-					throw new IllegalStateException("Kind" + p.kind);
+				if (form.isRef) {
+					Memory.storeInt(Memory.getFramePointer() + form.adr,(int) object[a]);
+				} else {
+					switch (form.type.kind) {
+					case Struct.INT:
+						Memory.storeInt(Memory.getFramePointer() + form.adr,(int) object[a]);
+				 		break; 
+					case Struct.CHAR:
+						Memory.storeChar(Memory.getFramePointer() + form.adr,(char) object[a]);
+						break;
+					case Struct.FLOAT:
+						Memory.storeFloat(Memory.getFramePointer() + form.adr,(float) object[a]);
+						break;
+					case Struct.STRING:
+						Memory.storeStringAdress(Memory.getFramePointer()+ form.adr, (int) object[a]);
+						break;
+					default:
+						debugger.abort("Not supportet node kind", p);
+						throw new IllegalStateException("Kind" + p.kind);
+					}
 				}
-
 				a++;
-			}
+		}
 			try {
-				StatSeq(p.obj.ast); // starting the Function
-			} catch (ReturnException e) { // Make Returns Close the Function
+				StatSeq(p.obj.ast); 		// Starting the new C-- Function
+			} catch (ReturnException e) { 	// closing the C-- Function
 			}
 
 			try {
-				Memory.closeStackFrame(); // closing the Memory Frame*/
+				Memory.closeStackFrame(); // Closing the C-- Function Frame
 			} catch (StackUnderflowException e) {
 				debugger.abort("Stack Underflow", p);
 				throw new IllegalStateException();
@@ -532,37 +523,37 @@ public final class Interpreter {
 	}
 
 	/*
-	 * Designators: Address reserving Ident, Dot, Index, Strukturen fertig
+	 * Designators: Address reserving Identifier, Dot, Index, Structs
 	 */
 
-	int Adr(Node p) throws ReturnException, AbortException { // Designators
+	int Adr(Node p) throws ReturnException, AbortException { // TODO
 		switch (p.kind) {
-		case Node.IDENT:
+		case Node.IDENT:					// more at @IdentAdr
 			return IdentAdr(p.obj);
-		case Node.DOT:
+		case Node.DOT:						//for structs very familiar with index
 			return Adr(p.left) + p.right.val;
-		case Node.INDEX: // if(p.left.type.kind != Struct.STRING)
+		case Node.INDEX:					//right value + Integer * sizeof(Integer)
 			return Adr(p.left) + p.left.type.elemType.size * IntExpr(p.right);
-			// else
-			// return Adr(p.left) + p.left.type.elemType.size * StringExpr(p);
+		case Node.REF://TODO
+			return Adr(p.left);
 		default:
-			return Memory.getFramePointer();
+			debugger.abort("Not supported Node Kind", p);
+			throw new IllegalStateException("p.kind" + p.kind);
 		}
 	}
 
 	/*
-	 * Identifer Adress
+	 * Identifier Address
 	 */
 	int IdentAdr(Obj obj) throws ReturnException, AbortException {
 		int adr;
-		if (obj.level == 0)
-			adr = Memory.getGlobalPointer() + obj.adr;
+		if (obj.level == 0)					// Is the variable global?
+			adr = Memory.getGlobalPointer() + obj.adr;	//yes - GlobalPointer + Address
 		else
-			adr = Memory.getFramePointer() + obj.adr;
+			adr = Memory.getFramePointer() + obj.adr;	//no - FramePointer + Address
 		if (obj.isRef)
-			return Memory.loadInt(adr); // References saves the Adress in an Int
-										// Variable
+			return Memory.loadInt(adr); // References saves the Address in an Integer Variable
 		else
-			return adr;
+			return adr;					//Returns the normal Address Value
 	}
 }

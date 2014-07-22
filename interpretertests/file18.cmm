@@ -1,0 +1,23 @@
+int test(int b, int c){
+	int a;
+	a = b + 1 + c;
+	return a;
+} 
+
+void main() {
+	int b;
+	int c;
+
+	b = 2;
+	c = 1;
+
+	b = test(b,c);
+
+	int d;
+	d = 5 + b;
+
+	print((char) d);
+
+}
+
+

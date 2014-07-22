@@ -75,7 +75,7 @@ public class Tests implements StdInOut {
 
 	@Test
 	public void test1() throws Exception {
-		String[] a = { "interpretertests/file01.cmm"};//, "-debug", "1", "1" };
+		String[] a = { "interpretertests/file01.cmm", "-debug", "1", "1" };//, "-debug", "1", "1" };
 		System.out.println("\n" + a[0] + ":");
 		run(a);
 		Assert.assertEquals(1,(char) ref.get(0));
@@ -214,7 +214,7 @@ public class Tests implements StdInOut {
 	
 	@Test
 	public void test10() throws Exception{
-		String[] a = { "interpretertests/file10.cmm" };
+		String[] a = { "interpretertests/file10.cmm", "-debug", "1", "1"  };
 		System.out.println("\n" + a[0] + ":");
 		run(a);
 
@@ -284,8 +284,7 @@ public class Tests implements StdInOut {
 	}
 	
 	/*
-	 * Without Global Variable
-	 * multidimensional Array + while
+	 * 3 dimensional Array	
 	 */
 	@Test
 	public void test15() throws Exception{
@@ -296,7 +295,9 @@ public class Tests implements StdInOut {
 		Assert.assertEquals(5,(char) ref.get(0));
 		ref.clear();
 	}
-	
+	/*
+	 *  2 dimensional Array	
+	 */
 	@Test
 	public void test16() throws Exception{
 		String[] a = { "interpretertests/file16.cmm"};
@@ -306,7 +307,10 @@ public class Tests implements StdInOut {
 		Assert.assertEquals(10,(char) ref.get(0));
 		ref.clear();
 	}
-	
+
+	/*
+	 *  1 dimensional Array
+	 */
 	@Test
 	public void test17() throws Exception{
 		String[] a = { "interpretertests/file17.cmm"};
@@ -317,6 +321,69 @@ public class Tests implements StdInOut {
 		ref.clear();
 	}
 	
+	/*
+	 * Method with Return Value
+	 */
+	
+	@Test
+	public void test18() throws Exception{
+		String[] a = { "interpretertests/file18.cmm"};
+		System.out.println("\n" + a[0] + ":");
+		run(a);
+		
+		Assert.assertEquals(9,(char) ref.get(0));
+		ref.clear();
+	}
+	
+	/*
+	 * Strings Ausgabe mit stdio.h
+	 */
+	
+	@Test
+	public void test19() throws Exception{
+		String[] a = { "interpretertests/file19.cmm"};
+		System.out.println("\n" + a[0] + ":");
+		run(a);
+		
+		Assert.assertEquals('h',(char) ref.get(0));
+		Assert.assertEquals('a',(char) ref.get(1));
+		Assert.assertEquals('l',(char) ref.get(2));
+		Assert.assertEquals('l',(char) ref.get(3));
+		Assert.assertEquals('o',(char) ref.get(4));
+		ref.clear();
+	}
+	
+	/*
+	 * Referenzen	
+	 */
+	@Test
+	public void test20() throws Exception{
+		String[] a = { "interpretertests/file20.cmm" , "-debug", "1", "1" };
+		System.out.println("\n" + a[0] + ":");
+		run(a);
+		
+		Assert.assertEquals(1,(char) ref.get(0));
+		Assert.assertEquals('a',(char) ref.get(1));
+		Assert.assertEquals(2,(char) ref.get(2));
+		ref.clear();
+	}
+
+	/*
+	 * Referenzen Char
+	 */
+	@Test
+	public void test21() throws Exception{
+		String[] a = { "interpretertests/file21.cmm" , "-debug", "1", "1" };
+		System.out.println("\n" + a[0] + ":");
+		run(a);
+		
+		Assert.assertEquals('a',(char) ref.get(0));
+		ref.clear();
+	}
+	/*
+	 * @see at.jku.ssw.cmm.debugger.StdInOut#in()
+	 */
+	
 	@Override
 	public char in() {
 		return 0;
@@ -325,7 +392,6 @@ public class Tests implements StdInOut {
 	@Override
 	public void out(char arg0) {
 		ref.add(arg0);
-		// System.out.println("Test" + arg0);
 	}
 
 }
