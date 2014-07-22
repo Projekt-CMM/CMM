@@ -1,0 +1,12 @@
+void reftest(char &b){
+
+	b = 'a';
+}
+
+void main(){
+	char b = 'c';
+
+	reftest(b);
+
+	print((char) b);
+}
