@@ -1,0 +1,10 @@
+<?xml version="1.0"?> 
+<quest>
+	<title>Pflanzen suchen</title> 
+	<description>Beschreibung</description> 
+	<cmmprogramm>void main(){print((char) 'b');}</cmmprogramm> 
+	<plattern>void main(){print((char) 'b');}</plattern> 
+	<reward>reward.xml</reward> 
+	<level>3</level>
+	<nextquest>while</nextquest> 
+</quest> 

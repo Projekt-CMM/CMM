@@ -75,7 +75,7 @@ public class Tests implements StdInOut {
 
 	@Test
 	public void test1() throws Exception {
-		String[] a = { "interpretertests/file01.cmm", "-debug", "1", "1" };//, "-debug", "1", "1" };
+		String[] a = { "interpretertests/file01.cmm"};//, "-debug", "1", "1" };
 		System.out.println("\n" + a[0] + ":");
 		run(a);
 		Assert.assertEquals(1,(char) ref.get(0));
@@ -214,7 +214,7 @@ public class Tests implements StdInOut {
 	
 	@Test
 	public void test10() throws Exception{
-		String[] a = { "interpretertests/file10.cmm", "-debug", "1", "1"  };
+		String[] a = { "interpretertests/file10.cmm"};
 		System.out.println("\n" + a[0] + ":");
 		run(a);
 
@@ -246,11 +246,11 @@ public class Tests implements StdInOut {
 	 */
 	@Test
 	public void test12() throws Exception{
-		String[] a = { "interpretertests/file12.cmm" , "-debug", "1", "1" };
+		String[] a = { "interpretertests/file12.cmm"};
 		System.out.println("\n" + a[0] + ":");
 		run(a);
 		
-		Assert.assertEquals(11,(char) ref.get(0));
+		Assert.assertEquals(13,(char) ref.get(0));
 		ref.clear();
 	}
 	
@@ -265,7 +265,7 @@ public class Tests implements StdInOut {
 		System.out.println("\n" + a[0] + ":");
 		run(a);
 		
-		Assert.assertEquals(354,(char) ref.get(0));
+		Assert.assertEquals(276,(char) ref.get(0));
 		ref.clear();
 	}	
 	
@@ -279,7 +279,7 @@ public class Tests implements StdInOut {
 		System.out.println("\n" + a[0] + ":");
 		run(a);
 		
-		Assert.assertEquals(734,(char) ref.get(0));
+		Assert.assertEquals(276,(char) ref.get(0));
 		ref.clear();
 	}
 	
@@ -373,7 +373,7 @@ public class Tests implements StdInOut {
 	 */
 	@Test
 	public void test21() throws Exception{
-		String[] a = { "interpretertests/file21.cmm" , "-debug", "1", "1" };
+		String[] a = { "interpretertests/file21.cmm" };
 		System.out.println("\n" + a[0] + ":");
 		run(a);
 		

@@ -181,9 +181,7 @@ public final class Interpreter {
 			
 		case Node.CALL:								//Opens new Integer c-- Function
 			Call(p);
-			return Memory.getIntReturnValue();		//getting return Value
-		case Node.REF:								//returning only the Address
-			return Adr(p);							
+			return Memory.getIntReturnValue();		//getting return Value						
 			
 		case Node.F2I:								//casting float to Integer
 			return (int) FloatExpr(p.left);
@@ -230,11 +228,9 @@ public final class Interpreter {
 			return (float) IntExpr(p.left);		
 		case Node.CALL:							//Opens a new C-- Function and returns the Return Value
 			Call(p);
-			return Memory.getFloatReturnValue();
-		case Node.REF:							//Returning the Address of the main Variable
-			return Adr(p);						
+			return Memory.getFloatReturnValue();						
 		case Node.IDENT:						//more at @Adr
-			return Memory.loadFloat(Adr(p));	
+			return Memory.loadFloat(IdentAdr(p.obj));	
 		case Node.DOT:							//more at @Adr
 			return Memory.loadFloat(Adr(p));
 		case Node.INDEX:						//more at @Adr
@@ -258,11 +254,8 @@ public final class Interpreter {
 		case Node.I2C:
 			if (IntExpr(p.left) >= 0)
 				return (char) IntExpr(p.left);		//Casting an IntExpression to Char
-
-		case Node.REF: 
-			return (char) Adr(p);					//Returning the Address of the main Variable
 		case Node.IDENT:
-			return Memory.loadChar(Adr(p));			//more at @Adr
+			return Memory.loadChar(IdentAdr(p.obj));			//more at @Adr
 		case Node.DOT:
 			return Memory.loadChar(Adr(p));			//more at @Adr
 		case Node.INDEX:
@@ -414,10 +407,10 @@ public final class Interpreter {
 	}
 
 	/*
-	 * Call Function working
+	 * Call Function working TODO
 	 */
 
-	void Call(Node p) throws AbortException, ReturnException { //TODO
+	void Call(Node p) throws AbortException, ReturnException { 
 
 		switch (p.obj.name) {
 		case "print":	//Our Print, can only print Characters
@@ -471,7 +464,7 @@ public final class Interpreter {
 				}
 				a++;
 			}
-
+			
 			// New Memory Frame for C-- Function
 			try {
 				Memory.openStackFrame(p.line,MethodContainer.getMethodId(p.obj.name), p.obj.size);
@@ -527,6 +520,8 @@ public final class Interpreter {
 	 */
 
 	int Adr(Node p) throws ReturnException, AbortException { // TODO
+		int a;
+		
 		switch (p.kind) {
 		case Node.IDENT:					// more at @IdentAdr
 			return IdentAdr(p.obj);
