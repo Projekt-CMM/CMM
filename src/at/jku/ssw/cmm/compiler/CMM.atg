@@ -416,7 +416,11 @@ Type<out type>
 [ "&"								(. 	// set reference-flag to true
 										isRef = true; .)
 ]
-ident								(. 	// add parameter to current scope
+ident								(. 	// if parameter is give by reference, size is always 4 byte
+										if(isRef)
+											type.size = 4;
+
+										// add parameter to current scope
 										Obj curPar = tab.insert(Obj.VAR, t.val, type);
 
 										// copy reference-flag

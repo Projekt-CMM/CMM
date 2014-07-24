@@ -664,6 +664,9 @@ public class Parser {
 			isRef = true; 
 		}
 		Expect(1);
+		if(isRef)
+		type.size = 4;
+		// add parameter to current scope
 		Obj curPar = tab.insert(Obj.VAR, t.val, type);
 		// copy reference-flag
 		 	curPar.isRef = isRef;
