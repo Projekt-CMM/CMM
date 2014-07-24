@@ -25,6 +25,8 @@ public class RewardContentHandler implements ContentHandler {
 		if(localName.equals("reward"))
 			reward = new Reward();
 		
+		
+		
 	}
 	
 	public void endElement(String uri, String localName, String qName)
@@ -33,6 +35,14 @@ public class RewardContentHandler implements ContentHandler {
 		//Title
 		if(localName.equals("title"))
 			reward.setTitle(currentValue);
+		
+		//Reward Type
+		if(localName.equals("type"))
+			reward.setType(currentValue);
+		
+		//Reward Type
+		if(localName.equals("xp"))
+			reward.setXp(Integer.parseInt(currentValue));
 		
 		//CMM - Program - Description
 		if(localName.equals("description"))

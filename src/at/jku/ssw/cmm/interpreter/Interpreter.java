@@ -520,7 +520,6 @@ public final class Interpreter {
 	 */
 
 	int Adr(Node p) throws ReturnException, AbortException { // TODO
-		int a;
 		
 		switch (p.kind) {
 		case Node.IDENT:					// more at @IdentAdr

@@ -1,6 +1,8 @@
 <?xml version="1.0"?> 
 <reward>
 	<title>Pflanzen suchen</title> 
+	<type>none</type> 
 	<description>Beschreibung</description> 
 	<image>images/test.png</image> 
+	<xp>32</xp> 
 </reward> 

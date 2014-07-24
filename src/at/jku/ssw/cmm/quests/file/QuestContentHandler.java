@@ -39,6 +39,10 @@ public class QuestContentHandler implements ContentHandler {
 		if(localName.equals("description"))
 			quest.setDescription(currentValue);
 		
+		//CMM - Program - Image
+		if(localName.equals("image"))
+			quest.setImage(currentValue);
+		
 		//CMM - Program - LSG
 		if(localName.equals("cmmprogramm"))
 			quest.setCmmProgramm(currentValue);
@@ -49,7 +53,7 @@ public class QuestContentHandler implements ContentHandler {
 		
 		//Reward when finished
 		if(localName.equals("reward"))
-			quest.setReward(currentValue);
+			quest.setRewardPath(currentValue);
 		
 		//Difficulty Level
 		if(localName.equals("level"))

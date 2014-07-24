@@ -1,7 +1,7 @@
 package at.jku.ssw.cmm.quests.datastructs;
 
 public class Settings {
-	boolean debug;
+	private boolean debug;
 	
 	Settings(boolean debug){
 		this.debug = debug;
