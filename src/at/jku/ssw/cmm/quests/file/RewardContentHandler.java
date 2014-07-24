@@ -1,110 +1,68 @@
 package at.jku.ssw.cmm.quests.file;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.Locator;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import at.jku.ssw.cmm.quests.datastructs.Reward;
 
-public class RewardContentHandler implements ContentHandler {
+public class RewardContentHandler  {
 
-	  private String currentValue;
-	  private Reward reward;
-	  
-	  
-	public void characters(char[] ch, int start, int length)
-			throws SAXException {
-	    currentValue = new String(ch, start, length);
-		
-	}
+	Reward reward;
+	NodeList nodeList;
 	
-	public void startElement(String uri, String localName, String qName,
-			Attributes atts) throws SAXException {
-		
-		if(localName.equals("reward"))
-			reward = new Reward();
-		
-		
-		
-	}
-	
-	public void endElement(String uri, String localName, String qName)
-			throws SAXException {
-		
-		//Title
-		if(localName.equals("title"))
-			reward.setTitle(currentValue);
-		
-		//Reward Type
-		if(localName.equals("type"))
-			reward.setType(currentValue);
-		
-		//Reward Type
-		if(localName.equals("xp"))
-			reward.setXp(Integer.parseInt(currentValue));
-		
-		//CMM - Program - Description
-		if(localName.equals("description"))
-			reward.setDescription(currentValue);
-		
-		//CMM - Program - LSG
-		if(localName.equals("image"))
-			reward.setImage(currentValue);
-	}
-	
+	public Reward Parse(FileInputStream file) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException{
+        
+		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        
+        String expression;
+        
+        DocumentBuilder builder;
 
-	
-	
-	/**
-	 * @return the reward
-	 */
-	public Reward getReward() {
+		builder = builderFactory.newDocumentBuilder();
+
+         
+        Document xmlDocument = builder.parse(file);
+
+        XPath xPath =  XPathFactory.newInstance().newXPath();
+        
+        reward = new Reward();
+        
+        expression = "/reward/title";
+        nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
+        reward.setTitle(nodeList.item(0).getFirstChild().getNodeValue());
+
+        expression = "/reward/type";
+        nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
+        reward.setType(nodeList.item(0).getFirstChild().getNodeValue());
+        
+        expression = "/reward/description";
+        nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
+        reward.setDescription(nodeList.item(0).getFirstChild().getNodeValue());
+        
+        expression = "/reward/image";
+        nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
+        reward.setImage(nodeList.item(0).getFirstChild().getNodeValue());
+        
+        expression = "/reward/xp";
+        nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
+        reward.setXp(Integer.parseInt(nodeList.item(0).getFirstChild().getNodeValue()));
+        
+       
+        
 		return reward;
-	}
-
-	@Override
-	public void endDocument() throws SAXException {
-		// Method not used!
-		
-	}
-	
-	@Override
-	public void endPrefixMapping(String prefix) throws SAXException {
-		// Method not used!
-		
-	}
-	@Override
-	public void ignorableWhitespace(char[] ch, int start, int length)
-			throws SAXException {
-		// Method not used!
-		
-	}
-	@Override
-	public void processingInstruction(String target, String data)
-			throws SAXException {
-		// Method not used!
-		
-	}
-	@Override
-	public void setDocumentLocator(Locator locator) {
-		// Method not used!
-		
-	}
-	@Override
-	public void skippedEntity(String name) throws SAXException {
-		// Method not used!
-		
-	}
-	@Override
-	public void startDocument() throws SAXException {
-		// Method not used!
-		
-	}
-	@Override
-	public void startPrefixMapping(String prefix, String uri)
-			throws SAXException {
-		// Method not used!
 		
 	}
 	  

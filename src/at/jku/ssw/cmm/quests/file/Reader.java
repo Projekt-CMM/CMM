@@ -1,16 +1,14 @@
 package at.jku.ssw.cmm.quests.file;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 
+import org.xml.sax.SAXException;
 
 import at.jku.ssw.cmm.quests.datastructs.Quest;
 import at.jku.ssw.cmm.quests.datastructs.Reward;
@@ -79,66 +77,53 @@ public class Reader{
 		ReadFileNames(packagePath, questsPath);
 		
 		for(int i = 0; i < fileNames.size(); i++)
-			try {
 				allQuests.add(ReadQuest(packagePath, fileNames.get(i)));
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
 		return allQuests;
 	}
 	
-	private Quest ReadQuest(String packagePath, String filename)throws SAXException, FileNotFoundException, IOException{
-		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+	private Quest ReadQuest(String packagePath, String filename){
+		try {		 
+			
+		FileInputStream file = new FileInputStream(new File(initPath + sep + packagePath + sep + questsPath + sep +filename));
+
 		QuestContentHandler handler = new QuestContentHandler();
+
+		return handler.Parse(file);
 		
-
-		//Pfad zur XML Datei
-	      FileReader reader = new FileReader(initPath + sep + packagePath + sep + questsPath + sep +filename);
-	      InputSource inputSource = new InputSource(reader);
-	      
-	      //Handler wird übergeben
-	      xmlReader.setContentHandler(handler );
-
-	      //Parsen wird gestartet
-	      xmlReader.parse(inputSource);
-
-	      //Aktuelle Quest wird zurueckgegeben
-	     return handler.getQuest();        
+		} catch (XPathExpressionException e) {
+			e.printStackTrace();
+		}catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+				
+		
 }
 	
 	public Reward ReadReward(String packagePath, String filename) {
-		try {		
-		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+		try {		 
+			
+		FileInputStream file = new FileInputStream(new File(initPath + sep + packagePath + sep + rewardPath + sep + filename));
+
 		RewardContentHandler handler = new RewardContentHandler();
+
+		return handler.Parse(file);
 		
-
-		//Pfad zur XML Datei
-	      FileReader reader = new FileReader(initPath + sep + packagePath + sep + rewardPath + sep + filename);
-	      InputSource inputSource = new InputSource(reader);
-	      
-	      //Handler wird übergeben
-	      xmlReader.setContentHandler(handler);
-
-	      //Parsen wird gestartet
-			xmlReader.parse(inputSource);
-			
-			//Return Value
-		     return handler.getReward();
-			
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (SAXException e) {
-				e.printStackTrace();
-			}
-			
-		return null; //TODO Throw new
+		} catch (XPathExpressionException e) {
+			e.printStackTrace();
+		}catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 
 	}
 	
