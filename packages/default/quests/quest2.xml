@@ -1,0 +1,11 @@
+<?xml version="1.0"?> 
+<quest>
+	<title>Nach langer Reise</title> 
+	<description>QuestBeschreibung2</description> 
+	<image>images/quest2.png</image>
+	<cmmprogramm>programms/testprogramm2.cmm</cmmprogramm>
+	<pattern>none</pattern>
+	<reward>reward2.xml</reward> 
+	<level>3</level>
+	<nextquest>default/quests/quest3.xml</nextquest> 
+</quest> 
