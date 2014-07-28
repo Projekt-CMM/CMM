@@ -1,6 +1,20 @@
 package at.jku.ssw.cmm.quests.datastructs;
 
 public class Quest {
+	
+	public static final String
+	XML_QUEST = "quest",
+	XML_IMAGE = "image",
+	XML_CMMPROGRAMM = "cmmprogramm",
+	XML_PATTERN = "pattern",
+	XML_REWARD = "reward",
+	XML_LEVEL = "level",
+	XML_NEXTQUEST = "nextquest",
+	XML_DESCRIPTION = "description",
+	XML_TITLE = "title";
+	
+	private String sep = System.getProperty("file.separator");
+	private String path;
 	private String title;
 	private String description;
 	private String image;
@@ -9,6 +23,7 @@ public class Quest {
 	private String rewardPath;
 	private int level; //in Stars
 	private String nextQuest;
+	
 	/**
 	 * @return the title
 	 */
@@ -105,7 +120,23 @@ public class Quest {
 	public void setNextQuest(String nextQuest) {
 		this.nextQuest = nextQuest;
 	}
+	/**
+	 * @return the path
+	 */
+	public String getPath() {
+		return path;
+	}
+	/**
+	 * @param path the path to set
+	 */
+	public void setPath(String path) {
+		this.path = path;
+	}
 	
-
+	public String getPackagePath(){
+		return path.split(sep)[0];
+	}
+	
+	
 	
 }

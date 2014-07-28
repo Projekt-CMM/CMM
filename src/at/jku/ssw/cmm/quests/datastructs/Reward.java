@@ -1,24 +1,20 @@
 package at.jku.ssw.cmm.quests.datastructs;
 
 public class Reward {
+	public static final String
+		XML_REWARD = "reward",
+		XML_TITLE = "title",
+		XML_TYLE = "type",
+		XML_DESCRIPTION = "description",
+		XML_IMAGE = "image",
+		XML_XP = "xp";
+	
 	private String title;
 	private String type;
 	private int xp;
 	private String description;
 	private String image;
-
-
-	//Reward Types
-	public static final int
-		BACKGROUND = 1,
-		SOUNDS = 2,
-		PROFILE_IMAGE = 3,
-		XP = 4,
-		COLORPICKER = 5,
-		AUTO_COMPLETE = 6,
-		SPELL_CHECKING = 7;
-		
-	
+	private String path;
 	
 	/**
 	 * @return the title
@@ -79,6 +75,18 @@ public class Reward {
 	 */
 	public void setImage(String image) {
 		this.image = image;
+	}
+	/**
+	 * @return the path
+	 */
+	public String getPath() {
+		return path;
+	}
+	/**
+	 * @param path the path to set
+	 */
+	public void setPath(String path) {
+		this.path = path;
 	}
 	
 	

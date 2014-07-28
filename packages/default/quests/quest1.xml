@@ -3,8 +3,9 @@
 	<title>Pflanzen suchen</title> 
 	<description>Beschreibung</description> 
 	<image>images/test.png</image>
-	<cmmprogramm>void main(){print((char) 'b');}</cmmprogramm> 
-	<reward>reward.xml</reward> 
+	<cmmprogramm>programms/testprogramm1.cmm</cmmprogramm>
+	<pattern>none</pattern>
+	<reward>reward1.xml</reward> 
 	<level>3</level>
-	<nextquest>while</nextquest> 
+	<nextquest>default/quests/quest2.xml</nextquest> 
 </quest> 

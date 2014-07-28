@@ -1,0 +1,8 @@
+<?xml version="1.0"?> 
+<reward>
+	<title>Die Pest</title> 
+	<type>none</type> 
+	<description>Beschreibung</description> 
+	<image>images/test1.png</image> 
+	<xp>32</xp> 
+</reward> 

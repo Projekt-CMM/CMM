@@ -1,0 +1,11 @@
+<?xml version="1.0"?> 
+<quest>
+	<title>Es war einmal</title> 
+	<description>QuestBeschreibung3</description> 
+	<image>images/quest3.png</image>
+	<cmmprogramm>programms/testprogramm3.cmm</cmmprogramm>
+	<pattern>none</pattern>
+	<reward>reward3.xml</reward> 
+	<level>4</level>
+	<nextquest>default/quests/quest3.xml</nextquest> 
+</quest> 
