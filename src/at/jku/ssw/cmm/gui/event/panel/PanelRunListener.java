@@ -174,14 +174,14 @@ public class PanelRunListener implements Debugger {
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 * <hr>
 	 */
-	private void setErrorMode(String message) {
+	private void setErrorMode(String message, int line, int col) {
 		this.run = true;
 		this.keepRunning = false;
 
 		this.master.unlockStepButton();
 		this.master.unlockStopButton();
 
-		this.master.setRuntimeErrorMode(message);
+		this.master.setRuntimeErrorMode("Runtime error: ", message, line, col);
 
 		System.out.println("[mode] setting error");
 	}
@@ -274,7 +274,7 @@ public class PanelRunListener implements Debugger {
 
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				setErrorMode(message + " in line " + node.line);
+				setErrorMode(message, node.line, 0);
 			}
 		});
 	}
@@ -311,14 +311,8 @@ public class PanelRunListener implements Debugger {
 
 		// -> Node #3 - DEFAULT
 		/* --- Update Block --- */
-		this.master.selectFunction();
-		this.master.globalSelectRoot();
-
-		this.master.updateGlobals();
-		this.master.updateCallStack();
-		this.master.updateLocals();
-
 		this.master.updateStepOutButton();
+		this.master.updateVariableTables(true);
 
 		this.timer = null;
 

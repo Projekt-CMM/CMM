@@ -8,7 +8,7 @@ import javax.swing.JMenuItem;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import at.jku.ssw.cmm.gui.GUImainSettings;
-import at.jku.ssw.cmm.gui.mod.GUIrPanelMod;
+import at.jku.ssw.cmm.gui.GUIrightPanel;
 import at.jku.ssw.cmm.gui.event.MenuBarEventListener;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
 
@@ -31,12 +31,15 @@ public class InitMenuBar {
 	 * @param settings A reference to the main GUI's configuration object
 	 * @param saveDialog A reference to the save dialog manager initialized with the main GUI
 	 */
-	public static void initFileM( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImainSettings settings, GUIrPanelMod modifier, SaveDialog saveDialog ){
+	public static void initFileM( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImainSettings settings, GUIrightPanel modifier, SaveDialog saveDialog ){
 		
-		//Init listener for the menu bar
-		MenuBarEventListener listener = new MenuBarEventListener( jFrame, jSourcePane, settings, modifier, saveDialog );
+		//Initialize menu bar toggle wrapper
+		MenuBarVisToggle toggle1 = new MenuBarVisToggle();
 		
-		//Init MenuBar
+		//Initialize listener for the menu bar
+		MenuBarEventListener listener = new MenuBarEventListener( jFrame, jSourcePane, settings, modifier, saveDialog, toggle1 );
+		
+		//Initialize MenuBar
 		JMenuBar menubar = new JMenuBar();
 		jFrame.setJMenuBar(menubar);
 		
@@ -54,6 +57,8 @@ public class InitMenuBar {
 			fileM.add(openMI);
 			openMI.addActionListener(listener.openHandler);
 			
+			fileM.addSeparator();
+			
 			// --- file -> save as ---
 			JMenuItem saveAsMI = new JMenuItem("Save As...");
 			fileM.add(saveAsMI);
@@ -63,10 +68,35 @@ public class InitMenuBar {
 			JMenuItem saveMI = new JMenuItem("Save...");
 			fileM.add(saveMI);
 			saveMI.addActionListener(listener.saveHandler);
+			
+			fileM.addSeparator();
 		
 			// --- file -> exit ---
 			JMenuItem exitMI = new JMenuItem("Exit");
 			exitMI.addActionListener(listener.exitHandler);
 			fileM.add(exitMI);
+			
+		/* --- MENU: "view" --- */
+		JMenu viewM = new JMenu("View");
+		menubar.add(viewM);
+				
+			// --- view -> tables and lists ---
+			JMenuItem tableMI = new JMenuItem("Tables and lists");
+			tableMI.addActionListener(listener.viewTableHandler);
+			viewM.add(tableMI);
+			toggle1.registerComponent(tableMI);
+			
+			// --- view -> tables and lists ---
+			JMenuItem treeMI = new JMenuItem("TreeTable");
+			treeMI.addActionListener(listener.viewTreeHandler);
+			viewM.add(treeMI);
+			toggle1.registerComponent(treeMI);
+		
+		toggle1.disable(0);
+		
+		/* --- MENU: "quests" --- */
+		JMenu questM = new JMenu("Quests");
+		questM.addMouseListener(listener.questHandler);
+		menubar.add(questM);
 	}
 }

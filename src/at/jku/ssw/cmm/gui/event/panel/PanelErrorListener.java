@@ -3,8 +3,8 @@ package at.jku.ssw.cmm.gui.event.panel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import at.jku.ssw.cmm.gui.GUIrightPanel;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
-import at.jku.ssw.cmm.gui.mod.GUIrPanelMod;
 
 /**
  * This class is a listener for the right panel of the main GUI in the "error" mode
@@ -16,7 +16,7 @@ import at.jku.ssw.cmm.gui.mod.GUIrPanelMod;
  */
 public class PanelErrorListener implements MouseListener {
 	
-	public PanelErrorListener( GUIrPanelMod p, GUImainMod modifier ){
+	public PanelErrorListener( GUIrightPanel p, GUImainMod modifier ){
 		this.modifier = modifier;
 		this.p = p;
 	}
@@ -24,8 +24,8 @@ public class PanelErrorListener implements MouseListener {
 	//An interface for modifications on the main GUI
 	private final GUImainMod modifier;
 	
-	//An interface for modifications on the right panel of the main GUI
-	private final GUIrPanelMod p;
+	//A reference to the right GUI panel
+	private final GUIrightPanel p;
 
 	@Override
 	public void mouseClicked(MouseEvent e) {

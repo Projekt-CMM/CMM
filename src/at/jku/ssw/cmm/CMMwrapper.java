@@ -3,11 +3,11 @@ package at.jku.ssw.cmm;
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Error;
 import at.jku.ssw.cmm.compiler.Tab;
+import at.jku.ssw.cmm.gui.GUIrightPanel;
 import at.jku.ssw.cmm.gui.event.panel.PanelRunListener;
 import at.jku.ssw.cmm.gui.interpreter.IOstream;
 import at.jku.ssw.cmm.gui.mod.CMMrunnableMod;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
-import at.jku.ssw.cmm.gui.mod.GUIrPanelMod;
 
 /**
  * Wrapper class for the interpreter thread starter and manager class for the compiler.
@@ -27,7 +27,7 @@ public class CMMwrapper implements CMMrunnableMod {
 	 * @param modifier Interface for main GUI manipulations, for example syntax line highlighting
 	 * @param rPanel Interface for manipulating the right GUI panel, in this case for showing error messages
 	 */
-	public CMMwrapper( GUImainMod modifier, GUIrPanelMod rPanel ){
+	public CMMwrapper( GUImainMod modifier, GUIrightPanel rPanel ){
 		
 		this.modifier = modifier;
 		this.rPanel = rPanel;
@@ -50,7 +50,7 @@ public class CMMwrapper implements CMMrunnableMod {
 	private final GUImainMod modifier;
 	
 	//Interface for manipulating the right GUI panel, in this case for showing error messages
-	private final GUIrPanelMod rPanel;
+	private final GUIrightPanel rPanel;
 	
 	/**
 	 * Runs interpreter in a seperate thread. For thread synchronisation see {@link PanelRunListener.java}.
@@ -160,5 +160,15 @@ public class CMMwrapper implements CMMrunnableMod {
 	 */
 	public Tab getSymbolTable(){
 		return this.compiler.getSymbolTable();
+	}
+	
+	/**
+	 * <hr><i>THREAD SAFE by default</i><hr>
+	 * 
+	 * @return TRUE if an interpreter thread is already running,<br>
+	 * FALSE if not
+	 */
+	public boolean isRunning(){
+		return this.running;
 	}
 }

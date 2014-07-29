@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Insets;
-import java.util.List;
 import java.util.Stack;
 
 import javax.swing.BorderFactory;
@@ -24,19 +22,20 @@ import javax.swing.table.TableCellRenderer;
 
 import at.jku.ssw.cmm.CMMwrapper;
 import at.jku.ssw.cmm.gui.datastruct.ReadCallStack;
+import at.jku.ssw.cmm.gui.datastruct.ReadCallStackHierarchy;
 import at.jku.ssw.cmm.gui.datastruct.ReadSymbolTable;
 import at.jku.ssw.cmm.gui.datastruct.StructureContainer;
 import at.jku.ssw.cmm.gui.datastruct.VarTableModel;
-import at.jku.ssw.cmm.gui.event.panel.PanelEditListener;
-import at.jku.ssw.cmm.gui.event.panel.PanelErrorListener;
 import at.jku.ssw.cmm.gui.event.panel.PanelRunBrowseListener;
 import at.jku.ssw.cmm.gui.event.panel.PanelRunStackListener;
 import at.jku.ssw.cmm.gui.event.panel.PanelRunListener;
 import at.jku.ssw.cmm.gui.exception.IncludeNotFoundException;
 import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
+import at.jku.ssw.cmm.gui.init.StringPopup;
 import at.jku.ssw.cmm.gui.interpreter.IOstream;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
-import at.jku.ssw.cmm.gui.mod.GUIrPanelMod;
+import at.jku.ssw.cmm.gui.treetable.TreeTable;
+import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
 import at.jku.ssw.cmm.gui.utils.JTableButtonMouseListener;
 import at.jku.ssw.cmm.gui.utils.JTableButtonRenderer;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
@@ -58,7 +57,7 @@ import at.jku.ssw.cmm.interpreter.memory.MethodContainer;
  * @author fabian
  *
  */
-public class GUIrightPanel implements GUIrPanelMod {
+public class GUIrightPanel {
 
 	/**
 	 * 
@@ -69,15 +68,19 @@ public class GUIrightPanel implements GUIrPanelMod {
 	 */
 	public GUIrightPanel(JComponent cp, GUImainMod mod) {
 
+		this.cp = cp;
+		
 		this.modifier = mod;
 
 		this.jRightContainer = new JPanel();
 		this.jRightContainer.setBorder(new EmptyBorder(5, 5, 5, 5));
 		this.jRightContainer.setLayout(new BorderLayout());
+		
+		this.visToggle = new VarTableVisToggle();
 
 		this.jRightPanel = new JPanel[3];
-		this.jRightPanel[0] = new JPanel();
-		this.jRightPanel[1] = new JPanel();
+		//this.jRightPanel[0] = new JPanel();
+		//this.jRightPanel[1] = new JPanel();
 		this.jRightPanel[2] = new JPanel();
 
 		this.listener = new PanelRunListener(this.modifier, this);
@@ -86,14 +89,12 @@ public class GUIrightPanel implements GUIrPanelMod {
 		this.jRightContainer.add(this.initCommonPanel(),
 				BorderLayout.PAGE_START);
 
-		this.initEditMode();
-		this.initErrorMode();
 		this.initRunMode();
 
-		this.jRightContainer.add(jRightPanel[0], BorderLayout.CENTER);
+		this.jRightContainer.add(jRightPanel[2], BorderLayout.CENTER);
 		cp.add(this.jRightContainer, BorderLayout.CENTER);
 
-		this.mode = 0;
+		this.viewMode = VM_TABLE;
 		this.stepTarget = -1;
 		this.sourceCodeBeginLine = 0;
 
@@ -105,6 +106,8 @@ public class GUIrightPanel implements GUIrPanelMod {
 		this.globalVarLock = new Object();
 		this.localVarLock = new Object();
 	}
+	
+	private final JComponent cp;
 
 	// Interface for main GUI manipulations
 	private final GUImainMod modifier;
@@ -117,8 +120,11 @@ public class GUIrightPanel implements GUIrPanelMod {
 	// error, interpreter)
 	private final JPanel jRightPanel[];
 
-	// Mode of the right panel (edit text, compile error, interpreter)
-	private int mode;
+	// Variable view mode of the right panel (table and call stack, tree table, ...)
+	private byte viewMode;
+	
+	public static final byte VM_TABLE = 0;
+	public static final byte VM_TREE = 1;
 
 	// Wrapper class with listeners for the "run" mode. Also contains the debug
 	// and I/O stream interface
@@ -131,12 +137,6 @@ public class GUIrightPanel implements GUIrPanelMod {
 	/* --- top panel objects --- */
 	// Breakpoint button
 	private JButton jButtonBreakPoint;
-
-	/* --- error mode objects --- */
-	// Error mode labels
-	private JLabel ErrorTitle;
-	private JLabel ErrorName;
-	private JLabel ErrorPos;
 
 	// Error position data
 	private int line;
@@ -163,6 +163,7 @@ public class GUIrightPanel implements GUIrPanelMod {
 	// Runtime error labels
 	private JLabel jRuntimeErrorLabel1;
 	private JLabel jRuntimeErrorLabel2;
+	private JLabel jRuntimeErrorLabel3;
 
 	// Panel containing tables for variables and the call stack list
 	// These objects are in an separate panel so that they can be removed during
@@ -191,10 +192,16 @@ public class GUIrightPanel implements GUIrPanelMod {
 
 	// Call stack list object
 	private JList<Object> jCallStack;
+	
+	private JLabel jLabel2;
 
 	// SelectedFunction
 	private final Stack<StructureContainer> globalVarBrowser;
 	private final Stack<StructureContainer> localVarBrowser;
+	
+	// Tree table for variables
+	private TreeTable varTreeTable;
+	private TreeTableDataModel varTreeTableModel;
 
 	// Synchronized lock objects for variable browsers
 	private final Object globalVarLock;
@@ -206,6 +213,9 @@ public class GUIrightPanel implements GUIrPanelMod {
 
 	// Begin of source code, without includes
 	private int sourceCodeBeginLine;
+	
+	//Manager for setting visible and invisible tables of different view modes
+	private final VarTableVisToggle visToggle;
 
 	// TODO this
 	private JPanel initCommonPanel() {
@@ -215,56 +225,6 @@ public class GUIrightPanel implements GUIrPanelMod {
 		jTopPanel.add(this.jButtonBreakPoint);
 
 		return jTopPanel;
-	}
-
-	/**
-	 * Initializes objects of the "edit" mode, which is active when the user
-	 * types code
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i><br>
-	 * As this is a initialization method, it should generally not be called
-	 * outside the constructor.
-	 * </hr>
-	 */
-	private void initEditMode() {
-
-		JButton button1 = new JButton("Compile");
-		button1.addMouseListener(new PanelEditListener(this));
-		button1.setMargin(new Insets(5, 5, 5, 5));
-
-		this.jRightPanel[0].add(button1);
-	}
-
-	/**
-	 * Initializes the objects of the "error" mode, which is active if there has
-	 * been a compiler error
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>.</i><br>
-	 * As this is a initialization method, it should generally not be called
-	 * outside the constructor.
-	 * </hr>
-	 */
-	private void initErrorMode() {
-
-		this.jRightPanel[1].setLayout(new BorderLayout());
-		this.jRightPanel[1].setBorder(BorderFactory
-				.createLineBorder(Color.DARK_GRAY));
-		this.jRightPanel[1].setLayout(new BoxLayout(this.jRightPanel[1],
-				BoxLayout.PAGE_AXIS));
-
-		ErrorTitle = new JLabel("Error:");
-		this.jRightPanel[1].add(ErrorTitle);
-
-		ErrorName = new JLabel("[..]");
-		this.jRightPanel[1].add(ErrorName);
-
-		ErrorPos = new JLabel("[..]");
-		this.jRightPanel[1].add(ErrorPos);
-
-		JButton button1 = new JButton("View");
-		button1.setMargin(new Insets(5, 5, 5, 5));
-		button1.addMouseListener(new PanelErrorListener(this, this.modifier));
-		this.jRightPanel[1].add(button1);
 	}
 
 	/**
@@ -322,6 +282,10 @@ public class GUIrightPanel implements GUIrPanelMod {
 		this.jRuntimeErrorLabel2 = new JLabel("...");
 		pane1.add(this.jRuntimeErrorLabel2);
 		this.jRuntimeErrorLabel2.setVisible(false);
+		
+		this.jRuntimeErrorLabel3 = new JLabel("...");
+		pane1.add(this.jRuntimeErrorLabel3);
+		this.jRuntimeErrorLabel3.setVisible(false);
 
 		/* ---------- SLIDER ---------- */
 		jLabelTimer = new JLabel("1.0 sec");
@@ -357,6 +321,9 @@ public class GUIrightPanel implements GUIrPanelMod {
 		paneGlobal1.add(jButtonB1);
 		this.jButtonB1.setVisible(false);
 
+		if( this.visToggle == null )
+			System.out.println("noll error");
+		this.visToggle.registerComponent(0, paneGlobal1);
 		this.jPanelVarInfo.add(paneGlobal1);
 
 		this.jTableGlobalModel = new VarTableModel();
@@ -373,11 +340,15 @@ public class GUIrightPanel implements GUIrPanelMod {
 		JScrollPane scrollPane1 = new JScrollPane(this.jTableGlobal);
 		this.jTableGlobal.setFillsViewportHeight(true);
 		this.jPanelVarInfo.add(scrollPane1);
+		
+		this.visToggle.registerComponent(0, scrollPane1);
 
 		/* ---------- CALL STACK ---------- */
-		JLabel jLabel2 = new JLabel("Call Stack");
+		jLabel2 = new JLabel("Call Stack");
 		jLabel2.setAlignmentX(Component.CENTER_ALIGNMENT);
 		this.jPanelVarInfo.add(jLabel2);
+		
+		this.visToggle.registerComponent(0, jLabel2);
 
 		Object[] space = { " ", " ", " ", " ", " " };
 
@@ -392,6 +363,8 @@ public class GUIrightPanel implements GUIrPanelMod {
 		this.jCallStack.setVisibleRowCount(10);
 		JScrollPane scrollPane2 = new JScrollPane(this.jCallStack);
 		this.jPanelVarInfo.add(scrollPane2);
+		
+		this.visToggle.registerComponent(0, scrollPane2);
 
 		/* ---------- TABLE FOR LOCAL VARs ---------- */
 		JPanel paneLocal1 = new JPanel();
@@ -407,7 +380,8 @@ public class GUIrightPanel implements GUIrPanelMod {
 		this.jButtonB2.setVisible(false);
 
 		this.jPanelVarInfo.add(paneLocal1);
-
+		this.visToggle.registerComponent(0, paneLocal1);
+		
 		this.jTableLocalModel = new VarTableModel();
 		this.jTableLocal = new JTable(this.jTableLocalModel);
 
@@ -421,86 +395,143 @@ public class GUIrightPanel implements GUIrPanelMod {
 		JScrollPane scrollPane3 = new JScrollPane(this.jTableLocal);
 		this.jTableLocal.setFillsViewportHeight(true);
 		this.jPanelVarInfo.add(scrollPane3);
+		this.visToggle.registerComponent(0, scrollPane3);
 
 		this.jRightPanel[2].add(this.jPanelVarInfo);
+		
+		/* ---------- TREE TABLE for CALL STACK and LOCALS (optional) ---------- */
+		JLabel jLabelTreeTable = new JLabel("Variables");
+		this.visToggle.registerComponent(1, jLabelTreeTable);
+		this.jPanelVarInfo.add(jLabelTreeTable);
+		
+		this.varTreeTableModel = new TreeTableDataModel(ReadCallStackHierarchy.createDataStructure());
+		
+		this.varTreeTable = new TreeTable(this.varTreeTableModel);
+		
+		JScrollPane p = new JScrollPane(this.varTreeTable);
+		p.setVisible(false);
+		this.jPanelVarInfo.add(p);
+		this.visToggle.registerComponent(1, p);
 		// Sub-panel end
+		
+		this.visToggle.setVisible(0);
 
 		/* --- Listener initialization --- */
 		PanelRunStackListener dataListener = new PanelRunStackListener(this,
 				this.jCallStack);
 		this.jCallStack.addMouseListener(dataListener.jCallStackListener);
 	}
-
-	/*
-	 * --- The methods below are implemented from GUIrPanelMod --- *
-	 * (non-Javadoc)
+	
+	/**
+	 * Sets the right panel of the main GUI to the "runtime error" mode, which
+	 * is a sub-mode of "run" mode.
 	 * 
-	 * @see at.jku.ssw.cmm.gui.mod.GUIrPanelMod#setRightPanel(int)
+	 * <hr>
+	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
+	 * <hr>
+	 * 
+	 * @param message
+	 *            The error message from the interpreter
 	 */
-	@Override
-	public void setRightPanel(int id) {
-
-		this.jRightContainer.remove(this.jRightPanel[this.mode]);
-		this.jRightContainer.add(this.jRightPanel[id], BorderLayout.CENTER);
-
-		this.mode = id;
-		this.modifier.repaint();
-	}
-
-	@Override
-	public void setError(String msg, int line, int col) {
-		this.setRightPanel(1);
-		this.col = col;
+	public void setRuntimeErrorMode(String title, String message, int line, int col ) {
+		
 		this.line = line;
+		this.col = col;
 
-		this.ErrorName.setText(msg);
+		// Set standard mode elements invisible
+		this.jButtonPlay.setVisible(false);
+		this.jButtonStepOver.setVisible(false);
+		this.jButtonStepOut.setVisible(false);
+		this.jLabelTimer.setVisible(false);
+		this.jSlider.setVisible(false);
 
-		// Error occurred in another file
-		if (line <= (int) this.modifier.getSourceCodeRegister().get(0)[0]) {
-			List<Object[]> register = this.modifier.getSourceCodeRegister();
-			for (int i = 1; i < register.size(); i++) {
-				if (line >= (int) register.get(i)[0]
-						&& line <= (int) register.get(i)[1]) {
-					this.ErrorPos.setText("... in file \"" + register.get(i)[2]
-							+ "\"");
-				}
-			}
-		}
-		// Error occurred in main file
-		else {
-			this.ErrorPos.setText("..on line "
-					+ ExpandSourceCode.correctLine(line, (int) this.modifier
-							.getSourceCodeRegister().get(0)[0], this.modifier
-							.getSourceCodeRegister().size()) + ", col " + col);
-		}
+		// Make error mode elements visible
+		this.jRuntimeErrorLabel1.setVisible(true);
+		this.jRuntimeErrorLabel1.setText(title);
+		this.jRuntimeErrorLabel2.setVisible(true);
+		this.jRuntimeErrorLabel2.setText(message);
+		this.jRuntimeErrorLabel3.setVisible(true);
+		this.jRuntimeErrorLabel3.setText("... in line " + this.line);
 
+		// Change step button to view button
+		this.jButtonStep.setVisible(true);
+		this.jButtonStep.setText("View");
 	}
 
-	@Override
-	public void setErrorCount(int n) {
+	/**
+	 * Goes back from "runtime error" mode to "ready" mode. Both are sub-modes
+	 * of "run" mode
+	 * 
+	 * <hr>
+	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
+	 * <hr>
+	 */
+	public void unsetRunTimeError() {
 
-		if (n >= 0)
-			this.ErrorTitle.setText("Errors (Total " + n + ")");
+		// Set standard mode elements visible
+		this.jButtonPlay.setVisible(true);
+		this.jLabelTimer.setVisible(true);
+		this.jSlider.setVisible(true);
+
+		// Hide error mode elements
+		this.jRuntimeErrorLabel1.setVisible(false);
+		this.jRuntimeErrorLabel2.setVisible(false);
+		this.jRuntimeErrorLabel3.setVisible(false);
+
+		// Change view button to step button
+		this.jButtonStep.setText("\u25AE\u25B6");
+	}
+	
+	public void setViewMode( byte mode ){
+		if( this.viewMode != mode )
+			this.viewMode = mode;
 		else
-			this.ErrorTitle.setText("Runtime error:");
+			return;
+		
+		switch( mode ){
+		case VM_TABLE:
+			this.visToggle.setVisible(0);
+			
+			if( this.compileManager.isRunning() ){
+				this.selectFunction();
+				this.globalSelectRoot();
+	
+				this.updateGlobals();
+				this.updateCallStack();
+				this.updateLocals();
+			}
+			break;
+		case VM_TREE:
+			this.visToggle.setVisible(1);
+			
+			if( this.compileManager.isRunning() )
+				this.updateTreeTable(true);
+			break;
+		default:
+			throw new IllegalStateException("Invalid view mode in variable browser");
+		}
 	}
 
-	@Override
+	/**
+	 * <hr>
+	 * <i>THREAD SAFE by default </i>
+	 * <hr>
+	 * 
+	 * @return The first line of the original source code, without includes and
+	 *         include code.
+	 */
+	public int getBeginLine() {
+		return this.sourceCodeBeginLine;
+	}
+	
 	public int getErrorLine() {
 		return this.line;
 	}
 
-	@Override
 	public int getErrorCol() {
 		return this.col;
 	}
-
-	@Override
-	public int getPanelMode() {
-		return this.mode;
-	}
-
-	@Override
+	
 	public void resetInterpreterData() {
 
 		this.jTableGlobalModel.reset();
@@ -509,6 +540,8 @@ public class GUIrightPanel implements GUIrPanelMod {
 		this.jTableLocalModel.reset();
 		this.jTableLocal.setModel(this.jTableLocalModel);
 
+		this.varTreeTable.reset();
+		
 		this.listener.reset();
 
 		this.callStackSize = 0;
@@ -523,8 +556,6 @@ public class GUIrightPanel implements GUIrPanelMod {
 
 		this.modifier.resetInputHighlighter();
 	}
-
-	/* --- Implementation of GUIrPanelMod end --- */
 
 	/**
 	 * Reads the global variables from the call stack and saves them to the
@@ -774,21 +805,26 @@ public class GUIrightPanel implements GUIrPanelMod {
 	 *            FALSE if the struct/array shall be shown on the local
 	 *            variables table
 	 */
-	public void selectStruct(String name, int address, int type, boolean global) {
-
-		if (global) {
-			synchronized (globalVarLock) {
-				this.globalVarBrowser.add(new StructureContainer(name, type,
-						address));
-				this.jButtonB1.setVisible(true);
-				this.updateGlobals();
-			}
-		} else {
-			synchronized (localVarLock) {
-				this.localVarBrowser.add(new StructureContainer(name, type,
-						address));
-				this.jButtonB2.setVisible(true);
-				this.updateLocals();
+	public void selectStruct(String name, int address, int type, boolean global, int x, int y ) {
+		//TODO popup
+		if( type == StructureContainer.STRING ){
+			StringPopup.createPopUp(this.cp, "Hello world", x, y);
+		}
+		else{
+			if (global) {
+				synchronized (globalVarLock) {
+					this.globalVarBrowser.add(new StructureContainer(name, type,
+							address));
+					this.jButtonB1.setVisible(true);
+					this.updateGlobals();
+				}
+			} else {
+				synchronized (localVarLock) {
+					this.localVarBrowser.add(new StructureContainer(name, type,
+							address));
+					this.jButtonB2.setVisible(true);
+					this.updateLocals();
+				}
 			}
 		}
 	}
@@ -849,6 +885,47 @@ public class GUIrightPanel implements GUIrPanelMod {
 					this.jButtonB2.setVisible(false);
 				}
 			}
+		}
+	}
+	
+	/**
+	 * Reads the call stack, local variables and global variables and saves it to
+	 * the tree table.
+	 * 
+	 * <hr>
+	 * <i>THREAD SAFE, asynchronously invoked. </i>Exception may stop EDT!
+	 * <hr>
+	 * 
+	 * @param render TRUE if the tree table data has to be re-rendered
+	 * (if there are more or less nodes than before)<br>
+	 * FALSE if the tree table data gets updated
+	 * (no new entries, just new values)
+	 */
+	public void updateTreeTable( final boolean render ){
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				if( render )
+					varTreeTable.setTreeModel(ReadCallStackHierarchy.readSymbolTable(compileManager));
+				else
+					varTreeTable.updateTreeModel(ReadCallStackHierarchy.readSymbolTable(compileManager));
+			}
+		});
+	}
+	
+	/**
+	 * Updates the variable table, call stack or tree table according to the current view mode.
+	 */
+	public void updateVariableTables( boolean render ){
+		if( this.viewMode == VM_TABLE ){
+			this.selectFunction();
+			this.globalSelectRoot();
+
+			this.updateGlobals();
+			this.updateCallStack();
+			this.updateLocals();
+		}
+		else if( this.viewMode == VM_TREE ){
+			this.updateTreeTable(render);
 		}
 	}
 
@@ -1051,66 +1128,9 @@ public class GUIrightPanel implements GUIrPanelMod {
 			System.out.println("Stepping out...");
 		}
 	}
-
-	/**
-	 * Sets the right panel of the main GUI to the "runtime error" mode, which
-	 * is a sub-mode of "run" mode.
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 * 
-	 * @param message
-	 *            The error message from the interpreter
-	 */
-	public void setRuntimeErrorMode(String message) {
-
-		// Set standard mode elements invisible
-		this.jButtonPlay.setVisible(false);
-		this.jLabelTimer.setVisible(false);
-		this.jSlider.setVisible(false);
-
-		// Make error mode elements visible
-		this.jRuntimeErrorLabel1.setVisible(true);
-		this.jRuntimeErrorLabel2.setVisible(true);
-
-		// Change step button to view button
-		this.jButtonStep.setText("View");
-	}
-
-	/**
-	 * Goes back from "runtime error" mode to "ready" mode. Both are sub-modes
-	 * of "run" mode
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 */
-	public void unsetRunTimeError() {
-
-		// Set standard mode elements visible
-		this.jButtonPlay.setVisible(true);
-		this.jLabelTimer.setVisible(true);
-		this.jSlider.setVisible(true);
-
-		// Hide error mode elements
-		this.jRuntimeErrorLabel1.setVisible(false);
-		this.jRuntimeErrorLabel2.setVisible(false);
-
-		// Change view button to step button
-		this.jButtonStep.setText("\u25AE\u25B6");
-	}
-
-	/**
-	 * <hr>
-	 * <i>THREAD SAFE by default </i>
-	 * <hr>
-	 * 
-	 * @return The first line of the original source code, without includes and
-	 *         include code.
-	 */
-	public int getBeginLine() {
-		return this.sourceCodeBeginLine;
+	
+	public boolean isCodeChangeAllowed(){
+		return true;
 	}
 
 	// TODO Invoke this method as side task
@@ -1136,7 +1156,7 @@ public class GUIrightPanel implements GUIrPanelMod {
 			// An include file could not be found
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					setError("Include file not found: \"" + e1.getFileName()
+					setRuntimeErrorMode("Preprocessor error:", "Include file not found: \"" + e1.getFileName()
 							+ "\"", e1.getLine(), 0);
 				}
 			});
@@ -1170,26 +1190,27 @@ public class GUIrightPanel implements GUIrPanelMod {
 
 		// no errors
 		if (e == null) {
-			this.setRightPanel(2);
+			//TODO this.setRightPanel(2);
+			return;
 		}
 		// compiler returns errors
 		else {
-			setError(e.msg, e.line, e.col);
+			setRuntimeErrorMode("Compiler error: ", e.msg, e.line, e.col);
 
 			// Count errors
-			int errCount = 0;
+			/*int errCount = 0;
 			while (e != null) {
 				System.out.println("line " + e.line + ", col " + e.col + ": "
 						+ e.msg);
 				errCount++;
 				e = e.next;
-			}
+			}*/
 
 			// Display total errors
-			setErrorCount(errCount);
+			//TODO setErrorCount(errCount);
 
 			// Set error panel
-			this.setRightPanel(1);
+			//TODO this.setRightPanel(1);
 		}
 	}
 
@@ -1202,6 +1223,7 @@ public class GUIrightPanel implements GUIrPanelMod {
 	 * <hr>
 	 */
 	public void runInterpreter() {
+		this.compile();
 		this.compileManager.runInterpreter(listener,
 				new IOstream(this.modifier));
 	}

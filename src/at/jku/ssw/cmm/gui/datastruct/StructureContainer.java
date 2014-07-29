@@ -16,6 +16,7 @@ public class StructureContainer {
 	public static final int STRUCT = 1;
 	public static final int ARRAY = 2;
 	public static final int GLOBAL = 3;
+	public static final int STRING = 4;
 
 	/**
 	 * Container class for variable browser information.

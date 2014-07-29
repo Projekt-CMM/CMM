@@ -25,7 +25,6 @@ import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
 import at.jku.ssw.cmm.gui.init.InitLeftPanel;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
-import at.jku.ssw.cmm.gui.mod.GUIrPanelMod;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -148,8 +147,7 @@ public class GUImain implements GUImainMod {
 				this.rightPanelControl));
 
 		// Initialize the source panel listener
-		this.jSourcePane.addKeyListener(new SourcePaneKeyListener(
-				(GUIrPanelMod) this.rightPanelControl, this.jSourcePane));
+		this.jSourcePane.addKeyListener(new SourcePaneKeyListener(this.rightPanelControl, this.jSourcePane));
 
 		// Menubar
 		InitMenuBar.initFileM(this.jFrame, this.jSourcePane, this.settings,
@@ -307,7 +305,5 @@ public class GUImain implements GUImainMod {
 		for (int i = 0, index = 0; i < line; i++) {
 			index = code.indexOf("\n", index);
 		}
-
-		// TODO this
 	}
 }
