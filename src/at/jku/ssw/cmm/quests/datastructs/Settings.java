@@ -6,6 +6,7 @@ public class Settings {
 	private int color_picker;
 	private int auto_complete;
 	private int spell_checking;
+	public static boolean debug = false;
 	
 	
 	/**
@@ -67,6 +68,18 @@ public class Settings {
 	 */
 	public void setSpell_checking(int spell_checking) {
 		this.spell_checking = spell_checking;
+	}
+	/**
+	 * @return the debug
+	 */
+	public static boolean isDebug() {
+		return debug;
+	}
+	/**
+	 * @param debug the debug to set
+	 */
+	public static void setDebug(boolean debug) {
+		Settings.debug = debug;
 	}
 	
 	

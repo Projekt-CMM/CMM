@@ -1,5 +1,9 @@
 package at.jku.ssw.cmm.quests.datastructs;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Quest {
 	
 	public static final String
@@ -11,7 +15,18 @@ public class Quest {
 	XML_LEVEL = "level",
 	XML_NEXTQUEST = "nextquest",
 	XML_DESCRIPTION = "description",
-	XML_TITLE = "title";
+	XML_TITLE = "title",
+	XML_STATUS = "status",
+	XML_SOLUTION = "solution",
+	XML_DATE = "date";
+	
+	public static final String
+	STATUS_CLOSED = "closed",
+	STATIS_OPENED = "opened",
+	STATUS_INPROGRESS = "inprogress",
+	STATUS_DONE = "done",
+	STATUS_START = "start";
+
 	
 	private String sep = System.getProperty("file.separator");
 	private String path;
@@ -21,8 +36,11 @@ public class Quest {
 	private String cmmProgramm;
 	private String pattern;
 	private String rewardPath;
-	private int level; //in Stars
+	private int level;
 	private String nextQuest;
+	private String status;
+	private String solution;
+	private String date;
 	
 	/**
 	 * @return the title
@@ -135,6 +153,52 @@ public class Quest {
 	
 	public String getPackagePath(){
 		return path.split(sep)[0];
+	}
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	/**
+	 * @return the solution
+	 */
+	public String getSolution() {
+		return solution;
+	}
+	/**
+	 * @param solution the solution to set
+	 */
+	public void setSolution(String solution) {
+		this.solution = solution;
+	}
+	/**
+	 * @return the time
+	 */
+	public String getDate() {
+		return date;
+	}
+	/**
+	 * @param time the time to set
+	 */
+	public void setnewDate() {
+		  DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy/ HH:mm:ss");
+		  Date date = new Date();
+		  
+		  this.date = dateFormat.format(date);
+		
+	}
+	/**
+	 * @param date the date to set
+	 */
+	public void setDate(String date) {
+		this.date = date;
 	}
 	
 	

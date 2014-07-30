@@ -10,25 +10,29 @@ public class Profile {
 	private String nick;
 	private int xp;
 	private String selectedImage;
+	private String openedQuest;
 	
 	private ArrayList<String> finished;
+	private ArrayList<String> selectable;
 	public boolean[] activeRewards = new boolean[7];
 	
 	public static final int
-		BACKGROND = 0,
-		SOUNDS = 1,
-		PROFILE_IMAGE = 2,
-		ONLY_XP = 3,
-		COLOR_PICKER = 4,
-		AUTO_COMPLETE = 5,
-		SPELL_CHECKING = 6;
+		SET_BACKGROND = 0,
+		SET_SOUNDS = 1,
+		SET_PROFILE_IMAGE = 2,
+		SET_ONLY_XP = 3,
+		SET_COLOR_PICKER = 4,
+		SET_AUTO_COMPLETE = 5,
+		SET_SPELL_CHECKING = 6;
 	
 	public static final String
 		XML_PROFILE = "profile",
 		XML_NICK = "nick",
 		XML_XP = "xp",
 		XML_FINISHED = "finished",
-		XML_SELECTEDIMAGE = "selectedimage";
+		XML_SELECTEDIMAGE = "selectedimage",
+		XML_OPENEDQUEST = "open",
+		XML_SELECTABLE = "selectable";
 		
 	
 	/**
@@ -137,23 +141,23 @@ public class Profile {
 		
 		//AutoComplete
 		if(settings.getAuto_complete() <= getLevel())
-			activeRewards[Profile.AUTO_COMPLETE] = true;
+			activeRewards[Profile.SET_AUTO_COMPLETE] = true;
 		
 		//BackGround
 		if(settings.getBackground() <= getLevel())
-			activeRewards[Profile.BACKGROND] = true;
+			activeRewards[Profile.SET_BACKGROND] = true;
 		
 		//ColorPicker
 		if(settings.getColor_picker() <= getLevel())
-			activeRewards[Profile.COLOR_PICKER] = true;
+			activeRewards[Profile.SET_COLOR_PICKER] = true;
 		
 		//Sounds
 		if(settings.getSounds() <= getLevel())
-			activeRewards[Profile.SOUNDS] = true;
+			activeRewards[Profile.SET_SOUNDS] = true;
 		
 		//Spell_Checking
 		if(settings.getSpell_checking() <= getLevel())
-			activeRewards[Profile.SPELL_CHECKING] = true;
+			activeRewards[Profile.SET_SPELL_CHECKING] = true;
 		
 		
 		return activeRewards;
@@ -166,6 +170,7 @@ public class Profile {
 	 * @param finished QuestsPAth
 	 */
 	public void AddFinished(String finishedPath){
+		if(!finished.contains(finishedPath))
 			finished.add(finishedPath);
 	}
 	
@@ -191,6 +196,54 @@ public class Profile {
 	 */
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	/**
+	 * @return the openedQuest
+	 */
+	public String getOpenedQuest() {
+		return openedQuest;
+	}
+
+	/**
+	 * @param openedQuest the openedQuest to set
+	 */
+	public void setOpenedQuest(String openedQuest) {
+		this.openedQuest = openedQuest;
+	}
+
+	
+	/**
+	 * @return the selectable Quests
+	 */
+	public ArrayList<String> getSelectableQuestNames() {
+		return selectable;
+	}
+
+	/**
+	 * @param selectable the selectable Quests to set
+	 */
+	public void setSelectable(ArrayList<String> selectable) {
+		this.selectable = selectable;
+	}
+
+	
+	/**
+	 * 
+	 * For adding a finished Quest to the Profile
+	 * @param finished QuestsPAth
+	 */
+	public void AddSelectable(String selectablePath){
+		if(!finished.contains(selectablePath))
+			finished.add(selectablePath);
+	}
+	
+	/**
+	 * Deleting a finished Quest in the Profile
+	 * @param String
+	 */
+	public void DelSelectable(String selectablePath){
+		finished.remove(selectablePath);
 	}
 	
 	

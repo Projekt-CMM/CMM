@@ -25,11 +25,20 @@ public class SettingsContentHandler {
 		 
 		 NodeList root = doc.getChildNodes();		 
 		 Node settings = handler.getNode("settings",root);
-		
 		 
+		 
+		 //For getting the Main <settings>
+		 NodeList nodes = settings.getChildNodes();
+			try{
+ 				Settings.setDebug(Boolean.parseBoolean(handler.getNodeValue("debug",nodes).get(0)));
+ 			}catch(IndexOutOfBoundsException e){
+ 				System.out.println("No Spell Checking min Level set");
+ 			}
+		 
+			
+		//For getting the Settings in <rewardsettings>	
 		Node rewardsettings = handler.getNodeList("rewardsettings",settings.getChildNodes()).get(0);
-	
-		NodeList nodes = rewardsettings.getChildNodes();
+		nodes = rewardsettings.getChildNodes();
 		 			
 		 			try{
 		 				settingsvar.setBackground(Integer.parseInt(handler.getNodeValue("background",nodes).get(0)));

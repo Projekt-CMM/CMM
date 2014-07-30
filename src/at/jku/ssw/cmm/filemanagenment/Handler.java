@@ -3,6 +3,12 @@ package at.jku.ssw.cmm.filemanagenment;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -25,7 +31,6 @@ public class Handler{
 	
 	private ArrayList<String> folderNames = new ArrayList<>();
 	private ArrayList<String> fileNames = new ArrayList<>();
-	
 	private ArrayList<Quest> allQuests = new ArrayList<>();
 	
 	public Handler(){
@@ -51,6 +56,7 @@ public class Handler{
 	 */
 	public void init(){
 		ReadFolderNames();
+		ReadSettings("settings.xml");
 	}
 	
 	/**
@@ -95,13 +101,72 @@ public class Handler{
 		
 		return fileNames;
 	}
+
+	/**
+	 * Reads All Quests in all Packages
+	 * @return ArrayList<Quest> 
+	 */
+	
+	public ArrayList<Quest> ReadAllQuests(){
+		ArrayList<Quest> allquests = new ArrayList<>();
+		ArrayList<String> packageNames = ReadFolderNames();
+		
+		for(int i = 0; i < packageNames.size(); i++){
+			allquests.addAll(ReadAllPackageQuests(packageNames.get(i)));
+		}
+		return allquests;
+	}
+	
+	/**
+	 * Sorts the Certain QuestList:
+	 * @Form:
+	 * + inprogress <br>
+	 * + open <br>
+	 * + done <br>
+	 * + closed <br>
+	 */
+	
+	public ArrayList<Quest> SortQuestList(ArrayList<Quest> quests){
+		
+		Quest quest;
+		int a=0;
+		int x;
+		
+		for(x = 0; x < quests.size(); x++){
+			if(quests.get(x).getStatus() != null && quests.get(x).getStatus().contains(Quest.STATUS_INPROGRESS)){
+				quest = quests.get(x);
+				quests.remove(x);
+				quests.add(0, quest);
+				a++;
+				}
+			}
+		for(x = a;x<quests.size();x++){
+			if(quests.get(x).getStatus() != null && quests.get(x).getStatus().contains(Quest.STATIS_OPENED)){
+				quest = quests.get(x);
+				quests.remove(x);
+				quests.add(a, quest);
+				a++;
+				}
+			}
+		for(x = a; x < quests.size(); x++){
+			if(quests.get(x).getStatus() != null && quests.get(x).getStatus().contains(Quest.STATUS_DONE)){
+				quest = quests.get(x);
+				quests.remove(x);
+				quests.add(a,quest);
+			}
+		}
+		
+		
+	    return quests;
+	}
 	
 /**
  * 
+ * TODO: Next Time Unused, due to Status update in Quests
  * @param profile
  * @return All finished Quests
  */
-	public ArrayList<Quest> ReadAllQuests(Profile profile){
+	public ArrayList<Quest> ReadAllFinishedQuests(Profile profile){
 		ArrayList<Quest> questlist = new ArrayList<>();
 
 		for(int i = 0; i < profile.getFinishedQuestNames().size(); i++)
@@ -112,25 +177,41 @@ public class Handler{
 	}
 	
 	/**
+	 *TODO: Next Time unused, due to Status update in Quests
+	 * @param profile
+	 * @return All selectable Quests
+	 */
+		public ArrayList<Quest> ReadAllSelectableQuests(Profile profile){
+			ArrayList<Quest> questlist = new ArrayList<>();
+
+			for(int i = 0; i < profile.getSelectableQuestNames().size(); i++)
+				questlist.add(ReadQuest(profile.getSelectableQuestNames().get(i)));
+			
+			return questlist;
+			
+		}
+	
+	/**
+	 *TODO: Not generally necessary
 	 * 
-	 * Reads all Quests
+	 * Reads all Quests in one Package
 	 * @param packagePath
 	 * @return ArrayList<Quest> containing a list of Quests
 	 * @Format packagePath: packageFolderName
 	 */
 	
-	public ArrayList<Quest> ReadAllQuests(String packagePath){
+	public ArrayList<Quest> ReadAllPackageQuests(String packagePath){
+		ArrayList<Quest> allQuests = new ArrayList<>();
 		ReadFileNames(packagePath, questsPath);
 		
 		for(int i = 0; i < fileNames.size(); i++){
 				allQuests.add(ReadQuest( packagePath, questsPath, fileNames.get(i)));
 		}
-
 		return allQuests;
 	}
 	/**
 	 * 
-	 * Reads one Quest
+	 * Reads one Quest, mainly for the profile paths
 	 * @param path
 	 * @return Quest 
 	 * @Format path: package + sep + questPath + sep + quest.xml
@@ -174,7 +255,7 @@ public class Handler{
 	
 	/**
 	 * 
-	 * Reads the Settings File
+	 * Reads the Settings File, The Settings File contains various Informations about the Reward - Levels
 	 * @param settingsFile
 	 * @return Settings
 	 * @Format settingsFile
@@ -197,7 +278,8 @@ public class Handler{
 
 	/**
 	 * 
-	 * Reads one Profile
+	 * Reads one Profile <br />
+	 * of corse without loading the Quests or something like that, containing the Profile
 	 * @param profilePath
 	 * @param profileName
 	 * @return	Profile
@@ -210,9 +292,7 @@ public class Handler{
 		
 		try {
 			return handler.Parse(initPath , profilePath, file);
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
+		}catch (SAXException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -255,6 +335,16 @@ public class Handler{
 		handler.Write(profile, file);
 	}
 	
+/**
+ * For Reading a Reward directly from a Quest, not from a Path
+ * @param quest
+ * @return
+ */
+	public Reward ReadReward(Quest quest){
+		return ReadReward(quest.getPackagePath(), quest.getRewardPath());
+	}
+	
+	
 	/**
 	 * Reads one Reward
 	 * @param packagePath
@@ -262,10 +352,6 @@ public class Handler{
 	 * @return Reward
 	 * @Format packagePath + sep + rewardPath + sep + reward.xml
 	 */
-	public Reward ReadReward(Quest quest){
-		return ReadReward(quest.getPackagePath(), quest.getRewardPath());
-	}
-	
 	public Reward ReadReward(String packagePath, String filename) {
 		String file = packagePath + sep + rewardPath + sep + filename;
 		RewardContentHandler handler = new RewardContentHandler();
@@ -284,15 +370,56 @@ public class Handler{
 	}
 	
 	/**
-	 * 
+	 * Reads the Finished Profile Rewards
+	 * @param profile
+	 * @return a list of rewards
+	 */
+	
+	public ArrayList<Reward> ReadAllFinishedRewards(Profile profile){
+	ArrayList<Reward> rewards = new ArrayList<>();
+		
+	Quest quest;
+	
+		for(int i = 0; i < profile.getFinishedQuestNames().size(); i++){
+			quest = ReadQuest(profile.getFinishedQuestNames().get(i));
+			rewards.add(ReadReward(quest)); 
+		}
+		 
+		return rewards;
+	}
+	
+	/**
+	 * TODO In the Future not more nessesary, due to quest.xml Extendsions
+	 * Reads the Selectable Profile Rewards
+	 * @param profile
+	 * @return a list of rewards
+	 */
+	
+	public ArrayList<Reward> ReadAllSelectableRewards(Profile profile){
+	ArrayList<Reward> rewards = new ArrayList<>();
+		
+	Quest quest;
+	
+		for(int i = 0; i < profile.getSelectableQuestNames().size(); i++){
+			quest = ReadQuest(profile.getSelectableQuestNames().get(i));
+			rewards.add(ReadReward(quest)); 
+		}
+		
+		return rewards;
+	}	
+	
+	/**
+	 * Returns a <String> Arraylist with all Packages - FolderNames
 	 * @return String ArrayList of FolderNames
 	 */
 	public ArrayList<String> getFolderNames(){
+		ReadFolderNames();
 		return folderNames;
 		
 	}
 
 	/**
+	 * For returning the Inital-Path
 	 * @return the initPath
 	 */
 	public String getInitPath() {
@@ -300,6 +427,7 @@ public class Handler{
 	}
 
 	/**
+	 * For setting the Initial-Path
 	 * @param initPath the initPath to set
 	 */
 	public void setInitPath(String initPath) {
@@ -307,6 +435,7 @@ public class Handler{
 	}
 
 	/**
+	 * For getting the Package Path
 	 * @return the packagePath
 	 */
 	public String getPackagePath() {
@@ -314,6 +443,7 @@ public class Handler{
 	}
 
 	/**
+	 * For setting the Package Path
 	 * @param packagePath the packagePath to set
 	 */
 	public void setPackagePath(String packagePath) {
