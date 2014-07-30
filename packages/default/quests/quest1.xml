@@ -1,11 +1,13 @@
-<?xml version="1.0"?> 
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <quest>
-	<title>Pflanzen suchen</title> 
-	<description>Beschreibung</description> 
-	<image>images/test.png</image>
-	<cmmprogramm>programms/testprogramm1.cmm</cmmprogramm>
-	<pattern>none</pattern>
-	<reward>reward1.xml</reward> 
-	<level>3</level>
-	<nextquest>default/quests/quest2.xml</nextquest> 
-</quest> 
+<title>Pflanzen suchen</title>
+<description>Beschreibung</description>
+<image>images/test.png</image>
+<cmmprogramm>programms/testprogramm1.cmm</cmmprogramm>
+<pattern>none</pattern>
+<reward>reward1.xml</reward>
+<level>3</level>
+<nextquest>default/quests/quest2.xml</nextquest>
+<solution>solution/name.cmm</solution>
+<status>inprogress</status>
+</quest>
