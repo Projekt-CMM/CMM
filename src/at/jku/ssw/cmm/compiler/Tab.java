@@ -330,6 +330,8 @@ public class Tab {
 			case Node.F2I:
 			case Node.I2C:
 			case Node.C2I:
+			case Node.A2S:
+			case Node.C2S:
 				return true;
 			default:
 				return false;
@@ -430,6 +432,8 @@ public class Tab {
 		else if(type == Tab.floatType && element.type == Tab.charType) {
 			element =new Node(Node.C2I, element, null, Tab.intType);
 			return new Node(Node.I2F, element, null, Tab.floatType);
+		} else if(type == Tab.stringType && element.type == Tab.charType) {
+			return new Node(Node.C2S, element, null, Tab.stringType); 
 		} else parser.SemErr("no known cast from " + getNameOfType(element.type) + " to " + getNameOfType(type));
 			return element;
 	}

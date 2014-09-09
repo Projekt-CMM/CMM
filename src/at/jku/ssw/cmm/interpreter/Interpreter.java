@@ -303,7 +303,8 @@ public final class Interpreter {
 				}
 				return strings.put(s);	//Saving the new String and returns Int Adress
 			}
-
+		case Node.C2S:
+			return strings.put(Character.toString(CharExpr(p.left)));
 		default:
 			debugger.abort("Not supportet node kind", p);
 			throw new IllegalStateException("Kind" + p.kind);
