@@ -102,12 +102,13 @@ float atan(float x) {
 // „Arkustangens“ mit zwei Argumenten 	\operatorname{atan2}(y, x)
 // https://en.wikipedia.org/wiki/Atan2#Definition_and_computation
 float atan2(float y, float x) {
-    return (2*atan(y/(sqrt(pow(x,2)+pow(y,2))+x));
+    return (2*atan(y/(sqrt(pow(x,2)+pow(y,2))+x)));
 }
 
 // Aufrundungsfunktion 	\lceil x \rceil
 float ceil(float x) {
-    if((int)x >= x) {
+    int xAsInt = x;
+    if(xAsInt >= x) {
         return (float)((int)x);
     } else {
         return (float)((int)x)+1;
@@ -180,7 +181,8 @@ float fabs(float x) {
 
 // Ganzteilfunktion 	\lfloor x \rfloor
 float floor(float x) {
-    if((int)x <= x) {
+    int xAsInt = x;
+    if(xAsInt <= x) {
         return (float)((int)x);
     } else {
         return (float)((int)x)-1;
