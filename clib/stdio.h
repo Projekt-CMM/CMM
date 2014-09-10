@@ -28,10 +28,10 @@ void prints(string s) {
 
 // get string
 string scanf() {
-    string s;
-    while(length(s) == 0 
-            && s[length(s)-1] != ' ' && s[length(s)-1] != '\t' 
-            && s[length(s)-1] != '\r' && s[length(s)-1] != '\n') {
+    string s = "";
+    while(length(s) == 0 ||
+            ( s[length(s)-1] != ' ' && s[length(s)-1] != '\t' 
+            && s[length(s)-1] != '\r' && s[length(s)-1] != '\n')) {
         s += read();
     }
     return s;

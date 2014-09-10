@@ -19,11 +19,11 @@ int atoi(string s);
  * @working yes
  */
 string itoa(int x) {
-    string s;
-    char[1] ch;
+    string s = "";
+    char ch;
     while(x != 0) {
-        ch[0] = (char)((x%10)+'0');
-        s = (string)ch + s;
+        ch = (char)((x%10)+'0');
+        s = ch + s;
         x /= 10;
     }
 
