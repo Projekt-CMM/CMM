@@ -482,24 +482,24 @@ public class Scanner {
 					if (ch >= '0' && ch <= '9') {AddCh(); state = 7; break;}
 					else {t.kind = 3; break loop;}
 				case 8:
-					if (ch <= 8 || ch >= 11 && ch <= 12 || ch >= 14 && ch <= '&' || ch >= '(' && ch <= '[' || ch >= ']' && ch <= 65535) {AddCh(); state = 9; break;}
+					if (ch >= 1 && ch <= 8 || ch >= 11 && ch <= 12 || ch >= 14 && ch <= '&' || ch >= '(' && ch <= '[' || ch >= ']' && ch <= 65535) {AddCh(); state = 9; break;}
 					else if (ch == 92) {AddCh(); state = 10; break;}
 					else {state = 0; break;}
 				case 9:
 					if (ch == 39) {AddCh(); state = 11; break;}
 					else {state = 0; break;}
 				case 10:
-					if (ch == 39 || ch == 92 || ch == 'n' || ch == 'r' || ch == 't') {AddCh(); state = 9; break;}
+					if (ch == 39 || ch == '0' || ch == 92 || ch == 'n' || ch == 'r' || ch == 't') {AddCh(); state = 9; break;}
 					else {state = 0; break;}
 				case 11:
 					{t.kind = 4; break loop;}
 				case 12:
-					if (ch <= 8 || ch >= 11 && ch <= 12 || ch >= 14 && ch <= '!' || ch >= '#' && ch <= '[' || ch >= ']' && ch <= 65535) {AddCh(); state = 12; break;}
+					if (ch >= 1 && ch <= 8 || ch >= 11 && ch <= 12 || ch >= 14 && ch <= '!' || ch >= '#' && ch <= '[' || ch >= ']' && ch <= 65535) {AddCh(); state = 12; break;}
 					else if (ch == '"') {AddCh(); state = 14; break;}
 					else if (ch == 92) {AddCh(); state = 13; break;}
 					else {state = 0; break;}
 				case 13:
-					if (ch == '"' || ch == 92 || ch == 'n' || ch == 'r' || ch == 't') {AddCh(); state = 12; break;}
+					if (ch == '"' || ch == '0' || ch == 92 || ch == 'n' || ch == 'r' || ch == 't') {AddCh(); state = 12; break;}
 					else {state = 0; break;}
 				case 14:
 					{t.kind = 5; break loop;}

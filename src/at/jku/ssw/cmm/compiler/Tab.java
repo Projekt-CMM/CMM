@@ -259,6 +259,8 @@ public class Tab {
 					return '\n';
 				case 't':
 					return '\t';
+				case '0':
+					return '\0';
 				case '\'':
 					return '\'';
 				case '\\':
@@ -297,6 +299,9 @@ public class Tab {
 						break;
 					case 't':
 						returnStr += '\t';
+						break;
+					case '0':
+						returnStr += '\0';
 						break;
 					case '\"':
 						returnStr += '"';
