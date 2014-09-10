@@ -93,7 +93,7 @@ public class ReadSymbolTable {
 	 * @param global TRUE if reading global data, FALSE if reading local data (this is necessary for the
 	 * 				"view" button listeners of complex data structures such as arrays or structs)
 	 */
-	private static void readVariables( Obj count, int address, VarTableModel table, GUIrightPanel listenerModifier, boolean global ){
+	public static void readVariables( Obj count, int address, VarTableModel table, GUIrightPanel listenerModifier, boolean global ){
 		
 		//Search symbol tree - linked list
 		while( count != null ){

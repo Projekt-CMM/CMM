@@ -217,7 +217,7 @@ public class GUIrightPanel {
 	//Manager for setting visible and invisible tables of different view modes
 	private final VarTableVisToggle visToggle;
 
-	// TODO this
+	// TODO Add breakpoint functions
 	private JPanel initCommonPanel() {
 		JPanel jTopPanel = new JPanel();
 
@@ -1187,30 +1187,11 @@ public class GUIrightPanel {
 
 		// Compile
 		at.jku.ssw.cmm.compiler.Error e = compileManager.compile(sourceCode);
-
-		// no errors
-		if (e == null) {
-			//TODO this.setRightPanel(2);
-			return;
-		}
+		
 		// compiler returns errors
-		else {
+		if( e != null ) {
+			//TODO more error messages
 			setRuntimeErrorMode("Compiler error: ", e.msg, e.line, e.col);
-
-			// Count errors
-			/*int errCount = 0;
-			while (e != null) {
-				System.out.println("line " + e.line + ", col " + e.col + ": "
-						+ e.msg);
-				errCount++;
-				e = e.next;
-			}*/
-
-			// Display total errors
-			//TODO setErrorCount(errCount);
-
-			// Set error panel
-			//TODO this.setRightPanel(1);
 		}
 	}
 

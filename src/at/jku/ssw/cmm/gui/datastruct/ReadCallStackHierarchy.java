@@ -2,6 +2,8 @@ package at.jku.ssw.cmm.gui.datastruct;
 
 import java.util.ArrayList;
 
+import javax.swing.JButton;
+
 import at.jku.ssw.cmm.CMMwrapper;
 import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Struct;
@@ -20,10 +22,16 @@ public class ReadCallStackHierarchy {
 	
 	public static TreeTableDataModel readSymbolTable( CMMwrapper compiler ){
 		
+		//Create root node
 		DataNode node = new DataNode("root", "void", "", new ArrayList<DataNode>());
 		
+		//Add global variables
+		node = readVariables(compiler.getSymbolTable().curScope.locals, node, Memory.getGlobalPointer());
+		
+		//Read local variables recursively
 		getNextAddress( compiler, Memory.getFramePointer(), node );
 		
+		//Create tree table model
 		TreeTableDataModel model = new TreeTableDataModel( node );
 		
 		return model;
@@ -82,16 +90,11 @@ public class ReadCallStackHierarchy {
 						node.add(new DataNode(obj.name, "float", obj.val, null));
 					}
 				}
-				/*if( obj.type.kind == Struct.ARR ){
-					type = "array";
-					JButton b = new JButton("View");
-					System.out.println("Registering array: " + obj.name );
-					MouseListener l = new PanelRunLinkListener( listenerModifier, obj.name, StructureContainer.ARRAY, address + obj.adr, global, b );
-					b.addMouseListener(l);
-					value = b;
-				}*/
+				if( obj.type.kind == Struct.ARR ){
+					node.add(readArray(obj, address + obj.adr));
+				}
 				if( obj.type.kind == Struct.STRUCT ){
-					DataNode n = readVariables( obj.type.fields, new DataNode(obj.name, "struct", "", new ArrayList<DataNode>()), address );
+					DataNode n = readVariables( obj.type.fields, new DataNode(obj.name, "struct", "", new ArrayList<DataNode>()), address + obj.adr );
 					node.add(n);
 				}
 				if( obj.type.kind == Struct.STRING ){
@@ -102,6 +105,50 @@ public class ReadCallStackHierarchy {
 			obj = obj.next;
 		}
 		return node;
+	}
+	
+	private static DataNode readArray( Obj count, int address ){
+		
+		int length = count.type.elements;
+		int size = count.type.size / count.type.elements;
+		
+		System.out.println("Reading array...");
+		
+		DataNode node = new DataNode( count.name, "array", "", new ArrayList<DataNode>() );
+		
+		for( int i = 0; i < length; i++ ){
+			
+			Object value = "";
+			String typeName = "";
+			
+			if( count.kind == Struct.INT ){
+				typeName = "int";
+				value = Memory.loadInt(address + size * i);
+			}
+			else if( count.kind == Struct.CHAR ){
+				typeName = "char";
+				value = Memory.loadChar(address + size * i);
+			}
+			else if( count.kind == Struct.FLOAT ){
+				typeName = "float";
+				value = Memory.loadFloat(address + size * i);
+			}
+			else if( count.kind == Struct.BOOL ){
+				typeName = "bool";
+			}
+			else if( count.kind == Struct.ARR ){
+				node.add(readArray(count.type.fields, address + address + size * i));
+			}
+			else if( count.kind == Struct.STRUCT ){
+				DataNode n = readVariables( count.type.fields, new DataNode(count.name, "struct", "", new ArrayList<DataNode>()), address + count.adr );
+				node.add(n);
+			}
+			
+			node.add(new DataNode("" + i, typeName, "" + value, null));
+		}
+		
+		return node;
+		
 	}
 	
 	public static DataNode createDataStructure() {
