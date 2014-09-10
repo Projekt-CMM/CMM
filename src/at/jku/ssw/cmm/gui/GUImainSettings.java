@@ -201,6 +201,11 @@ public class GUImainSettings {
 		} catch (IOException e) {
 			System.out.println("Config file not found. Replacing...");
 			this.createConfigFile();
+			this.path = null;
+			this.sizeX = 600;
+			this.sizeY = 400;
+			this.posX  = 0;
+			this.posY  = 0;
 		}
 	}
 	

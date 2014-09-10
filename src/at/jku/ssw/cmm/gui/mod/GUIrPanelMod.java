@@ -15,7 +15,7 @@ public interface GUIrPanelMod {
 	 * 
 	 * @param id The mode ID described above
 	 */
-	public void setRightPanel( int id );
+	//public void setRightPanel( int id );
 	
 	/**
 	 * Sets the right panel of the GUI to "error" mode and displays the error message given. This method

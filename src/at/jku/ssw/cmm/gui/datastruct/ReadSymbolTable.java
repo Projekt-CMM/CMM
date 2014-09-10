@@ -30,16 +30,16 @@ public class ReadSymbolTable {
 		table.reset();
 		
 		//Reading a function
-		if( type == StructureContainer.GLOBAL ){
+		if( type == StructureContainer.GLOBAL && methodName != null ){
 			readVariables( compiler.getSymbolTable().curScope.locals,
 					Memory.getGlobalPointer(), table, listenerModifier, true );
 		}
 		//Reading a struct
-		else if ( type == StructureContainer.STRUCT ){
+		else if ( type == StructureContainer.STRUCT && methodName != null ){
 			readVariables( findNodeByName(compiler.getSymbolTable().curScope.locals, methodName).type.fields,
 					address, table, listenerModifier, true );
 		}
-		else if ( type == StructureContainer.ARRAY ){
+		else if ( type == StructureContainer.ARRAY && methodName != null ){
 			System.out.println("Opening array: " + methodName);
 			readArray( findNodeByName(compiler.getSymbolTable().curScope.locals, methodName), address, table, listenerModifier, true );
 		}
@@ -62,16 +62,16 @@ public class ReadSymbolTable {
 		table.reset();
 		
 		//Reading a function
-		if( type == StructureContainer.FUNC ){
+		if( type == StructureContainer.FUNC && methodName != null ){
 			readVariables( findNodeByName(compiler.getSymbolTable().curScope.locals, methodName).locals,
 					ReadCallStack.getAddressByIndex(address), table, listenerModifier, false );
 		}
 		//Reading a struct
-		else if ( type == StructureContainer.STRUCT ){
+		else if ( type == StructureContainer.STRUCT && methodName != null ){
 			readVariables( findNodeByName(compiler.getSymbolTable().curScope.locals, methodName).type.fields,
 					address, table, listenerModifier, false );
 		}
-		else if( type == StructureContainer.ARRAY ){
+		else if( type == StructureContainer.ARRAY && methodName != null ){
 			System.out.println("Opening array: " + methodName);
 			readArray( findNodeByName(compiler.getSymbolTable().curScope.locals, methodName), address, table, listenerModifier, false );
 		}
@@ -93,7 +93,7 @@ public class ReadSymbolTable {
 	 * @param global TRUE if reading global data, FALSE if reading local data (this is necessary for the
 	 * 				"view" button listeners of complex data structures such as arrays or structs)
 	 */
-	private static void readVariables( Obj count, int address, VarTableModel table, GUIrightPanel listenerModifier, boolean global ){
+	public static void readVariables( Obj count, int address, VarTableModel table, GUIrightPanel listenerModifier, boolean global ){
 		
 		//Search symbol tree - linked list
 		while( count != null ){
@@ -139,7 +139,7 @@ public class ReadSymbolTable {
 					type = "array";
 					JButton b = new JButton("View");
 					System.out.println("Registering array: " + count.name );
-					MouseListener l = new PanelRunLinkListener( listenerModifier, count.name, StructureContainer.ARRAY, address + count.adr, global );
+					MouseListener l = new PanelRunLinkListener( listenerModifier, count.name, StructureContainer.ARRAY, address + count.adr, global, b );
 					b.addMouseListener(l);
 					value = b;
 				}
@@ -164,9 +164,19 @@ public class ReadSymbolTable {
 					type = "struct";
 					prefix = "";
 					JButton b = new JButton("View");
-					MouseListener l = new PanelRunLinkListener( listenerModifier, count.name, StructureContainer.STRUCT, address + count.adr, global );
+					MouseListener l = new PanelRunLinkListener( listenerModifier, count.name, StructureContainer.STRUCT, address + count.adr, global, b );
 					b.addMouseListener(l);
 					value = b;
+				}
+				if( count.type.kind == Struct.STRING ){
+					type = "string";
+					prefix = "";
+					JButton b = new JButton("View");
+					MouseListener l = new PanelRunLinkListener( listenerModifier, count.name,
+							StructureContainer.STRING, address + count.adr, global, b );
+					b.addMouseListener(l);
+					value = b;
+					
 				}
 				
 				Object[] buffer = {count.name, type, value};
@@ -223,7 +233,7 @@ public class ReadSymbolTable {
 				typeName = "array";
 				JButton b = new JButton("View");
 				System.out.println("Registering array: " + count.name );
-				MouseListener l = new PanelRunLinkListener( listenerModifier, count.name, StructureContainer.ARRAY, address + count.adr, global );
+				MouseListener l = new PanelRunLinkListener( listenerModifier, count.name, StructureContainer.ARRAY, address + count.adr, global, b );
 				b.addMouseListener(l);
 				value = b;
 			}
@@ -231,7 +241,7 @@ public class ReadSymbolTable {
 				typeName = "struct";
 				JButton b = new JButton("View");
 				System.out.println("Registering array: " + count.name );
-				MouseListener l = new PanelRunLinkListener( listenerModifier, count.name, StructureContainer.STRUCT, address + count.adr, global );
+				MouseListener l = new PanelRunLinkListener( listenerModifier, count.name, StructureContainer.STRUCT, address + count.adr, global, b );
 				b.addMouseListener(l);
 				value = b;
 			}
@@ -253,7 +263,7 @@ public class ReadSymbolTable {
 	 * @param name The name of the node that is searched
 	 * @return The node (if found), null if not found
 	 */
-	private static Obj findNodeByName( Obj start, String name ){
+	public static Obj findNodeByName( Obj start, String name ){
 		
 		//System.out.println("Looking for: " + name);
 		
