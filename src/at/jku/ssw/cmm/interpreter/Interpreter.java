@@ -151,7 +151,11 @@ public final class Interpreter {
 		case Node.PLUS:
 			return IntExpr(p.left) + IntExpr(p.right);
 		case Node.MINUS:
-			return IntExpr(p.left) - IntExpr(p.right);
+			if(p.right == null) {
+				return 0 - IntExpr(p.left);
+			} else {
+				return IntExpr(p.left) - IntExpr(p.right);
+			}
 		case Node.TIMES:
 			return IntExpr(p.left) * IntExpr(p.right);
 		case Node.DIV:
@@ -215,7 +219,11 @@ public final class Interpreter {
 		case Node.PLUS:
 			return FloatExpr(p.left) + FloatExpr(p.right);
 		case Node.MINUS:
-			return FloatExpr(p.left) - FloatExpr(p.right);
+			if(p.right == null) {
+				return 0 - FloatExpr(p.left);
+			} else {
+				return FloatExpr(p.left) - FloatExpr(p.right);
+			}
 		case Node.TIMES:
 			return FloatExpr(p.left) * FloatExpr(p.right);
 		case Node.DIV:
@@ -303,7 +311,8 @@ public final class Interpreter {
 				}
 				return strings.put(s);	//Saving the new String and returns Int Adress
 			}
-
+		case Node.C2S:
+			return strings.put(Character.toString(CharExpr(p.left)));
 		default:
 			debugger.abort("Not supportet node kind", p);
 			throw new IllegalStateException("Kind" + p.kind);

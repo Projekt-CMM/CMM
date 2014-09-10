@@ -63,16 +63,17 @@ public final class Node {
 		I2C      	= 42,   // conversion from int to char
 		C2I      	= 43,   // conversion from char to int
 		A2S      	= 44,   // conversion from char-array to string
+		C2S			= 45,	// conversion from char to string
 		//------------ conditionals
-		EQL      	= 45,  	// ==
-		NEQ      	= 46,  	// !=
-		LSS      	= 47,  	// <
-		LEQ      	= 48,  	// <=
-		GTR      	= 49,  	// >
-		GEQ      	= 50,  	// >=
-		NOT      	= 51,  	// !
-		OR       	= 52,  	// ||
-		AND      	= 53;  	// &&
+		EQL      	= 46,  	// ==
+		NEQ      	= 47,  	// !=
+		LSS      	= 48,  	// <
+		LEQ      	= 49,  	// <=
+		GTR      	= 50,  	// >
+		GEQ      	= 51,  	// >=
+		NOT      	= 52,  	// !
+		OR       	= 53,  	// ||
+		AND      	= 54;  	// &&
 
 	public int kind;        // STATSEQ, ASSIGN, ...
 	public Struct type;     // only used in expressions
@@ -142,7 +143,7 @@ public final class Node {
 		"IDENT", "INTCON", "FLOATCON", "CHARCON", "STRINGCON",
 		"DOT", "INDEX", "REF",
 		"PLUS", "MINUS", "TIMES", "DIV", "REM", "BITNEQ", "BITAND", "BITOR", "BITXOR", 
-		"SHIFTLEFT", "SHIFTRIGHT", "INC", "DEC", "I2F", "F2I", "I2C", "C2I", "A2S",
+		"SHIFTLEFT", "SHIFTRIGHT", "INC", "DEC", "I2F", "F2I", "I2C", "C2I", "A2S", "C2S",
 		"EQL", "NEQ", "LSS", "LEQ", "GTR", "GEQ", "NOT", "OR", "AND"
 	};
 
