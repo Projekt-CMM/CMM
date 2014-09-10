@@ -14,7 +14,10 @@ int atoi(string s);
 
 //------------------- declarations
 
-// convert int to string
+/** convert int to string
+ *
+ * @working yes
+ */
 string itoa(int x) {
     string s;
     char[1] ch;
@@ -31,11 +34,14 @@ string itoa(int x) {
 /*string ftoa(int f) {
 }*/
 
-// convert string to int
+/** convert string to int 
+ *
+ * @working yes
+ */
 int atoi(string s) {
     int ret = 0;
     int i = 0;
-    while(length(s) < i) {
+    while(length(s) > i) {
         if(s[i] >= '0' && s[i] <= '9') {
             ret *= 10;
             ret += s[i]-'0';
@@ -44,6 +50,7 @@ int atoi(string s) {
     }
     return ret;
 }
+
 
 // convert string to float
 /*float atof(string s) {
