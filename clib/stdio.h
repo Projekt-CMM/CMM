@@ -12,12 +12,18 @@ string scanf();
 
 //------------------- declarations
 
-// print character
+/** print character
+ *
+ * @working yes
+ */
 void putc(char ch) {
     print(ch);
 }
 
-// print string
+/** print string
+ *
+ * @working yes
+ */
 void prints(string s) {
     int i = 0; 
     while(i < length(s)) {
@@ -26,13 +32,22 @@ void prints(string s) {
     }
 }
 
-// get string
+/** get string
+ *
+ * @working yes
+ */
 string scanf() {
-    string s;
-    while(length(s) == 0 
-            && s[length(s)-1] != ' ' && s[length(s)-1] != '\t' 
-            && s[length(s)-1] != '\r' && s[length(s)-1] != '\n') {
+    string s = "";
+    while(1 == 1) {
+        // read character
         s += read();
+        // check if end of scanf is reached
+        if(s[length(s)-1] == ' ' 
+            || s[length(s)-1] == '\t'
+            || s[length(s)-1] == '\r' 
+            || s[length(s)-1] == '\n'
+            || s[length(s)-1] == '\0') {
+            return s;
+        }
     }
-    return s;
 }

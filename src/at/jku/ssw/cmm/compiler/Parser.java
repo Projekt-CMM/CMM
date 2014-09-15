@@ -839,8 +839,8 @@ public class Parser {
 			else {
 			if((!con.type.isPrimitive() && con.type != Tab.stringType) || (!e.type.isPrimitive() && e.type != Tab.stringType))
 			     SemErr("type is not a primitive or string");
-			 else if((con.type.isPrimitive() != e.type.isPrimitive()) || ((con.type == Tab.stringType) != (e.type == Tab.stringType)))
-			     SemErr("you cannot mix primitive and string in expression");
+			 else if((con.type == Tab.stringType || e.type == Tab.stringType) && ((con.type == Tab.stringType || con.type == Tab.charType) != (e.type == Tab.stringType || e.type == Tab.charType)))
+			     SemErr("you cannot mix primitive and string in condition");
 			 
 			con = tab.doImplicitCastByAritmetic(con, con.type, e.type);
 			e = tab.doImplicitCastByAritmetic(e, con.type, e.type);
@@ -945,7 +945,7 @@ public class Parser {
 			   SemErr("type is not a primitive or string");
 			else if(res.type == Tab.stringType && n.type == Tab.stringType && kind != Node.PLUS)
 			   SemErr("for string operations, only + is allowed");
-			else if((res.type.isPrimitive() != n.type.isPrimitive()) || ((res.type == Tab.stringType) != (n.type == Tab.stringType)))
+			else if ((res.type == Tab.stringType || n.type == Tab.stringType) && ((res.type == Tab.stringType || res.type == Tab.charType) != (n.type == Tab.stringType || n.type == Tab.charType)))
 			       SemErr("you cannot mix primitive and string in expression");
 			else {
 			   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);

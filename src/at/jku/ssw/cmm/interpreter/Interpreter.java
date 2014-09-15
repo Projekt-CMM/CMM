@@ -404,6 +404,24 @@ public final class Interpreter {
 				debugger.abort("Not supportet char node kind", p);
 				throw new IllegalStateException("Kind" + p.kind);
 			}
+			
+		case Struct.BOOL:
+			switch (p.kind) {
+			case Node.EQL:
+				return Condition(p.left) == Condition(p.right);
+			case Node.NEQ:
+				return Condition(p.left) != Condition(p.right);
+				
+			case Node.OR:
+				return Condition(p.left) || Condition(p.right); // OR ||
+			case Node.AND:
+				return Condition(p.left) && Condition(p.right); // AND &&
+			case Node.NOT:
+				return !Condition(p.left); // NOT
+			default:
+				debugger.abort("Not supportet char node kind", p);
+				throw new IllegalStateException("Kind" + p.kind);
+			}
 
 			// case Struct.BOOL: break; // Boolean Variables
 			// case Struct.STRING: break; // Compiler implentation
