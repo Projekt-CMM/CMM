@@ -3,8 +3,8 @@ package at.jku.ssw.cmm;
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Error;
 import at.jku.ssw.cmm.compiler.Tab;
-import at.jku.ssw.cmm.gui.GUIrightPanel;
-import at.jku.ssw.cmm.gui.event.panel.PanelRunListener;
+import at.jku.ssw.cmm.gui.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.gui.interpreter.IOstream;
 import at.jku.ssw.cmm.gui.mod.CMMrunnableMod;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
@@ -27,7 +27,7 @@ public class CMMwrapper implements CMMrunnableMod {
 	 * @param modifier Interface for main GUI manipulations, for example syntax line highlighting
 	 * @param rPanel Interface for manipulating the right GUI panel, in this case for showing error messages
 	 */
-	public CMMwrapper( GUImainMod modifier, GUIrightPanel rPanel ){
+	public CMMwrapper( GUImainMod modifier, GUIdebugPanel rPanel ){
 		
 		this.modifier = modifier;
 		this.rPanel = rPanel;
@@ -50,7 +50,7 @@ public class CMMwrapper implements CMMrunnableMod {
 	private final GUImainMod modifier;
 	
 	//Interface for manipulating the right GUI panel, in this case for showing error messages
-	private final GUIrightPanel rPanel;
+	private final GUIdebugPanel rPanel;
 	
 	/**
 	 * Runs interpreter in a seperate thread. For thread synchronisation see {@link PanelRunListener.java}.

@@ -1,9 +1,9 @@
-package at.jku.ssw.cmm.gui.event.panel;
+package at.jku.ssw.cmm.gui.event.debug;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import at.jku.ssw.cmm.gui.GUIrightPanel;
+import at.jku.ssw.cmm.gui.GUIdebugPanel;
 
 /**
  * This class is a listener for the right panel of the main GUI in edit mode.
@@ -14,12 +14,12 @@ import at.jku.ssw.cmm.gui.GUIrightPanel;
  */
 public class PanelEditListener implements MouseListener {
 	
-	public PanelEditListener( GUIrightPanel master ){
+	public PanelEditListener( GUIdebugPanel master ){
 		this.master = master;
 	}
 	
 	//Reference to the panel manager
-	private final GUIrightPanel master;
+	private final GUIdebugPanel master;
 
 	@Override
 	public void mouseClicked(MouseEvent e) {

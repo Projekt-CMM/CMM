@@ -1,15 +1,15 @@
-package at.jku.ssw.cmm.gui.event.panel;
+package at.jku.ssw.cmm.gui.event.debug;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 
-import at.jku.ssw.cmm.gui.GUIrightPanel;
+import at.jku.ssw.cmm.gui.GUIdebugPanel;
 
 public class PanelRunLinkListener implements MouseListener {
 	
-	public PanelRunLinkListener( GUIrightPanel master, String name, int type, int address, boolean global, JButton b ){
+	public PanelRunLinkListener( GUIdebugPanel master, String name, int type, int address, boolean global, JButton b ){
 		this.master = master;
 		this.name = name;
 		this.type = type;
@@ -18,7 +18,7 @@ public class PanelRunLinkListener implements MouseListener {
 		this.b = b;
 	}
 	
-	private final GUIrightPanel master;
+	private final GUIdebugPanel master;
 	private final int type;
 	private final String name;
 	private final int address;

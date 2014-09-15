@@ -7,8 +7,9 @@ import javax.swing.JMenuItem;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.GUImainSettings;
-import at.jku.ssw.cmm.gui.GUIrightPanel;
+import at.jku.ssw.cmm.gui.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.event.MenuBarEventListener;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
 
@@ -31,13 +32,13 @@ public class InitMenuBar {
 	 * @param settings A reference to the main GUI's configuration object
 	 * @param saveDialog A reference to the save dialog manager initialized with the main GUI
 	 */
-	public static void initFileM( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImainSettings settings, GUIrightPanel modifier, SaveDialog saveDialog ){
+	public static void initFileM( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImain main, GUImainSettings settings, GUIdebugPanel modifier, SaveDialog saveDialog ){
 		
 		//Initialize menu bar toggle wrapper
 		MenuBarVisToggle toggle1 = new MenuBarVisToggle();
 		
 		//Initialize listener for the menu bar
-		MenuBarEventListener listener = new MenuBarEventListener( jFrame, jSourcePane, settings, modifier, saveDialog, toggle1 );
+		MenuBarEventListener listener = new MenuBarEventListener( jFrame, jSourcePane, main, settings, modifier, saveDialog, toggle1 );
 		
 		//Initialize MenuBar
 		JMenuBar menubar = new JMenuBar();
@@ -94,9 +95,18 @@ public class InitMenuBar {
 		
 		toggle1.disable(0);
 		
-		/* --- MENU: "quests" --- */
-		JMenu questM = new JMenu("Quests");
-		questM.addMouseListener(listener.questHandler);
+		/* --- MENU: "progress" --- */
+		JMenu questM = new JMenu("Progress");
 		menubar.add(questM);
+		
+			// --- progress -> profile ---
+			JMenuItem profileMI = new JMenuItem("Select Profile");
+			profileMI.addActionListener(listener.profileHandler);
+			questM.add(profileMI);
+					
+			// --- progress -> quests ---
+			JMenuItem questMI = new JMenuItem("Quests");
+			questMI.addActionListener(listener.questHandler);
+			questM.add(questMI);
 	}
 }

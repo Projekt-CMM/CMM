@@ -1,4 +1,4 @@
-package at.jku.ssw.cmm.gui.event.panel;
+package at.jku.ssw.cmm.gui.event.debug;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -9,7 +9,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import at.jku.ssw.cmm.debugger.Debugger;
-import at.jku.ssw.cmm.gui.GUIrightPanel;
+import at.jku.ssw.cmm.gui.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.compiler.Node;
 
@@ -42,7 +42,7 @@ public class PanelRunListener implements Debugger {
 	 * @param master
 	 *            Reference to the right panel wrapper class
 	 */
-	public PanelRunListener(GUImainMod modMain, GUIrightPanel master) {
+	public PanelRunListener(GUImainMod modMain, GUIdebugPanel master) {
 		this.modMain = modMain;
 		this.master = master;
 
@@ -60,7 +60,7 @@ public class PanelRunListener implements Debugger {
 	private final GUImainMod modMain;
 
 	// Reference to the right panel wrapper class
-	private final GUIrightPanel master;
+	private final GUIdebugPanel master;
 
 	// FALSE = pause | TRUE = play
 	private boolean run;

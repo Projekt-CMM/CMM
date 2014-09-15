@@ -5,11 +5,13 @@ import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
@@ -25,6 +27,7 @@ import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
 import at.jku.ssw.cmm.gui.init.InitLeftPanel;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
+import at.jku.ssw.cmm.gui.quest.GUIquestMain;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -69,6 +72,8 @@ public class GUImain implements GUImainMod {
 	private int inputHighlightOffset;
 
 	private Object readLoopLock;
+	
+	public static final char BREAKPOINT = '\u2326';
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)
@@ -93,7 +98,7 @@ public class GUImain implements GUImainMod {
 	private void start() {
 		
 		if( SwingUtilities.isEventDispatchThread() )
-			System.out.println("GUI runnung on EDT.");
+			System.out.println("[EDT Analyse] Main GUI runnung on EDT.");
 
 		// Initialize the window
 		this.jFrame = new JFrame("C-- Entwicklungsumgebung");
@@ -144,14 +149,14 @@ public class GUImain implements GUImainMod {
 		// Initialize window component listener
 		this.jFrame.addComponentListener(new WindowComponentListener(
 				this.jFrame, this.jSourcePane, this.settings,
-				this.rightPanelControl));
+				this.rightPanelControl.getDebugPanel()));
 
 		// Initialize the source panel listener
-		this.jSourcePane.addKeyListener(new SourcePaneKeyListener(this.rightPanelControl, this.jSourcePane));
+		this.jSourcePane.addKeyListener(new SourcePaneKeyListener(this.rightPanelControl.getDebugPanel(), this.jSourcePane));
 
 		// Menubar
-		InitMenuBar.initFileM(this.jFrame, this.jSourcePane, this.settings,
-				this.rightPanelControl, this.saveDialog);
+		InitMenuBar.initFileM(this.jFrame, this.jSourcePane, this, this.settings,
+				this.rightPanelControl.getDebugPanel(), this.saveDialog);
 
 		// Causes this Window to be sized to fit the preferred size and layouts
 		// of its subcomponents.
@@ -296,14 +301,45 @@ public class GUImain implements GUImainMod {
 
 		return this.jInputPane.getText();
 	}
-
+	
 	@Override
-	public void setBreakPoint(int line) {
-
+	public void toggleBreakPoint() {
+		
+		int start = this.jSourcePane.getSelectionStart();
+		int end = this.jSourcePane.getSelectionEnd();
 		String code = this.jSourcePane.getText();
 
-		for (int i = 0, index = 0; i < line; i++) {
-			index = code.indexOf("\n", index);
+		for( int i = start; i >= 0; i-- ){
+			System.out.println("Scanning: " + code.charAt(i));
+			if( code.charAt(i) == '\n' ){
+				code = code.substring(0, i+1) + BREAKPOINT + code.substring(i+1);
+				start = start + 1;
+				end = end + 1;
+				break;
+			}else if( code.charAt(i) == BREAKPOINT ){
+				code = code.substring(0, i) + code.substring(i+1);
+				start = start - 1;
+				end = end - 1;
+				break;
+			}
 		}
+		
+		this.jSourcePane.setText(code);
+		this.jSourcePane.select(start, end);
+	}
+	
+	@Override
+	public void startQuestGUI(){
+		System.out.println("Opening Quest Selection Window...");
+		new GUIquestMain().start();
+	}
+	
+	@Override
+	public void selectProfile(){
+		System.out.println("Opening Profile Selection Window...");
+		JFileChooser chooser = new JFileChooser("Select a profile...");
+		chooser.setFileFilter(new FileNameExtensionFilter(
+				"C Compact Profile", "xml"));
+		chooser.showOpenDialog(jFrame);
 	}
 }

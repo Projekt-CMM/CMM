@@ -1,7 +1,7 @@
 package at.jku.ssw.cmm.gui.interpreter;
 
 import at.jku.ssw.cmm.compiler.Node;
-import at.jku.ssw.cmm.gui.GUIrightPanel;
+import at.jku.ssw.cmm.gui.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 /**
  * UNUSED
@@ -11,14 +11,14 @@ import at.jku.ssw.cmm.gui.mod.GUImainMod;
  */
 public class ProcessInterpreterStep {
 
-	public ProcessInterpreterStep(GUImainMod modMain, GUIrightPanel master) {
+	public ProcessInterpreterStep(GUImainMod modMain, GUIdebugPanel master) {
 		this.modMain = modMain;
 		this.master = master;
 	}
 
 	@SuppressWarnings("unused")
 	private final GUImainMod modMain;
-	private final GUIrightPanel master;
+	private final GUIdebugPanel master;
 
 	public void interpret(Node n) {
 
