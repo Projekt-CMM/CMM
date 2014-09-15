@@ -70,15 +70,19 @@ float acos(float x) {
     return result; // TODO
 }
 
-// Arkussinus 	\arcsin x
-// https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
+/** Arkussinus 	\arcsin x
+ *
+ * @working yes
+ *
+ * https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
+ */
 float asin(float x) {
     float result;
     int n;
     result = 0;
     n=0;
-    while(n<=100) { // TODO
-        result += fak(2*n)/(pow(4,n)*pow(fak(n),2)*(2*n+1));
+    while(n<=6) { // TODO
+        result += fak(2*n)/(pow(4,n)*pow(fak(n),2)*(2*n+1))*pow(x, 2*n+1);
         n += 1;
     }
     return result; // TODO
@@ -87,12 +91,11 @@ float asin(float x) {
 // Arkustangens 	\arctan x
 // https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
 float atan(float x) {
-    
     float result;
     int n;
     result = 0;
     n=0;
-    while(n<=100) { // TODO
+    while(n<=6) { // TODO
         result += pow(-1,n)*1/(2*n+1)*pow(x,2*n+1);
         n += 1;
     }
@@ -105,7 +108,10 @@ float atan2(float y, float x) {
     return (2*atan(y/(sqrt(pow(x,2)+pow(y,2))+x)));
 }
 
-// Aufrundungsfunktion 	\lceil x \rceil
+/** Aufrundungsfunktion 	\lceil x \rceil
+ *
+ * @working yes
+ */
 float ceil(float x) {
     int xAsInt = x;
     if(xAsInt >= x) {
@@ -115,15 +121,19 @@ float ceil(float x) {
     }
 }
 
-// Kosinus 	\cos x
-// https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
+/** Kosinus 	\cos x
+ *
+ * @working yes
+ *
+ * https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
+ */
 float cos(float x) {
     x = fmod(x, M_PI);
     float result;
     int n;
     result = 0;
     n=0;
-    while(n<=100) { // TODO
+    while(n<=6) {
         result += pow(-1.,n) * pow(x,2*n)/fak(2*n);
         n += 1;
     }
@@ -137,7 +147,7 @@ float cosh(float x) {
     int n;
     result = 0;
     n=0;
-    while(n<=100) { // TODO
+    while(n<=6) { // TODO
         result += pow(x,2*n) / fak(2*n);
         n += 1;
     }
@@ -151,20 +161,23 @@ float exp(float x) {
     int n;
     result = 0;
     n=0;
-    while(n<=100) { // TODO
+    while(n<=6) { // TODO
         result += pow(x,n)/fak(n);
         n += 1;
     }
     return result;
 }
 
-// Fakultät
+/** Fakultät
+ *
+ * @working yes
+ */
 int fak(int x) {
     int result, n;
     result = 1;
     n = 1;
     while(n <= x) {
-        result += n;
+        result *= n;
         n += 1;    
     }
     return result;
@@ -189,7 +202,10 @@ float floor(float x) {
     }
 }
 
-// Führt die Modulo Funktion für Gleitkommazahlen durch 	x \bmod y
+/** Führt die Modulo Funktion für Gleitkommazahlen durch 	x \bmod y
+ *
+ * @working yes
+ */
 float fmod(float x, float y) {
     x -= y*floor((x)/y);
     return x;
@@ -219,11 +235,15 @@ float modf() {
     return 0.; // TODO
 }
 
-// Potenziert ersten mit dem zweiten Parameter 	x^y
-// https://de.wikipedia.org/wiki/Bin%C3%A4re_Exponentiation
-// http://www.programminglogic.com/fast-exponentiation-algorithms/
+/** Potenziert ersten mit dem zweiten Parameter 	x^y
+ *
+ * @working yes
+ *
+ * https://de.wikipedia.org/wiki/Bin%C3%A4re_Exponentiation
+ * http://www.programminglogic.com/fast-exponentiation-algorithms/
+ */
 float pow(float x, int y)  {
-    int result;
+    float result;
     result = 1;
 
     while (y != 0) {
@@ -236,15 +256,19 @@ float pow(float x, int y)  {
     return result;
 }
 
-// Sinus 	\sin x
-// https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
+/** Sinus 	\sin x
+ *
+ * @working yes
+ *
+ * https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
+ */
 float sin(float x) {
     x = fmod(x, M_PI);
     float result;
     int n;
     result = 0;
     n=0;
-    while(n<=100) { // TODO
+    while(n<=6) {
         result += pow(-1.,n) * pow(x,2*n+1)/fak(2*n+1);
         n += 1;
     }
@@ -258,7 +282,7 @@ float sinh(float x) {
     int n;
     result = 0;
     n=0;
-    while(n<=100) { // TODO
+    while(n<=6) { // TODO
         result += pow(x,2*n+1) / fak(2*n+1);
         n += 1;
     }
@@ -272,7 +296,7 @@ float sqrt(float x) {
     int n;
     xn = (x+1)/2; // TODO
     n = 0;
-    while(n<=50) {
+    while(n<=6) {
         xn += (xn + (x/xn)) / 2;
         n += 1;
     }
