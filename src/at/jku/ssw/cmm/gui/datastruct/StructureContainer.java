@@ -4,7 +4,7 @@ package at.jku.ssw.cmm.gui.datastruct;
  * Container class for variable browser information. Every object of this class stands for
  * one data structure or function which is displayed in one of the variable tables of the
  * right panel of the main GUI. These objects are saved to a Stack in the wrapper class of
- * the right panel ({@link GUIrightPanel}).
+ * the right panel ({@link GUIdebugPanel}).
  * 
  * @author fabian
  *

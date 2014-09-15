@@ -2,7 +2,7 @@ package at.jku.ssw.cmm;
 
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Obj;
-import at.jku.ssw.cmm.gui.event.panel.PanelRunListener;
+import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.gui.interpreter.IOstream;
 import at.jku.ssw.cmm.gui.mod.CMMrunnableMod;
 import at.jku.ssw.cmm.interpreter.Interpreter;

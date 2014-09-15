@@ -1,20 +1,20 @@
-package at.jku.ssw.cmm.gui.event.panel;
+package at.jku.ssw.cmm.gui.event.debug;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JList;
 
-import at.jku.ssw.cmm.gui.GUIrightPanel;
+import at.jku.ssw.cmm.gui.GUIdebugPanel;
 
 public class PanelRunStackListener {
 
-	public PanelRunStackListener( GUIrightPanel master, JList<Object> jCallStack2 ){
+	public PanelRunStackListener( GUIdebugPanel master, JList<Object> jCallStack2 ){
 		this.master = master;
 		this.jCallStack = jCallStack2;
 	}
 	
-	private final GUIrightPanel master;
+	private final GUIdebugPanel master;
 	private final JList<Object> jCallStack;
 	
 	//Call stack listener

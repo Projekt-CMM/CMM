@@ -7,8 +7,8 @@ import javax.swing.JButton;
 import at.jku.ssw.cmm.CMMwrapper;
 import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Struct;
-import at.jku.ssw.cmm.gui.GUIrightPanel;
-import at.jku.ssw.cmm.gui.event.panel.PanelRunLinkListener;
+import at.jku.ssw.cmm.gui.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.event.debug.PanelRunLinkListener;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
 
 public class ReadSymbolTable {
@@ -21,12 +21,12 @@ public class ReadSymbolTable {
 	 * 
 	 * @param compiler A reference to the compiler object containing the symbol table
 	 * @param table The table model containing table data
-	 * @param listenerModifier A reference to the main GUI right panel wrapper class {@link GUIrightPanel}
+	 * @param listenerModifier A reference to the main GUI right panel wrapper class {@link GUIdebugPanel}
 	 * @param methodName The name of the method or struct which contains the variables we are searching for
 	 * @param type Type of the variable container ( function | struct | array | global ), see {@link StructureContainer}
 	 * @param address Start address for the search and read process
 	 */
-	public static void readGlobals( CMMwrapper compiler, VarTableModel table, GUIrightPanel listenerModifier, String methodName, int type, int address ){
+	public static void readGlobals( CMMwrapper compiler, VarTableModel table, GUIdebugPanel listenerModifier, String methodName, int type, int address ){
 		table.reset();
 		
 		//Reading a function
@@ -53,12 +53,12 @@ public class ReadSymbolTable {
 	 * 
 	 * @param compiler A reference to the compiler object containing the symbol table
 	 * @param table The table model containing table data
-	 * @param listenerModifier A reference to the main GUI right panel wrapper class {@link GUIrightPanel}
+	 * @param listenerModifier A reference to the main GUI right panel wrapper class {@link GUIdebugPanel}
 	 * @param methodName The name of the method or struct which contains the variables we are searching for
 	 * @param type Type of the variable container ( function | struct | array | global ), see {@link StructureContainer}
 	 * @param address Start address for the search and read process
 	 */
-	public static void readLocals( CMMwrapper compiler, VarTableModel table, GUIrightPanel listenerModifier, String methodName, int type, int address ){
+	public static void readLocals( CMMwrapper compiler, VarTableModel table, GUIdebugPanel listenerModifier, String methodName, int type, int address ){
 		table.reset();
 		
 		//Reading a function
@@ -89,11 +89,11 @@ public class ReadSymbolTable {
 	 * @param count The start node in the symbol table
 	 * @param address The address of the function or structure which is being read
 	 * @param table The table model containing table data
-	 * @param listenerModifier A reference to the main GUI right panel wrapper class {@link GUIrightPanel}
+	 * @param listenerModifier A reference to the main GUI right panel wrapper class {@link GUIdebugPanel}
 	 * @param global TRUE if reading global data, FALSE if reading local data (this is necessary for the
 	 * 				"view" button listeners of complex data structures such as arrays or structs)
 	 */
-	public static void readVariables( Obj count, int address, VarTableModel table, GUIrightPanel listenerModifier, boolean global ){
+	public static void readVariables( Obj count, int address, VarTableModel table, GUIdebugPanel listenerModifier, boolean global ){
 		
 		//Search symbol tree - linked list
 		while( count != null ){
@@ -198,11 +198,11 @@ public class ReadSymbolTable {
 	 * @param count The start node in the symbol table
 	 * @param address The address of the function or structure which is being read
 	 * @param table The table model containing table data
-	 * @param listenerModifier A reference to the main GUI right panel wrapper class {@link GUIrightPanel}
+	 * @param listenerModifier A reference to the main GUI right panel wrapper class {@link GUIdebugPanel}
 	 * @param global TRUE if reading global data, FALSE if reading local data (this is necessary for the
 	 * 				"view" button listeners of complex data structures such as arrays or structs)
 	 */
-	private static void readArray( Obj count, int address, VarTableModel table, GUIrightPanel listenerModifier, boolean global ){
+	private static void readArray( Obj count, int address, VarTableModel table, GUIdebugPanel listenerModifier, boolean global ){
 		
 		int length = count.type.elements;
 		int size = count.type.size / count.type.elements;

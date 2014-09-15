@@ -1,18 +1,18 @@
-package at.jku.ssw.cmm.gui.event.panel;
+package at.jku.ssw.cmm.gui.event.debug;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import at.jku.ssw.cmm.gui.GUIrightPanel;
+import at.jku.ssw.cmm.gui.GUIdebugPanel;
 
 public class PanelRunBrowseListener implements MouseListener {
 	
-	public PanelRunBrowseListener( GUIrightPanel master, boolean global ){
+	public PanelRunBrowseListener( GUIdebugPanel master, boolean global ){
 		this.master = master;
 		this.global = global;
 	}
 	
-	private final GUIrightPanel master;
+	private final GUIdebugPanel master;
 	private final boolean global;
 
 	@Override

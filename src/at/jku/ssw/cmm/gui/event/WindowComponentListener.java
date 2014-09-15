@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import at.jku.ssw.cmm.gui.GUImainSettings;
-import at.jku.ssw.cmm.gui.GUIrightPanel;
+import at.jku.ssw.cmm.gui.GUIdebugPanel;
 
 /**
  * Event listener for the main window. Controls automatic resizing of the source code text pane.
@@ -24,7 +24,7 @@ public class WindowComponentListener implements ComponentListener {
 	 * @param jSourcePane The text pane for the source code
 	 * @param settings The main window configuration object.
 	 */
-	public WindowComponentListener( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImainSettings settings, GUIrightPanel rPanel ){
+	public WindowComponentListener( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImainSettings settings, GUIdebugPanel rPanel ){
 		this.jFrame = jFrame;
 		this.jSourcePane = jSourcePane;
 		this.settings = settings;
@@ -35,7 +35,7 @@ public class WindowComponentListener implements ComponentListener {
 	private final RSyntaxTextArea jSourcePane;
 	private final GUImainSettings settings;
 	@SuppressWarnings("unused")
-	private final GUIrightPanel rPanel;
+	private final GUIdebugPanel rPanel;
 
 	@Override
 	public void componentResized(ComponentEvent e) {

@@ -2,8 +2,6 @@ package at.jku.ssw.cmm.gui.datastruct;
 
 import java.util.ArrayList;
 
-import javax.swing.JButton;
-
 import at.jku.ssw.cmm.CMMwrapper;
 import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Struct;

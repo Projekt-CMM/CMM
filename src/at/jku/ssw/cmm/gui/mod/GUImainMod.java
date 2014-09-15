@@ -98,5 +98,9 @@ public interface GUImainMod {
 	 */
 	public String getInputStream();
 
-	void setBreakPoint( int line );
+	void toggleBreakPoint();
+	
+	public void startQuestGUI();
+	
+	public void selectProfile();
 }

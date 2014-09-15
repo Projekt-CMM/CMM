@@ -2,8 +2,6 @@ package at.jku.ssw.cmm.gui.event;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 
 import javax.swing.JFileChooser;
@@ -12,8 +10,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.GUImainSettings;
-import at.jku.ssw.cmm.gui.GUIrightPanel;
+import at.jku.ssw.cmm.gui.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
 import at.jku.ssw.cmm.gui.init.MenuBarVisToggle;
@@ -26,9 +25,10 @@ import at.jku.ssw.cmm.gui.init.MenuBarVisToggle;
  */
 public class MenuBarEventListener {
 	
-	public MenuBarEventListener( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImainSettings settings, GUIrightPanel modifier, SaveDialog saveDialog, MenuBarVisToggle toggle1 ){
+	public MenuBarEventListener( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImain main, GUImainSettings settings, GUIdebugPanel modifier, SaveDialog saveDialog, MenuBarVisToggle toggle1 ){
 		this.jFrame = jFrame;
 		this.jSourcePane = jSourcePane;
+		this.main = main;
 		this.settings = settings;
 		this.modifier = modifier;
 		this.saveDialog = saveDialog;
@@ -41,13 +41,15 @@ public class MenuBarEventListener {
 	//The text area for the source code
 	private final RSyntaxTextArea jSourcePane;
 	
+	private final GUImain main;
+	
 	//A reference to the configuration object of the main GUI.
 	private final GUImainSettings settings;
 	
-	//A reference to the save dialog manager class.-
+	//A reference to the save dialog manager class.
 	private final SaveDialog saveDialog;
 	
-	private final GUIrightPanel modifier;
+	private final GUIdebugPanel modifier;
 	
 	private final MenuBarVisToggle toggle1;
 	
@@ -141,7 +143,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			
-			modifier.setViewMode(GUIrightPanel.VM_TABLE);
+			modifier.setViewMode(GUIdebugPanel.VM_TABLE);
 			toggle1.disable(0);
 		}
 	};
@@ -151,27 +153,26 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			
-			modifier.setViewMode(GUIrightPanel.VM_TREE);
+			modifier.setViewMode(GUIdebugPanel.VM_TREE);
 			toggle1.disable(1);
 		}
 	};
 	
-	public MouseListener questHandler = new MouseListener() {
+	public ActionListener profileHandler = new ActionListener() {
 
 		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			//TODO: Add quest selection window opener
-			System.out.println("Opening quest selection window...");
+		public void actionPerformed(ActionEvent arg0) {
 			
+			main.selectProfile();
 		}
+	};
+	
+	public ActionListener questHandler = new ActionListener() {
 
 		@Override
-		public void mouseEntered(MouseEvent arg0) {}
-		@Override
-		public void mouseExited(MouseEvent arg0) {}
-		@Override
-		public void mousePressed(MouseEvent arg0) {}
-		@Override
-		public void mouseReleased(MouseEvent arg0) {}
+		public void actionPerformed(ActionEvent arg0) {
+			
+			main.startQuestGUI();
+		}
 	};
 }

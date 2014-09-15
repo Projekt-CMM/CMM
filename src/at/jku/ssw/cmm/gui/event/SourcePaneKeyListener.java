@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-import at.jku.ssw.cmm.gui.GUIrightPanel;
+import at.jku.ssw.cmm.gui.GUIdebugPanel;
 
 /**
  * This class is a listener which is used as key listener for the source code panel
@@ -16,13 +16,13 @@ import at.jku.ssw.cmm.gui.GUIrightPanel;
  */
 public class SourcePaneKeyListener implements KeyListener{
 
-	public SourcePaneKeyListener( GUIrightPanel p, RSyntaxTextArea jSourceTextArea ){
+	public SourcePaneKeyListener( GUIdebugPanel p, RSyntaxTextArea jSourceTextArea ){
 		this.p = p;
 		this.jSourceTextArea = jSourceTextArea;
 	}
 	
 	//Interface for changing states and graphical objects of the right panel of the main GUI.
-	private final GUIrightPanel p;
+	private final GUIdebugPanel p;
 	
 	private final RSyntaxTextArea jSourceTextArea;
 

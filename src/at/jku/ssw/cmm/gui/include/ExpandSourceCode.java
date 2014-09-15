@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.exception.IncludeNotFoundException;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 
@@ -23,7 +24,7 @@ public class ExpandSourceCode {
 	 * @return
 	 * @throws IncludeNotFoundException 
 	 */
-	public static String expand( String sourceCode, String workingDirectory, List<Object[]> codeRegister ) throws IncludeNotFoundException{
+	public static String expand( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints ) throws IncludeNotFoundException{
 		
 		System.out.println("Starting include file scan");
 		
@@ -57,7 +58,13 @@ public class ExpandSourceCode {
 			}
 			
 			else{
-				sourceCode = sourceCode + s + "\n";
+				//Line contains a breakpoint
+				if( s.startsWith("" + GUImain.BREAKPOINT) ){
+					sourceCode = sourceCode + s.substring(1) + "\n";
+					breakpoints.add(line);
+				}
+				else
+					sourceCode = sourceCode + s + "\n";
 				if( !s.isEmpty() )
 					finishedIncludes = true;
 			}
@@ -74,7 +81,7 @@ public class ExpandSourceCode {
 				    String include;
 				    
 				    if( localDirectory )
-				    	include = FileManagerCode.readSourceCode(new File("lib/" + m.group(1)));
+				    	include = FileManagerCode.readSourceCode(new File("clib/" + m.group(1)));
 				    else
 				    	include = FileManagerCode.readSourceCode(new File(workingDirectory + "/" + m.group(1)));
 				    
@@ -93,6 +100,7 @@ public class ExpandSourceCode {
 				    }
 				}
 			}
+			
 			line ++;
 		}
 		
@@ -103,6 +111,11 @@ public class ExpandSourceCode {
     	
     	Object[] e = {offset - length + 1, length, "original file"};
     	codeRegister.add(0, e);
+    	
+    	//Correct breakpoint offset through includes
+    	for( int i = 0; i < breakpoints.size(); i++ ){
+    		breakpoints.set(i, breakpoints.get(i) + offset - length + 1 );
+    	}
 		
 		return sourceCode;
 	}
