@@ -136,7 +136,6 @@ public class GUImain implements GUImainMod {
 
 		// Right part of the GUI
 		this.rightPanelControl = new GUIrightPanel(cp, (GUImainMod) this);
-		// this.rightPanelControl.setRightPanel(0);
 
 		// Initialize the save dialog object
 		this.saveDialog = new SaveDialog(this.jFrame, this.jSourcePane,
@@ -280,6 +279,8 @@ public class GUImain implements GUImainMod {
 		this.jSourcePane.setEditable(false);
 		this.jInputPane.setEditable(false);
 		this.jOutputPane.setEditable(false);
+		
+		this.rightPanelControl.lockInput();
 	}
 
 	@Override
@@ -288,6 +289,8 @@ public class GUImain implements GUImainMod {
 		this.jSourcePane.setEditable(true);
 		this.jInputPane.setEditable(true);
 		this.jOutputPane.setEditable(true);
+		
+		this.rightPanelControl.unlockInput();
 	}
 
 	@Override
@@ -310,7 +313,6 @@ public class GUImain implements GUImainMod {
 		String code = this.jSourcePane.getText();
 
 		for( int i = start; i >= 0; i-- ){
-			System.out.println("Scanning: " + code.charAt(i));
 			if( code.charAt(i) == '\n' ){
 				code = code.substring(0, i+1) + BREAKPOINT + code.substring(i+1);
 				start = start + 1;

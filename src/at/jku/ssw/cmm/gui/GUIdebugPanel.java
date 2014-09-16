@@ -964,7 +964,7 @@ public class GUIdebugPanel {
 	}
 
 	/**
-	 * Locks the "stop" button in "run" mode so that it can non be pressed.
+	 * Locks the "stop" button in "run" mode so that it can not be pressed.
 	 * 
 	 * <hr>
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
@@ -1109,6 +1109,10 @@ public class GUIdebugPanel {
 	
 	public boolean isCodeChangeAllowed(){
 		return true;
+	}
+	
+	public List<Integer> getBreakPoints(){
+		return this.breakpoints;
 	}
 
 	// TODO Invoke this method as side task
