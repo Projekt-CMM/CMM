@@ -10,7 +10,7 @@ java based compiler for a minimal c-dialect
 ##### Install required packages on Debian/Ubuntu
 
 ```
-sudo apt-get install ant coco-java
+sudo apt-get install ant coco-java openjdk-7-jdk
 ```
 
 ##### using ant to build project
@@ -28,6 +28,6 @@ demonstrative and understandable way.
 
 The program is based on three components:
 
-1) A compiler which generates an abstract syntax tree  
-2) An interpreter which builds up a call stack and runs the AST step by step  
-3) The GUI which enables editing the source code and running it  
+1) A compiler which generates an abstract syntax tree
+2) An interpreter which builds up a call stack and runs the AST step by step
+3) The GUI which enables editing the source code and running it
