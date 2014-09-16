@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
-import at.jku.ssw.cmm.gui.event.RightPanelEventListener;
+import at.jku.ssw.cmm.gui.event.RightPanelBreakpointListener;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 
 public class GUIrightPanel {
@@ -22,7 +22,7 @@ public class GUIrightPanel {
 	 */
 	public GUIrightPanel(JComponent cp, GUImainMod mod) {
 		
-		this.listener = new RightPanelEventListener(mod);
+		this.mod = mod;
 		
 		//Main right panel
 		this.jRightContainer = new JPanel();
@@ -51,15 +51,16 @@ public class GUIrightPanel {
 		cp.add(this.jRightContainer, BorderLayout.CENTER);
 	}
 	
+	private final GUImainMod mod;
+	
 	// Main container for the right panel. All interface changes happen inside
 	// this JPanel
 	private final JPanel jRightContainer;
 	
 	private final GUIdebugPanel debugPanel;
 	
+	@SuppressWarnings("unused")
 	private final GUIquestPanel questPanel;
-	
-	private final RightPanelEventListener listener;
 	
 	/* --- top panel objects --- */
 	// Breakpoint button
@@ -70,7 +71,8 @@ public class GUIrightPanel {
 		JPanel jTopPanel = new JPanel();
 
 		this.jButtonBreakPoint = new JButton("\u2326");
-		this.jButtonBreakPoint.addMouseListener(this.listener.breakPointHandler);
+		RightPanelBreakpointListener listener = new RightPanelBreakpointListener(this.mod, this.jButtonBreakPoint);
+		this.jButtonBreakPoint.addMouseListener(listener);
 		jTopPanel.add(this.jButtonBreakPoint);
 
 		return jTopPanel;
@@ -78,5 +80,13 @@ public class GUIrightPanel {
 	
 	public GUIdebugPanel getDebugPanel(){
 		return this.debugPanel;
+	}
+	
+	public void lockInput(){
+		this.jButtonBreakPoint.setEnabled(false);
+	}
+	
+	public void unlockInput(){
+		this.jButtonBreakPoint.setEnabled(true);
 	}
 }

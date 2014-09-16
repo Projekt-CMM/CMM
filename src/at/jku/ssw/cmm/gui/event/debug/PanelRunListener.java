@@ -306,6 +306,13 @@ public class PanelRunListener implements Debugger {
 		/* --- Node #3: Quick mode? --- */
 		if (this.isRunMode() && this.delay == 0) {
 			this.master.updateCallStackSize();
+			
+			//Passing a breakpoint
+			if( !this.master.getBreakPoints().isEmpty() && arg0.line >= this.master.getBreakPoints().get(0)-1 ){
+				this.setPauseMode();
+				System.out.println("Stopped at breakpoint: "  + arg0.line + " - " + this.master.getBreakPoints().get(0) );
+				this.master.getBreakPoints().remove(0);
+			}
 			return this.keepRunning;
 		}
 

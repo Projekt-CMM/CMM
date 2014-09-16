@@ -109,13 +109,14 @@ public class ExpandSourceCode {
 		int length = count( sourceCode, '\n' );
     	offset += length;
     	
+    	//Correct breakpoint offset
+    	for( int i = 0; i < breakpoints.size(); i++ ){
+    		breakpoints.set(i, breakpoints.get(i) + offset - length - codeRegister.size() );
+    	}
+    	
+    	//Add original user code to code register
     	Object[] e = {offset - length + 1, length, "original file"};
     	codeRegister.add(0, e);
-    	
-    	//Correct breakpoint offset through includes
-    	for( int i = 0; i < breakpoints.size(); i++ ){
-    		breakpoints.set(i, breakpoints.get(i) + offset - length + 1 );
-    	}
 		
 		return sourceCode;
 	}

@@ -53,7 +53,7 @@ public class CMMwrapper implements CMMrunnableMod {
 	private final GUIdebugPanel rPanel;
 	
 	/**
-	 * Runs interpreter in a seperate thread. For thread synchronisation see {@link PanelRunListener.java}.
+	 * Runs interpreter in a separate thread. For thread synchronization see {@link PanelRunListener.java}.
 	 * Also locks the three text fields of the main GUI (syntax, in, out)
 	 * so that they can not be edited during runtime.
 	 * 
