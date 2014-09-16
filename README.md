@@ -19,6 +19,12 @@ sudo apt-get install ant coco-java openjdk-7-jdk
 ant build
 ```
 
+##### using ant to run tests
+
+```
+ant test
+```
+
 ### Overview
 
 This project is an IDE for a minimal version of C.

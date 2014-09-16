@@ -2,7 +2,7 @@
 
 # run cmm-compiler
 function testCode {
-    java -classpath ../bin at.jku.ssw.cmm.compiler.CMM $1
+    java -classpath $(dirname $0)/../../bin at.jku.ssw.cmm.compiler.CMM $1
 }
 
 # define different colors
@@ -13,6 +13,7 @@ NC='\e[0m' # No Color
 
 # count occouring failes
 failes=0
+tests=0
 outputAll=0
 
 if [ $# > 1 ];then
@@ -26,19 +27,20 @@ echo "----------------------------------------------------------------"
 echo "Check incorrect code"
 echo "----------------------------------------------------------------"
 
-for entry in "failed"/*
+for entry in "$(dirname $0)/failed"/*
 do
     if [ -f "$entry" ];then
+        tests=`expr $tests + 1`
         cmmOutput=$(testCode "$entry")
 
         if [ $? != 0 ];then
-            printf "${green} %-70s ERROR DETECTED${NC}\n" $entry
+            printf "${green} %-80s ERROR DETECTED${NC}\n" $entry
             if [ $outputAll = 1 ];then
                 echo -e "${yellow}$cmmOutput${NC}"
             fi
         else
             failes=`expr $failes + 1`
-            printf "${red} %-70s ERROR NOT DETECTED${NC}\n" $entry
+            printf "${red} %-80s ERROR NOT DETECTED${NC}\n" $entry
             echo -e "${yellow}$cmmOutput${NC}"
         fi 
     fi
@@ -49,23 +51,33 @@ echo "----------------------------------------------------------------"
 echo "Check correct code"
 echo "----------------------------------------------------------------"
 
-for entry in "success"/*
+for entry in "$(dirname $0)/success"/*
 do
     if [ -f "$entry" ];then
+        tests=`expr $tests + 1`
         cmmOutput=$(testCode "$entry")
 
         if [ $? != 0 ];then
             failes=`expr $failes + 1`
-            printf "${red} %-70s ERROR DETECTED -> FAILED${NC}\n" $entry
+            printf "${red} %-80s ERROR DETECTED -> FAILED${NC}\n" $entry
             echo -e "${yellow}$cmmOutput${NC}"
         else
-            printf "${green} %-70s NO ERROR${NC}\n" $entry
+            printf "${green} %-80s NO ERROR${NC}\n" $entry
             if [ $outputAll = 1 ];then
                 echo -e "${yellow}$cmmOutput${NC}"
             fi
-        fi 
+        fi
     fi
 done
 
-echo "----------------------------------------------------------------"
-echo "$failes Test(s) failed"
+if [ $failes == 0 ];then
+    echo "----------------------------------------------------------------"
+    echo -e "${green}all $tests Test(s) success!${NC}"
+    echo "----------------------------------------------------------------"
+    exit 0
+else
+    echo "----------------------------------------------------------------"
+    echo -e "${red} $failes of $tests Test(s) failed!${NC}"
+    echo "----------------------------------------------------------------"
+    exit 2
+fi
