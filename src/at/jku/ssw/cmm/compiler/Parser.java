@@ -541,6 +541,11 @@ public class Parser {
 			design = Designator();
 			if (StartOf(4)) {
 				kind = AssignOp();
+				if(design.kind == Node.IDENT && design.obj.kind == Obj.CON) {
+				        		SemErr(design.obj.name + " is declared as const");
+				        } else if(design.kind == Node.IDENT && design.obj.kind == Obj.PROC) {
+				        		SemErr(design.obj.name + " is declared as function");
+				        } 
 				e = BinExpr();
 				if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
 				SemErr("name must be an designator");
@@ -683,7 +688,7 @@ public class Parser {
 		Struct type; 
 		Expect(1);
 		String name = t.val;
-		                     	obj = tab.find(name); 
+		                     	obj = tab.find(name);
 		                     	n = new Node(obj);
 		                     	type = obj.type; 
 		while (la.kind == 34 || la.kind == 48) {

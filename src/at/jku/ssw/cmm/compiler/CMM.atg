@@ -452,8 +452,12 @@ Statement<out Node st>				(. Node design;
                       				   int kind;.)
 =                                   (. st = null; 
                                        int line = la.line; .)
-( Designator<out design>				
-  ( AssignOp<out kind> 
+( Designator<out design>			
+  ( AssignOp<out kind> 				(. if(design.kind == Node.IDENT && design.obj.kind == Obj.CON) {
+                                       		SemErr(design.obj.name + " is declared as const");
+                                       } else if(design.kind == Node.IDENT && design.obj.kind == Obj.PROC) {
+                                       		SemErr(design.obj.name + " is declared as function");
+                                       } .)
   BinExpr<out e> 					(. if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
   									       SemErr("name must be an designator");
   									   if(design.type == null || (!design.type.isPrimitive() && design.type != Tab.stringType)) 
@@ -725,7 +729,7 @@ Designator<out Node n>				(. 	Obj obj;
                       				   	Struct type; .)
 = 
 ident								(. 	String name = t.val;
-                                       	obj = tab.find(name); 
+                                       	obj = tab.find(name);
                                        	n = new Node(obj);
                                        	type = obj.type; .)
 { "."								(. 	if(obj.type.kind != Struct.STRUCT) 
