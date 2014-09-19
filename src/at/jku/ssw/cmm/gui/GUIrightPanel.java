@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 
 import at.jku.ssw.cmm.gui.event.RightPanelBreakpointListener;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
+import at.jku.ssw.cmm.gui.popup.PopupInterface;
 
 public class GUIrightPanel {
 	
@@ -20,7 +21,7 @@ public class GUIrightPanel {
 	 * @param mod
 	 *            Interface for main GUI manipulations
 	 */
-	public GUIrightPanel(JComponent cp, GUImainMod mod) {
+	public GUIrightPanel(JComponent cp, GUImainMod mod, PopupInterface popup) {
 		
 		this.mod = mod;
 		
@@ -39,7 +40,7 @@ public class GUIrightPanel {
 			JPanel jDebugPanel = new JPanel();
 			jDebugPanel.setLayout(new BorderLayout());
 			tabbedPane.add(jDebugPanel, "Debug");
-			debugPanel = new GUIdebugPanel( jDebugPanel, mod );
+			debugPanel = new GUIdebugPanel( jDebugPanel, mod, popup );
 	
 			//Quest Panel
 			JPanel jQuestPanel = new JPanel();

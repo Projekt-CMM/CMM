@@ -12,16 +12,16 @@ strings. Strings with the same values are stored only once in the string storage
 import java.util.Map;
 import java.util.HashMap;
 
-public class Strings {
-	private char[] data = new char[4096]; // grows automatically
-	private int top = 0;
-	private Map<String, Integer> map = new HashMap<>();
+public final class Strings {
+	static private char[] data = new char[4096]; // grows automatically
+	static private int top = 0;
+	static private Map<String, Integer> map = new HashMap<>();
 
 	// Puts the string s into the string storage and returns its address there.
 	// If s is already in the string storage, s is not added again, but the address of
 	// the existing string is returned.
 	// s may still contain escape sequences (such as \t or \r) that must be converted first.
-	public int put(String s) {
+	public static int put(String s) {
 		// make bigger array if nessesary
 		if(top+s.length()+1 >= data.length) {
 			char[] oldData = data;
@@ -45,7 +45,7 @@ public class Strings {
 	}
 
 	// Returns the string that is stored at adr in the string storage
-	public String get(int adr) {
+	public static String get(int adr) {
 		if(!checkAdr(adr)) {
 			return new String();
 		}
@@ -59,7 +59,7 @@ public class Strings {
 	}
 
 	// Returns the character at adr in the string storage
-	public char charAt(int adr) {
+	public static char charAt(int adr) {
 		if(checkAdr(adr)) {
 			return data[adr];
 		} else {
@@ -67,7 +67,7 @@ public class Strings {
 		}
 	}
 	
-	public boolean checkAdr(int adr) {
+	public static boolean checkAdr(int adr) {
 		if(adr < 0 || adr > data.length) {
 			return false;
 		}

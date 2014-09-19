@@ -6,6 +6,7 @@ import javax.swing.JButton;
 
 import at.jku.ssw.cmm.CMMwrapper;
 import at.jku.ssw.cmm.compiler.Obj;
+import at.jku.ssw.cmm.compiler.Strings;
 import at.jku.ssw.cmm.compiler.Struct;
 import at.jku.ssw.cmm.gui.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunLinkListener;
@@ -171,7 +172,7 @@ public class ReadSymbolTable {
 				if( count.type.kind == Struct.STRING ){
 					type = "string";
 					prefix = "";
-					JButton b = new JButton("View");
+					JButton b = new JButton(Strings.get(Memory.loadStringAddress(address + count.adr)));
 					MouseListener l = new PanelRunLinkListener( listenerModifier, count.name,
 							StructureContainer.STRING, address + count.adr, global, b );
 					b.addMouseListener(l);
