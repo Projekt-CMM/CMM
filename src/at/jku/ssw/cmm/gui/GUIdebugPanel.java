@@ -23,6 +23,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellRenderer;
 
 import at.jku.ssw.cmm.CMMwrapper;
+import at.jku.ssw.cmm.compiler.Strings;
 import at.jku.ssw.cmm.gui.datastruct.ReadCallStack;
 import at.jku.ssw.cmm.gui.datastruct.ReadCallStackHierarchy;
 import at.jku.ssw.cmm.gui.datastruct.ReadSymbolTable;
@@ -33,9 +34,10 @@ import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunStackListener;
 import at.jku.ssw.cmm.gui.exception.IncludeNotFoundException;
 import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
-import at.jku.ssw.cmm.gui.init.StringPopup;
 import at.jku.ssw.cmm.gui.interpreter.IOstream;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
+import at.jku.ssw.cmm.gui.popup.PopupInterface;
+import at.jku.ssw.cmm.gui.popup.StringPopup;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
 import at.jku.ssw.cmm.gui.utils.JTableButtonMouseListener;
@@ -68,11 +70,13 @@ public class GUIdebugPanel {
 	 * @param mod
 	 *            Interface for main GUI manipulations
 	 */
-	public GUIdebugPanel(JPanel cp, GUImainMod mod) {
+	public GUIdebugPanel(JPanel cp, GUImainMod mod, PopupInterface popup) {
 
 		this.cp = cp;
 		
 		this.modifier = mod;
+	
+		this.popup = popup;
 		
 		this.visToggle = new VarTableVisToggle();
 
@@ -104,6 +108,8 @@ public class GUIdebugPanel {
 
 	// Interface for main GUI manipulations
 	private final GUImainMod modifier;
+	
+	private final PopupInterface popup;
 
 	// Interface of the right panel (edit text, compile
 	// error, interpreter)
@@ -784,9 +790,9 @@ public class GUIdebugPanel {
 	 *            variables table
 	 */
 	public void selectStruct(String name, int address, int type, boolean global, int x, int y ) {
-		//TODO popup
+
 		if( type == StructureContainer.STRING ){
-			StringPopup.createPopUp(this.cp, "Hello world", x, y);
+			StringPopup.createPopUp(this.popup, this.cp, Strings.get(Memory.loadStringAddress(address)), x, y);
 		}
 		else{
 			if (global) {

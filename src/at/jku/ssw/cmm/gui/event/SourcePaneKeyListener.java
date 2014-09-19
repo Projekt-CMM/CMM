@@ -22,8 +22,10 @@ public class SourcePaneKeyListener implements KeyListener{
 	}
 	
 	//Interface for changing states and graphical objects of the right panel of the main GUI.
+	@SuppressWarnings("unused")
 	private final GUIdebugPanel p;
 	
+	@SuppressWarnings("unused")
 	private final RSyntaxTextArea jSourceTextArea;
 
 	@Override

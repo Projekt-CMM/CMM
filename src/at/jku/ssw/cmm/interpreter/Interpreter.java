@@ -299,7 +299,7 @@ public final class Interpreter {
 	int StringExpr(Node p) throws AbortException, ReturnException { //TODO
 		switch (p.kind) {
 		case Node.IDENT:
-			return Memory.loadStringAdress(Adr(p));
+			return Memory.loadStringAddress(Adr(p));
 			
 		case Node.PLUS:		//Reads the left and the right String and putting them together
 			return strings.put(strings.get(StringExpr(p.left))+ strings.get(StringExpr(p.right)));

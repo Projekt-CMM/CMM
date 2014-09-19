@@ -27,6 +27,8 @@ import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
 import at.jku.ssw.cmm.gui.init.InitLeftPanel;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
+import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
+import at.jku.ssw.cmm.gui.popup.PopupInterface;
 import at.jku.ssw.cmm.gui.quest.GUIquestMain;
 
 import java.io.File;
@@ -39,7 +41,7 @@ import java.util.List;
  * @author fabian
  *
  */
-public class GUImain implements GUImainMod {
+public class GUImain implements GUImainMod, PopupInterface {
 
 	/**
 	 * Launches the program and initiates the main window.
@@ -107,6 +109,13 @@ public class GUImain implements GUImainMod {
 				new Dimension(this.settings.getSizeX(), this.settings
 						.getSizeY()));
 		this.jFrame.setMinimumSize(new Dimension(600, 400));
+		
+		JPanel glassPane = new JPanel();
+	    glassPane.setOpaque(false);
+	    glassPane.setLayout(null);
+
+	    jFrame.setGlassPane(glassPane);
+	    jFrame.getGlassPane().setVisible(true);
 
 		// base class for all swing components, except the top level containers
 		JComponent cp = (JComponent) this.jFrame.getContentPane();
@@ -135,7 +144,7 @@ public class GUImain implements GUImainMod {
 		cp.add(jPanelLeft, BorderLayout.LINE_START);
 
 		// Right part of the GUI
-		this.rightPanelControl = new GUIrightPanel(cp, (GUImainMod) this);
+		this.rightPanelControl = new GUIrightPanel(cp, (GUImainMod) this, (PopupInterface)this );
 
 		// Initialize the save dialog object
 		this.saveDialog = new SaveDialog(this.jFrame, this.jSourcePane,
@@ -181,7 +190,7 @@ public class GUImain implements GUImainMod {
 
 	/*
 	 * --- The methods below are implemented from the interface "GUImainMod" ---
-	 * * --- ...see there for comments and descriptions ---
+	 * --- ...see there for comments and descriptions ---
 	 */
 	@Override
 	public void repaint() {
@@ -343,5 +352,25 @@ public class GUImain implements GUImainMod {
 		chooser.setFileFilter(new FileNameExtensionFilter(
 				"C Compact Profile", "xml"));
 		chooser.showOpenDialog(jFrame);
+	}
+	
+	/*
+	 * --- The methods below are implemented from the interface "PopupInterface" ---
+	 * --- ...see there for comments and descriptions ---
+	 */
+
+	@Override
+	public JPanel getGlassPane() {
+		
+		return ((JPanel)this.jFrame.getGlassPane());
+	}
+
+	@Override
+	public void invokePopup( JPanel popup, int x, int y, int width, int height ) {
+		
+		((JPanel)this.jFrame.getGlassPane()).add(popup);
+		((JPanel)this.jFrame.getGlassPane()).addMouseListener(new PopupCloseListener( ((JPanel)this.jFrame.getGlassPane()), popup, x, y, width, height));
+		((JPanel)this.jFrame.getGlassPane()).validate();
+		((JPanel)this.jFrame.getGlassPane()).repaint();
 	}
 }
