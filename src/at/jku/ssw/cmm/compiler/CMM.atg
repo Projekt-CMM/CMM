@@ -525,9 +525,9 @@ Statement<out Node st>              (.  Node design;
     ]
 | "while" "(" Condition<out con>
     ")" Statement<out st>           (.  st = new Node(Node.WHILE,con,st,line); .)
-/*| "do" Statement<out st>
+| "do" Statement<out st>
   "while" "(" Condition<out con> 
-  ")"                               (.  st = new Node(Node.DOWHILE,con,st,line); .)*/
+  ")" ";"                           (.  st = new Node(Node.DOWHILE,con,st,line); .)
 /*| "for" "(" Statement<out con>    (.  e = con; .)
   ";" Condition<out e.next>         (.  e = e.next; .)
   ";" Statement<out e.next>
