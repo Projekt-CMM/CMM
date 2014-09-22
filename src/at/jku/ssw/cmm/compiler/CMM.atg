@@ -9,104 +9,104 @@ CMM Compiler description for C--
 
 COMPILER CMM
 
-	public  Tab       tab;                     // symbol table
-	public  boolean[] debug;
+    public  Tab       tab;                     // symbol table
+    public  boolean[] debug;
   
-  	Obj curProc;
-	Strings strings = new Strings();
+      Obj curProc;
+    Strings strings = new Strings();
 //--- LL(1) conflict resolvers
 
-	/** 
-	 * Check if a VarDecl comes next in the input
-	 *
-	 * @return true if a var-declaration follow
-	 */
-	boolean isVarDecl() {
-		// is the next kind an identifier?
-		if (la.kind != _ident) 
-			return false;
-		// get identifier and check if it represent a type
-		Obj obj = tab.find(la.val);
-		if (obj.kind == Obj.TYPE){
-			// get next token
-			Token x = scanner.Peek();
-			
-			// if the current token is a semicolon, it doesn't reach a wrong token, so it would be a declaration
-			while (x.kind != _semicolon) {
-				// this token cannot follow direct after a declaration
-				if (x.kind == _EOF || x.kind == _lpar  || x.kind == _assignplus
-					|| x.kind == _assignminus || x.kind == _assigntimes  || x.kind == _assigndiv  
-					|| x.kind == _assignrem || x.kind == _assignleftshift || x.kind == _assignrightshift
-					|| x.kind == _assignbitand || x.kind == _assignbitxor || x.kind == _assignbitor) 
-					return false;
-					
-				// return true because it is a assignment
-				else if(x.kind == _assign)
-					return true;
-					
-				// get next token
-				x = scanner.Peek();
-			}
-			// token is semicolon
-			return true;
-		}
-		// identifier is not a type
-		return false;
-	}
-	
-	/**
-	 * check if next input is an Expression, and not a '(' Condition ')'
-	 *
-	 * @return true if the next input is an Expr
-	 */
-	boolean isExpr() {
-		// if the next token is a "!", it is sure a condition
-		if (la.kind == _bang) 
-			return false;
-			
-		// the next token is a "(", so it can be an expression or a condition
-		else if (la.kind == _lpar) {
-			// get next token
-			Token x = scanner.Peek();
-			
-			// if one of the following tokens occour, it would be a condition
-			while (x.kind != _rpar && x.kind != _EOF) {
-				if (x.kind == _eql || x.kind == _neq || x.kind == _lss 
-					|| x.kind == _leq || x.kind == _gtr || x.kind == _geq) 
-					return false;
-					
-				// get next token
-				x = scanner.Peek();
-			}
-			// if last readed character is a ")", it is a expression, otherwise we reached end of file
-			return x.kind == _rpar;
-		} 
-		// anything else is an Expression
-		else 
-			return true;
-	}
-	
-	/**
-	 * Check if the next input is a type cast
-	 *
-	 * @return true if the next input is a type cast 
-	 *
-	 * @info requires symbol table
-	 */
-	boolean isCast() {
-		// get next token
-		Token x = scanner.Peek();
-		
-		// if it is not an identifier, it cannot be a cast
-		if (x.kind != _ident) 
-			return false;
-			
-		// get the identifier
-		Obj obj = tab.find(x.val);
-		
-		// check if the identfier declare a type
-		return obj.kind == Obj.TYPE;
-	}
+    /** 
+     * Check if a VarDecl comes next in the input
+     *
+     * @return true if a var-declaration follow
+     */
+    boolean isVarDecl() {
+        // is the next kind an identifier?
+        if (la.kind != _ident) 
+            return false;
+        // get identifier and check if it represent a type
+        Obj obj = tab.find(la.val);
+        if (obj.kind == Obj.TYPE){
+            // get next token
+            Token x = scanner.Peek();
+            
+            // if the current token is a semicolon, it doesn't reach a wrong token, so it would be a declaration
+            while (x.kind != _semicolon) {
+                // this token cannot follow direct after a declaration
+                if (x.kind == _EOF || x.kind == _lpar  || x.kind == _assignplus
+                    || x.kind == _assignminus || x.kind == _assigntimes  || x.kind == _assigndiv  
+                    || x.kind == _assignrem || x.kind == _assignleftshift || x.kind == _assignrightshift
+                    || x.kind == _assignbitand || x.kind == _assignbitxor || x.kind == _assignbitor) 
+                    return false;
+                    
+                // return true because it is a assignment
+                else if(x.kind == _assign)
+                    return true;
+                    
+                // get next token
+                x = scanner.Peek();
+            }
+            // token is semicolon
+            return true;
+        }
+        // identifier is not a type
+        return false;
+    }
+    
+    /**
+     * check if next input is an Expression, and not a '(' Condition ')'
+     *
+     * @return true if the next input is an Expr
+     */
+    boolean isExpr() {
+        // if the next token is a "!", it is sure a condition
+        if (la.kind == _bang) 
+            return false;
+            
+        // the next token is a "(", so it can be an expression or a condition
+        else if (la.kind == _lpar) {
+            // get next token
+            Token x = scanner.Peek();
+            
+            // if one of the following tokens occour, it would be a condition
+            while (x.kind != _rpar && x.kind != _EOF) {
+                if (x.kind == _eql || x.kind == _neq || x.kind == _lss 
+                    || x.kind == _leq || x.kind == _gtr || x.kind == _geq) 
+                    return false;
+                    
+                // get next token
+                x = scanner.Peek();
+            }
+            // if last readed character is a ")", it is a expression, otherwise we reached end of file
+            return x.kind == _rpar;
+        } 
+        // anything else is an Expression
+        else 
+            return true;
+    }
+    
+    /**
+     * Check if the next input is a type cast
+     *
+     * @return true if the next input is a type cast 
+     *
+     * @info requires symbol table
+     */
+    boolean isCast() {
+        // get next token
+        Token x = scanner.Peek();
+        
+        // if it is not an identifier, it cannot be a cast
+        if (x.kind != _ident) 
+            return false;
+            
+        // get the identifier
+        Obj obj = tab.find(x.val);
+        
+        // check if the identfier declare a type
+        return obj.kind == Obj.TYPE;
+    }
 
 /*-------------------------------------------------------------------------*/
 
@@ -124,22 +124,22 @@ TOKENS
   floatCon  = digit {digit} '.' {digit} [('E'|'e') ['+'|'-'] digit {digit}].
   charCon   = '\'' ( charCh | '\\' ('r' | 'n' | 't' | '0' | '\'' | '\\' )) '\''.
   stringCon = '"' {( stringCh | '\\' ('r' | 'n' | 't' | '0' | '"' | '\\' ))} '"'.
-  
+
   //--- token definitions for lookahead peeking
   lpar      = "(".
   rpar      = ")".
   semicolon = ";".
   assign    = '='.
-  assignplus 	= "+=".
-  assignminus 	= "-=".
-  assigntimes 	= "*=".
-  assigndiv 	= "/=".
-  assignrem 	= "%=".
-  assignleftshift 	= "<<=".
-  assignrightshift 	= ">>=".
-  assignbitand 	= "&=".
-  assignbitxor 	= "^=".
-  assignbitor 	= "|=".
+  assignplus     = "+=".
+  assignminus     = "-=".
+  assigntimes     = "*=".
+  assigndiv     = "/=".
+  assignrem     = "%=".
+  assignleftshift     = "<<=".
+  assignrightshift     = ">>=".
+  assignbitand     = "&=".
+  assignbitxor     = "^=".
+  assignbitor     = "|=".
   eql       = "==".
   neq       = "!=".
   lss       = "<".
@@ -158,624 +158,669 @@ IGNORE "\t\r\n"
 PRODUCTIONS
 
 CMM
-=	                          		(. 	tab = new Tab(this);
+=                                   (.  tab = new Tab(this);
 
-										// open global scope
-                                 	 	 tab.openScope(); 
-                                       	
-                               	    	Node e; .)
+                                        // open global scope
+                                        tab.openScope(); 
+                                           
+                                        Node e; .)
 { 
 ( ConstDecl 
 | StructDecl 
 | IF(isVarDecl()) 
-    VarDecl<out e> 					(. 	// if a VarDecl return not null, there is a assignment in the Declaration
-    									if(e != null) 
-    										SemErr("variable assigment is not allowed for global variables"); .)
-| ProcDecl 
+    VarDecl<out e>                  (.  // if a VarDecl return not null, there is a assignment in the Declaration
+                                        if(e != null) 
+                                            SemErr("variable assigment is not allowed for global variables"); .)
+| ProcDecl
 ) SYNC
-}                            	 	(. 	// generate debug-output if the correct flags are set
-										if (debug[0]) 
-											tab.dumpScope(tab.curScope.locals, 0);
-								 	  	if (debug[2])
-								   			strings.dump();
-									   
-										// check if all forward-declarations resolved
-								  	 	tab.checkIfForwardsResolved(tab.curScope); 
-									   	
-								  	 	// check if main-function is declared
-								  	 	Obj obj = tab.find("main");
-								  	 	if(obj == Tab.noObj || obj.kind != Obj.PROC) 
-								   			SemErr("main is not declared as function"); .)
+}                                   (.  // generate debug-output if the correct flags are set
+                                        if (debug[0]) 
+                                            tab.dumpScope(tab.curScope.locals, 0);
+                                        if (debug[2])
+                                            strings.dump();
+                                        
+                                        // check if all forward-declarations resolved
+                                        tab.checkIfForwardsResolved(tab.curScope);
+                                        
+                                        // check if main-function is declared
+                                        Obj obj = tab.find("main");
+                                        if(obj == Tab.noObj || obj.kind != Obj.PROC) 
+                                            SemErr("main is not declared as function"); .)
 .
 //-------------------------------------------------------------------------
-ConstDecl							(. 	Struct type; .)
+ConstDecl                           (.  Struct type; .)
 =
 "const"
 Type<out type>
-ident								(. 	// create new constant variable
-										Obj curCon = tab.insert(Obj.CON, t.val, type); .)
+ident                               (.  // create new constant variable
+                                        Obj curCon = tab.insert(Obj.CON, t.val, type); .)
 "=" 
-( intCon 							(. 	curCon.val = tab.intVal(t.val); 
-                               	    	if (type != Tab.intType) 
-                                  	 		SemErr("int constant not allowed here"); .)
-| floatCon 							(. 	curCon.fVal = tab.floatVal(t.val); 
-								 	  	if (type != Tab.floatType) 
-								   			SemErr("float constant not allowed here"); .)
-| charCon 							(. 	curCon.val = tab.charVal(t.val); 
-									   	if (type != Tab.charType) 
-									   		SemErr("char constant not allowed here"); .)
-| stringCon 						(. 	curCon.val = strings.put(tab.stringVal(t.val));  // TODO
-									   	if (type != Tab.stringType) 
-								   			SemErr("string constant not allowed here"); .)
+( intCon                            (.  curCon.val = tab.intVal(t.val); 
+                                        if (type != Tab.intType) 
+                                            SemErr("int constant not allowed here"); .)
+| floatCon                          (.  curCon.fVal = tab.floatVal(t.val); 
+                                        if (type != Tab.floatType) 
+                                            SemErr("float constant not allowed here"); .)
+| charCon                           (.  curCon.val = tab.charVal(t.val); 
+                                        if (type != Tab.charType) 
+                                            SemErr("char constant not allowed here"); .)
+| stringCon                         (.  curCon.val = strings.put(tab.stringVal(t.val));  // TODO
+                                        if (type != Tab.stringType) 
+                                            SemErr("string constant not allowed here"); .)
 )
-";"	
+";"    
 .
 //-------------------------------------------------------------------------
-VarDecl<out Node e>           	  	(.	Struct type; 
-                              	     	Node curNode = null, newNode; 
-                             	      	Obj curObj; .)
-= 									(. 	e = null;
-										// get current line
-                              	     	int line = la.line; .)
+VarDecl<out Node e>                 (.  Struct type; 
+                                        Node curNode = null, newNode; 
+                                        Obj curObj; .)
+=                                   (.  e = null;
+                                        // get current line
+                                        int line = la.line; .)
 Type<out type>
-ident                        	  	(. 	// create new variable
-										curObj = tab.insert(Obj.VAR, t.val, type); .)
+ident                               (.  // create new variable
+                                        curObj = tab.insert(Obj.VAR, t.val, type); .)
   [ "="
-    BinExpr<out e>					(. 	// check if type of variable declaration is correct 
-    									// TODO probably direct after declaration?
-    									if(type == null || (!type.isPrimitive() && type != Tab.stringType)) 
-  									   		SemErr("type is not a primitive or string");
-  								   		
-  									   	// check if Expression is not null
-  									   	else if(e == null) 
-  									   		SemErr("right operator is not defined");
-  								   		
-  									   	// make implicit type conversation
-  									   	else 
-  									   		e = tab.impliciteTypeCon(e, type);
-									
-										// add assignment
-    								   	e = new Node(Node.ASSIGN,new Node(curObj),e,line);
-    							   	
-    								   	curNode = e; .)
+    BinExpr<out e>                  (.  // check if type of variable declaration is correct 
+                                        // TODO probably direct after declaration?
+                                        if(type == null || (!type.isPrimitive() && type != Tab.stringType)) 
+                                            SemErr("type is not a primitive or string");
+                                             
+                                        // check if Expression is not null
+                                        else if(e == null) 
+                                            SemErr("right operator is not defined");
+                                             
+                                        // make implicit type conversation
+                                        else 
+                                            e = tab.impliciteTypeCon(e, type);
+                                    
+                                        // add assignment
+                                        e = new Node(Node.ASSIGN,new Node(curObj),e,line);
+                                       
+                                        curNode = e; .)
   ]
 { "," 
-  ident								(. 	// create new variable
-  										curObj = tab.insert(Obj.VAR, t.val, type); .)
-  [ "="								
-    BinExpr<out newNode>			(. 	// check if type of variable declaration is correct 
-    									if(type == null || (!type.isPrimitive() && type != Tab.stringType)) 
-  									      	SemErr("type is not a primitive or string");
-  								    
-  									    // check if Expression is not null
-  									   	else if(newNode == null) 
-  									   		SemErr("right operator is not defined");
-  								   	
-  									   	// make implicit type conversation
-  									   	else 
-  									   		newNode = tab.impliciteTypeCon(newNode, type);
-  								   	
-  									   	// if no assignment has occour yet, do the following
-    								   	if(curNode == null) {
-    								       	e = new Node(Node.ASSIGN,new Node(curObj),newNode,line);
-    								       	curNode = e;
-    								   	}
-    								   	// otherwise that
-    								   	else {
-    								       	curNode.next = new Node(Node.ASSIGN,new Node(curObj),newNode,line); 
-    								       	curNode = curNode.next; 
-    								   	} .)
+  ident                             (.  // create new variable
+                                        curObj = tab.insert(Obj.VAR, t.val, type); .)
+  [ "="                                
+    BinExpr<out newNode>            (.  // check if type of variable declaration is correct 
+                                        if(type == null || (!type.isPrimitive() && type != Tab.stringType)) 
+                                            SemErr("type is not a primitive or string");
+                                      
+                                        // check if Expression is not null
+                                        else if(newNode == null) 
+                                            SemErr("right operator is not defined");
+                                         
+                                        // make implicit type conversation
+                                        else 
+                                            newNode = tab.impliciteTypeCon(newNode, type);
+                                         
+                                        // if no assignment has occour yet, do the following
+                                        if(curNode == null) {
+                                            e = new Node(Node.ASSIGN,new Node(curObj),newNode,line);
+                                            curNode = e;
+                                        }
+                                        // otherwise that
+                                        else {
+                                            curNode.next = new Node(Node.ASSIGN,new Node(curObj),newNode,line); 
+                                            curNode = curNode.next; 
+                                        } .)
   ]
-} ";"		
+} ";"        
 .
 //-------------------------------------------------------------------------
-StructDecl							(. 	Node e; .)
+StructDecl                          (.  Node e; .)
 = 
-"struct"                       		(. 	// create a struct
-										Struct type = new Struct(Struct.STRUCT); .)
-ident                          		(. 	// insert the struct in the current scope
-										tab.insert(Obj.TYPE, t.val, type); .)
-"{"                            		(. 	// open new scope
-										tab.openScope(); .)
-{ VarDecl<out e>					(. 	// if a VarDecl return not null, there is a assignment in the Declaration
-										if(e!=null) 
-											SemErr("variable assigment is not allowed in struct"); .)
+"struct"                            (.  // create a struct
+                                        Struct type = new Struct(Struct.STRUCT); .)
+ident                               (.  // insert the struct in the current scope
+                                        tab.insert(Obj.TYPE, t.val, type); .)
+"{"                                 (.  // open new scope
+                                        tab.openScope(); .)
+{ VarDecl<out e>                    (.  // if a VarDecl return not null, there is a assignment in the Declaration
+                                        if(e!=null) 
+                                            SemErr("variable assigment is not allowed in struct"); .)
 } 
-"}"                            		(. 	// copy variables from local scope int struct
-										type.fields = tab.curScope.locals;
-										// copy size
-                                   		type.size = tab.curScope.size;
-                                      		
-                                   		// check if no variable is declared
-                                   		if(type.fields==null) 
-                                   			SemErr("struct must contain at least one variable");
-                                     		
-                                   		// close current scope
-                                   		tab.closeScope(); .)
+"}"                                 (.  // copy variables from local scope int struct
+                                        type.fields = tab.curScope.locals;
+                                        // copy size
+                                        type.size = tab.curScope.size;
+                                              
+                                        // check if no variable is declared
+                                        if(type.fields==null) 
+                                            SemErr("struct must contain at least one variable");
+                                             
+                                        // close current scope
+                                        tab.closeScope(); .)
 .
 //-------------------------------------------------------------------------
-ProcDecl                          	(. 	Struct type = Tab.noType; .)
-= 									(. 	// get current line
-										int line = la.line; .)
+ProcDecl                            (.  Struct type = Tab.noType; .)
+=                                   (.  // get current line
+                                        int line = la.line; .)
 ( Type<out type>
 | "void"
 )
-ident								(. 	// insert the procedure in the current(global) scope
-										curProc = tab.insert(Obj.PROC, t.val, type);
-										
-										// check if it return the correct type
-									   	if(type != Tab.noType && type != Tab.stringType && !type.isPrimitive()) 
-									   		SemErr("procedure must return a primitive type ,a string or is void"); .)
-"("									(. 	// open new scope
-										tab.openScope(); .)
+ident                               (.  // insert the procedure in the current(global) scope
+                                        curProc = tab.insert(Obj.PROC, t.val, type);
+                                        
+                                        // check if it return the correct type
+                                        if(type != Tab.noType && type != Tab.stringType && !type.isPrimitive()) 
+                                            SemErr("procedure must return a primitive type ,a string or is void"); .)
+"("                                 (.  // open new scope
+                                        tab.openScope(); .)
 [ FormPars<out curProc.nPars>
 ]
 ")"
-( "{"								(. 	// check if procedure is already forward-declared
-										if(curProc.isForward) {
-											// check if forward-declaration match with the current declaration
-											tab.checkForwardParams(curProc.locals,tab.curScope.locals);
-											
-											// check return type
-									   		if(curProc.type != type)
-									   			SemErr("return value of forware declaration does not match declaration");
-									   		
-									   		// remove forward-flag
-									   		curProc.isForward = false;
-									   	}
-									   	Node startNode = null, curNode = null, newNode; .)
+( "{"                               (.  // check if procedure is already forward-declared
+                                        if(curProc.isForward) {
+                                            // check if forward-declaration match with the current declaration
+                                            tab.checkForwardParams(curProc.locals,tab.curScope.locals);
+                                            
+                                            // check return type
+                                            if(curProc.type != type)
+                                                SemErr("return value of forware declaration does not match declaration");
+                                               
+                                            // remove forward-flag
+                                            curProc.isForward = false;
+                                        }
+                                        Node startNode = null, curNode = null, newNode; .)
   { ConstDecl
   | IF(isVarDecl()) 
-      VarDecl<out newNode>			(. 	// check if delaration contain a assignement
-      									if(newNode != null) { 
-      								       	if(startNode == null) {
-      								       		// if that is the first statment in the procedure, set start node
-  									       		startNode = newNode;
-  									       	} else {
-  									       		//otherwise check if current node is correct
-  								    	       	if(curNode == null) 
-  								    	       		SemErr("invalide statement");
-  								    	       		
-  								    	       	// add statment to list if possible
-  									          	else 
-  									          		curNode.next = newNode;  
-  								      	   	}
-  								      	   	
-  								      	   	// set new current node
-  									       	curNode = newNode;
-  									       	
-  									       	// go forward in the list, if more than one statment occour while the declaration
-  									       	while(curNode.next != null) {
-  								    	       	curNode = curNode.next; 
-  									       	} 
-  									 	} .)
-  | Statement<out newNode> 			(. 	if(startNode == null) {
-  											// if that is the first statment in the procedure, set start node
-  									       	startNode = newNode;
-  									   	} else {
-  									   		//otherwise check if current node is correct
-  									       	if(curNode == null) 
-  									       		SemErr("invalide statement");
-  									       	
-  									       	// add statment to list if possible
-  									       	else 
-  									       		curNode.next = newNode;  
-  									   	}
-  									   	
-  									   	// set new current node
-  									   	curNode = newNode; .)
+      VarDecl<out newNode>          (.  // check if delaration contain a assignement
+                                        if(newNode != null) { 
+                                            if(startNode == null) {
+                                                // if that is the first statment in the procedure, set start node
+                                                startNode = newNode;
+                                            } else {
+                                                //otherwise check if current node is correct
+                                                if(curNode == null) 
+                                                    SemErr("invalide statement");
+                                                         
+                                                    // add statment to list if possible
+                                                else 
+                                                    curNode.next = newNode;  
+                                            }
+                                                   
+                                            // set new current node
+                                            curNode = newNode;
+                                                 
+                                            // go forward in the list, if more than one statment occour while the declaration
+                                            while(curNode.next != null) {
+                                                curNode = curNode.next; 
+                                            } 
+                                        } .)
+  | Statement<out newNode>          (.  if(startNode == null) {
+                                            // if that is the first statment in the procedure, set start node
+                                            startNode = newNode;
+                                        } else {
+                                            //otherwise check if current node is correct
+                                            if(curNode == null) 
+                                                SemErr("invalide statement");
+                                                 
+                                            // add statment to list if possible
+                                            else 
+                                                curNode.next = newNode;  
+                                        }
+                                             
+                                        // set new current node
+                                        curNode = newNode; .)
   }
-  "}"                               (.	// check if procedure return a type
-  										if(curProc.type != Tab.noType) {
-  											// add Node.TRAP at end of procedure if possible
-  									       	if(startNode == null) {
-	  									       	startNode = new Node(Node.TRAP,null,null,t.line);
-	  									   	} else {
-	  									       	if(curNode == null) 
-	  									       		SemErr("invalide statement");
-	  									       	else 
-	  									       		curNode.next = new Node(Node.TRAP,null,null,t.line);
-	  									   	}
-  									   	}
-  									   	
-  									   	// add created syntax-tree to procedure
-  									   	curProc.ast = new Node(Node.STATSEQ,startNode,null,line);
-  									   	
-  									   	// generate debug-output if the correct flags are set
-  									   	if (debug[1]) 
-  									   		Node.dump(curProc.ast, 0); .)
-| ";"								(. 	// check if procedure is already forward-declared
-										if(curProc.isForward) 
-											SemErr("function is already forward declared");
-											
-										// set forward-flag
-									   	curProc.isForward = true; .)
-)									(. 	// copy variables of the current scope into procedure
-										curProc.locals = tab.curScope.locals;
-										
-										// copy variable size of lcurrent scope into procedure
-									   	curProc.size = tab.curScope.size;
-									   	
-									   	// close current scope
-									   	tab.closeScope(); .)
+  "}"                               (.  // check if procedure return a type
+                                        if(curProc.type != Tab.noType) {
+                                            // add Node.TRAP at end of procedure if possible
+                                            if(startNode == null) {
+                                                startNode = new Node(Node.TRAP,null,null,t.line);
+                                            } else {
+                                                if(curNode == null) 
+                                                    SemErr("invalide statement");
+                                                else 
+                                                    curNode.next = new Node(Node.TRAP,null,null,t.line);
+                                            }
+                                        }
+                                             
+                                        // add created syntax-tree to procedure
+                                        curProc.ast = new Node(Node.STATSEQ,startNode,null,line);
+                                             
+                                        // generate debug-output if the correct flags are set
+                                        if (debug[1]) 
+                                            Node.dump(curProc.ast, 0); .)
+| ";"                               (.  // check if procedure is already forward-declared
+                                        if(curProc.isForward) 
+                                            SemErr("function is already forward declared");
+                                            
+                                        // set forward-flag
+                                        curProc.isForward = true; .)
+)                                   (.  // copy variables of the current scope into procedure
+                                        curProc.locals = tab.curScope.locals;
+                                        
+                                        // copy variable size of lcurrent scope into procedure
+                                        curProc.size = tab.curScope.size;
+                                           
+                                        // close current scope
+                                        tab.closeScope(); .)
 .
 //-------------------------------------------------------------------------
 FormPars<out int n>
 = 
-FormPar                         	(.	// Set number of procedure parameter to 1
-										n = 1; .)
+FormPar                             (.  // Set number of procedure parameter to 1
+                                        n = 1; .)
 { "," 
-  FormPar                        	(. 	// increase number of procedure parameter
-  										n++; .)
+  FormPar                           (.  // increase number of procedure parameter
+                                        n++; .)
 }.
 //-------------------------------------------------------------------------
-FormPar								(. 	Struct type; 
-									   	boolean isRef = false; .)
+FormPar                             (.  Struct type; 
+                                        boolean isRef = false; .)
 = 
 Type<out type>
-[ "&"								(. 	// set reference-flag to true
-										isRef = true; .)
+[ "&"                               (.  // set reference-flag to true
+                                        isRef = true; .)
 ]
-ident								(. 	// if parameter is give by reference, size is always 4 byte
-										if(isRef)
-											type.size = 4;
+ident                               (.  // if parameter is give by reference, size is always 4 byte
+                                        if(isRef)
+                                            type.size = 4;
 
-										// add parameter to current scope
-										Obj curPar = tab.insert(Obj.VAR, t.val, type);
+                                        // add parameter to current scope
+                                        Obj curPar = tab.insert(Obj.VAR, t.val, type);
 
-										// copy reference-flag
-									   	curPar.isRef = isRef;
-									   
-									   	// check if parameter is primitive or string
-									   	if(!type.isPrimitive() && type != Tab.stringType) 
-									   		SemErr("var must be a primitive type or string"); .)
+                                        // copy reference-flag
+                                        curPar.isRef = isRef;
+                                       
+                                        // check if parameter is primitive or string
+                                        if(!type.isPrimitive() && type != Tab.stringType) 
+                                            SemErr("var must be a primitive type or string"); .)
 .
 //-------------------------------------------------------------------------
 Type<out Struct type>
 = 
-ident                            	(. 	Obj obj = tab.find(t.val);
-									   	if(obj.kind != Obj.TYPE) SemErr(obj.name + " is not a type");
-                                       	type = obj.type; 
-                                       	ArrayList<Integer> dimensions = new ArrayList(); .)
+ident                               (.  // check if a type with the given name exist
+                                        Obj obj = tab.find(t.val);
+                                        if(obj.kind != Obj.TYPE)
+                                            SemErr(obj.name + " is not a type");
+                                          
+                                        type = obj.type;
+                                        // init array-list, which store the size of the dimensions
+                                        ArrayList<Integer> dimensions = new ArrayList(); .)
 { "[" 
-  intCon 							(. 	int arraySize = tab.intVal(t.val);
-  									   	dimensions.add(arraySize); 
-  									   	if(arraySize <= 0) SemErr("array-size must be 1 or higher"); .)
+  intCon                            (.  // get array size of this dimensions
+                                        int arraySize = tab.intVal(t.val);
+                                        // add this dimension
+                                        dimensions.add(arraySize);
+                                        // check if size of dimension is at least 1 
+                                        if(arraySize <= 0)
+                                            SemErr("array-size must be 1 or higher"); .)
   "]" }
-									(. 	for(int i = dimensions.size()-1; i>=0;i--) {
-									       		type = new Struct(Struct.ARR, dimensions.get(i), type);
-									  	} .)
+                                    (.  // generate array (if multi dimension, array in array in...)
+                                        for(int i = dimensions.size()-1; i>=0;i--) {
+                                            type = new Struct(Struct.ARR, dimensions.get(i), type);
+                                        } .)
 .
 //-------------------------------------------------------------------------
-Statement<out Node st>				(. Node design; 
-                      				   Node e, con, curStat, newStat; 
-                      				   int kind;.)
-=                                   (. st = null; 
-                                       int line = la.line; .)
-( Designator<out design>				
-  ( AssignOp<out kind> 
-  BinExpr<out e> 					(. if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
-  									       SemErr("name must be an designator");
-  									   if(design.type == null || (!design.type.isPrimitive() && design.type != Tab.stringType)) 
-  									       SemErr("type is not a primitive or string");
-  									   else if(design.kind == Node.INDEX && design.left.type == Tab.stringType)
-  									   		SemErr("string manipulation is not allowed"); 
-  									   else if(e == null) SemErr("right operator is not defined"); 
-  									   else if(design.type == Tab.stringType && !(kind == Node.ASSIGN || kind == Node.ASSIGNPLUS)) 
-  									       SemErr("only = or += is allowed for string assignements"); 
-  									   else e = tab.impliciteTypeCon(e, design.type);
-  									   
-  									   if(kind == Node.ASSIGNPLUS)
-  									       e = new Node(Node.PLUS, design, e, design.type);
-  									   else if(kind == Node.ASSIGNMINUS)
-  									       e = new Node(Node.MINUS, design, e, design.type);
-  									   else if(kind == Node.ASSIGNTIMES)
-  									       e = new Node(Node.TIMES, design, e, design.type);
-  									   else if(kind == Node.ASSIGNDIV)
-  									       e = new Node(Node.DIV, design, e, design.type);
-  									   else if(kind == Node.ASSIGNREM)
-  									       e = new Node(Node.REM, design, e, design.type);
-  									   else if(kind == Node.ASSIGNSHIFTLEFT)
-  									       e = new Node(Node.SHIFTLEFT, design, e, design.type);
-  									   else if(kind == Node.ASSIGNSHIFTRIGHT)
-  									       e = new Node(Node.SHIFTRIGHT, design, e, design.type);
-  									   else if(kind == Node.ASSIGNBITAND)
-  									       e = new Node(Node.BITAND, design, e, design.type);
-  									   else if(kind == Node.ASSIGNBITXOR)
-  									       e = new Node(Node.BITXOR, design, e, design.type);
-  									   else if(kind == Node.ASSIGNBITOR)
-  									       e = new Node(Node.BITOR, design, e, design.type);							       
-  									       
-  									   st = new Node(Node.ASSIGN,design,e,line); .)
-  | ActPars<out e>                  (. if(design.type != Tab.noType) SemErr("only void is allowed"); 
-  									   st = new Node(Node.CALL,e,null,line);
-  									   st.obj = design.obj;
-					  				   tab.checkFunctionParams(design.obj,st); .) 
- /* | IncDecop<out kind>				(. if(design.type == null || !design.type.isPrimitive()) SemErr("type is not a primitive"); 
-  									   n = new Node(kind,n,null,n.type); .)*/
+Statement<out Node st>              (.  Node design; 
+                                        Node e = null, con, curStat, newStat; 
+                                        int kind;.)
+=                                   (.  st = null; 
+                                        int line = la.line; .)
+( Designator<out design>            
+  ( AssignOp<out kind>              (.  // check if designator is from the correct kind
+                                        if(design.kind == Node.IDENT && design.obj.kind == Obj.CON) {
+                                            SemErr(design.obj.name + " is declared as const");
+                                        } else if(design.kind == Node.IDENT && design.obj.kind == Obj.PROC) {
+                                            SemErr(design.obj.name + " is declared as function");
+                                        } .)
+  BinExpr<out e>                    (.  // check context conditions
+                                        if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
+                                            SemErr("name must be an designator");
+                                        if(design.type == null || (!design.type.isPrimitive() && design.type != Tab.stringType)) 
+                                            SemErr("type is not a primitive or string");
+                                        else if(design.kind == Node.INDEX && design.left.type == Tab.stringType)
+                                            SemErr("string manipulation is not allowed"); 
+                                        else if(e == null)
+                                            SemErr("right operator is not defined"); 
+                                        else if(design.type == Tab.stringType && !(kind == Node.ASSIGN || kind == Node.ASSIGNPLUS)) 
+                                            SemErr("only = or += is allowed for string assignements"); 
+                                        else
+                                            e = tab.impliciteTypeCon(e, design.type);
+                                     
+                                        // add special node if assign has operator inside (like *=, -0,...)
+                                        if(kind == Node.ASSIGNPLUS)
+                                            e = new Node(Node.PLUS, design, e, design.type);
+                                        else if(kind == Node.ASSIGNMINUS)
+                                            e = new Node(Node.MINUS, design, e, design.type);
+                                        else if(kind == Node.ASSIGNTIMES)
+                                            e = new Node(Node.TIMES, design, e, design.type);
+                                        else if(kind == Node.ASSIGNDIV)
+                                            e = new Node(Node.DIV, design, e, design.type);
+                                        else if(kind == Node.ASSIGNREM)
+                                            e = new Node(Node.REM, design, e, design.type);
+                                        else if(kind == Node.ASSIGNSHIFTLEFT)
+                                            e = new Node(Node.SHIFTLEFT, design, e, design.type);
+                                        else if(kind == Node.ASSIGNSHIFTRIGHT)
+                                            e = new Node(Node.SHIFTRIGHT, design, e, design.type);
+                                        else if(kind == Node.ASSIGNBITAND)
+                                            e = new Node(Node.BITAND, design, e, design.type);
+                                        else if(kind == Node.ASSIGNBITXOR)
+                                            e = new Node(Node.BITXOR, design, e, design.type);
+                                        else if(kind == Node.ASSIGNBITOR)
+                                            e = new Node(Node.BITOR, design, e, design.type);                                   
+
+                                        // add node
+                                        st = new Node(Node.ASSIGN,design,e,line); .)
+  | ActPars<out e>                  (.  // only function whith void as return statement are allowed
+                                        if(design.type != Tab.noType)
+                                            SemErr("only void is allowed");
+                                     
+                                        // create CALL node
+                                        st = new Node(Node.CALL,e,null,line);
+                                        st.obj = design.obj;
+                                        tab.checkFunctionParams(design.obj,st); .) 
+ /* | IncDecop<out kind>                (. if(design.type == null || !design.type.isPrimitive()) SemErr("type is not a primitive"); 
+                                         n = new Node(kind,n,null,n.type); .)*/
   ) ";"
-| "if" "(" 							(. Node ifYes, ifNo; .)
-	Condition<out con>
-	")" 
-	Statement<out ifYes> 			(. st = new Node(Node.IF,con,ifYes,line); .)
-	["else" Statement<out ifNo> 	(. st = new Node(Node.IFELSE,st,ifNo,line); .)
-	]
+| "if" "("                          (.  Node ifYes, ifNo; .)
+    Condition<out con>
+    ")" 
+    Statement<out ifYes>            (.  st = new Node(Node.IF,con,ifYes,line); .)
+    ["else" Statement<out ifNo>     (.  st = new Node(Node.IFELSE,st,ifNo,line); .)
+    ]
 | "while" "(" Condition<out con>
-	")" Statement<out st> 			(. st = new Node(Node.WHILE,con,st,line); .)
-/*| "for" "(" Statement<out con>			(. e = con; .)
-  ";" Condition<out e.next>			(. e = e.next; .)
+    ")" Statement<out st>           (.  st = new Node(Node.WHILE,con,st,line); .)
+| "do" Statement<out st>
+  "while" "(" Condition<out con> 
+  ")" ";"                           (.  st = new Node(Node.DOWHILE,con,st,line); .)
+/*| "for" "(" Statement<out con>    (.  e = con; .)
+  ";" Condition<out e.next>         (.  e = e.next; .)
   ";" Statement<out e.next>
-  ")" Statement<out st> 			(. st = new Node(Node.FOR,con,st,line); .)*/
-| "print" "(" BinExpr<out e> 		(. st = new Node(Node.CALL,e,null,line); 
-									   st.obj = Tab.printProc;
-					  				   tab.checkFunctionParams(Tab.printProc,st); .)	// TODO
+  ")" Statement<out st>             (.  st = new Node(Node.FOR,con,st,line); .)*/
+| "print" "(" BinExpr<out e>        (.  st = new Node(Node.CALL,e,null,line); 
+                                        st.obj = Tab.printProc;
+                                        tab.checkFunctionParams(Tab.printProc,st); .)    // TODO
  ")" ";"
-| "{" 								(. curStat = null; con=null; .)
-  {Statement<out newStat> 			(. if(curStat == null) {
-  									       curStat = newStat;
-  									       con = curStat;
-  									   }
-  									   else {
-  									       curStat.next = newStat;
-  									       curStat = curStat.next;
-  									   } .)
-	} "}"							(. st = new Node(Node.STATSEQ,con,null,line); .)
-| "return" BinExpr<out e>
- ";"								(. if(curProc.type.kind == Struct.NONE) SemErr("procedure has void as return type");
- 						   			   e = tab.impliciteTypeCon(e, curProc.type);
- 						   			   st = new Node(Node.RETURN,e,null,line); .)
-| ";"								(. st = null; .)
+| "{"                               (.  curStat = null; con=null; .)
+  {Statement<out newStat>           (.  if(curStat == null) {
+                                            curStat = newStat;
+                                            con = curStat;
+                                        } else {
+                                            curStat.next = newStat;
+                                            curStat = curStat.next;
+                                        } .)
+    } "}"                           (.  st = new Node(Node.STATSEQ,con,null,line); .)
+| "return"
+ [BinExpr<out e>                    (.  // check context condition
+                                        if(curProc.type.kind == Struct.NONE)
+                                            SemErr("procedure has void as return type defined");
+
+                                        // do implicite type convertation if required
+                                        e = tab.impliciteTypeCon(e, curProc.type); .)
+ ] ";"                              (.  // check context condition
+                                        if(e == null && curProc.type.kind != Struct.NONE)
+                                            SemErr("return require parameter from correct type");
+
+                                        st = new Node(Node.RETURN,e,null,line); .)
+| ";"                               (.  st = null; .)
 ).
 //-------------------------------------------------------------------------
 AssignOp<out int kind>
-=									(. kind=Node.ASSIGN; .)
+=                                   (.  // default kind is ASSIGN
+                                        kind=Node.ASSIGN; .)
 ( "="
-| "+="								(. kind=Node.ASSIGNPLUS; .)
-| "-="								(. kind=Node.ASSIGNMINUS; .)
-| "*="								(. kind=Node.ASSIGNTIMES; .)
-| "/="								(. kind=Node.ASSIGNDIV; .)
-| "%="								(. kind=Node.ASSIGNREM; .)
-| "<<="								(. kind=Node.ASSIGNSHIFTLEFT; .)
-| ">>="								(. kind=Node.ASSIGNSHIFTRIGHT; .)
-| "&="								(. kind=Node.ASSIGNBITAND; .)
-| "^="								(. kind=Node.ASSIGNBITXOR; .)
-| "|="								(. kind=Node.ASSIGNBITOR; .)
-).	
+| "+="                              (.  kind=Node.ASSIGNPLUS; .)
+| "-="                              (.  kind=Node.ASSIGNMINUS; .)
+| "*="                              (.  kind=Node.ASSIGNTIMES; .)
+| "/="                              (.  kind=Node.ASSIGNDIV; .)
+| "%="                              (.  kind=Node.ASSIGNREM; .)
+| "<<="                             (.  kind=Node.ASSIGNSHIFTLEFT; .)
+| ">>="                             (.  kind=Node.ASSIGNSHIFTRIGHT; .)
+| "&="                              (.  kind=Node.ASSIGNBITAND; .)
+| "^="                              (.  kind=Node.ASSIGNBITXOR; .)
+| "|="                              (.  kind=Node.ASSIGNBITOR; .)
+).    
 
 //-------------------------------------------------------------------------
-ActPars<out Node outPar>			(. Node par, curPar = null; .)
-= 									(. outPar = null; .)
+ActPars<out Node outPar>            (.  Node par, curPar = null; .)
+=                                   (.  outPar = null; .)
 "(" 
-[ ActPar<out outPar> 				(. curPar = outPar; .)
+[ ActPar<out outPar>                (.  curPar = outPar; .)
   { "," 
-  ActPar<out par> 					(. curPar.next = par;
-  									   curPar = par; .)
+  ActPar<out par>                   (.  curPar.next = par;
+                                        curPar = par; .)
   }
 ] 
 ")".
 //-------------------------------------------------------------------------
 ActPar<out Node e>
-= 									(. e = null; .)
+=                                   (.  e = null; .)
 (BinExpr<out e>
 ).
 //-------------------------------------------------------------------------
-Condition<out Node con>				(. Node newCon; .)
+Condition<out Node con>             (.  Node newCon; .)
 = 
 CondTerm<out con>
-{ "||"								
-  CondTerm<out newCon>				(. con = new Node(Node.OR, con, newCon, Tab.boolType); .)
+{ "||"                                
+  CondTerm<out newCon>              (.  con = new Node(Node.OR, con, newCon, Tab.boolType); .)
 }.
 //-------------------------------------------------------------------------
-CondTerm<out Node con>	
+CondTerm<out Node con>    
 = 
-CondFact<out con> 					
-{ "&&" 								(. Node con2; .)
-  CondFact<out con2>				(. con = new Node(Node.AND, con, con2, Tab.boolType); .)
+CondFact<out con>                     
+{ "&&"                              (.  Node con2; .)
+  CondFact<out con2>                (.  con = new Node(Node.AND, con, con2, Tab.boolType); .)
 }.
 //-------------------------------------------------------------------------
-CondFact<out Node con>				(. Node e; int kind; .)
-=									(. con = null; .)
+CondFact<out Node con>              (.  Node e; int kind; .)
+=                                   (.  con = null; .)
 ( IF (isExpr()) BinExpr<out con>
   Relop<out kind>
-  BinExpr<out e>					(. if(con == null || e == null)
-  									       SemErr("please check condition");
-  									   else {
-  									       if((!con.type.isPrimitive() && con.type != Tab.stringType) || (!e.type.isPrimitive() && e.type != Tab.stringType))
-             						           SemErr("type is not a primitive or string");
-             						       else if((con.type == Tab.stringType || e.type == Tab.stringType) && ((con.type == Tab.stringType || con.type == Tab.charType) != (e.type == Tab.stringType || e.type == Tab.charType)))
-             						           SemErr("you cannot mix primitive and string in condition");
-             						       
-  									       con = tab.doImplicitCastByAritmetic(con, con.type, e.type);
-  									       e = tab.doImplicitCastByAritmetic(e, con.type, e.type);
-  									   }
-  									   con = new Node(kind,con,e,Tab.boolType); .)
+  BinExpr<out e>                    (.  if(con == null || e == null)
+                                            SemErr("please check condition");
+                                        else {
+                                            if((!con.type.isPrimitive() && con.type != Tab.stringType) || (!e.type.isPrimitive() && e.type != Tab.stringType))
+                                                SemErr("type is not a primitive or string");
+                                            else if((con.type == Tab.stringType || e.type == Tab.stringType) && ((con.type == Tab.stringType || con.type == Tab.charType) != (e.type == Tab.stringType || e.type == Tab.charType)))
+                                                SemErr("you cannot mix primitive and string in condition");
+                                            
+                                            con = tab.doImplicitCastByAritmetic(con, con.type, e.type);
+                                            e = tab.doImplicitCastByAritmetic(e, con.type, e.type);
+                                        }
+                                        con = new Node(kind,con,e,Tab.boolType); .)
 | "!" "(" 
-  Condition<out con> 				(. con = new Node(Node.NOT, con, null, Tab.boolType); .)
+  Condition<out con>                (.  con = new Node(Node.NOT, con, null, Tab.boolType); .)
   ")"
 | "(" Condition<out con> ")"
 ).
 //-------------------------------------------------------------------------
 Relop<out int kind>
-=									(. kind = Node.EQL; .)
-("=="								(. kind = Node.EQL; .)
-| "!=" 								(. kind = Node.NEQ; .)
-| ">" 								(. kind = Node.GTR; .)
-| ">=" 								(. kind = Node.GEQ; .)
-| "<" 								(. kind = Node.LSS; .)
-| "<="								(. kind = Node.LEQ; .)
+=                                   (.  kind = Node.EQL; .)
+("=="                               (.  kind = Node.EQL; .)
+| "!="                              (.  kind = Node.NEQ; .)
+| ">"                               (.  kind = Node.GTR; .)
+| ">="                              (.  kind = Node.GEQ; .)
+| "<"                               (.  kind = Node.LSS; .)
+| "<="                              (.  kind = Node.LEQ; .)
 ).
 //-------------------------------------------------------------------------
-BinExpr<out Node res>				(. int kind;
-                  					   Node n; .)
+BinExpr<out Node res>               (.  int kind;
+                                        Node n; .)
 =
 Shift<out res>
 { Binop<out kind>
-  Shift<out n>						(. if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive())
-             						   		SemErr("type is not a primitive");
-             						   else {
-             						       res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
-             						       n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
-             						   }
-             						   res = new Node(kind, res, n , res.type); .)
+  Shift<out n>                      (.  if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive())
+                                            SemErr("type is not a primitive");
+                                        else {
+                                            res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
+                                            n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
+                                        }
+                                        res = new Node(kind, res, n , res.type); .)
 }
 .
 //-------------------------------------------------------------------------
-Shift<out Node res>					(. int kind;
-                  					   Node n; .)
+Shift<out Node res>                 (.  int kind;
+                                        Node n; .)
 =
 Expr<out res>
 { Shiftop<out kind>
-  Expr<out n>						(. if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive())
-             						   		SemErr("type is not a primitive");
-             						   else {
-             						       res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
-             						       n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
-             						   }
-             						   res = new Node(kind, res, n , res.type); .)
+  Expr<out n>                       (.  if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive())
+                                            SemErr("type is not a primitive");
+                                        else {
+                                            res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
+                                            n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
+                                        }
+                                        res = new Node(kind, res, n , res.type); .)
 }
 .
 //-------------------------------------------------------------------------
-Expr<out Node res>					(. int kind;
-                  					   Node n; .)
+Expr<out Node res>                  (.  int kind;
+                                        Node n; .)
 =
 Term<out res>
 { Addop<out kind>
-  Term<out n>						(. if((!res.type.isPrimitive() && res.type !=Tab.stringType) || n==null || (!n.type.isPrimitive() && n.type !=Tab.stringType))
-             						       SemErr("type is not a primitive or string");
-             						   else if(res.type == Tab.stringType && n.type == Tab.stringType && kind != Node.PLUS)
-             						       SemErr("for string operations, only + is allowed");
-             						   else if ((res.type == Tab.stringType || n.type == Tab.stringType) && ((res.type == Tab.stringType || res.type == Tab.charType) != (n.type == Tab.stringType || n.type == Tab.charType)))
-             						           SemErr("you cannot mix primitive and string in expression");
-             						   else {
-             						       res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
-             						       n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
-             						   }
-             						   res = new Node(kind, res, n , res.type); .)
+  Term<out n>                       (.  if((!res.type.isPrimitive() && res.type !=Tab.stringType) || n==null || (!n.type.isPrimitive() && n.type !=Tab.stringType))
+                                            SemErr("type is not a primitive or string");
+                                        else if(res.type == Tab.stringType && n.type == Tab.stringType && kind != Node.PLUS)
+                                            SemErr("for string operations, only + is allowed");
+                                        else if ((res.type == Tab.stringType || n.type == Tab.stringType) && ((res.type == Tab.stringType || res.type == Tab.charType) != (n.type == Tab.stringType || n.type == Tab.charType)))
+                                            SemErr("you cannot mix primitive and string in expression");
+                                        else {
+                                            res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
+                                            n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
+                                        }
+                                        res = new Node(kind, res, n , res.type); .)
 }
 .
 //-------------------------------------------------------------------------
-Term<out Node res>					(. int kind; 
-                					   Node n; .)
+Term<out Node res>                  (.  int kind; 
+                                        Node n; .)
 = 
 Factor<out res> 
 { Mulop<out kind>
-  Factor<out n>						(. if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive())
-             						   		SemErr("type is not a primitive");
-             						   else {
-             						       res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
-             						       n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
-  									   }
-  									   res = new Node(kind, res, n, n.type); .)
+  Factor<out n>                     (.  if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive())
+                                            SemErr("type is not a primitive");
+                                        else {
+                                            res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
+                                            n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
+                                         }
+                                         res = new Node(kind, res, n, n.type); .)
 }
 .
 //-------------------------------------------------------------------------
-Factor<out Node n>					(. Struct type; 
-                  					   Node design, arrDesign; 
-                  					   int kind; .)
-=									(. n = null; 
-									   int line = la.line; .)
-( Designator<out design>			
-	[ ActPars<out n> 				(. if(design.obj == null || design.obj.kind != Obj.PROC ) SemErr("name is not a procedure"); 
-									   else if(design.obj.type == Tab.noType) SemErr("function call of a void procedure"); 
-									   else {n = new Node(Node.CALL,n,null,line); 
-									   n.type = design.obj.type; 
-									   n.obj = design.obj;
-									   tab.checkFunctionParams(design.obj,n); 
-									   }.)
-	]								(. if (n == null) n = design; .)
-| intCon							(. n = new Node(tab.intVal(t.val)); .)
-| floatCon							(. n = new Node(tab.floatVal(t.val)); .)
-| charCon							(. n = new Node(tab.charVal(t.val)); .)
-| stringCon							(. n = new Node(tab.stringVal(t.val)); 
-									   n.val = strings.put(tab.stringVal(t.val));.) // TODO
-| "read" "(" ")"					(. n = new Node(Node.CALL,null,null,line);
-									   n.type = tab.charType;
-									   n.obj = Tab.readProc;
-					  				   tab.checkFunctionParams(Tab.readProc,n); .)
+Factor<out Node n>                  (.  Struct type; 
+                                        Node design, arrDesign; 
+                                        int kind; .)
+=                                   (.  n = null; 
+                                        int line = la.line; .)
+( Designator<out design>            
+    [ ActPars<out n>                (.  if(design.obj == null || design.obj.kind != Obj.PROC )
+                                            SemErr("name is not a procedure"); 
+                                        else if(design.obj.type == Tab.noType)
+                                            SemErr("function call of a void procedure"); 
+                                        else {
+                                            n = new Node(Node.CALL,n,null,line); 
+                                            n.type = design.obj.type; 
+                                            n.obj = design.obj;
+                                            tab.checkFunctionParams(design.obj,n); 
+                                        } .)
+    ]                               (.  if (n == null) n = design; .)
+| intCon                            (.  n = new Node(tab.intVal(t.val)); .)
+| floatCon                          (.  n = new Node(tab.floatVal(t.val)); .)
+| charCon                           (.  n = new Node(tab.charVal(t.val)); .)
+| stringCon                         (.  n = new Node(tab.stringVal(t.val)); 
+                                        n.val = strings.put(tab.stringVal(t.val)); .) // TODO
+| "read" "(" ")"                    (.  n = new Node(Node.CALL,null,null,line);
+                                        n.type = tab.charType;
+                                        n.obj = Tab.readProc;
+                                        tab.checkFunctionParams(Tab.readProc,n); .)
 | "length" 
   "(" 
   Designator<out arrDesign>
-  ")"								(. //if(arrDesign.obj.type != Tab.stringType)
-  									     //  SemErr("can only get length of string");
-  									   n = new Node(Node.CALL,arrDesign,null,line);
-									   n.type = tab.intType;
-									   n.obj = Tab.lengthProc;
-					  				   tab.checkFunctionParams(Tab.lengthProc,n); .)
-| "-" Factor<out n> 				(. if(n == null || !n.type.isPrimitive()) SemErr("type is not a primitive");
-									   else n = new Node(Node.MINUS,n,null,n.type); .)
-| "+" Factor<out n> 				(. if(n == null || !n.type.isPrimitive()) SemErr("type is not a primitive");
-									   else n = new Node(Node.PLUS,n,null,n.type); .)
-| "~" Factor<out n>					(. if(n == null || !n.type.isPrimitive()) SemErr("type is not a primitive");
-									   else n = new Node(Node.BITNEQ,n,null,n.type); .)
+  ")"                               (.  //if(arrDesign.obj.type != Tab.stringType)
+                                            //  SemErr("can only get length of string");
+                                        n = new Node(Node.CALL,arrDesign,null,line);
+                                        n.type = tab.intType;
+                                        n.obj = Tab.lengthProc;
+                                        tab.checkFunctionParams(Tab.lengthProc,n); .)
+| "-" Factor<out n>                 (.  if(n == null || !n.type.isPrimitive())
+                                            SemErr("type is not a primitive");
+                                        else
+                                            n = new Node(Node.MINUS,n,null,n.type); .)
+| "+" Factor<out n>                 (.  if(n == null || !n.type.isPrimitive())
+                                            SemErr("type is not a primitive");
+                                        else
+                                            n = new Node(Node.PLUS,n,null,n.type); .)
+| "~" Factor<out n>                 (.  if(n == null || !n.type.isPrimitive())
+                                            SemErr("type is not a primitive");
+                                        else
+                                            n = new Node(Node.BITNEQ,n,null,n.type); .)
 | IncDecop<out kind>
- Factor<out n>						(. if(n == null || !n.type.isPrimitive()) SemErr("type is not a primitive");
- 									   else n = new Node(kind,n,null,n.type); .)
-| IF (isCast())						
+ Factor<out n>                      (.  if(n == null || !n.type.isPrimitive())
+                                            SemErr("type is not a primitive");
+                                        else
+                                            n = new Node(kind,n,null,n.type); .)
+| IF (isCast())                        
   "(" 
   Type<out type>
   ")"
-  Factor<out n> 					(. n = tab.expliciteTypeCon(n, type); .)
+  Factor<out n>                     (.  n = tab.expliciteTypeCon(n, type); .)
 | "("
-	BinExpr<out n>
+    BinExpr<out n>
  ")"
 ).
 //-------------------------------------------------------------------------
-Designator<out Node n>				(. 	Obj obj; 
-                      				   	Node e; 
-                      				   	Struct type; .)
+Designator<out Node n>              (.  Obj obj; 
+                                        Node e; 
+                                        Struct type; .)
 = 
-ident								(. 	String name = t.val;
-                                       	obj = tab.find(name); 
-                                       	n = new Node(obj);
-                                       	type = obj.type; .)
-{ "."								(. 	if(obj.type.kind != Struct.STRUCT) 
-											SemErr(name + " is not a struct"); .)
-  ident								(. 	obj = tab.findField(t.val,obj.type); 
-  									   	n = new Node(Node.DOT, n, new Node(obj.adr), obj.type); .)
-| "["								(. 	if(obj.type.kind != Struct.ARR && obj.type.kind != Struct.STRING) 
-											SemErr(name + " is not an array"); .)
-  BinExpr<out e> 					(. 	if(e == null || e.type == null || e.type.kind != Struct.INT)
-  											SemErr("index must be an int");
-  									   	
-  									   	if(obj.type.kind == Struct.STRING) 
-  									   		n = new Node(Node.INDEX, n, e, Tab.charType);
-  									   	else {
-  									   		n = new Node(Node.INDEX, n, e, type.elemType);
-  									   		type = type.elemType;
-  									   	} .)
+ident                               (.  String name = t.val;
+                                        obj = tab.find(name);
+                                        n = new Node(obj);
+                                        type = obj.type; .)
+{ "."                               (.  if(obj.type.kind != Struct.STRUCT) 
+                                            SemErr(name + " is not a struct"); .)
+  ident                             (.  obj = tab.findField(t.val,obj.type); 
+                                        n = new Node(Node.DOT, n, new Node(obj.adr), obj.type); .)
+| "["                               (.  if(obj.type.kind != Struct.ARR && obj.type.kind != Struct.STRING) 
+                                            SemErr(name + " is not an array"); .)
+  BinExpr<out e>                    (.  if(e == null || e.type == null || e.type.kind != Struct.INT)
+                                            SemErr("index must be an int");
+                                             
+                                        if(obj.type.kind == Struct.STRING) 
+                                            n = new Node(Node.INDEX, n, e, Tab.charType);
+                                        else {
+                                            n = new Node(Node.INDEX, n, e, type.elemType);
+                                            type = type.elemType;
+                                        } .)
   "]"
 }
 .
 //-------------------------------------------------------------------------
 IncDecop<out int kind>
-=									(. kind=Node.INC; .) 
-( "++"									
-| "--"								(. kind=Node.DEC; .)
+=                                   (.  kind=Node.INC; .) 
+( "++"                                    
+| "--"                              (.  kind=Node.DEC; .)
 ).
 //-------------------------------------------------------------------------
 Binop<out int kind>
-=									(. kind=Node.BITAND; .) 
-( "&"									
-| "^"								(. kind=Node.BITXOR; .)
-| "|"								(. kind=Node.BITOR; .) 
+=                                   (.  kind=Node.BITAND; .) 
+( "&"                                    
+| "^"                               (.  kind=Node.BITXOR; .)
+| "|"                               (.  kind=Node.BITOR; .) 
 ).
 //-------------------------------------------------------------------------
 Shiftop<out int kind>
-=									(. kind=Node.SHIFTLEFT; .) 
-( "<<"									
-| ">>"								(. kind=Node.SHIFTRIGHT; .) 
+=                                   (.  kind=Node.SHIFTLEFT; .) 
+( "<<"                                    
+| ">>"                              (.  kind=Node.SHIFTRIGHT; .) 
 ).
 //-------------------------------------------------------------------------
 Addop<out int kind>
-=									(. kind=Node.PLUS; .) 
-( "+"									
-| "-"								(. kind=Node.MINUS; .) 
+=                                   (.  kind=Node.PLUS; .) 
+( "+"                                    
+| "-"                               (.  kind=Node.MINUS; .) 
 ).
 //-------------------------------------------------------------------------
 Mulop<out int kind>
-=									(. kind=Node.TIMES; .) 
-( "*" 								
-| "/" 								(. kind=Node.DIV; .) 
-| "%"								(. kind=Node.REM; .) 
+=                                   (.  kind=Node.TIMES; .) 
+( "*"                                 
+| "/"                               (.  kind=Node.DIV; .) 
+| "%"                               (.  kind=Node.REM; .) 
 ).
 END CMM.
