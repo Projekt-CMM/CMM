@@ -489,7 +489,7 @@ public class GUIdebugPanel {
 			this.visToggle.setVisible(1);
 			
 			if( this.compileManager.isRunning() )
-				this.updateTreeTable(true);
+				this.updateTreeTable(true, this);
 			break;
 		default:
 			throw new IllegalStateException("Invalid view mode in variable browser");
@@ -885,13 +885,13 @@ public class GUIdebugPanel {
 	 * FALSE if the tree table data gets updated
 	 * (no new entries, just new values)
 	 */
-	public void updateTreeTable( final boolean render ){
+	public void updateTreeTable( final boolean render, final GUIdebugPanel panel ){
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				if( render )
-					varTreeTable.setTreeModel(ReadCallStackHierarchy.readSymbolTable(compileManager));
+					varTreeTable.setTreeModel(ReadCallStackHierarchy.readSymbolTable(compileManager, panel));
 				else
-					varTreeTable.updateTreeModel(ReadCallStackHierarchy.readSymbolTable(compileManager));
+					varTreeTable.updateTreeModel(ReadCallStackHierarchy.readSymbolTable(compileManager, panel));
 			}
 		});
 	}
@@ -909,7 +909,7 @@ public class GUIdebugPanel {
 			this.updateLocals();
 		}
 		else if( this.viewMode == VM_TREE ){
-			this.updateTreeTable(render);
+			this.updateTreeTable(render, this);
 		}
 	}
 
