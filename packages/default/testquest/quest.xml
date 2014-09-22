@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<quest>
+	<!-- The Title of the Quest-->
+	<title>Hallo Welt</title>
+
+	<!-- The xp you can gain from this Quest -->
+	<xp>1000</xp>
+
+	<!-- Status only nessesery if this is the first Quest -->
+	<state>opened</state>
+
+	 <!-- No / or multiple Next Quests allowed -->
+	<nextquest>quest2.xml</nextquest>
+	<nextquest>quest3.xml</nextquest>
+</quest>
