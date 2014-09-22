@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.quests.datastructs.Quest;
 import at.jku.ssw.cmm.quests.datastructs.Settings;
 

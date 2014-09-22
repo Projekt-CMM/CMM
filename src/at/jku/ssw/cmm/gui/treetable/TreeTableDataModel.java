@@ -13,7 +13,7 @@ public class TreeTableDataModel extends AbstractTreeTableModel {
     static protected String[] columnNames = { "Name", "Type", "Value" };
  
     // Column types
-    static protected Class<?>[] columnTypes = { TreeTableModel.class, String.class, Integer.class };
+    static protected Class<?>[] columnTypes = { TreeTableModel.class, String.class, Object.class };
  
     public TreeTableDataModel(DataNode rootNode) {
         super(rootNode);
@@ -59,7 +59,12 @@ public class TreeTableDataModel extends AbstractTreeTableModel {
     }
  
     public boolean isCellEditable(Object node, int column) {
-        return true; // Important to activate TreeExpandListener
+        //First column must be editable, so that the user can open a jTree node
+    	if( column == 0 )
+        	return true;
+    	//Other cells are not editable
+        else
+        	return false;
     }
  
     public void setValueAt(Object aValue, Object node, int column) {

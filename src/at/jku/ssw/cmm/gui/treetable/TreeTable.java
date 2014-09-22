@@ -3,10 +3,13 @@ package at.jku.ssw.cmm.gui.treetable;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JTable;
 
+import at.jku.ssw.cmm.gui.utils.JTableButtonRenderer;
+
 /**
- * A hierarchical tree embedded in a table
+ * A jTree embedded in a table
  * <br>
  * <i>NOTE: </i> This code has been adapted from a tutorial, see {@link http://www.hameister.org/JavaSwingTreeTable.html}
  * 
@@ -41,6 +44,7 @@ public class TreeTable extends JTable {
         tree = new TreeTableCellRenderer(this, treeTableModel);
         
         super.setModel(new TreeTableModelAdapter(treeTableModel, tree));
+        super.getColumn("Value").setCellRenderer(new JTableButtonRenderer(super.getDefaultRenderer(JButton.class)));
          
         //Selection of tree and table at once
         TreeTableSelectionModel selectionModel = new TreeTableSelectionModel();
