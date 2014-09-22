@@ -112,6 +112,9 @@ public final class Interpreter {
 				Statement(p.right);
 			break;
 		case Node.RETURN:
+			if(p.left == null)
+				throw new ReturnException();
+
 			switch (p.left.type.kind) {
 			case Struct.INT:
 				Memory.setIntReturnValue(IntExpr(p.left));
