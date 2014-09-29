@@ -91,7 +91,7 @@ public class ReadCallStackHierarchy {
 						node.add(new DataNode(obj.name, "float", Memory.loadFloat(Memory.loadInt(address + obj.adr)), null));
 					}
 					else{
-						node.add(new DataNode(obj.name, "float", obj.val, null));
+						node.add(new DataNode(obj.name, "float", obj.fVal, null));
 					}
 				}
 				if( obj.type.kind == Struct.ARR ){
