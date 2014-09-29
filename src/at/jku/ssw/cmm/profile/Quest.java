@@ -17,7 +17,7 @@ import org.xml.sax.SAXException;
 public class Quest {
 
 	//File Seperator
-	private static String sep = System.getProperty("file.separator");
+	public static String sep = System.getProperty("file.separator");
 	
 	//General Variables
 	private String title;
@@ -116,9 +116,10 @@ public class Quest {
 					quest.setStyle(true);
 				
 				//Setting Quest Paths for later use:
+				quest.setTitle(questPath);
 				quest.setInitPath(allPackagesPath);
 				quest.setPackagePath(packagePath);
-				quest.setQuestPath(questPath);
+				quest.setQuestPath(questPath);//TODO remove quest path variable (no longer used)
 				
 				try {
 					quest = ReadQuestXML(path,quest);
@@ -157,7 +158,7 @@ public class Quest {
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 	 
 				Element eElement = (Element) nNode;
-				quest.setTitle(eElement.getElementsByTagName(Quest.XML_TITLE).item(0).getTextContent());
+				//quest.setTitle(eElement.getElementsByTagName(Quest.XML_TITLE).item(0).getTextContent());
 				quest.setXp(Integer.parseInt(eElement.getElementsByTagName(Quest.XML_XP).item(0).getTextContent()));
 				quest.setState(eElement.getElementsByTagName(Quest.XML_STATE).item(0).getTextContent());
 				

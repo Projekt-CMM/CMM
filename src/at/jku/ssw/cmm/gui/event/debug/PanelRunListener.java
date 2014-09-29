@@ -133,7 +133,7 @@ public class PanelRunListener implements Debugger {
 		this.master.lockStepButton();
 		this.master.setPause();
 
-		System.out.println("[mode] setting run");
+		System.out.println("[mode] setting run, delay = " + this.delay);
 	}
 
 	/**
@@ -312,6 +312,14 @@ public class PanelRunListener implements Debugger {
 				this.setPauseMode();
 				System.out.println("Stopped at breakpoint: "  + arg0.line + " - " + this.master.getBreakPoints().get(0) );
 				this.master.getBreakPoints().remove(0);
+			}
+			
+			//Delay the interpreter for 10ms so that the GUI is still able to work
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				System.out.println("[Error] Failed to delay interpreter thread!");
+				e.printStackTrace();
 			}
 			return this.keepRunning;
 		}
@@ -564,6 +572,8 @@ public class PanelRunListener implements Debugger {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			
+			System.out.println(">> Stop!");
 
 			// Stop interpreter out of RUN or PAUSE mode
 			if (keepRunning) {

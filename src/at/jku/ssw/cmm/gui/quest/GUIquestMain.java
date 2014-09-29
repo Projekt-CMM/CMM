@@ -15,14 +15,20 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
+import at.jku.ssw.cmm.profile.Quest;
 
 public class GUIquestMain {
+	
+	public static final String QUEST_TREE_ROOT = "root";
+	public static final String PACKAGE_DIRECTORY = "packages";
 	
 	public GUIquestMain(){
 		
 	}
 
 	private JFrame jFrame;
+	
+	private JScrollPane editorScrollPane;
 	
 	public void start(){
 		if( SwingUtilities.isEventDispatchThread() )
@@ -46,21 +52,14 @@ public class GUIquestMain {
 		//Title
 		JLabel jLabel1 = new JLabel("Packages and Quests");
 		jQuestPane.add(jLabel1, BorderLayout.PAGE_START);
-		
-		//create the root node
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
-        //create the child nodes
-        DefaultMutableTreeNode vegetableNode = new DefaultMutableTreeNode("Vegetables");
-        DefaultMutableTreeNode fruitNode = new DefaultMutableTreeNode("Fruits");
- 
-        //add the child nodes to the root node
-        root.add(vegetableNode);
-        root.add(fruitNode);
          
-        //create the tree by passing in the root node
-        JTree jPackageTree = new JTree(root);
+        //Quest tree
+        final JTree jPackageTree = new JTree(this.initQuestTree());
+        jPackageTree.setShowsRootHandles(false);
         jPackageTree.setBorder(new EmptyBorder(5, 5, 5, 5));
         jQuestPane.add(jPackageTree, BorderLayout.CENTER);
+        
+        jPackageTree.getSelectionModel().addTreeSelectionListener(new QuestTreeListener(this, jPackageTree));
         
         cp.add(jQuestPane, BorderLayout.LINE_START);
         
@@ -74,7 +73,7 @@ public class GUIquestMain {
       	jDescPane.add(jLabel2, BorderLayout.PAGE_START);
       	
       	//Quest description
-      	JScrollPane editorScrollPane = LoadStatics.loadHTMLdoc("profileTest/index.html", "profileTest/doxygen.css");
+      	editorScrollPane = LoadStatics.loadHTMLdoc( PACKAGE_DIRECTORY + "/default.html", PACKAGE_DIRECTORY + "/default.css");
       	editorScrollPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         jDescPane.add(editorScrollPane, BorderLayout.CENTER);
 
@@ -93,5 +92,26 @@ public class GUIquestMain {
 		// of its subcomponents.
 		this.jFrame.pack();
 		this.jFrame.setVisible(true);
+	}
+	
+	private DefaultMutableTreeNode initQuestTree(){
+		
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(QUEST_TREE_ROOT);
+		
+		for( String p : Quest.ReadFolderNames(PACKAGE_DIRECTORY) ){
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(p);
+			
+			for( Quest q : Quest.ReadPackageQuests(PACKAGE_DIRECTORY, p) ){
+				node.add(new DefaultMutableTreeNode(q.getTitle()));
+			}
+			
+			root.add(node);
+		}
+		
+		return root;
+	}
+	
+	public void setDescriptionText( String html, String css ){
+		editorScrollPane = LoadStatics.loadHTMLdoc(html, css);
 	}
 }
