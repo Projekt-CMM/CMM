@@ -1156,7 +1156,7 @@ public class GUIdebugPanel {
 			// An include file could not be found
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					listener.setErrorMode("Preprocessor error:", "Include file not found: \"" + e1.getFileName() + "\"", e1.getLine(), 0);
+					listener.setErrorMode("Preprocessor error", "Include file not found: \"" + e1.getFileName() + "\"", e1.getLine(), 0);
 				}
 			});
 			return;
@@ -1192,7 +1192,7 @@ public class GUIdebugPanel {
 		
 		// compiler returns errors
 		if( e != null ) {
-			this.listener.setErrorMode("Compiler error: ", e.msg, e.line, e.col);
+			this.listener.setErrorMode("Compiler error", e.msg, e.line, e.col);
 		}
 	}
 

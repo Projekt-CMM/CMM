@@ -76,6 +76,8 @@ public class GUImain implements GUImainMod, PopupInterface {
 	private Object readLoopLock;
 	
 	public static final char BREAKPOINT = '\u2326';
+	
+	public static final boolean ADVANCED_GUI = false;
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)
@@ -105,9 +107,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 		// Initialize the window
 		this.jFrame = new JFrame("C-- Entwicklungsumgebung");
 		this.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.jFrame.getContentPane().setPreferredSize(
-				new Dimension(this.settings.getSizeX(), this.settings
-						.getSizeY()));
+		this.jFrame.getContentPane().setPreferredSize(new Dimension(800, 500));
 		this.jFrame.setMinimumSize(new Dimension(600, 400));
 		
 		JPanel glassPane = new JPanel();
