@@ -724,9 +724,31 @@ public class Parser {
 		Struct type; 
 		Expect(1);
 		String name = t.val;
-		System.out.println("get ident: " + name );
 		obj = tab.find(name);
-		n = new Node(obj);
+		if(obj.kind == Obj.CON) {
+		   switch(obj.type.kind) {
+		       case Struct.INT:
+		           n = new Node((int)obj.val);
+		           break;
+		       case Struct.FLOAT:
+		           n = new Node((float)obj.fVal);
+		           break;
+		       case Struct.CHAR:
+		           n = new Node((char)obj.val);
+		           break;
+		       case Struct.BOOL:
+		           if(obj.val == 0)
+		               n = new Node(false);
+		           else
+		               n = new Node(true);
+		           break;
+		       default:
+		           n = new Node(obj);
+		   }
+		}
+		else {
+		   n = new Node(obj);
+		}
 		type = obj.type; 
 		while (la.kind == 36 || la.kind == 51) {
 			if (la.kind == 51) {
