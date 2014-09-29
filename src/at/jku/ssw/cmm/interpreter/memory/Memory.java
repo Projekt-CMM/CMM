@@ -70,6 +70,20 @@ public final class Memory {
 			throw new StackUnderflowException();
 	}
 
+	public static boolean loadBool(int address) {
+		if(memory.get(address) == 0)
+			return false;
+		else
+			return true;
+	}
+
+	public static void storeBool(int address, boolean value) {
+		if(value)
+			memory.put(address, (byte)0x01);
+		else
+			memory.put(address, (byte)0x00);
+	}
+	
 	public static int loadInt(int address) {
 		return memory.getInt(address);
 	}
@@ -103,6 +117,13 @@ public final class Memory {
 		return memory.getInt(address);
 	}
 
+	public static void setBoolReturnValue(boolean value) {
+		if(value)
+			returnValue = 1;
+		else
+			returnValue = 0;
+	}
+	
 	public static void setIntReturnValue(int value) {
 		returnValue = value;
 	}
@@ -115,6 +136,13 @@ public final class Memory {
 		floatreturnValue = value;
 	}
 
+	public static boolean getBoolReturnValue() {
+		if(returnValue == 0)
+			return false;
+		else
+			return true;
+	}
+	
 	public static int getIntReturnValue() {
 		return returnValue;
 	}

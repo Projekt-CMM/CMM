@@ -69,6 +69,9 @@ public final class Interpreter {
 		switch (p.kind) {
 		case Node.ASSIGN:
 			switch (p.right.type.kind) {
+			case Struct.BOOL:
+				Memory.storeBool(Adr(p.left), BoolExpr(p.right));
+				break;
 			case Struct.INT:
 				Memory.storeInt(Adr(p.left), IntExpr(p.right));
 				break;
@@ -121,6 +124,9 @@ public final class Interpreter {
 				throw new ReturnException();
 
 			switch (p.left.type.kind) {
+			case Struct.BOOL:
+				Memory.setBoolReturnValue(BoolExpr(p.left));
+				throw new ReturnException();
 			case Struct.INT:
 				Memory.setIntReturnValue(IntExpr(p.left));
 				throw new ReturnException();
@@ -143,9 +149,53 @@ public final class Interpreter {
 			throw new IllegalStateException("Kind" + p.kind);
 		}
 	}
-
 	/*
-	 * IntExpr: intcon, plus, minus, times, div, rem, call, ref, f2i, c2i,
+	 * BoolExpr: boolcon, call, ref, i2b,
+	 * ident, dot, index
+	 */
+	boolean BoolExpr(Node p) throws ReturnException, AbortException { //TODO
+		switch (p.kind) {
+		case Node.BOOLCON:
+			// Returns a Constante
+			if(p.val == 0)
+				return false;
+			else
+				return true;
+
+		/*
+		 * Bit Operators
+		 */
+		case Node.BITAND:
+			return BoolExpr(p.left) & BoolExpr(p.right);
+		case Node.BITOR:
+			return BoolExpr(p.left) | BoolExpr(p.right);
+		case Node.BITXOR:
+			return BoolExpr(p.left) ^ BoolExpr(p.right);
+			
+		case Node.CALL:								//Opens new Integer c-- Function
+			Call(p);
+			return Memory.getBoolReturnValue();		//getting return Value						
+			
+		case Node.I2B:
+			int retIntExpr = IntExpr(p.left); //casting Integer to Bool
+			if(retIntExpr == 0)
+				return false;
+			else
+				return true;
+		case Node.IDENT:							//more at @Adr
+			return Memory.loadBool(IdentAdr(p.obj));
+		case Node.DOT:								//more at @Adr
+			return Memory.loadBool(Adr(p));			
+		case Node.INDEX:							//more at @Adr
+			return Memory.loadBool(Adr(p));
+		default:
+			debugger.abort("Not supportet boolexpr node kind", p);
+			throw new IllegalStateException("Kind" + p.kind);
+		}
+	}
+	
+	/*
+	 * IntExpr: intcon, plus, minus, times, div, rem, call, ref, f2i, c2i, b2i
 	 * ident, dot, index
 	 */
 	int IntExpr(Node p) throws ReturnException, AbortException { //TODO
@@ -199,6 +249,12 @@ public final class Interpreter {
 			return (int) FloatExpr(p.left);
 		case Node.C2I:								//casting char to Integer
 			return (int) CharExpr(p.left);
+		case Node.B2I:								//casting char to Integer
+			boolean retBoolExpr = BoolExpr(p.left);
+			if(retBoolExpr)
+				return 0x01;
+			else
+				return 0x00;
 		case Node.IDENT:							//more at @Adr
 			return Memory.loadInt(IdentAdr(p.obj));
 		case Node.DOT:								//more at @Adr
@@ -335,9 +391,21 @@ public final class Interpreter {
 	 * Conditions EQL, NEQ, LSS, LEQ, GTR, GEQ, NOT, OR, AND
 	 */
 	boolean Condition(Node p) throws AbortException, ReturnException {
+		if(p.kind == Node.BOOLCON) {
+			if(p.val == 0)
+				return false;
+			else
+				return true;
+		}
+		
 		switch (p.left.type.kind) {
 		case Struct.INT:
 			switch (p.kind) {
+			case Node.I2B:
+				if(IntExpr(p.left) == 0)
+					return false;
+				else
+					return true;
 			case Node.EQL:
 				return IntExpr(p.left) == IntExpr(p.right);
 			case Node.NEQ:
@@ -483,6 +551,9 @@ public final class Interpreter {
 					object[a] = Adr(ref);
 				} else {
 					switch (form.type.kind) {
+					case Struct.BOOL:
+						object[a] = BoolExpr(ref);
+						break; 
 					case Struct.INT:
 						object[a] = IntExpr(ref);
 						break; 
@@ -516,6 +587,12 @@ public final class Interpreter {
 					Memory.storeInt(Memory.getFramePointer() + form.adr,(int) object[a]);
 				} else {
 					switch (form.type.kind) {
+					case Struct.BOOL:
+						if((int)object[a] == 0)
+							Memory.storeBool(Memory.getFramePointer() + form.adr,false);
+						else
+							Memory.storeBool(Memory.getFramePointer() + form.adr,true);
+				 		break; 
 					case Struct.INT:
 						Memory.storeInt(Memory.getFramePointer() + form.adr,(int) object[a]);
 				 		break; 

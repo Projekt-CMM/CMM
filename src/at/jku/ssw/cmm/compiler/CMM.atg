@@ -162,7 +162,7 @@ CMM
 
                                         // open global scope
                                         tab.openScope(); 
-                                           
+
                                         Node e; .)
 { 
 ( ConstDecl 
@@ -194,8 +194,15 @@ ConstDecl                           (.  Struct type; .)
 Type<out type>
 ident                               (.  // create new constant variable
                                         Obj curCon = tab.insert(Obj.CON, t.val, type); .)
-"=" 
-( intCon                            (.  curCon.val = tab.intVal(t.val); 
+"="
+( ("true"                          (.  curCon.val = 1; 
+                                        if (type != Tab.boolType) 
+                                            SemErr("bool constant not allowed here"); .)
+  |"false"                          (.  curCon.val = 0; 
+                                        if (type != Tab.boolType) 
+                                            SemErr("bool constant not allowed here"); .)             
+  )
+| intCon                            (.  curCon.val = tab.intVal(t.val); 
                                         if (type != Tab.intType) 
                                             SemErr("int constant not allowed here"); .)
 | floatCon                          (.  curCon.fVal = tab.floatVal(t.val); 
@@ -607,10 +614,10 @@ CondFact<out con>
   CondFact<out con2>                (.  con = new Node(Node.AND, con, con2, Tab.boolType); .)
 }.
 //-------------------------------------------------------------------------
-CondFact<out Node con>              (.  Node e; int kind; .)
+CondFact<out Node con>              (.  Node e = null; int kind; .)
 =                                   (.  con = null; .)
 ( IF (isExpr()) BinExpr<out con>
-  Relop<out kind>
+  [ Relop<out kind>
   BinExpr<out e>                    (.  if(con == null || e == null)
                                             SemErr("please check condition");
                                         else {
@@ -623,6 +630,12 @@ CondFact<out Node con>              (.  Node e; int kind; .)
                                             e = tab.doImplicitCastByAritmetic(e, con.type, e.type);
                                         }
                                         con = new Node(kind,con,e,Tab.boolType); .)
+  ]                                 (.  if(e == null) {
+                                            if(con == null || !con.type.isPrimitive())
+                                                SemErr("type is not a primitive");
+                                                
+                                            con = tab.impliciteTypeCon(con, Tab.boolType);
+                                        } .)
 | "!" "(" 
   Condition<out con>                (.  con = new Node(Node.NOT, con, null, Tab.boolType); .)
   ")"
@@ -719,12 +732,16 @@ Factor<out Node n>                  (.  Struct type;
                                             n.obj = design.obj;
                                             tab.checkFunctionParams(design.obj,n); 
                                         } .)
-    ]                               (.  if (n == null) n = design; .)
+    ]                               (.  if (n == null)
+                                            n = design; .)
 | intCon                            (.  n = new Node(tab.intVal(t.val)); .)
 | floatCon                          (.  n = new Node(tab.floatVal(t.val)); .)
 | charCon                           (.  n = new Node(tab.charVal(t.val)); .)
 | stringCon                         (.  n = new Node(tab.stringVal(t.val)); 
                                         n.val = strings.put(tab.stringVal(t.val)); .) // TODO
+| ("true"                           (.  n = new Node(true); .)
+  |"false"                          (.  n = new Node(false); .)          
+  )
 | "read" "(" ")"                    (.  n = new Node(Node.CALL,null,null,line);
                                         n.type = tab.charType;
                                         n.obj = Tab.readProc;
@@ -770,6 +787,7 @@ Designator<out Node n>              (.  Obj obj;
                                         Struct type; .)
 = 
 ident                               (.  String name = t.val;
+                                        System.out.println("get ident: " + name );
                                         obj = tab.find(name);
                                         n = new Node(obj);
                                         type = obj.type; .)
