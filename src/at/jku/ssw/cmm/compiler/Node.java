@@ -41,7 +41,7 @@ public final class Node {
 		//CASE		= 23,
 		//------------ leaf expressions
 		IDENT    	= 24,   // identifier
-		//BOOLCON		= 25,	// bool constant
+		BOOLCON		= 25,	// bool constant
 		INTCON   	= 26,   // int constant
 		FLOATCON 	= 27,   // float constant
 		CHARCON  	= 28,   // char constant
@@ -70,16 +70,18 @@ public final class Node {
 		C2I      	= 49,   // conversion from char to int
 		A2S      	= 50,   // conversion from char-array to string
 		C2S			= 51,	// conversion from char to string
+		B2I			= 52,	// conversion from bool to int
+		I2B			= 53,	// conversion from int to bool
 		//------------ conditionals
-		EQL      	= 52,  	// ==
-		NEQ      	= 53,  	// !=
-		LSS      	= 54,  	// <
-		LEQ      	= 55,  	// <=
-		GTR      	= 56,  	// >
-		GEQ      	= 57,  	// >=
-		NOT      	= 58,  	// !
-		OR       	= 59,  	// ||
-		AND      	= 60;  	// &&
+		EQL      	= 54,  	// ==
+		NEQ      	= 55,  	// !=
+		LSS      	= 56,  	// <
+		LEQ      	= 57,  	// <=
+		GTR      	= 58,  	// >
+		GEQ      	= 59,  	// >=
+		NOT      	= 60,  	// !
+		OR       	= 61,  	// ||
+		AND      	= 62;  	// &&
 
 	public int kind;        // STATSEQ, ASSIGN, ...
 	public Struct type;     // only used in expressions
@@ -114,6 +116,15 @@ public final class Node {
 		this.obj = obj;
 	}
 
+	public Node(boolean val) {
+		this.kind = BOOLCON;
+		this.type = Tab.boolType;
+		if(val == true)
+			this.val = 1;
+		else
+			this.val = 0;
+	}
+	
 	public Node(int val) {
 		this.kind = INTCON;
 		this.type = Tab.intType;
@@ -149,7 +160,7 @@ public final class Node {
 		"SWITCH", "CASE", "IDENT", "BOOLCON", "INTCON", "FLOATCON", "CHARCON", "STRINGCON",
 		"DOT", "INDEX", "REF",
 		"PLUS", "MINUS", "TIMES", "DIV", "REM", "BITNEQ", "BITAND", "BITOR", "BITXOR", 
-		"SHIFTLEFT", "SHIFTRIGHT", "INC", "DEC", "I2F", "F2I", "I2C", "C2I", "A2S", "C2S",
+		"SHIFTLEFT", "SHIFTRIGHT", "INC", "DEC", "I2F", "F2I", "I2C", "C2I", "A2S", "C2S", "B2I", "I2B",
 		"EQL", "NEQ", "LSS", "LEQ", "GTR", "GEQ", "NOT", "OR", "AND"
 	};
 
@@ -163,6 +174,7 @@ public final class Node {
 		else {
 			System.out.print(name[x.kind]);
 			if (x.kind == IDENT) System.out.print(" " + x.obj.name + " level=" + x.obj.level);
+			else if (x.kind == BOOLCON) System.out.print(" " + x.val);
 			else if (x.kind == INTCON) System.out.print(" " + x.val);
 			else if (x.kind == FLOATCON) System.out.print(" " + x.fVal);
 			else if (x.kind == CHARCON) System.out.print(" \'" + (char)x.val + "\'");

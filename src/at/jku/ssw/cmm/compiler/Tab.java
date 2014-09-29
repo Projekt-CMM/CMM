@@ -224,20 +224,6 @@ public class Tab {
 			return 0;
 		}
 	}
-
-	/**
-	 * Convert a string representation of a bool constant into a bool value
-	 * 
-	 * @param s string which would be converted
-	 * @return return converted bool
-	 */
-	public boolean boolVal(String s) {
-		if(s.matches("^(false|FALSE|0)$")) {
-			return false;
-		} else{
-			return true;
-		}
-	}
 	
 	/**
 	 * Convert a string representation of a char constant into a char value
@@ -337,6 +323,8 @@ public class Tab {
 			case Node.C2I:
 			case Node.A2S:
 			case Node.C2S:
+			case Node.B2I:
+			case Node.I2B:
 				return true;
 			default:
 				return false;
@@ -433,12 +421,16 @@ public class Tab {
 		else if(type == Tab.floatType && element.type == Tab.intType) 
 			return new Node(Node.I2F, element, null, Tab.floatType);
 		else if(type.kind == Struct.INT && element.type == Tab.charType)
-			return new Node(Node.C2I, element, null, Tab.intType); 
+			return new Node(Node.C2I, element, null, Tab.intType);
+		else if(type.kind == Struct.INT && element.type == Tab.boolType)
+			return new Node(Node.B2I, element, null, Tab.intType);
+		else if(type.kind == Struct.BOOL && element.type == Tab.intType)
+			return new Node(Node.I2B, element, null, Tab.boolType); 
 		else if(type == Tab.floatType && element.type == Tab.charType) {
 			element =new Node(Node.C2I, element, null, Tab.intType);
 			return new Node(Node.I2F, element, null, Tab.floatType);
 		} else if(type == Tab.stringType && element.type == Tab.charType) {
-			return new Node(Node.C2S, element, null, Tab.stringType); 
+			return new Node(Node.C2S, element, null, Tab.stringType);
 		} else parser.SemErr("no known cast from " + getNameOfType(element.type) + " to " + getNameOfType(type));
 			return element;
 	}
@@ -633,10 +625,15 @@ public class Tab {
 		noObj     = new Obj(Obj.VAR, "???", noType);
 		
 		// insert predeclared types into universe
+		insert(Obj.TYPE, "bool", boolType);
 		insert(Obj.TYPE, "int", intType);
 		insert(Obj.TYPE, "float", floatType);
 		insert(Obj.TYPE, "char", charType);
 		insert(Obj.TYPE, "string", stringType);
+		
+		// insert predeclared constants into universe, TODO required and useful?
+		insert(Obj.CON, "true", boolType).val = 1;
+		insert(Obj.CON, "false", boolType).val = 0;
 		
 		// declare important-functions in universe
 		printProc = insert(Obj.PROC, "print", noType);
