@@ -85,9 +85,6 @@ public class PanelRunListener implements Debugger {
 	// "null" if unused
 	private Timer timer;
 
-	// The line where the last runtime error logged occurred
-	private int errorLine;
-
 	/* --- functional methods --- */
 	/**
 	 * <hr>
@@ -161,8 +158,7 @@ public class PanelRunListener implements Debugger {
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 * <hr>
 	 */
-	private void setReadyMode() {
-		this.reset();
+	public void setReadyMode() {
 
 		this.master.resetInterpreterData();
 	}
@@ -174,14 +170,14 @@ public class PanelRunListener implements Debugger {
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 * <hr>
 	 */
-	private void setErrorMode(String message, int line, int col) {
+	public void setErrorMode(String title, String message, int line, int col) {
 		this.run = true;
 		this.keepRunning = false;
 
 		this.master.unlockStepButton();
 		this.master.unlockStopButton();
 
-		this.master.setRuntimeErrorMode("Runtime error: ", message, line, col);
+		this.master.setRuntimeErrorMode(title + ": ", message, line, col);
 
 		System.out.println("[mode] setting error");
 	}
@@ -274,7 +270,7 @@ public class PanelRunListener implements Debugger {
 
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				setErrorMode(message, node.line, 0);
+				setErrorMode("Runtime error: ", message, node.line, 0);
 			}
 		});
 	}
@@ -300,8 +296,6 @@ public class PanelRunListener implements Debugger {
 				modMain.highlightSourceCode(arg0.line, 1);
 			}
 		});
-
-		errorLine = arg0.line;
 
 		/* --- Node #3: Quick mode? --- */
 		if (this.isRunMode() && this.delay == 0) {
@@ -436,8 +430,8 @@ public class PanelRunListener implements Debugger {
 
 			// Ready -> Start interpreting in run mode
 			if (!keepRunning && !run) {
-				master.runInterpreter();
-				setRunMode();
+				if( master.runInterpreter() )
+					setRunMode();
 			}
 
 			// Run -> pause interpreting
@@ -479,21 +473,26 @@ public class PanelRunListener implements Debugger {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			
+			System.out.println("Step: keep = " + keepRunning + ", run = " + run);
 
 			// Ready mode -> start interpreting in pause mode
-			if (!keepRunning && !run) {
-				master.runInterpreter();
-				setPauseMode();
+			if (isReadyMode()) {
+				if( master.runInterpreter() )
+					setPauseMode();
 			}
 
 			// Pause mode -> next step
-			else if (keepRunning && !run)
+			else if (isPauseMode()){
 				userReply();
+				System.out.println("-> pause");
+			}
 
 			// Error mode -> step button has "view" function
-			else if (!keepRunning && run) {
-				modMain.highlightSourceCode(errorLine, 0);
-				System.out.println("Highlighting error line..." + errorLine);
+			else if (isErrorMode()) {
+				modMain.highlightSourceCode(master.getCompleteErrorLine(), 0);
+				System.out.println("-> error");
+				System.out.println("Highlighting error line..." + master.getCompleteErrorLine());
 			}
 		}
 
@@ -572,8 +571,6 @@ public class PanelRunListener implements Debugger {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			
-			System.out.println(">> Stop!");
 
 			// Stop interpreter out of RUN or PAUSE mode
 			if (keepRunning) {
