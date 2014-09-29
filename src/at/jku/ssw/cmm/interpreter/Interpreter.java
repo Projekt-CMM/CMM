@@ -396,6 +396,13 @@ public final class Interpreter {
 				return false;
 			else
 				return true;
+		} else if(p.kind == Node.IDENT) {
+			if(p.type.kind == Struct.BOOL) {
+				return Memory.loadBool(p.obj.adr);
+			} else {
+				debugger.abort("type not supported as ident in condition", p);
+				throw new IllegalStateException("Kind" + p.kind);
+			}
 		}
 		
 		switch (p.left.type.kind) {
