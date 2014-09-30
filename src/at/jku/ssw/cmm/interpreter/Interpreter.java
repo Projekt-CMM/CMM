@@ -43,12 +43,16 @@ public final class Interpreter {
 	 * Start Function
 	 */
 	public void run(Node node) {
-
+		// TODO try catch abort messages
 		try {
 			StatSeq(node);
 		} catch (ReturnException e) {
 			return;
 		} catch (AbortException e) {
+			return;
+		} catch(BreakException e) {
+			return;
+		} catch(ContinueException e) {
 			return;
 		}
 	}
@@ -56,15 +60,9 @@ public final class Interpreter {
 	/*
 	 * StartSequenz, Working Module
 	 */
-	void StatSeq(Node p) throws ReturnException, AbortException { // AST
-		try {
+	void StatSeq(Node p) throws ReturnException, AbortException, BreakException, ContinueException { // AST
 		for (p = p.left; p != null; p = p.next)
 			Statement(p);
-		} catch(BreakException e) {
-			debugger.abort("break is not allowed here", p);
-		} catch(ContinueException e) {
-			debugger.abort("continue is not allowed here", p);
-		}
 	}
 
 	/*
@@ -126,7 +124,7 @@ public final class Interpreter {
 					} catch(ContinueException e) {
 					}
 				}
-			} catch(BreakException e) {	
+			} catch(BreakException e) {
 			}
 			break;
 		case Node.DOWHILE:
@@ -404,7 +402,7 @@ public final class Interpreter {
 		default:
 			debugger.abort("Not supportet node kind", p);
 			throw new IllegalStateException("Kind" + p.kind);
-		}
+		}break;
 	}
 
 	/*
@@ -646,6 +644,10 @@ public final class Interpreter {
 			try {
 				StatSeq(p.obj.ast); 		// Starting the new C-- Function
 			} catch (ReturnException e) { 	// closing the C-- Function
+			} catch(BreakException e) {
+				debugger.abort("break is not allowed here", p);
+			} catch(ContinueException e) {
+				debugger.abort("continue is not allowed here", p);
 			}
 
 			try {
