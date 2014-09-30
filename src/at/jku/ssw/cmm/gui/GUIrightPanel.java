@@ -8,8 +8,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
-import at.jku.ssw.cmm.gui.event.RightPanelEventListener;
+import at.jku.ssw.cmm.gui.event.RightPanelBreakpointListener;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
+import at.jku.ssw.cmm.gui.popup.PopupInterface;
 
 public class GUIrightPanel {
 	
@@ -20,9 +21,9 @@ public class GUIrightPanel {
 	 * @param mod
 	 *            Interface for main GUI manipulations
 	 */
-	public GUIrightPanel(JComponent cp, GUImainMod mod) {
+	public GUIrightPanel(JComponent cp, GUImainMod mod, PopupInterface popup) {
 		
-		this.listener = new RightPanelEventListener(mod);
+		this.mod = mod;
 		
 		//Main right panel
 		this.jRightContainer = new JPanel();
@@ -39,17 +40,21 @@ public class GUIrightPanel {
 			JPanel jDebugPanel = new JPanel();
 			jDebugPanel.setLayout(new BorderLayout());
 			tabbedPane.add(jDebugPanel, "Debug");
-			debugPanel = new GUIdebugPanel( jDebugPanel, mod );
+			debugPanel = new GUIdebugPanel( jDebugPanel, mod, popup );
 	
 			//Quest Panel
 			JPanel jQuestPanel = new JPanel();
-			jQuestPanel.setLayout(new BorderLayout());
-			tabbedPane.add(jQuestPanel, "Quest");
-			questPanel = new GUIquestPanel( jQuestPanel, mod );
+			if( GUImain.ADVANCED_GUI ){
+				jQuestPanel.setLayout(new BorderLayout());
+				tabbedPane.add(jQuestPanel, "Quest");
+				questPanel = new GUIquestPanel( jQuestPanel, mod );
+			}
 		
 		this.jRightContainer.add(tabbedPane);
 		cp.add(this.jRightContainer, BorderLayout.CENTER);
 	}
+	
+	private final GUImainMod mod;
 	
 	// Main container for the right panel. All interface changes happen inside
 	// this JPanel
@@ -57,9 +62,8 @@ public class GUIrightPanel {
 	
 	private final GUIdebugPanel debugPanel;
 	
-	private final GUIquestPanel questPanel;
-	
-	private final RightPanelEventListener listener;
+	@SuppressWarnings("unused")
+	private GUIquestPanel questPanel;
 	
 	/* --- top panel objects --- */
 	// Breakpoint button
@@ -70,7 +74,8 @@ public class GUIrightPanel {
 		JPanel jTopPanel = new JPanel();
 
 		this.jButtonBreakPoint = new JButton("\u2326");
-		this.jButtonBreakPoint.addMouseListener(this.listener.breakPointHandler);
+		RightPanelBreakpointListener listener = new RightPanelBreakpointListener(this.mod, this.jButtonBreakPoint);
+		this.jButtonBreakPoint.addMouseListener(listener);
 		jTopPanel.add(this.jButtonBreakPoint);
 
 		return jTopPanel;
@@ -78,5 +83,13 @@ public class GUIrightPanel {
 	
 	public GUIdebugPanel getDebugPanel(){
 		return this.debugPanel;
+	}
+	
+	public void lockInput(){
+		this.jButtonBreakPoint.setEnabled(false);
+	}
+	
+	public void unlockInput(){
+		this.jButtonBreakPoint.setEnabled(true);
 	}
 }

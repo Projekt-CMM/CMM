@@ -18,7 +18,8 @@ import javax.swing.text.Highlighter;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-import at.jku.ssw.cmm.gui.event.SourcePaneKeyListener;
+import at.jku.ssw.cmm.gui.event.MainKeyListener;
+import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.event.WindowComponentListener;
 import at.jku.ssw.cmm.gui.event.WindowEventListener;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
@@ -27,6 +28,8 @@ import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
 import at.jku.ssw.cmm.gui.init.InitLeftPanel;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
+import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
+import at.jku.ssw.cmm.gui.popup.PopupInterface;
 import at.jku.ssw.cmm.gui.quest.GUIquestMain;
 
 import java.io.File;
@@ -39,7 +42,7 @@ import java.util.List;
  * @author fabian
  *
  */
-public class GUImain implements GUImainMod {
+public class GUImain implements GUImainMod, PopupInterface {
 
 	/**
 	 * Launches the program and initiates the main window.
@@ -74,6 +77,10 @@ public class GUImain implements GUImainMod {
 	private Object readLoopLock;
 	
 	public static final char BREAKPOINT = '\u2326';
+	
+	public static final boolean ADVANCED_GUI = false;
+	
+	public static final String VERSION = "C Compact Alpha 1.0";
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)
@@ -101,12 +108,17 @@ public class GUImain implements GUImainMod {
 			System.out.println("[EDT Analyse] Main GUI runnung on EDT.");
 
 		// Initialize the window
-		this.jFrame = new JFrame("C-- Entwicklungsumgebung");
+		this.jFrame = new JFrame(VERSION);
 		this.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.jFrame.getContentPane().setPreferredSize(
-				new Dimension(this.settings.getSizeX(), this.settings
-						.getSizeY()));
+		this.jFrame.getContentPane().setPreferredSize(new Dimension(800, 500));
 		this.jFrame.setMinimumSize(new Dimension(600, 400));
+		
+		JPanel glassPane = new JPanel();
+	    glassPane.setOpaque(false);
+	    glassPane.setLayout(null);
+
+	    jFrame.setGlassPane(glassPane);
+	    jFrame.getGlassPane().setVisible(true);
 
 		// base class for all swing components, except the top level containers
 		JComponent cp = (JComponent) this.jFrame.getContentPane();
@@ -125,6 +137,8 @@ public class GUImain implements GUImainMod {
 		if (this.settings.hasPath())
 			this.jSourcePane.setText(FileManagerCode.readSourceCode(new File(
 					this.settings.getPath())));
+		
+		this.updateWinFileName();
 
 		// Text area for input
 		this.jInputPane = InitLeftPanel.initInputPane(jPanelLeft);
@@ -135,8 +149,7 @@ public class GUImain implements GUImainMod {
 		cp.add(jPanelLeft, BorderLayout.LINE_START);
 
 		// Right part of the GUI
-		this.rightPanelControl = new GUIrightPanel(cp, (GUImainMod) this);
-		// this.rightPanelControl.setRightPanel(0);
+		this.rightPanelControl = new GUIrightPanel(cp, (GUImainMod) this, (PopupInterface)this );
 
 		// Initialize the save dialog object
 		this.saveDialog = new SaveDialog(this.jFrame, this.jSourcePane,
@@ -152,7 +165,10 @@ public class GUImain implements GUImainMod {
 				this.rightPanelControl.getDebugPanel()));
 
 		// Initialize the source panel listener
-		this.jSourcePane.addKeyListener(new SourcePaneKeyListener(this.rightPanelControl.getDebugPanel(), this.jSourcePane));
+		this.jSourcePane.getDocument().addDocumentListener(new SourceCodeListener(this));
+		
+		//Initialize the source panel key listener for ctrl+s
+		this.jSourcePane.addKeyListener(new MainKeyListener(this, this.saveDialog));
 
 		// Menubar
 		InitMenuBar.initFileM(this.jFrame, this.jSourcePane, this, this.settings,
@@ -182,7 +198,7 @@ public class GUImain implements GUImainMod {
 
 	/*
 	 * --- The methods below are implemented from the interface "GUImainMod" ---
-	 * * --- ...see there for comments and descriptions ---
+	 * --- ...see there for comments and descriptions ---
 	 */
 	@Override
 	public void repaint() {
@@ -192,8 +208,22 @@ public class GUImain implements GUImainMod {
 	}
 
 	@Override
-	public void setWinFileName(String name) {
-		this.jFrame.setTitle("C-- Entwicklungsumgebung - " + name);
+	public void updateWinFileName() {
+		if( this.settings.getPath() == null )
+			this.jFrame.setTitle(VERSION + " - Unnamed");
+		else
+			this.jFrame.setTitle(VERSION + " - " + this.settings.getPath());
+	}
+	
+	public void setFileChanged(){
+		if( !this.jFrame.getTitle().endsWith("*") )
+			this.jFrame.setTitle(this.jFrame.getTitle() + "*");
+	}
+	
+	public void setFileSaved(){
+		if( this.jFrame.getTitle().endsWith("*") ){
+			this.jFrame.setTitle(this.jFrame.getTitle().substring(0, this.jFrame.getTitle().length()-1));
+		}
 	}
 
 	@Override
@@ -203,7 +233,6 @@ public class GUImain implements GUImainMod {
 
 	@Override
 	public List<Object[]> getSourceCodeRegister() {
-
 		return this.codeRegister;
 	}
 
@@ -280,6 +309,8 @@ public class GUImain implements GUImainMod {
 		this.jSourcePane.setEditable(false);
 		this.jInputPane.setEditable(false);
 		this.jOutputPane.setEditable(false);
+		
+		this.rightPanelControl.lockInput();
 	}
 
 	@Override
@@ -288,6 +319,8 @@ public class GUImain implements GUImainMod {
 		this.jSourcePane.setEditable(true);
 		this.jInputPane.setEditable(true);
 		this.jOutputPane.setEditable(true);
+		
+		this.rightPanelControl.unlockInput();
 	}
 
 	@Override
@@ -310,7 +343,6 @@ public class GUImain implements GUImainMod {
 		String code = this.jSourcePane.getText();
 
 		for( int i = start; i >= 0; i-- ){
-			System.out.println("Scanning: " + code.charAt(i));
 			if( code.charAt(i) == '\n' ){
 				code = code.substring(0, i+1) + BREAKPOINT + code.substring(i+1);
 				start = start + 1;
@@ -341,5 +373,25 @@ public class GUImain implements GUImainMod {
 		chooser.setFileFilter(new FileNameExtensionFilter(
 				"C Compact Profile", "xml"));
 		chooser.showOpenDialog(jFrame);
+	}
+	
+	/*
+	 * --- The methods below are implemented from the interface "PopupInterface" ---
+	 * --- ...see there for comments and descriptions ---
+	 */
+
+	@Override
+	public JPanel getGlassPane() {
+		
+		return ((JPanel)this.jFrame.getGlassPane());
+	}
+
+	@Override
+	public void invokePopup( JPanel popup, int x, int y, int width, int height ) {
+		
+		((JPanel)this.jFrame.getGlassPane()).add(popup);
+		((JPanel)this.jFrame.getGlassPane()).addMouseListener(new PopupCloseListener( ((JPanel)this.jFrame.getGlassPane()), popup, x, y, width, height));
+		((JPanel)this.jFrame.getGlassPane()).validate();
+		((JPanel)this.jFrame.getGlassPane()).repaint();
 	}
 }

@@ -113,7 +113,7 @@ public final class Memory {
 		memory.putInt(address, value);
 	}
 
-	public static int loadStringAdress(int address) {
+	public static int loadStringAddress(int address) {
 		return memory.getInt(address);
 	}
 

@@ -82,11 +82,11 @@ public class WindowEventListener implements WindowListener {
 		if( settings.getPath() == null ){
 					
 			//Custom button text
-			Object[] options = {"Save now", "Close without saving"};
+			Object[] options = {"Yes", "No"};
 					
 			//Init warning dialog with two buttons
 			int n = JOptionPane.showOptionDialog( jFrame,
-				"The current file has not yet been saved!",
+				"Do you want to save \"Unnamed\"",
 				"Closing the C-- IDE",
 				JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE,
@@ -94,27 +94,40 @@ public class WindowEventListener implements WindowListener {
 				options,  			//the titles of buttons
 				options[0]); 		//default button title
 					
-				//What did the user decide for?
-				switch( n ){
-					case JOptionPane.YES_OPTION:
-						//Open a save dialog to save current source code
-						saveDialog.doSaveAs();
-						break;
-					case JOptionPane.NO_OPTION:
-						//User does not want to save
-						System.exit(0);
-						break;
-				}
-			}
+			if( n == JOptionPane.YES_OPTION )
+				//Open a save dialog to save current source code
+				saveDialog.doSaveAs();
+		}
+		
+		//Warning if last changes are not saved -> opens a warning dialog
+		else if( jFrame.getTitle().endsWith("*") ){
+							
+			//Custom button text
+			Object[] options = {"Save now", "Close without saving"};
+							
+			//Init warning dialog with two buttons
+			int n = JOptionPane.showOptionDialog( jFrame,
+				"The current file has not yet been saved!",
+				"Closing the C-- IDE",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.WARNING_MESSAGE,
+				null,     			//do not use a custom Icon
+				options,  			//the titles of buttons
+				options[0]); 		//default button title
+							
+			if( n == JOptionPane.YES_OPTION )
+				//Save the last changes to current file path
+				saveDialog.directSave();
+		}
 				
-			//Configuration data of the window is updated...
-			settings.setSizeX(jFrame.getWidth());
-			settings.setSizeY(jFrame.getHeight());
-			settings.setPosX(jFrame.getX());
-			settings.setPosY(jFrame.getY());
+		//Configuration data of the window is updated...
+		settings.setSizeX(jFrame.getWidth());
+		settings.setSizeY(jFrame.getHeight());
+		settings.setPosX(jFrame.getX());
+		settings.setPosY(jFrame.getY());
 				
-			// ...and saved
-			settings.saveConfigFile();
+		// ...and saved
+		settings.saveConfigFile();
 	}
 
 }

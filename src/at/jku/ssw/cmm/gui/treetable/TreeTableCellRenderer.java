@@ -67,8 +67,9 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
      * Controls the offset of the nodes
      */
     public void paint(Graphics g) {
-        g.translate(0, -visibleRow * getRowHeight());
          
+        g.translate(0, -visibleRow * getRowHeight());
+        
         super.paint(g);
     }
      
@@ -77,7 +78,8 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
      */
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
     	
-    	if ( table.getValueAt(row, 0).toString().endsWith("()") ){
+    	//Set background of cell with function name green
+    	if ( table.getValueAt(row, 0).toString().endsWith(")") ){
         	setBackground(Color.GREEN);
         }
     	else if (isSelected)

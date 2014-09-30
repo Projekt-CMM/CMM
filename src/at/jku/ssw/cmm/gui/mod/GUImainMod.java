@@ -17,10 +17,8 @@ public interface GUImainMod {
 	 * Note: Method from interface <i>GUImod</i>
 	 * 
 	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
-	 * 
-	 * @param name The new name of the window
 	 */
-	public void setWinFileName( String name );
+	void updateWinFileName();
 	
 	/**
 	 * Note: Method from interface <i>GUImod</i>

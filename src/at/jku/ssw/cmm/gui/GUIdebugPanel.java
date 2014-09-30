@@ -23,6 +23,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellRenderer;
 
 import at.jku.ssw.cmm.CMMwrapper;
+import at.jku.ssw.cmm.compiler.Strings;
 import at.jku.ssw.cmm.gui.datastruct.ReadCallStack;
 import at.jku.ssw.cmm.gui.datastruct.ReadCallStackHierarchy;
 import at.jku.ssw.cmm.gui.datastruct.ReadSymbolTable;
@@ -33,9 +34,10 @@ import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunStackListener;
 import at.jku.ssw.cmm.gui.exception.IncludeNotFoundException;
 import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
-import at.jku.ssw.cmm.gui.init.StringPopup;
 import at.jku.ssw.cmm.gui.interpreter.IOstream;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
+import at.jku.ssw.cmm.gui.popup.PopupInterface;
+import at.jku.ssw.cmm.gui.popup.StringPopup;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
 import at.jku.ssw.cmm.gui.utils.JTableButtonMouseListener;
@@ -68,11 +70,13 @@ public class GUIdebugPanel {
 	 * @param mod
 	 *            Interface for main GUI manipulations
 	 */
-	public GUIdebugPanel(JPanel cp, GUImainMod mod) {
+	public GUIdebugPanel(JPanel cp, GUImainMod mod, PopupInterface popup) {
 
 		this.cp = cp;
 		
 		this.modifier = mod;
+	
+		this.popup = popup;
 		
 		this.visToggle = new VarTableVisToggle();
 
@@ -104,6 +108,8 @@ public class GUIdebugPanel {
 
 	// Interface for main GUI manipulations
 	private final GUImainMod modifier;
+	
+	private final PopupInterface popup;
 
 	// Interface of the right panel (edit text, compile
 	// error, interpreter)
@@ -168,12 +174,16 @@ public class GUIdebugPanel {
 
 	// Data model for the global variables tables
 	private VarTableModel jTableGlobalModel;
+	
+	private JScrollPane jTableGlobalContainer;
 
 	// Table of local variables
 	private JTable jTableLocal;
 
 	// Data model for the global variables tables
 	private VarTableModel jTableLocalModel;
+	
+	private JScrollPane jTableLocalContainer;
 
 	// Call stack list object
 	private JList<Object> jCallStack;
@@ -315,11 +325,11 @@ public class GUIdebugPanel {
 		this.jTableGlobal.addMouseListener(new JTableButtonMouseListener(
 				this.jTableGlobal));
 
-		JScrollPane scrollPane1 = new JScrollPane(this.jTableGlobal);
+		this.jTableGlobalContainer = new JScrollPane(this.jTableGlobal);
 		this.jTableGlobal.setFillsViewportHeight(true);
-		this.jPanelVarInfo.add(scrollPane1);
+		this.jPanelVarInfo.add(this.jTableGlobalContainer);
 		
-		this.visToggle.registerComponent(0, scrollPane1);
+		this.visToggle.registerComponent(0, this.jTableGlobalContainer);
 
 		/* ---------- CALL STACK ---------- */
 		jLabel2 = new JLabel("Call Stack");
@@ -370,10 +380,10 @@ public class GUIdebugPanel {
 		this.jTableLocal.addMouseListener(new JTableButtonMouseListener(
 				this.jTableLocal));
 
-		JScrollPane scrollPane3 = new JScrollPane(this.jTableLocal);
+		this.jTableLocalContainer = new JScrollPane(this.jTableLocal);
 		this.jTableLocal.setFillsViewportHeight(true);
-		this.jPanelVarInfo.add(scrollPane3);
-		this.visToggle.registerComponent(0, scrollPane3);
+		this.jPanelVarInfo.add(this.jTableLocalContainer);
+		this.visToggle.registerComponent(0, this.jTableLocalContainer);
 
 		this.jRightPanel.add(this.jPanelVarInfo);
 		
@@ -413,8 +423,10 @@ public class GUIdebugPanel {
 	 */
 	public void setRuntimeErrorMode(String title, String message, int line, int col ) {
 		
-		this.line = line;
+		this.line = line - this.sourceCodeBeginLine + this.modifier.getSourceCodeRegister().size();
 		this.col = col;
+		
+		System.out.println("Error found: " + line + " -> " + this.line );
 
 		// Set standard mode elements invisible
 		this.jButtonPlay.setVisible(false);
@@ -483,7 +495,7 @@ public class GUIdebugPanel {
 			this.visToggle.setVisible(1);
 			
 			if( this.compileManager.isRunning() )
-				this.updateTreeTable(true);
+				this.updateTreeTable(true, this);
 			break;
 		default:
 			throw new IllegalStateException("Invalid view mode in variable browser");
@@ -504,6 +516,10 @@ public class GUIdebugPanel {
 	
 	public int getErrorLine() {
 		return this.line;
+	}
+	
+	public int getCompleteErrorLine() {
+		return this.line + this.sourceCodeBeginLine - this.modifier.getSourceCodeRegister().size();
 	}
 
 	public int getErrorCol() {
@@ -784,9 +800,9 @@ public class GUIdebugPanel {
 	 *            variables table
 	 */
 	public void selectStruct(String name, int address, int type, boolean global, int x, int y ) {
-		//TODO popup
+
 		if( type == StructureContainer.STRING ){
-			StringPopup.createPopUp(this.cp, "Hello world", x, y);
+			StringPopup.createPopUp(this.popup, this.cp, Strings.get(Memory.loadStringAddress(address)), x, y);
 		}
 		else{
 			if (global) {
@@ -879,13 +895,13 @@ public class GUIdebugPanel {
 	 * FALSE if the tree table data gets updated
 	 * (no new entries, just new values)
 	 */
-	public void updateTreeTable( final boolean render ){
+	public void updateTreeTable( final boolean render, final GUIdebugPanel panel ){
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				if( render )
-					varTreeTable.setTreeModel(ReadCallStackHierarchy.readSymbolTable(compileManager));
+					varTreeTable.setTreeModel(ReadCallStackHierarchy.readSymbolTable(compileManager, panel));
 				else
-					varTreeTable.updateTreeModel(ReadCallStackHierarchy.readSymbolTable(compileManager));
+					varTreeTable.updateTreeModel(ReadCallStackHierarchy.readSymbolTable(compileManager, panel));
 			}
 		});
 	}
@@ -903,7 +919,7 @@ public class GUIdebugPanel {
 			this.updateLocals();
 		}
 		else if( this.viewMode == VM_TREE ){
-			this.updateTreeTable(render);
+			this.updateTreeTable(render, this);
 		}
 	}
 
@@ -964,7 +980,7 @@ public class GUIdebugPanel {
 	}
 
 	/**
-	 * Locks the "stop" button in "run" mode so that it can non be pressed.
+	 * Locks the "stop" button in "run" mode so that it can not be pressed.
 	 * 
 	 * <hr>
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
@@ -1110,6 +1126,10 @@ public class GUIdebugPanel {
 	public boolean isCodeChangeAllowed(){
 		return true;
 	}
+	
+	public List<Integer> getBreakPoints(){
+		return this.breakpoints;
+	}
 
 	// TODO Invoke this method as side task
 	// TODO make thread safe and update comments
@@ -1136,8 +1156,7 @@ public class GUIdebugPanel {
 			// An include file could not be found
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					setRuntimeErrorMode("Preprocessor error:", "Include file not found: \"" + e1.getFileName()
-							+ "\"", e1.getLine(), 0);
+					listener.setErrorMode("Preprocessor error", "Include file not found: \"" + e1.getFileName() + "\"", e1.getLine(), 0);
 				}
 			});
 			return;
@@ -1173,8 +1192,7 @@ public class GUIdebugPanel {
 		
 		// compiler returns errors
 		if( e != null ) {
-			//TODO more error messages
-			setRuntimeErrorMode("Compiler error: ", e.msg, e.line, e.col);
+			this.listener.setErrorMode("Compiler error", e.msg, e.line, e.col);
 		}
 	}
 
@@ -1186,9 +1204,8 @@ public class GUIdebugPanel {
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 * <hr>
 	 */
-	public void runInterpreter() {
+	public boolean runInterpreter() {
 		this.compile();
-		this.compileManager.runInterpreter(listener,
-				new IOstream(this.modifier));
+		return this.compileManager.runInterpreter(listener, new IOstream(this.modifier));
 	}
 }

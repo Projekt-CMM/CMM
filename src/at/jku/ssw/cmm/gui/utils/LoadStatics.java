@@ -19,6 +19,10 @@ import javax.swing.text.html.StyleSheet;
 public final class LoadStatics {
 
 	public static final JLabel loadImage( String path ){
+		return loadImage( path, true );
+	}
+	
+	public static final JLabel loadImage( String path, boolean createBorder ){
 		BufferedImage loadBuffer = null;
 		try {
 			loadBuffer = ImageIO.read(new File(path));
@@ -26,7 +30,8 @@ public final class LoadStatics {
 			System.err.println("Error reading image");
 		}
 		JLabel picture = new JLabel(new ImageIcon(loadBuffer));
-		picture.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+		if( createBorder )
+			picture.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
 		
 		return picture;
 	}
