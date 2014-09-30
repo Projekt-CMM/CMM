@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.file;
 
+import java.io.File;
+
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -54,5 +56,9 @@ public class SaveDialog {
 			FileManagerCode.saveSourceCode(chooser.getSelectedFile(), jSourcePane.getText());
 			settings.setPath(chooser.getSelectedFile().getPath());
 		}
+	}
+	
+	public void directSave(){
+		FileManagerCode.saveSourceCode(new File(settings.getPath()), jSourcePane.getText());
 	}
 }

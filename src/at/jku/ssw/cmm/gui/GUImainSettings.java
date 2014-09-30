@@ -143,7 +143,7 @@ public class GUImainSettings {
 	 * that no working directory is registered.
 	 */
 	public void setPath( String p ){
-		if( p == "*" )
+		if( p == "#" )
 			this.path = null;
 		else
 			this.path = p;
@@ -192,11 +192,16 @@ public class GUImainSettings {
 			this.posX  = Integer.parseInt(file.readLine());
 			this.posY  = Integer.parseInt(file.readLine());
 			
-			this.setPath(file.readLine());
+			String path = file.readLine();
+			if( path.endsWith("#") )
+				this.setPath("#");
+			else
+				this.setPath(path);
 			
 			file.close();
 			
 			System.out.println("Config is: " + this.sizeX + " | " + this.sizeY + " | " + this.posX + " | " + this.posY);
+			System.out.println("Current file: " + this.path);
 			
 		} catch (IOException e) {
 			System.out.println("Config file not found. Replacing...");
@@ -222,7 +227,7 @@ public class GUImainSettings {
 			file.write("400\n");
 			file.write("0\n");
 			file.write("0\n");
-			file.write("*");
+			file.write("#");
 			file.close();
 		} catch (IOException e) {}
 	}
@@ -246,7 +251,7 @@ public class GUImainSettings {
 			file.write(this.posY + "\n");
 			
 			if( this.path == null )
-				file.write("*");
+				file.write("#");
 			else
 				file.write(this.path);
 			

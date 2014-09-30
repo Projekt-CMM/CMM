@@ -2,7 +2,6 @@ package at.jku.ssw.cmm.gui.event;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -64,6 +63,7 @@ public class MenuBarEventListener {
 			if( modifier.isCodeChangeAllowed() ){
 				jSourcePane.setText("");
 				settings.setPath(null);
+				main.updateWinFileName();
 			}
 		}
 	};
@@ -87,6 +87,8 @@ public class MenuBarEventListener {
 					jSourcePane.setText(FileManagerCode.readSourceCode(chooser.getSelectedFile()));
 					//Set the new C-- file directory
 					settings.setPath(chooser.getSelectedFile().getPath());
+					
+					main.updateWinFileName();
 				}
 			}
 		}
@@ -103,6 +105,7 @@ public class MenuBarEventListener {
 			if( modifier.isCodeChangeAllowed() ){
 				//Call the main GUI's save dialog (contains file chooser and save routines
 				saveDialog.doSaveAs();
+				main.setFileSaved();
 			}
 		}
 	};
@@ -118,10 +121,12 @@ public class MenuBarEventListener {
 			if( modifier.isCodeChangeAllowed() ){
 				if( settings.getPath() != null )
 					//Save to working directory
-					FileManagerCode.saveSourceCode(new File(settings.getPath()), jSourcePane.getText());
+					saveDialog.directSave();
 				else
 					//Open "save as" dialog if there is no working directory
 					saveDialog.doSaveAs();
+				
+				main.setFileSaved();
 			}
 		}
 	};
