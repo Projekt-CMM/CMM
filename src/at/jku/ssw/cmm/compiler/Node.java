@@ -35,8 +35,8 @@ public final class Node {
 		//FOR    		= 17,  	// print statement
 		RETURN   	= 18,  	// return statement
 		TRAP     	= 19,  	// trap if a function reaches its end without a return
-		//BREAK		= 20,
-		//CONTINUE	= 21,
+		BREAK		= 20,
+		CONTINUE	= 21,
 		//SWITCH		= 22,
 		//CASE		= 23,
 		//------------ leaf expressions

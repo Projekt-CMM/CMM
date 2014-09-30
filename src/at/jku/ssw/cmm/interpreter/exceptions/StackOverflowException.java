@@ -1,4 +1,4 @@
-package at.jku.ssw.cmm.interpreter.excpetions;
+package at.jku.ssw.cmm.interpreter.exceptions;
 
 public final class StackOverflowException extends Exception {
 

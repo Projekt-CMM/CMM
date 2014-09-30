@@ -12,10 +12,12 @@ import at.jku.ssw.cmm.compiler.Struct;
 import at.jku.ssw.cmm.compiler.Strings;
 import at.jku.ssw.cmm.debugger.Debugger;
 import at.jku.ssw.cmm.debugger.StdInOut;
-import at.jku.ssw.cmm.interpreter.excpetions.AbortException;
-import at.jku.ssw.cmm.interpreter.excpetions.ReturnException;
-import at.jku.ssw.cmm.interpreter.excpetions.StackOverflowException;
-import at.jku.ssw.cmm.interpreter.excpetions.StackUnderflowException;
+import at.jku.ssw.cmm.interpreter.exceptions.AbortException;
+import at.jku.ssw.cmm.interpreter.exceptions.BreakException;
+import at.jku.ssw.cmm.interpreter.exceptions.ContinueException;
+import at.jku.ssw.cmm.interpreter.exceptions.ReturnException;
+import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
+import at.jku.ssw.cmm.interpreter.exceptions.StackUnderflowException;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
 import at.jku.ssw.cmm.interpreter.memory.MethodContainer;
 import at.jku.ssw.cmm.compiler.Node;
@@ -55,14 +57,20 @@ public final class Interpreter {
 	 * StartSequenz, Working Module
 	 */
 	void StatSeq(Node p) throws ReturnException, AbortException { // AST
+		try {
 		for (p = p.left; p != null; p = p.next)
 			Statement(p);
+		} catch(BreakException e) {
+			debugger.abort("break is not allowed here", p);
+		} catch(ContinueException e) {
+			debugger.abort("continue is not allowed here", p);
+		}
 	}
 
 	/*
 	 * Statements: assign, stateseq, if, ifelse, while, return, trap, call TODO
 	 */
-	void Statement(Node p) throws ReturnException, AbortException { // b = a;
+	void Statement(Node p) throws ReturnException, AbortException, BreakException, ContinueException { // b = a;
 		if (!debugger.step(p))
 			throw new AbortException();
 
@@ -111,13 +119,26 @@ public final class Interpreter {
 				Statement(p.right);
 			break;
 		case Node.WHILE:
-			while (Condition(p.left))
-				Statement(p.right);
+			try {
+				while (Condition(p.left)) {
+					try {
+						Statement(p.right);
+					} catch(ContinueException e) {
+					}
+				}
+			} catch(BreakException e) {	
+			}
 			break;
 		case Node.DOWHILE:
-			do
-				Statement(p.right);
-			while (Condition(p.left));
+			try {
+				do
+					try {
+						Statement(p.right);
+					} catch(ContinueException e) {
+					}
+				while (Condition(p.left));
+			} catch(BreakException e) {	
+			}
 			break;
 		case Node.RETURN:
 			if(p.left == null)
@@ -143,7 +164,10 @@ public final class Interpreter {
 				debugger.abort("Not supportet return node kind", p);
 				throw new IllegalStateException("Kind" + p.kind);
 			}
-
+		case Node.BREAK:
+				throw new BreakException();
+		case Node.CONTINUE:
+				throw new ContinueException();
 		default:
 			debugger.abort("Not supportet statement node kind", p);
 			throw new IllegalStateException("Kind" + p.kind);

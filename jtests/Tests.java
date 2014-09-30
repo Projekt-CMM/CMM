@@ -13,7 +13,7 @@ import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Strings;
 import at.jku.ssw.cmm.debugger.DebuggerMock;
 import at.jku.ssw.cmm.interpreter.Interpreter;
-import at.jku.ssw.cmm.interpreter.excpetions.StackOverflowException;
+import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
 import at.jku.ssw.cmm.debugger.StdInOut;
 

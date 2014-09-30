@@ -9,8 +9,9 @@ CMM Compiler description for C--
 
 COMPILER CMM
 
-    public  Tab       tab;                     // symbol table
-    public  boolean[] debug;
+    public Tab       tab;                     // symbol table
+    public boolean[] debug;
+    public int breakLevel;
   
       Obj curProc;
     Strings strings = new Strings();
@@ -66,18 +67,19 @@ COMPILER CMM
             
         // the next token is a "(", so it can be an expression or a condition
         else if (la.kind == _lpar) {
+            
             // get next token
             Token x = scanner.Peek();
             
             // if one of the following tokens occour, it would be a condition
             while (x.kind != _rpar && x.kind != _EOF) {
                 if (x.kind == _eql || x.kind == _neq || x.kind == _lss 
-                    || x.kind == _leq || x.kind == _gtr || x.kind == _geq) 
+                    || x.kind == _leq || x.kind == _gtr || x.kind == _geq || x.kind == _and | x.kind == _or ) 
                     return false;
-                    
                 // get next token
                 x = scanner.Peek();
             }
+
             // if last readed character is a ")", it is a expression, otherwise we reached end of file
             return x.kind == _rpar;
         } 
@@ -130,16 +132,16 @@ TOKENS
   rpar      = ")".
   semicolon = ";".
   assign    = '='.
-  assignplus     = "+=".
-  assignminus     = "-=".
-  assigntimes     = "*=".
+  assignplus    = "+=".
+  assignminus   = "-=".
+  assigntimes   = "*=".
   assigndiv     = "/=".
   assignrem     = "%=".
-  assignleftshift     = "<<=".
-  assignrightshift     = ">>=".
-  assignbitand     = "&=".
-  assignbitxor     = "^=".
-  assignbitor     = "|=".
+  assignleftshift   = "<<=".
+  assignrightshift  = ">>=".
+  assignbitand      = "&=".
+  assignbitxor      = "^=".
+  assignbitor       = "|=".
   eql       = "==".
   neq       = "!=".
   lss       = "<".
@@ -147,6 +149,11 @@ TOKENS
   gtr       = ">".
   geq       = ">=".
   bang      = "!".
+  and       = "&&".
+  or        = "||".
+  bitand    = "&".
+  bitor     = "|".
+  bitxor    = "^".
 
 COMMENTS FROM "/*" TO "*/" NESTED
 COMMENTS FROM "//" TO '\n'
@@ -162,6 +169,8 @@ CMM
 
                                         // open global scope
                                         tab.openScope(); 
+
+                                        breakLevel = 0;
 
                                         Node e; .)
 { 
@@ -530,9 +539,12 @@ Statement<out Node st>              (.  Node design;
     Statement<out ifYes>            (.  st = new Node(Node.IF,con,ifYes,line); .)
     ["else" Statement<out ifNo>     (.  st = new Node(Node.IFELSE,st,ifNo,line); .)
     ]
-| "while" "(" Condition<out con>
-    ")" Statement<out st>           (.  st = new Node(Node.WHILE,con,st,line); .)
-| "do" Statement<out st>
+| "while" "(" Condition<out con>    
+    ")"                             (.  breakLevel ++; .) 
+    Statement<out st>               (.  st = new Node(Node.WHILE,con,st,line); 
+                                        breakLevel --; .)
+| "do"                              (.  breakLevel ++; .) 
+    Statement<out st>               (.  breakLevel --; .)
   "while" "(" Condition<out con> 
   ")" ";"                           (.  st = new Node(Node.DOWHILE,con,st,line); .)
 /*| "for" "(" Statement<out con>    (.  e = con; .)
@@ -564,6 +576,12 @@ Statement<out Node st>              (.  Node design;
                                             SemErr("return require parameter from correct type");
 
                                         st = new Node(Node.RETURN,e,null,line); .)
+| "break" ";"                       (.  if(breakLevel <= 0)
+                                            SemErr("break is not allowed here");
+                                        st = new Node(Node.BREAK,e,null,line); .)
+| "continue" ";"                    (.  if(breakLevel <= 0)
+                                            SemErr("continue is not allowed here");
+                                        st = new Node(Node.CONTINUE,e,null,line); .)
 | ";"                               (.  st = null; .)
 ).
 //-------------------------------------------------------------------------

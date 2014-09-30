@@ -2,8 +2,8 @@ package at.jku.ssw.cmm.interpreter.memory;
 
 import java.nio.ByteBuffer;
 
-import at.jku.ssw.cmm.interpreter.excpetions.StackOverflowException;
-import at.jku.ssw.cmm.interpreter.excpetions.StackUnderflowException;
+import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
+import at.jku.ssw.cmm.interpreter.exceptions.StackUnderflowException;
 
 public final class Memory {
 	private static final int MEMORY_SIZE = 8388608; // 8MB
