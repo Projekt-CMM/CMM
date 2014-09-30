@@ -66,18 +66,19 @@ COMPILER CMM
             
         // the next token is a "(", so it can be an expression or a condition
         else if (la.kind == _lpar) {
+            
             // get next token
             Token x = scanner.Peek();
             
             // if one of the following tokens occour, it would be a condition
             while (x.kind != _rpar && x.kind != _EOF) {
                 if (x.kind == _eql || x.kind == _neq || x.kind == _lss 
-                    || x.kind == _leq || x.kind == _gtr || x.kind == _geq) 
+                    || x.kind == _leq || x.kind == _gtr || x.kind == _geq || x.kind == _and | x.kind == _or ) 
                     return false;
-                    
                 // get next token
                 x = scanner.Peek();
             }
+
             // if last readed character is a ")", it is a expression, otherwise we reached end of file
             return x.kind == _rpar;
         } 
@@ -130,16 +131,16 @@ TOKENS
   rpar      = ")".
   semicolon = ";".
   assign    = '='.
-  assignplus     = "+=".
-  assignminus     = "-=".
-  assigntimes     = "*=".
+  assignplus    = "+=".
+  assignminus   = "-=".
+  assigntimes   = "*=".
   assigndiv     = "/=".
   assignrem     = "%=".
-  assignleftshift     = "<<=".
-  assignrightshift     = ">>=".
-  assignbitand     = "&=".
-  assignbitxor     = "^=".
-  assignbitor     = "|=".
+  assignleftshift   = "<<=".
+  assignrightshift  = ">>=".
+  assignbitand      = "&=".
+  assignbitxor      = "^=".
+  assignbitor       = "|=".
   eql       = "==".
   neq       = "!=".
   lss       = "<".
@@ -147,6 +148,11 @@ TOKENS
   gtr       = ">".
   geq       = ">=".
   bang      = "!".
+  and       = "&&".
+  or        = "||".
+  bitand    = "&".
+  bitor     = "|".
+  bitxor    = "^".
 
 COMMENTS FROM "/*" TO "*/" NESTED
 COMMENTS FROM "//" TO '\n'
