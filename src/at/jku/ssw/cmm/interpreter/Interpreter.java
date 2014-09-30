@@ -402,7 +402,7 @@ public final class Interpreter {
 		default:
 			debugger.abort("Not supportet node kind", p);
 			throw new IllegalStateException("Kind" + p.kind);
-		}break;
+		}
 	}
 
 	/*
