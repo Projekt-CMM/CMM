@@ -174,12 +174,16 @@ public class GUIdebugPanel {
 
 	// Data model for the global variables tables
 	private VarTableModel jTableGlobalModel;
+	
+	private JScrollPane jTableGlobalContainer;
 
 	// Table of local variables
 	private JTable jTableLocal;
 
 	// Data model for the global variables tables
 	private VarTableModel jTableLocalModel;
+	
+	private JScrollPane jTableLocalContainer;
 
 	// Call stack list object
 	private JList<Object> jCallStack;
@@ -321,11 +325,11 @@ public class GUIdebugPanel {
 		this.jTableGlobal.addMouseListener(new JTableButtonMouseListener(
 				this.jTableGlobal));
 
-		JScrollPane scrollPane1 = new JScrollPane(this.jTableGlobal);
+		this.jTableGlobalContainer = new JScrollPane(this.jTableGlobal);
 		this.jTableGlobal.setFillsViewportHeight(true);
-		this.jPanelVarInfo.add(scrollPane1);
+		this.jPanelVarInfo.add(this.jTableGlobalContainer);
 		
-		this.visToggle.registerComponent(0, scrollPane1);
+		this.visToggle.registerComponent(0, this.jTableGlobalContainer);
 
 		/* ---------- CALL STACK ---------- */
 		jLabel2 = new JLabel("Call Stack");
@@ -376,10 +380,10 @@ public class GUIdebugPanel {
 		this.jTableLocal.addMouseListener(new JTableButtonMouseListener(
 				this.jTableLocal));
 
-		JScrollPane scrollPane3 = new JScrollPane(this.jTableLocal);
+		this.jTableLocalContainer = new JScrollPane(this.jTableLocal);
 		this.jTableLocal.setFillsViewportHeight(true);
-		this.jPanelVarInfo.add(scrollPane3);
-		this.visToggle.registerComponent(0, scrollPane3);
+		this.jPanelVarInfo.add(this.jTableLocalContainer);
+		this.visToggle.registerComponent(0, this.jTableLocalContainer);
 
 		this.jRightPanel.add(this.jPanelVarInfo);
 		
@@ -419,8 +423,10 @@ public class GUIdebugPanel {
 	 */
 	public void setRuntimeErrorMode(String title, String message, int line, int col ) {
 		
-		this.line = line;
+		this.line = line - this.sourceCodeBeginLine + this.modifier.getSourceCodeRegister().size();
 		this.col = col;
+		
+		System.out.println("Error found: " + line + " -> " + this.line );
 
 		// Set standard mode elements invisible
 		this.jButtonPlay.setVisible(false);
@@ -510,6 +516,10 @@ public class GUIdebugPanel {
 	
 	public int getErrorLine() {
 		return this.line;
+	}
+	
+	public int getCompleteErrorLine() {
+		return this.line + this.sourceCodeBeginLine - this.modifier.getSourceCodeRegister().size();
 	}
 
 	public int getErrorCol() {
@@ -1146,8 +1156,7 @@ public class GUIdebugPanel {
 			// An include file could not be found
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					setRuntimeErrorMode("Preprocessor error:", "Include file not found: \"" + e1.getFileName()
-							+ "\"", e1.getLine(), 0);
+					listener.setErrorMode("Preprocessor error", "Include file not found: \"" + e1.getFileName() + "\"", e1.getLine(), 0);
 				}
 			});
 			return;
@@ -1183,8 +1192,7 @@ public class GUIdebugPanel {
 		
 		// compiler returns errors
 		if( e != null ) {
-			//TODO more error messages
-			setRuntimeErrorMode("Compiler error: ", e.msg, e.line, e.col);
+			this.listener.setErrorMode("Compiler error", e.msg, e.line, e.col);
 		}
 	}
 
@@ -1196,9 +1204,8 @@ public class GUIdebugPanel {
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 * <hr>
 	 */
-	public void runInterpreter() {
+	public boolean runInterpreter() {
 		this.compile();
-		this.compileManager.runInterpreter(listener,
-				new IOstream(this.modifier));
+		return this.compileManager.runInterpreter(listener, new IOstream(this.modifier));
 	}
 }

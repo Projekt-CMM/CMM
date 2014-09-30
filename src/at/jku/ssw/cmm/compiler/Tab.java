@@ -67,7 +67,7 @@ public class Tab {
 	public Obj insert(int kind, String name, Struct type) {
 		//--- erzeugen
 		Obj obj = new Obj(kind, name, type);
-		if (kind == Obj.VAR) {
+		if (kind == Obj.VAR || kind == Obj.CON) {
 			obj.adr = curScope.size;
 			curScope.size += type.size;
 			obj.level = curLevel;

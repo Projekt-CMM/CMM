@@ -63,7 +63,7 @@ public class CMMwrapper implements CMMrunnableMod {
 	 * @param stream Interface for the I/O stream. Output messages are shown in the "output" text area of the main GUI.
 	 * 			Input messages have to be entered in the "input" text field in the main GUI
 	 */
-	public void runInterpreter( PanelRunListener listener, IOstream stream ) {
+	public boolean runInterpreter( PanelRunListener listener, IOstream stream ) {
 		
 		//Check if another interpreter thread is already running
 		if( this.compiler != null && !this.running ){
@@ -79,11 +79,16 @@ public class CMMwrapper implements CMMrunnableMod {
 			
 			//Run interpreter thread
 			this.interpreter.start();
+			
+			return true;
 		}
 		//Another thread is already running
-		else
+		else{
 			//Error message
 			System.out.println("[ERROR] Already running or not compiled!");
+			
+			return false;
+		}
 	}
 	
 	/**

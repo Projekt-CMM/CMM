@@ -111,7 +111,15 @@ public final class Interpreter {
 			while (Condition(p.left))
 				Statement(p.right);
 			break;
+		case Node.DOWHILE:
+			do
+				Statement(p.right);
+			while (Condition(p.left));
+			break;
 		case Node.RETURN:
+			if(p.left == null)
+				throw new ReturnException();
+
 			switch (p.left.type.kind) {
 			case Struct.INT:
 				Memory.setIntReturnValue(IntExpr(p.left));

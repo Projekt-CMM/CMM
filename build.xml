@@ -1,57 +1,82 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <project default="build" name="CMM">
 <!-- https://de.wikipedia.org/wiki/Apache_Ant -->
-	<property name="build.classes" value="bin" />
-  	<property name="build.lib" value="lib" />
-  	<property name="java.dir" value="src" />
-  	<property name="name" value="CMM" />
-  	<property name="manifest" value="manifest.txt" />
+    <property name="build.classes" value="bin"/>
+    <property name="build.lib" value="lib"/>
+    <property name="java.dir" value="src"/>
+    <property name="name" value="CMM"/>
+    <property name="manifest" value="manifest.txt"/>
+    <property name="coco-ant.file" value="${java.dir}/at/jku/ssw/cmm/compiler/CMM.atg"/>
 
-	<path id="classpath">
-    	<pathelement location="." />
-   	</path>
+    <path id="classpath">
+        <pathelement location="."/>
+    </path>
 
-	<target name="coco" description="generate Parser.java and Scanner.java from CMM.atg" >
-		<exec executable="cocoj">
-    		<arg value="src/at/jku/ssw/cmm/compiler/CMM.atg"/>
-  		</exec>
-  	</target>
+    <!-- clean project and then build it from scratch -->
+    <target name="all" depends="clean, build, test" description="build project from scrach"/>
 
-    <target name="build" depends="coco">
-
-		<!-- Verzeichis anlegen -->
-		<mkdir dir="${build.classes}"/>
-
-		<!-- Quelltext kompilieren -->
-		<javac srcdir="${java.dir}"
-			destdir="${build.classes}"
-			classpath="${build.lib}/rsyntaxtextarea.jar"
-			debug="false"
-			deprecation="true"
-			optimize="true" >
-		  	<classpath refid="classpath" />
-		</javac>
-
-		<!-- Kopiert notwendige Dateien -->
-		<copy todir="${build.classes}">
-		 	<fileset dir="${java.dir}">
-		 	</fileset>
-		</copy>
-	 
-		<!-- Baut die JAR-Datei -->
-		<jar jarfile="${name}.jar" manifest="${manifest}">
-		  	<fileset dir="${build.classes}"/>
-			<zipgroupfileset dir="${build.lib}" includes="*.jar"/>
-		</jar>
+    <!-- generate parser and scanner from CMM.atg, using cocoj -->
+    <target name="coco" description="generate Parser.java and Scanner.java from CMM.atg">
+        <exec executable="cocoj">
+            <arg value="${coco-ant.file}"/>
+        </exec>
     </target>
 
-	<!-- Aufräumen  -->
-  	<target name="clean" description="Räumt die temporär angelegten Dateien weg">
-    <!-- Löscht Dateien -->
-		<delete dir="${build.classes}" />
-		<delete> 
-		  	<fileset dir="." includes="**/*~" defaultexcludes="no"/>
-		</delete>
-  	</target>
+    <!-- build project -->
+    <target name="build" depends="coco" description="build project">
+
+        <!-- add directory -->
+        <mkdir dir="${build.classes}"/>
+
+        <!-- Quelltext kompilieren -->
+        <javac srcdir="${java.dir}"
+            destdir="${build.classes}"
+            classpath="${build.lib}/rsyntaxtextarea.jar"
+            debug="false"
+            deprecation="true"
+            optimize="true" 
+            includeantruntime="false">
+            <classpath refid="classpath"/>
+        </javac>
+
+        <!-- copy required files -->
+        <copy todir="${build.classes}">
+            <fileset dir="${java.dir}"/>
+        </copy>
+
+        <!-- build jar file -->
+        <jar jarfile="${name}.jar" manifest="${manifest}">
+            <fileset dir="${build.classes}"/>
+            <zipgroupfileset dir="${build.lib}" includes="*.jar"/>
+        </jar>
+    </target>
+
+    <!-- cleanup  -->
+    <target name="clean" description="clear build-files">
+        <!-- delete generated files -->
+        <delete dir="${build.classes}"/>
+        <delete file="./CMM.jar"/>
+    </target>
+
+    <!-- test project -->
+    <target name="test" depends="build, test-compiler, test-interpreter, test-gui" description="test project"/>
+
+    <!-- test compiler part -->
+    <target name="test-compiler" depends="build" description="test compiler part">
+        <!-- test compiling of a few files -->
+        <exec executable="./tests/compiler/test.sh"/>
+        <!-- start bruteforce test -->
+        <exec executable="./tests/compiler/bruteforcetest.sh"/>
+    </target>
+
+    <!-- test interpreter part -->
+    <target name="test-interpreter" depends="build" description="test interpreter part">
+
+    </target>
+
+    <!-- test gui part -->
+    <target name="test-gui" depends="build" description="test gui part">
+
+    </target>
 
 </project>

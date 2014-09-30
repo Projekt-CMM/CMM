@@ -2,7 +2,7 @@
 
 # run cmm-compiler
 function testCode {
-    java -classpath ../bin at.jku.ssw.cmm.compiler.CMM $1
+    java -classpath $(dirname $0)/../../bin at.jku.ssw.cmm.compiler.CMM $1
 }
 
 function generateWord {
@@ -72,6 +72,7 @@ NC='\e[0m' # No Color
 
 # count occouring failes
 failes=0
+tests=0
 outputAll=0
 
 if [ $# > 1 ];then
@@ -79,11 +80,15 @@ if [ $# > 1 ];then
         outputAll=1
     fi
 fi 
+echo "----------------------------------------------------------------"
+echo "Start Bruteforce-Test"
+echo "----------------------------------------------------------------"
+echo "..."
 
-printf "${yellow}Start Bruteforce-Test${NC}\n\n"
 
-while [ true ]
+while [ $tests -le 99 ]
 do
+    tests=$(( $tests + 1 ))
     date=$(date)
     # write generated code into bruteforce.c
     code=$(generateCode)
@@ -111,7 +116,7 @@ do
         echo "----------------------------------------------------------------"
         printf "${yellow} $code \n ${red}FAILED${NC}\n"
         echo $cmmOutput
-
+        failes=$(( $failes + 1 ))
         # save file
         mkdir -p bruteforce_failed
         cp bruteforce.c "bruteforce_failed/$date.c"
@@ -119,5 +124,15 @@ do
 
 done
 
-echo "----------------------------------------------------------------"
-echo "$failes Test(s) failed"
+
+if [ $failes == 0 ];then
+    echo "----------------------------------------------------------------"
+    echo -e "${green}all $tests Test(s) success!${NC}"
+    echo "----------------------------------------------------------------"
+    exit 0
+else
+    echo "----------------------------------------------------------------"
+    echo -e "${red} $failes of $tests Test(s) failed!${NC}"
+    echo "----------------------------------------------------------------"
+    exit 2
+fi

@@ -44,9 +44,11 @@ public class GUIrightPanel {
 	
 			//Quest Panel
 			JPanel jQuestPanel = new JPanel();
-			jQuestPanel.setLayout(new BorderLayout());
-			tabbedPane.add(jQuestPanel, "Quest");
-			questPanel = new GUIquestPanel( jQuestPanel, mod );
+			if( GUImain.ADVANCED_GUI ){
+				jQuestPanel.setLayout(new BorderLayout());
+				tabbedPane.add(jQuestPanel, "Quest");
+				questPanel = new GUIquestPanel( jQuestPanel, mod );
+			}
 		
 		this.jRightContainer.add(tabbedPane);
 		cp.add(this.jRightContainer, BorderLayout.CENTER);
@@ -61,7 +63,7 @@ public class GUIrightPanel {
 	private final GUIdebugPanel debugPanel;
 	
 	@SuppressWarnings("unused")
-	private final GUIquestPanel questPanel;
+	private GUIquestPanel questPanel;
 	
 	/* --- top panel objects --- */
 	// Breakpoint button

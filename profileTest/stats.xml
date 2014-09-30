@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<stats>
+	<!-- Stopwatch class Java http://stackoverflow.com/questions/11277954/adding-a-time-counter-in-java -->
+	<onlinetime></onlinetime>
+	<finished>
+		<package>default</package>
+		<quest>testquest</quest>
+
+		<startdate>03-05-2013:15:34:731</startdate>
+		<enddate>03-06-2013:15:34:731</enddate>
+		<timescompiled>3</timescompiled><!-- JButton Pressed  http://stackoverflow.com/questions/5602463/count-how-many-times-a-jbutton-is-pressed -->
+		<timeskeypressed>342</timeskeypressed><!-- Any key pressed (asdf ..)-->
+	</finished>
+	<active>
+		<package>default</package>
+		<quest>testquest</quest>
+		<date>03-05-2013:15:34:731</date>
+	</active>
+	<unlocked>
+		<package>default</package>
+		<quest>testquest</quest>
+		<date>03-05-2013:15:34:731</date>
+	</unlocked>
+	<locked>
+		<package>default</package>
+		<quest>testquest</quest>
+		<date>03-05-2013:15:34:731</date>
+	</locked>
+</stats>

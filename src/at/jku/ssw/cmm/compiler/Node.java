@@ -31,49 +31,55 @@ public final class Node {
 		IF       	= 13,  	// if statement without else branch
 		IFELSE   	= 14,  	// if statement with else branch
 		WHILE    	= 15,  	// while statement
-		FOR    	= 16,  	// print statement
-		RETURN   	= 17,  	// return statement
-		TRAP     	= 18,  	// trap if a function reaches its end without a return
+		DOWHILE		= 16,
+		//FOR    		= 17,  	// print statement
+		RETURN   	= 18,  	// return statement
+		TRAP     	= 19,  	// trap if a function reaches its end without a return
+		//BREAK		= 20,
+		//CONTINUE	= 21,
+		//SWITCH		= 22,
+		//CASE		= 23,
 		//------------ leaf expressions
-		IDENT    	= 19,   // identifier
-		INTCON   	= 20,   // int constant
-		FLOATCON 	= 21,   // float constant
-		CHARCON  	= 22,   // char constant
-		STRINGCON  	= 23,   // char constant
+		IDENT    	= 24,   // identifier
+		//BOOLCON		= 25,	// bool constant
+		INTCON   	= 26,   // int constant
+		FLOATCON 	= 27,   // float constant
+		CHARCON  	= 28,   // char constant
+		STRINGCON  	= 29,   // char constant
 		//------------ designators and ref parameters
-		DOT      	= 24,   // field selection (x.y)
-		INDEX    	= 25,   // array element (a[i])
-		REF      	= 26,   // ref parameter
+		DOT      	= 30,   // field selection (x.y)
+		INDEX    	= 31,   // array element (a[i])
+		REF      	= 32,   // ref parameter
 		//------------ expressions
-		PLUS     	= 27,  	// +
-		MINUS    	= 28,   // -
-		TIMES    	= 29,   // *
-		DIV      	= 30,   // /
-		REM      	= 31,   // %
-		BITNEQ		= 32,	// ~
-		BITAND		= 33,	// &
-		BITOR		= 34,	// |
-		BITXOR		= 35,	// ^
-		SHIFTLEFT 	= 36,	// <<
-		SHIFTRIGHT 	= 37,	// >>
-		INC			= 38,	// ++	// Todo x++
-		DEC			= 39,	// --	// Todo x--
-		I2F      	= 40,   // conversion from int to float
-		F2I      	= 41,   // conversion from float to int
-		I2C      	= 42,   // conversion from int to char
-		C2I      	= 43,   // conversion from char to int
-		A2S      	= 44,   // conversion from char-array to string
-		C2S			= 45,	// conversion from char to string
+		PLUS     	= 33,  	// +
+		MINUS    	= 34,   // -
+		TIMES    	= 35,   // *
+		DIV      	= 36,   // /
+		REM      	= 37,   // %
+		BITNEQ		= 38,	// ~
+		BITAND		= 39,	// &
+		BITOR		= 40,	// |
+		BITXOR		= 41,	// ^
+		SHIFTLEFT 	= 42,	// <<
+		SHIFTRIGHT 	= 43,	// >>
+		INC			= 44,	// ++	// Todo x++
+		DEC			= 45,	// --	// Todo x--
+		I2F      	= 46,   // conversion from int to float
+		F2I      	= 47,   // conversion from float to int
+		I2C      	= 48,   // conversion from int to char
+		C2I      	= 49,   // conversion from char to int
+		A2S      	= 50,   // conversion from char-array to string
+		C2S			= 51,	// conversion from char to string
 		//------------ conditionals
-		EQL      	= 46,  	// ==
-		NEQ      	= 47,  	// !=
-		LSS      	= 48,  	// <
-		LEQ      	= 49,  	// <=
-		GTR      	= 50,  	// >
-		GEQ      	= 51,  	// >=
-		NOT      	= 52,  	// !
-		OR       	= 53,  	// ||
-		AND      	= 54;  	// &&
+		EQL      	= 52,  	// ==
+		NEQ      	= 53,  	// !=
+		LSS      	= 54,  	// <
+		LEQ      	= 55,  	// <=
+		GTR      	= 56,  	// >
+		GEQ      	= 57,  	// >=
+		NOT      	= 58,  	// !
+		OR       	= 59,  	// ||
+		AND      	= 60;  	// &&
 
 	public int kind;        // STATSEQ, ASSIGN, ...
 	public Struct type;     // only used in expressions
@@ -139,8 +145,8 @@ public final class Node {
 	static String[] name = {
 		"STATSEQ", "ASSIGN", "ASSIGNPLUS", "ASSIGNMINUS", "ASSIGNTIMES", "ASSIGNDIV","ASSIGNREM",
 		"ASSIGNSHIFTLEFT", "ASSIGNSHIFTRIGHT", "ASSIGNBITAND", "ASSIGNBITXOR", "ASSIGNBITOR",
-		"CALL", "IF", "IFELSE", "WHILE", "FOR", "RETURN", "TRAP",
-		"IDENT", "INTCON", "FLOATCON", "CHARCON", "STRINGCON",
+		"CALL", "IF", "IFELSE", "WHILE", "DOWHILE", "FOR", "RETURN", "TRAP", "BREAK", "CONTINUE",
+		"SWITCH", "CASE", "IDENT", "BOOLCON", "INTCON", "FLOATCON", "CHARCON", "STRINGCON",
 		"DOT", "INDEX", "REF",
 		"PLUS", "MINUS", "TIMES", "DIV", "REM", "BITNEQ", "BITAND", "BITOR", "BITXOR", 
 		"SHIFTLEFT", "SHIFTRIGHT", "INC", "DEC", "I2F", "F2I", "I2C", "C2I", "A2S", "C2S",

@@ -2,11 +2,9 @@ package at.jku.ssw.cmm.gui.init;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Insets;
 
 import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
@@ -60,9 +58,9 @@ public class InitLeftPanel {
 	public static JTextArea initInputPane( JPanel pane ){
 		
 		//Label saying "input" above the text area for the input stream
-		JLabel jLabel2 = new JLabel("Input");
-		jLabel2.setAlignmentX(Component.LEFT_ALIGNMENT);
-		pane.add(jLabel2);
+		JPanel valuePanel = new JPanel();
+		valuePanel.setBorder(BorderFactory.createTitledBorder("Input"));
+		valuePanel.setLayout(new BorderLayout());
         
 		//The text area for the input stream
         JTextArea tArea = new JTextArea();
@@ -70,7 +68,8 @@ public class InitLeftPanel {
         tArea.setMargin(new Insets(5, 5, 5, 5));
         tArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         
-        pane.add(tArea);
+        valuePanel.add(tArea, BorderLayout.CENTER);
+        pane.add(valuePanel);
         
         return tArea;
 	}
@@ -84,9 +83,9 @@ public class InitLeftPanel {
 	public static JTextArea initOutputPane( JPanel pane ){
 		
 		//Label saying "output" above the text area for the output stream
-		JLabel jLabel3 = new JLabel("Output");
-		jLabel3.setAlignmentX(Component.LEFT_ALIGNMENT);
-		pane.add(jLabel3);
+		JPanel valuePanel = new JPanel();
+		valuePanel.setBorder(BorderFactory.createTitledBorder("Output"));
+		valuePanel.setLayout(new BorderLayout());
         
 		//The text area for the output stream
         JTextArea tArea = new JTextArea();
@@ -94,7 +93,8 @@ public class InitLeftPanel {
         tArea.setMargin(new Insets(5, 5, 5, 5));
         tArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         
-        pane.add(tArea);
+        valuePanel.add(tArea, BorderLayout.CENTER);
+        pane.add(valuePanel);
         
         return tArea;
 	}

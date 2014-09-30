@@ -157,7 +157,7 @@ public class ReadSymbolTable {
 						prefix = "reference";
 					}
 					else{
-						value = count.val;
+						value = count.fVal;
 						prefix = "";
 					}
 				}

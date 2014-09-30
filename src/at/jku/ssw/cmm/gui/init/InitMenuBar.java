@@ -96,6 +96,7 @@ public class InitMenuBar {
 		toggle1.disable(0);
 		
 		/* --- MENU: "progress" --- */
+		if( GUImain.ADVANCED_GUI ){
 		JMenu questM = new JMenu("Progress");
 		menubar.add(questM);
 		
@@ -108,5 +109,6 @@ public class InitMenuBar {
 			JMenuItem questMI = new JMenuItem("Quests");
 			questMI.addActionListener(listener.questHandler);
 			questM.add(questMI);
+		}
 	}
 }
