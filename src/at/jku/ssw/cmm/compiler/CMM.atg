@@ -9,8 +9,9 @@ CMM Compiler description for C--
 
 COMPILER CMM
 
-    public  Tab       tab;                     // symbol table
-    public  boolean[] debug;
+    public Tab       tab;                     // symbol table
+    public boolean[] debug;
+    public int breakLevel;
   
       Obj curProc;
     Strings strings = new Strings();
@@ -168,6 +169,8 @@ CMM
 
                                         // open global scope
                                         tab.openScope(); 
+
+                                        breakLevel = 0;
 
                                         Node e; .)
 { 
@@ -536,9 +539,12 @@ Statement<out Node st>              (.  Node design;
     Statement<out ifYes>            (.  st = new Node(Node.IF,con,ifYes,line); .)
     ["else" Statement<out ifNo>     (.  st = new Node(Node.IFELSE,st,ifNo,line); .)
     ]
-| "while" "(" Condition<out con>
-    ")" Statement<out st>           (.  st = new Node(Node.WHILE,con,st,line); .)
-| "do" Statement<out st>
+| "while" "(" Condition<out con>    
+    ")"                             (.  breakLevel ++; .) 
+    Statement<out st>               (.  st = new Node(Node.WHILE,con,st,line); 
+                                        breakLevel --; .)
+| "do"                              (.  breakLevel ++; .) 
+    Statement<out st>               (.  breakLevel --; .)
   "while" "(" Condition<out con> 
   ")" ";"                           (.  st = new Node(Node.DOWHILE,con,st,line); .)
 /*| "for" "(" Statement<out con>    (.  e = con; .)
@@ -570,6 +576,12 @@ Statement<out Node st>              (.  Node design;
                                             SemErr("return require parameter from correct type");
 
                                         st = new Node(Node.RETURN,e,null,line); .)
+| "break" ";"                       (.  if(breakLevel <= 0)
+                                            SemErr("break is not allowed here");
+                                        st = new Node(Node.BREAK,e,null,line); .)
+| "continue" ";"                    (.  if(breakLevel <= 0)
+                                            SemErr("continue is not allowed here");
+                                        st = new Node(Node.CONTINUE,e,null,line); .)
 | ";"                               (.  st = null; .)
 ).
 //-------------------------------------------------------------------------

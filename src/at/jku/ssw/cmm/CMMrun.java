@@ -6,7 +6,7 @@ import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.gui.interpreter.IOstream;
 import at.jku.ssw.cmm.gui.mod.CMMrunnableMod;
 import at.jku.ssw.cmm.interpreter.Interpreter;
-import at.jku.ssw.cmm.interpreter.excpetions.StackOverflowException;
+import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
 import at.jku.ssw.cmm.interpreter.memory.MethodContainer;
 
