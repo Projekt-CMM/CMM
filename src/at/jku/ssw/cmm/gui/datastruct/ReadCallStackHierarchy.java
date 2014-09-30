@@ -48,7 +48,7 @@ public class ReadCallStackHierarchy {
 		int methodID = Memory.loadInt(address-8);
 		name = MethodContainer.getMethodName(methodID);
 
-		DataNode funcNode = new DataNode( name + "()", "", "line " + Memory.loadInt(address - 16), new ArrayList<DataNode>() );
+		DataNode funcNode = new DataNode( name + "()", "", "", new ArrayList<DataNode>() );
 		readVariables( ReadSymbolTable.findNodeByName(compiler.getSymbolTable().curScope.locals, name).locals, funcNode, address, listenerModifier );
 		node.add(funcNode);
 		
@@ -61,18 +61,18 @@ public class ReadCallStackHierarchy {
 	private static DataNode readVariables( Obj obj, DataNode node, int address, GUIdebugPanel listenerModifier ){
 		
 		while( obj != null ){
-				if( obj.type.kind == Struct.INT ){
+				if( obj.type.kind == Struct.INT && obj.kind != Obj.PROC ){
 					if( obj.kind == Obj.VAR && !obj.isRef ){
 						node.add(new DataNode(obj.name, "int", Memory.loadInt(address + obj.adr), null));
 					}
-					else if( obj.kind == Obj.VAR && obj.isRef ){
+					else if( obj.kind == Obj.VAR && obj.isRef && obj.kind != Obj.PROC ){
 						node.add(new DataNode(obj.name, "int", Memory.loadInt(Memory.loadInt(address + obj.adr)), null));
 					}
 					else{
 						node.add(new DataNode(obj.name, "int", obj.val, null));
 					}
 				}
-				if( obj.type.kind == Struct.CHAR ){
+				if( obj.type.kind == Struct.CHAR && obj.kind != Obj.PROC ){
 					if( obj.kind == Obj.VAR && !obj.isRef ){
 						node.add(new DataNode(obj.name, "char", Memory.loadChar(address + obj.adr), null));
 					}
@@ -83,7 +83,7 @@ public class ReadCallStackHierarchy {
 						node.add(new DataNode(obj.name, "char", obj.val, null));
 					}
 				}
-				if( obj.type.kind == Struct.FLOAT ){
+				if( obj.type.kind == Struct.FLOAT && obj.kind != Obj.PROC ){
 					if( obj.kind == Obj.VAR && !obj.isRef ){
 						node.add(new DataNode(obj.name, "float", Memory.loadFloat(address + obj.adr), null));
 					}
@@ -94,14 +94,14 @@ public class ReadCallStackHierarchy {
 						node.add(new DataNode(obj.name, "float", obj.fVal, null));
 					}
 				}
-				if( obj.type.kind == Struct.ARR ){
+				if( obj.type.kind == Struct.ARR && obj.kind != Obj.PROC ){
 					node.add(readArray(obj, address + obj.adr, listenerModifier));
 				}
-				if( obj.type.kind == Struct.STRUCT ){
+				if( obj.type.kind == Struct.STRUCT && obj.kind != Obj.PROC ){
 					DataNode n = readVariables( obj.type.fields, new DataNode(obj.name, "struct", "", new ArrayList<DataNode>()), address + obj.adr, listenerModifier );
 					node.add(n);
 				}
-				if( obj.type.kind == Struct.STRING ){
+				if( obj.type.kind == Struct.STRING && obj.kind != Obj.PROC ){
 					JButton b = new JButton(Strings.get(Memory.loadStringAddress(address + obj.adr)));
 					MouseListener l = new PanelRunLinkListener( listenerModifier, obj.name,
 							StructureContainer.STRING, address + obj.adr, false, b );

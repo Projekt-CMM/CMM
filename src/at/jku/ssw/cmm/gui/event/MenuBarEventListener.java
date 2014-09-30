@@ -106,6 +106,7 @@ public class MenuBarEventListener {
 				//Call the main GUI's save dialog (contains file chooser and save routines
 				saveDialog.doSaveAs();
 				main.setFileSaved();
+				main.updateWinFileName();
 			}
 		}
 	};
@@ -127,6 +128,7 @@ public class MenuBarEventListener {
 					saveDialog.doSaveAs();
 				
 				main.setFileSaved();
+				main.updateWinFileName();
 			}
 		}
 	};

@@ -6,6 +6,7 @@ import java.awt.Insets;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.text.AttributeSet;
@@ -68,7 +69,9 @@ public class InitLeftPanel {
         tArea.setMargin(new Insets(5, 5, 5, 5));
         tArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         
-        valuePanel.add(tArea, BorderLayout.CENTER);
+        JScrollPane scroll = new JScrollPane(tArea);
+        
+        valuePanel.add(scroll, BorderLayout.CENTER);
         pane.add(valuePanel);
         
         return tArea;
@@ -93,7 +96,9 @@ public class InitLeftPanel {
         tArea.setMargin(new Insets(5, 5, 5, 5));
         tArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         
-        valuePanel.add(tArea, BorderLayout.CENTER);
+        JScrollPane scroll = new JScrollPane(tArea);
+        
+        valuePanel.add(scroll, BorderLayout.CENTER);
         pane.add(valuePanel);
         
         return tArea;
