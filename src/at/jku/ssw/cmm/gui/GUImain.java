@@ -18,6 +18,7 @@ import javax.swing.text.Highlighter;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+import at.jku.ssw.cmm.gui.event.MainKeyListener;
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.event.WindowComponentListener;
 import at.jku.ssw.cmm.gui.event.WindowEventListener;
@@ -165,6 +166,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 
 		// Initialize the source panel listener
 		this.jSourcePane.getDocument().addDocumentListener(new SourceCodeListener(this));
+		
+		//Initialize the source panel key listener for ctrl+s
+		this.jSourcePane.addKeyListener(new MainKeyListener(this, this.saveDialog));
 
 		// Menubar
 		InitMenuBar.initFileM(this.jFrame, this.jSourcePane, this, this.settings,

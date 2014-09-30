@@ -86,7 +86,7 @@ public class WindowEventListener implements WindowListener {
 					
 			//Init warning dialog with two buttons
 			int n = JOptionPane.showOptionDialog( jFrame,
-				"Do you want to save \"New File\"",
+				"Do you want to save \"Unnamed\"",
 				"Closing the C-- IDE",
 				JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE,
@@ -96,7 +96,7 @@ public class WindowEventListener implements WindowListener {
 					
 			if( n == JOptionPane.YES_OPTION )
 				//Open a save dialog to save current source code
-				saveDialog.directSave();
+				saveDialog.doSaveAs();
 		}
 		
 		//Warning if last changes are not saved -> opens a warning dialog

@@ -49,6 +49,7 @@ public class SaveDialog {
 	 * main GUI configuration object and the source code is automatically saved.
 	 */
 	public void doSaveAs(){
+		
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(new FileNameExtensionFilter(
 				"C-- file", "cmm"));
@@ -59,6 +60,9 @@ public class SaveDialog {
 	}
 	
 	public void directSave(){
-		FileManagerCode.saveSourceCode(new File(settings.getPath()), jSourcePane.getText());
+		if( settings.getPath() != null )
+			FileManagerCode.saveSourceCode(new File(settings.getPath()), jSourcePane.getText());
+		else
+			this.doSaveAs();
 	}
 }
