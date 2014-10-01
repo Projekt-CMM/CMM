@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<quest>
+	<!-- Titel der Quest – String -->
+	<!-- XP die man bei dieser Quest bekommen kann - Integer -->
+	<xp>1000</xp>
+	<!-- Status, nur bei der ersten Quest notwendig – String -->
+	 <!-- Weiterfuehrende Quests, keine oder mehrere Quests moeglich – String -->
+	<nextquest>quest2.xml</nextquest>
+	<nextquest>quest3.xml</nextquest>
+</quest>
