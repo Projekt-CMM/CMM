@@ -11,14 +11,23 @@ public class Language {
 	private static Map<String, String> langMap = null;
 	
 	public static void loadLanguage(String langCode){
+		
+		System.out.println("Loading language -> " + langCode);
+		
 		langMap = new HashMap<>();
+		
+		//Reset to default language
+		if( langCode == null ){
+			langMap = null;
+			return;
+		}
 		
 		BufferedReader file;
 		String line;
 		String line2;
 		
 		try {
-			file = new BufferedReader(new FileReader("po/" + langCode + ".po"));
+			file = new BufferedReader(new FileReader("po/" + langCode ));
 			while ((line = file.readLine()) != null) {
 				//Load a translated String
 				if( line.startsWith("msgid") && (line2 = file.readLine()) != null && line2.startsWith("msgstr") ){

@@ -2,6 +2,8 @@ package at.jku.ssw.cmm.gui.init;
 
 import static at.jku.ssw.cmm.gettext.Language._;
 
+import java.io.File;
+
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -12,6 +14,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.GUImainSettings;
 import at.jku.ssw.cmm.gui.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.event.LanguageListener;
 import at.jku.ssw.cmm.gui.event.MenuBarEventListener;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
 
@@ -111,6 +114,24 @@ public class InitMenuBar {
 			JMenuItem questMI = new JMenuItem(_("Select Quest"));
 			questMI.addActionListener(listener.questHandler);
 			questM.add(questMI);
+		
+		/* --- MENU: "language" --- */
+		JMenu langM = new JMenu(_("Language"));
+		menubar.add(langM);
+		
+			File folder = new File("po");
+			File[] listOfFiles = folder.listFiles();
+
+		    for (int i = 0; i < listOfFiles.length; i++) {
+		    	if (listOfFiles[i].isFile()) {
+		    		System.out.println("File " + listOfFiles[i].getName());
+		    		if( listOfFiles[i].getName().endsWith(".po") ){
+			    		JMenuItem mi = new JMenuItem(listOfFiles[i].getName());
+			    		mi.addActionListener(new LanguageListener(main, listOfFiles[i].getName()));
+			    		langM.add(mi);
+		    		}
+		    	}
+		    }
 		}
 	}
 }

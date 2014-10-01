@@ -81,7 +81,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	
 	public static final char BREAKPOINT = '\u2326';
 	
-	public static final boolean ADVANCED_GUI = true;
+	public static final boolean ADVANCED_GUI = false;
 	
 	public static final String VERSION = "C Compact Alpha 1.0";
 
@@ -111,7 +111,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 			System.out.println("[EDT Analyse] Main GUI runnung on EDT.");
 		
 		//Load translations
-		//Language.loadLanguage("by");
+		//Language.loadLanguage("by.po");
 
 		// Initialize the window
 		this.jFrame = new JFrame(VERSION);
