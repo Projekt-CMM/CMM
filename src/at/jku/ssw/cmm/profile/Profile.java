@@ -1,247 +1,472 @@
 package at.jku.ssw.cmm.profile;
 
-//public class Profile {
-//	private String path;
-//	private String nick;
-//	private int xp;
-//	private String selectedImage;
-//	private String openedQuest;
-//	
-//	private ArrayList<String> finished;
-//	private ArrayList<String> selectable;
-//	public boolean[] activeRewards = new boolean[7];
-//	
-//	public static final int
-//		SET_BACKGROND = 0,
-//		SET_SOUNDS = 1,
-//		SET_PROFILE_IMAGE = 2,
-//		SET_ONLY_XP = 3,
-//		SET_COLOR_PICKER = 4,
-//		SET_AUTO_COMPLETE = 5,
-//		SET_SPELL_CHECKING = 6;
-//	
-//	public static final String
-//		XML_PROFILE = "profile",
-//		XML_NICK = "nick",
-//		XML_XP = "xp",
-//		XML_FINISHED = "finished",
-//		XML_SELECTEDIMAGE = "selectedimage",
-//		XML_OPENEDQUEST = "open",
-//		XML_SELECTABLE = "selectable";
-//		
-//	
-//	/**
-//	 * @return the Profiles Nick Name
-//	 */
-//	public String getNick() {
-//		return nick;
-//	}
-//
-//	/**
-//	 * @param nick setting the Profiles Nick Name
-//	 */
-//	public void setNick(String nick) {
-//		this.nick = nick;
-//	}
-//
-//	/**
-//	 * @return the current XP Status
-//	 */
-//	public int getXp() {
-//		return xp;
-//	}
-//
-//	/**
-//	 * @param xp XP to set
-//	 */
-//	public void setXp(int xp) {
-//		this.xp = xp;
-//	}
-//	
-//	/**
-//	 * @param xp XP to add
-//	 */
-//	public void addXP(int xp){
-//		this.xp += xp;
-//	}
-//
-//	/**
-//	 * @param xp XP to sub
-//	 */
-//	public void subXP(int xp){
-//		this.xp -= xp;
-//	}	
-//	
-//	/**
-//	 * @return a List of Finished Quests
-//	 * @see Please initialisize the Handler before calling this
-//	 */
-//	public ArrayList<String> getFinishedQuestNames() {
-//		return finished;
-//	}
-//
-//	/**
-//	 * @param finished the finished to set
-//	 * @Format packagePath + sep + questsPath + sep + quest.xml
-//	 */
-//	public void setFinishedQuests(ArrayList<String> finished) {
-//		this.finished = finished;
-//	}
-//
-//	
-//	/**
-//	 * @return the current Profile Image
-//	 * @Format images + sep + image.png
-//	 */
-//	public String getSelectedImage() {
-//		return selectedImage;
-//	}
-//
-//	/**
-//	 * @param for setting the current Profile Image
-//	 * @Format images + sep + image.png
-//	 */
-//	public void setSelectedImage(String selectedImage) {
-//		this.selectedImage = selectedImage;
-//	}
-//
-//	/**
-//	 * <b>Calculating the Level and returns</b>
-//	 * @return the level
-//	 */
-//	public int getLevel() {
-//		return calculateLevel(); //for Calculating the Level
-//	}
-//
-//	private int calculateLevel(){
-//		return (int) Math.sqrt(xp); //square of 2
-//	}	
-//
-//	/**
-//	 * <b>Reading the settingsfile and returns boolean</b>
-//	 * SettingsFile contains: InitPath + sep + settings.xml
-//	 * @return boolean Array of Rewards
-//	 * Please Node: Use <b>Profile.*</b> for getting the right Selection
-//	 * Instead of * a List of Options is displayed. 
-//	 */
-//	
-//	public boolean[] getActiveRewards(String settingsfile){
-//		//Handler handler = new Handler();
-//		
-//		//Settings settings = handler.ReadSettings(settingsfile);
-//		
-//		//Set the whole Array on false
-//		for(int i = 0; i < activeRewards.length; i++)
-//			activeRewards[i] = false;
-//		
-//		//AutoComplete
-//		if(settings.getAuto_complete() <= getLevel())
-//			activeRewards[Profile.SET_AUTO_COMPLETE] = true;
-//		
-//		//BackGround
-//		if(settings.getBackground() <= getLevel())
-//			activeRewards[Profile.SET_BACKGROND] = true;
-//		
-//		//ColorPicker
-//		if(settings.getColor_picker() <= getLevel())
-//			activeRewards[Profile.SET_COLOR_PICKER] = true;
-//		
-//		//Sounds
-//		if(settings.getSounds() <= getLevel())
-//			activeRewards[Profile.SET_SOUNDS] = true;
-//		
-//		//Spell_Checking
-//		if(settings.getSpell_checking() <= getLevel())
-//			activeRewards[Profile.SET_SPELL_CHECKING] = true;
-//		
-//		
-//		return activeRewards;
-//		
-//	}
-//	
-//	/**
-//	 * 
-//	 * For adding a finished Quest to the Profile
-//	 * @param finished QuestsPAth
-//	 */
-//	public void AddFinished(String finishedPath){
-//		if(!finished.contains(finishedPath))
-//			finished.add(finishedPath);
-//	}
-//	
-//	/**
-//	 * Deleting a finished Quest in the Profile
-//	 * @param String
-//	 */
-//	public void DelFinished(String finishedPath){
-//		finished.remove(finishedPath);
-//	}
-//	
-//	/**
-//	 * @return the path
-//	 * @Format profilePath + sep + profile.xml
-//	 */
-//	public String getPath() {
-//		return path;
-//	}
-//
-//	/**
-//	 * @param path the path to set
-//  	 * @Format profilePath + sep + profile.xml
-//	 */
-//	public void setPath(String path) {
-//		this.path = path;
-//	}
-//
-//	/**
-//	 * @return the openedQuest
-//	 */
-//	public String getOpenedQuest() {
-//		return openedQuest;
-//	}
-//
-//	/**
-//	 * @param openedQuest the openedQuest to set
-//	 */
-//	public void setOpenedQuest(String openedQuest) {
-//		this.openedQuest = openedQuest;
-//	}
-//
-//	
-//	/**
-//	 * @return the selectable Quests
-//	 */
-//	public ArrayList<String> getSelectableQuestNames() {
-//		return selectable;
-//	}
-//
-//	/**
-//	 * @param selectable the selectable Quests to set
-//	 */
-//	public void setSelectable(ArrayList<String> selectable) {
-//		this.selectable = selectable;
-//	}
-//
-//	
-//	/**
-//	 * 
-//	 * For adding a finished Quest to the Profile
-//	 * @param finished QuestsPAth
-//	 */
-//	public void AddSelectable(String selectablePath){
-//		if(!finished.contains(selectablePath))
-//			finished.add(selectablePath);
-//	}
-//	
-//	/**
-//	 * Deleting a finished Quest in the Profile
-//	 * @param String
-//	 */
-//	public void DelSelectable(String selectablePath){
-//		finished.remove(selectablePath);
-//	}
-//	
-//	
-//	
-//	
-//}
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+public class Profile {
+	
+	//File Seperator
+	private static String sep = System.getProperty("file.separator");
+		
+	
+	//General Profile Fields
+	private String name;			//OrdnerName = ProfilName
+	private int xp;					//Anzahl der XP des Benutzers
+	
+	//Folder Names
+	private String profilePath;		//inizialer Profile Pfad
+	private String packagesPath;	//Pfad der Quest Packages
+	private String packagePath;		//Package Pfad
+	
+	//Temporary variables
+	private List<Quest> profileQuests;
+	
+	//Static final Strings
+	public static final String
+		FILE_PROFILE = "profile.xml";
+	
+	public static final String
+		XML_NAME = "name",
+		XML_XP = "xp",
+		XML_PROFILE = "profile",
+		XML_STATE = "state",
+		XML_QUEST = "quest",
+		XML_ID = "id",
+		XML_PACKAGE = "package",
+		XML_DATE ="date";
+	
+	public Profile(){}
+	
+	public Profile(String profilePath, String packagePath){
+		this.profilePath = profilePath;
+		this.packagesPath = packagePath;
+	}
+	
+/**
+ * Returning Sorted Package Quests:
+ * Sorting: (by date)
+ * 	- OPEN			
+ *  - INPROGRESS
+ *  - SELECTABLE
+ *  - FINISHED
+ *  - LOCKED
+ * @param profile
+ * @param allPackagesPath:  the PackageFolderName of the Profile mostly "packages"
+ * @param packagePath: 		the PackagePath of the Current Profile
+ * @return	List<Quest> packageQuests with status updated
+ */
+	public static List<Quest> ReadPackageQuests(Profile profile, String allPackagesPath, String packagePath){
+		List<Quest> packageQuests = Quest.ReadPackageQuests(allPackagesPath, packagePath);
+		List<Quest> profileQuests = profile.getProfileQuests();
+		
+		if(profileQuests == null)
+			return sortQuestList(packageQuests);
+		
+		for(Quest packageQuest : packageQuests){
+			for(Quest profileQuest : profileQuests){
+				if(profileQuest.getTitle().equals(packageQuest.getTitle()) && profileQuest.getPackagePath().equals(packageQuest.getPackagePath())){
+					packageQuest.setState(profileQuest.getState());
+					packageQuest.setDate(profileQuest.getDate());
+					
+				}
+			}
+		}
+		//Sorts the Quests and Returns it
+		return sortQuestList(packageQuests);
+		
+	}
+	/**
+	 * Reading a Profile fully, the "profile.xml"
+	 * @param profilePath
+	 * @param packagesPath
+	 * @return profile
+	 */
+	public static Profile ReadProfile(String profilePath, String packagesPath) {
+		List<String> fileNames = Quest.ReadFileNames(profilePath);
+		
+		if(!fileNames.contains(Profile.FILE_PROFILE))
+			return null;
+		
+		Profile profile = new Profile(profilePath,packagesPath);
+		profile.setName(profilePath.split(sep)[profilePath.split(sep).length-1]);
+		profile.setInitPath(profilePath);
+		
+		String path = profilePath + sep + Profile.FILE_PROFILE;
+		
+		try {
+			profile = ReadProfileXML(path, profile);
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			e.printStackTrace();
+		}
+
+			
+		return profile;
+	}
+	
+	/**
+	 * For reading the .xml file of the Profile "profile.xml"
+	 * @param path: of the profile.xml
+	 * @param profile
+	 * @return fully working profile
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
+	private static Profile ReadProfileXML(String path, Profile profile) throws ParserConfigurationException, SAXException, IOException{
+		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
+		        .newInstance();
+		    DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+		    Document document = docBuilder.parse(new File(path));
+		    profile = readxml(document.getDocumentElement(), profile);
+		    
+	
+			return profile;
+	}
+	
+	/**
+	 * Sub-Klass of ReadProfileXML
+	 * @param node
+	 * @param profile
+	 * @return profile
+	 */
+	private static Profile readxml(Node node, Profile profile) {
+	    //System.out.println(node.getNodeName());
+	    
+		List<Quest> questList = new ArrayList<>();
+		Quest quest = new Quest();
+		 
+			if(node.getNodeName().equals(Profile.XML_XP))
+				 profile.setXp(Integer.parseInt(node.getTextContent()));
+			
+			if(node.getNodeName().equals(Profile.XML_STATE)){
+				String s = node.getAttributes().item(0).getTextContent();
+			if(s.equals(Quest.STATE_FINISHED) || s.equals(Quest.STATE_INPROGRESS) || s.equals(Quest.STATE_SELECTABLE) || s.equals(Quest.STATE_OPEN)){
+				
+				quest.setState(s); //setting the quest State
+				
+				//Iterate through the Nodes
+				 NodeList nodeList = node.getChildNodes();
+				    for (int i = 0; i < nodeList.getLength(); i++) {
+				        Node currentNode = nodeList.item(i);
+				        if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
+				        	if(currentNode.getNodeName().equals(Profile.XML_QUEST)) //quest
+				        		quest.setTitle(currentNode.getTextContent());
+				        	if(currentNode.getNodeName().equals(Profile.XML_PACKAGE)) //package
+				        		quest.setPackagePath(currentNode.getTextContent());
+				        	if(currentNode.getNodeName().equals(Profile.XML_DATE)) //date
+				        		quest.setStringDate(currentNode.getTextContent());
+				        }
+				    }
+				    
+				    //When the Profile Quests wasn't set
+				    if(profile.getProfileQuests() != null)
+				    	questList = profile.getProfileQuests();
+				    
+				    //if all Components are there than only the Quest will be added to ProfileQuests
+				    if(quest != null && quest.getTitle() != null && quest.getPackagePath() != null)
+				    	questList.add(quest);
+
+				    profile.setProfileQuests(questList);
+				}
+			}
+			
+			
+			  NodeList nodeList = node.getChildNodes();
+			    for (int i = 0; i < nodeList.getLength(); i++) {
+			        Node currentNode = nodeList.item(i);
+			        if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
+			            //calls this method for all the children which is Element
+			        	profile = readxml(currentNode, profile);
+			        }
+		    }
+				 
+	
+		    
+		    return profile;
+			
+		}
+	
+	public static void writeProfile(Profile profile, String profilePath){
+        DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder icBuilder;
+        
+        String path = profilePath + sep + Profile.FILE_PROFILE;
+        
+
+            try {
+				icBuilder = icFactory.newDocumentBuilder();
+            Document doc = icBuilder.newDocument();
+            Element mainRootElement = doc.createElementNS(path, Profile.XML_PROFILE);
+            doc.appendChild(mainRootElement);
+            mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_XP, profile.getXp() + ""));
+            
+            
+            if(profile.getProfileQuests() != null)
+            // append xp and state to root element
+            for(Quest q: profile.getProfileQuests())
+            	mainRootElement.appendChild(writeProfileState(doc, q));
+
+            // output DOM XML to console
+            Transformer transformer;
+			transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(doc);
+            
+            //Writing into file
+            StreamResult result = new StreamResult(new File(path));
+            transformer.transform(source, result);
+            
+            //Debug output
+            //System.out.println("\nXML DOM Created Successfully..");
+            
+			} catch (ParserConfigurationException | TransformerConfigurationException
+					| TransformerFactoryConfigurationError e) {
+				e.printStackTrace();
+			} catch (TransformerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+	}
+	
+	private static Node writeProfileState(Document doc, Quest quest){
+        Element state = doc.createElement(Profile.XML_STATE);
+        state.setAttribute("id", quest.getState());
+        state.appendChild(writeProfileElements(doc, state, Profile.XML_QUEST, quest.getTitle()));
+        state.appendChild(writeProfileElements(doc, state, Profile.XML_PACKAGE, quest.getPackagePath()));
+        state.appendChild(writeProfileElements(doc, state, Profile.XML_DATE, quest.getStringDate()));
+        
+        return state;
+	}
+	
+    private static Node writeProfileElements(Document doc, Element element, String name, String value) {
+        Element node = doc.createElement(name);
+        node.appendChild(doc.createTextNode(value));
+        return node;
+    }
+    
+	private static List<Quest> sortQuestList(List<Quest> quests){
+		//Sorting List, up tp Status, Opened, Inprogress, others are at bottom list
+		final List<String> definedOrder =  Arrays.asList(Quest.STATE_LOCKED,Quest.STATE_FINISHED,Quest.STATE_SELECTABLE, Quest.STATE_INPROGRESS,Quest.STATE_OPEN);
+		Comparator<Quest> statecomparator = new Comparator<Quest>(){
+			   
+			@Override
+			   /*
+			    * Sort the List by State
+			    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+			    */
+				public int compare(final Quest o1, final Quest o2){
+			    	
+			        	return Integer.valueOf(definedOrder.indexOf(o2.getState())).compareTo(Integer.valueOf(definedOrder.indexOf(o1.getState())));
+			        	
+			    }};
+
+			    
+			    //Sort the ArrayList by Date
+			    Comparator<Quest> timecomparator = new Comparator<Quest>(){
+					    	@Override
+					    	public int compare(final Quest o1, final Quest o2){
+									Date date1 = o1.getDate();
+									Date date2 = o2.getDate();
+											
+					    		if(o1.getDate() != null && o2.getDate() != null && o1.getState()!= null && o2.getState() != null){
+					    			if(o1.getState().equals(o2.getState())){
+					    				if(o1.getState().equals(Quest.STATE_INPROGRESS)){
+					    					return date2.compareTo(date1);
+					    				}
+					    				else{
+					    					return date1.compareTo(date2);					    					
+					    				}
+					    			}
+					    		}
+								return 0;
+				   	}
+			    };
+			    
+			//Opening the Sorting Method
+			Collections.sort(quests,statecomparator);
+			Collections.sort(quests,timecomparator);
+				
+	    return quests;
+	}
+    
+/**
+ * Changes the State of the Quest, adding new Date and returning new Profile Object.
+ * On wrong Quest file, returning the old Profile
+ * @param profile
+ * @param quest
+ * @param state:
+ * - Quest.State_SELECTABLE
+ * - Quest.State_INPROGRESS
+ * - Quest.State_FINISHED
+ * @return profile
+ */
+	public static Profile changeQuestState(Profile profile, Quest quest, String state){
+		
+		//Returning old Profile if Quest is Null
+		if(quest == null)
+			return profile;
+		
+		
+		//Setting a new Date
+		quest.setnewDate();
+		quest.setState(state);
+		List<Quest> questList;
+		
+		//getting Profile Quests
+		if(profile.getProfileQuests() != null)
+			questList = profile.getProfileQuests();
+		else 
+			questList = new ArrayList<>();
+	
+		//only if Title & Package already exists
+		for(int i = 0; i < questList.size(); i++){
+			if(questList.get(i).getTitle().equals(quest.getTitle()) && questList.get(i).getPackagePath().equals(quest.getPackagePath())){
+				
+				questList.set(i, quest);
+				profile.setProfileQuests(questList);
+				
+				//save Profile
+				writeProfile(profile, profile.getInitPath());
+				return profile;
+			}
+		}
+
+		//if the Variable is not existing in the profile
+		questList.add(quest);
+		profile.setProfileQuests(questList);
+		
+		//save Profile
+		writeProfile(profile, profile.getInitPath());
+			
+		return profile;
+	}
+	
+	/**
+	 * @return the initPath
+	 */
+	public String getInitPath() {
+		return profilePath;
+	}
+	
+	/**
+	 * @param initPath the initPath to set
+	 */
+	public void setInitPath(String initPath) {
+		this.profilePath = initPath;
+	}
+	
+	/**
+	 * @return the packagesPath
+	 */
+	public String getPackagesPath() {
+		return packagesPath;
+	}
+	
+	/**
+	 * @param packagesPath the packagesPath to set
+	 */
+	public void setPackagesPath(String packagesPath) {
+		this.packagesPath = packagesPath;
+	}
+	
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	/**
+	 * For adding XP
+	 * @param xp
+	 */
+	public void addXp(int xp){
+		this.xp = this.xp + xp;
+	}
+	
+	/**
+	 * For subtracting xp
+	 * @param sub
+	 */
+	public void subXp(int xp){
+		this.xp = this.xp - xp;
+		
+		if(this.xp <= 0)
+			this.xp = 0;
+	}
+	
+	/**
+	 * @return the xp
+	 */
+	public int getXp() {
+		return xp;
+	}
+	
+	/**
+	 * @param xp the xp to set
+	 */
+	public void setXp(int xp) {
+		this.xp = xp;
+	}
+	
+	
+	/**
+	 * <b>Calculating and returns the Level</b>
+	 * TODO better Level Calculation
+	 * @return the Level
+	 */
+	public int getLevel(){
+		return (int) Math.sqrt(xp); //square of 2	
+	}
+
+	/**
+	 * @return the profileQuests
+	 */
+	public List<Quest> getProfileQuests() {
+		return profileQuests;
+	}
+
+	/**
+	 * @param profileQuests the profileQuests to set
+	 */
+	public void setProfileQuests(List<Quest> profileQuests) {
+		this.profileQuests = profileQuests;
+	}
+	
+}
