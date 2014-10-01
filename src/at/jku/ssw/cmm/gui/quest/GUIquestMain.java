@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.quest;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
@@ -34,7 +36,7 @@ public class GUIquestMain {
 			System.out.println("[EDT Analyse] Quest GUI runnung on EDT.");
 
 		// Initialize the window
-		this.jFrame = new JFrame("C Compact - Quest Manager");
+		this.jFrame = new JFrame(_("C Compact - Quest Manager"));
 		this.jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.jFrame.getContentPane().setPreferredSize(new Dimension(600, 640));
 		this.jFrame.setMinimumSize(new Dimension(400, 400));
@@ -49,7 +51,7 @@ public class GUIquestMain {
 		jQuestPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		//Title
-		JLabel jLabel1 = new JLabel("Packages and Quests");
+		JLabel jLabel1 = new JLabel(_("Packages and Quests"));
 		jQuestPane.add(jLabel1, BorderLayout.PAGE_START);
          
         //Quest tree
@@ -68,7 +70,7 @@ public class GUIquestMain {
       	jDescPane.setBorder(new EmptyBorder(5, 5, 5, 5));
       		
       	//Title
-      	JLabel jLabel2 = new JLabel("Description");
+      	JLabel jLabel2 = new JLabel(_("Description"));
       	jDescPane.add(jLabel2, BorderLayout.PAGE_START);
       	
       	//Quest description
@@ -83,7 +85,7 @@ public class GUIquestMain {
         progressBar = new JProgressBar(0, 100);
         progressBar.setValue(35);
         progressBar.setStringPainted(true);
-        progressBar.setString("Total Quest Progress: 35%");
+        progressBar.setString(_("Total Quest Progress") + ": 35%");
         
         cp.add(progressBar, BorderLayout.PAGE_END);
 		

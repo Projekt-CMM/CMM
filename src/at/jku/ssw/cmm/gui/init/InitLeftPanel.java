@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.init;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Insets;
@@ -60,7 +62,7 @@ public class InitLeftPanel {
 		
 		//Label saying "input" above the text area for the input stream
 		JPanel valuePanel = new JPanel();
-		valuePanel.setBorder(BorderFactory.createTitledBorder("Input"));
+		valuePanel.setBorder(BorderFactory.createTitledBorder(_("Input")));
 		valuePanel.setLayout(new BorderLayout());
         
 		//The text area for the input stream
@@ -87,7 +89,7 @@ public class InitLeftPanel {
 		
 		//Label saying "output" above the text area for the output stream
 		JPanel valuePanel = new JPanel();
-		valuePanel.setBorder(BorderFactory.createTitledBorder("Output"));
+		valuePanel.setBorder(BorderFactory.createTitledBorder(_("Output")));
 		valuePanel.setLayout(new BorderLayout());
         
 		//The text area for the output stream

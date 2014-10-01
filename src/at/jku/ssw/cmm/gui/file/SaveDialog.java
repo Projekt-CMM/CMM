@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.file;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.io.File;
 
 import javax.swing.JFileChooser;
@@ -52,7 +54,7 @@ public class SaveDialog {
 		
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(new FileNameExtensionFilter(
-				"C-- file", "cmm"));
+				"C-- " + _("file"), "cmm"));
 		if (chooser.showSaveDialog(jFrame) == JFileChooser.APPROVE_OPTION) {
 			FileManagerCode.saveSourceCode(chooser.getSelectedFile(), jSourcePane.getText());
 			settings.setPath(chooser.getSelectedFile().getPath());

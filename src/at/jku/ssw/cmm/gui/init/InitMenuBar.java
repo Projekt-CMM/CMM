@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.init;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -45,50 +47,50 @@ public class InitMenuBar {
 		jFrame.setJMenuBar(menubar);
 		
 		/* --- MENU: "file" --- */
-		JMenu fileM = new JMenu("File");
+		JMenu fileM = new JMenu(_("File"));
 		menubar.add(fileM);
 			
 			// --- file -> new ---
-			JMenuItem newMI = new JMenuItem("New");
+			JMenuItem newMI = new JMenuItem(_("New"));
 			newMI.addActionListener(listener.newFileHandler);
 			fileM.add(newMI);
 		
 			// --- file -> open ---
-			JMenuItem openMI = new JMenuItem("Open");
+			JMenuItem openMI = new JMenuItem(_("Open"));
 			fileM.add(openMI);
 			openMI.addActionListener(listener.openHandler);
 			
 			fileM.addSeparator();
 			
 			// --- file -> save as ---
-			JMenuItem saveAsMI = new JMenuItem("Save As...");
+			JMenuItem saveAsMI = new JMenuItem(_("Save As..."));
 			fileM.add(saveAsMI);
 			saveAsMI.addActionListener(listener.saveAsHandler);
 			
 			// --- file -> save ---
-			JMenuItem saveMI = new JMenuItem("Save...");
+			JMenuItem saveMI = new JMenuItem(_("Save..."));
 			fileM.add(saveMI);
 			saveMI.addActionListener(listener.saveHandler);
 			
 			fileM.addSeparator();
 		
 			// --- file -> exit ---
-			JMenuItem exitMI = new JMenuItem("Exit");
+			JMenuItem exitMI = new JMenuItem(_("Exit"));
 			exitMI.addActionListener(listener.exitHandler);
 			fileM.add(exitMI);
 			
 		/* --- MENU: "view" --- */
-		JMenu viewM = new JMenu("View");
+		JMenu viewM = new JMenu(_("View"));
 		menubar.add(viewM);
 				
 			// --- view -> tables and lists ---
-			JMenuItem tableMI = new JMenuItem("Tables and lists");
+			JMenuItem tableMI = new JMenuItem(_("Tables and lists"));
 			tableMI.addActionListener(listener.viewTableHandler);
 			viewM.add(tableMI);
 			toggle1.registerComponent(tableMI);
 			
 			// --- view -> tables and lists ---
-			JMenuItem treeMI = new JMenuItem("TreeTable");
+			JMenuItem treeMI = new JMenuItem(_("TreeTable"));
 			treeMI.addActionListener(listener.viewTreeHandler);
 			viewM.add(treeMI);
 			toggle1.registerComponent(treeMI);
@@ -97,16 +99,16 @@ public class InitMenuBar {
 		
 		/* --- MENU: "progress" --- */
 		if( GUImain.ADVANCED_GUI ){
-		JMenu questM = new JMenu("Progress");
+		JMenu questM = new JMenu(_("Progress"));
 		menubar.add(questM);
 		
 			// --- progress -> profile ---
-			JMenuItem profileMI = new JMenuItem("Select Profile");
+			JMenuItem profileMI = new JMenuItem(_("Select Profile"));
 			profileMI.addActionListener(listener.profileHandler);
 			questM.add(profileMI);
 					
 			// --- progress -> quests ---
-			JMenuItem questMI = new JMenuItem("Quests");
+			JMenuItem questMI = new JMenuItem(_("Select Quest"));
 			questMI.addActionListener(listener.questHandler);
 			questM.add(questMI);
 		}

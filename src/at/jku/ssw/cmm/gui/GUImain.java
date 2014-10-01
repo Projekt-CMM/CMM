@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
@@ -18,6 +20,7 @@ import javax.swing.text.Highlighter;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+import at.jku.ssw.cmm.gettext.Language;
 import at.jku.ssw.cmm.gui.event.MainKeyListener;
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.event.WindowComponentListener;
@@ -78,7 +81,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	
 	public static final char BREAKPOINT = '\u2326';
 	
-	public static final boolean ADVANCED_GUI = false;
+	public static final boolean ADVANCED_GUI = true;
 	
 	public static final String VERSION = "C Compact Alpha 1.0";
 
@@ -106,6 +109,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 		
 		if( SwingUtilities.isEventDispatchThread() )
 			System.out.println("[EDT Analyse] Main GUI runnung on EDT.");
+		
+		//Load translations
+		//Language.loadLanguage("by");
 
 		// Initialize the window
 		this.jFrame = new JFrame(VERSION);
@@ -209,8 +215,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 
 	@Override
 	public void updateWinFileName() {
-		if( this.settings.getPath() == null )
-			this.jFrame.setTitle(VERSION + " - Unnamed");
+		if( this.settings.getPath() == null ){
+			this.jFrame.setTitle(VERSION + " - " + _("Unnamed"));
+		}
 		else
 			this.jFrame.setTitle(VERSION + " - " + this.settings.getPath());
 	}
@@ -362,16 +369,16 @@ public class GUImain implements GUImainMod, PopupInterface {
 	
 	@Override
 	public void startQuestGUI(){
-		System.out.println("Opening Quest Selection Window...");
+		System.out.println("[log][GUImain]Opening Quest Selection Window...");
 		new GUIquestMain().start();
 	}
 	
 	@Override
 	public void selectProfile(){
-		System.out.println("Opening Profile Selection Window...");
-		JFileChooser chooser = new JFileChooser("Select a profile...");
+		System.out.println("[log][GUImain]Opening Profile Selection Window...");
+		JFileChooser chooser = new JFileChooser(_("Select a profile..."));
 		chooser.setFileFilter(new FileNameExtensionFilter(
-				"C Compact Profile", "xml"));
+				_("C Compact Profile"), "xml"));
 		chooser.showOpenDialog(jFrame);
 	}
 	

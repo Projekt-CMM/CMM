@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.event;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -79,7 +81,7 @@ public class MenuBarEventListener {
 			if( modifier.isCodeChangeAllowed() ){
 				//Create file chooser (opens a window to select a file)
 				JFileChooser chooser = new JFileChooser();
-				chooser.setFileFilter(new FileNameExtensionFilter("C-- file", "cmm"));
+				chooser.setFileFilter(new FileNameExtensionFilter("C-- " + _("file"), "cmm"));
 				
 				//User selected a file
 				if (chooser.showOpenDialog(jFrame) == JFileChooser.APPROVE_OPTION) {

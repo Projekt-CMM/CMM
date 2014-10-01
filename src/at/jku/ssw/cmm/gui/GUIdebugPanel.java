@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -263,7 +265,7 @@ public class GUIdebugPanel {
 		pane1.add(jButtonStop);
 
 		/* --- RUNTIME ERROR LABELS --- */
-		this.jRuntimeErrorLabel1 = new JLabel("Runtime Error:");
+		this.jRuntimeErrorLabel1 = new JLabel(_("Runtime Error")+":");
 		pane1.add(this.jRuntimeErrorLabel1);
 		this.jRuntimeErrorLabel1.setVisible(false);
 
@@ -300,7 +302,7 @@ public class GUIdebugPanel {
 		JPanel paneGlobal1 = new JPanel();
 		paneGlobal1.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		jLabel1 = new JLabel("Global variables");
+		jLabel1 = new JLabel(_("Global variables"));
 		jLabel1.setAlignmentX(Component.CENTER_ALIGNMENT);
 		paneGlobal1.add(jLabel1);
 
@@ -309,8 +311,6 @@ public class GUIdebugPanel {
 		paneGlobal1.add(jButtonB1);
 		this.jButtonB1.setVisible(false);
 
-		if( this.visToggle == null )
-			System.out.println("noll error");
 		this.visToggle.registerComponent(0, paneGlobal1);
 		this.jPanelVarInfo.add(paneGlobal1);
 
@@ -332,7 +332,7 @@ public class GUIdebugPanel {
 		this.visToggle.registerComponent(0, this.jTableGlobalContainer);
 
 		/* ---------- CALL STACK ---------- */
-		jLabel2 = new JLabel("Call Stack");
+		jLabel2 = new JLabel(_("Call Stack"));
 		jLabel2.setAlignmentX(Component.CENTER_ALIGNMENT);
 		this.jPanelVarInfo.add(jLabel2);
 		
@@ -358,7 +358,7 @@ public class GUIdebugPanel {
 		JPanel paneLocal1 = new JPanel();
 		paneLocal1.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		jLabel3 = new JLabel("Local variables");
+		jLabel3 = new JLabel(_("Local variables"));
 		jLabel3.setAlignmentX(Component.CENTER_ALIGNMENT);
 		paneLocal1.add(jLabel3);
 
@@ -388,7 +388,7 @@ public class GUIdebugPanel {
 		this.jRightPanel.add(this.jPanelVarInfo);
 		
 		/* ---------- TREE TABLE for CALL STACK and LOCALS (optional) ---------- */
-		JLabel jLabelTreeTable = new JLabel("Variables");
+		JLabel jLabelTreeTable = new JLabel(_("Variables"));
 		this.visToggle.registerComponent(1, jLabelTreeTable);
 		this.jPanelVarInfo.add(jLabelTreeTable);
 		
@@ -668,7 +668,7 @@ public class GUIdebugPanel {
 		this.callStackSize = ReadCallStack.readCallStack().size();
 
 		if (this.callStackSize <= this.stepTarget) {
-			System.out.println("Step completed");
+			System.out.println("[interpreter][GUIdebugPanel]Step completed");
 			this.listener.stepComplete();
 			this.stepTarget = -1;
 			return true;
@@ -692,7 +692,7 @@ public class GUIdebugPanel {
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					synchronized (localVarLock) {
-						jLabel3.setText("Local Variables @ "
+						jLabel3.setText(_("Local Variables") + " @ "
 								+ localVarBrowser.peek().getName());
 					}
 				}
@@ -836,7 +836,7 @@ public class GUIdebugPanel {
 		synchronized (globalVarLock) {
 			this.globalVarBrowser.clear();
 			this.globalVarBrowser.add(new StructureContainer(
-					"Global variables", StructureContainer.GLOBAL, Memory
+					_("Global variables"), StructureContainer.GLOBAL, Memory
 							.getGlobalPointer()));
 		}
 		
@@ -1013,7 +1013,7 @@ public class GUIdebugPanel {
 	 *            delay time in seconds
 	 */
 	public void setTimerLabelSeconds(double s) {
-		this.jLabelTimer.setText("" + s + " sec");
+		this.jLabelTimer.setText("" + s + " " + _("sec"));
 	}
 
 	/**
@@ -1096,7 +1096,7 @@ public class GUIdebugPanel {
 	public void stepOver() {
 		this.stepTarget = this.callStackSize;
 		this.listener.stepOver();
-		System.out.println("Stepping over...");
+		System.out.println("[interpreter][GUIdebugPanel]Stepping over...");
 	}
 
 	public void updateStepOutButton() {
@@ -1119,7 +1119,7 @@ public class GUIdebugPanel {
 		if (this.callStackSize > 1) {
 			this.stepTarget = this.callStackSize - 1;
 			this.listener.stepOver();
-			System.out.println("Stepping out...");
+			System.out.println("[interpreter][GuidebugPanel]Stepping out...");
 		}
 	}
 	
@@ -1156,7 +1156,7 @@ public class GUIdebugPanel {
 			// An include file could not be found
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					listener.setErrorMode("Preprocessor error", "Include file not found: \"" + e1.getFileName() + "\"", e1.getLine(), 0);
+					listener.setErrorMode(_("Preprocessor error"), _("Include file not found") + ": \"" + e1.getFileName() + "\"", e1.getLine(), 0);
 				}
 			});
 			return;

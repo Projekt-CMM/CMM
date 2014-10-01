@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.BorderLayout;
 
 import javax.swing.JButton;
@@ -39,14 +41,14 @@ public class GUIrightPanel {
 			//Debug Panel
 			JPanel jDebugPanel = new JPanel();
 			jDebugPanel.setLayout(new BorderLayout());
-			tabbedPane.add(jDebugPanel, "Debug");
+			tabbedPane.add(jDebugPanel, _("Debug"));
 			debugPanel = new GUIdebugPanel( jDebugPanel, mod, popup );
 	
 			//Quest Panel
 			JPanel jQuestPanel = new JPanel();
 			if( GUImain.ADVANCED_GUI ){
 				jQuestPanel.setLayout(new BorderLayout());
-				tabbedPane.add(jQuestPanel, "Quest");
+				tabbedPane.add(jQuestPanel, _("Quest"));
 				questPanel = new GUIquestPanel( jQuestPanel, mod );
 			}
 		

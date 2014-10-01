@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.event;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -82,12 +84,12 @@ public class WindowEventListener implements WindowListener {
 		if( settings.getPath() == null ){
 					
 			//Custom button text
-			Object[] options = {"Yes", "No"};
+			Object[] options = {_("Yes"), _("No")};
 					
 			//Init warning dialog with two buttons
 			int n = JOptionPane.showOptionDialog( jFrame,
-				"Do you want to save \"Unnamed\"",
-				"Closing the C-- IDE",
+				_("Do you want to save the new file?"),
+				_("Closing the C-- IDE"),
 				JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE,
 				null,     			//do not use a custom Icon
@@ -103,12 +105,12 @@ public class WindowEventListener implements WindowListener {
 		else if( jFrame.getTitle().endsWith("*") ){
 							
 			//Custom button text
-			Object[] options = {"Save now", "Close without saving"};
+			Object[] options = {_("Save now"), _("Close without saving")};
 							
 			//Init warning dialog with two buttons
 			int n = JOptionPane.showOptionDialog( jFrame,
-				"The current file has not yet been saved!",
-				"Closing the C-- IDE",
+				_("The current file has not yet been saved!"),
+				_("Closing the C-- IDE"),
 				JOptionPane.YES_NO_OPTION,
 				JOptionPane.WARNING_MESSAGE,
 				null,     			//do not use a custom Icon
