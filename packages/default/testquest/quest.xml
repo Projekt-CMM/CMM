@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <quest>
-	<!-- The Title of the Quest-->
-	<title>Hallo Welt</title>
-
-	<!-- The xp you can gain from this Quest -->
+	<!-- Titel der Quest – String -->
+	<!-- XP die man bei dieser Quest bekommen kann - Integer -->
 	<xp>1000</xp>
-
-	<!-- Status only nessesery if this is the first Quest -->
-	<state>opened</state>
-
-	 <!-- No / or multiple Next Quests allowed -->
+	<!-- Status, nur bei der ersten Quest notwendig – String -->
+	 <!-- Weiterfuehrende Quests, keine oder mehrere Quests moeglich – String -->
 	<nextquest>quest2.xml</nextquest>
 	<nextquest>quest3.xml</nextquest>
 </quest>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<profile>
-	<xp>1620</xp>
-	<fullname>Peter Wassermair</fullname>
-	<school></school>
+<profile xmlns="profileTest/profile.xml">
+<xp>0</xp>
+<state id="inprogress">
+<quest>testquest</quest>
+<package>default</package>
+<date>01-10-2014:15:17:292</date>
+</state>
 </profile>

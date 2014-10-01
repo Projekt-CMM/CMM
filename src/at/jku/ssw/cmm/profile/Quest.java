@@ -2,7 +2,14 @@ package at.jku.ssw.cmm.profile;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -19,28 +26,29 @@ public class Quest {
 	//File Seperator
 	private static String sep = System.getProperty("file.separator");
 	
-	//General Variables
-	private String title;
-	private String state;
-	private String token;
-	private ArrayList<String> nextQuest;
-	private int xp;
-	private boolean style;
-	private boolean description;
+	//Variablen abgeleitet von der quest.xml
+	private String title;					//Titel der Quest
+	private String token;					//Token welches man beim Abschluss bekommt
+	private List<String> nextQuest;	//nächste Quest
+	private int xp;							//die zu bekommenden XP bei geschaffter Quest.
+	private boolean description;			//Beschreibung: description.html
+	private boolean style;					//Stylesheet: style.css
+	private String state;					//Status wird mit Profil abgeglichen
+	private Date date;						//Datum der letzten Bearbeitung
+		
+	//Ordner der Quest
+	private String initPath;				//Inizialisierungspfad:
+	private String packagePath;				//Package-Ordner
+	private String questPath;				//Quest-Ordner
 	
-	//Temporary
-	private String questPath;
-	private String packagePath;
-	private ArrayList<String> FileNames;
-	
-	//Folders and Files
-	private String initPath;
+	//Temporary file data
 	private String folderName;
-	private String fileName;
+	private String fileName;	
 	
 	public static final String
 		FILE_DESCRIPTION = "description.html",
-		FILE_STYLE = "style.css";
+		FILE_STYLE = "style.css",
+		FiLE_QUEST = "quest.xml";
 	
 	public static final String
 		XML_QUEST = "quest",
@@ -50,14 +58,25 @@ public class Quest {
 		XML_NEXTQUEST = "nextquest",
 		XML_STATE = "state";
 
+	public static final String
+		STATE_LOCKED = "locked",
+		STATE_SELECTABLE = "selectable",
+		STATE_INPROGRESS = "inprogress",
+		STATE_OPEN = "open",
+		STATE_FINISHED = "finished";
+	
+	//Time Format
+	public static final String
+	TIME_FORMAT = "dd-MM-yyyy:HH:mm:SS";
+	
 	/**
 	 * For Reading All Quests
 	 * @param AllPackagesPath: the initial Path of all Packages
 	 * @return allQuests: containing all Quests sorted TODO
 	 */
-	public static ArrayList<Quest> ReadAllQuests(String allPackagesPath){
-		ArrayList<String> packageFolderNames = ReadFolderNames(allPackagesPath);
-		ArrayList<Quest> allQuests = new ArrayList<>();
+	public static List<Quest> ReadAllQuests(String allPackagesPath){
+		List<String> packageFolderNames = ReadFolderNames(allPackagesPath);
+		List<Quest> allQuests = new ArrayList<>();
 		
 		if(packageFolderNames != null){
 			for(int i = 0; i < packageFolderNames.size();i++){
@@ -76,10 +95,10 @@ public class Quest {
 	 * @param packagePath: the folder Name of the Package
 	 * @return packageQuests: all Quests of one package
 	 */
-	public static ArrayList<Quest> ReadPackageQuests(String allPackagesPath, String packagePath){
+	public static List<Quest> ReadPackageQuests(String allPackagesPath, String packagePath){
 		
-		ArrayList<String> questFolderNames = ReadFolderNames(allPackagesPath + sep + packagePath);
-		ArrayList<Quest> packageQuests = new ArrayList<>();
+		List<String> questFolderNames = ReadFolderNames(allPackagesPath + sep + packagePath);
+		List<Quest> packageQuests = new ArrayList<>();
 		
 		for(int i = 0;i < questFolderNames.size(); i++){
 			Quest quest;
@@ -88,8 +107,6 @@ public class Quest {
 					if(quest!= null)
 						packageQuests.add(quest);
 					
-
-			
 			}
 				
 		
@@ -104,27 +121,30 @@ public class Quest {
 	 * @param questPath: the foldername of the quests folder
 	 * @return quest
 	 */
-	public static Quest ReadQuest(String allPackagesPath, String packagePath, String questPath) {	
+	public static Quest ReadQuest(String allPackagesFolder, String packageFolder, String questFolder) {	
 			Quest quest = new Quest();
-			String path = allPackagesPath + sep + packagePath + sep + questPath;
+			String path = allPackagesFolder + sep + packageFolder + sep + questFolder;
 			
-			ArrayList<String> fileNames = ReadFileNames(path);
-			if(fileNames != null){
+			List<String> fileNames = ReadFileNames(path);
+			
+			//Folder has to have any Files and a Quest File.
+			if(fileNames != null && fileNames.contains(Quest.FiLE_QUEST)){
+				//Foldername = questtitle
+				quest.setTitle(questFolder);
+				
 				if(fileNames.contains(Quest.FILE_DESCRIPTION))
 					quest.setDescription(true);
 				if(fileNames.contains(Quest.FILE_STYLE))
 					quest.setStyle(true);
 				
 				//Setting Quest Paths for later use:
-				quest.setInitPath(allPackagesPath);
-				quest.setPackagePath(packagePath);
-				quest.setQuestPath(questPath);
+				quest.setInitPath(allPackagesFolder);
+				quest.setPackagePath(packageFolder);
+				quest.setQuestPath(questFolder);
 				
 				try {
 					quest = ReadQuestXML(path,quest);
-				} catch (ParserConfigurationException | SAXException
-						| IOException e) {
-					// TODO Auto-generated catch block
+				} catch (ParserConfigurationException | SAXException | IOException e) {
 					e.printStackTrace();
 				}
 				
@@ -137,9 +157,9 @@ public class Quest {
 	
 	private static Quest ReadQuestXML(String path, Quest quest) throws ParserConfigurationException, SAXException, IOException{
 
-		ArrayList<String> nextQuest = new ArrayList<>();
+		List<String> nextQuest = new ArrayList<>();
 		
-		File file = new File(path + sep + "quest.xml");
+		File file = new File(path + sep + Quest.FiLE_QUEST);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(file);
@@ -157,10 +177,20 @@ public class Quest {
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 	 
 				Element eElement = (Element) nNode;
-				quest.setTitle(eElement.getElementsByTagName(Quest.XML_TITLE).item(0).getTextContent());
+				//quest.setTitle(eElement.getElementsByTagName(Quest.XML_TITLE).item(0).getTextContent());
 				quest.setXp(Integer.parseInt(eElement.getElementsByTagName(Quest.XML_XP).item(0).getTextContent()));
-				quest.setState(eElement.getElementsByTagName(Quest.XML_STATE).item(0).getTextContent());
-				
+				try{
+				String s = eElement.getElementsByTagName(Quest.XML_STATE).item(0).getTextContent();
+					if(s.contains(Quest.STATE_SELECTABLE) || s.contains(Quest.STATE_LOCKED))
+						quest.setState(eElement.getElementsByTagName(Quest.XML_STATE).item(0).getTextContent());
+					else
+						throw new NullPointerException();
+						
+				}catch(NullPointerException e){
+					//setting to status locked
+					//System.out.println("No / Wrong State set!");
+					quest.setState(Quest.STATE_LOCKED);
+				}
 				for(int x = 0; x < eElement.getElementsByTagName(Quest.XML_NEXTQUEST).getLength(); x++){
 					nextQuest.add(eElement.getElementsByTagName(Quest.XML_NEXTQUEST).item(x).getTextContent());
 				}
@@ -176,10 +206,10 @@ public class Quest {
 	/**
 	 * Reads all Folders on the specific path, excluded tokens folder
 	 * @param folderPath
-	 * @return ArrayList<String> folderNames / or null on non existing folder
+	 * @return List<String> folderNames / or null on non existing folder
 	 */
-	public static ArrayList<String> ReadFolderNames(String path) {
-		ArrayList<String> folderNames = new ArrayList<>();
+	public static List<String> ReadFolderNames(String path) {
+		List<String> folderNames = new ArrayList<>();
 		
 		File folder = new File(path);
 		if(!folder.exists())
@@ -202,10 +232,10 @@ public class Quest {
 	/**
 	 * Reads all Files of the specific folder
 	 * @param folderPath
-	 * @return ArrayList<Strin> fileNames / or null on non existing folder
+	 * @return List<Strin> fileNames / or null on non existing folder
 	 */
-	public static ArrayList<String> ReadFileNames(String path) {
-		ArrayList<String> fileNames = new ArrayList<>();
+	public static List<String> ReadFileNames(String path) {
+		List<String> fileNames = new ArrayList<>();
 		
 		File folder = new File(path);
 		if(!folder.exists())
@@ -311,20 +341,6 @@ public class Quest {
 	}
 
 	/**
-	 * @return the fileNames
-	 */
-	public ArrayList<String> getFileNames() {
-		return FileNames;
-	}
-
-	/**
-	 * @param fileNames the fileNames to set
-	 */
-	public void setFileNames(ArrayList<String> fileNames) {
-		FileNames = fileNames;
-	}
-
-	/**
 	 * @return the initPath
 	 */
 	public String getInitPath() {
@@ -397,16 +413,55 @@ public class Quest {
 	/**
 	 * @return the nextQuest
 	 */
-	public ArrayList<String> getNextQuest() {
+	public List<String> getNextQuest() {
 		return nextQuest;
 	}
 
 	/**
 	 * @param nextQuest the nextQuest to set
 	 */
-	public void setNextQuest(ArrayList<String> nextQuest) {
+	public void setNextQuest(List<String> nextQuest) {
 		this.nextQuest = nextQuest;
+	}
+
+	/**
+	 * @return the time as String
+	 */
+	public Date getDate() {
+		return date;
+	}
+	/**
+	 * @param time the time to set
+	 */
+	public void setnewDate() {
+		date = new Date();
+		
+	}
+	
+	public void setDate(Date date){
+		this.date = date;
+	}
+	/**
+	 * @param date the date to set
+	 */
+	public void setStringDate(String date) {
+		try {
+			this.date = new SimpleDateFormat(Quest.TIME_FORMAT, Locale.ENGLISH).parse(date);
+		} catch (ParseException e) {
+			//if(Settings.debug)System.out.println("Unknown Data Format, setting new Date");
+			setnewDate();
+		}
+	}
+	
+	/**Quest
+	 * 
+	 * @return String Value of Date
+	 */
+	public String getStringDate(){
+		SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(Quest.TIME_FORMAT);
+		return DATE_FORMAT.format(date);
 	}	
+	
 	
 	
 }
