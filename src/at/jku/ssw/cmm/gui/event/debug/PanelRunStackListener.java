@@ -5,16 +5,16 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JList;
 
-import at.jku.ssw.cmm.gui.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.debug.TableView;
 
 public class PanelRunStackListener {
 
-	public PanelRunStackListener( GUIdebugPanel master, JList<Object> jCallStack2 ){
+	public PanelRunStackListener( TableView master, JList<Object> jCallStack2 ){
 		this.master = master;
 		this.jCallStack = jCallStack2;
 	}
 	
-	private final GUIdebugPanel master;
+	private final TableView master;
 	private final JList<Object> jCallStack;
 	
 	//Call stack listener

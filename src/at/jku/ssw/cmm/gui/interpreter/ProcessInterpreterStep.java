@@ -1,7 +1,7 @@
 package at.jku.ssw.cmm.gui.interpreter;
 
 import at.jku.ssw.cmm.compiler.Node;
-import at.jku.ssw.cmm.gui.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 /**
  * UNUSED
@@ -22,12 +22,7 @@ public class ProcessInterpreterStep {
 
 	public void interpret(Node n) {
 
-		this.master.selectFunction();
-		this.master.globalSelectRoot();
-
-		this.master.updateGlobals();
-		this.master.updateCallStack();
-		this.master.updateLocals();
+		this.master.updateVariableTables();
 
 		switch (n.kind) {
 		case Node.ASSIGN:

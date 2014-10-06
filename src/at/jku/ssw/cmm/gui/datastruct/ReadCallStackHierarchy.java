@@ -1,6 +1,5 @@
 package at.jku.ssw.cmm.gui.datastruct;
 
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -9,8 +8,7 @@ import at.jku.ssw.cmm.CMMwrapper;
 import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Strings;
 import at.jku.ssw.cmm.compiler.Struct;
-import at.jku.ssw.cmm.gui.GUIdebugPanel;
-import at.jku.ssw.cmm.gui.event.debug.PanelRunLinkListener;
+import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.treetable.DataNode;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
@@ -103,9 +101,8 @@ public class ReadCallStackHierarchy {
 				}
 				if( obj.type.kind == Struct.STRING && obj.kind != Obj.PROC ){
 					JButton b = new JButton(Strings.get(Memory.loadStringAddress(address + obj.adr)));
-					MouseListener l = new PanelRunLinkListener( listenerModifier, obj.name,
-							StructureContainer.STRING, address + obj.adr, false, b );
-					b.addMouseListener(l);
+					//MouseListener l = new PanelRunLinkListener( listenerModifier, obj.name,StructureContainer.STRING, address + obj.adr, false, b );
+					//b.addMouseListener(l);
 					
 					node.add(new DataNode(obj.name, "string", b, null));
 				}

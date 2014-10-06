@@ -5,11 +5,11 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 
-import at.jku.ssw.cmm.gui.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.debug.TableView;
 
 public class PanelRunLinkListener implements MouseListener {
 	
-	public PanelRunLinkListener( GUIdebugPanel master, String name, int type, int address, boolean global, JButton b ){
+	public PanelRunLinkListener( TableView master, String name, int type, int address, boolean global, JButton b ){
 		this.master = master;
 		this.name = name;
 		this.type = type;
@@ -18,7 +18,7 @@ public class PanelRunLinkListener implements MouseListener {
 		this.b = b;
 	}
 	
-	private final GUIdebugPanel master;
+	private final TableView master;
 	private final int type;
 	private final String name;
 	private final int address;

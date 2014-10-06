@@ -13,7 +13,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.GUImainSettings;
-import at.jku.ssw.cmm.gui.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.event.LanguageListener;
 import at.jku.ssw.cmm.gui.event.MenuBarEventListener;
 import at.jku.ssw.cmm.gui.file.SaveDialog;

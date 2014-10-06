@@ -1,51 +1,31 @@
-package at.jku.ssw.cmm.gui;
+package at.jku.ssw.cmm.gui.debug;
 
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSlider;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.border.TitledBorder;
 
 import at.jku.ssw.cmm.CMMwrapper;
-import at.jku.ssw.cmm.compiler.Strings;
 import at.jku.ssw.cmm.gui.datastruct.ReadCallStack;
-import at.jku.ssw.cmm.gui.datastruct.ReadCallStackHierarchy;
-import at.jku.ssw.cmm.gui.datastruct.ReadSymbolTable;
-import at.jku.ssw.cmm.gui.datastruct.StructureContainer;
-import at.jku.ssw.cmm.gui.datastruct.VarTableModel;
-import at.jku.ssw.cmm.gui.event.debug.PanelRunBrowseListener;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
-import at.jku.ssw.cmm.gui.event.debug.PanelRunStackListener;
 import at.jku.ssw.cmm.gui.exception.IncludeNotFoundException;
 import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
 import at.jku.ssw.cmm.gui.interpreter.IOstream;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.gui.popup.PopupInterface;
-import at.jku.ssw.cmm.gui.popup.StringPopup;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
-import at.jku.ssw.cmm.gui.utils.JTableButtonMouseListener;
-import at.jku.ssw.cmm.gui.utils.JTableButtonRenderer;
-import at.jku.ssw.cmm.interpreter.memory.Memory;
-import at.jku.ssw.cmm.interpreter.memory.MethodContainer;
 
 /**
  * Controls the right panel of the main GUI. This is a bit more complex, as this
@@ -77,10 +57,6 @@ public class GUIdebugPanel {
 		this.cp = cp;
 		
 		this.modifier = mod;
-	
-		this.popup = popup;
-		
-		this.visToggle = new VarTableVisToggle();
 
 		this.jRightPanel = new JPanel();
 
@@ -89,39 +65,37 @@ public class GUIdebugPanel {
 		
 		this.initRunMode();
 
-		this.viewMode = VM_TABLE;
+		jVarPanel = new JPanel();
+		jVarPanel.setBorder(new TitledBorder(_("Variables")));
+		jVarPanel.setLayout(new BoxLayout(jVarPanel, BoxLayout.PAGE_AXIS));
+		this.varView = new TableView( this, jVarPanel, popup );
+		this.jRightPanel.add(jVarPanel);
+		
 		this.stepTarget = -1;
 		this.sourceCodeBeginLine = 0;
 
 		this.listener.reset();
-
-		this.globalVarBrowser = new Stack<>();
-		this.localVarBrowser = new Stack<>();
-
-		this.globalVarLock = new Object();
-		this.localVarLock = new Object();
 		
 		this.cp.add(this.jRightPanel, BorderLayout.CENTER);
 		
 		this.breakpoints = new ArrayList<>();
 	}
 	
+	public static final byte VM_TABLE = 0;
+	public static final byte VM_TREETABLE = 1;
+	
 	private final JComponent cp;
+	
+	private JPanel jVarPanel;
 
 	// Interface for main GUI manipulations
 	private final GUImainMod modifier;
-	
-	private final PopupInterface popup;
 
 	// Interface of the right panel (edit text, compile
 	// error, interpreter)
 	private final JPanel jRightPanel;
 
-	// Variable view mode of the right panel (table and call stack, tree table, ...)
-	private byte viewMode;
-	
-	public static final byte VM_TABLE = 0;
-	public static final byte VM_TREE = 1;
+	private VariableView varView;
 
 	// Wrapper class with listeners for the "run" mode. Also contains the debug
 	// and I/O stream interface
@@ -158,51 +132,11 @@ public class GUIdebugPanel {
 	private JLabel jRuntimeErrorLabel2;
 	private JLabel jRuntimeErrorLabel3;
 
-	// Panel containing tables for variables and the call stack list
-	// These objects are in an separate panel so that they can be removed during
-	// runtime
-	private JPanel jPanelVarInfo;
-
-	private JLabel jLabel1;
-	private JButton jButtonB1;
-
-	// Label saying "local variables". Can be edited so that it also shows the
-	// function name
-	private JLabel jLabel3;
-	private JButton jButtonB2;
-
-	// Table of global variables
-	private JTable jTableGlobal;
-
-	// Data model for the global variables tables
-	private VarTableModel jTableGlobalModel;
 	
-	private JScrollPane jTableGlobalContainer;
-
-	// Table of local variables
-	private JTable jTableLocal;
-
-	// Data model for the global variables tables
-	private VarTableModel jTableLocalModel;
-	
-	private JScrollPane jTableLocalContainer;
-
-	// Call stack list object
-	private JList<Object> jCallStack;
-	
-	private JLabel jLabel2;
-
-	// SelectedFunction
-	private final Stack<StructureContainer> globalVarBrowser;
-	private final Stack<StructureContainer> localVarBrowser;
 	
 	// Tree table for variables
 	private TreeTable varTreeTable;
 	private TreeTableDataModel varTreeTableModel;
-
-	// Synchronized lock objects for variable browsers
-	private final Object globalVarLock;
-	private final Object localVarLock;
 
 	// Step over counter
 	private int stepTarget;
@@ -213,9 +147,6 @@ public class GUIdebugPanel {
 	
 	// List of Breakpoints
 	private final List<Integer> breakpoints;
-	
-	//Manager for setting visible and invisible tables of different view modes
-	private final VarTableVisToggle visToggle;
 
 	/**
 	 * Initializes the objects of the "run" mode, which is active during
@@ -228,9 +159,6 @@ public class GUIdebugPanel {
 	 */
 	private void initRunMode() {
 
-		// Panel layout
-		this.jRightPanel.setBorder(BorderFactory
-				.createLineBorder(Color.DARK_GRAY));
 		this.jRightPanel.setLayout(new BoxLayout(this.jRightPanel,
 				BoxLayout.PAGE_AXIS));
 
@@ -292,103 +220,10 @@ public class GUIdebugPanel {
 		this.jRightPanel.add(pane1);
 		// Sub-panel end
 
-		// Sub-panel with variable information tables and call stack list
-		this.jPanelVarInfo = new JPanel();
-		this.jPanelVarInfo.setBorder(new EmptyBorder(5, 5, 5, 5));
-		this.jPanelVarInfo.setLayout(new BoxLayout(this.jPanelVarInfo,
-				BoxLayout.PAGE_AXIS));
-
-		/* ---------- TABLE FOR GLOBAL VARs ---------- */
-		JPanel paneGlobal1 = new JPanel();
-		paneGlobal1.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		jLabel1 = new JLabel(_("Global variables"));
-		jLabel1.setAlignmentX(Component.CENTER_ALIGNMENT);
-		paneGlobal1.add(jLabel1);
-
-		jButtonB1 = new JButton("\u2190");
-		jButtonB1.addMouseListener(new PanelRunBrowseListener(this, true));
-		paneGlobal1.add(jButtonB1);
-		this.jButtonB1.setVisible(false);
-
-		this.visToggle.registerComponent(0, paneGlobal1);
-		this.jPanelVarInfo.add(paneGlobal1);
-
-		this.jTableGlobalModel = new VarTableModel();
-		this.jTableGlobal = new JTable(this.jTableGlobalModel);
-
-		TableCellRenderer defaultRenderer;
-		defaultRenderer = this.jTableGlobal.getDefaultRenderer(JButton.class);
-		this.jTableGlobal.getColumn("Value").setCellRenderer(
-				new JTableButtonRenderer(defaultRenderer));
-
-		this.jTableGlobal.addMouseListener(new JTableButtonMouseListener(
-				this.jTableGlobal));
-
-		this.jTableGlobalContainer = new JScrollPane(this.jTableGlobal);
-		this.jTableGlobal.setFillsViewportHeight(true);
-		this.jPanelVarInfo.add(this.jTableGlobalContainer);
 		
-		this.visToggle.registerComponent(0, this.jTableGlobalContainer);
-
-		/* ---------- CALL STACK ---------- */
-		jLabel2 = new JLabel(_("Call Stack"));
-		jLabel2.setAlignmentX(Component.CENTER_ALIGNMENT);
-		this.jPanelVarInfo.add(jLabel2);
-		
-		this.visToggle.registerComponent(0, jLabel2);
-
-		Object[] space = { " ", " ", " ", " ", " " };
-
-		this.jCallStack = new JList<Object>(space);
-		this.jCallStack.setBorder(BorderFactory
-				.createLineBorder(Color.DARK_GRAY));
-		this.jCallStack.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Only
-																				// one
-																				// item
-																				// selectable
-		this.jCallStack.setLayoutOrientation(JList.VERTICAL);
-		this.jCallStack.setVisibleRowCount(10);
-		JScrollPane scrollPane2 = new JScrollPane(this.jCallStack);
-		this.jPanelVarInfo.add(scrollPane2);
-		
-		this.visToggle.registerComponent(0, scrollPane2);
-
-		/* ---------- TABLE FOR LOCAL VARs ---------- */
-		JPanel paneLocal1 = new JPanel();
-		paneLocal1.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		jLabel3 = new JLabel(_("Local variables"));
-		jLabel3.setAlignmentX(Component.CENTER_ALIGNMENT);
-		paneLocal1.add(jLabel3);
-
-		jButtonB2 = new JButton("\u2190");
-		jButtonB2.addMouseListener(new PanelRunBrowseListener(this, false));
-		paneLocal1.add(jButtonB2);
-		this.jButtonB2.setVisible(false);
-
-		this.jPanelVarInfo.add(paneLocal1);
-		this.visToggle.registerComponent(0, paneLocal1);
-		
-		this.jTableLocalModel = new VarTableModel();
-		this.jTableLocal = new JTable(this.jTableLocalModel);
-
-		defaultRenderer = this.jTableLocal.getDefaultRenderer(JButton.class);
-		this.jTableLocal.setDefaultRenderer(JButton.class,
-				new JTableButtonRenderer(defaultRenderer));
-
-		this.jTableLocal.addMouseListener(new JTableButtonMouseListener(
-				this.jTableLocal));
-
-		this.jTableLocalContainer = new JScrollPane(this.jTableLocal);
-		this.jTableLocal.setFillsViewportHeight(true);
-		this.jPanelVarInfo.add(this.jTableLocalContainer);
-		this.visToggle.registerComponent(0, this.jTableLocalContainer);
-
-		this.jRightPanel.add(this.jPanelVarInfo);
 		
 		/* ---------- TREE TABLE for CALL STACK and LOCALS (optional) ---------- */
-		JLabel jLabelTreeTable = new JLabel(_("Variables"));
+		/*JLabel jLabelTreeTable = new JLabel(_("Variables"));
 		this.visToggle.registerComponent(1, jLabelTreeTable);
 		this.jPanelVarInfo.add(jLabelTreeTable);
 		
@@ -402,12 +237,9 @@ public class GUIdebugPanel {
 		this.visToggle.registerComponent(1, p);
 		// Sub-panel end
 		
-		this.visToggle.setVisible(0);
+		this.visToggle.setVisible(0);*/
 
-		/* --- Listener initialization --- */
-		PanelRunStackListener dataListener = new PanelRunStackListener(this,
-				this.jCallStack);
-		this.jCallStack.addMouseListener(dataListener.jCallStackListener);
+		
 	}
 	
 	/**
@@ -471,36 +303,6 @@ public class GUIdebugPanel {
 		// Change view button to step button
 		this.jButtonStep.setText("\u25AE\u25B6");
 	}
-	
-	public void setViewMode( byte mode ){
-		if( this.viewMode != mode )
-			this.viewMode = mode;
-		else
-			return;
-		
-		switch( mode ){
-		case VM_TABLE:
-			this.visToggle.setVisible(0);
-			
-			if( this.compileManager.isRunning() ){
-				this.selectFunction();
-				this.globalSelectRoot();
-	
-				this.updateGlobals();
-				this.updateCallStack();
-				this.updateLocals();
-			}
-			break;
-		case VM_TREE:
-			this.visToggle.setVisible(1);
-			
-			if( this.compileManager.isRunning() )
-				this.updateTreeTable(true, this);
-			break;
-		default:
-			throw new IllegalStateException("Invalid view mode in variable browser");
-		}
-	}
 
 	/**
 	 * <hr>
@@ -527,14 +329,6 @@ public class GUIdebugPanel {
 	}
 	
 	public void resetInterpreterData() {
-
-		this.jTableGlobalModel.reset();
-		this.jTableGlobal.setModel(this.jTableGlobalModel);
-
-		this.jTableLocalModel.reset();
-		this.jTableLocal.setModel(this.jTableLocalModel);
-
-		this.varTreeTable.reset();
 		
 		this.listener.reset();
 
@@ -543,107 +337,38 @@ public class GUIdebugPanel {
 		this.listener.stepComplete();
 		this.stepTarget = -1;
 
-		this.jTableGlobal.repaint();
-		this.jTableLocal.repaint();
-		Object[] o = {};
-		this.jCallStack.setListData(o);
-
 		this.modifier.resetInputHighlighter();
+		
+		this.varView.standby();
 	}
-
+	
 	/**
-	 * Reads the global variables from the call stack and saves them to the
-	 * global variables table. This method is made thread safe as it is
-	 * regularly called from the interpreter thread.
-	 * 
-	 * <hr>
-	 * <i>THREAD SAFE, asynchronously invoked. </i>Exception may stop EDT!
-	 * <hr>
+	 * Updates the variable table, call stack or tree table according to the current view mode.
 	 */
-	public void updateGlobals() {
-
-		if (this.globalVarBrowser.peek().getType() == StructureContainer.GLOBAL) {
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					synchronized (globalVarLock) {
-						jLabel1.setText("Global Variables");
-					}
-				}
-			});
-		} else {
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					synchronized (globalVarLock) {
-						jLabel1.setText(globalVarBrowser.peek().getName());
-					}
-				}
-			});
+	public void updateVariableTables(){
+		varView.update(compileManager);
+	}
+	
+	void setCallStackSize( int size ){
+		this.callStackSize = size;
+	}
+	
+	public void setViewMode( byte mode ){
+		switch( mode ){
+		case VM_TREETABLE:
+			//TODO treetable
+			break;
+		default:
+			this.jRightPanel.remove(this.jVarPanel);
+			jVarPanel = new JPanel();
+			jVarPanel.setBorder(new TitledBorder(_("Variables")));
+			jVarPanel.setLayout(new BoxLayout(jVarPanel, BoxLayout.PAGE_AXIS));
+			this.varView = new TableView( this, jVarPanel, null );
+			this.jRightPanel.add(jVarPanel);
+			break;
 		}
-
-		final GUIdebugPanel reference = this;
-
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				synchronized (globalVarLock) {
-					ReadSymbolTable.readGlobals(compileManager,
-							jTableGlobalModel, reference, globalVarBrowser
-									.peek().getName(), globalVarBrowser.peek()
-									.getType(), globalVarBrowser.peek()
-									.getAddress());
-
-				}
-
-				jTableGlobal.repaint();
-			}
-		});
 	}
-
-	/**
-	 * Updates the call stack list in the main GUI. Also updates the local
-	 * variable "int callStackSize", which is important for function skipping
-	 * ("step over"). Take care that at least one of the following methods (all
-	 * are thread save) is called at each interpreter step
-	 * <ul>
-	 * <li>public void updateCallStack()</li>
-	 * <li>public void updateCallStackSize()</li>
-	 * <li>public boolean checkForStepEnd()</li>
-	 * </ul>
-	 * 
-	 * <hr>
-	 * <i>THREAD SAFE, asynchronously invoked. </i>Exception may stop EDT!
-	 * <hr>
-	 */
-	public void updateCallStack() {
-		final Stack<String> stack = ReadCallStack.readCallStack();
-		this.callStackSize = stack.size();
-
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				jCallStack.setListData(stack.toArray());
-			}
-		});
-	}
-
-	/**
-	 * Updates the local variable "int callStackSize", which is important for
-	 * function skipping ("step over"). Does <b>not</b> update the call stack
-	 * list of the main GUI. Take care that at least one of the following
-	 * methods (all are thread save) is called at each interpreter step
-	 * <ul>
-	 * <li>public void updateCallStack()</li>
-	 * <li>public void updateCallStackSize()</li>
-	 * <li>public boolean checkForStepEnd()</li>
-	 * </ul>
-	 * 
-	 * <hr>
-	 * <i>THREAD SAFE by default </i>Exception may stop EDT!
-	 * <hr>
-	 */
-	public void updateCallStackSize() {
-
-		this.callStackSize = ReadCallStack.readCallStack().size();
-	}
-
+	
 	/**
 	 * Checks if the function which has to be skipped (as part of the
 	 * "step over" routine) is finished. Eventually exits the "step over" mode.
@@ -676,251 +401,9 @@ public class GUIdebugPanel {
 
 		return false;
 	}
-
-	/**
-	 * Reads the local variables from the call stack and saves them to the local
-	 * variables table. This method is made thread safe as it is regularly
-	 * called from the interpreter thread.
-	 * 
-	 * <hr>
-	 * <i>THREAD SAFE, asynchronously invoked. </i>Exception may stop EDT!
-	 * <hr>
-	 */
-	public void updateLocals() {
-
-		if (this.localVarBrowser.peek().getType() == StructureContainer.FUNC) {
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					synchronized (localVarLock) {
-						jLabel3.setText(_("Local Variables") + " @ "
-								+ localVarBrowser.peek().getName());
-					}
-				}
-			});
-		} else {
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					synchronized (localVarLock) {
-						jLabel3.setText(localVarBrowser.peek().getName()
-								+ " @ "
-								+ localVarBrowser.firstElement().getName());
-					}
-				}
-			});
-		}
-
-		final GUIdebugPanel reference = this;
-
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				synchronized (localVarLock) {
-					ReadSymbolTable.readLocals(compileManager,
-							jTableLocalModel, reference, localVarBrowser.peek()
-									.getName(), localVarBrowser.peek()
-									.getType(), localVarBrowser.peek()
-									.getAddress());
-				}
-
-				jTableLocal.repaint();
-			}
-		});
-	}
-
-	/**
-	 * Local variable table in the right panel of the main GUI will display the
-	 * variables of the given function.
-	 * 
-	 * <hr>
-	 * <i>THREAD SAFE, asynchronously invoked. </i>Exception may stop EDT!
-	 * <hr>
-	 * 
-	 * @param name
-	 *            Name of the function
-	 * @param index
-	 *            Index of the function (in the call stack; the last function
-	 *            called has the index 0)
-	 */
-	public void selectFunction(String name, int index) {
-		synchronized (localVarLock) {
-			this.localVarBrowser.clear();
-			this.localVarBrowser.push(new StructureContainer(name,
-					StructureContainer.FUNC, index));
-			this.updateLocals();
-		}
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				jButtonB2.setVisible(false);
-			}
-		});
-	}
-
-	/**
-	 * Sets the variable browsing tree of the local variable table in the right
-	 * panel of the main GUI to the current function. This means, the table
-	 * displays the local variables of the function which is currently on the
-	 * top of the call stack.
-	 * 
-	 * <hr>
-	 * <i>THREAD SAFE, asynchronously invoked. </i>Exception may stop EDT!
-	 * <hr>
-	 */
-	public void selectFunction() {
-		synchronized (localVarLock) {
-			this.localVarBrowser.clear();
-			this.localVarBrowser.push(new StructureContainer(
-					MethodContainer.getMethodName(Memory.loadInt(Memory.getFramePointer() - 8)),
-					StructureContainer.FUNC, 0));
-		}
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				jButtonB2.setVisible(false);
-			}
-		});
-	}
-
-	/**
-	 * Sets one of the variable tables of the right panel of the main GUI to
-	 * display content of an array or a structure.
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 * 
-	 * @param name
-	 *            Name of the struct/array
-	 * @param address
-	 *            Call stack address of the structure
-	 * @param type
-	 *            Type of the variable browser entry, see
-	 *            {@link StructureContainer}
-	 * @param global
-	 *            TRUE if the struct/array shall be shown in the global
-	 *            variables table,<br>
-	 *            FALSE if the struct/array shall be shown on the local
-	 *            variables table
-	 */
-	public void selectStruct(String name, int address, int type, boolean global, int x, int y ) {
-
-		if( type == StructureContainer.STRING ){
-			StringPopup.createPopUp(this.popup, this.cp, Strings.get(Memory.loadStringAddress(address)), x, y);
-		}
-		else{
-			if (global) {
-				synchronized (globalVarLock) {
-					this.globalVarBrowser.add(new StructureContainer(name, type,
-							address));
-					this.jButtonB1.setVisible(true);
-					this.updateGlobals();
-				}
-			} else {
-				synchronized (localVarLock) {
-					this.localVarBrowser.add(new StructureContainer(name, type,
-							address));
-					this.jButtonB2.setVisible(true);
-					this.updateLocals();
-				}
-			}
-		}
-	}
-
-	/**
-	 * Sets the global variable browser back to the lowest layer (leaves structs
-	 * and arrays). Does not update the global variable table, therefore thread
-	 * safe by default.
-	 * 
-	 * <hr>
-	 * <i>THREAD SAFE, asynchronously invoked. </i>Exception may stop EDT!
-	 * <hr>
-	 */
-	public void globalSelectRoot() {
-		synchronized (globalVarLock) {
-			this.globalVarBrowser.clear();
-			this.globalVarBrowser.add(new StructureContainer(
-					_("Global variables"), StructureContainer.GLOBAL, Memory
-							.getGlobalPointer()));
-		}
-		
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				jButtonB1.setVisible(false);
-			}
-		});
-	}
-
-	/**
-	 * Goes one layer back in the [global/local] variable browser (leaves the
-	 * currently displayed array or structure). Eventually removes the "back"
-	 * button (if the browser came to the lowest level).
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 * 
-	 * @param global
-	 *            TRUE if command refers to the global variables table,<br>
-	 *            FALSE if command refers to the local variables table
-	 */
-	public void browseBack(boolean global) {
-		if (global) {
-			synchronized (globalVarLock) {
-				this.globalVarBrowser.pop();
-				this.updateGlobals();
-
-				if (this.globalVarBrowser.size() <= 1) {
-					this.jButtonB1.setVisible(false);
-				}
-			}
-		} else {
-			synchronized (localVarLock) {
-				this.localVarBrowser.pop();
-				this.updateLocals();
-
-				if (this.localVarBrowser.size() <= 1) {
-					this.jButtonB2.setVisible(false);
-				}
-			}
-		}
-	}
 	
-	/**
-	 * Reads the call stack, local variables and global variables and saves it to
-	 * the tree table.
-	 * 
-	 * <hr>
-	 * <i>THREAD SAFE, asynchronously invoked. </i>Exception may stop EDT!
-	 * <hr>
-	 * 
-	 * @param render TRUE if the tree table data has to be re-rendered
-	 * (if there are more or less nodes than before)<br>
-	 * FALSE if the tree table data gets updated
-	 * (no new entries, just new values)
-	 */
-	public void updateTreeTable( final boolean render, final GUIdebugPanel panel ){
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				if( render )
-					varTreeTable.setTreeModel(ReadCallStackHierarchy.readSymbolTable(compileManager, panel));
-				else
-					varTreeTable.updateTreeModel(ReadCallStackHierarchy.readSymbolTable(compileManager, panel));
-			}
-		});
-	}
-	
-	/**
-	 * Updates the variable table, call stack or tree table according to the current view mode.
-	 */
-	public void updateVariableTables( boolean render ){
-		if( this.viewMode == VM_TABLE ){
-			this.selectFunction();
-			this.globalSelectRoot();
-
-			this.updateGlobals();
-			this.updateCallStack();
-			this.updateLocals();
-		}
-		else if( this.viewMode == VM_TREE ){
-			this.updateTreeTable(render, this);
-		}
+	public void updateCallStackSize(){
+		this.callStackSize = ReadCallStack.readCallStack().size();
 	}
 
 	/**

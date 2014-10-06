@@ -9,7 +9,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import at.jku.ssw.cmm.debugger.Debugger;
-import at.jku.ssw.cmm.gui.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.compiler.Node;
 
@@ -321,7 +321,7 @@ public class PanelRunListener implements Debugger {
 		// -> Node #3 - DEFAULT
 		/* --- Update Block --- */
 		this.master.updateStepOutButton();
-		this.master.updateVariableTables(true);
+		this.master.updateVariableTables();
 
 		this.timer = null;
 

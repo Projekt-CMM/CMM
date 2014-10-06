@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import at.jku.ssw.cmm.gui.GUImainSettings;
-import at.jku.ssw.cmm.gui.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 
 /**
  * Event listener for the main window. Controls automatic resizing of the source code text pane.

@@ -13,7 +13,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.GUImainSettings;
-import at.jku.ssw.cmm.gui.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
 import at.jku.ssw.cmm.gui.init.MenuBarVisToggle;
@@ -162,7 +162,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			
-			modifier.setViewMode(GUIdebugPanel.VM_TREE);
+			modifier.setViewMode(GUIdebugPanel.VM_TREETABLE);
 			toggle1.disable(1);
 		}
 	};

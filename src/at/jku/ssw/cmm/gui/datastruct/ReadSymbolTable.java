@@ -8,7 +8,8 @@ import at.jku.ssw.cmm.CMMwrapper;
 import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Strings;
 import at.jku.ssw.cmm.compiler.Struct;
-import at.jku.ssw.cmm.gui.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.debug.TableView;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunLinkListener;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
 
@@ -27,7 +28,7 @@ public class ReadSymbolTable {
 	 * @param type Type of the variable container ( function | struct | array | global ), see {@link StructureContainer}
 	 * @param address Start address for the search and read process
 	 */
-	public static void readGlobals( CMMwrapper compiler, VarTableModel table, GUIdebugPanel listenerModifier, String methodName, int type, int address ){
+	public static void readGlobals( CMMwrapper compiler, VarTableModel table, TableView listenerModifier, String methodName, int type, int address ){
 		table.reset();
 		
 		//Reading a function
@@ -59,7 +60,7 @@ public class ReadSymbolTable {
 	 * @param type Type of the variable container ( function | struct | array | global ), see {@link StructureContainer}
 	 * @param address Start address for the search and read process
 	 */
-	public static void readLocals( CMMwrapper compiler, VarTableModel table, GUIdebugPanel listenerModifier, String methodName, int type, int address ){
+	public static void readLocals( CMMwrapper compiler, VarTableModel table, TableView listenerModifier, String methodName, int type, int address ){
 		table.reset();
 		
 		//Reading a function
@@ -94,7 +95,7 @@ public class ReadSymbolTable {
 	 * @param global TRUE if reading global data, FALSE if reading local data (this is necessary for the
 	 * 				"view" button listeners of complex data structures such as arrays or structs)
 	 */
-	public static void readVariables( Obj count, int address, VarTableModel table, GUIdebugPanel listenerModifier, boolean global ){
+	public static void readVariables( Obj count, int address, VarTableModel table, TableView listenerModifier, boolean global ){
 		
 		//Search symbol tree - linked list
 		while( count != null ){
@@ -203,7 +204,7 @@ public class ReadSymbolTable {
 	 * @param global TRUE if reading global data, FALSE if reading local data (this is necessary for the
 	 * 				"view" button listeners of complex data structures such as arrays or structs)
 	 */
-	private static void readArray( Obj count, int address, VarTableModel table, GUIdebugPanel listenerModifier, boolean global ){
+	private static void readArray( Obj count, int address, VarTableModel table, TableView listenerModifier, boolean global ){
 		
 		int length = count.type.elements;
 		int size = count.type.size / count.type.elements;

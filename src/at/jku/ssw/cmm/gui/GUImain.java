@@ -20,7 +20,6 @@ import javax.swing.text.Highlighter;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-import at.jku.ssw.cmm.gettext.Language;
 import at.jku.ssw.cmm.gui.event.MainKeyListener;
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.event.WindowComponentListener;

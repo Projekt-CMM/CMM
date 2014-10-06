@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-import at.jku.ssw.cmm.gui.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 
 /**
  * This class is a listener which is used as key listener for the source code panel
