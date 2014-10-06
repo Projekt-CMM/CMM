@@ -8,7 +8,7 @@ import at.jku.ssw.cmm.CMMwrapper;
 import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Strings;
 import at.jku.ssw.cmm.compiler.Struct;
-import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.debug.TreeTableView;
 import at.jku.ssw.cmm.gui.treetable.DataNode;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
@@ -22,7 +22,7 @@ import at.jku.ssw.cmm.interpreter.memory.MethodContainer;
  */
 public class ReadCallStackHierarchy {
 	
-	public static TreeTableDataModel readSymbolTable( CMMwrapper compiler, GUIdebugPanel listenerModifier ){
+	public static TreeTableDataModel readSymbolTable( CMMwrapper compiler, TreeTableView listenerModifier ){
 		
 		//Create root node
 		DataNode node = new DataNode("root", "void", "", new ArrayList<DataNode>());
@@ -39,7 +39,7 @@ public class ReadCallStackHierarchy {
 		return model;
 	}
 	
-	private static void getNextAddress( CMMwrapper compiler, int address, DataNode node,GUIdebugPanel listenerModifier ){
+	private static void getNextAddress( CMMwrapper compiler, int address, DataNode node, TreeTableView listenerModifier ){
 		
 		String name;
 
@@ -56,7 +56,7 @@ public class ReadCallStackHierarchy {
 			getNextAddress( compiler, Memory.loadInt(address-4), node, listenerModifier );
 	}
 	
-	private static DataNode readVariables( Obj obj, DataNode node, int address, GUIdebugPanel listenerModifier ){
+	private static DataNode readVariables( Obj obj, DataNode node, int address, TreeTableView listenerModifier ){
 		
 		while( obj != null ){
 				if( obj.type.kind == Struct.INT && obj.kind != Obj.PROC ){
@@ -113,7 +113,7 @@ public class ReadCallStackHierarchy {
 		return node;
 	}
 	
-	private static DataNode readArray( Obj count, int address, GUIdebugPanel listenerModifier ){
+	private static DataNode readArray( Obj count, int address, TreeTableView listenerModifier ){
 		
 		int length = count.type.elements;
 		int size = count.type.size / count.type.elements;

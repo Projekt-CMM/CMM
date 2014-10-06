@@ -3,7 +3,6 @@ package at.jku.ssw.cmm.gui.debug;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +18,6 @@ import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
 import at.jku.ssw.cmm.gui.interpreter.IOstream;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.gui.popup.PopupInterface;
-import at.jku.ssw.cmm.gui.treetable.TreeTable;
-import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
 
 /**
  * Controls the right panel of the main GUI. This is a bit more complex, as this
@@ -60,16 +57,15 @@ public class GUIdebugPanel {
 		
 		this.jControlPanel = new JPanel();
 		this.jControlPanel.setBorder(new TitledBorder(_("Control elements")));
-		//this.jControlPanel.setLayout(new BoxLayout(this.jControlPanel, BoxLayout.LINE_AXIS));
 		this.ctrlPanel = new GUIcontrolPanel( this.jControlPanel, this, mod );
 		this.ctrlPanel.getListener().reset();
+		this.jRightPanel.add(jControlPanel, BorderLayout.PAGE_START);
 		
 		this.jVarPanel = new JPanel();
 		this.jVarPanel.setBorder(new TitledBorder(_("Variables")));
 		this.jVarPanel.setLayout(new BoxLayout(this.jVarPanel, BoxLayout.PAGE_AXIS));
 		this.varView = new TableView( this, this.jVarPanel, popup );
 		this.jRightPanel.add(jVarPanel, BorderLayout.CENTER);
-		this.jRightPanel.add(jControlPanel, BorderLayout.PAGE_START);
 		
 		this.stepTarget = -1;
 		this.sourceCodeBeginLine = 0;
@@ -104,10 +100,6 @@ public class GUIdebugPanel {
 	// Error position data
 	private int line;
 	private int col;
-	
-	// Tree table for variables
-		private TreeTable varTreeTable;
-		private TreeTableDataModel varTreeTableModel;
 
 	// Step over counter
 	private int stepTarget;
@@ -169,19 +161,22 @@ public class GUIdebugPanel {
 	}
 	
 	public void setViewMode( byte mode ){
+		
+		this.jVarPanel.removeAll();
+		
 		switch( mode ){
 		case VM_TREETABLE:
-			//TODO treetable
+			this.varView = new TreeTableView(jVarPanel);
 			break;
 		default:
-			this.jRightPanel.remove(this.jVarPanel);
-			jVarPanel = new JPanel();
-			jVarPanel.setBorder(new TitledBorder(_("Variables")));
-			jVarPanel.setLayout(new BoxLayout(jVarPanel, BoxLayout.PAGE_AXIS));
 			this.varView = new TableView( this, jVarPanel, null );
-			this.jRightPanel.add(jVarPanel);
 			break;
 		}
+		
+		this.jVarPanel.repaint();
+		
+		if( this.compileManager.isRunning() )
+			this.varView.update(compileManager);
 	}
 	
 	/**

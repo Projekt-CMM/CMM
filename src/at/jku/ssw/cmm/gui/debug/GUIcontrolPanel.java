@@ -2,15 +2,10 @@ package at.jku.ssw.cmm.gui.debug;
 
 import static at.jku.ssw.cmm.gettext.Language._;
 
-import java.awt.Dimension;
-
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;

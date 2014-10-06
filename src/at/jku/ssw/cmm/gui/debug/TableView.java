@@ -48,7 +48,7 @@ public class TableView extends VariableView {
 		
 		this.panel = panel;
 		
-		this.init(panel);
+		this.init();
 	}
 	
 	private final JPanel panel;
@@ -97,7 +97,7 @@ public class TableView extends VariableView {
 	CMMwrapper compileManager;
 
 	@Override
-	public void init(JPanel panel) {
+	public void init() {
 		
 		/* ---------- TABLE FOR GLOBAL VARs ---------- */
 		JPanel paneGlobal1 = new JPanel();

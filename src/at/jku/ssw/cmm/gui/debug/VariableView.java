@@ -1,7 +1,5 @@
 package at.jku.ssw.cmm.gui.debug;
 
-import javax.swing.JPanel;
-
 import at.jku.ssw.cmm.CMMwrapper;
 
 public abstract class VariableView {
@@ -11,7 +9,7 @@ public abstract class VariableView {
 	 * 
 	 * @param panel
 	 */
-	public abstract void init( JPanel panel );
+	public abstract void init();
 	
 	/**
 	 * Updates variable values and call stack
