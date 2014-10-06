@@ -65,14 +65,14 @@ public class Tab {
 	 *  @return return created object or forward declared procedure
 	 */
 	public Obj insert(int kind, String name, Struct type) {
-		//--- erzeugen
+		//--- create
 		Obj obj = new Obj(kind, name, type);
 		if (kind == Obj.VAR) {
 			obj.adr = curScope.size;
 			curScope.size += type.size;
 			obj.level = curLevel;
 		}
-		//--- einfügen
+		//--- insert
 		Obj p = curScope.locals, last = null;
 		while (p != null) {
 			if (p.name.equals(name)) {

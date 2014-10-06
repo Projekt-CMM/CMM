@@ -20,6 +20,7 @@ import javax.swing.text.Highlighter;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+import at.jku.ssw.cmm.gettext.Language;
 import at.jku.ssw.cmm.gui.event.MainKeyListener;
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.event.WindowComponentListener;
@@ -110,7 +111,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 			System.out.println("[EDT Analyse] Main GUI runnung on EDT.");
 		
 		//Load translations
-		//Language.loadLanguage("by.po");
+		Language.loadLanguage("de.po");
 
 		// Initialize the window
 		this.jFrame = new JFrame(VERSION);
