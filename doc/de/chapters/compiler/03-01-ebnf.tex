@@ -1,0 +1,20 @@
+%!TEX root=../Vorlage_DA.tex
+%	########################################################
+% 				EBNF
+%	########################################################
+
+\subsection{EBNF}
+
+\begin{lstlisting}[language=EBNF]
+CMM	= { ConstDecl | StructDecl | VarDecl | ProcDecl }.
+\end{lstlisting}
+
+\begin{lstlisting}[language=EBNF]
+ConstDecl = "const" Type ident "=" 
+  ( ( "true" | "false" ) 
+    | intCon
+    | floatCon
+    | charCon
+    | stringCon
+  ) ";".
+\end{lstlisting}
