@@ -8,17 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import at.jku.ssw.cmm.CMMwrapper;
 import at.jku.ssw.cmm.gui.datastruct.ReadCallStack;
-import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.gui.exception.IncludeNotFoundException;
 import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
 import at.jku.ssw.cmm.gui.interpreter.IOstream;
@@ -59,22 +54,25 @@ public class GUIdebugPanel {
 		this.modifier = mod;
 
 		this.jRightPanel = new JPanel();
+		this.jRightPanel.setLayout(new BorderLayout());
 
-		this.listener = new PanelRunListener(this.modifier, this);
 		this.compileManager = new CMMwrapper(this.modifier, this);
 		
-		this.initRunMode();
-
-		jVarPanel = new JPanel();
-		jVarPanel.setBorder(new TitledBorder(_("Variables")));
-		jVarPanel.setLayout(new BoxLayout(jVarPanel, BoxLayout.PAGE_AXIS));
-		this.varView = new TableView( this, jVarPanel, popup );
-		this.jRightPanel.add(jVarPanel);
+		this.jControlPanel = new JPanel();
+		this.jControlPanel.setBorder(new TitledBorder(_("Control elements")));
+		//this.jControlPanel.setLayout(new BoxLayout(this.jControlPanel, BoxLayout.LINE_AXIS));
+		this.ctrlPanel = new GUIcontrolPanel( this.jControlPanel, this, mod );
+		this.ctrlPanel.getListener().reset();
+		
+		this.jVarPanel = new JPanel();
+		this.jVarPanel.setBorder(new TitledBorder(_("Variables")));
+		this.jVarPanel.setLayout(new BoxLayout(this.jVarPanel, BoxLayout.PAGE_AXIS));
+		this.varView = new TableView( this, this.jVarPanel, popup );
+		this.jRightPanel.add(jVarPanel, BorderLayout.CENTER);
+		this.jRightPanel.add(jControlPanel, BorderLayout.PAGE_START);
 		
 		this.stepTarget = -1;
 		this.sourceCodeBeginLine = 0;
-
-		this.listener.reset();
 		
 		this.cp.add(this.jRightPanel, BorderLayout.CENTER);
 		
@@ -87,6 +85,7 @@ public class GUIdebugPanel {
 	private final JComponent cp;
 	
 	private JPanel jVarPanel;
+	private JPanel jControlPanel;
 
 	// Interface for main GUI manipulations
 	private final GUImainMod modifier;
@@ -96,11 +95,8 @@ public class GUIdebugPanel {
 	private final JPanel jRightPanel;
 
 	private VariableView varView;
-
-	// Wrapper class with listeners for the "run" mode. Also contains the debug
-	// and I/O stream interface
-	// for the interpreter as well as (interpreter) "run" mode event routines.
-	private final PanelRunListener listener;
+	
+	private final GUIcontrolPanel ctrlPanel;
 
 	// Wrapper class for the compiler. Also initiates the interpreter thread.
 	private final CMMwrapper compileManager;
@@ -108,35 +104,10 @@ public class GUIdebugPanel {
 	// Error position data
 	private int line;
 	private int col;
-
-	/* --- run mode objects --- */
-	// starts or resumes interpreting
-	private JButton jButtonPlay;
-
-	// resumes interpreting for one step
-	private JButton jButtonStep;
-
-	private JButton jButtonStepOver;
-
-	private JButton jButtonStepOut;
-
-	// Stops interpreting
-	private JButton jButtonStop;
-
-	// Regulates interpreter speed
-	private JSlider jSlider;
-	private JLabel jLabelTimer;
-
-	// Runtime error labels
-	private JLabel jRuntimeErrorLabel1;
-	private JLabel jRuntimeErrorLabel2;
-	private JLabel jRuntimeErrorLabel3;
-
-	
 	
 	// Tree table for variables
-	private TreeTable varTreeTable;
-	private TreeTableDataModel varTreeTableModel;
+		private TreeTable varTreeTable;
+		private TreeTableDataModel varTreeTableModel;
 
 	// Step over counter
 	private int stepTarget;
@@ -147,162 +118,6 @@ public class GUIdebugPanel {
 	
 	// List of Breakpoints
 	private final List<Integer> breakpoints;
-
-	/**
-	 * Initializes the objects of the "run" mode, which is active during
-	 * interpreting
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT.</i><br>
-	 * As this is a initialization method, it should generally not be called
-	 * outside the constructor.
-	 * </hr>
-	 */
-	private void initRunMode() {
-
-		this.jRightPanel.setLayout(new BoxLayout(this.jRightPanel,
-				BoxLayout.PAGE_AXIS));
-
-		// Sub-panel with switches and buttons
-		JPanel pane1 = new JPanel();
-		pane1.setBorder(new EmptyBorder(5, 5, 5, 5));
-		pane1.setMinimumSize(new Dimension(100, 72));
-
-		/* ---------- PLAY | PAUSE buttons ---------- */
-		jButtonPlay = new JButton("\u25B6");
-		this.jButtonPlay.addMouseListener(this.listener.playButtonHandler);
-		pane1.add(jButtonPlay);
-
-		jButtonStep = new JButton("\u25AE\u25B6");
-		this.jButtonStep.addMouseListener(this.listener.stepButtonHandler);
-		pane1.add(jButtonStep);
-
-		jButtonStepOver = new JButton("\u21B7");
-		this.jButtonStepOver
-				.addMouseListener(this.listener.stepOverButtonHandler);
-		pane1.add(jButtonStepOver);
-		this.jButtonStepOver.setVisible(false);
-
-		jButtonStepOut = new JButton("\u21B5");
-		this.jButtonStepOut
-				.addMouseListener(this.listener.stepOutButtonHandler);
-		pane1.add(jButtonStepOut);
-		this.jButtonStepOut.setVisible(false);
-
-		jButtonStop = new JButton("\u25A0");
-		this.jButtonStop.addMouseListener(this.listener.stopButtonHandler);
-		pane1.add(jButtonStop);
-
-		/* --- RUNTIME ERROR LABELS --- */
-		this.jRuntimeErrorLabel1 = new JLabel(_("Runtime Error")+":");
-		pane1.add(this.jRuntimeErrorLabel1);
-		this.jRuntimeErrorLabel1.setVisible(false);
-
-		this.jRuntimeErrorLabel2 = new JLabel("...");
-		pane1.add(this.jRuntimeErrorLabel2);
-		this.jRuntimeErrorLabel2.setVisible(false);
-		
-		this.jRuntimeErrorLabel3 = new JLabel("...");
-		pane1.add(this.jRuntimeErrorLabel3);
-		this.jRuntimeErrorLabel3.setVisible(false);
-
-		/* ---------- SLIDER ---------- */
-		jLabelTimer = new JLabel("1.0 sec");
-		pane1.add(jLabelTimer);
-
-		jSlider = new JSlider(JSlider.HORIZONTAL, 1, 5, 1);
-		jSlider.setMajorTickSpacing(1);
-		jSlider.setMinorTickSpacing(1);
-		jSlider.setPaintTicks(true);
-		jSlider.addChangeListener(this.listener.sliderListener);
-		jSlider.setValue(3);
-		pane1.add(jSlider);
-
-		this.jRightPanel.add(pane1);
-		// Sub-panel end
-
-		
-		
-		/* ---------- TREE TABLE for CALL STACK and LOCALS (optional) ---------- */
-		/*JLabel jLabelTreeTable = new JLabel(_("Variables"));
-		this.visToggle.registerComponent(1, jLabelTreeTable);
-		this.jPanelVarInfo.add(jLabelTreeTable);
-		
-		this.varTreeTableModel = new TreeTableDataModel(ReadCallStackHierarchy.createDataStructure());
-		
-		this.varTreeTable = new TreeTable(this.varTreeTableModel);
-		
-		JScrollPane p = new JScrollPane(this.varTreeTable);
-		p.setVisible(false);
-		this.jPanelVarInfo.add(p);
-		this.visToggle.registerComponent(1, p);
-		// Sub-panel end
-		
-		this.visToggle.setVisible(0);*/
-
-		
-	}
-	
-	/**
-	 * Sets the right panel of the main GUI to the "runtime error" mode, which
-	 * is a sub-mode of "run" mode.
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 * 
-	 * @param message
-	 *            The error message from the interpreter
-	 */
-	public void setRuntimeErrorMode(String title, String message, int line, int col ) {
-		
-		this.line = line - this.sourceCodeBeginLine + this.modifier.getSourceCodeRegister().size();
-		this.col = col;
-		
-		System.out.println("Error found: " + line + " -> " + this.line );
-
-		// Set standard mode elements invisible
-		this.jButtonPlay.setVisible(false);
-		this.jButtonStepOver.setVisible(false);
-		this.jButtonStepOut.setVisible(false);
-		this.jLabelTimer.setVisible(false);
-		this.jSlider.setVisible(false);
-
-		// Make error mode elements visible
-		this.jRuntimeErrorLabel1.setVisible(true);
-		this.jRuntimeErrorLabel1.setText(title);
-		this.jRuntimeErrorLabel2.setVisible(true);
-		this.jRuntimeErrorLabel2.setText(message);
-		this.jRuntimeErrorLabel3.setVisible(true);
-		this.jRuntimeErrorLabel3.setText("... in line " + this.line);
-
-		// Change step button to view button
-		this.jButtonStep.setVisible(true);
-		this.jButtonStep.setText("View");
-	}
-
-	/**
-	 * Goes back from "runtime error" mode to "ready" mode. Both are sub-modes
-	 * of "run" mode
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 */
-	public void unsetRunTimeError() {
-
-		// Set standard mode elements visible
-		this.jButtonPlay.setVisible(true);
-		this.jLabelTimer.setVisible(true);
-		this.jSlider.setVisible(true);
-
-		// Hide error mode elements
-		this.jRuntimeErrorLabel1.setVisible(false);
-		this.jRuntimeErrorLabel2.setVisible(false);
-		this.jRuntimeErrorLabel3.setVisible(false);
-
-		// Change view button to step button
-		this.jButtonStep.setText("\u25AE\u25B6");
-	}
 
 	/**
 	 * <hr>
@@ -330,11 +145,11 @@ public class GUIdebugPanel {
 	
 	public void resetInterpreterData() {
 		
-		this.listener.reset();
+		this.ctrlPanel.getListener().reset();
 
 		this.callStackSize = 0;
 
-		this.listener.stepComplete();
+		this.ctrlPanel.getListener().stepComplete();
 		this.stepTarget = -1;
 
 		this.modifier.resetInputHighlighter();
@@ -370,6 +185,26 @@ public class GUIdebugPanel {
 	}
 	
 	/**
+	 * Sets the right panel of the main GUI to the "runtime error" mode, which
+	 * is a sub-mode of "run" mode.
+	 * 
+	 * <hr>
+	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
+	 * <hr>
+	 * 
+	 * @param message
+	 *            The error message from the interpreter
+	 */
+	public void setRuntimeErrorMode(String title, String message, int line, int col ) {
+		this.line = line - this.sourceCodeBeginLine + this.modifier.getSourceCodeRegister().size();
+		this.col = col;
+		
+		System.out.println("Error found: " + line + " -> " + this.line );
+		
+		this.ctrlPanel.setRuntimeErrorMode(title, message, this.line, this.col);
+	}
+	
+	/**
 	 * Checks if the function which has to be skipped (as part of the
 	 * "step over" routine) is finished. Eventually exits the "step over" mode.
 	 * Also updates the local variable "int callStackSize", which is important
@@ -394,7 +229,7 @@ public class GUIdebugPanel {
 
 		if (this.callStackSize <= this.stepTarget) {
 			System.out.println("[interpreter][GUIdebugPanel]Step completed");
-			this.listener.stepComplete();
+			this.ctrlPanel.getListener().stepComplete();
 			this.stepTarget = -1;
 			return true;
 		}
@@ -404,6 +239,12 @@ public class GUIdebugPanel {
 	
 	public void updateCallStackSize(){
 		this.callStackSize = ReadCallStack.readCallStack().size();
+	}
+	
+	public int getCallStackSize() {
+		
+		this.updateCallStackSize();
+		return this.callStackSize;
 	}
 
 	/**
@@ -418,154 +259,7 @@ public class GUIdebugPanel {
 		return this.compileManager;
 	}
 
-	/**
-	 * Sets the "play/pause" button in "run" mode to display PAUSE
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 */
-	public void setPause() {
-		this.jButtonPlay.setText("\u25AE\u25AE");
-	}
-
-	/**
-	 * Sets the "play/pause" button in "run" mode to display PLAY
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 */
-	public void setPlay() {
-		this.jButtonPlay.setText("\u25B6");
-	}
-
-	/**
-	 * Locks the "step" button in "run" mode so that it can non be pressed
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 */
-	public void lockStepButton() {
-		this.jButtonStep.setEnabled(false);
-	}
-
-	/**
-	 * Unlocks the "step" button in "run" mode so that it can be used again
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 */
-	public void unlockStepButton() {
-		this.jButtonStep.setEnabled(true);
-	}
-
-	/**
-	 * Locks the "stop" button in "run" mode so that it can not be pressed.
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 */
-	public void lockStopButton() {
-		this.jButtonStop.setEnabled(false);
-	}
-
-	/**
-	 * Unlocks the "stop" button in "run" mode so that it can be used again
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 */
-	public void unlockStopButton() {
-		this.jButtonStop.setEnabled(true);
-	}
-
-	/**
-	 * Sets the label for the execution delay in "run" mode to the given value.
-	 * Adds "sec" postfix automatically.
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 * 
-	 * @param s
-	 *            delay time in seconds
-	 */
-	public void setTimerLabelSeconds(double s) {
-		this.jLabelTimer.setText("" + s + " " + _("sec"));
-	}
-
-	/**
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 * 
-	 * @return The current value of the interpreter speed slider
-	 */
-	public int getInterpreterSpeedSlider() {
-		return this.jSlider.getValue();
-	}
-
-	/**
-	 * Makes the "step over" button at the top of the right panel in the main
-	 * GUI visible.
-	 * 
-	 * <hr>
-	 * <i>THREAD SAFE, asynchronously invoked. </i>Exception may stop EDT!
-	 * <hr>
-	 */
-	public void setStepOverButton() {
-		if (this.listener.isPauseMode()) {
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					jButtonStepOver.setVisible(true);
-				}
-			});
-		}
-	}
-
-	/**
-	 * Makes the "step over" button at the top of the right panel in the main
-	 * GUI visible and hides the "nest step" button. Used for functions from
-	 * include files, as these shall not be visualized step by step.
-	 * 
-	 * <hr>
-	 * <i>THREAD SAFE, asynchronously invoked. </i>Exception may stop EDT!
-	 * <hr>
-	 */
-	public void setStepOverButtonAlone() {
-		if (this.listener.isPauseMode()) {
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					jButtonStepOver.setVisible(true);
-					jButtonStep.setVisible(false);
-				}
-			});
-		}
-	}
-
-	/**
-	 * Hides the "step over button at the top of the right panel in the main GUI
-	 * and makes the "next step" button visible. This is the default state,
-	 * displayed for every AST node, except function calls and assignments with
-	 * calls.
-	 * 
-	 * <hr>
-	 * <i>THREAD SAFE, asynchronously invoked. </i>Exception may stop EDT!
-	 * <hr>
-	 */
-	public void unsetStepOverButton() {
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				jButtonStepOver.setVisible(false);
-				jButtonStep.setVisible(true);
-			}
-		});
-	}
+	
 
 	/**
 	 * Initiates stepping over the next function, <b>not</b> the current
@@ -578,30 +272,14 @@ public class GUIdebugPanel {
 	 */
 	public void stepOver() {
 		this.stepTarget = this.callStackSize;
-		this.listener.stepOver();
+		this.ctrlPanel.getListener().stepOver();
 		System.out.println("[interpreter][GUIdebugPanel]Stepping over...");
-	}
-
-	public void updateStepOutButton() {
-		if (this.callStackSize > 1) {
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					jButtonStepOut.setVisible(true);
-				}
-			});
-		} else {
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					jButtonStepOut.setVisible(false);
-				}
-			});
-		}
 	}
 
 	public void stepOut() {
 		if (this.callStackSize > 1) {
 			this.stepTarget = this.callStackSize - 1;
-			this.listener.stepOver();
+			this.ctrlPanel.getListener().stepOver();
 			System.out.println("[interpreter][GuidebugPanel]Stepping out...");
 		}
 	}
@@ -612,6 +290,10 @@ public class GUIdebugPanel {
 	
 	public List<Integer> getBreakPoints(){
 		return this.breakpoints;
+	}
+	
+	public GUIcontrolPanel getControlPanel(){
+		return this.ctrlPanel;
 	}
 
 	// TODO Invoke this method as side task
@@ -639,7 +321,7 @@ public class GUIdebugPanel {
 			// An include file could not be found
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					listener.setErrorMode(_("Preprocessor error"), _("Include file not found") + ": \"" + e1.getFileName() + "\"", e1.getLine(), 0);
+					ctrlPanel.getListener().setErrorMode(_("Preprocessor error"), _("Include file not found") + ": \"" + e1.getFileName() + "\"", e1.getLine(), 0);
 				}
 			});
 			return;
@@ -675,7 +357,7 @@ public class GUIdebugPanel {
 		
 		// compiler returns errors
 		if( e != null ) {
-			this.listener.setErrorMode("Compiler error", e.msg, e.line, e.col);
+			this.ctrlPanel.getListener().setErrorMode("Compiler error", e.msg, e.line, e.col);
 		}
 	}
 
@@ -689,6 +371,6 @@ public class GUIdebugPanel {
 	 */
 	public boolean runInterpreter() {
 		this.compile();
-		return this.compileManager.runInterpreter(listener, new IOstream(this.modifier));
+		return this.compileManager.runInterpreter(ctrlPanel.getListener(), new IOstream(this.modifier));
 	}
 }

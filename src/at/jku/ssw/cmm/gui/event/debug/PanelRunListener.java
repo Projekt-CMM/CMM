@@ -98,19 +98,19 @@ public class PanelRunListener implements Debugger {
 
 		this.stepOver = false;
 
-		this.delay = master.getInterpreterSpeedSlider() - 1;
+		this.delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
 
-		master.setTimerLabelSeconds((double) (delay) / 2);
+		master.getControlPanel().setTimerLabelSeconds((double) (delay) / 2);
 
 		if (this.timer != null)
 			this.timer.cancel();
 
-		this.master.unsetRunTimeError();
-		this.master.unsetStepOverButton();
+		this.master.getControlPanel().unsetRunTimeError();
+		this.master.getControlPanel().unsetStepOverButton();
 
-		this.master.lockStopButton();
-		this.master.unlockStepButton();
-		this.master.setPlay();
+		this.master.getControlPanel().lockStopButton();
+		this.master.getControlPanel().unlockStepButton();
+		this.master.getControlPanel().setPlay();
 
 		System.out.println("[mode] setting ready by reset");
 	}
@@ -126,9 +126,9 @@ public class PanelRunListener implements Debugger {
 		this.run = true;
 		this.keepRunning = true;
 
-		this.master.unlockStopButton();
-		this.master.lockStepButton();
-		this.master.setPause();
+		this.master.getControlPanel().unlockStopButton();
+		this.master.getControlPanel().lockStepButton();
+		this.master.getControlPanel().setPause();
 
 		System.out.println("[mode] setting run, delay = " + this.delay);
 	}
@@ -144,9 +144,9 @@ public class PanelRunListener implements Debugger {
 		this.run = false;
 		this.keepRunning = true;
 
-		this.master.unlockStopButton();
-		this.master.unlockStepButton();
-		this.master.setPlay();
+		this.master.getControlPanel().unlockStopButton();
+		this.master.getControlPanel().unlockStepButton();
+		this.master.getControlPanel().setPlay();
 
 		System.out.println("[mode] setting pause");
 	}
@@ -174,10 +174,10 @@ public class PanelRunListener implements Debugger {
 		this.run = true;
 		this.keepRunning = false;
 
-		this.master.unlockStepButton();
-		this.master.unlockStopButton();
+		this.master.getControlPanel().unlockStepButton();
+		this.master.getControlPanel().unlockStopButton();
 
-		this.master.setRuntimeErrorMode(title + ": ", message, line, col);
+		this.master.getControlPanel().setRuntimeErrorMode(title + ": ", message, line, col);
 
 		System.out.println("[mode] setting error");
 	}
@@ -257,7 +257,7 @@ public class PanelRunListener implements Debugger {
 	 */
 	synchronized public void stepComplete() {
 		this.stepOver = false;
-		this.master.unsetStepOverButton();
+		this.master.getControlPanel().unsetStepOverButton();
 	}
 
 	/* --- debugger interpreter listeners --- */
@@ -320,7 +320,7 @@ public class PanelRunListener implements Debugger {
 
 		// -> Node #3 - DEFAULT
 		/* --- Update Block --- */
-		this.master.updateStepOutButton();
+		this.master.getControlPanel().updateStepOutButton();
 		this.master.updateVariableTables();
 
 		this.timer = null;
@@ -368,14 +368,14 @@ public class PanelRunListener implements Debugger {
 		if( n.kind == Node.CALL && n.obj.ast != null ){
 			//Calls function from include
 			if( n.obj.ast.line <= this.master.getBeginLine() )
-				this.master.setStepOverButtonAlone();
+				this.master.getControlPanel().setStepOverButtonAlone();
 			//Calls local function
 			else
-				this.master.setStepOverButton();
+				this.master.getControlPanel().setStepOverButton();
 		}
 		//No valid function call -> no step over button
 		else
-			this.master.unsetStepOverButton();
+			this.master.getControlPanel().unsetStepOverButton();
 	}
 	
 	private void doStepOverRunCheck( Node n ){
@@ -580,7 +580,7 @@ public class PanelRunListener implements Debugger {
 
 			// Get out of ERROR mode
 			else if (!keepRunning && run) {
-				master.unsetRunTimeError();
+				master.getControlPanel().unsetRunTimeError();
 				setReadyMode();
 
 				// Has to be done here, as interpreter has exited in error mode
@@ -613,8 +613,8 @@ public class PanelRunListener implements Debugger {
 		@Override
 		public void stateChanged(ChangeEvent e) {
 
-			delay = master.getInterpreterSpeedSlider() - 1;
-			master.setTimerLabelSeconds((double) (delay) / 2);
+			delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
+			master.getControlPanel().setTimerLabelSeconds((double) (delay) / 2);
 		}
 	};
 

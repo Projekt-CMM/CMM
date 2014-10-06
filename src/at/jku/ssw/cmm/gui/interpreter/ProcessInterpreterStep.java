@@ -30,19 +30,19 @@ public class ProcessInterpreterStep {
 			if (n.right.kind == Node.CALL) {
 				// Calling a function from include file -> step over by default
 				if (n.right.obj.ast.line <= this.master.getBeginLine())
-					this.master.setStepOverButtonAlone();
+					this.master.getControlPanel().setStepOverButtonAlone();
 				// Calling a local function -> show step over button
 				else
-					this.master.setStepOverButton();
+					this.master.getControlPanel().setStepOverButton();
 			}
 			break;
 		case Node.CALL:
 			// Calling a function from include file -> step over by default
 			if (n.obj.ast.line <= this.master.getBeginLine())
-				this.master.setStepOverButtonAlone();
+				this.master.getControlPanel().setStepOverButtonAlone();
 			// Calling a local function -> show step over button
 			else
-				this.master.setStepOverButton();
+				this.master.getControlPanel().setStepOverButton();
 			break;
 		case Node.IF:
 			break;
