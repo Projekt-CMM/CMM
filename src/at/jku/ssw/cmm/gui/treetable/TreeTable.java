@@ -55,7 +55,7 @@ public class TreeTable extends JTable {
         // -> table
         setSelectionModel(selectionModel.getListSelectionModel());
  
-        tree.setRootVisible(false); 
+        tree.setRootVisible(true); 
         
         //Renderer for the tree
         setDefaultRenderer(TreeTableModel.class, tree);

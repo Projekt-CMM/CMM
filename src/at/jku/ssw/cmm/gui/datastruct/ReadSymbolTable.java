@@ -34,12 +34,12 @@ public class ReadSymbolTable {
 		//Reading a function
 		if( type == StructureContainer.GLOBAL && methodName != null ){
 			readVariables( compiler.getSymbolTable().curScope.locals,
-					Memory.getGlobalPointer(), table, listenerModifier, true );
+					Memory.getGlobalPointer(), table, listenerModifier, true, true );
 		}
 		//Reading a struct
 		else if ( type == StructureContainer.STRUCT && methodName != null ){
 			readVariables( findNodeByName(compiler.getSymbolTable().curScope.locals, methodName).type.fields,
-					address, table, listenerModifier, true );
+					address, table, listenerModifier, true, false );
 		}
 		else if ( type == StructureContainer.ARRAY && methodName != null ){
 			System.out.println("Opening array: " + methodName);
@@ -65,13 +65,13 @@ public class ReadSymbolTable {
 		
 		//Reading a function
 		if( type == StructureContainer.FUNC && methodName != null ){
-			readVariables( findNodeByName(compiler.getSymbolTable().curScope.locals, methodName).locals,
-					ReadCallStack.getAddressByIndex(address), table, listenerModifier, false );
+			readVariables( findNodeByName(compiler.getSymbolTable().curScope.locals, methodName),
+					ReadCallStack.getAddressByIndex(address), table, listenerModifier, false, true );
 		}
 		//Reading a struct
 		else if ( type == StructureContainer.STRUCT && methodName != null ){
 			readVariables( findNodeByName(compiler.getSymbolTable().curScope.locals, methodName).type.fields,
-					address, table, listenerModifier, false );
+					address, table, listenerModifier, false, false );
 		}
 		else if( type == StructureContainer.ARRAY && methodName != null ){
 			System.out.println("Opening array: " + methodName);
@@ -95,7 +95,13 @@ public class ReadSymbolTable {
 	 * @param global TRUE if reading global data, FALSE if reading local data (this is necessary for the
 	 * 				"view" button listeners of complex data structures such as arrays or structs)
 	 */
-	public static void readVariables( Obj count, int address, VarTableModel table, TableView listenerModifier, boolean global ){
+	public static void readVariables( Obj count, int address, VarTableModel table, TableView listenerModifier, boolean global, boolean func ){
+		
+		int paras = 0;
+		if( func ){
+			paras = count.nPars;
+			count = count.locals;
+		}
 		
 		//Search symbol tree - linked list
 		while( count != null ){
@@ -181,8 +187,15 @@ public class ReadSymbolTable {
 					
 				}
 				
-				Object[] buffer = {count.name, type, value};
-				table.addRow(buffer);
+				if( paras > 0 ){
+					Object[] buffer = {"*" + count.name, type, value};
+					table.addRow(buffer);
+					paras--;
+				}
+				else{
+					Object[] buffer = {count.name, type, value};
+					table.addRow(buffer);
+				}
 			}
 			
 			//Next node

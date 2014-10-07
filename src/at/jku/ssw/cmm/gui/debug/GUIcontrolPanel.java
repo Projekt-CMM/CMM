@@ -2,6 +2,8 @@ package at.jku.ssw.cmm.gui.debug;
 
 import static at.jku.ssw.cmm.gettext.Language._;
 
+import java.awt.Dimension;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -124,6 +126,9 @@ public class GUIcontrolPanel {
 		
 		this.panel.add(jSlider);
 		// Sub-panel end
+		
+		this.panel.setPreferredSize(new Dimension(300, 85));
+		this.panel.setMinimumSize(new Dimension(200, 85));
 	}
 	/**
 	 * Sets the right panel of the main GUI to the "runtime error" mode, which
