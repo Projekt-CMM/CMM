@@ -191,10 +191,13 @@ CMM
                                         // check if all forward-declarations resolved
                                         tab.checkIfForwardsResolved(tab.curScope);
                                         
-                                        // check if main-function is declared
+                                        // check if main-function is declared correct
                                         Obj obj = tab.find("main");
                                         if(obj == Tab.noObj || obj.kind != Obj.PROC) 
-                                            SemErr("main is not declared as function"); .)
+                                            SemErr("main is not declared as function");
+                                        else if(obj.nPars != 0) 
+                                            SemErr("function parameters not allowed for main function");
+                                        .)
 .
 //-------------------------------------------------------------------------
 ConstDecl                           (.  Struct type; .)
@@ -530,8 +533,6 @@ Statement<out Node st>              (.  Node design;
                                         st = new Node(Node.CALL,e,null,line);
                                         st.obj = design.obj;
                                         tab.checkFunctionParams(design.obj,st); .) 
- /* | IncDecop<out kind>                (. if(design.type == null || !design.type.isPrimitive()) SemErr("type is not a primitive"); 
-                                         n = new Node(kind,n,null,n.type); .)*/
   ) ";"
 | "if" "("                          (.  Node ifYes, ifNo; .)
     Condition<out con>
@@ -547,14 +548,10 @@ Statement<out Node st>              (.  Node design;
     Statement<out st>               (.  breakLevel --; .)
   "while" "(" Condition<out con> 
   ")" ";"                           (.  st = new Node(Node.DOWHILE,con,st,line); .)
-/*| "for" "(" Statement<out con>    (.  e = con; .)
+(. /*| "for" "(" Statement<out con>    (.  e = con; .)
   ";" Condition<out e.next>         (.  e = e.next; .)
   ";" Statement<out e.next>
-  ")" Statement<out st>             (.  st = new Node(Node.FOR,con,st,line); .)*/
-| "print" "(" BinExpr<out e>        (.  st = new Node(Node.CALL,e,null,line); 
-                                        st.obj = Tab.printProc;
-                                        tab.checkFunctionParams(Tab.printProc,st); .)    // TODO
- ")" ";"
+  ")" Statement<out st>             (.  st = new Node(Node.FOR,con,st,line); .)*/.)
 | "{"                               (.  curStat = null; con=null; .)
   {Statement<out newStat>           (.  if(curStat == null) {
                                             curStat = newStat;
@@ -671,7 +668,7 @@ Relop<out int kind>
 ).
 //-------------------------------------------------------------------------
 BinExpr<out Node res>               (.  int kind;
-                                        Node n; .)
+                                        Node n = null; .)
 =
 Shift<out res>
 { Binop<out kind>
@@ -680,13 +677,13 @@ Shift<out res>
                                         else {
                                             res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
                                             n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
-                                        }
-                                        res = new Node(kind, res, n , res.type); .)
+                                            res = new Node(kind, res, n , res.type);
+                                        } .)
 }
 .
 //-------------------------------------------------------------------------
 Shift<out Node res>                 (.  int kind;
-                                        Node n; .)
+                                        Node n = null; .)
 =
 Expr<out res>
 { Shiftop<out kind>
@@ -695,13 +692,13 @@ Expr<out res>
                                         else {
                                             res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
                                             n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
-                                        }
-                                        res = new Node(kind, res, n , res.type); .)
+                                            res = new Node(kind, res, n , res.type);
+                                        } .)
 }
 .
 //-------------------------------------------------------------------------
 Expr<out Node res>                  (.  int kind;
-                                        Node n; .)
+                                        Node n = null; .)
 =
 Term<out res>
 { Addop<out kind>
@@ -714,13 +711,13 @@ Term<out res>
                                         else {
                                             res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
                                             n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
-                                        }
-                                        res = new Node(kind, res, n , res.type); .)
+                                            res = new Node(kind, res, n , res.type);
+                                        } .)
 }
 .
 //-------------------------------------------------------------------------
 Term<out Node res>                  (.  int kind; 
-                                        Node n; .)
+                                        Node n = null; .)
 = 
 Factor<out res> 
 { Mulop<out kind>
@@ -729,8 +726,8 @@ Factor<out res>
                                         else {
                                             res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
                                             n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
-                                         }
-                                         res = new Node(kind, res, n, n.type); .)
+                                            res = new Node(kind, res, n, n.type);
+                                         } .)
 }
 .
 //-------------------------------------------------------------------------
@@ -760,19 +757,6 @@ Factor<out Node n>                  (.  Struct type;
 | ("true"                           (.  n = new Node(true); .)
   |"false"                          (.  n = new Node(false); .)          
   )
-| "read" "(" ")"                    (.  n = new Node(Node.CALL,null,null,line);
-                                        n.type = tab.charType;
-                                        n.obj = Tab.readProc;
-                                        tab.checkFunctionParams(Tab.readProc,n); .)
-| "length" 
-  "(" 
-  Designator<out arrDesign>
-  ")"                               (.  //if(arrDesign.obj.type != Tab.stringType)
-                                            //  SemErr("can only get length of string");
-                                        n = new Node(Node.CALL,arrDesign,null,line);
-                                        n.type = tab.intType;
-                                        n.obj = Tab.lengthProc;
-                                        tab.checkFunctionParams(Tab.lengthProc,n); .)
 | "-" Factor<out n>                 (.  if(n == null || !n.type.isPrimitive())
                                             SemErr("type is not a primitive");
                                         else
@@ -785,11 +769,6 @@ Factor<out Node n>                  (.  Struct type;
                                             SemErr("type is not a primitive");
                                         else
                                             n = new Node(Node.BITNEQ,n,null,n.type); .)
-| IncDecop<out kind>
- Factor<out n>                      (.  if(n == null || !n.type.isPrimitive())
-                                            SemErr("type is not a primitive");
-                                        else
-                                            n = new Node(kind,n,null,n.type); .)
 | IF (isCast())                        
   "(" 
   Type<out type>
@@ -849,12 +828,6 @@ ident                               (.  String name = t.val;
   "]"
 }
 .
-//-------------------------------------------------------------------------
-IncDecop<out int kind>
-=                                   (.  kind=Node.INC; .) 
-( "++"                                    
-| "--"                              (.  kind=Node.DEC; .)
-).
 //-------------------------------------------------------------------------
 Binop<out int kind>
 =                                   (.  kind=Node.BITAND; .) 

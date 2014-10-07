@@ -62,8 +62,8 @@ public final class Node {
 		BITXOR		= 41,	// ^
 		SHIFTLEFT 	= 42,	// <<
 		SHIFTRIGHT 	= 43,	// >>
-		INC			= 44,	// ++	// Todo x++
-		DEC			= 45,	// --	// Todo x--
+		//INC			= 44,	// ++	// Todo x++
+		//DEC			= 45,	// --	// Todo x--
 		I2F      	= 46,   // conversion from int to float
 		F2I      	= 47,   // conversion from float to int
 		I2C      	= 48,   // conversion from int to char

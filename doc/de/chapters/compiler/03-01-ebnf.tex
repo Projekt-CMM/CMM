@@ -3,12 +3,31 @@
 % 				EBNF
 %	########################################################
 
-\subsection{EBNF}
+\subsection{EBNF Syntax + Kontextbedingungen}
 
+%	########################################################
+% 				Startpoint
+%	########################################################
+
+\begin{samepage}
 \begin{lstlisting}[language=EBNF]
-CMM	= { ConstDecl | StructDecl | VarDecl | ProcDecl }.
+CMM	= { ( ConstDecl | StructDecl | VarDecl | ProcDecl ) }.
 \end{lstlisting}
+\begin{itemize}
+  \item Es muss eine parameterlose void-Prozedur namens main() geben.
+  \begin{itemize}
+    \item main not found
+    \item main is not declared as function
+    \item function parameters not allowed for main function
+  \end{itemize}
+\end{itemize}
+\end{samepage}
 
+%	########################################################
+% 				Constant Declaration
+%	########################################################
+
+\begin{samepage}
 \begin{lstlisting}[language=EBNF]
 ConstDecl = "const" Type ident "=" 
   ( ( "true" | "false" ) 
@@ -18,3 +37,298 @@ ConstDecl = "const" Type ident "="
     | stringCon
   ) ";".
 \end{lstlisting}
+\begin{itemize}
+  \item Der Typ von inCon, floatCon, charCon und stringCon muss gleich sein wie der Typ von Type.
+  \begin{itemize}
+    \item bool constant not allowed here
+    \item int constant not allowed here
+    \item float constant not allowed here
+    \item char constant not allowed here
+    \item string constant not allowed here
+  \end{itemize}
+\end{itemize}
+\end{samepage}
+
+%	########################################################
+% 				Variable Declaration
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+VarDecl = Type ident [ "=" BinExpr ]
+  { "," ident [ "=" BinExpr ] }
+  ";".
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				Structure Declaration
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+StructDecl = "struct" ident "{" { VarDecl } "}" .
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				Procedure Declaration
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+ProcDecl = ( Type | "void" )
+  ident "(" [ FormPars ] ")"
+  ( "{" 
+    { ConstDecl 
+    | VarDecl 
+    | Statement 
+    } "}" 
+  | ";"
+  ).
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				multible procedure parameters
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+FormPars = FormPar { "," FormPar }.
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				single procedure parameters
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+FormPar = Type [ "&" ] ident.
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				Type declaration
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+Type = ident { "[" intCon "]" }.
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				Statement
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+Statement = 
+  ( Designator
+    ( AssignOp BinExpr 
+    | ActPars
+    ) ";" 
+  | "if" "(" Condition ")" Statement ["else" Statement ]
+  | "while" "(" Condition ")" Statement
+  | "do" Statement "while" "(" Condition ")" ";"
+  | "{" { Statement } "}"
+  | "return" [BinExpr] ";"
+  | "break" ";"
+  | "continue" ";"
+  | ";"
+  ).
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				Assign Operator
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+AssignOp = ( "=" 
+  | "+=" | "-=" | "*=" | "/=" | "%=" 
+  | "<<=" | ">>=" 
+  | "&=" | "^=" | "|=" 
+  ). 
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				ActPars
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+ActPars = "(" [ ActPar { "," ActPar } ] ")".
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				ActPar
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+ActPar = ( BinExpr ).
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				Condition
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+Condition = CondTerm { "||" CondTerm }.
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				CondTerm
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+CondTerm = CondFact { "&&" CondFact }.
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				CondFact
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+CondFact = 
+  ( BinExpr [ Relop BinExpr ] 
+  | "!" "(" Condition ")" 
+  | "(" Condition ")" 
+  ).
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				Relop
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+Relop = ( "==" | "!=" | ">" | ">=" | "<" | "<=" ).
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				BinExpr
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+BinExpr = Shift { Binop Shift }.
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				Shift
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+Shift = Expr { Shiftop Expr }.
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				Expression
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+Expr = Term { Addop Term }.
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				Term
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+Term = Factor { Mulop Factor }.
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				Factor
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+Factor = ( Designator [ ActPars ]
+  | intCon
+  | floatCon
+  | charCon
+  | stringCon
+  | ("true"
+    |"false"
+    )
+  | "-" Factor
+  | "+" Factor
+  | "~" Factor
+  | "(" Type ")" Factor
+  | "(" BinExpr ")"
+  ).
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				Designator
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+Designator = ident { "." ident | "[" BinExpr "]" }.
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				Binop
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+Binop = ( "&" | "^" | "|" ).
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				Shiftop
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+Shiftop = ( "<<" | ">>" ).
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				Addop
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+Addop = ( "+" | "-" ).
+\end{lstlisting}
+\end{samepage}
+
+%	########################################################
+% 				Mulop
+%	########################################################
+
+\begin{samepage}
+\begin{lstlisting}[language=EBNF]
+Mulop = ( "*" | "/" | "%" ).
+\end{lstlisting}
+\end{samepage}
