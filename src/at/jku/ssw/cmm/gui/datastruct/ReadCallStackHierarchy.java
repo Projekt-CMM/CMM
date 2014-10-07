@@ -47,7 +47,7 @@ public class ReadCallStackHierarchy {
 		name = MethodContainer.getMethodName(methodID);
 
 		DataNode funcNode = new DataNode( name + "()", "", "", new ArrayList<DataNode>() );
-		readVariables( ReadSymbolTable.findNodeByName(compiler.getSymbolTable().curScope.locals, name).locals, funcNode, address, listenerModifier );
+		readVariables( findNodeByName(compiler.getSymbolTable().curScope.locals, name).locals, funcNode, address, listenerModifier );
 		node.add(funcNode);
 		
 		if( name == "main" )
@@ -161,4 +161,40 @@ public class ReadCallStackHierarchy {
         DataNode root = new DataNode("R1", "R1", Integer.valueOf(10), null);
         return root;
     }
+	
+	/**
+	 * Finds a node in the symbol table by its name. Also works with equal names in different
+	 * scopes of the source code, because the "start" node limits the search to one function
+	 * or data structure.
+	 * 
+	 * <hr><i>THREAD SAFE by default</i><hr>
+	 * 
+	 * @param start The start node for the search
+	 * @param name The name of the node that is searched
+	 * @return The node (if found), null if not found
+	 */
+	private static Obj findNodeByName( Obj start, String name ){
+		
+		//System.out.println("Looking for: " + name);
+		
+		Obj count = start;
+		while( count != null ){
+			
+			//System.out.println("checking: " + count.name);
+			
+			if( count.name.equals(name) ){
+				//System.out.println("found: " + count.name);
+				return count;
+			}
+			
+			if( count.locals != null ){
+				Obj re = findNodeByName( count.locals, name );
+				if( re != null )
+					return re;
+			}
+			count = count.next;
+		}
+		
+		return null;
+	}
 }

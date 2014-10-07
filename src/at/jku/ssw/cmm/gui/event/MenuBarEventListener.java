@@ -16,7 +16,6 @@ import at.jku.ssw.cmm.gui.GUImainSettings;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
-import at.jku.ssw.cmm.gui.init.MenuBarVisToggle;
 
 /**
  * Contains event listeners for the main in the main GUI.
@@ -26,14 +25,13 @@ import at.jku.ssw.cmm.gui.init.MenuBarVisToggle;
  */
 public class MenuBarEventListener {
 	
-	public MenuBarEventListener( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImain main, GUImainSettings settings, GUIdebugPanel modifier, SaveDialog saveDialog, MenuBarVisToggle toggle1 ){
+	public MenuBarEventListener( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImain main, GUImainSettings settings, GUIdebugPanel modifier, SaveDialog saveDialog ){
 		this.jFrame = jFrame;
 		this.jSourcePane = jSourcePane;
 		this.main = main;
 		this.settings = settings;
 		this.modifier = modifier;
 		this.saveDialog = saveDialog;
-		this.toggle1 = toggle1;
 	}
 	
 	//The main window frame
@@ -51,8 +49,6 @@ public class MenuBarEventListener {
 	private final SaveDialog saveDialog;
 	
 	private final GUIdebugPanel modifier;
-	
-	private final MenuBarVisToggle toggle1;
 	
 	/**
 	 * Event listener for the "new file" entry in the "file" drop-down menu
@@ -145,28 +141,7 @@ public class MenuBarEventListener {
 			
 			WindowEventListener.doSaveCloseProgram(jFrame, settings, saveDialog);
 		}
-	};
-	
-	public ActionListener viewTableHandler = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			
-			modifier.setViewMode(GUIdebugPanel.VM_TABLE);
-			toggle1.disable(0);
-		}
-	};
-	
-	public ActionListener viewTreeHandler = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			
-			modifier.setViewMode(GUIdebugPanel.VM_TREETABLE);
-			toggle1.disable(1);
-		}
-	};
-	
+	};	
 	public ActionListener profileHandler = new ActionListener() {
 
 		@Override

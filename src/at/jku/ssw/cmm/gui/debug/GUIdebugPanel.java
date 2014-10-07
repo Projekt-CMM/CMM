@@ -64,7 +64,7 @@ public class GUIdebugPanel {
 		this.jVarPanel = new JPanel();
 		this.jVarPanel.setBorder(new TitledBorder(_("Variables")));
 		this.jVarPanel.setLayout(new BoxLayout(this.jVarPanel, BoxLayout.PAGE_AXIS));
-		this.varView = new TableView( this, this.jVarPanel, popup );
+		this.varView = new TreeTableView(jVarPanel);
 		this.jRightPanel.add(jVarPanel, BorderLayout.CENTER);
 		
 		this.stepTarget = -1;
@@ -158,25 +158,6 @@ public class GUIdebugPanel {
 	
 	void setCallStackSize( int size ){
 		this.callStackSize = size;
-	}
-	
-	public void setViewMode( byte mode ){
-		
-		this.jVarPanel.removeAll();
-		
-		switch( mode ){
-		case VM_TREETABLE:
-			this.varView = new TreeTableView(jVarPanel);
-			break;
-		default:
-			this.varView = new TableView( this, jVarPanel, null );
-			break;
-		}
-		
-		this.jVarPanel.repaint();
-		
-		if( this.compileManager.isRunning() )
-			this.varView.update(compileManager);
 	}
 	
 	/**

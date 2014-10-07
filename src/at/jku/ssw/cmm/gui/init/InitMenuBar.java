@@ -39,11 +39,8 @@ public class InitMenuBar {
 	 */
 	public static void initFileM( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImain main, GUImainSettings settings, GUIdebugPanel modifier, SaveDialog saveDialog ){
 		
-		//Initialize menu bar toggle wrapper
-		MenuBarVisToggle toggle1 = new MenuBarVisToggle();
-		
 		//Initialize listener for the menu bar
-		MenuBarEventListener listener = new MenuBarEventListener( jFrame, jSourcePane, main, settings, modifier, saveDialog, toggle1 );
+		MenuBarEventListener listener = new MenuBarEventListener( jFrame, jSourcePane, main, settings, modifier, saveDialog );
 		
 		//Initialize MenuBar
 		JMenuBar menubar = new JMenuBar();
@@ -81,24 +78,6 @@ public class InitMenuBar {
 			JMenuItem exitMI = new JMenuItem(_("Exit"));
 			exitMI.addActionListener(listener.exitHandler);
 			fileM.add(exitMI);
-			
-		/* --- MENU: "view" --- */
-		JMenu viewM = new JMenu(_("View"));
-		menubar.add(viewM);
-				
-			// --- view -> tables and lists ---
-			JMenuItem tableMI = new JMenuItem(_("Tables and lists"));
-			tableMI.addActionListener(listener.viewTableHandler);
-			viewM.add(tableMI);
-			toggle1.registerComponent(tableMI);
-			
-			// --- view -> tables and lists ---
-			JMenuItem treeMI = new JMenuItem(_("TreeTable"));
-			treeMI.addActionListener(listener.viewTreeHandler);
-			viewM.add(treeMI);
-			toggle1.registerComponent(treeMI);
-		
-		toggle1.disable(0);
 		
 		/* --- MENU: "progress" --- */
 		if( GUImain.ADVANCED_GUI ){
