@@ -49,6 +49,8 @@ public class GUIdebugPanel {
 		this.cp = cp;
 		
 		this.modifier = mod;
+		
+		this.popup = popup;
 
 		this.jRightPanel = new JPanel();
 		this.jRightPanel.setLayout(new BorderLayout());
@@ -89,6 +91,8 @@ public class GUIdebugPanel {
 	// Interface of the right panel (edit text, compile
 	// error, interpreter)
 	private final JPanel jRightPanel;
+	
+	private final PopupInterface popup;
 
 	private TreeTableView varView;
 	
@@ -153,7 +157,7 @@ public class GUIdebugPanel {
 	 * Updates the variable table, call stack or tree table according to the current view mode.
 	 */
 	public void updateVariableTables(){
-		varView.update(compileManager, this.modifier.getFileName());
+		varView.update(compileManager, this.modifier.getFileName(), popup);
 	}
 	
 	void setCallStackSize( int size ){

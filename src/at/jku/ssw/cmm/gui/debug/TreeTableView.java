@@ -5,6 +5,7 @@ import javax.swing.JScrollPane;
 
 import at.jku.ssw.cmm.CMMwrapper;
 import at.jku.ssw.cmm.gui.datastruct.ReadCallStackHierarchy;
+import at.jku.ssw.cmm.gui.popup.PopupInterface;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
 
@@ -46,9 +47,9 @@ public class TreeTableView{
 	 * 
 	 * @param compiler
 	 */
-	public void update( CMMwrapper compiler, String fileName ) {
+	public void update( CMMwrapper compiler, String fileName, PopupInterface popup ) {
 		
-		this.varTreeTable.setTreeModel(ReadCallStackHierarchy.readSymbolTable(compiler, null, fileName));
+		this.varTreeTable.setTreeModel(ReadCallStackHierarchy.readSymbolTable(compiler, popup, fileName));
 	}
 
 	/**

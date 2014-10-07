@@ -1,5 +1,6 @@
 package at.jku.ssw.cmm.gui.datastruct;
 
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -8,7 +9,8 @@ import at.jku.ssw.cmm.CMMwrapper;
 import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Strings;
 import at.jku.ssw.cmm.compiler.Struct;
-import at.jku.ssw.cmm.gui.debug.TreeTableView;
+import at.jku.ssw.cmm.gui.event.debug.StringPopupListener;
+import at.jku.ssw.cmm.gui.popup.PopupInterface;
 import at.jku.ssw.cmm.gui.treetable.DataNode;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
@@ -22,16 +24,16 @@ import at.jku.ssw.cmm.interpreter.memory.MethodContainer;
  */
 public class ReadCallStackHierarchy {
 	
-	public static TreeTableDataModel readSymbolTable( CMMwrapper compiler, TreeTableView listenerModifier, String fileName ){
+	public static TreeTableDataModel readSymbolTable( CMMwrapper compiler, PopupInterface popup, String fileName ){
 		
 		//Create root node
 		DataNode node = new DataNode(fileName, "", "", new ArrayList<DataNode>());
 		
 		//Add global variables
-		node = readVariables(compiler.getSymbolTable().curScope.locals, node, Memory.getGlobalPointer(), listenerModifier);
+		node = readVariables(compiler.getSymbolTable().curScope.locals, node, Memory.getGlobalPointer(), popup);
 		
 		//Read local variables recursively
-		getNextAddress( compiler, Memory.getFramePointer(), node, listenerModifier );
+		getNextAddress( compiler, Memory.getFramePointer(), node, popup );
 		
 		//Create tree table model
 		TreeTableDataModel model = new TreeTableDataModel( node );
@@ -39,7 +41,7 @@ public class ReadCallStackHierarchy {
 		return model;
 	}
 	
-	private static void getNextAddress( CMMwrapper compiler, int address, DataNode node, TreeTableView listenerModifier ){
+	private static void getNextAddress( CMMwrapper compiler, int address, DataNode node, PopupInterface popup ){
 		
 		String name;
 
@@ -47,16 +49,16 @@ public class ReadCallStackHierarchy {
 		name = MethodContainer.getMethodName(methodID);
 
 		DataNode funcNode = new DataNode( name + "()", "", "", new ArrayList<DataNode>() );
-		readVariables( findNodeByName(compiler.getSymbolTable().curScope.locals, name).locals, funcNode, address, listenerModifier );
+		readVariables( findNodeByName(compiler.getSymbolTable().curScope.locals, name).locals, funcNode, address, popup );
 		node.add(funcNode);
 		
 		if( name == "main" )
 			return;
 		else
-			getNextAddress( compiler, Memory.loadInt(address-4), node, listenerModifier );
+			getNextAddress( compiler, Memory.loadInt(address-4), node, popup );
 	}
 	
-	private static DataNode readVariables( Obj obj, DataNode node, int address, TreeTableView listenerModifier ){
+	private static DataNode readVariables( Obj obj, DataNode node, int address, PopupInterface popup ){
 		
 		while( obj != null ){
 				if( obj.type.kind == Struct.INT && obj.kind != Obj.PROC ){
@@ -93,16 +95,16 @@ public class ReadCallStackHierarchy {
 					}
 				}
 				if( obj.type.kind == Struct.ARR && obj.kind != Obj.PROC ){
-					node.add(readArray(obj, address + obj.adr, listenerModifier));
+					node.add(readArray(obj, address + obj.adr, popup));
 				}
 				if( obj.type.kind == Struct.STRUCT && obj.kind != Obj.PROC ){
-					DataNode n = readVariables( obj.type.fields, new DataNode(obj.name, "struct", "", new ArrayList<DataNode>()), address + obj.adr, listenerModifier );
+					DataNode n = readVariables( obj.type.fields, new DataNode(obj.name, "struct", "", new ArrayList<DataNode>()), address + obj.adr, popup );
 					node.add(n);
 				}
 				if( obj.type.kind == Struct.STRING && obj.kind != Obj.PROC ){
 					JButton b = new JButton(Strings.get(Memory.loadStringAddress(address + obj.adr)));
-					//MouseListener l = new PanelRunLinkListener( listenerModifier, obj.name,StructureContainer.STRING, address + obj.adr, false, b );
-					//b.addMouseListener(l);
+					MouseListener l = new StringPopupListener(popup, Strings.get(Memory.loadStringAddress(address + obj.adr)));
+					b.addMouseListener(l);
 					
 					node.add(new DataNode(obj.name, "string", b, null));
 				}
@@ -113,7 +115,7 @@ public class ReadCallStackHierarchy {
 		return node;
 	}
 	
-	private static DataNode readArray( Obj count, int address, TreeTableView listenerModifier ){
+	private static DataNode readArray( Obj count, int address, PopupInterface popup ){
 		
 		int length = count.type.elements;
 		int size = count.type.size / count.type.elements;
@@ -143,10 +145,10 @@ public class ReadCallStackHierarchy {
 				typeName = "bool";
 			}
 			else if( count.kind == Struct.ARR ){
-				node.add(readArray(count.type.fields, address + address + size * i, listenerModifier));
+				node.add(readArray(count.type.fields, address + address + size * i, popup));
 			}
 			else if( count.kind == Struct.STRUCT ){
-				DataNode n = readVariables( count.type.fields, new DataNode(count.name, "struct", "", new ArrayList<DataNode>()), address + count.adr, listenerModifier );
+				DataNode n = readVariables( count.type.fields, new DataNode(count.name, "struct", "", new ArrayList<DataNode>()), address + count.adr, popup );
 				node.add(n);
 			}
 			

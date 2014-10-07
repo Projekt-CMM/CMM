@@ -2,13 +2,12 @@ package at.jku.ssw.cmm.gui.popup;
 
 import java.awt.Dimension;
 
-import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class StringPopup {
 
-	public static void createPopUp( PopupInterface popupInterface, JComponent cp, String text, int x, int y ){
+	public static void createPopUp( PopupInterface popupInterface, String text, int x, int y ){
 		
 		ImagePopup popup = new ImagePopup("images/popup2.png");
 		popup.setBounds(popupInterface.getGlassPane().getMousePosition().x-221, popupInterface.getGlassPane().getMousePosition().y-151, 260, 151);

@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.treetable;
 
+import javax.swing.JButton;
+
 /**
  * Defines the complete data model as well as column names and column data types
  * <br>
@@ -60,7 +62,7 @@ public class TreeTableDataModel extends AbstractTreeTableModel {
  
     public boolean isCellEditable(Object node, int column) {
         //First column must be editable, so that the user can open a jTree node
-    	if( column == 0 )
+    	if( column == 0 || (column == 2 && node instanceof JButton) )
         	return true;
     	//Other cells are not editable
         else
