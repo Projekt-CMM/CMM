@@ -1,5 +1,5 @@
 /bin/
-/doc/
+*.swp
 *.*~
 CMM.jar
 bruteforce.c

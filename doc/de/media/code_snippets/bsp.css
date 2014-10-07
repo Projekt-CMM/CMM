@@ -1,0 +1,14 @@
+/* Zugriff auf ein HTML Tag */
+body {
+	background-color: blue;
+}
+
+/* Zugriff auf eine Klasse */
+.class {
+	font-weight: bold;
+}
+
+/* Zugriff auf eine ID */
+#id {
+	color: red;
+}
