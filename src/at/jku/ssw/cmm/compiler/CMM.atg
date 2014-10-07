@@ -533,6 +533,10 @@ Statement<out Node st>              (.  Node design;
                                         st = new Node(Node.CALL,e,null,line);
                                         st.obj = design.obj;
                                         tab.checkFunctionParams(design.obj,st); .) 
+  | "++"                            (.  e = new Node(Node.PLUS, design, new Node(1), design.type);
+                                        st = new Node(Node.ASSIGN,design,e,line); .)
+  | "--"                            (.  e = new Node(Node.MINUS, design, new Node(1), design.type);
+                                        st = new Node(Node.ASSIGN,design,e,line); .)
   ) ";"
 | "if" "("                          (.  Node ifYes, ifNo; .)
     Condition<out con>
