@@ -1,4 +1,5 @@
 package at.jku.ssw.cmm.gui.datastruct;
+
 import java.util.Stack;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
 import at.jku.ssw.cmm.interpreter.memory.MethodContainer;

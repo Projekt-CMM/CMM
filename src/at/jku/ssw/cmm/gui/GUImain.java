@@ -222,6 +222,24 @@ public class GUImain implements GUImainMod, PopupInterface {
 			this.jFrame.setTitle(VERSION + " - " + this.settings.getPath());
 	}
 	
+	@Override
+	public String getFileName() {
+		
+		//final String sep = System.getProperty("file.separator");
+		String s = this.settings.getPath();
+		
+		File file = new File(s);
+		s = file.getName();
+		
+		return s;
+	}
+
+	@Override
+	public String getFileNameAndPath() {
+		
+		return this.settings.getPath();
+	}
+	
 	public void setFileChanged(){
 		if( !this.jFrame.getTitle().endsWith("*") )
 			this.jFrame.setTitle(this.jFrame.getTitle() + "*");

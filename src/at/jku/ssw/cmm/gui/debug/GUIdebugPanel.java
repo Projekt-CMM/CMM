@@ -64,7 +64,7 @@ public class GUIdebugPanel {
 		this.jVarPanel = new JPanel();
 		this.jVarPanel.setBorder(new TitledBorder(_("Variables")));
 		this.jVarPanel.setLayout(new BoxLayout(this.jVarPanel, BoxLayout.PAGE_AXIS));
-		this.varView = new TreeTableView(jVarPanel);
+		this.varView = new TreeTableView(jVarPanel, mod.getFileName());
 		this.jRightPanel.add(jVarPanel, BorderLayout.CENTER);
 		
 		this.stepTarget = -1;
@@ -90,7 +90,7 @@ public class GUIdebugPanel {
 	// error, interpreter)
 	private final JPanel jRightPanel;
 
-	private VariableView varView;
+	private TreeTableView varView;
 	
 	private final GUIcontrolPanel ctrlPanel;
 
@@ -146,14 +146,14 @@ public class GUIdebugPanel {
 
 		this.modifier.resetInputHighlighter();
 		
-		this.varView.standby();
+		this.varView.standby(this.modifier.getFileName());
 	}
 	
 	/**
 	 * Updates the variable table, call stack or tree table according to the current view mode.
 	 */
 	public void updateVariableTables(){
-		varView.update(compileManager);
+		varView.update(compileManager, this.modifier.getFileName());
 	}
 	
 	void setCallStackSize( int size ){

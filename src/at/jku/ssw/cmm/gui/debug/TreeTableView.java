@@ -8,13 +8,13 @@ import at.jku.ssw.cmm.gui.datastruct.ReadCallStackHierarchy;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
 
-public class TreeTableView extends VariableView{
+public class TreeTableView{
 	
-	public TreeTableView( JPanel panel ){
+	public TreeTableView( JPanel panel, String fileName ){
 		
 		this.panel = panel;
 		
-		this.init();
+		this.init(fileName);
 	}
 	
 	// Main panel
@@ -24,11 +24,15 @@ public class TreeTableView extends VariableView{
 	private TreeTable varTreeTable;
 	private TreeTableDataModel varTreeTableModel;
 	
-	@Override
-	public void init() {
+	/**
+	 * Initializes the variable view table/tree table, etc
+	 * 
+	 * @param panel
+	 */
+	public void init( String fileName ) {
 		
 		/* ---------- TREE TABLE for CALL STACK and LOCALS (optional) ---------- */
-		this.varTreeTableModel = new TreeTableDataModel(ReadCallStackHierarchy.createDataStructure());
+		this.varTreeTableModel = new TreeTableDataModel(ReadCallStackHierarchy.createDataStructure(fileName));
 		
 		this.varTreeTable = new TreeTable(this.varTreeTableModel);
 		
@@ -37,16 +41,22 @@ public class TreeTableView extends VariableView{
 		// Sub-panel end
 	}
 
-	@Override
-	public void update(CMMwrapper compiler) {
+	/**
+	 * Updates variable values and call stack
+	 * 
+	 * @param compiler
+	 */
+	public void update( CMMwrapper compiler, String fileName ) {
 		
-		this.varTreeTable.setTreeModel(ReadCallStackHierarchy.readSymbolTable(compiler, null));
+		this.varTreeTable.setTreeModel(ReadCallStackHierarchy.readSymbolTable(compiler, null, fileName));
 	}
 
-	@Override
-	public void standby() {
+	/**
+	 * Deletes all variable values from tables; tables are shown blank
+	 */
+	public void standby( String fileName ) {
 		
-		this.varTreeTable.setTreeModel(new TreeTableDataModel(ReadCallStackHierarchy.createDataStructure()));
+		this.varTreeTable.setTreeModel(new TreeTableDataModel(ReadCallStackHierarchy.createDataStructure(fileName)));
 	}
 
 }

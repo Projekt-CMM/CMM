@@ -22,10 +22,10 @@ import at.jku.ssw.cmm.interpreter.memory.MethodContainer;
  */
 public class ReadCallStackHierarchy {
 	
-	public static TreeTableDataModel readSymbolTable( CMMwrapper compiler, TreeTableView listenerModifier ){
+	public static TreeTableDataModel readSymbolTable( CMMwrapper compiler, TreeTableView listenerModifier, String fileName ){
 		
 		//Create root node
-		DataNode node = new DataNode("root", "void", "", new ArrayList<DataNode>());
+		DataNode node = new DataNode(fileName, "", "", new ArrayList<DataNode>());
 		
 		//Add global variables
 		node = readVariables(compiler.getSymbolTable().curScope.locals, node, Memory.getGlobalPointer(), listenerModifier);
@@ -157,8 +157,8 @@ public class ReadCallStackHierarchy {
 		
 	}
 	
-	public static DataNode createDataStructure() {
-        DataNode root = new DataNode("R1", "R1", Integer.valueOf(10), null);
+	public static DataNode createDataStructure( String fileName ) {
+        DataNode root = new DataNode(fileName, "", "", null);
         return root;
     }
 	
@@ -175,15 +175,10 @@ public class ReadCallStackHierarchy {
 	 */
 	private static Obj findNodeByName( Obj start, String name ){
 		
-		//System.out.println("Looking for: " + name);
-		
 		Obj count = start;
 		while( count != null ){
 			
-			//System.out.println("checking: " + count.name);
-			
 			if( count.name.equals(name) ){
-				//System.out.println("found: " + count.name);
 				return count;
 			}
 			

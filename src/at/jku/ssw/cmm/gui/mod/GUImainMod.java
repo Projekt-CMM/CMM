@@ -21,6 +21,19 @@ public interface GUImainMod {
 	void updateWinFileName();
 	
 	/**
+	 * 
+	 * @return Name of the current file without path, eg "file2.cmm"
+	 */
+	String getFileName();
+	
+	/**
+	 * 
+	 * @return Name of the current cmm file with path, eg "demo/file2.cmm" <br>
+	 * <i>WARNING: File path can be absolute or relative</i>
+	 */
+	String getFileNameAndPath();
+	
+	/**
 	 * Note: Method from interface <i>GUImod</i>
 	 * 
 	 * <hr><i>THREAD SAFE by default</i><hr>
