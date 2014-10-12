@@ -119,7 +119,7 @@ public class GUIquestPanel {
 	}
 	
 	/**
-	 * Loads the profile image and the players reward tokens
+	 * Loads the profile image and the player's reward tokens
 	 */
 	private void loadImages(){
 		//Load Profile Image

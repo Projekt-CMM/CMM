@@ -58,32 +58,91 @@ public class GUImain implements GUImainMod, PopupInterface {
 		app.start();
 	}
 
+	/**
+	 * The frame of the window which contains the main GUI.
+	 */
 	private JFrame jFrame;
 
+	/**
+	 * A reference to the right panel control class. <br>
+	 * The right panel contains the debugger and profile/quest info tabs.
+	 */
 	private GUIrightPanel rightPanelControl;
 
+	/**
+	 * The text panel with the source code.
+	 */
 	private RSyntaxTextArea jSourcePane;
 
+	/**
+	 * The text panel with input data for the cmm program.
+	 */
 	private JTextArea jInputPane;
 
+	/**
+	 * The text panel for the output stream of the cmm program.
+	 */
 	private JTextArea jOutputPane;
 
+	/**
+	 * A reference to the general settings object which contains the path of the current file,
+	 * the current screen size and the window name. <br>
+	 * Will be replaced by individual profile settings in future.
+	 */
 	private final GUImainSettings settings;
 
+	/**
+	 * A reference to the save dialog class which manages saving the current cmm file.
+	 */
 	private SaveDialog saveDialog;
 
 	//TODO make codeRegister thread safe
+	/**
+	 * A list which contains the lines of all libraries in the complete source code.
+	 * When a library is loaded, its code is pasted to the source code of the cmm file
+	 * and this complete code is given to the compiler.
+	 * 
+	 * codeRegister contains information about the start and end line of each library file.
+	 * The array in the list is initialized as follows:
+	 * <ul>
+	 * 		<li>Start line</li>
+	 * 		<li>End line</li>
+	 * 		<li>File Name</li>
+	 * </ul>
+	 * 
+	 * <i>Note: Please use ExpandSourcecode.correctLine() determine the line in the text area
+	 * from the line of the complete source code. The parameters are.
+	 * <ul>
+	 * 		<li><b>int line:</b> the line in the complete source code.</li>
+	 * 		<li><b>int codeStart:</b> the line where the original source code starts. Use this.codeRegister.get(0)[0] </li>
+	 * 		<li><b>int files:</b> The total number of library files. Use this.codeRegister.size()</li>
+	 * </ul>
+	 */
 	private List<Object[]> codeRegister;
 
+	/**
+	 * When input data from the input source pane is read by the cmm program, the input data
+	 * has to be marked as "already read". This happens with simple highlighting. <br>
+	 * The variable inputHightlightOffset is the number of characters of the input string which
+	 * has already been used.
+	 */
 	private int inputHighlightOffset;
-
-	private Object readLoopLock;
 	
+	/**
+	 * Unicode character of the breakpoint.
+	 */
 	public static final char BREAKPOINT = '\u2326';
 	
+	/**
+	 * If true, GUI options for quest and profile functions are shown. <br>
+	 * If false, quest/profile GUI is hidden.
+	 */
 	public static final boolean ADVANCED_GUI = false;
 	
-	public static final String VERSION = "C Compact Alpha 1.0";
+	/**
+	 * The current version of C Compact, used as window title.
+	 */
+	public static final String VERSION = "C Compact Alpha 1.1 dev";
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)
@@ -101,9 +160,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 * requires calling a constructor with configuration data before (see above
 	 * in code).
 	 * 
-	 * <hr>
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
 	 */
 	private void start() {
 		
@@ -187,9 +244,14 @@ public class GUImain implements GUImainMod, PopupInterface {
 
 		// Variable initialization
 		this.inputHighlightOffset = 0;
-		this.readLoopLock = new Object();
 	}
 
+	/**
+	 * Highlights the already used characters of the input text area.
+	 * Usually called while interpreter is working.
+	 * 
+	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
+	 */
 	private void highlightInputPane() {
 		Highlighter high = this.jInputPane.getHighlighter();
 		high.removeAllHighlights();
@@ -272,7 +334,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	@Override
 	public void highlightSourceCode(int line, int col) {
 
-		// Line out of source code range (includes)
+		// Line out of user source code range (#include)
 		if (line <= (int) this.codeRegister.get(0)[0])
 			return;
 
@@ -285,11 +347,10 @@ public class GUImain implements GUImainMod, PopupInterface {
 		int i, l = 0;
 		final String code = this.jSourcePane.getText();
 
-		synchronized (readLoopLock) {
-			for (i = 0; l < line - 1; i++) {
-				if (code.charAt(i) == '\n')
-					l++;
-			}
+		//TODO readLoopLock
+		for (i = 0; l < line - 1; i++) {
+			if (code.charAt(i) == '\n')
+				l++;
 		}
 
 		final int i_copy = i, l_copy = l;
