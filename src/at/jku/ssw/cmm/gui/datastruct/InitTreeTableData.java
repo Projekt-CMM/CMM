@@ -112,7 +112,7 @@ public class InitTreeTableData {
 				if( obj.type.kind == Struct.ARR && obj.kind != Obj.PROC ){
 					node.add(init, readArray(init, obj, node.getChild(obj.name, "array", ""), address + obj.adr, popup));
 				}
-				if( obj.type.kind == Struct.STRUCT && obj.kind != Obj.PROC ){
+				if( obj.type.kind == Struct.STRUCT && obj.kind != Obj.PROC && obj.kind != Obj.TYPE ){
 					DataNode n = readVariables( init, obj.type.fields, node.getChild(obj.name, "struct", ""), address + obj.adr, popup );
 					node.add(init, n);
 						
@@ -161,7 +161,7 @@ public class InitTreeTableData {
 			else if( count.kind == Struct.ARR ){
 				node.add(init, readArray(init, count.type.fields, node.getChild(count.name, "array", ""), address + address + size * i, popup));
 			}
-			else if( count.kind == Struct.STRUCT ){
+			else if( count.kind == Struct.STRUCT && count.kind != Obj.TYPE ){
 				DataNode n = readVariables( init, count.type.fields, new DataNode(count.name, "struct", "", new ArrayList<DataNode>()), address + count.adr, popup );
 				node.add(init, n);
 			}
