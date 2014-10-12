@@ -59,8 +59,12 @@ public class DataNode {
     	if( !init && this.children != null && this.children.size() > 0 ){
     		for( DataNode d : this.children ){
     			if( d.name.equals(n.name) ){
-    				if( DataNode.equals(d, n) )
+    				if( DataNode.equals(d, n) ){
+    					d.type = "" + n.type + "*";
     					System.err.println("Value changed (" + d.value + ", " + d.value.getClass() + ") " + n.print());
+    				}
+    				else
+    					d.type = n.type;
     				d.value = n.value;
     				System.out.println("Found: " + n.name + ", new value is " + n.value + " | " + d.value);
     				return;
