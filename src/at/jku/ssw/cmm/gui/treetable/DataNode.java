@@ -3,6 +3,8 @@ package at.jku.ssw.cmm.gui.treetable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
+
 /**
  * Contains the data for one node of the tree table.
  * <br>
@@ -57,7 +59,7 @@ public class DataNode {
     	if( !init && this.children != null && this.children.size() > 0 ){
     		for( DataNode d : this.children ){
     			if( d.name.equals(n.name) ){
-    				if( !d.value.equals(n.value) )
+    				if( DataNode.equals(d, n) )
     					System.err.println("Value changed (" + d.value + ", " + d.value.getClass() + ") " + n.print());
     				d.value = n.value;
     				System.out.println("Found: " + n.name + ", new value is " + n.value + " | " + d.value);
@@ -79,6 +81,18 @@ public class DataNode {
     			return d;
     	}
     	return new DataNode( name, type, value, new ArrayList<DataNode>() );
+    }
+    
+    public static boolean equals( DataNode oldNode, DataNode newNode ){
+    	
+    	if( oldNode.getValue() instanceof JButton && newNode.getValue() instanceof JButton ){
+    		JButton b1 = (JButton)oldNode.getValue();
+    		JButton b2 = (JButton)newNode.getValue();
+    		
+    		return !b1.getText().equals(b2.getText());
+    	}
+    	else
+    		return !oldNode.getValue().equals(newNode.getValue());
     }
  
     /**
