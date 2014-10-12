@@ -84,4 +84,9 @@ public class TreeTable extends JTable {
     	
     	this.setTreeModel(empty);
     }
+    
+    public TreeTableCellRenderer getCellRenderer(){
+    	return this.tree;
+    }
+
 }

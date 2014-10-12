@@ -82,6 +82,9 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
     	if ( table.getValueAt(row, 0).toString().endsWith(")") ){
         	setBackground(Color.GREEN);
         }
+    	else if ( table.getValueAt(row, 0).toString().endsWith(" ") ){
+        	setBackground(Color.YELLOW);
+        }
     	else if (isSelected)
 	        setBackground(table.getSelectionBackground());
 	    else

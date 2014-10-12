@@ -87,9 +87,7 @@ public class PanelRunListener implements Debugger {
 
 	/* --- functional methods --- */
 	/**
-	 * <hr>
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
 	 */
 	public void reset() {
 		this.run = false;

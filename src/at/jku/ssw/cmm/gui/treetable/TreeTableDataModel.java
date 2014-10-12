@@ -21,6 +21,10 @@ public class TreeTableDataModel extends AbstractTreeTableModel {
         super(rootNode);
         root = rootNode;
     }
+    
+    public DataNode getRoot(){
+    	return root;
+    }
 
 	public Object getChild(Object parent, int index) {
         return ((DataNode) parent).getChildren().get(index);

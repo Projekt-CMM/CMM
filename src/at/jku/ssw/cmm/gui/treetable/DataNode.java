@@ -46,6 +46,10 @@ public class DataNode {
         return children;
     }
     
+    public int getChildCount(){
+    	return this.children.size();
+    }
+    
     public void add( DataNode n ){
     	this.children.add(n);
     }

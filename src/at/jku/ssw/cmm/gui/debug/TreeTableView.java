@@ -8,6 +8,7 @@ import at.jku.ssw.cmm.gui.datastruct.ReadCallStackHierarchy;
 import at.jku.ssw.cmm.gui.popup.PopupInterface;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
+import at.jku.ssw.cmm.gui.treetable.TreeUtils;
 
 public class TreeTableView{
 	
@@ -50,6 +51,10 @@ public class TreeTableView{
 	public void update( CMMwrapper compiler, String fileName, PopupInterface popup ) {
 		
 		this.varTreeTable.setTreeModel(ReadCallStackHierarchy.readSymbolTable(compiler, popup, fileName));
+		
+		TreeUtils.expandAll(varTreeTable, true);
+		
+		this.varTreeTable.repaint();
 	}
 
 	/**
@@ -58,6 +63,10 @@ public class TreeTableView{
 	public void standby( String fileName ) {
 		
 		this.varTreeTable.setTreeModel(new TreeTableDataModel(ReadCallStackHierarchy.createDataStructure(fileName)));
+	}
+	
+	public TreeTableDataModel getModel(){
+		return this.varTreeTableModel;
 	}
 
 }
