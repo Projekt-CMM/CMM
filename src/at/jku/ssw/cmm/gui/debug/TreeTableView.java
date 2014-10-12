@@ -53,7 +53,7 @@ public class TreeTableView{
 	 */
 	public void update( CMMwrapper compiler, String fileName, PopupInterface popup, boolean completeUpDate ) {
 		
-		if( completeUpDate || forceUpdate ){
+		if( completeUpDate || this.forceUpdate ){
 			System.out.println("[treetable][update] complete variable structure update");
 			this.varTreeTable.setTreeModel(InitTreeTableData.readSymbolTable(compiler, popup, fileName));
 			this.forceUpdate = false;
@@ -75,10 +75,6 @@ public class TreeTableView{
 		this.forceUpdate = true;
 		
 		System.out.println("[treetable] standby");
-	}
-	
-	public TreeTableDataModel getModel(){
-		return this.varTreeTableModel;
 	}
 
 }
