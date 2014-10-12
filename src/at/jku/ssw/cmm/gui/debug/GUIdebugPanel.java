@@ -77,48 +77,81 @@ public class GUIdebugPanel {
 		this.breakpoints = new ArrayList<>();
 	}
 	
-	public static final byte VM_TABLE = 0;
-	public static final byte VM_TREETABLE = 1;
-	
+	/**
+	 * Main component of the main GUI
+	 */
 	private final JComponent cp;
 	
+	/**
+	 * Panel with variable tree table
+	 */
 	private JPanel jVarPanel;
+	
+	/**
+	 * Panel with control buttons, i.e. PLAY/PAUSE, STEP, STEP OVER, ...
+	 */
 	private JPanel jControlPanel;
-
-	// Interface for main GUI manipulations
-	private final GUImainMod modifier;
-
-	// Interface of the right panel (edit text, compile
-	// error, interpreter)
-	private final JPanel jRightPanel;
 	
-	private final PopupInterface popup;
-
-	private TreeTableView varView;
-	
+	/**
+	 * The manager object for the control panel.
+	 */
 	private final GUIcontrolPanel ctrlPanel;
 
-	// Wrapper class for the compiler. Also initiates the interpreter thread.
+	/**
+	 * Interface for main GUI manipulations
+	 */
+	private final GUImainMod modifier;
+
+	/**
+	 * Interface of the right panel (edit text, compile error, interpreter)
+	 */
+	private final JPanel jRightPanel;
+	
+	/**
+	 * Interface for popup operations. Used by static methods which invoke popups.
+	 */
+	private final PopupInterface popup;
+
+	//TODO add a comment
+	private TreeTableView varView;
+
+	/**
+	 * Wrapper class for the compiler. Also initiates the interpreter thread.
+	 */
 	private final CMMwrapper compileManager;
 
-	// Error position data
+	/**
+	 * Line of the currently displayed error (if necessary)
+	 */
 	private int line;
+	
+	/**
+	 * Column of the currently displayed error (if necessary)
+	 */
 	private int col;
 
-	// Step over counter
+	/**
+	 * The Call stack size which has to be reached so that stepping over a function is finished.
+	 */
 	private int stepTarget;
+	
+	/**
+	 * The current call stack size.
+	 */
 	private int callStackSize;
 
-	// Begin of source code, without includes
+	/**
+	 * Begin of source code, without includes
+	 */
 	private int sourceCodeBeginLine;
 	
-	// List of Breakpoints
+	/**
+	 * List of breakpoints
+	 */
 	private final List<Integer> breakpoints;
 
 	/**
-	 * <hr>
 	 * <i>THREAD SAFE by default </i>
-	 * <hr>
 	 * 
 	 * @return The first line of the original source code, without includes and
 	 *         include code.
@@ -127,18 +160,40 @@ public class GUIdebugPanel {
 		return this.sourceCodeBeginLine;
 	}
 	
+	/**
+	 * <i>THREAD SAFE by default </i>
+	 * 
+	 * @return The line of the currently displayed error (if necessary)
+	 */
 	public int getErrorLine() {
 		return this.line;
 	}
 	
-	public int getCompleteErrorLine() {
-		return this.line + this.sourceCodeBeginLine - this.modifier.getSourceCodeRegister().size();
-	}
-
+	/**
+	 * <i>THREAD SAFE by default </i>
+	 * 
+	 * @return The column of the currently displayed error
+	 */
 	public int getErrorCol() {
 		return this.col;
 	}
 	
+	/**
+	 * <i>THREAD SAFE by default </i>
+	 * 
+	 * @return The line of the currently displayed error in the users's source code.
+	 * This is the error line which is highlighted in the source code panel of the main GUI.
+	 */
+	public int getCompleteErrorLine() {
+		return ExpandSourceCode.correctLine(this.line, this.sourceCodeBeginLine, this.modifier.getSourceCodeRegister().size());
+	}
+	
+	/**
+	 * Resets the control panel and the variable tree table (consequently the whole debug panel GUI).
+	 * Should be called after resetting interpreter so that the GUI does no longer display variable values.
+	 * 
+	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
+	 */
 	public void resetInterpreterData() {
 		
 		this.ctrlPanel.getListener().reset();
@@ -160,8 +215,35 @@ public class GUIdebugPanel {
 		varView.update(compileManager, this.modifier.getFileName(), popup);
 	}
 	
+	/**
+	 * Sets the call stack counter variable to the given value
+	 * <br><br>
+	 * <i>THREAD SAFE by default </i>
+	 * 
+	 * @param size The current size of the call stack.
+	 */
 	void setCallStackSize( int size ){
 		this.callStackSize = size;
+	}
+	
+	/**
+	 * <i>THREAD SAFE by default </i>
+	 * <br><br>
+	 * Updates the call stack counter variable automatically by reading the call stack memory.
+	 */
+	public void updateCallStackSize(){
+		this.callStackSize = ReadCallStack.readCallStack().size();
+	}
+	
+	/**
+	 * <i>THREAD SAFE by default </i>
+	 * 
+	 * @return The current size of the call stack. Updates automatically.
+	 */
+	public int getCallStackSize() {
+		
+		this.updateCallStackSize();
+		return this.callStackSize;
 	}
 	
 	/**
@@ -197,9 +279,8 @@ public class GUIdebugPanel {
 	 * <li>public boolean checkForStepEnd()</li>
 	 * </ul>
 	 * 
-	 * <hr>
+	 * <br><br>
 	 * <i>THREAD SAFE, asynchronously invoked. </i>Exception may stop EDT!
-	 * <hr>
 	 * 
 	 * @return TRUE if "step over" has ended, otherwise FALSE
 	 */
@@ -216,21 +297,10 @@ public class GUIdebugPanel {
 
 		return false;
 	}
-	
-	public void updateCallStackSize(){
-		this.callStackSize = ReadCallStack.readCallStack().size();
-	}
-	
-	public int getCallStackSize() {
-		
-		this.updateCallStackSize();
-		return this.callStackSize;
-	}
 
 	/**
-	 * <hr>
+	 * <br><br>
 	 * <i>THREAD SAFE by default </i>
-	 * <hr>
 	 * 
 	 * @return A reference to the right panel's compiler wrapper object, see
 	 *         {@link CMMwrapper}
@@ -246,9 +316,8 @@ public class GUIdebugPanel {
 	 * function. However, stepping over will abort if function is not entered
 	 * with the next AST node.
 	 * 
-	 * <hr>
+	 * <br><br>
 	 * <i>THREAD SAFE, calls synchronized function </i>
-	 * <hr>
 	 */
 	public void stepOver() {
 		this.stepTarget = this.callStackSize;
@@ -256,6 +325,12 @@ public class GUIdebugPanel {
 		System.out.println("[interpreter][GUIdebugPanel]Stepping over...");
 	}
 
+	/**
+	 * Initiates stepping out of the current function.
+	 * 
+	 * <br><br>
+	 * <i>THREAD SAFE, calls synchronized function </i>
+	 */
 	public void stepOut() {
 		if (this.callStackSize > 1) {
 			this.stepTarget = this.callStackSize - 1;
@@ -264,14 +339,29 @@ public class GUIdebugPanel {
 		}
 	}
 	
+	/**
+	 * <i>THREAD SAFE by default</i>
+	 * 
+	 * @return TRUE if source code can be modified, otherwise FALSE (during interpreting cmm program)
+	 */
 	public boolean isCodeChangeAllowed(){
 		return true;
 	}
 	
+	/**
+	 * <i>THREAD SAFE by default</i>
+	 * 
+	 * @return A list of all breakpoints
+	 */
 	public List<Integer> getBreakPoints(){
 		return this.breakpoints;
 	}
 	
+	/**
+	 * <i>THREAD SAFE by default</i>
+	 * 
+	 * @return A reference to the control panel manager class
+	 */
 	public GUIcontrolPanel getControlPanel(){
 		return this.ctrlPanel;
 	}
@@ -307,8 +397,8 @@ public class GUIdebugPanel {
 			return;
 		}
 
-		System.out
-				.println("\n-------------------------------------\nUsed input files: ");
+		/* --- Code statistics --- */
+		System.out.println("\n-------------------------------------\nUsed input files: ");
 		for (Object[] o : this.modifier.getSourceCodeRegister()) {
 			System.out.println("" + o[2] + ", line " + o[0] + " - " + o[1]);
 		}
@@ -331,6 +421,7 @@ public class GUIdebugPanel {
 		}
 
 		System.out.println("-------------------------------------");
+		/* --- end of statistics ---*/
 
 		// Compile
 		at.jku.ssw.cmm.compiler.Error e = compileManager.compile(sourceCode);

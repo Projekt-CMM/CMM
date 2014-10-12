@@ -21,6 +21,14 @@ import at.jku.ssw.cmm.gui.mod.GUImainMod;
  */
 public class GUIcontrolPanel {
 	
+	/**
+	 * This is the small panel with the "play", "pause", etc. buttons of the "debug" tab on the
+	 * right side of the main GUI.
+	 * 
+	 * @param panel The main panel which contains all the conntrolPanel buttons
+	 * @param debug A reference to the debug panel which contains this controlPanel
+	 * @param mod A reference to the main GUI modification interface
+	 */
 	public GUIcontrolPanel( JPanel panel, GUIdebugPanel debug, GUImainMod mod ){
 		
 		this.debug = debug;
@@ -30,26 +38,52 @@ public class GUIcontrolPanel {
 		this.initRunMode();
 	}
 	
+	/**
+	 * The main panel which contains all the conntrolPanel buttons.
+	 */
 	private JPanel panel;
 	
+	/**
+	 * A reference to the debug panel which contains this controlPanel.
+	 */
 	private final GUIdebugPanel debug;
 	
 	/* --- run mode objects --- */
-	// starts or resumes interpreting
+	/**
+	 * This button starts or pauses interpreting.
+	 */
 	private JButton jButtonPlay;
 
-	// resumes interpreting for one step
+	/**
+	 * This button resumes interpreting for one step.
+	 */
 	private JButton jButtonStep;
 
+	/**
+	 * Used for stepping over a specific function.
+	 */
 	private JButton jButtonStepOver;
 
+	/**
+	 * Used for stepping out of a function.
+	 */
 	private JButton jButtonStepOut;
 
-	// Stops interpreting
+	/**
+	 * Stops the interpreter.
+	 * Also used to get out of an error message mode.
+	 */
 	private JButton jButtonStop;
 
-	// Regulates interpreter speed
+	/**
+	 * Slider for interpreter speed (regulates the period of each interpreter step
+	 * in RUN mode).
+	 */
 	private JSlider jSlider;
+	
+	/**
+	 * Displays the current interpreter step period length in seconds.
+	 */
 	private JLabel jLabelTimer;
 
 	// Runtime error labels
@@ -57,9 +91,10 @@ public class GUIcontrolPanel {
 	private JLabel jRuntimeErrorLabel2;
 	private JLabel jRuntimeErrorLabel3;
 	
-	// Wrapper class with listeners for the "run" mode. Also contains the debug
-	// and I/O stream interface
-	// for the interpreter as well as (interpreter) "run" mode event routines.
+	/**
+	 * Wrapper class with listeners for the "run" mode. Also contains the debug
+	 * and I/O stream interface for the interpreter as well as (interpreter) "run" mode event routines.
+	 */
 	private final PanelRunListener listener;
 	
 	/**
@@ -130,6 +165,7 @@ public class GUIcontrolPanel {
 		this.panel.setPreferredSize(new Dimension(300, 85));
 		this.panel.setMinimumSize(new Dimension(200, 85));
 	}
+	
 	/**
 	 * Sets the right panel of the main GUI to the "runtime error" mode, which
 	 * is a sub-mode of "run" mode.
