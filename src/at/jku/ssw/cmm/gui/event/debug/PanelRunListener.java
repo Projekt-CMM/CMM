@@ -277,6 +277,8 @@ public class PanelRunListener implements Debugger {
 	public boolean step(final Node arg0) {
 
 		System.out.println("[node] " + arg0);
+		
+		this.master.updateCallStackSize();
 
 		/* --- Node #1: Step over mode? --- */
 		if (this.stepOver) {
@@ -297,7 +299,6 @@ public class PanelRunListener implements Debugger {
 
 		/* --- Node #3: Quick mode? --- */
 		if (this.isRunMode() && this.delay == 0) {
-			this.master.updateCallStackSize();
 			
 			//Passing a breakpoint
 			if( !this.master.getBreakPoints().isEmpty() && arg0.line >= this.master.getBreakPoints().get(0)-1 ){
@@ -319,7 +320,8 @@ public class PanelRunListener implements Debugger {
 		// -> Node #3 - DEFAULT
 		/* --- Update Block --- */
 		this.master.getControlPanel().updateStepOutButton();
-		this.master.updateVariableTables();
+		if( arg0.kind == Node.CALL || arg0.kind == Node.ASSIGN )
+			this.master.updateVariableTables(this.master.callStackChanged());
 
 		this.timer = null;
 

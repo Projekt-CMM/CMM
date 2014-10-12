@@ -1,6 +1,5 @@
 package at.jku.ssw.cmm.gui.treetable;
 
-import java.util.List;
 import java.util.Stack;
 
 import javax.swing.tree.TreePath;

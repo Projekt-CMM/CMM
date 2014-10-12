@@ -139,6 +139,11 @@ public class GUIdebugPanel {
 	 * The current call stack size.
 	 */
 	private int callStackSize;
+	
+	/**
+	 * The previous call stack size
+	 */
+	private int previousCallStackSize;
 
 	/**
 	 * Begin of source code, without includes
@@ -199,6 +204,7 @@ public class GUIdebugPanel {
 		this.ctrlPanel.getListener().reset();
 
 		this.callStackSize = 0;
+		this.previousCallStackSize = 0;
 
 		this.ctrlPanel.getListener().stepComplete();
 		this.stepTarget = -1;
@@ -211,8 +217,8 @@ public class GUIdebugPanel {
 	/**
 	 * Updates the variable table, call stack or tree table according to the current view mode.
 	 */
-	public void updateVariableTables(){
-		varView.update(compileManager, this.modifier.getFileName(), popup);
+	public void updateVariableTables( boolean completeUpDate ){
+		varView.update(compileManager, this.modifier.getFileName(), popup, completeUpDate);
 	}
 	
 	/**
@@ -223,6 +229,7 @@ public class GUIdebugPanel {
 	 * @param size The current size of the call stack.
 	 */
 	void setCallStackSize( int size ){
+		this.previousCallStackSize = this.callStackSize;
 		this.callStackSize = size;
 	}
 	
@@ -232,6 +239,7 @@ public class GUIdebugPanel {
 	 * Updates the call stack counter variable automatically by reading the call stack memory.
 	 */
 	public void updateCallStackSize(){
+		this.previousCallStackSize = this.callStackSize;
 		this.callStackSize = ReadCallStack.readCallStack().size();
 	}
 	
@@ -242,8 +250,16 @@ public class GUIdebugPanel {
 	 */
 	public int getCallStackSize() {
 		
-		this.updateCallStackSize();
 		return this.callStackSize;
+	}
+	
+	/**
+	 * <i>THREAD SAFE by default </i>
+	 * 
+	 * @return TRUE if the size of the call stack has changed with the last update
+	 */
+	public boolean callStackChanged(){
+		return this.callStackSize != this.previousCallStackSize;
 	}
 	
 	/**
@@ -285,8 +301,6 @@ public class GUIdebugPanel {
 	 * @return TRUE if "step over" has ended, otherwise FALSE
 	 */
 	public boolean checkForStepEnd() {
-
-		this.callStackSize = ReadCallStack.readCallStack().size();
 
 		if (this.callStackSize <= this.stepTarget) {
 			System.out.println("[interpreter][GUIdebugPanel]Step completed");

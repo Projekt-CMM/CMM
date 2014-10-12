@@ -1,6 +1,6 @@
 package at.jku.ssw.cmm.gui.treetable;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +15,7 @@ public class DataNode {
 	 
     private final String name;
     private final String type;
-    private final Object value;
+    private Object value;
  
     private List<DataNode> children;
  
@@ -26,7 +26,7 @@ public class DataNode {
         this.children = children;
  
         if (this.children == null) {
-            this.children = Collections.emptyList();
+            this.children = new ArrayList<>();
         }
     }
  
@@ -50,8 +50,33 @@ public class DataNode {
     	return this.children.size();
     }
     
-    public void add( DataNode n ){
+    public void add( boolean init, DataNode n ){
+    	
+    	System.out.println("Checking data node: " + n.print() );
+    	
+    	if( !init && this.children != null && this.children.size() > 0 ){
+    		for( DataNode d : this.children ){
+    			if( d.name.equals(n.name) ){
+    				d.value = n.value;
+    				System.out.println("Found: " + n.name + ", new value is " + n.value + " | " + d.value);
+    				return;
+    			}
+    		}
+    	}
+    	
+    	if( this.children == null ){
+    		this.children = new ArrayList<>();
+    	}
+    		
     	this.children.add(n);
+    }
+    
+    public DataNode getChild(String name, String type, Object value){
+    	for( DataNode d : this.children ){
+    		if( d.name.equals(name) )
+    			return d;
+    	}
+    	return new DataNode( name, type, value, new ArrayList<DataNode>() );
     }
  
     /**
@@ -59,5 +84,9 @@ public class DataNode {
      */
     public String toString() {
         return name;
+    }
+    
+    private String print() {
+    	return "{ Name: " + this.name + ", Type: " + this.type + ", Value: " + this.value + ", Children: " + this.children + " }";
     }
 }

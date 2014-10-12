@@ -4,17 +4,18 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import at.jku.ssw.cmm.CMMwrapper;
-import at.jku.ssw.cmm.gui.datastruct.ReadCallStackHierarchy;
+import at.jku.ssw.cmm.gui.datastruct.InitTreeTableData;
 import at.jku.ssw.cmm.gui.popup.PopupInterface;
+import at.jku.ssw.cmm.gui.treetable.DataNode;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
-import at.jku.ssw.cmm.gui.treetable.TreeUtils;
 
 public class TreeTableView{
 	
 	public TreeTableView( JPanel panel, String fileName ){
 		
 		this.panel = panel;
+		this.forceUpdate = true;
 		
 		this.init(fileName);
 	}
@@ -26,6 +27,8 @@ public class TreeTableView{
 	private TreeTable varTreeTable;
 	private TreeTableDataModel varTreeTableModel;
 	
+	private boolean forceUpdate;
+	
 	/**
 	 * Initializes the variable view table/tree table, etc
 	 * 
@@ -34,7 +37,7 @@ public class TreeTableView{
 	public void init( String fileName ) {
 		
 		/* ---------- TREE TABLE for CALL STACK and LOCALS (optional) ---------- */
-		this.varTreeTableModel = new TreeTableDataModel(ReadCallStackHierarchy.createDataStructure(fileName));
+		this.varTreeTableModel = new TreeTableDataModel(InitTreeTableData.createDataStructure(fileName));
 		
 		this.varTreeTable = new TreeTable(this.varTreeTableModel);
 		
@@ -48,13 +51,19 @@ public class TreeTableView{
 	 * 
 	 * @param compiler
 	 */
-	public void update( CMMwrapper compiler, String fileName, PopupInterface popup ) {
+	public void update( CMMwrapper compiler, String fileName, PopupInterface popup, boolean completeUpDate ) {
 		
-		this.varTreeTable.setTreeModel(ReadCallStackHierarchy.readSymbolTable(compiler, popup, fileName));
-		
-		TreeUtils.expandAll(varTreeTable, true);
-		
-		this.varTreeTable.repaint();
+		if( completeUpDate || forceUpdate ){
+			System.out.println("[treetable][update] complete variable structure update");
+			this.varTreeTable.setTreeModel(InitTreeTableData.readSymbolTable(compiler, popup, fileName));
+			this.forceUpdate = false;
+		}
+		else{
+			System.out.println("[treeTable][update] updating variable values");
+			InitTreeTableData.updateTreeTable(this.varTreeTable.getTreeModel(), (DataNode)this.varTreeTable.getCellRenderer().getModel().getRoot(), compiler, popup, fileName);
+			this.varTreeTable.updateTreeModel();
+			this.varTreeTable.repaint();
+		}
 	}
 
 	/**
@@ -62,7 +71,10 @@ public class TreeTableView{
 	 */
 	public void standby( String fileName ) {
 		
-		this.varTreeTable.setTreeModel(new TreeTableDataModel(ReadCallStackHierarchy.createDataStructure(fileName)));
+		this.varTreeTable.setTreeModel(new TreeTableDataModel(InitTreeTableData.createDataStructure(fileName)));
+		this.forceUpdate = true;
+		
+		System.out.println("[treetable] standby");
 	}
 	
 	public TreeTableDataModel getModel(){
