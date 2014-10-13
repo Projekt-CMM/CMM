@@ -85,8 +85,8 @@ public class PanelRunListener implements Debugger {
 	// "null" if unused
 	private Timer timer;
 	
-	//The last line in the user's source code which has been processed
-	private int lastLine;
+	//The last node in the user's source code which has been processed
+	private Node lastNode;
 
 	/* --- functional methods --- */
 	/**
@@ -113,7 +113,7 @@ public class PanelRunListener implements Debugger {
 		this.master.getControlPanel().unlockStepButton();
 		this.master.getControlPanel().setPlay();
 		
-		this.lastLine = 0;
+		this.lastNode = null;
 
 		System.out.println("[mode] setting ready by reset");
 	}
@@ -284,7 +284,7 @@ public class PanelRunListener implements Debugger {
 		System.out.println("[node] " + arg0);
 		
 		//Update latest node's line
-		this.lastLine = arg0.line;
+		this.lastNode = arg0;
 		this.master.updateCallStackSize();
 
 		/* --- Node #1: Step over mode? --- */
@@ -465,9 +465,11 @@ public class PanelRunListener implements Debugger {
 				userReply();
 				
 				//Remove already passed breakpoints if in fast run mode
-				if( delay == 0 ){
-					master.updateBreakPoints(lastLine);
-				}
+				if( delay == 0 )
+					master.updateBreakPoints(lastNode.line);
+				//Check if there is a function to jump over
+				else
+					doStepOverRunCheck(lastNode);
 			}
 		}
 
@@ -640,7 +642,7 @@ public class PanelRunListener implements Debugger {
 			
 			//Remove already passed breakpoints if in fast run mode
 			if( delay == 0 ){
-				master.updateBreakPoints(lastLine);
+				master.updateBreakPoints(lastNode.line);
 			}
 		}
 	};
