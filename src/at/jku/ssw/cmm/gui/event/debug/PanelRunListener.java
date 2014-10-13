@@ -322,6 +322,16 @@ public class PanelRunListener implements Debugger {
 		this.master.getControlPanel().updateStepOutButton();
 		if( arg0.kind == Node.CALL || arg0.kind == Node.ASSIGN )
 			this.master.updateVariableTables(this.master.callStackChanged());
+		
+		if( arg0.kind == Node.ASSIGN && arg0.left.kind == Node.IDENT ){
+			System.err.println( "New Value: " + arg0.left.obj.name );
+		}
+		else if( arg0.kind == Node.ASSIGN && arg0.left.kind == Node.DOT ){
+			System.err.println( "New Value: " + arg0.left.left.obj.name + ", " + arg0.left.right.obj.name );
+		}
+		else if( arg0.kind == Node.ASSIGN && arg0.left.kind == Node.INDEX ){
+			System.err.println( "New Value: " + arg0.left.left.obj.name );
+		}
 
 		this.timer = null;
 

@@ -54,6 +54,7 @@ public class TreeTable extends JTable {
         
         super.setModel(new TreeTableModelAdapter(treeTableModel, tree));
         super.getColumn("Value").setCellRenderer(this.buttonRenderer);
+        super.getColumn("Type").setCellRenderer(this.buttonRenderer);
         JTable t = this;
         this.addMouseListener(new JTableButtonMouseListener(t));
          

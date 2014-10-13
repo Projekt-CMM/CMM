@@ -1,5 +1,6 @@
 package at.jku.ssw.cmm.gui.utils;
 
+import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JTable;
@@ -17,6 +18,15 @@ public class JTableButtonRenderer implements TableCellRenderer {
 		if(value instanceof Component)
 			return (Component)value;
 		
-		return defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		else if( table.getValueAt(row, 0).toString().endsWith(")") ){
+			System.out.println("Coloring: " + table.getValueAt(row, 0).toString() + " from " + row );
+			Component c = (Component)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			c.setBackground(Color.CYAN);
+			return c;
+		}
+		
+		Component c = (Component)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		c.setBackground(table.getBackground());
+		return c;
 	}
 }
