@@ -372,6 +372,20 @@ public class GUIdebugPanel {
 	}
 	
 	/**
+	 * Deletes all breakpoints before the given line. Used when the user switches from any mode
+	 * to "fast run" mode; so that the interpreter does not stop at breakpoints which should already
+	 * have been passed.
+	 * 
+	 * @param line The current line
+	 */
+	public void updateBreakPoints( int line ){
+		for( int i = 0; i < this.breakpoints.size(); i++ ){
+			if( this.breakpoints.get(i) <= line )
+				this.breakpoints.remove(i);
+		}
+	}
+	
+	/**
 	 * <i>THREAD SAFE by default</i>
 	 * 
 	 * @return A reference to the control panel manager class
