@@ -59,6 +59,12 @@ VarDecl = Type ident [ "=" BinExpr ]
   { "," ident [ "=" BinExpr ] }
   ";".
 \end{lstlisting}
+\begin{itemize}
+  \item Der Typ von Type muss ein primitive oder String sein, wenn eine Zuweisung stattfindet
+  \begin{itemize}
+    \item type is not a primitive or string
+  \end{itemize}
+\end{itemize}
 \end{samepage}
 
 %	########################################################
@@ -69,6 +75,20 @@ VarDecl = Type ident [ "=" BinExpr ]
 \begin{lstlisting}[language=EBNF]
 StructDecl = "struct" ident "{" { VarDecl } "}" .
 \end{lstlisting}
+\begin{itemize}
+  \item Die Struct-Deklaration darf nicht leer sein
+  \begin{itemize}
+    \item struct must contain at least one variable
+  \end{itemize}
+  \item Der Name des Struct-Typs darf nicht als Typ eines der Felder verwendet werden.
+  \begin{itemize}
+    \item TODO!!!!!!
+  \end{itemize}
+  \item Es darf keine Variablenzuweisung in der Struktur deklariert werden
+  \begin{itemize}
+    \item variable assigment is not allowed in struct
+  \end{itemize}
+\end{itemize}
 \end{samepage}
 
 %	########################################################
@@ -87,6 +107,29 @@ ProcDecl = ( Type | "void" )
   | ";"
   ).
 \end{lstlisting}
+\begin{itemize}
+  \item Wenn die Prozedur eine Funktion ist, muss sie mit return verlassen werden.
+  \begin{itemize}
+    \item TODO?????
+  \end{itemize}
+  \item Type muss ein primitiver Typ oder string sein.
+  \begin{itemize}
+    \item procedure must return a primitive type ,a string or is void
+  \end{itemize}
+  
+  \item Zu jeder Forward-Deklaration muss es eine volle Prozedurdeklaration geben.
+  \begin{itemize}
+    \item <ident> has only a forward-declaration
+  \end{itemize}
+  \item Eine Forward-Deklaration muss die gleiche Signatur haben wie die später folgende volle Prozedurdeklaration, d.h. der Prozedurname, der Funktionstyp, die Anzahl der Parameter, die Parametertypen und die Parameterarten (ref oder nicht ref) müssen übereinstimmen.
+  \begin{itemize}
+    \item return value of forware declaration does not match declaration
+    \item parameter of function and forward declaration has not the same type
+    \item parameter of function or forward declaration is ref, in the other not
+    \item forward-declaration of function has more parameter as function itself
+    \item function has more parameters as forward-declaration declare
+  \end{itemize}
+\end{itemize}
 \end{samepage}
 
 %	########################################################
@@ -107,6 +150,12 @@ FormPars = FormPar { "," FormPar }.
 \begin{lstlisting}[language=EBNF]
 FormPar = Type [ "&" ] ident.
 \end{lstlisting}
+\begin{itemize}
+  \item Type muss ein primitiver Typ oder string sein.
+  \begin{itemize}
+    \item var must be a primitive type or string
+  \end{itemize}
+\end{itemize}
 \end{samepage}
 
 %	########################################################
@@ -117,6 +166,16 @@ FormPar = Type [ "&" ] ident.
 \begin{lstlisting}[language=EBNF]
 Type = ident { "[" intCon "]" }.
 \end{lstlisting}
+\begin{itemize}
+  \item ident muss einen Typ bezeichnen.
+  \begin{itemize}
+    \item <ident> is not a type
+  \end{itemize}
+  \item intCon darf nicht 0 oder negativ sein.
+  \begin{itemize}
+    \item array-size must be 1 or higher
+  \end{itemize}
+\end{itemize}
 \end{samepage}
 
 %	########################################################
@@ -133,6 +192,10 @@ Statement =
   | "if" "(" Condition ")" Statement ["else" Statement ]
   | "while" "(" Condition ")" Statement
   | "do" Statement "while" "(" Condition ")" ";"
+  | "switch" "(" BinExpr ")" "{" 
+  	{ ( "case" ( intCon | floatCon | charCon )
+  	  | "default" ) ":" { Statement } 
+  	} "}"
   | "{" { Statement } "}"
   | "return" [BinExpr] ";"
   | "break" ";"
@@ -140,6 +203,21 @@ Statement =
   | ";"
   ).
 \end{lstlisting}
+\begin{itemize}
+  \item TODO, Kontextbedingungen weiterschreiben!!!!
+  \item In einem switch/case muss der Typ von BinExpr gleich dem Type des case sein
+  \begin{itemize}
+    \item type of switch has to match type of case value
+  \end{itemize}
+  \item In einem switch/case darf eine case konstante jeweils nur einmal benutzt werden
+  \begin{itemize}
+    \item TODO!!!!!
+  \end{itemize}
+  \item In einem switch/case darf jeweils nur einmal default: vorkommen
+  \begin{itemize}
+    \item you cannot declare the default statement twice
+  \end{itemize}
+\end{itemize}
 \end{samepage}
 
 %	########################################################
@@ -249,6 +327,8 @@ Shift = Expr { Shiftop Expr }.
 Expr = Term { Addop Term }.
 \end{lstlisting}
 \end{samepage}
+
+
 
 %	########################################################
 % 				Term

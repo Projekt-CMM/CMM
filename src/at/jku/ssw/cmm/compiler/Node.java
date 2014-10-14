@@ -37,8 +37,8 @@ public final class Node {
 		TRAP     	= 19,  	// trap if a function reaches its end without a return
 		BREAK		= 20,
 		CONTINUE	= 21,
-		//SWITCH		= 22,
-		//CASE		= 23,
+		SWITCH		= 22,
+		CASE		= 23,	// default node: Node.left = null;
 		//------------ leaf expressions
 		IDENT    	= 24,   // identifier
 		BOOLCON		= 25,	// bool constant
@@ -81,7 +81,9 @@ public final class Node {
 		GEQ      	= 59,  	// >=
 		NOT      	= 60,  	// !
 		OR       	= 61,  	// ||
-		AND      	= 62;  	// &&
+		AND      	= 62,  	// &&
+		//------------ special nodes
+		NOP			= 63;	// No operation
 
 	public int kind;        // STATSEQ, ASSIGN, ...
 	public Struct type;     // only used in expressions
@@ -161,7 +163,8 @@ public final class Node {
 		"DOT", "INDEX", "REF",
 		"PLUS", "MINUS", "TIMES", "DIV", "REM", "BITNEQ", "BITAND", "BITOR", "BITXOR", 
 		"SHIFTLEFT", "SHIFTRIGHT", "INC", "DEC", "I2F", "F2I", "I2C", "C2I", "A2S", "C2S", "B2I", "I2B",
-		"EQL", "NEQ", "LSS", "LEQ", "GTR", "GEQ", "NOT", "OR", "AND"
+		"EQL", "NEQ", "LSS", "LEQ", "GTR", "GEQ", "NOT", "OR", "AND",
+		"NOP"
 	};
 
 	static String[] typ = {
