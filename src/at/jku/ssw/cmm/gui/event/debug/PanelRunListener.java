@@ -331,7 +331,7 @@ public class PanelRunListener implements Debugger {
 		if( arg0.kind == Node.CALL || arg0.kind == Node.ASSIGN )
 			this.master.updateVariableTables(this.master.callStackChanged());
 		
-		this.master.highlightVariable(SyntaxTreeUtils.getVariablePath(arg0, this.modMain.getFileName()));
+		this.master.highlightVariable(SyntaxTreeUtils.getVariablePath(arg0, this.modMain.getFileName(), this.master.getCompileManager()));
 		
 
 		this.timer = null;

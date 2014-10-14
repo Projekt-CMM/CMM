@@ -53,7 +53,7 @@ public class DataNode {
     }
     
     public void markChanged(){
-    	this.type += " ";
+    	this.type += "*";
     }
     
     public void add( boolean init, DataNode n ){
@@ -71,7 +71,7 @@ public class DataNode {
     					d.type = n.type;*/
     				d.value = n.value;
     				d.type = n.type;
-    				//System.out.println("Found: " + n.name + ", new value is " + n.value + " | " + d.value);
+    				System.out.println("Found: " + n.name + ", new value is " + n.value + " | " + d.value + ", type is " + n.type + " | " + d.type);
     				return;
     			}
     		}

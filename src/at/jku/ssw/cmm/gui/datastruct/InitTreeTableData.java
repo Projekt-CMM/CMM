@@ -189,7 +189,7 @@ public class InitTreeTableData {
 	 * @param name The name of the node that is searched
 	 * @return The node (if found), null if not found
 	 */
-	private static Obj findNodeByName( Obj start, String name ){
+	public static Obj findNodeByName( Obj start, String name ){
 		
 		Obj count = start;
 		while( count != null ){
