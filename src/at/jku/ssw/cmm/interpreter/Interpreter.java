@@ -69,7 +69,7 @@ public final class Interpreter {
 	 * Statements: assign, stateseq, if, ifelse, while, return, trap, call TODO
 	 */
 	void Statement(Node p) throws ReturnException, AbortException, BreakException, ContinueException { // b = a;
-		if (!debugger.step(p))
+		if (p.kind != Node.NOP && !debugger.step(p))
 			throw new AbortException();
 
 		switch (p.kind) {
