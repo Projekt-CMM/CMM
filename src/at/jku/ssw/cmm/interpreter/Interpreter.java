@@ -138,6 +138,37 @@ public final class Interpreter {
 			} catch(BreakException e) {	
 			}
 			break;
+		case Node.SWITCH:
+			try {
+				Node caseNode = p.right;
+				while(caseNode != null) {
+					// default statement
+					if(caseNode.left == null) {
+						Node curStateseq = caseNode.right;
+						while(curStateseq != null) {
+							Statement(curStateseq);
+							curStateseq = curStateseq.next;
+						}
+						break;
+					} else {
+						Node conNode = new Node(Node.EQL, p.left, caseNode.left, caseNode.line);
+
+						// case statement
+						if(Condition(conNode)) {
+							Node curStateseq = caseNode.right;
+							while(curStateseq != null) {
+								Statement(curStateseq);
+								curStateseq = curStateseq.next;
+							}
+							break;
+						}
+					}
+
+					caseNode = caseNode.next;
+				}
+			} catch(BreakException e) {	
+			}
+			break;
 		case Node.RETURN:
 			if(p.left == null)
 				throw new ReturnException();
@@ -166,6 +197,8 @@ public final class Interpreter {
 				throw new BreakException();
 		case Node.CONTINUE:
 				throw new ContinueException();
+		case Node.NOP:
+				break;
 		default:
 			debugger.abort("Not supportet statement node kind", p);
 			throw new IllegalStateException("Kind" + p.kind);

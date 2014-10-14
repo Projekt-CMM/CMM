@@ -11,7 +11,7 @@ COMPILER CMM
 
     public Tab       tab;                     // symbol table
     public boolean[] debug;
-    public int breakLevel;
+    public int breakLevel, continueLevel;
   
       Obj curProc;
     Strings strings = new Strings();
@@ -298,7 +298,9 @@ ident                               (.  // insert the struct in the current scop
                                         tab.openScope(); .)
 { VarDecl<out e>                    (.  // if a VarDecl return not null, there is a assignment in the Declaration
                                         if(e!=null) 
-                                            SemErr("variable assigment is not allowed in struct"); .)
+                                            SemErr("variable assigment is not allowed in struct");
+                                        
+                                        /*if(tab)*/.)
 } 
 "}"                                 (.  // copy variables from local scope int struct
                                         type.fields = tab.curScope.locals;
@@ -545,17 +547,71 @@ Statement<out Node st>              (.  Node design;
     ["else" Statement<out ifNo>     (.  st = new Node(Node.IFELSE,st,ifNo,line); .)
     ]
 | "while" "(" Condition<out con>    
-    ")"                             (.  breakLevel ++; .) 
+    ")"                             (.  breakLevel ++; 
+                                        continueLevel ++; .) 
     Statement<out st>               (.  st = new Node(Node.WHILE,con,st,line); 
-                                        breakLevel --; .)
-| "do"                              (.  breakLevel ++; .) 
-    Statement<out st>               (.  breakLevel --; .)
+                                        breakLevel --; 
+                                        continueLevel --; .)
+| "do"                              (.  breakLevel ++; 
+                                        continueLevel ++; .) 
+    Statement<out st>               (.  breakLevel --; 
+                                        continueLevel --; .)
   "while" "(" Condition<out con> 
   ")" ";"                           (.  st = new Node(Node.DOWHILE,con,st,line); .)
 (. /*| "for" "(" Statement<out con>    (.  e = con; .)
   ";" Condition<out e.next>         (.  e = e.next; .)
   ";" Statement<out e.next>
   ")" Statement<out st>             (.  st = new Node(Node.FOR,con,st,line); .)*/.)
+| "switch" "(" BinExpr<out e> ")"   (.  st = new Node(Node.SWITCH,e,null,line);
+                                        curStat = null;
+                                        breakLevel ++; 
+                                        Node n, defaultNode = null;
+                                        Node firstCaseStatement;
+                                        Node lastStatement = new Node(Node.NOP,null,null,line); .)
+  "{" {                             (.  n = null; 
+                                        newStat = null; .)
+    ( "case"                        
+      ( intCon                      (.  n = new Node(tab.intVal(t.val)); .)
+      | floatCon                    (.  n = new Node(tab.floatVal(t.val)); .)
+      | charCon                     (.  n = new Node(tab.charVal(t.val)); .)
+      )                             (.  if(n.type != e.type)
+                                            SemErr("type of switch has to match type of case value");
+                                        newStat = new Node(Node.CASE,n,null,line); .)
+    | "default"                     (.  newStat = new Node(Node.CASE,null,null,line);
+                                        if(defaultNode != null)
+                                            SemErr("you cannot declare the default statement twice");
+                                        defaultNode = newStat; .)
+    ) ":"                           (.  firstCaseStatement = null;
+                                        lastStatement.next = firstCaseStatement; .)
+    { Statement<out n>              (.  lastStatement.next = n;
+                                        
+                                        // get reference to first case-statement in this node
+                                        if(firstCaseStatement == null)
+                                            firstCaseStatement = n;
+                                        
+                                        lastStatement = n; .)
+    }                               (.  if(firstCaseStatement == null) {
+                                            firstCaseStatement = new Node(Node.NOP,null,null,line);
+                                            lastStatement.next = firstCaseStatement;
+                                            lastStatement = firstCaseStatement;
+                                        }
+    
+                                        newStat.right = firstCaseStatement;
+                                        if(newStat != defaultNode) {
+                                            if(curStat == null)
+                                                st.right = newStat;
+                                            else
+                                                curStat.next = newStat;
+                                            curStat = newStat; 
+                                        } .)
+  }
+  "}"                               (.  if(defaultNode != null) {
+                                            if(curStat == null)
+                                                st.right = defaultNode;
+                                            else
+                                                curStat.next = defaultNode;
+                                        }
+                                        breakLevel --; .)
 | "{"                               (.  curStat = null; con=null; .)
   {Statement<out newStat>           (.  if(curStat == null) {
                                             curStat = newStat;
@@ -579,10 +635,10 @@ Statement<out Node st>              (.  Node design;
                                         st = new Node(Node.RETURN,e,null,line); .)
 | "break" ";"                       (.  if(breakLevel <= 0)
                                             SemErr("break is not allowed here");
-                                        st = new Node(Node.BREAK,e,null,line); .)
-| "continue" ";"                    (.  if(breakLevel <= 0)
+                                        st = new Node(Node.BREAK,null,null,line); .)
+| "continue" ";"                    (.  if(continueLevel <= 0)
                                             SemErr("continue is not allowed here");
-                                        st = new Node(Node.CONTINUE,e,null,line); .)
+                                        st = new Node(Node.CONTINUE,null,null,line); .)
 | ";"                               (.  st = null; .)
 ).
 //-------------------------------------------------------------------------
@@ -816,7 +872,7 @@ ident                               (.  String name = t.val;
                                         type = obj.type; .)
 { "."                               (.  if(obj.type.kind != Struct.STRUCT) 
                                             SemErr(name + " is not a struct"); .)
-  ident                             (.  obj = tab.findField(t.val,obj.type); 
+  ident                             (.  obj = tab.findField(t.val,obj.type);
                                         n = new Node(Node.DOT, n, new Node(obj.adr), obj.type); .)
 | "["                               (.  if(obj.type.kind != Struct.ARR && obj.type.kind != Struct.STRING) 
                                             SemErr(name + " is not an array"); .)
