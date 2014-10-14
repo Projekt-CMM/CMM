@@ -89,7 +89,7 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
 	        setBackground(table.getSelectionBackground());
 	    else
 	    	setBackground(table.getBackground());
- 
+    	
         visibleRow = row;
         return this;
     }

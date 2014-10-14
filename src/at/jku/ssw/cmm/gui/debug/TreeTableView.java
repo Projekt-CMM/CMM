@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.debug;
 
+import java.util.Stack;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -9,6 +11,7 @@ import at.jku.ssw.cmm.gui.popup.PopupInterface;
 import at.jku.ssw.cmm.gui.treetable.DataNode;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
+import at.jku.ssw.cmm.gui.treetable.TreeUtils;
 
 public class TreeTableView{
 	
@@ -64,6 +67,13 @@ public class TreeTableView{
 			this.varTreeTable.updateTreeModel();
 			this.varTreeTable.repaint();
 		}
+		
+		Stack<String> path = new Stack<>();
+		
+		path.push("str");
+		path.push("main()");
+		
+		TreeUtils.expandPath(varTreeTable, path);
 	}
 
 	/**

@@ -40,7 +40,6 @@ public class TreeUtils {
 		System.out.println("Current path is: " + path.toString());
 		
 		if (node.getChildCount() >= 0) {
-			
 			for (DataNode e : node.getChildren()) {
 				
 				expandAll(tree, e, path, expand);
@@ -57,5 +56,38 @@ public class TreeUtils {
 			tree.collapsePath(new TreePath(path.toArray()));
 			path.pop();
 		}
+	}
+	
+	public static void expandPath(TreeTable tree, Stack<String> stack){
+		
+		DataNode root = (DataNode)tree.getCellRenderer().getModel().getRoot();
+		Stack<DataNode> path = new Stack<>();
+		path.push(root);
+		expandPath( tree.getCellRenderer(), root, stack, path );
+	}
+	
+	private static void expandPath(TreeTableCellRenderer tree, DataNode node, Stack<String> stack, Stack<DataNode> path){
+		
+		if( stack.size() <= 0 )
+			return;
+		
+		String name = stack.pop();
+		
+		System.out.println("[TreeTable][Expand] looking for: " + name);
+		
+		if (node.getChildCount() >= 0) {
+			for (DataNode e : node.getChildren()) {
+				if( e.getName().equals(name) ){
+					System.out.println("[TreeTable][Expand] entering new level: " + e.print());
+					path.push(e);
+					expandPath(tree, e, stack, path);
+				}
+			}
+		}
+		
+		System.out.println("[TreeTable][Expand] get expanded: " + path);
+		tree.expandPath(new TreePath(path.toArray()));
+		
+		path.pop();
 	}
 }

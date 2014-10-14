@@ -326,7 +326,7 @@ public class PanelRunListener implements Debugger {
 
 		// -> Node #3 - DEFAULT
 		/* --- Update Block --- */
-		this.master.getControlPanel().updateStepOutButton();
+		this.master.getControlPanel().updateStepOutButton();//*.next -> main()
 		if( arg0.kind == Node.CALL || arg0.kind == Node.ASSIGN )
 			this.master.updateVariableTables(this.master.callStackChanged());
 		
@@ -334,7 +334,7 @@ public class PanelRunListener implements Debugger {
 			System.err.println( "New Value: " + arg0.left.obj.name );
 		}
 		else if( arg0.kind == Node.ASSIGN && arg0.left.kind == Node.DOT ){
-			System.err.println( "New Value: " + arg0.left.left.obj.name + ", " + arg0.left.right.obj.name );
+			//System.err.println( "New Value: " + arg0.left.left.obj.name + ", " + arg0.left.right.obj.name );
 		}
 		else if( arg0.kind == Node.ASSIGN && arg0.left.kind == Node.INDEX ){
 			System.err.println( "New Value: " + arg0.left.left.obj.name );

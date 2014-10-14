@@ -106,7 +106,7 @@ public class DataNode {
         return name;
     }
     
-    private String print() {
+    public String print() {
     	return "{ Name: " + this.name + ", Type: " + this.type + ", Value: " + this.value + ", Children: " + this.children + " }";
     }
 }
