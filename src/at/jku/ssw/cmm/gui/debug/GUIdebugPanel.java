@@ -5,6 +5,7 @@ import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -212,6 +213,11 @@ public class GUIdebugPanel {
 		this.modifier.resetInputHighlighter();
 		
 		this.varView.standby(this.modifier.getFileName());
+	}
+	
+	public void highlightVariable( Stack<String> path ){
+		if( path != null)
+			this.varView.highlightVariable(path);
 	}
 	
 	/**

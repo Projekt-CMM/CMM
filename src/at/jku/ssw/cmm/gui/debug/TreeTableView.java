@@ -67,13 +67,6 @@ public class TreeTableView{
 			this.varTreeTable.updateTreeModel();
 			this.varTreeTable.repaint();
 		}
-		
-		Stack<String> path = new Stack<>();
-		
-		path.push("str");
-		path.push("main()");
-		
-		TreeUtils.expandPath(varTreeTable, path);
 	}
 
 	/**
@@ -85,6 +78,11 @@ public class TreeTableView{
 		this.forceUpdate = true;
 		
 		System.out.println("[treetable] standby");
+	}
+	
+	public void highlightVariable( Stack<String> path ){
+		System.out.println("-> " + path.firstElement());
+		TreeUtils.expandPath(varTreeTable, path).markChanged();
 	}
 
 }

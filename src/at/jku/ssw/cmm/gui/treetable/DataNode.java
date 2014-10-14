@@ -52,21 +52,26 @@ public class DataNode {
     	return this.children.size();
     }
     
+    public void markChanged(){
+    	this.type += " ";
+    }
+    
     public void add( boolean init, DataNode n ){
     	
-    	System.out.println("Checking data node: " + n.print() );
+    	//System.out.println("Checking data node: " + n.print() );
     	
     	if( !init && this.children != null && this.children.size() > 0 ){
     		for( DataNode d : this.children ){
     			if( d.name.equals(n.name) ){
-    				if( DataNode.equals(d, n) ){
+    				/*if( DataNode.equals(d, n) ){
     					d.type = "" + n.type + "*";
     					System.err.println("Value changed (" + d.value + ", " + d.value.getClass() + ") " + n.print());
     				}
     				else
-    					d.type = n.type;
+    					d.type = n.type;*/
     				d.value = n.value;
-    				System.out.println("Found: " + n.name + ", new value is " + n.value + " | " + d.value);
+    				d.type = n.type;
+    				//System.out.println("Found: " + n.name + ", new value is " + n.value + " | " + d.value);
     				return;
     			}
     		}

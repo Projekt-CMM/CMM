@@ -58,18 +58,22 @@ public class TreeUtils {
 		}
 	}
 	
-	public static void expandPath(TreeTable tree, Stack<String> stack){
+	public static DataNode expandPath(TreeTable tree, Stack<String> stack){
 		
 		DataNode root = (DataNode)tree.getCellRenderer().getModel().getRoot();
 		Stack<DataNode> path = new Stack<>();
 		path.push(root);
-		expandPath( tree.getCellRenderer(), root, stack, path );
+		if( stack.peek().endsWith(".cmm") )
+			stack.pop();
+		return expandPath( tree.getCellRenderer(), root, stack, path );
 	}
 	
-	private static void expandPath(TreeTableCellRenderer tree, DataNode node, Stack<String> stack, Stack<DataNode> path){
+	private static DataNode expandPath(TreeTableCellRenderer tree, DataNode node, Stack<String> stack, Stack<DataNode> path){
 		
 		if( stack.size() <= 0 )
-			return;
+			return node;
+		
+		DataNode lowest = null;
 		
 		String name = stack.pop();
 		
@@ -80,7 +84,7 @@ public class TreeUtils {
 				if( e.getName().equals(name) ){
 					System.out.println("[TreeTable][Expand] entering new level: " + e.print());
 					path.push(e);
-					expandPath(tree, e, stack, path);
+					lowest = expandPath(tree, e, stack, path);
 				}
 			}
 		}
@@ -89,5 +93,7 @@ public class TreeUtils {
 		tree.expandPath(new TreePath(path.toArray()));
 		
 		path.pop();
+		
+		return lowest;
 	}
 }

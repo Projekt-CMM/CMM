@@ -9,6 +9,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import at.jku.ssw.cmm.debugger.Debugger;
+import at.jku.ssw.cmm.gui.datastruct.SyntaxTreeUtils;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.compiler.Node;
@@ -330,15 +331,8 @@ public class PanelRunListener implements Debugger {
 		if( arg0.kind == Node.CALL || arg0.kind == Node.ASSIGN )
 			this.master.updateVariableTables(this.master.callStackChanged());
 		
-		if( arg0.kind == Node.ASSIGN && arg0.left.kind == Node.IDENT ){
-			System.err.println( "New Value: " + arg0.left.obj.name );
-		}
-		else if( arg0.kind == Node.ASSIGN && arg0.left.kind == Node.DOT ){
-			//System.err.println( "New Value: " + arg0.left.left.obj.name + ", " + arg0.left.right.obj.name );
-		}
-		else if( arg0.kind == Node.ASSIGN && arg0.left.kind == Node.INDEX ){
-			System.err.println( "New Value: " + arg0.left.left.obj.name );
-		}
+		this.master.highlightVariable(SyntaxTreeUtils.getVariablePath(arg0, this.modMain.getFileName()));
+		
 
 		this.timer = null;
 
