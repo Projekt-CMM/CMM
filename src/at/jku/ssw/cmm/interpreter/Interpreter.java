@@ -276,7 +276,6 @@ public final class Interpreter {
 				return IntExpr(p.left) / IntExpr(p.right);
 			else
 				debugger.abort("Divided by 0", p);
-			throw new IllegalStateException("Kind" + p.kind);
 		case Node.REM:
 			return IntExpr(p.left) % IntExpr(p.right);
 

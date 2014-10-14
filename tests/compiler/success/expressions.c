@@ -25,8 +25,6 @@ void main() {
 	x = y | 5;
 	x = y & 5;
 	x = y ^ 5;
-	x = ++y;
-	x = --y;
 	
 	f = x+y*z;
 	f = (x+y)*foo();
