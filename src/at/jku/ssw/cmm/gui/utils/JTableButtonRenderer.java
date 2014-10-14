@@ -6,6 +6,8 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
+import at.jku.ssw.cmm.gui.treetable.DataNode;
+
 public class JTableButtonRenderer implements TableCellRenderer {
 	private TableCellRenderer defaultRenderer;
 
@@ -24,7 +26,7 @@ public class JTableButtonRenderer implements TableCellRenderer {
 			return c;
 		}
 		
-		else if( table.getValueAt(row, 1).toString().endsWith(" ") ){
+		else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.CHANGE_TAG) ){
 			Component c = (Component)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			c.setBackground(Color.YELLOW);
 			return c;

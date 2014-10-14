@@ -20,6 +20,8 @@ public class DataNode {
     private Object value;
  
     private List<DataNode> children;
+    
+    public static final char CHANGE_TAG = ' ';
  
     public DataNode(String name, String type, Object value, List<DataNode> children) {
         this.name = name;
@@ -53,7 +55,7 @@ public class DataNode {
     }
     
     public void markChanged(){
-    	this.type += "*";
+    	this.type += CHANGE_TAG;
     }
     
     public void add( boolean init, DataNode n ){

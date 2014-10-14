@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.datastruct;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
 
 import at.jku.ssw.cmm.CMMwrapper;
@@ -35,7 +37,7 @@ public class SyntaxTreeUtils {
 		path.add(arg0.left.obj.name);
 		
 		if( arg0.left.obj.level != 0 )
-			path.add("main()");
+			path.add(ReadCallStack.readCallStack().get(0)+"()");
 		
 		path.add("file12b.cmm");
 		
@@ -45,32 +47,47 @@ public class SyntaxTreeUtils {
 	private static Stack<String> getStructPath( Node arg0, String fileName, CMMwrapper compiler ){
 		
 		Stack<String> path = new Stack<>();
-		String structName = arg0.left.left.obj.name;
+		List<Integer> adressList = new LinkedList<>();
+
+		Node node = arg0.left.left;
+		adressList.add(arg0.left.right.val);
+		while( node.obj == null ){
+			adressList.add(node.right.val);
+			node = node.left;
+		}
 		
-		int val = arg0.left.right.val;
+		String structName = node.obj.name;
 		
-		Obj structNode = arg0.left.left.type.fields;
-		System.out.println("Node: " + structNode + ", " + structNode.name + ", " + structNode.next.name);
-		
-		path.add(getLowestStructVar(structNode, val));
+		getLowestStructVar(path, node.type.fields, adressList);
 		path.add(structName);
 		
-		if( arg0.left.left.obj.level != 0 )
-			path.add(ReadCallStack.readCallStack().pop()+"()");
+		if( node.obj.level != 0 )
+			path.add(ReadCallStack.readCallStack().get(0)+"()");
 		
 		path.add(fileName);
+		
+		System.out.println("[syntax][final] path is: " + path);
 		
 		return path;
 	}
 	
-	private static String getLowestStructVar( Obj obj, int val ){
+	private static void getLowestStructVar( Stack<String> path, Obj obj, List<Integer> val ){
 
-		while( val > 0 ){
-			val -= obj.type.size;
+		while( val.get(val.size()-1) > 0 ){
+			System.out.println("[syntax] checking: " + obj.name + " with size " + obj.type.size + ", " + val.get(val.size()-1) + " | " + val);
+			val.set(val.size()-1, val.get(val.size()-1) - obj.type.size);
 			obj = obj.next;
+			System.out.println("[syntax] new size: " + val.get(val.size()-1));
 		}
-		//if( obj.type == Obj.)
-		return obj.name;
+		
+		System.out.println("[syntax] adding: " + obj.name);
+		path.add(0, obj.name);
+		
+		if( val.size() > 1 ){
+			System.out.println("[syntax] next level: " + obj.name);
+			val.remove(val.size()-1);
+			getLowestStructVar( path, obj.type.fields, val );
+		}
 	}
 	
 	private static Stack<String> getArrayPath( Node arg0, String fileName ){
