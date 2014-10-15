@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -34,7 +33,7 @@ import org.xml.sax.SAXException;
 public class Profile {
 	
 	//File Seperator
-	private static String sep = System.getProperty("file.separator");
+	public static String sep = System.getProperty("file.separator");
 		
 	
 	//General Profile Fields
@@ -51,7 +50,8 @@ public class Profile {
 	
 	//Static final Strings
 	public static final String
-		FILE_PROFILE = "profile.xml";
+		FILE_PROFILE = "profile.xml",
+		FILE_PACKAGESPATH = "packages";
 	
 	public static final String
 		XML_NAME = "name",
@@ -61,7 +61,10 @@ public class Profile {
 		XML_QUEST = "quest",
 		XML_ID = "id",
 		XML_PACKAGE = "package",
-		XML_DATE ="date";
+		XML_DATE ="date",
+		XML_TOKEN = "token";
+
+	private static Profile activeProfile;
 	
 	public Profile(){}
 	
@@ -69,6 +72,24 @@ public class Profile {
 		this.profilePath = profilePath;
 		this.packagesPath = packagePath;
 	}
+
+	/**
+	 * Returning Sorted Package Quests:
+	 * Sorting: (by date)
+	 * 	- OPEN			
+	 *  - INPROGRESS
+	 *  - SELECTABLE
+	 *  - FINISHED
+	 *  - LOCKED
+	 * @param profile
+	 * @param allPackagesPath:  the PackageFolderName of the Profile mostly "packages"
+	 * @param packagePath: 		the PackagePath of the Current Profile
+	 * @return	Package with status updated
+	 */
+	
+	public static Package ReadPackageQuests(Profile profile, String packagePath){
+		return ReadPackageQuests( profile,Profile.FILE_PACKAGESPATH, packagePath);
+	}	
 	
 /**
  * Returning Sorted Package Quests:
@@ -83,12 +104,21 @@ public class Profile {
  * @param packagePath: 		the PackagePath of the Current Profile
  * @return	List<Quest> packageQuests with status updated
  */
-	public static List<Quest> ReadPackageQuests(Profile profile, String allPackagesPath, String packagePath){
-		List<Quest> packageQuests = Quest.ReadPackageQuests(allPackagesPath, packagePath);
+	public static Package ReadPackageQuests(Profile profile, String allPackagesPath, String packagePath){
+		if(profile == null)
+			return null;
+		
+		Package package1 = Package.readPackage(allPackagesPath, packagePath);
+		List<Quest> packageQuests = package1.getQuestList();
 		List<Quest> profileQuests = profile.getProfileQuests();
 		
-		if(profileQuests == null)
-			return sortQuestList(packageQuests);
+		if(packageQuests == null)
+			return null;
+		
+		if(profileQuests == null){
+			package1.setQuestList(sortQuestList(packageQuests));
+			return package1;
+		}
 		
 		for(Quest packageQuest : packageQuests){
 			for(Quest profileQuest : profileQuests){
@@ -100,20 +130,34 @@ public class Profile {
 			}
 		}
 		//Sorts the Quests and Returns it
-		return sortQuestList(packageQuests);
+		package1.setQuestList(sortQuestList(packageQuests));
+		return package1;
 		
 	}
+	
 	/**
 	 * Reading a Profile fully, the "profile.xml"
-	 * @param profilePath
+	 * @param profilePath: without the profile.xml
 	 * @param packagesPath
 	 * @return profile
+	 * @throws XMLReadingException 
 	 */
-	public static Profile ReadProfile(String profilePath, String packagesPath) {
+	public static Profile ReadProfile(String profilePath) throws XMLReadingException {
+		 return ReadProfile( profilePath, Profile.FILE_PACKAGESPATH);
+	}
+	
+	/**
+	 * Reading a Profile fully, the "profile.xml"
+	 * @param profilePath: without the profile.xml
+	 * @param packagesPath
+	 * @return profile
+	 * @throws XMLReadingException 
+	 */
+	public static Profile ReadProfile(String profilePath, String packagesPath) throws XMLReadingException {
 		List<String> fileNames = Quest.ReadFileNames(profilePath);
 		
 		if(!fileNames.contains(Profile.FILE_PROFILE))
-			return null;
+			throw new XMLReadingException();
 		
 		Profile profile = new Profile(profilePath,packagesPath);
 		profile.setName(profilePath.split(sep)[profilePath.split(sep).length-1]);
@@ -183,6 +227,8 @@ public class Profile {
 				        		quest.setPackagePath(currentNode.getTextContent());
 				        	if(currentNode.getNodeName().equals(Profile.XML_DATE)) //date
 				        		quest.setStringDate(currentNode.getTextContent());
+				        	if(currentNode.getNodeName().equals(Profile.XML_TOKEN)) //token
+				        		quest.setToken(currentNode.getTextContent());
 				        }
 				    }
 				    
@@ -214,11 +260,20 @@ public class Profile {
 			
 		}
 	
-	public static void writeProfile(Profile profile, String profilePath){
+	/**
+	 * Writing / Saving the Profile to the specific path
+	 * @param profile
+	 * @param profilePath
+	 * @throws XMLWriteException 
+	 */
+	public static void writeProfile(Profile profile) throws XMLWriteException{
+		if(profile == null)
+			throw new XMLWriteException();
+		
         DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder icBuilder;
         
-        String path = profilePath + sep + Profile.FILE_PROFILE;
+        String path = profile.getInitPath() + sep + Profile.FILE_PROFILE;
         
 
             try {
@@ -263,6 +318,8 @@ public class Profile {
         state.appendChild(writeProfileElements(doc, state, Profile.XML_QUEST, quest.getTitle()));
         state.appendChild(writeProfileElements(doc, state, Profile.XML_PACKAGE, quest.getPackagePath()));
         state.appendChild(writeProfileElements(doc, state, Profile.XML_DATE, quest.getStringDate()));
+        if(quest.getToken() != null)
+        	state.appendChild(writeProfileElements(doc, state, Profile.XML_TOKEN, quest.getToken()));
         
         return state;
 	}
@@ -318,6 +375,39 @@ public class Profile {
 	    return quests;
 	}
     
+	/**
+	 * Adding the specific Quest to the Profile and sets the quest to inprogress
+	 * @param profile
+	 * @param quest
+	 * @return profile
+	 * @throws XMLWriteException
+	 */
+	public static Profile changeQuestStateToInprogress(Profile profile, Quest quest) throws XMLWriteException{
+		return changeQuestState(profile, quest, Quest.STATE_INPROGRESS);
+	}
+	
+	/**
+	 * Adding the specific Quest to the Profile and sets the quest to selectable
+	 * @param profile
+	 * @param quest
+	 * @return profile
+	 * @throws XMLWriteException
+	 */
+	public static Profile changeQuestStateToSelectable(Profile profile, Quest quest) throws XMLWriteException{
+		return changeQuestState(profile, quest, Quest.STATE_SELECTABLE);
+	}
+
+	/**
+	 * Adding the specific Quest to the Profile and sets the quest to finished
+	 * @param profile
+	 * @param quest
+	 * @return profile
+	 * @throws XMLWriteException
+	 */
+	public static Profile changeQuestStateToFinished(Profile profile, Quest quest) throws XMLWriteException{
+		return changeQuestState(profile, quest, Quest.STATE_FINISHED);
+	}
+	
 /**
  * Changes the State of the Quest, adding new Date and returning new Profile Object.
  * On wrong Quest file, returning the old Profile
@@ -328,8 +418,9 @@ public class Profile {
  * - Quest.State_INPROGRESS
  * - Quest.State_FINISHED
  * @return profile
+ * @throws XMLWriteException 
  */
-	public static Profile changeQuestState(Profile profile, Quest quest, String state){
+	public static Profile changeQuestState(Profile profile, Quest quest, String state) throws XMLWriteException{
 		
 		//Returning old Profile if Quest is Null
 		if(quest == null)
@@ -355,7 +446,7 @@ public class Profile {
 				profile.setProfileQuests(questList);
 				
 				//save Profile
-				writeProfile(profile, profile.getInitPath());
+				writeProfile(profile);
 				return profile;
 			}
 		}
@@ -365,7 +456,7 @@ public class Profile {
 		profile.setProfileQuests(questList);
 		
 		//save Profile
-		writeProfile(profile, profile.getInitPath());
+		writeProfile(profile);
 			
 		return profile;
 	}
@@ -467,6 +558,20 @@ public class Profile {
 	 */
 	public void setProfileQuests(List<Quest> profileQuests) {
 		this.profileQuests = profileQuests;
+	}
+
+	/**
+	 * @return the activeProfile
+	 */
+	public static Profile getActiveProfile() {
+		return activeProfile;
+	}
+
+	/**
+	 * @param activeProfile the activeProfile to set
+	 */
+	public static void setActiveProfile(Profile activeProfile) {
+		Profile.activeProfile = activeProfile;
 	}
 	
 }

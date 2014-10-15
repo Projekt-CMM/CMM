@@ -31,6 +31,8 @@ import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
 import at.jku.ssw.cmm.gui.popup.PopupInterface;
 import at.jku.ssw.cmm.gui.quest.GUIquestMain;
+import at.jku.ssw.cmm.profile.Profile;
+import at.jku.ssw.cmm.profile.XMLReadingException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -78,7 +80,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	
 	public static final char BREAKPOINT = '\u2326';
 	
-	public static final boolean ADVANCED_GUI = false;
+	public static final boolean ADVANCED_GUI = true;
 	
 	public static final String VERSION = "C Compact Alpha 1.0";
 
@@ -363,7 +365,13 @@ public class GUImain implements GUImainMod, PopupInterface {
 	@Override
 	public void startQuestGUI(){
 		System.out.println("Opening Quest Selection Window...");
+		//open profile selector on empty profile
+		if(Profile.getActiveProfile() == null)
+			selectProfile();
+		
 		new GUIquestMain().start();
+		
+		
 	}
 	
 	@Override
@@ -373,6 +381,18 @@ public class GUImain implements GUImainMod, PopupInterface {
 		chooser.setFileFilter(new FileNameExtensionFilter(
 				"C Compact Profile", "xml"));
 		chooser.showOpenDialog(jFrame);
+		chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+
+		if(chooser.getSelectedFile() != null && chooser.getSelectedFile().getPath() != null 	){
+			String s = chooser.getSelectedFile().getAbsolutePath();
+			try {
+				Profile.setActiveProfile(Profile.ReadProfile(s.substring(0, s.indexOf(Profile.sep +  Profile.FILE_PROFILE))));
+			} catch (XMLReadingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("Profile Chooser Path:" + chooser.getSelectedFile().getAbsolutePath());
+			};
 	}
 	
 	/*

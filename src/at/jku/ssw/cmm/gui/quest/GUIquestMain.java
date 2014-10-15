@@ -2,6 +2,7 @@ package at.jku.ssw.cmm.gui.quest;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -15,19 +16,17 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
+import at.jku.ssw.cmm.profile.Profile;
+import at.jku.ssw.cmm.profile.Quest;
+import at.jku.ssw.cmm.profile.Package;
 
 public class GUIquestMain {
-	
-	public static final String QUEST_TREE_ROOT = "root";
-	public static final String PACKAGE_DIRECTORY = "packages";
 	
 	public GUIquestMain(){
 		
 	}
 
 	private JFrame jFrame;
-	
-	private JScrollPane editorScrollPane;
 	
 	public void start(){
 		if( SwingUtilities.isEventDispatchThread() )
@@ -51,14 +50,48 @@ public class GUIquestMain {
 		//Title
 		JLabel jLabel1 = new JLabel("Packages and Quests");
 		jQuestPane.add(jLabel1, BorderLayout.PAGE_START);
+		
+		//create the root node
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
+        //Not visible
          
-        //Quest tree
-        final JTree jPackageTree = new JTree(this.initQuestTree());
-        jPackageTree.setShowsRootHandles(false);
-        jPackageTree.setBorder(new EmptyBorder(5, 5, 5, 5));
-        jQuestPane.add(jPackageTree, BorderLayout.CENTER);
+        //create the child nodes
+        //DefaultMutableTreeNode vegetableNode = new DefaultMutableTreeNode("Vegetables");
+        //DefaultMutableTreeNode fruitNode = new DefaultMutableTreeNode("Fruits"); //TODO
         
-        jPackageTree.getSelectionModel().addTreeSelectionListener(new QuestTreeListener(this, jPackageTree));
+	        Profile p = Profile.getActiveProfile();
+	        
+	        if(p != null){
+	        	List<String> s = Quest.ReadFolderNames("packages");
+	        	
+	        	
+	        	for(int i = 0; i < s.size(); i++){
+	        		Package package1 = Profile.ReadPackageQuests(p, s.get(i));
+	        		
+	        		//Main Nodes:
+	        		DefaultMutableTreeNode packages = new DefaultMutableTreeNode(package1.getTitle());
+	        		
+	        		//Only adding Packages which are used..
+	        		if(package1 != null && package1.getQuestList() != null)
+	        				root.add(packages);
+	        		
+	        		for(Quest q: package1.getQuestList()){
+	        			packages.add(new DefaultMutableTreeNode(q.getTitle()));
+	        		}
+	        	}
+	        }
+
+	        
+        //add the child nodes to the root node
+        //root.add(vegetableNode);
+        //root.add(fruitNode);
+         
+        //create the tree by passing in the root node
+        JTree jPackageTree = new JTree(root);
+       // jPackageTree.addMouseListener(l);
+        jPackageTree.setBorder(new EmptyBorder(5, 5, 5, 5));
+        jPackageTree.setRootVisible(false);
+        jQuestPane.add(jPackageTree, BorderLayout.CENTER);
         
         cp.add(jQuestPane, BorderLayout.LINE_START);
         
@@ -71,8 +104,8 @@ public class GUIquestMain {
       	JLabel jLabel2 = new JLabel("Description");
       	jDescPane.add(jLabel2, BorderLayout.PAGE_START);
       	
+      	JScrollPane editorScrollPane = LoadStatics.loadHTMLdoc("profileTest/index.html", "profileTest/doxygen.css");
       	//Quest description
-      	editorScrollPane = LoadStatics.loadHTMLdoc( PACKAGE_DIRECTORY + "/default.html", PACKAGE_DIRECTORY + "/default.css");
       	editorScrollPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         jDescPane.add(editorScrollPane, BorderLayout.CENTER);
 
@@ -91,26 +124,5 @@ public class GUIquestMain {
 		// of its subcomponents.
 		this.jFrame.pack();
 		this.jFrame.setVisible(true);
-	}
-	
-	private DefaultMutableTreeNode initQuestTree(){
-		
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(QUEST_TREE_ROOT);
-		
-		/*for( String p : Quest.ReadFolderNames(PACKAGE_DIRECTORY) ){
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(p);
-			
-			for( Quest q : Quest.ReadPackageQuests(PACKAGE_DIRECTORY, p) ){
-				node.add(new DefaultMutableTreeNode(q.getTitle()));
-			}
-			
-			root.add(node);
-		}*/
-		
-		return root;
-	}
-	
-	public void setDescriptionText( String html, String css ){
-		editorScrollPane = LoadStatics.loadHTMLdoc(html, css);
 	}
 }
