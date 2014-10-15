@@ -38,8 +38,8 @@ public class WindowEventListener implements WindowListener {
 
 	@Override
 	public void windowOpened(WindowEvent e) {
-		// Auto-generated method stub
 		
+		System.out.println("[window] Window opened.");
 	}
 
 	//User is closing program
@@ -51,33 +51,19 @@ public class WindowEventListener implements WindowListener {
 	}
 
 	@Override
-	public void windowClosed(WindowEvent e) {
-		// Auto-generated method stub
-	}
-
+	public void windowClosed(WindowEvent e) {}
 	@Override
 	public void windowIconified(WindowEvent e) {
-		// Auto-generated method stub
-		
+		System.out.println("[window] Window iconified.");
 	}
-
 	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// Auto-generated method stub
-		
-	}
-
+	public void windowDeiconified(WindowEvent e) {}
 	@Override
 	public void windowActivated(WindowEvent e) {
-		// Auto-generated method stub
-		
+		System.out.println("[window] Window activated.");
 	}
-
 	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// Auto-generated method stub
-		
-	}
+	public void windowDeactivated(WindowEvent e) {}
 	
 	public static void doSaveCloseProgram( JFrame jFrame, GUImainSettings settings, SaveDialog saveDialog ){
 		//Warning if current file is not saved -> opens a warning dialog

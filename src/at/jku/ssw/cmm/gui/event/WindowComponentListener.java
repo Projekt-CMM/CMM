@@ -51,20 +51,20 @@ public class WindowComponentListener implements ComponentListener {
 
 	@Override
 	public void componentMoved(ComponentEvent e) {
-		// Auto-generated method stub
 		
+		//If the window is resized, the configuration object is updated...
+		this.settings.setSizeX( this.jFrame.getWidth() );
+		this.settings.setSizeY( this.jFrame.getHeight() );
+				
+		// ...and the source code panel is resized as well.
+		this.jSourcePane.setColumns( settings.getSourceSizeX() );
+		this.jSourcePane.setRows( settings.getSourceSizeY() );
+		
+		this.jFrame.revalidate();
+		this.jFrame.repaint();
 	}
-
 	@Override
-	public void componentShown(ComponentEvent e) {
-		// Auto-generated method stub
-		
-	}
-
+	public void componentShown(ComponentEvent e) {}
 	@Override
-	public void componentHidden(ComponentEvent e) {
-		// Auto-generated method stub
-		
-	}
-
+	public void componentHidden(ComponentEvent e) {}
 }
