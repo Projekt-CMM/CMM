@@ -1,11 +1,11 @@
 package at.jku.ssw.cmm.profile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,21 +29,19 @@ public class Quest {
 	//Variablen abgeleitet von der quest.xml
 	private String title;					//Titel der Quest
 	private String token;					//Token welches man beim Abschluss bekommt
-	private List<String> nextQuest;	//nächste Quest
-	private int xp;							//die zu bekommenden XP bei geschaffter Quest.
+	private List<String> nextQuest;			//nächste Quest
+	private int level;						//den zu setzendesn Level bei geschaffter Quest.
+	private int minLevel;					//Level Anforderung - vom Package vorgegeben
 	private boolean description;			//Beschreibung: description.html
 	private boolean style;					//Stylesheet: style.css
 	private String state;					//Status wird mit Profil abgeglichen
+	private String reward;					//Reward welcher beim Abschluss einer Quest angezeigt wird.
 	private Date date;						//Datum der letzten Bearbeitung
 		
 	//Ordner der Quest
 	private String initPath;				//Inizialisierungspfad:
 	private String packagePath;				//Package-Ordner
 	private String questPath;				//Quest-Ordner
-	
-	//Temporary file data
-	private String folderName;
-	private String fileName;	
 	
 	public static final String
 		FILE_DESCRIPTION = "description.html",
@@ -53,10 +51,11 @@ public class Quest {
 	public static final String
 		XML_QUEST = "quest",
 		XML_TITLE = "title",
-		XML_XP = "xp",
+		XML_LEVEL = "level",
 		XML_TOKEN = "token",
 		XML_NEXTQUEST = "nextquest",
-		XML_STATE = "state";
+		XML_STATE = "state",
+		XML_REWARD = "reward";
 
 	public static final String
 		STATE_LOCKED = "locked",
@@ -68,52 +67,7 @@ public class Quest {
 	//Time Format
 	public static final String
 	TIME_FORMAT = "dd-MM-yyyy:HH:mm:SS";
-	
-	/**
-	 * For Reading All Quests
-	 * @param AllPackagesPath: the initial Path of all Packages
-	 * @return allQuests: containing all Quests sorted TODO
-	 */
-	public static List<Quest> ReadAllQuests(String allPackagesPath){
-		List<String> packageFolderNames = ReadFolderNames(allPackagesPath);
-		List<Quest> allQuests = new ArrayList<>();
 		
-		if(packageFolderNames != null){
-			for(int i = 0; i < packageFolderNames.size();i++){
-				if(ReadPackageQuests(allPackagesPath, packageFolderNames.get(i)) != null)
-					allQuests.addAll(ReadPackageQuests(allPackagesPath, packageFolderNames.get(i)));
-			}
-			
-			return allQuests;
-		}
-		return null;
-	}
-
-	/**
-	 * For reading all Quests in one Package
-	 * @param allPackagesPath: the initial Path of the Packages
-	 * @param packagePath: the folder Name of the Package
-	 * @return packageQuests: all Quests of one package
-	 */
-	public static List<Quest> ReadPackageQuests(String allPackagesPath, String packagePath){
-		
-		List<String> questFolderNames = ReadFolderNames(allPackagesPath + sep + packagePath);
-		List<Quest> packageQuests = new ArrayList<>();
-		
-		for(int i = 0;i < questFolderNames.size(); i++){
-			Quest quest;
-					quest = ReadQuest(allPackagesPath, packagePath, questFolderNames.get(i));
-					
-					if(quest!= null)
-						packageQuests.add(quest);
-					
-			}
-				
-		
-		
-		return packageQuests;
-	}
-
 	/**
 	 * Reads one Quest
 	 * @param allPackagesPath: the path where all Packages are saved
@@ -128,9 +82,9 @@ public class Quest {
 			List<String> fileNames = ReadFileNames(path);
 			
 			//Folder has to have any Files and a Quest File.
-			if(fileNames != null && fileNames.contains(Quest.FiLE_QUEST)){
-				//Foldername = questtitle
-				quest.setTitle(questFolder);
+			
+				//Foldername = questtitle was earlier so
+				//quest.setTitle(questFolder);
 				
 				if(fileNames.contains(Quest.FILE_DESCRIPTION))
 					quest.setDescription(true);
@@ -150,9 +104,7 @@ public class Quest {
 				
 				return quest;
 				
-			}else{
-				return null;
-			}
+
 	}
 	
 	private static Quest ReadQuestXML(String path, Quest quest) throws ParserConfigurationException, SAXException, IOException{
@@ -162,7 +114,17 @@ public class Quest {
 		File file = new File(path + sep + Quest.FiLE_QUEST);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		Document doc = dBuilder.parse(file);
+		Document doc = null;
+		try{
+		 doc = dBuilder.parse(file);
+		
+		}catch(FileNotFoundException e){
+			System.err.println(file + " not found!");
+			quest.setTitle(quest.getQuestPath());
+			quest.setLevel(-1);
+			
+			return quest;
+		}	
 		
 		doc.getDocumentElement().normalize();
 		
@@ -177,8 +139,34 @@ public class Quest {
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 	 
 				Element eElement = (Element) nNode;
-				//quest.setTitle(eElement.getElementsByTagName(Quest.XML_TITLE).item(0).getTextContent());
-				quest.setXp(Integer.parseInt(eElement.getElementsByTagName(Quest.XML_XP).item(0).getTextContent()));
+				try{
+				quest.setTitle(eElement.getElementsByTagName(Quest.XML_TITLE).item(0).getTextContent());
+				}catch(NullPointerException e){
+					//No Title found
+					quest.setTitle(null);
+				}
+				
+				try{
+				quest.setLevel(Integer.parseInt(eElement.getElementsByTagName(Quest.XML_LEVEL).item(0).getTextContent()));
+				}catch(NullPointerException e){
+					//No Level found
+					quest.setLevel(-1);
+				}
+				
+				try{
+					quest.setToken(eElement.getElementsByTagName(Quest.XML_TOKEN).item(0).getTextContent());
+				}catch(NullPointerException e){
+					//No Token found
+					quest.setToken(null);
+				}
+				
+				try{
+					quest.setReward(eElement.getElementsByTagName(Quest.XML_REWARD).item(0).getTextContent());
+				}catch(NullPointerException e){
+					//No Token found
+					quest.setReward(null);
+				}
+
 				try{
 				String s = eElement.getElementsByTagName(Quest.XML_STATE).item(0).getTextContent();
 					if(s.contains(Quest.STATE_SELECTABLE) || s.contains(Quest.STATE_LOCKED))
@@ -187,7 +175,8 @@ public class Quest {
 						throw new NullPointerException();
 						
 				}catch(NullPointerException e){
-					//setting to status locked
+					//No state found
+					
 					//System.out.println("No / Wrong State set!");
 					quest.setState(Quest.STATE_LOCKED);
 				}
@@ -224,8 +213,6 @@ public class Quest {
 		  }
 		 }
 		
-		//TODO Sort
-		
 			return folderNames;
 	}
 
@@ -235,6 +222,7 @@ public class Quest {
 	 * @return List<Strin> fileNames / or null on non existing folder
 	 */
 	public static List<String> ReadFileNames(String path) {
+		
 		List<String> fileNames = new ArrayList<>();
 		
 		File folder = new File(path);
@@ -244,17 +232,17 @@ public class Quest {
 		File[] listOfFiles = folder.listFiles(); //get all File and Folder - Names
 		
 		for (int i = 0; i < listOfFiles.length; i++) {	
-		//Excludes Profile Folder and execludes FileNames
-		  if(listOfFiles[i].isFile() && listOfFiles[i].isAbsolute() != true){
+		//Excludes Profile Folder and execludes FileNames, relative and absolute paths are allowed.
+		  if(listOfFiles[i].isFile()){
 			  fileNames.add(listOfFiles[i].getName());  
 		  }
 		 }
-		
 			return fileNames;
 	}
 
 
 	/**
+	 * A title can be null
 	 * @return the title
 	 */
 	public String getTitle() {
@@ -283,6 +271,7 @@ public class Quest {
 	}
 
 	/**
+	 * A token can be null
 	 * @return the token
 	 */
 	public String getToken() {
@@ -297,17 +286,18 @@ public class Quest {
 	}
 
 	/**
-	 * @return the xp
+	 * Level can be -1
+	 * @return the Level
 	 */
-	public int getXp() {
-		return xp;
+	public int getLevel() {
+		return level;
 	}
 
 	/**
-	 * @param xp the xp to set
+	 * @param level the level to set
 	 */
-	public void setXp(int xp) {
-		this.xp = xp;
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
 	/**
@@ -355,34 +345,6 @@ public class Quest {
 	}
 
 	/**
-	 * @return the folderName
-	 */
-	public String getFolderName() {
-		return folderName;
-	}
-
-	/**
-	 * @param folderName the folderName to set
-	 */
-	public void setFolderName(String folderName) {
-		this.folderName = folderName;
-	}
-
-	/**
-	 * @return the fileName
-	 */
-	public String getFileName() {
-		return fileName;
-	}
-
-	/**
-	 * @param fileName the fileName to set
-	 */
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	/**
 	 * @return the style
 	 */
 	public boolean isStyle() {
@@ -411,6 +373,7 @@ public class Quest {
 	}
 
 	/**
+	 * Can be null
 	 * @return the nextQuest
 	 */
 	public List<String> getNextQuest() {
@@ -425,6 +388,7 @@ public class Quest {
 	}
 
 	/**
+	 * Can be null
 	 * @return the time as String
 	 */
 	public Date getDate() {
@@ -454,12 +418,41 @@ public class Quest {
 	}
 	
 	/**Quest
-	 * 
+	 * Can be null
 	 * @return String Value of Date
 	 */
 	public String getStringDate(){
 		SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(Quest.TIME_FORMAT);
 		return DATE_FORMAT.format(date);
+	}
+
+	/**
+	 * Can be null
+	 * @return the reward
+	 */
+	public String getReward() {
+		return reward;
+	}
+
+	/**
+	 * @param reward the reward to set
+	 */
+	public void setReward(String reward) {
+		this.reward = reward;
+	}
+
+	/**
+	 * @return the minLevel
+	 */
+	public int getMinLevel() {
+		return minLevel;
+	}
+
+	/**
+	 * @param minLevel the minLevel to set
+	 */
+	public void setMinLevel(int minLevel) {
+		this.minLevel = minLevel;
 	}	
 	
 	
