@@ -128,6 +128,8 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 */
 	private int inputHighlightOffset;
 	
+	private MenuBarControl menuBarControl;
+	
 	/**
 	 * Unicode character of the breakpoint.
 	 */
@@ -234,8 +236,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.jSourcePane.addKeyListener(new MainKeyListener(this, this.saveDialog));
 
 		// Menubar
+		this.menuBarControl = new MenuBarControl();
 		InitMenuBar.initFileM(this.jFrame, this.jSourcePane, this, this.settings,
-				this.rightPanelControl.getDebugPanel(), this.saveDialog);
+				this.rightPanelControl.getDebugPanel(), this.menuBarControl, this.saveDialog);
 
 		// Causes this Window to be sized to fit the preferred size and layouts
 		// of its subcomponents.
@@ -403,6 +406,8 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.jOutputPane.setEditable(false);
 		
 		this.rightPanelControl.lockInput();
+		
+		this.menuBarControl.lockAll();
 	}
 
 	@Override
@@ -413,6 +418,8 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.jOutputPane.setEditable(true);
 		
 		this.rightPanelControl.unlockInput();
+		
+		this.menuBarControl.unlockAll();
 	}
 
 	@Override

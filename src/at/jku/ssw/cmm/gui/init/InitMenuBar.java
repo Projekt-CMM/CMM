@@ -13,6 +13,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.GUImainSettings;
+import at.jku.ssw.cmm.gui.MenuBarControl;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.event.LanguageListener;
 import at.jku.ssw.cmm.gui.event.MenuBarEventListener;
@@ -37,7 +38,7 @@ public class InitMenuBar {
 	 * @param settings A reference to the main GUI's configuration object
 	 * @param saveDialog A reference to the save dialog manager initialized with the main GUI
 	 */
-	public static void initFileM( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImain main, GUImainSettings settings, GUIdebugPanel modifier, SaveDialog saveDialog ){
+	public static void initFileM( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImain main, GUImainSettings settings, GUIdebugPanel modifier, MenuBarControl menuBarControl, SaveDialog saveDialog ){
 		
 		//Initialize listener for the menu bar
 		MenuBarEventListener listener = new MenuBarEventListener( jFrame, jSourcePane, main, settings, modifier, saveDialog );
@@ -54,11 +55,13 @@ public class InitMenuBar {
 			JMenuItem newMI = new JMenuItem(_("New"));
 			newMI.addActionListener(listener.newFileHandler);
 			fileM.add(newMI);
+			menuBarControl.add(newMI);
 		
 			// --- file -> open ---
 			JMenuItem openMI = new JMenuItem(_("Open"));
 			fileM.add(openMI);
 			openMI.addActionListener(listener.openHandler);
+			menuBarControl.add(openMI);
 			
 			fileM.addSeparator();
 			
@@ -66,11 +69,13 @@ public class InitMenuBar {
 			JMenuItem saveAsMI = new JMenuItem(_("Save As..."));
 			fileM.add(saveAsMI);
 			saveAsMI.addActionListener(listener.saveAsHandler);
+			menuBarControl.add(saveAsMI);
 			
 			// --- file -> save ---
 			JMenuItem saveMI = new JMenuItem(_("Save..."));
 			fileM.add(saveMI);
 			saveMI.addActionListener(listener.saveHandler);
+			menuBarControl.add(saveMI);
 			
 			fileM.addSeparator();
 		
