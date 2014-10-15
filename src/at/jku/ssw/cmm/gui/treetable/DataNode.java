@@ -64,6 +64,7 @@ public class DataNode {
     	
     	if( !init && this.children != null && this.children.size() > 0 ){
     		for( DataNode d : this.children ){
+    			System.out.println("[DataNode] Possible option: " + d.name );
     			if( d.name.equals(n.name) ){
     				/*if( DataNode.equals(d, n) ){
     					d.type = "" + n.type + "*";

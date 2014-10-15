@@ -137,7 +137,7 @@ public class InitTreeTableData {
 		
 		System.out.println("[initTreeTable] Reading array: " + count.kind);
 		
-		return readArrayElements(init, count.type, count.name, node.getChild(count.name, "array", ""), count.kind, address, size, popup);
+		return readArrayElements(init, count.type, count.name, node, count.kind, address, size, popup);
 		
 	}
 	
@@ -152,27 +152,27 @@ public class InitTreeTableData {
 			
 			if( count.elemType.elements > 0 ){
 				//node.add(init, readArray(init, obj, node.getChild(obj.name, "array", ""), address + obj.adr, popup));
-				node.add(init,readArrayElements(init, count.elemType, name, node.getChild(""+i, "array", ""), type, address, size, popup));
+				node.add(init,readArrayElements(init, count.elemType, name, node.getChild("["+i+"]", "array", ""), type, address, size, popup));
 			}
 			else{
 				if( type == Struct.CHAR ){
 					typeName = "char";
 					value = Memory.loadChar(address + size * i);
-					node.add(init, new DataNode("" + i, typeName, "" + value, null));
+					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null));
 				}
 				else if( type == Struct.FLOAT ){
 					typeName = "float";
 					value = Memory.loadFloat(address + size * i);
-					node.add(init, new DataNode("" + i, typeName, "" + value, null));
+					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null));
 				}
 				else if( type == Struct.BOOL ){
 					typeName = "bool";
-					node.add(init, new DataNode("" + i, typeName, "" + value, null));
+					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null));
 				}
 				else if( type == Struct.INT ){
 					typeName = "int";
 					value = Memory.loadInt(address + size * i);
-					node.add(init, new DataNode("" + i, typeName, "" + value, null));
+					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null));
 				}
 				else if( type == Struct.STRUCT && type != Obj.TYPE ){
 					//DataNode n = readVariables( init, count.fields, new DataNode(name, "struct", "", new ArrayList<DataNode>()), address + count.adr, popup );

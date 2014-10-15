@@ -93,7 +93,7 @@ public class SyntaxTreeUtils {
 		
 		Stack<String> path = new Stack<>();
 		
-		path.add("" + arg0.left.right.val);
+		path.add("[" + arg0.left.right.val + "]");
 		path.add(arg0.left.left.obj.name);
 		
 		if( arg0.left.left.obj.level != 0 )

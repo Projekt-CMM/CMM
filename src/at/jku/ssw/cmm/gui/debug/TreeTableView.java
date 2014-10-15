@@ -81,7 +81,7 @@ public class TreeTableView{
 	}
 	
 	public void highlightVariable( Stack<String> path ){
-		System.out.println("-> " + path.firstElement());
+		System.out.println("[treetable] last variable changed " + path);
 		TreeUtils.expandPath(varTreeTable, path).markChanged();
 	}
 
