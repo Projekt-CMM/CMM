@@ -174,7 +174,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 
 		// Initialize the window
 		this.jFrame = new JFrame(VERSION);
-		this.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.jFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.jFrame.getContentPane().setPreferredSize(new Dimension(800, 500));
 		this.jFrame.setMinimumSize(new Dimension(600, 400));
 		

@@ -82,9 +82,13 @@ public class WindowEventListener implements WindowListener {
 				options,  			//the titles of buttons
 				options[0]); 		//default button title
 					
-			if( n == JOptionPane.YES_OPTION )
+			if( n == JOptionPane.YES_OPTION ){
 				//Open a save dialog to save current source code
 				saveDialog.doSaveAs();
+				System.exit(0);
+			}
+			else if( n == JOptionPane.NO_OPTION )
+				System.exit(0);
 		}
 		
 		//Warning if last changes are not saved -> opens a warning dialog
@@ -103,9 +107,13 @@ public class WindowEventListener implements WindowListener {
 				options,  			//the titles of buttons
 				options[0]); 		//default button title
 							
-			if( n == JOptionPane.YES_OPTION )
+			if( n == JOptionPane.YES_OPTION ){
 				//Save the last changes to current file path
 				saveDialog.directSave();
+				System.exit(0);
+			}
+			else if( n == JOptionPane.NO_OPTION )
+				System.exit(0);
 		}
 				
 		//Configuration data of the window is updated...
