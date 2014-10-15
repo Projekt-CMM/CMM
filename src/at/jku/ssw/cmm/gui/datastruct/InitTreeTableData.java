@@ -135,11 +135,11 @@ public class InitTreeTableData {
 		
 		System.out.println("[initTreeTable] Reading array: " + count.kind);
 		
-		return readArrayElements(init, count.type, count.name, node, count.kind, address, 0, popup);
+		return readArrayElements(init, count.type, count.name, node, address, 0, popup);
 		
 	}
 	
-	public static DataNode readArrayElements( boolean init, Struct count, String name, DataNode node, int type, int address, int offset, PopupInterface popup ){
+	public static DataNode readArrayElements( boolean init, Struct count, String name, DataNode node, int address, int offset, PopupInterface popup ){
 		
 		int length = count.elements;
 		int size = count.size / count.elements;
@@ -152,32 +152,32 @@ public class InitTreeTableData {
 			String typeName = "";
 			
 			if( count.elemType.elements > 0 ){
-				//node.add(init, readArray(init, obj, node.getChild(obj.name, "array", ""), address + obj.adr, popup));
-				node.add(init,readArrayElements(init, count.elemType, name, node.getChild("["+i+"]", "array", ""), type, address, offset + size * i, popup));
+				node.add(init,readArrayElements(init, count.elemType, name, node.getChild("["+i+"]", "array", ""), address, offset + size * i, popup));
 			}
 			else{
-				if( type == Struct.CHAR ){
+				if( count.elemType.kind == Struct.CHAR ){
 					typeName = "char";
 					value = Memory.loadChar(address + offset + size * i);
 					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null));
 				}
-				else if( type == Struct.FLOAT ){
+				else if( count.elemType.kind == Struct.FLOAT ){
 					typeName = "float";
 					value = Memory.loadFloat(address + offset + size * i);
 					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null));
 				}
-				else if( type == Struct.BOOL ){
+				else if( count.elemType.kind == Struct.BOOL ){
 					typeName = "bool";
 					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null));
 				}
-				else if( type == Struct.INT ){
+				else if( count.elemType.kind == Struct.INT ){
 					typeName = "int";
 					value = Memory.loadInt(address + offset + size * i);
 					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null));
 				}
-				else if( type == Struct.STRUCT && type != Obj.TYPE ){
-					//DataNode n = readVariables( init, count.fields, new DataNode(name, "struct", "", new ArrayList<DataNode>()), address + count.adr, popup );
-					//node.add(init, n);
+				//TODO implement arrays of structs when compiler supports it
+				else if( count.elemType.kind == Struct.STRUCT ){
+					DataNode n = readVariables( init, count.fields, new DataNode(name, "struct", "", new ArrayList<DataNode>()), address + offset + size * i, popup );
+					node.add(init, n);
 				}
 			}
 		}
