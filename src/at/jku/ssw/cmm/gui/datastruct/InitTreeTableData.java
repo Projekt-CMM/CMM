@@ -179,6 +179,13 @@ public class InitTreeTableData {
 					DataNode n = readVariables( init, count.fields, new DataNode(name, "struct", "", new ArrayList<DataNode>()), address + offset + size * i, popup );
 					node.add(init, n);
 				}
+				else if( count.elemType.kind == Struct.STRING ){
+					JButton b = new JButton(Strings.get(Memory.loadStringAddress(address + offset + size * i)));
+					MouseListener l = new StringPopupListener(popup, Strings.get(Memory.loadStringAddress(address + offset + size * i)));
+					b.addMouseListener(l);
+					
+					node.add(init, new DataNode("[" + i + "]", "string", b, null));
+				}
 			}
 		}
 		
