@@ -391,6 +391,10 @@ public class GUIdebugPanel {
 		}
 	}
 	
+	public void updateFileName(){
+		this.varView.standby(this.modifier.getFileName());
+	}
+	
 	/**
 	 * <i>THREAD SAFE by default</i>
 	 * 

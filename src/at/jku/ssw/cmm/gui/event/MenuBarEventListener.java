@@ -83,6 +83,7 @@ public class MenuBarEventListener {
 				jSourcePane.setText("");
 				settings.setPath(null);
 				main.updateWinFileName();
+				modifier.updateFileName();
 			}
 		}
 	};
@@ -108,6 +109,7 @@ public class MenuBarEventListener {
 					settings.setPath(chooser.getSelectedFile().getPath());
 					
 					main.updateWinFileName();
+					modifier.updateFileName();
 				}
 			}
 		}
@@ -126,6 +128,7 @@ public class MenuBarEventListener {
 				saveDialog.doSaveAs();
 				main.setFileSaved();
 				main.updateWinFileName();
+				modifier.updateFileName();
 			}
 		}
 	};
@@ -148,6 +151,7 @@ public class MenuBarEventListener {
 				
 				main.setFileSaved();
 				main.updateWinFileName();
+				modifier.updateFileName();
 			}
 		}
 	};
