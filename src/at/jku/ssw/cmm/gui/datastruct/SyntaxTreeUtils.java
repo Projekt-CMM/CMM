@@ -92,11 +92,18 @@ public class SyntaxTreeUtils {
 	private static Stack<String> getArrayPath( Node arg0, String fileName ){
 		
 		Stack<String> path = new Stack<>();
+		Node n;
+		for( n = arg0.left; n.left != null; n = n.left ){
+			if( n.right != null ){
+				path.add("[" + n.right.val + "]");
+				System.out.println("[readArray] added to path: " + n.right.val);
+			}
+		}
 		
-		path.add("[" + arg0.left.right.val + "]");
-		path.add(arg0.left.left.obj.name);
 		
-		if( arg0.left.left.obj.level != 0 )
+		path.add(n.obj.name);
+		
+		if( n.obj.level != 0 )
 			path.add(ReadCallStack.readCallStack().get(0)+"()");
 		
 		path.add("file12b.cmm");
