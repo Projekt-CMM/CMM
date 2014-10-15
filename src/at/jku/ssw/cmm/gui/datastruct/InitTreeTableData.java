@@ -133,17 +133,18 @@ public class InitTreeTableData {
 	
 	private static DataNode readArray( boolean init, Obj count, DataNode node, int address, PopupInterface popup ){
 		
-		int size = 4;//count.type.size / count.type.elements;
-		
 		System.out.println("[initTreeTable] Reading array: " + count.kind);
 		
-		return readArrayElements(init, count.type, count.name, node, count.kind, address, size, popup);
+		return readArrayElements(init, count.type, count.name, node, count.kind, address, 0, popup);
 		
 	}
 	
-	public static DataNode readArrayElements( boolean init, Struct count, String name, DataNode node, int type, int address, int size, PopupInterface popup ){
+	public static DataNode readArrayElements( boolean init, Struct count, String name, DataNode node, int type, int address, int offset, PopupInterface popup ){
 		
 		int length = count.elements;
+		int size = count.size / count.elements;
+		
+		System.out.println("[initTreeTable] reading array level. size: " + size + ", elements: " + length + ", offset: " + offset );
 		
 		for( int i = 0; i < length; i++ ){
 			
@@ -152,17 +153,17 @@ public class InitTreeTableData {
 			
 			if( count.elemType.elements > 0 ){
 				//node.add(init, readArray(init, obj, node.getChild(obj.name, "array", ""), address + obj.adr, popup));
-				node.add(init,readArrayElements(init, count.elemType, name, node.getChild("["+i+"]", "array", ""), type, address, size, popup));
+				node.add(init,readArrayElements(init, count.elemType, name, node.getChild("["+i+"]", "array", ""), type, address, offset + size * i, popup));
 			}
 			else{
 				if( type == Struct.CHAR ){
 					typeName = "char";
-					value = Memory.loadChar(address + size * i);
+					value = Memory.loadChar(address + offset + size * i);
 					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null));
 				}
 				else if( type == Struct.FLOAT ){
 					typeName = "float";
-					value = Memory.loadFloat(address + size * i);
+					value = Memory.loadFloat(address + offset + size * i);
 					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null));
 				}
 				else if( type == Struct.BOOL ){
@@ -171,7 +172,7 @@ public class InitTreeTableData {
 				}
 				else if( type == Struct.INT ){
 					typeName = "int";
-					value = Memory.loadInt(address + size * i);
+					value = Memory.loadInt(address + offset + size * i);
 					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null));
 				}
 				else if( type == Struct.STRUCT && type != Obj.TYPE ){
