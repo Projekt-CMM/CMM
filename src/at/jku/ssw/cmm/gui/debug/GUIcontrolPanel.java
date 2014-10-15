@@ -123,13 +123,13 @@ public class GUIcontrolPanel {
 		this.jButtonStepOver
 				.addMouseListener(this.listener.stepOverButtonHandler);
 		this.panel.add(jButtonStepOver);
-		this.jButtonStepOver.setVisible(false);
+		this.jButtonStepOver.setEnabled(false);
 
 		jButtonStepOut = new JButton("\u21B5");
 		this.jButtonStepOut
 				.addMouseListener(this.listener.stepOutButtonHandler);
 		this.panel.add(jButtonStepOut);
-		this.jButtonStepOut.setVisible(false);
+		this.jButtonStepOut.setEnabled(false);
 
 		jButtonStop = new JButton("\u25A0");
 		this.jButtonStop.addMouseListener(this.listener.stopButtonHandler);
@@ -211,6 +211,8 @@ public class GUIcontrolPanel {
 
 		// Set standard mode elements visible
 		this.jButtonPlay.setVisible(true);
+		this.jButtonStepOver.setVisible(true);
+		this.jButtonStepOut.setVisible(true);
 		this.jLabelTimer.setVisible(true);
 		this.jSlider.setVisible(true);
 
@@ -331,7 +333,7 @@ public class GUIcontrolPanel {
 		if (this.listener.isPauseMode()) {
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					jButtonStepOver.setVisible(true);
+					jButtonStepOver.setEnabled(true);
 				}
 			});
 		}
@@ -350,8 +352,8 @@ public class GUIcontrolPanel {
 		if (this.listener.isPauseMode()) {
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					jButtonStepOver.setVisible(true);
-					jButtonStep.setVisible(false);
+					jButtonStepOver.setEnabled(true);
+					jButtonStep.setEnabled(false);
 				}
 			});
 		}
@@ -370,8 +372,8 @@ public class GUIcontrolPanel {
 	public void unsetStepOverButton() {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				jButtonStepOver.setVisible(false);
-				jButtonStep.setVisible(true);
+				jButtonStepOver.setEnabled(false);
+				jButtonStep.setEnabled(true);
 			}
 		});
 	}
@@ -380,13 +382,13 @@ public class GUIcontrolPanel {
 		if (this.debug.getCallStackSize() > 1) {
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					jButtonStepOut.setVisible(true);
+					jButtonStepOut.setEnabled(true);
 				}
 			});
 		} else {
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					jButtonStepOut.setVisible(false);
+					jButtonStepOut.setEnabled(false);
 				}
 			});
 		}
