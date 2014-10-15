@@ -89,6 +89,8 @@ public class WindowEventListener implements WindowListener {
 			}
 			else if( n == JOptionPane.NO_OPTION )
 				System.exit(0);
+			else
+				return;
 		}
 		
 		//Warning if last changes are not saved -> opens a warning dialog
@@ -114,6 +116,8 @@ public class WindowEventListener implements WindowListener {
 			}
 			else if( n == JOptionPane.NO_OPTION )
 				System.exit(0);
+			else
+				return;
 		}
 				
 		//Configuration data of the window is updated...
@@ -124,6 +128,8 @@ public class WindowEventListener implements WindowListener {
 				
 		// ...and saved
 		settings.saveConfigFile();
+		
+		System.exit(0);
 	}
 
 }
