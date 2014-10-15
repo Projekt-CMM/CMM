@@ -133,44 +133,55 @@ public class InitTreeTableData {
 	
 	private static DataNode readArray( boolean init, Obj count, DataNode node, int address, PopupInterface popup ){
 		
-		int length = count.type.elements;
-		int size = count.type.size / count.type.elements;
+		int size = 4;//count.type.size / count.type.elements;
 		
-		System.out.println("Reading array...");
+		System.out.println("[initTreeTable] Reading array: " + count.kind);
+		
+		return readArrayElements(init, count.type, count.name, node.getChild(count.name, "array", ""), count.kind, address, size, popup);
+		
+	}
+	
+	public static DataNode readArrayElements( boolean init, Struct count, String name, DataNode node, int type, int address, int size, PopupInterface popup ){
+		
+		int length = count.elements;
 		
 		for( int i = 0; i < length; i++ ){
 			
 			Object value = "";
 			String typeName = "";
 			
-			if( count.kind == Struct.INT ){
-				typeName = "int";
-				value = Memory.loadInt(address + size * i);
+			if( count.elemType.elements > 0 ){
+				//node.add(init, readArray(init, obj, node.getChild(obj.name, "array", ""), address + obj.adr, popup));
+				node.add(init,readArrayElements(init, count.elemType, name, node.getChild(""+i, "array", ""), type, address, size, popup));
 			}
-			else if( count.kind == Struct.CHAR ){
-				typeName = "char";
-				value = Memory.loadChar(address + size * i);
+			else{
+				if( type == Struct.CHAR ){
+					typeName = "char";
+					value = Memory.loadChar(address + size * i);
+					node.add(init, new DataNode("" + i, typeName, "" + value, null));
+				}
+				else if( type == Struct.FLOAT ){
+					typeName = "float";
+					value = Memory.loadFloat(address + size * i);
+					node.add(init, new DataNode("" + i, typeName, "" + value, null));
+				}
+				else if( type == Struct.BOOL ){
+					typeName = "bool";
+					node.add(init, new DataNode("" + i, typeName, "" + value, null));
+				}
+				else if( type == Struct.INT ){
+					typeName = "int";
+					value = Memory.loadInt(address + size * i);
+					node.add(init, new DataNode("" + i, typeName, "" + value, null));
+				}
+				else if( type == Struct.STRUCT && type != Obj.TYPE ){
+					//DataNode n = readVariables( init, count.fields, new DataNode(name, "struct", "", new ArrayList<DataNode>()), address + count.adr, popup );
+					//node.add(init, n);
+				}
 			}
-			else if( count.kind == Struct.FLOAT ){
-				typeName = "float";
-				value = Memory.loadFloat(address + size * i);
-			}
-			else if( count.kind == Struct.BOOL ){
-				typeName = "bool";
-			}
-			else if( count.kind == Struct.ARR ){
-				node.add(init, readArray(init, count.type.fields, node.getChild(count.name, "array", ""), address + address + size * i, popup));
-			}
-			else if( count.kind == Struct.STRUCT && count.kind != Obj.TYPE ){
-				DataNode n = readVariables( init, count.type.fields, new DataNode(count.name, "struct", "", new ArrayList<DataNode>()), address + count.adr, popup );
-				node.add(init, n);
-			}
-			
-			node.add(init, new DataNode("" + i, typeName, "" + value, null));
 		}
 		
 		return node;
-		
 	}
 	
 	public static DataNode createDataStructure( String fileName ) {

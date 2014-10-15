@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -59,6 +60,26 @@ public class MenuBarEventListener {
 		public void actionPerformed(ActionEvent arg0) {
 			
 			if( modifier.isCodeChangeAllowed() ){
+				
+				if( settings.getPath() == null ){
+					//Custom button text
+					Object[] options = {_("Save now"), _("Proceed without saving")};
+									
+					//Init warning dialog with two buttons
+					int n = JOptionPane.showOptionDialog( jFrame,
+						_("The current file has not yet been saved!"),
+						_("Opening new file"),
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE,
+						null,     			//do not use a custom Icon
+						options,  			//the titles of buttons
+						options[0]); 		//default button title
+									
+					if( n == JOptionPane.YES_OPTION )
+						//Save the last changes to current file path
+						saveDialog.directSave();
+				}
+				
 				jSourcePane.setText("");
 				settings.setPath(null);
 				main.updateWinFileName();

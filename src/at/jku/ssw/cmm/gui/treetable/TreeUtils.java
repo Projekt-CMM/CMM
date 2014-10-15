@@ -77,19 +77,19 @@ public class TreeUtils {
 		
 		String name = stack.pop();
 		
-		System.out.println("[TreeTable][Expand] looking for: " + name);
+		//System.out.println("[TreeTable][Expand] looking for: " + name);
 		
 		if (node.getChildCount() >= 0) {
 			for (DataNode e : node.getChildren()) {
 				if( e.getName().equals(name) ){
-					System.out.println("[TreeTable][Expand] entering new level: " + e.print());
+					//System.out.println("[TreeTable][Expand] entering new level: " + e.print());
 					path.push(e);
 					lowest = expandPath(tree, e, stack, path);
 				}
 			}
 		}
 		
-		System.out.println("[TreeTable][Expand] get expanded: " + path);
+		//System.out.println("[TreeTable][Expand] get expanded: " + path);
 		tree.expandPath(new TreePath(path.toArray()));
 		
 		path.pop();

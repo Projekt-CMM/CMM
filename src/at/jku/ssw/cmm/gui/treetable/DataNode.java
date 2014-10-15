@@ -60,7 +60,7 @@ public class DataNode {
     
     public void add( boolean init, DataNode n ){
     	
-    	//System.out.println("Checking data node: " + n.print() );
+    	System.out.println("[DataNode] Checking data node: " + n.print() );
     	
     	if( !init && this.children != null && this.children.size() > 0 ){
     		for( DataNode d : this.children ){
@@ -73,7 +73,7 @@ public class DataNode {
     					d.type = n.type;*/
     				d.value = n.value;
     				d.type = n.type;
-    				System.out.println("Found: " + n.name + ", new value is " + n.value + " | " + d.value + ", type is " + n.type + " | " + d.type);
+    				System.out.println("[DataNode] Found: " + n.name + ", new value is " + n.value + " | " + d.value + ", type is " + n.type + " | " + d.type);
     				return;
     			}
     		}

@@ -114,4 +114,6 @@ public interface GUImainMod {
 	public void startQuestGUI();
 	
 	public void selectProfile();
+	
+	public void saveIfNecessary();
 }

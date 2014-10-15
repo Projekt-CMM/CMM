@@ -290,6 +290,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 		//final String sep = System.getProperty("file.separator");
 		String s = this.settings.getPath();
 		
+		if( s == null )
+			return _("Unnamed");
+		
 		File file = new File(s);
 		s = file.getName();
 		
@@ -325,6 +328,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 
 	@Override
 	public String getWorkingDirectory() {
+		if( this.settings.getPath() == null )
+			return null;
+			
 		File f = new File(this.settings.getPath());
 		if( f.getParentFile() != null )
 			return f.getParentFile().getAbsolutePath();
@@ -459,6 +465,18 @@ public class GUImain implements GUImainMod, PopupInterface {
 		chooser.setFileFilter(new FileNameExtensionFilter(
 				_("C Compact Profile"), "xml"));
 		chooser.showOpenDialog(jFrame);
+	}
+	
+	@Override
+	public void saveIfNecessary() {
+		
+		if( this.settings.getPath() == null )
+			this.saveDialog.doSaveAs();
+		else
+			this.saveDialog.directSave();
+		
+		this.setFileSaved();
+		this.updateWinFileName();
 	}
 	
 	/*
