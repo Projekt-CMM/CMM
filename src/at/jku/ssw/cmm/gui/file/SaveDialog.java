@@ -37,13 +37,19 @@ public class SaveDialog {
 		this.settings = settings;
 	}
 	
-	//The main GUI window frame
+	/**
+	 * The main GUI window frame
+	 */
 	private final JFrame jFrame;
 	
-	//The text area with the source code
+	/**
+	 * The text area with the source code
+	 */
 	private final RSyntaxTextArea jSourcePane;
 	
-	//The main GUI configuration object
+	/**
+	 * The main GUI configuration object
+	 */
 	private final GUImainSettings settings;
 	
 	/**
@@ -61,6 +67,10 @@ public class SaveDialog {
 		}
 	}
 	
+	/**
+	 * Saves the current file directly without calling a save dialog.
+	 * Save dialog is called though, if there is no working directory for the file defined.
+	 */
 	public void directSave(){
 		if( settings.getPath() != null )
 			FileManagerCode.saveSourceCode(new File(settings.getPath()), jSourcePane.getText());
