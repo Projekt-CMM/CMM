@@ -57,36 +57,53 @@ public class PanelRunListener implements Debugger {
 		this.delay = 2;
 	}
 
-	// Interface for main GUI manipulations, eg. source code highlighting
+	/**
+	 * Interface for main GUI manipulations, eg. source code highlighting
+	 */
 	private final GUImainMod modMain;
 
-	// Reference to the right panel wrapper class
+	/**
+	 * Reference to the right panel wrapper class
+	 */
 	private final GUIdebugPanel master;
 
-	// FALSE = pause | TRUE = play
+	/**
+	 * FALSE = pause | TRUE = play
+	 */
 	private boolean run;
 
-	// TRUE -> Interpreter is still running | FALSE -> runtime error or ready
-	// See right panel mode definitions (in the documentation)
+	/**
+	 * TRUE -> Interpreter is still running | FALSE -> runtime error or ready
+	 * See right panel mode definitions (in the documentation)
+	 */
 	private boolean keepRunning;
 
-	// TRUE -> interpreter may carry on | FALSE -> interpreter is waiting for
-	// user action
-	// Do not set this variable from directly. Use the synchronized methods.
+	/**
+	 * TRUE -> interpreter may carry on | FALSE -> interpreter is waiting for user action
+	 * Do not set this variable from directly. Use the synchronized methods!
+	 */
 	private boolean wait;
 
-	// TRUE -> interpreter is in step over mode | FALSE -> nothing happens
+	/**
+	 * TRUE -> interpreter is in step over mode | FALSE -> nothing happens
+	 */
 	private boolean stepOver;
 
-	// The delay between two interpreter steps in run mode
-	// time [seconds] = delay/2
+	/**
+	 * The delay between two interpreter steps in run mode
+	 * time [seconds] = delay/2
+	 */
 	private int delay;
 
-	// Reference to the timer which is scheduling the run mode delay
-	// "null" if unused
+	/**
+	 * Reference to the timer which is scheduling the run mode delay <br>
+	 * "null" if unused
+	 */
 	private Timer timer;
 	
-	//The last node in the user's source code which has been processed
+	/**
+	 * The last node in the user's source code which has been processed
+	 */
 	private Node lastNode;
 
 	/* --- functional methods --- */
@@ -376,6 +393,11 @@ public class PanelRunListener implements Debugger {
 		return keepRunning;
 	}
 	
+	/**
+	 * Checks if step over button shall be visible or not. Eventually toggles visibility.
+	 * 
+	 * @param n The current node in the abstract syntax tree
+	 */
 	private void doStepOverButtonCheck( Node n ){
 		//Is function call? (NOT predefined function)
 		if( n.kind == Node.CALL && n.obj.ast != null ){
@@ -391,6 +413,13 @@ public class PanelRunListener implements Debugger {
 			this.master.getControlPanel().unsetStepOverButton();
 	}
 	
+	/**
+	 * This method shall always be called when the interpreter has to step over a function
+	 * for any reson. It checks wheather stepping over is possible and initiates the stepping
+	 * over process.
+	 * 
+	 * @param n The current node in the abstract syntax tree
+	 */
 	private void doStepOverRunCheck( Node n ){
 		//Is function call? (NOT predefined function) from external file
 		if( n.kind == Node.CALL && n.obj.ast != null && n.obj.ast.line <= this.master.getBeginLine() ){
