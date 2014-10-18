@@ -50,7 +50,7 @@ public class ExpandSourceCode {
 				localDirectory = true;
 			}
 			
-			//Project directory (working path)
+			//Project directory (working path)#include <stdilb.h>
 			else if( s.startsWith("#include") && s.contains("\"") && !finishedIncludes ){
 				p = Pattern.compile("#include \"([\\w./]+)\"");
 				System.out.println("Working directory include file: " + s);

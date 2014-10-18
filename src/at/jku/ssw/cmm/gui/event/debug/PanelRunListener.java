@@ -308,7 +308,7 @@ public class PanelRunListener implements Debugger {
 		/* --- Node #3: Quick mode? --- */
 		if (this.isRunMode() && this.delay == 0) {
 			
-			//Passing a breakpoint
+			/* --- Node #4: Passing a breakpoint --- */
 			if( !this.master.getBreakPoints().isEmpty() && arg0.line >= this.master.getBreakPoints().get(0)-1 ){
 				this.setPauseMode();
 				System.out.println("Stopped at breakpoint: "  + arg0.line + " - " + this.master.getBreakPoints().get(0) );
@@ -328,6 +328,8 @@ public class PanelRunListener implements Debugger {
 		// -> Node #3 - DEFAULT
 		/* --- Update Block --- */
 		this.master.getControlPanel().updateStepOutButton();//*.next -> main()
+		
+		/* --- Node #5 - Variable value changed --- */
 		if( arg0.kind == Node.CALL || arg0.kind == Node.ASSIGN )
 			this.master.updateVariableTables(this.master.callStackChanged());
 		
@@ -336,18 +338,18 @@ public class PanelRunListener implements Debugger {
 
 		this.timer = null;
 
-		/* --- Node #4: Pause or Run mode --- */
+		/* --- Node #6: Pause or Run mode --- */
 		if (this.isPauseMode()) {
-			/* --- Node #5: Create Buttons --- */
+			/* --- Node #7: Create Buttons --- */
 			if( arg0.kind == Node.ASSIGN )
 				this.doStepOverButtonCheck(arg0.right);
 			else
 				this.doStepOverButtonCheck(arg0);
 		}
-		/* --- Node #4: Pause or Run mode --- */
+		/* --- Node #6: Pause or Run mode --- */
 		else if (this.isRunMode() && this.delay > 0) {
 
-			/* --- Node #5: Step over if external function call --- */
+			/* --- Node #9: Step over if external function call --- */
 			if( arg0.kind == Node.ASSIGN )
 				this.doStepOverRunCheck(arg0.right);
 			else
@@ -362,7 +364,7 @@ public class PanelRunListener implements Debugger {
 				}
 			}, 500 * delay);
 		}
-		/* --- Node #4: Default exit --- */
+		/* --- Node #6: Default exit --- */
 		else {
 			throw new IllegalStateException();
 		}
