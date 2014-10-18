@@ -24,6 +24,15 @@ import at.jku.ssw.cmm.interpreter.memory.MethodContainer;
  */
 public class InitTreeTableData {
 	
+	/**
+	 * Reads the call stack for global and local variables and returns a data model for the tree table.<br>
+	 * <b>Note:</b> This method re-creates the whole data model. This will collapse the tree table nodes!
+	 * 
+	 * @param compiler A reference to the compiler wrapper object
+	 * @param popup A reference to the popup interface which is necessary to invoke popups
+	 * @param fileName The name of the current *.cmm file
+	 * @return The data model for the tree table
+	 */
 	public static TreeTableDataModel readSymbolTable( CMMwrapper compiler, PopupInterface popup, String fileName ){
 		
 		//Create root node
@@ -41,6 +50,17 @@ public class InitTreeTableData {
 		return model;
 	}
 	
+	/**
+	 * Updates a given tree table data model with the new variable values. Should be used to update
+	 * the tree table without collapsing the nodes. Should not be used when a new function is called
+	 * or at the very first initialization.
+	 * 
+	 * @param model The tree table data model which is already in use
+	 * @param node The root node of the tree
+	 * @param compiler A reference to the compiler wrapper object
+	 * @param popup A reference to the popup interface which is necessary to invoke popups
+	 * @param fileName The name of the current *.cmm file
+	 */
 	public static void updateTreeTable( TreeTableDataModel model, DataNode node, CMMwrapper compiler, PopupInterface popup, String fileName ){
 		
 		//Read global variables
@@ -50,87 +70,134 @@ public class InitTreeTableData {
 		getNextAddress( false, compiler, Memory.getFramePointer(), node, popup );
 	}
 	
+	/**
+	 * Iterates through the call stack recursively. Reads local variables of functions by calling
+	 * "readVariables()"
+	 * 
+	 * @param init TRUE if the tree table data model is re-created (called from readSymbolTable())<br>
+	 * 			FALSE if the data model is updated (called from updateTreeTable())
+	 * @param compiler A reference to the compiler wrapper object
+	 * @param address The start address of the current function
+	 * @param node The data node which has to be updated (the data node of this function)
+	 * @param popup A reference to the popup interface which is necessary to invoke popups
+	 */
 	private static void getNextAddress( boolean init, CMMwrapper compiler, int address, DataNode node, PopupInterface popup ){
 		
+		//Name of the function
 		String name;
+		name = MethodContainer.getMethodName(Memory.loadInt(address-8));
 
-		int methodID = Memory.loadInt(address-8);
-		name = MethodContainer.getMethodName(methodID);
-
+		//Tree table data node of this function
 		DataNode funcNode;
 		
 		if( init )
+			//Initialize data node if re-creating the data model
 			funcNode = new DataNode( name + "()", "", "", new ArrayList<DataNode>() );
 		else
-			funcNode = node.getChild(name + "()", "", "");
+			//Update the data node
+			funcNode = node.getChild( name + "()", "", "" );
 		
+		//Read local variables of the current function
 		readVariables( init, findNodeByName(compiler.getSymbolTable().curScope.locals, name).locals, funcNode, address, popup );
 		node.add(init, funcNode);
 		
 		if( name == "main" )
+			//Return if reached the bottom of the call stack (main)
 			return;
 		else
+			//Read next function in call stack
 			getNextAddress( init, compiler, Memory.loadInt(address-4), node, popup );
 	}
 	
+	/**
+	 * Reads gloabal or local variables from a given address in the call stack and a given
+	 * node in the symbol table.
+	 * 
+	 * @param init TRUE if the tree table data model is re-created (called from readSymbolTable())<br>
+	 * 			FALSE if the data model is updated (called from updateTreeTable())
+	 * @param obj The start node in the symbol table
+	 * @param node The data node which has to be updated
+	 * @param address The start address of the current function
+	 * @param popup A reference to the popup interface which is necessary to invoke popups
+	 * @return The updated data node (see papam "node")
+	 */
 	private static DataNode readVariables( boolean init, Obj obj, DataNode node, int address, PopupInterface popup ){
 		
+		//Iterate through symbol table
 		while( obj != null ){
-				if( obj.type.kind == Struct.INT && obj.kind != Obj.PROC ){
-					if( obj.kind == Obj.VAR && !obj.isRef ){
-						node.add(init, new DataNode(obj.name, "int", Memory.loadInt(address + obj.adr), null));
-					}
-					else if( obj.kind == Obj.VAR && obj.isRef && obj.kind != Obj.PROC ){
-						node.add(init, new DataNode(obj.name, "int", Memory.loadInt(Memory.loadInt(address + obj.adr)), null));
-					}
-					else{
-						node.add(init, new DataNode(obj.name, "int", obj.val, null));
-					}
+			//Reading an INTEGER
+			if( obj.type.kind == Struct.INT && obj.kind != Obj.PROC ){
+				if( obj.kind == Obj.VAR && !obj.isRef ){
+					node.add(init, new DataNode(obj.name, "int", Memory.loadInt(address + obj.adr), null));
 				}
-				if( obj.type.kind == Struct.CHAR && obj.kind != Obj.PROC ){
-					if( obj.kind == Obj.VAR && !obj.isRef ){
-						node.add(init, new DataNode(obj.name, "char", Memory.loadChar(address + obj.adr), null));
-					}
-					else if( obj.kind == Obj.VAR && obj.isRef ){
-						node.add(init, new DataNode(obj.name, "char", Memory.loadChar(Memory.loadInt(address + obj.adr)), null));
-					}
-					else{
-						node.add(init, new DataNode(obj.name, "char", obj.val, null));
-					}
+				else if( obj.kind == Obj.VAR && obj.isRef && obj.kind != Obj.PROC ){
+					node.add(init, new DataNode(obj.name, "int", Memory.loadInt(Memory.loadInt(address + obj.adr)), null));
 				}
-				if( obj.type.kind == Struct.FLOAT && obj.kind != Obj.PROC ){
-					if( obj.kind == Obj.VAR && !obj.isRef ){
-						node.add(init, new DataNode(obj.name, "float", Memory.loadFloat(address + obj.adr), null));
-					}
-					else if( obj.kind == Obj.VAR && obj.isRef ){
-						node.add(init, new DataNode(obj.name, "float", Memory.loadFloat(Memory.loadInt(address + obj.adr)), null));
-					}
-					else{
-						node.add(init, new DataNode(obj.name, "float", obj.fVal, null));
-					}
+				else{
+					node.add(init, new DataNode(obj.name, "int", obj.val, null));
 				}
-				if( obj.type.kind == Struct.ARR && obj.kind != Obj.PROC ){
-					node.add(init, readArray(init, obj, node.getChild(obj.name, "array", ""), address + obj.adr, popup));
+			}
+			//Reading a CHARACTER
+			if( obj.type.kind == Struct.CHAR && obj.kind != Obj.PROC ){
+				if( obj.kind == Obj.VAR && !obj.isRef ){
+					node.add(init, new DataNode(obj.name, "char", Memory.loadChar(address + obj.adr), null));
 				}
-				if( obj.type.kind == Struct.STRUCT && obj.kind != Obj.PROC && obj.kind != Obj.TYPE ){
-					DataNode n = readVariables( init, obj.type.fields, node.getChild(obj.name, "struct", ""), address + obj.adr, popup );
-					node.add(init, n);
-						
+				else if( obj.kind == Obj.VAR && obj.isRef ){
+					node.add(init, new DataNode(obj.name, "char", Memory.loadChar(Memory.loadInt(address + obj.adr)), null));
 				}
-				if( obj.type.kind == Struct.STRING && obj.kind != Obj.PROC ){
-					JButton b = new JButton(Strings.get(Memory.loadStringAddress(address + obj.adr)));
-					MouseListener l = new StringPopupListener(popup, Strings.get(Memory.loadStringAddress(address + obj.adr)));
-					b.addMouseListener(l);
+				else{
+					node.add(init, new DataNode(obj.name, "char", obj.val, null));
+				}
+			}
+			//Reading a FLOAT
+			if( obj.type.kind == Struct.FLOAT && obj.kind != Obj.PROC ){
+				if( obj.kind == Obj.VAR && !obj.isRef ){
+					node.add(init, new DataNode(obj.name, "float", Memory.loadFloat(address + obj.adr), null));
+				}
+				else if( obj.kind == Obj.VAR && obj.isRef ){
+					node.add(init, new DataNode(obj.name, "float", Memory.loadFloat(Memory.loadInt(address + obj.adr)), null));
+				}
+				else{
+					node.add(init, new DataNode(obj.name, "float", obj.fVal, null));
+				}
+			}
+			//Reading an ARRAY (any type)
+			if( obj.type.kind == Struct.ARR && obj.kind != Obj.PROC ){
+				node.add(init, readArray(init, obj, node.getChild(obj.name, "array", ""), address + obj.adr, popup));
+			}
+			//Reading a STRUCTURE
+			if( obj.type.kind == Struct.STRUCT && obj.kind != Obj.PROC && obj.kind != Obj.TYPE ){
+				DataNode n = readVariables( init, obj.type.fields, node.getChild(obj.name, "struct", ""), address + obj.adr, popup );
+				node.add(init, n);
+			}
+			//READING A STRING
+			if( obj.type.kind == Struct.STRING && obj.kind != Obj.PROC ){
+				JButton b = new JButton(Strings.get(Memory.loadStringAddress(address + obj.adr)));
+				MouseListener l = new StringPopupListener(popup, Strings.get(Memory.loadStringAddress(address + obj.adr)));
+				b.addMouseListener(l);
 					
-					node.add(init, new DataNode(obj.name, "string", b, null));
-				}
+				node.add(init, new DataNode(obj.name, "string", b, null));
+			}
 			
 			//Next symbol table node
 			obj = obj.next;
 		}
+		
+		//Return the updated tree table data node
 		return node;
 	}
 	
+	/**
+	 * Initiates the array reading process. Supports multi-dimensional arrays
+	 * 
+	 * @param init TRUE if the tree table data model is re-created (called from readSymbolTable())<br>
+	 * 			FALSE if the data model is updated (called from updateTreeTable())
+	 * @param count The start node in the symbol table
+	 * @param node The data node which has to be updated
+	 * @param address The start address of the current function
+	 * @param popup A reference to the popup interface which is necessary to invoke popups
+	 * @return The updated data node (see papam "node")
+	 */
 	private static DataNode readArray( boolean init, Obj count, DataNode node, int address, PopupInterface popup ){
 		
 		System.out.println("[initTreeTable] Reading array: " + count.kind);
@@ -139,6 +206,20 @@ public class InitTreeTableData {
 		
 	}
 	
+	/**
+	 * Reads an array. Do not call this method. The array reading process is started with
+	 * the method "readArray()"
+	 * 
+	 * @param init TRUE if the tree table data model is re-created (called from readSymbolTable())<br>
+	 * 			FALSE if the data model is updated (called from updateTreeTable())
+	 * @param count The start node in the symbol table
+	 * @param name
+	 * @param node The data node which has to be updated
+	 * @param address The start address of the current function
+	 * @param offset The address offset (for multi-dimensional arrays
+	 * @param popup A reference to the popup interface which is necessary to invoke popups
+	 * @return The updated data node (see papam "node")
+	 */
 	public static DataNode readArrayElements( boolean init, Struct count, String name, DataNode node, int address, int offset, PopupInterface popup ){
 		
 		int length = count.elements;
@@ -192,6 +273,14 @@ public class InitTreeTableData {
 		return node;
 	}
 	
+	/**
+	 * Creates a default data structure for the tree table which contains nothing else than a root node
+	 * with the name of the currently edited *.cmm file. Used during READY GUI mode (eg. when the user
+	 * types code, creates a new file, ...)
+	 * 
+	 * @param fileName The name of the current file
+	 * @return The data structure containing a root node with the file name
+	 */
 	public static DataNode createDataStructure( String fileName ) {
         DataNode root = new DataNode(fileName, "", "", null);
         return root;
