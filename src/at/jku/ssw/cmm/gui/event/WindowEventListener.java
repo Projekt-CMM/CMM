@@ -21,19 +21,34 @@ import at.jku.ssw.cmm.gui.file.SaveDialog;
  */
 public class WindowEventListener implements WindowListener {
 	
+	/**
+	 * Event listener for the main GUI window. Used for triggering an event when the user closes the window.
+	 * The save dialog call and exit manager itself is located in a separate static method because by
+	 * this it can also be called if the window is closed by some other event or reason.
+	 * 
+	 * @param jFrame The frame of the main GUI window
+	 * @param settings A reference to the main GUI's configuration object
+	 * @param saveDialog A reference to the main window's save dialog
+	 */
 	public WindowEventListener( JFrame jFrame, GUImainSettings settings, SaveDialog saveDialog ){
 		this.jFrame = jFrame;
 		this.settings = settings;
 		this.saveDialog = saveDialog;
 	}
 	
-	//A reference to the main GUI's configuration object
+	/**
+	 * A reference to the main GUI's configuration object
+	 */
 	private final GUImainSettings settings;
 	
-	//The frame of the main GUI window
+	/**
+	 * The frame of the main GUI window
+	 */
 	private final JFrame jFrame;
 	
-	//A reference to the main window's save dialog
+	/**
+	 * A reference to the main window's save dialog
+	 */
 	private final SaveDialog saveDialog;
 
 	@Override
@@ -53,15 +68,11 @@ public class WindowEventListener implements WindowListener {
 	@Override
 	public void windowClosed(WindowEvent e) {}
 	@Override
-	public void windowIconified(WindowEvent e) {
-		System.out.println("[window] Window iconified.");
-	}
+	public void windowIconified(WindowEvent e) {}
 	@Override
 	public void windowDeiconified(WindowEvent e) {}
 	@Override
-	public void windowActivated(WindowEvent e) {
-		System.out.println("[window] Window activated.");
-	}
+	public void windowActivated(WindowEvent e) {}
 	@Override
 	public void windowDeactivated(WindowEvent e) {}
 	

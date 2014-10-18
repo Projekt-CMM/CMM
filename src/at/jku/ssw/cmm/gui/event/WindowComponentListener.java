@@ -19,6 +19,7 @@ import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 public class WindowComponentListener implements ComponentListener {
 	
 	/**
+	 * Event listener for the main window. Controls automatic resizing of the source code text pane.
 	 * 
 	 * @param jFrame The main window frame
 	 * @param jSourcePane The text pane for the source code
