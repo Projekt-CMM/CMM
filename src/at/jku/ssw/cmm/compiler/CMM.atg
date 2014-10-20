@@ -884,16 +884,21 @@ ident                               (.  // get name of identifier and check if i
                                         type = obj.type;
                                         // add Node
                                         n = new Node(Node.DOT, n, new Node(obj.adr), type); .)
-| "["                               (.  if(type.kind != Struct.ARR && type.kind != Struct.STRING) 
+| "["                               (.  if(type == null)
+                                            SemErr("invalide array selector");
+                                        else if(type.kind != Struct.ARR && type.kind != Struct.STRING) 
                                             SemErr(name + " is not an array"); .)
   BinExpr<out e>                    (.  if(e == null || e.type == null || e.type.kind != Struct.INT)
                                             SemErr("index must be an int");
-                                        // the index of an string is returned as a char
-                                        if(type.kind == Struct.STRING)
-                                            n = new Node(Node.INDEX, n, e, Tab.charType);
-                                        else {
-                                            n = new Node(Node.INDEX, n, e, type.elemType);
-                                            type = type.elemType;
+
+                                        if(type != null) {
+                                            // the index of an string is returned as a char
+                                            if(type.kind == Struct.STRING)
+                                                n = new Node(Node.INDEX, n, e, Tab.charType);
+                                            else {
+                                                n = new Node(Node.INDEX, n, e, type.elemType);
+                                                type = type.elemType;
+                                            } 
                                         } .)
   "]"
 }
