@@ -115,7 +115,7 @@ public class GUIquestPanel {
 		this.jProfileXP.setString("2560/7860 XP");
 		
 		//Quest info panel
-		this.jQuestInfo = LoadStatics.loadHTMLdoc("profileTest/index.html", "profileTest/doxygen.css");
+		this.jQuestInfo = LoadStatics.loadHTMLdoc("packages/default/Hallo Welt/index.html", "profileTest/doxygen.css");
 	}
 	
 	/**

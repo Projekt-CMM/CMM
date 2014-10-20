@@ -139,7 +139,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 * If true, GUI options for quest and profile functions are shown. <br>
 	 * If false, quest/profile GUI is hidden.
 	 */
-	public static final boolean ADVANCED_GUI = false;
+	public static final boolean ADVANCED_GUI = true;
 	
 	/**
 	 * The current version of C Compact, used as window title.
@@ -170,7 +170,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 			System.out.println("[EDT Analyse] Main GUI runnung on EDT.");
 		
 		//Load translations
-		Language.loadLanguage("de.po");
+		//Language.loadLanguage("de.po");
 
 		// Initialize the window
 		this.jFrame = new JFrame(VERSION);
