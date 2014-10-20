@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.event;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -19,25 +21,40 @@ import at.jku.ssw.cmm.gui.file.SaveDialog;
  */
 public class WindowEventListener implements WindowListener {
 	
+	/**
+	 * Event listener for the main GUI window. Used for triggering an event when the user closes the window.
+	 * The save dialog call and exit manager itself is located in a separate static method because by
+	 * this it can also be called if the window is closed by some other event or reason.
+	 * 
+	 * @param jFrame The frame of the main GUI window
+	 * @param settings A reference to the main GUI's configuration object
+	 * @param saveDialog A reference to the main window's save dialog
+	 */
 	public WindowEventListener( JFrame jFrame, GUImainSettings settings, SaveDialog saveDialog ){
 		this.jFrame = jFrame;
 		this.settings = settings;
 		this.saveDialog = saveDialog;
 	}
 	
-	//A reference to the main GUI's configuration object
+	/**
+	 * A reference to the main GUI's configuration object
+	 */
 	private final GUImainSettings settings;
 	
-	//The frame of the main GUI window
+	/**
+	 * The frame of the main GUI window
+	 */
 	private final JFrame jFrame;
 	
-	//A reference to the main window's save dialog
+	/**
+	 * A reference to the main window's save dialog
+	 */
 	private final SaveDialog saveDialog;
 
 	@Override
 	public void windowOpened(WindowEvent e) {
-		// Auto-generated method stub
 		
+		System.out.println("[window] Window opened.");
 	}
 
 	//User is closing program
@@ -49,75 +66,69 @@ public class WindowEventListener implements WindowListener {
 	}
 
 	@Override
-	public void windowClosed(WindowEvent e) {
-		// Auto-generated method stub
-	}
-
+	public void windowClosed(WindowEvent e) {}
 	@Override
-	public void windowIconified(WindowEvent e) {
-		// Auto-generated method stub
-		
-	}
-
+	public void windowIconified(WindowEvent e) {}
 	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// Auto-generated method stub
-		
-	}
-
+	public void windowDeiconified(WindowEvent e) {}
 	@Override
-	public void windowActivated(WindowEvent e) {
-		// Auto-generated method stub
-		
-	}
-
+	public void windowActivated(WindowEvent e) {}
 	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// Auto-generated method stub
-		
-	}
+	public void windowDeactivated(WindowEvent e) {}
 	
 	public static void doSaveCloseProgram( JFrame jFrame, GUImainSettings settings, SaveDialog saveDialog ){
 		//Warning if current file is not saved -> opens a warning dialog
 		if( settings.getPath() == null ){
 					
 			//Custom button text
-			Object[] options = {"Yes", "No"};
+			Object[] options = {_("Yes"), _("No")};
 					
 			//Init warning dialog with two buttons
 			int n = JOptionPane.showOptionDialog( jFrame,
-				"Do you want to save \"Unnamed\"",
-				"Closing the C-- IDE",
+				_("Do you want to save the new file?"),
+				_("Closing the C-- IDE"),
 				JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE,
 				null,     			//do not use a custom Icon
 				options,  			//the titles of buttons
 				options[0]); 		//default button title
 					
-			if( n == JOptionPane.YES_OPTION )
+			if( n == JOptionPane.YES_OPTION ){
 				//Open a save dialog to save current source code
 				saveDialog.doSaveAs();
+				System.exit(0);
+			}
+			else if( n == JOptionPane.NO_OPTION )
+				System.exit(0);
+			else
+				return;
 		}
 		
 		//Warning if last changes are not saved -> opens a warning dialog
 		else if( jFrame.getTitle().endsWith("*") ){
 							
 			//Custom button text
-			Object[] options = {"Save now", "Close without saving"};
+			Object[] options = {_("Save now"), _("Close without saving")};
 							
 			//Init warning dialog with two buttons
 			int n = JOptionPane.showOptionDialog( jFrame,
-				"The current file has not yet been saved!",
-				"Closing the C-- IDE",
+				_("The current file has not yet been saved!"),
+				_("Closing the C-- IDE"),
 				JOptionPane.YES_NO_OPTION,
 				JOptionPane.WARNING_MESSAGE,
 				null,     			//do not use a custom Icon
 				options,  			//the titles of buttons
 				options[0]); 		//default button title
 							
-			if( n == JOptionPane.YES_OPTION )
+			if( n == JOptionPane.YES_OPTION ){
 				//Save the last changes to current file path
 				saveDialog.directSave();
+				System.exit(0);
+			}
+			else if( n == JOptionPane.NO_OPTION )
+				System.exit(0);
+			else
+				return;
 		}
 				
 		//Configuration data of the window is updated...
@@ -128,6 +139,8 @@ public class WindowEventListener implements WindowListener {
 				
 		// ...and saved
 		settings.saveConfigFile();
+		
+		System.exit(0);
 	}
 
 }

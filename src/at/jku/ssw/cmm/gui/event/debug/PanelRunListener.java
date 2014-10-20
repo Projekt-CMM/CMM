@@ -9,7 +9,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import at.jku.ssw.cmm.debugger.Debugger;
-import at.jku.ssw.cmm.gui.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.datastruct.SymbolTableUtils;
+import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.compiler.Node;
 
@@ -56,40 +57,58 @@ public class PanelRunListener implements Debugger {
 		this.delay = 2;
 	}
 
-	// Interface for main GUI manipulations, eg. source code highlighting
+	/**
+	 * Interface for main GUI manipulations, eg. source code highlighting
+	 */
 	private final GUImainMod modMain;
 
-	// Reference to the right panel wrapper class
+	/**
+	 * Reference to the right panel wrapper class
+	 */
 	private final GUIdebugPanel master;
 
-	// FALSE = pause | TRUE = play
+	/**
+	 * FALSE = pause | TRUE = play
+	 */
 	private boolean run;
 
-	// TRUE -> Interpreter is still running | FALSE -> runtime error or ready
-	// See right panel mode definitions (in the documentation)
+	/**
+	 * TRUE -> Interpreter is still running | FALSE -> runtime error or ready
+	 * See right panel mode definitions (in the documentation)
+	 */
 	private boolean keepRunning;
 
-	// TRUE -> interpreter may carry on | FALSE -> interpreter is waiting for
-	// user action
-	// Do not set this variable from directly. Use the synchronized methods.
+	/**
+	 * TRUE -> interpreter may carry on | FALSE -> interpreter is waiting for user action
+	 * Do not set this variable from directly. Use the synchronized methods!
+	 */
 	private boolean wait;
 
-	// TRUE -> interpreter is in step over mode | FALSE -> nothing happens
+	/**
+	 * TRUE -> interpreter is in step over mode | FALSE -> nothing happens
+	 */
 	private boolean stepOver;
 
-	// The delay between two interpreter steps in run mode
-	// time [seconds] = delay/2
+	/**
+	 * The delay between two interpreter steps in run mode
+	 * time [seconds] = delay/2
+	 */
 	private int delay;
 
-	// Reference to the timer which is scheduling the run mode delay
-	// "null" if unused
+	/**
+	 * Reference to the timer which is scheduling the run mode delay <br>
+	 * "null" if unused
+	 */
 	private Timer timer;
+	
+	/**
+	 * The last node in the user's source code which has been processed
+	 */
+	private Node lastNode;
 
 	/* --- functional methods --- */
 	/**
-	 * <hr>
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
 	 */
 	public void reset() {
 		this.run = false;
@@ -98,19 +117,21 @@ public class PanelRunListener implements Debugger {
 
 		this.stepOver = false;
 
-		this.delay = master.getInterpreterSpeedSlider() - 1;
+		this.delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
 
-		master.setTimerLabelSeconds((double) (delay) / 2);
+		master.getControlPanel().setTimerLabelSeconds((double) (delay) / 2);
 
 		if (this.timer != null)
 			this.timer.cancel();
 
-		this.master.unsetRunTimeError();
-		this.master.unsetStepOverButton();
+		this.master.getControlPanel().unsetRunTimeError();
+		this.master.getControlPanel().unsetStepOverButton();
 
-		this.master.lockStopButton();
-		this.master.unlockStepButton();
-		this.master.setPlay();
+		this.master.getControlPanel().lockStopButton();
+		this.master.getControlPanel().unlockStepButton();
+		this.master.getControlPanel().setPlay();
+		
+		this.lastNode = null;
 
 		System.out.println("[mode] setting ready by reset");
 	}
@@ -126,9 +147,9 @@ public class PanelRunListener implements Debugger {
 		this.run = true;
 		this.keepRunning = true;
 
-		this.master.unlockStopButton();
-		this.master.lockStepButton();
-		this.master.setPause();
+		this.master.getControlPanel().unlockStopButton();
+		this.master.getControlPanel().lockStepButton();
+		this.master.getControlPanel().setPause();
 
 		System.out.println("[mode] setting run, delay = " + this.delay);
 	}
@@ -144,9 +165,9 @@ public class PanelRunListener implements Debugger {
 		this.run = false;
 		this.keepRunning = true;
 
-		this.master.unlockStopButton();
-		this.master.unlockStepButton();
-		this.master.setPlay();
+		this.master.getControlPanel().unlockStopButton();
+		this.master.getControlPanel().unlockStepButton();
+		this.master.getControlPanel().setPlay();
 
 		System.out.println("[mode] setting pause");
 	}
@@ -174,10 +195,10 @@ public class PanelRunListener implements Debugger {
 		this.run = true;
 		this.keepRunning = false;
 
-		this.master.unlockStepButton();
-		this.master.unlockStopButton();
+		this.master.getControlPanel().unlockStepButton();
+		this.master.getControlPanel().unlockStopButton();
 
-		this.master.setRuntimeErrorMode(title + ": ", message, line, col);
+		this.master.getControlPanel().setRuntimeErrorMode(title + ": ", message, line, col);
 
 		System.out.println("[mode] setting error");
 	}
@@ -257,7 +278,7 @@ public class PanelRunListener implements Debugger {
 	 */
 	synchronized public void stepComplete() {
 		this.stepOver = false;
-		this.master.unsetStepOverButton();
+		this.master.getControlPanel().unsetStepOverButton();
 	}
 
 	/* --- debugger interpreter listeners --- */
@@ -279,6 +300,10 @@ public class PanelRunListener implements Debugger {
 	public boolean step(final Node arg0) {
 
 		System.out.println("[node] " + arg0);
+		
+		//Update latest node's line
+		this.lastNode = arg0;
+		this.master.updateCallStackSize();
 
 		/* --- Node #1: Step over mode? --- */
 		if (this.stepOver) {
@@ -299,9 +324,8 @@ public class PanelRunListener implements Debugger {
 
 		/* --- Node #3: Quick mode? --- */
 		if (this.isRunMode() && this.delay == 0) {
-			this.master.updateCallStackSize();
 			
-			//Passing a breakpoint
+			/* --- Node #4: Passing a breakpoint --- */
 			if( !this.master.getBreakPoints().isEmpty() && arg0.line >= this.master.getBreakPoints().get(0)-1 ){
 				this.setPauseMode();
 				System.out.println("Stopped at breakpoint: "  + arg0.line + " - " + this.master.getBreakPoints().get(0) );
@@ -320,23 +344,29 @@ public class PanelRunListener implements Debugger {
 
 		// -> Node #3 - DEFAULT
 		/* --- Update Block --- */
-		this.master.updateStepOutButton();
-		this.master.updateVariableTables(true);
+		this.master.getControlPanel().updateStepOutButton();//*.next -> main()
+		
+		/* --- Node #5 - Variable value changed --- */
+		if( arg0.kind == Node.CALL || arg0.kind == Node.ASSIGN )
+			this.master.updateVariableTables(this.master.callStackChanged());
+		
+		this.master.highlightVariable(SymbolTableUtils.getVariablePath(arg0, this.modMain.getFileName(), this.master.getCompileManager()));
+		
 
 		this.timer = null;
 
-		/* --- Node #4: Pause or Run mode --- */
+		/* --- Node #6: Pause or Run mode --- */
 		if (this.isPauseMode()) {
-			/* --- Node #5: Create Buttons --- */
+			/* --- Node #7: Create Buttons --- */
 			if( arg0.kind == Node.ASSIGN )
 				this.doStepOverButtonCheck(arg0.right);
 			else
 				this.doStepOverButtonCheck(arg0);
 		}
-		/* --- Node #4: Pause or Run mode --- */
+		/* --- Node #6: Pause or Run mode --- */
 		else if (this.isRunMode() && this.delay > 0) {
 
-			/* --- Node #5: Step over if external function call --- */
+			/* --- Node #9: Step over if external function call --- */
 			if( arg0.kind == Node.ASSIGN )
 				this.doStepOverRunCheck(arg0.right);
 			else
@@ -351,7 +381,7 @@ public class PanelRunListener implements Debugger {
 				}
 			}, 500 * delay);
 		}
-		/* --- Node #4: Default exit --- */
+		/* --- Node #6: Default exit --- */
 		else {
 			throw new IllegalStateException();
 		}
@@ -363,21 +393,33 @@ public class PanelRunListener implements Debugger {
 		return keepRunning;
 	}
 	
+	/**
+	 * Checks if step over button shall be visible or not. Eventually toggles visibility.
+	 * 
+	 * @param n The current node in the abstract syntax tree
+	 */
 	private void doStepOverButtonCheck( Node n ){
 		//Is function call? (NOT predefined function)
 		if( n.kind == Node.CALL && n.obj.ast != null ){
 			//Calls function from include
 			if( n.obj.ast.line <= this.master.getBeginLine() )
-				this.master.setStepOverButtonAlone();
+				this.master.getControlPanel().setStepOverButtonAlone();
 			//Calls local function
 			else
-				this.master.setStepOverButton();
+				this.master.getControlPanel().setStepOverButton();
 		}
 		//No valid function call -> no step over button
 		else
-			this.master.unsetStepOverButton();
+			this.master.getControlPanel().unsetStepOverButton();
 	}
 	
+	/**
+	 * This method shall always be called when the interpreter has to step over a function
+	 * for any reson. It checks wheather stepping over is possible and initiates the stepping
+	 * over process.
+	 * 
+	 * @param n The current node in the abstract syntax tree
+	 */
 	private void doStepOverRunCheck( Node n ){
 		//Is function call? (NOT predefined function) from external file
 		if( n.kind == Node.CALL && n.obj.ast != null && n.obj.ast.line <= this.master.getBeginLine() ){
@@ -442,10 +484,17 @@ public class PanelRunListener implements Debugger {
 					timer.cancel();
 			}
 
-			// Pause -> run interpreting
+			// Pause -> re-run interpreting
 			else if (keepRunning && !run) {
 				setRunMode();
 				userReply();
+				
+				//Remove already passed breakpoints if in fast run mode
+				if( delay == 0 )
+					master.updateBreakPoints(lastNode.line);
+				//Check if there is a function to jump over
+				else
+					doStepOverRunCheck(lastNode);
 			}
 		}
 
@@ -580,7 +629,7 @@ public class PanelRunListener implements Debugger {
 
 			// Get out of ERROR mode
 			else if (!keepRunning && run) {
-				master.unsetRunTimeError();
+				master.getControlPanel().unsetRunTimeError();
 				setReadyMode();
 
 				// Has to be done here, as interpreter has exited in error mode
@@ -613,8 +662,13 @@ public class PanelRunListener implements Debugger {
 		@Override
 		public void stateChanged(ChangeEvent e) {
 
-			delay = master.getInterpreterSpeedSlider() - 1;
-			master.setTimerLabelSeconds((double) (delay) / 2);
+			delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
+			master.getControlPanel().setTimerLabelSeconds((double) (delay) / 2);
+			
+			//Remove already passed breakpoints if in fast run mode
+			if( delay == 0 ){
+				master.updateBreakPoints(lastNode.line);
+			}
 		}
 	};
 

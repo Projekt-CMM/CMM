@@ -27,7 +27,6 @@ public class TreeTableSelectionModel extends DefaultTreeSelectionModel {
         getListSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				// Auto-generated method stub
 			}
         });
     }

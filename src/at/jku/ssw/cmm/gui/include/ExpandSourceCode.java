@@ -9,6 +9,14 @@ import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.exception.IncludeNotFoundException;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 
+/**
+ * This class contains the "preprocessor" for the CMM compiler.
+ * It adds include file code to the original user's source code before
+ * it is given to the compiler.
+ * 
+ * @author fabian
+ *
+ */
 public class ExpandSourceCode {
 
 	/**
@@ -26,20 +34,33 @@ public class ExpandSourceCode {
 	 */
 	public static String expand( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints ) throws IncludeNotFoundException{
 		
-		System.out.println("Starting include file scan");
+		//Debug message
+		System.out.println("[include] Starting include file scan");
 		
+		//Code offset to the user's source code
 		int offset = 0;
+		
+		//Is the current library from the standard lib directory (FALSE)
+		//or from the project/file directory (TRUE) ?
 		boolean localDirectory = true;
+		
+		//TRUE if all libraries are included
 		boolean finishedIncludes = false;
 		
+		//Reset code register list
 		codeRegister.clear();
 		
+		//Save copy of source code
 		String l = sourceCode;
+		
+		//String for library code
 		String preFunctionSource = "";
+
+		//Source code will be re-initialized
 		sourceCode = "";
 		
 		int line = 1;
-		for( String s : l.split("\n") ){
+		for( String s : sourceCode.split("\n") ){
 			
 			Pattern p = null;
 			
@@ -50,7 +71,7 @@ public class ExpandSourceCode {
 				localDirectory = true;
 			}
 			
-			//Project directory (working path)
+			//Project directory (working path)#include <stdilb.h>
 			else if( s.startsWith("#include") && s.contains("\"") && !finishedIncludes ){
 				p = Pattern.compile("#include \"([\\w./]+)\"");
 				System.out.println("Working directory include file: " + s);
@@ -121,20 +142,36 @@ public class ExpandSourceCode {
 		return sourceCode;
 	}
 	
+	/**
+	 * Counts the number of times a character occurs in a given String.
+	 * 
+	 * @param text The String that is searched for a given character
+	 * @param sign The character that is counted
+	 * @return The number of times the character "sign" occurs in the String "text"
+	 */
 	private static int count( String text, char sign ){
 		
 		int count = 0;
 		
+		//Search every character in text
 		for( char c : text.toCharArray() ){
 			if( c == sign )
 				count++;
 		}
 		
-		System.out.println("Total " + count + " lines");
-		
 		return count;
 	}
 	
+	/**
+	 * Calculates the line number in the user's source code from the complete code line,
+	 * which comes from the compiler and interpreter.
+	 * 
+	 * @param line The line from the compiler/interpreter (source code including
+	 * 		library code)
+	 * @param codeStart The line in the complete code, where the user's code starts
+	 * @param files The number of referenced libraries
+	 * @return The line in the user's code
+	 */
 	public static int correctLine( int line, int codeStart, int files ){
 		return line - codeStart + files;
 	}
