@@ -143,10 +143,11 @@ public class GUImainSettings {
 	 * that no working directory is registered.
 	 */
 	public void setPath( String p ){
-		if( p == "#" )
+		if( p == "#" || p == null )
 			this.path = null;
-		else
-			this.path = p;
+		else{
+			this.path = p.endsWith(".cmm") ? p : p + ".cmm";
+		}
 	}
 	
 	/**

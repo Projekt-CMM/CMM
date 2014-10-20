@@ -1,9 +1,12 @@
 package at.jku.ssw.cmm.gui.utils;
 
+import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
+
+import at.jku.ssw.cmm.gui.treetable.DataNode;
 
 public class JTableButtonRenderer implements TableCellRenderer {
 	private TableCellRenderer defaultRenderer;
@@ -17,6 +20,20 @@ public class JTableButtonRenderer implements TableCellRenderer {
 		if(value instanceof Component)
 			return (Component)value;
 		
-		return defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		else if( table.getValueAt(row, 0).toString().endsWith(")") ){
+			Component c = (Component)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			c.setBackground(Color.CYAN);
+			return c;
+		}
+		
+		else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.CHANGE_TAG) ){
+			Component c = (Component)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			c.setBackground(Color.YELLOW);
+			return c;
+		}
+		
+		Component c = (Component)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		c.setBackground(table.getBackground());
+		return c;
 	}
 }

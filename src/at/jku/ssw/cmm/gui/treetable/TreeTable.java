@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JTable;
 
+import at.jku.ssw.cmm.gui.utils.JTableButtonMouseListener;
 import at.jku.ssw.cmm.gui.utils.JTableButtonRenderer;
 
 /**
@@ -24,10 +25,15 @@ public class TreeTable extends JTable {
 	private static final long serialVersionUID = 1L;
 	
 	private TreeTableCellRenderer tree;
+	private TreeTableDataModel dataModel;
+	private final JTableButtonRenderer buttonRenderer;
      
      
     public TreeTable( TreeTableDataModel treeTableModel ){
         super();
+        
+        //Initialize button renderer
+        this.buttonRenderer = new JTableButtonRenderer(super.getDefaultRenderer(JButton.class));
  
         //Initialize tree
         this.setTreeModel(treeTableModel);
@@ -40,11 +46,17 @@ public class TreeTable extends JTable {
     }
     
     public void setTreeModel( TreeTableDataModel treeTableModel ){
+    	
+    	this.dataModel = treeTableModel;
+    	
     	//Create JTree
         tree = new TreeTableCellRenderer(this, treeTableModel);
         
         super.setModel(new TreeTableModelAdapter(treeTableModel, tree));
-        super.getColumn("Value").setCellRenderer(new JTableButtonRenderer(super.getDefaultRenderer(JButton.class)));
+        super.getColumn("Value").setCellRenderer(this.buttonRenderer);
+        super.getColumn("Type").setCellRenderer(this.buttonRenderer);
+        JTable t = this;
+        this.addMouseListener(new JTableButtonMouseListener(t));
          
         //Selection of tree and table at once
         TreeTableSelectionModel selectionModel = new TreeTableSelectionModel();
@@ -55,7 +67,7 @@ public class TreeTable extends JTable {
         // -> table
         setSelectionModel(selectionModel.getListSelectionModel());
  
-        tree.setRootVisible(false); 
+        tree.setRootVisible(true); 
         
         //Renderer for the tree
         setDefaultRenderer(TreeTableModel.class, tree);
@@ -66,11 +78,14 @@ public class TreeTable extends JTable {
         this.repaint();
     }
     
-    public void updateTreeModel( TreeTableDataModel treeTableModel ){
-    	//Create JTree
-        tree = new TreeTableCellRenderer(this, treeTableModel);
+    public TreeTableDataModel getTreeModel(){
+    	return this.dataModel;
+    }
+    
+    public void updateTreeModel(){
         
-        super.setModel(new TreeTableModelAdapter(treeTableModel, tree));
+    	super.setModel(new TreeTableModelAdapter(this.dataModel, tree));
+    	super.getColumn("Value").setCellRenderer(this.buttonRenderer);
         
         this.repaint();
     }
@@ -81,4 +96,9 @@ public class TreeTable extends JTable {
     	
     	this.setTreeModel(empty);
     }
+    
+    public TreeTableCellRenderer getCellRenderer(){
+    	return this.tree;
+    }
+
 }

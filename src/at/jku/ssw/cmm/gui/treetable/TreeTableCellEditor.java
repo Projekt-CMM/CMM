@@ -33,7 +33,10 @@ public class TreeTableCellEditor extends AbstractCellEditor implements TableCell
     }
  
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int r, int c) {
-        return tree;
+    	if( c == 0 )
+        	return this.tree;
+        else
+        	return this.table;
     }
  
     public boolean isCellEditable(EventObject e) {

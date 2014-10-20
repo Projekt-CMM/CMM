@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.file;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.io.File;
 
 import javax.swing.JFileChooser;
@@ -35,13 +37,19 @@ public class SaveDialog {
 		this.settings = settings;
 	}
 	
-	//The main GUI window frame
+	/**
+	 * The main GUI window frame
+	 */
 	private final JFrame jFrame;
 	
-	//The text area with the source code
+	/**
+	 * The text area with the source code
+	 */
 	private final RSyntaxTextArea jSourcePane;
 	
-	//The main GUI configuration object
+	/**
+	 * The main GUI configuration object
+	 */
 	private final GUImainSettings settings;
 	
 	/**
@@ -52,13 +60,17 @@ public class SaveDialog {
 		
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(new FileNameExtensionFilter(
-				"C-- file", "cmm"));
+				"C-- " + _("file"), "cmm"));
 		if (chooser.showSaveDialog(jFrame) == JFileChooser.APPROVE_OPTION) {
 			FileManagerCode.saveSourceCode(chooser.getSelectedFile(), jSourcePane.getText());
 			settings.setPath(chooser.getSelectedFile().getPath());
 		}
 	}
 	
+	/**
+	 * Saves the current file directly without calling a save dialog.
+	 * Save dialog is called though, if there is no working directory for the file defined.
+	 */
 	public void directSave(){
 		if( settings.getPath() != null )
 			FileManagerCode.saveSourceCode(new File(settings.getPath()), jSourcePane.getText());

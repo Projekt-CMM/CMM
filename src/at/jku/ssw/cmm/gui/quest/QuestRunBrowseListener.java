@@ -3,7 +3,7 @@ package at.jku.ssw.cmm.gui.quest;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import at.jku.ssw.cmm.gui.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 
 public class QuestRunBrowseListener implements MouseListener{
 

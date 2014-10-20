@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -93,31 +95,31 @@ public class GUIquestPanel {
 	private void initObejcts(){
 		
 		//Labels
-		this.jProfileTitle = new JLabel("Profile Information");
-		this.jProfileName = new JLabel("Name: John Doe");
-		this.jProfileLevel = new JLabel("Level: 3");
+		this.jProfileTitle = new JLabel(_("Profile Information"));
+		this.jProfileName = new JLabel(_("Name") + ": John Doe");
+		this.jProfileLevel = new JLabel(_("Level") + ": 3");
 		
-		this.jQuestTitle = new JLabel("Current Quest");
+		this.jQuestTitle = new JLabel(_("Current Quest"));
 		
 		//Buttons
-		this.jProfileSelectButton = new JButton("Select Profile");
+		this.jProfileSelectButton = new JButton(_("Select Profile"));
 		this.jProfileSelectButton.addMouseListener(listener.profileHandler);
-		this.jQuestSelectButton = new JButton("Select Quest");
+		this.jQuestSelectButton = new JButton(_("Select Quest"));
 		this.jQuestSelectButton.addMouseListener(listener.questHandler);
 		
 		//Level progress scroll bar
-		this.jProfileLevel = new JLabel("Level 3");
+		this.jProfileLevel = new JLabel(_("Level") + " 3");
 		this.jProfileXP = new JProgressBar(0, 100);
 		this.jProfileXP.setValue(35);
 		this.jProfileXP.setStringPainted(true);
 		this.jProfileXP.setString("2560/7860 XP");
 		
 		//Quest info panel
-		this.jQuestInfo = LoadStatics.loadHTMLdoc("profileTest/index.html", "profileTest/doxygen.css");
+		this.jQuestInfo = LoadStatics.loadHTMLdoc("packages/default/Hallo Welt/index.html", "profileTest/doxygen.css");
 	}
 	
 	/**
-	 * Loads the profile image and the players reward tokens
+	 * Loads the profile image and the player's reward tokens
 	 */
 	private void loadImages(){
 		//Load Profile Image

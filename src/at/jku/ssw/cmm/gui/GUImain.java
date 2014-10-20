@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
@@ -18,6 +20,7 @@ import javax.swing.text.Highlighter;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+import at.jku.ssw.cmm.gettext.Language;
 import at.jku.ssw.cmm.gui.event.MainKeyListener;
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.event.WindowComponentListener;
@@ -57,32 +60,93 @@ public class GUImain implements GUImainMod, PopupInterface {
 		app.start();
 	}
 
+	/**
+	 * The frame of the window which contains the main GUI.
+	 */
 	private JFrame jFrame;
 
+	/**
+	 * A reference to the right panel control class. <br>
+	 * The right panel contains the debugger and profile/quest info tabs.
+	 */
 	private GUIrightPanel rightPanelControl;
 
+	/**
+	 * The text panel with the source code.
+	 */
 	private RSyntaxTextArea jSourcePane;
 
+	/**
+	 * The text panel with input data for the cmm program.
+	 */
 	private JTextArea jInputPane;
 
+	/**
+	 * The text panel for the output stream of the cmm program.
+	 */
 	private JTextArea jOutputPane;
 
+	/**
+	 * A reference to the general settings object which contains the path of the current file,
+	 * the current screen size and the window name. <br>
+	 * Will be replaced by individual profile settings in future.
+	 */
 	private final GUImainSettings settings;
 
+	/**
+	 * A reference to the save dialog class which manages saving the current cmm file.
+	 */
 	private SaveDialog saveDialog;
 
 	//TODO make codeRegister thread safe
+	/**
+	 * A list which contains the lines of all libraries in the complete source code.
+	 * When a library is loaded, its code is pasted to the source code of the cmm file
+	 * and this complete code is given to the compiler.
+	 * 
+	 * codeRegister contains information about the start and end line of each library file.
+	 * The array in the list is initialized as follows:
+	 * <ul>
+	 * 		<li>Start line</li>
+	 * 		<li>End line</li>
+	 * 		<li>File Name</li>
+	 * </ul>
+	 * 
+	 * <i>Note: Please use ExpandSourcecode.correctLine() determine the line in the text area
+	 * from the line of the complete source code. The parameters are.
+	 * <ul>
+	 * 		<li><b>int line:</b> the line in the complete source code.</li>
+	 * 		<li><b>int codeStart:</b> the line where the original source code starts. Use this.codeRegister.get(0)[0] </li>
+	 * 		<li><b>int files:</b> The total number of library files. Use this.codeRegister.size()</li>
+	 * </ul>
+	 */
 	private List<Object[]> codeRegister;
 
+	/**
+	 * When input data from the input source pane is read by the cmm program, the input data
+	 * has to be marked as "already read". This happens with simple highlighting. <br>
+	 * The variable inputHightlightOffset is the number of characters of the input string which
+	 * has already been used.
+	 */
 	private int inputHighlightOffset;
-
-	private Object readLoopLock;
 	
+	private MenuBarControl menuBarControl;
+	
+	/**
+	 * Unicode character of the breakpoint.
+	 */
 	public static final char BREAKPOINT = '\u2326';
 	
+	/**
+	 * If true, GUI options for quest and profile functions are shown. <br>
+	 * If false, quest/profile GUI is hidden.
+	 */
 	public static final boolean ADVANCED_GUI = true;
 	
-	public static final String VERSION = "C Compact Alpha 1.0";
+	/**
+	 * The current version of C Compact, used as window title.
+	 */
+	public static final String VERSION = "C Compact Alpha 1.1 dev";
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)
@@ -100,18 +164,19 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 * requires calling a constructor with configuration data before (see above
 	 * in code).
 	 * 
-	 * <hr>
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
 	 */
 	private void start() {
 		
 		if( SwingUtilities.isEventDispatchThread() )
 			System.out.println("[EDT Analyse] Main GUI runnung on EDT.");
+		
+		//Load translations
+		//Language.loadLanguage("de.po");
 
 		// Initialize the window
 		this.jFrame = new JFrame(VERSION);
-		this.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.jFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.jFrame.getContentPane().setPreferredSize(new Dimension(800, 500));
 		this.jFrame.setMinimumSize(new Dimension(600, 400));
 		
@@ -173,8 +238,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.jSourcePane.addKeyListener(new MainKeyListener(this, this.saveDialog));
 
 		// Menubar
+		this.menuBarControl = new MenuBarControl();
 		InitMenuBar.initFileM(this.jFrame, this.jSourcePane, this, this.settings,
-				this.rightPanelControl.getDebugPanel(), this.saveDialog);
+				this.rightPanelControl.getDebugPanel(), this.menuBarControl, this.saveDialog);
 
 		// Causes this Window to be sized to fit the preferred size and layouts
 		// of its subcomponents.
@@ -183,9 +249,14 @@ public class GUImain implements GUImainMod, PopupInterface {
 
 		// Variable initialization
 		this.inputHighlightOffset = 0;
-		this.readLoopLock = new Object();
 	}
 
+	/**
+	 * Highlights the already used characters of the input text area.
+	 * Usually called while interpreter is working.
+	 * 
+	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
+	 */
 	private void highlightInputPane() {
 		Highlighter high = this.jInputPane.getHighlighter();
 		high.removeAllHighlights();
@@ -211,10 +282,32 @@ public class GUImain implements GUImainMod, PopupInterface {
 
 	@Override
 	public void updateWinFileName() {
-		if( this.settings.getPath() == null )
-			this.jFrame.setTitle(VERSION + " - Unnamed");
+		if( this.settings.getPath() == null ){
+			this.jFrame.setTitle(VERSION + " - " + _("Unnamed"));
+		}
 		else
 			this.jFrame.setTitle(VERSION + " - " + this.settings.getPath());
+	}
+	
+	@Override
+	public String getFileName() {
+		
+		//final String sep = System.getProperty("file.separator");
+		String s = this.settings.getPath();
+		
+		if( s == null )
+			return _("Unnamed");
+		
+		File file = new File(s);
+		s = file.getName();
+		
+		return s;
+	}
+
+	@Override
+	public String getFileNameAndPath() {
+		
+		return this.settings.getPath();
 	}
 	
 	public void setFileChanged(){
@@ -240,6 +333,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 
 	@Override
 	public String getWorkingDirectory() {
+		if( this.settings.getPath() == null )
+			return null;
+			
 		File f = new File(this.settings.getPath());
 		if( f.getParentFile() != null )
 			return f.getParentFile().getAbsolutePath();
@@ -249,7 +345,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	@Override
 	public void highlightSourceCode(int line, int col) {
 
-		// Line out of source code range (includes)
+		// Line out of user source code range (#include)
 		if (line <= (int) this.codeRegister.get(0)[0])
 			return;
 
@@ -262,11 +358,10 @@ public class GUImain implements GUImainMod, PopupInterface {
 		int i, l = 0;
 		final String code = this.jSourcePane.getText();
 
-		synchronized (readLoopLock) {
-			for (i = 0; l < line - 1; i++) {
-				if (code.charAt(i) == '\n')
-					l++;
-			}
+		//TODO readLoopLock
+		for (i = 0; l < line - 1; i++) {
+			if (code.charAt(i) == '\n')
+				l++;
 		}
 
 		final int i_copy = i, l_copy = l;
@@ -313,6 +408,8 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.jOutputPane.setEditable(false);
 		
 		this.rightPanelControl.lockInput();
+		
+		this.menuBarControl.lockAll();
 	}
 
 	@Override
@@ -323,6 +420,8 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.jOutputPane.setEditable(true);
 		
 		this.rightPanelControl.unlockInput();
+		
+		this.menuBarControl.unlockAll();
 	}
 
 	@Override
@@ -364,22 +463,20 @@ public class GUImain implements GUImainMod, PopupInterface {
 	
 	@Override
 	public void startQuestGUI(){
-		System.out.println("Opening Quest Selection Window...");
+		System.out.println("[log][GUImain]Opening Quest Selection Window...");
 		//open profile selector on empty profile
 		if(Profile.getActiveProfile() == null)
 			selectProfile();
 		
 		new GUIquestMain().start();
-		
-		
 	}
 	
 	@Override
 	public void selectProfile(){
-		System.out.println("Opening Profile Selection Window...");
-		JFileChooser chooser = new JFileChooser("Select a profile...");
+		System.out.println("[log][GUImain]Opening Profile Selection Window...");
+		JFileChooser chooser = new JFileChooser(_("Select a profile..."));
 		chooser.setFileFilter(new FileNameExtensionFilter(
-				"C Compact Profile", "xml"));
+				_("C Compact Profile"), "xml"));
 		chooser.showOpenDialog(jFrame);
 		chooser.setDialogType(JFileChooser.SAVE_DIALOG);
 
@@ -393,6 +490,18 @@ public class GUImain implements GUImainMod, PopupInterface {
 			}
 			System.out.println("Profile Chooser Path:" + chooser.getSelectedFile().getAbsolutePath());
 			};
+	}
+	
+	@Override
+	public void saveIfNecessary() {
+		
+		if( this.settings.getPath() == null )
+			this.saveDialog.doSaveAs();
+		else
+			this.saveDialog.directSave();
+		
+		this.setFileSaved();
+		this.updateWinFileName();
 	}
 	
 	/*

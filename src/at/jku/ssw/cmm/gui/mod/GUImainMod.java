@@ -21,6 +21,19 @@ public interface GUImainMod {
 	void updateWinFileName();
 	
 	/**
+	 * 
+	 * @return Name of the current file without path, eg "file2.cmm"
+	 */
+	String getFileName();
+	
+	/**
+	 * 
+	 * @return Name of the current cmm file with path, eg "demo/file2.cmm" <br>
+	 * <i>WARNING: File path can be absolute or relative</i>
+	 */
+	String getFileNameAndPath();
+	
+	/**
 	 * Note: Method from interface <i>GUImod</i>
 	 * 
 	 * <hr><i>THREAD SAFE by default</i><hr>
@@ -45,6 +58,9 @@ public interface GUImainMod {
 	 */
 	public List<Object[]> getSourceCodeRegister();
 	
+	/**
+	 * @return The complete path to the directory where the currently edited *.cmm file is saved
+	 */
 	String getWorkingDirectory();
 	
 	/**
@@ -59,8 +75,15 @@ public interface GUImainMod {
 	 */
 	public void highlightSourceCode( int line, int col );
 	
+	/**
+	 * Increments the input highlighter (input text area), which marks the already
+	 * read characters, by one.
+	 */
 	void increaseInputHighlighter();
 
+	/**
+	 * Sets the input highlighter to 0.
+	 */
 	void resetInputHighlighter();
 	
 	/**
@@ -96,9 +119,24 @@ public interface GUImainMod {
 	 */
 	public String getInputStream();
 
+	/**
+	 * Adds a breakpoint to the current line in the source code if there isn't yet any.
+	 * Otherwise removes the breakpoint from the current line.
+	 */
 	void toggleBreakPoint();
 	
+	/**
+	 * Invokes the Quest GUI window
+	 */
 	public void startQuestGUI();
 	
+	/**
+	 * Invokes the profile selection dialog
+	 */
 	public void selectProfile();
+	
+	/**
+	 * Saves the current *.cmm file if there are unsaved changes
+	 */
+	public void saveIfNecessary();
 }
