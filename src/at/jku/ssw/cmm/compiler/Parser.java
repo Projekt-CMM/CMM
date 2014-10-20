@@ -832,6 +832,7 @@ public class Parser {
 		String name = t.val;
 		obj = tab.find(name);
 		if(obj.kind == Obj.CON) {
+		   // If Node is constant, insert value directly
 		   switch(obj.type.kind) {
 		       case Struct.INT:
 		           n = new Node((int)obj.val);
@@ -848,31 +849,37 @@ public class Parser {
 		           else
 		               n = new Node(true);
 		           break;
+		       // TODO STRING
 		       default:
 		           n = new Node(obj);
 		   }
 		}
 		else {
+		   // if Node is a normal identifier, using that Node
 		   n = new Node(obj);
 		}
+		// set type of identifier
 		type = obj.type; 
 		while (la.kind == 40 || la.kind == 58) {
 			if (la.kind == 58) {
 				Get();
-				if(obj.type.kind != Struct.STRUCT) 
+				if(type.kind != Struct.STRUCT) 
 				   SemErr(name + " is not a struct"); 
 				Expect(1);
-				obj = tab.findField(t.val,obj.type);
-				n = new Node(Node.DOT, n, new Node(obj.adr), obj.type); 
+				obj = tab.findField(t.val,type);
+				// update type
+				type = obj.type;
+				// add Node
+				n = new Node(Node.DOT, n, new Node(obj.adr), type); 
 			} else {
 				Get();
-				if(obj.type.kind != Struct.ARR && obj.type.kind != Struct.STRING) 
+				if(type.kind != Struct.ARR && type.kind != Struct.STRING) 
 				   SemErr(name + " is not an array"); 
 				e = BinExpr();
 				if(e == null || e.type == null || e.type.kind != Struct.INT)
 				   SemErr("index must be an int");
-				    
-				if(obj.type.kind == Struct.STRING) 
+				// the index of an string is returned as a char
+				if(type.kind == Struct.STRING)
 				   n = new Node(Node.INDEX, n, e, Tab.charType);
 				else {
 				   n = new Node(Node.INDEX, n, e, type.elemType);
