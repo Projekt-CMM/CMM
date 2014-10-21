@@ -60,7 +60,7 @@ public class ExpandSourceCode {
 		sourceCode = "";
 		
 		int line = 1;
-		for( String s : sourceCode.split("\n") ){
+		for( String s : l.split("\n") ){
 			
 			Pattern p = null;
 			
