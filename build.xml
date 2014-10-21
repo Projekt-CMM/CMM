@@ -32,7 +32,7 @@
         <javac srcdir="${java.dir}"
             destdir="${build.classes}"
             classpath="${build.lib}/rsyntaxtextarea.jar"
-            debug="false"
+            debug="true"
             deprecation="true"
             optimize="true" 
             includeantruntime="false">
@@ -76,7 +76,13 @@
 
     <!-- test gui part -->
     <target name="test-gui" depends="build" description="test gui part">
-
+        <!-- check if gui start without exception -->
+        <exec executable="timeout">
+            <arg value="5"/>
+            <arg value="java"/>
+            <arg value="-jar"/>
+            <arg value="CMM.jar"/>
+        </exec>
     </target>
 
 </project>
