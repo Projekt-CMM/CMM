@@ -86,8 +86,8 @@ public class InitMenuBar {
 		
 		/* --- MENU: "progress" --- */
 		if( GUImain.ADVANCED_GUI ){
-		JMenu questM = new JMenu(_("Progress"));
-		menubar.add(questM);
+			JMenu questM = new JMenu(_("Progress"));
+			menubar.add(questM);
 		
 			// --- progress -> profile ---
 			JMenuItem profileMI = new JMenuItem(_("Select Profile"));
@@ -99,14 +99,14 @@ public class InitMenuBar {
 			questMI.addActionListener(listener.questHandler);
 			questM.add(questMI);
 		
-		/* --- MENU: "language" --- */
-		JMenu langM = new JMenu(_("Language"));
-		menubar.add(langM);
+			/* --- MENU: "language" --- */
+			JMenu langM = new JMenu(_("Language"));
+			menubar.add(langM);
 		
 			File folder = new File("po");
 			File[] listOfFiles = folder.listFiles();
 
-		    for (int i = 0; i < listOfFiles.length; i++) {
+		    for (int i = 0; listOfFiles != null && i < listOfFiles.length; i++) {
 		    	if (listOfFiles[i].isFile()) {
 		    		System.out.println("File " + listOfFiles[i].getName());
 		    		if( listOfFiles[i].getName().endsWith(".po") ){
