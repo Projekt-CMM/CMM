@@ -212,17 +212,19 @@ public class GUImain implements GUImainMod, PopupInterface {
 
 		// Text area (text pane) for source code
 		this.jSourcePane = InitLeftPanel.initCodePane(jPanelLeft, this.settings);
-		if (this.settings.hasPath())
-			this.jSourcePane.setText(FileManagerCode.readSourceCode(new File(
-					this.settings.getPath())));
-		
-		this.updateWinFileName();
 
 		// Text area for input
 		this.jInputPane = InitLeftPanel.initInputPane(jPanelLeft);
 
 		// Text area for output
 		this.jOutputPane = InitLeftPanel.initOutputPane(jPanelLeft);
+		
+		//Read last opened files
+		if (this.settings.hasPath()){
+			this.jSourcePane.setText(FileManagerCode.readSourceCode(new File(this.settings.getPath())));
+			this.jInputPane.setText(FileManagerCode.readInputData(new File(this.settings.getPath())));
+		}
+		this.updateWinFileName();
 
 		cp.add(jPanelLeft, BorderLayout.LINE_START);
 
@@ -230,8 +232,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.rightPanelControl = new GUIrightPanel(cp, (GUImainMod) this, (PopupInterface)this );
 
 		// Initialize the save dialog object
-		this.saveDialog = new SaveDialog(this.jFrame, this.jSourcePane,
-				this.settings);
+		this.saveDialog = new SaveDialog(this.jFrame, this.jSourcePane, this.jInputPane, this.settings);
 
 		// Initialize the window listener
 		this.jFrame.addWindowListener(new WindowEventListener(this.jFrame,
@@ -250,7 +251,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 
 		// Menubar
 		this.menuBarControl = new MenuBarControl();
-		InitMenuBar.initFileM(this.jFrame, this.jSourcePane, this, this.settings,
+		InitMenuBar.initFileM(this.jFrame, this.jSourcePane, this.jInputPane, this, this.settings,
 				this.rightPanelControl.getDebugPanel(), this.menuBarControl, this.saveDialog);
 
 		// Causes this Window to be sized to fit the preferred size and layouts

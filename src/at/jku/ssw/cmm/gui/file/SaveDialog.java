@@ -6,6 +6,7 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JTextPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -31,9 +32,10 @@ public class SaveDialog {
 	 * @param jSourcePane The text area with the source code
 	 * @param settings The main GUI configuration object
 	 */
-	public SaveDialog( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImainSettings settings ){
+	public SaveDialog( JFrame jFrame, RSyntaxTextArea jSourcePane, JTextPane jInputPane, GUImainSettings settings ){
 		this.jFrame = jFrame;
 		this.jSourcePane = jSourcePane;
+		this.jInputPane = jInputPane;
 		this.settings = settings;
 	}
 	
@@ -46,6 +48,11 @@ public class SaveDialog {
 	 * The text area with the source code
 	 */
 	private final RSyntaxTextArea jSourcePane;
+	
+	/**
+	 * The text panel with the input data
+	 */
+	private final JTextPane jInputPane;
 	
 	/**
 	 * The main GUI configuration object
@@ -62,7 +69,7 @@ public class SaveDialog {
 		chooser.setFileFilter(new FileNameExtensionFilter(
 				"C-- " + _("file"), "cmm"));
 		if (chooser.showSaveDialog(jFrame) == JFileChooser.APPROVE_OPTION) {
-			FileManagerCode.saveSourceCode(chooser.getSelectedFile(), jSourcePane.getText());
+			FileManagerCode.saveSourceCode(chooser.getSelectedFile(), jSourcePane.getText(), jInputPane.getText());
 			settings.setPath(chooser.getSelectedFile().getPath());
 		}
 	}
@@ -73,7 +80,7 @@ public class SaveDialog {
 	 */
 	public void directSave(){
 		if( settings.getPath() != null )
-			FileManagerCode.saveSourceCode(new File(settings.getPath()), jSourcePane.getText());
+			FileManagerCode.saveSourceCode(new File(settings.getPath()), jSourcePane.getText(), jInputPane.getText());
 		else
 			this.doSaveAs();
 	}

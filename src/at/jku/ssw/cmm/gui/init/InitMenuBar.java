@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JTextPane;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
@@ -38,10 +39,10 @@ public class InitMenuBar {
 	 * @param settings A reference to the main GUI's configuration object
 	 * @param saveDialog A reference to the save dialog manager initialized with the main GUI
 	 */
-	public static void initFileM( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImain main, GUImainSettings settings, GUIdebugPanel modifier, MenuBarControl menuBarControl, SaveDialog saveDialog ){
+	public static void initFileM( JFrame jFrame, RSyntaxTextArea jSourcePane, JTextPane jInputPane, GUImain main, GUImainSettings settings, GUIdebugPanel modifier, MenuBarControl menuBarControl, SaveDialog saveDialog ){
 		
 		//Initialize listener for the menu bar
-		MenuBarEventListener listener = new MenuBarEventListener( jFrame, jSourcePane, main, settings, modifier, saveDialog );
+		MenuBarEventListener listener = new MenuBarEventListener( jFrame, jSourcePane, jInputPane, main, settings, modifier, saveDialog );
 		
 		//Initialize MenuBar
 		JMenuBar menubar = new JMenuBar();
