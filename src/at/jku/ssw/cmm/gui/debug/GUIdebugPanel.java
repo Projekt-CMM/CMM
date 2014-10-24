@@ -215,9 +215,14 @@ public class GUIdebugPanel {
 		this.varView.standby(this.modifier.getFileName());
 	}
 	
-	public void highlightVariable( Stack<String> path ){
-		if( path != null)
-			this.varView.highlightVariable(path);
+	public void highlightVariable( final Stack<String> path ){
+		if( path != null){
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					varView.highlightVariable(path);
+				}
+			});
+		}
 	}
 	
 	/**
