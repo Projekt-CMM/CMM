@@ -56,7 +56,15 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 */
 	public static void main(String[] args) {
 		GUImain app = new GUImain(new GUImainSettings());
-		app.start();
+		
+		boolean test = false;
+		
+		for( String s : args )
+			if( s.equals("-t") )
+				test = true;
+			
+		
+		app.start(test);
 	}
 
 	/**
@@ -165,7 +173,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 * 
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 */
-	private void start() {
+	private void start( boolean test ) {
 		
 		if( SwingUtilities.isEventDispatchThread() )
 			System.out.println("[EDT Analyse] Main GUI runnung on EDT.");
@@ -248,6 +256,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 
 		// Variable initialization
 		this.inputHighlightOffset = 0;
+		
+		if( test )
+			System.exit(0);
 	}
 
 	/**
