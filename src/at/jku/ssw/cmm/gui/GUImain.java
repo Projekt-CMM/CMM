@@ -143,6 +143,8 @@ public class GUImain implements GUImainMod, PopupInterface {
 	
 	private MenuBarControl menuBarControl;
 	
+	private SourceCodeListener codeListener;
+	
 	/**
 	 * Unicode character of the breakpoint.
 	 */
@@ -176,6 +178,8 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 * in code).
 	 * 
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
+	 * 
+	 * @param test TRUE if program shall exit after init (for GUI test)
 	 */
 	private void start( boolean test ) {
 		
@@ -244,10 +248,14 @@ public class GUImain implements GUImainMod, PopupInterface {
 				this.rightPanelControl.getDebugPanel()));
 
 		// Initialize the source panel listener
-		this.jSourcePane.getDocument().addDocumentListener(new SourceCodeListener(this));
+		this.codeListener = new SourceCodeListener(this);
+		this.jSourcePane.getDocument().addDocumentListener(this.codeListener);
+		//TODO this.jInputPane.getDocument().addDocumentListener(this.codeListener);
 		
 		//Initialize the source panel key listener for ctrl+s
-		this.jSourcePane.addKeyListener(new MainKeyListener(this, this.saveDialog));
+		MainKeyListener keyListener = new MainKeyListener(this, this.saveDialog);
+		this.jSourcePane.addKeyListener(keyListener);
+		this.jInputPane.addKeyListener(keyListener);
 
 		// Menubar
 		this.menuBarControl = new MenuBarControl();
@@ -273,15 +281,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 */
 	private void highlightInputPane() {
-		/*Highlighter high = this.jInputPane.getHighlighter();
-		high.removeAllHighlights();
 
-		try {
-			high.addHighlight(0, this.inputHighlightOffset,
-					DefaultHighlighter.DefaultPainter);
-		} catch (BadLocationException ex) {
-			ex.printStackTrace();
-		}*/
 		DefaultStyledDocument document = new DefaultStyledDocument();
 		
 		StyleContext context = new StyleContext();
@@ -303,6 +303,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
+		//TODO document.addDocumentListener(this.codeListener);
 		this.jInputPane.setDocument(document);
 		this.jInputPane.repaint();
 	}
