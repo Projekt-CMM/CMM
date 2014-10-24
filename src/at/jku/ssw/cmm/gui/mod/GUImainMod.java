@@ -87,6 +87,11 @@ public interface GUImainMod {
 	void resetInputHighlighter();
 	
 	/**
+	 * Resets the output text panel so that there is no text displayed
+	 */
+	void resetOutputTextPane();
+	
+	/**
 	 * Makes all text fields of the main GUI uneditable. Should happen before interpreter starts running
 	 * so that the source code can't be changed during runtime.
 	 * 

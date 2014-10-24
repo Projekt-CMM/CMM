@@ -436,6 +436,12 @@ public class GUImain implements GUImainMod, PopupInterface {
 			}
 		});
 	}
+	
+	@Override
+	public void resetOutputTextPane() {
+		
+		this.jOutputPane.setText("");
+	}
 
 	@Override
 	public void lockInput() {
