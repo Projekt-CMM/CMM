@@ -3,6 +3,7 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
@@ -11,12 +12,15 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.Highlighter;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
@@ -86,7 +90,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	/**
 	 * The text panel with input data for the cmm program.
 	 */
-	private JTextArea jInputPane;
+	private JTextPane jInputPane;
 
 	/**
 	 * The text panel for the output stream of the cmm program.
@@ -268,7 +272,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 */
 	private void highlightInputPane() {
-		Highlighter high = this.jInputPane.getHighlighter();
+		/*Highlighter high = this.jInputPane.getHighlighter();
 		high.removeAllHighlights();
 
 		try {
@@ -276,7 +280,30 @@ public class GUImain implements GUImainMod, PopupInterface {
 					DefaultHighlighter.DefaultPainter);
 		} catch (BadLocationException ex) {
 			ex.printStackTrace();
+		}*/
+		DefaultStyledDocument document = new DefaultStyledDocument();
+		
+		StyleContext context = new StyleContext();
+
+		//Highlighting style
+		Style highlightStyle = context.addStyle("highlight", null);
+		StyleConstants.setBackground(highlightStyle, Color.YELLOW);
+		StyleConstants.setBold(highlightStyle, true);
+		
+		//Default style
+		Style defaultStyle = context.addStyle("default", null);
+		StyleConstants.setBackground(highlightStyle, Color.YELLOW);
+		StyleConstants.setBold(highlightStyle, true);
+		
+		//Do highlighting
+		try {
+			document.insertString(0, this.jInputPane.getText().substring(inputHighlightOffset), defaultStyle);
+			document.insertString(0, this.jInputPane.getText().substring(0,inputHighlightOffset), highlightStyle);
+		} catch (BadLocationException e) {
+			e.printStackTrace();
 		}
+		this.jInputPane.setDocument(document);
+		this.jInputPane.repaint();
 	}
 
 	/*
@@ -495,7 +522,6 @@ public class GUImain implements GUImainMod, PopupInterface {
 			try {
 				Profile.setActiveProfile(Profile.ReadProfile(s.substring(0, s.indexOf(Profile.sep +  Profile.FILE_PROFILE))));
 			} catch (XMLReadingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			System.out.println("Profile Chooser Path:" + chooser.getSelectedFile().getAbsolutePath());
