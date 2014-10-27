@@ -86,6 +86,7 @@ public class TreeTable extends JTable {
         
     	super.setModel(new TreeTableModelAdapter(this.dataModel, tree));
     	super.getColumn("Value").setCellRenderer(this.buttonRenderer);
+    	super.getColumn("Type").setCellRenderer(this.buttonRenderer);
         
         this.repaint();
     }

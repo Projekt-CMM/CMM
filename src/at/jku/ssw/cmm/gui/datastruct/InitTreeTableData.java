@@ -92,10 +92,10 @@ public class InitTreeTableData {
 		
 		if( init )
 			//Initialize data node if re-creating the data model
-			funcNode = new DataNode( name + "()", new JButton("Call"), new JButton("Declaration"), new ArrayList<DataNode>() );
+			funcNode = new DataNode( name + "()", "", ""/*new JButton("Call"), new JButton("Declaration")*/, new ArrayList<DataNode>() );
 		else
 			//Update the data node
-			funcNode = node.getChild( name + "()", new JButton("Call"), new JButton("Declaration") );
+			funcNode = node.getChild( name + "()", "", ""/*new JButton("Call"), new JButton("Declaration")*/ );
 		
 		//Read local variables of the current function
 		readVariables( init, findNodeByName(compiler.getSymbolTable().curScope.locals, name).locals, funcNode, address, popup );
