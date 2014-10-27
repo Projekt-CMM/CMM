@@ -382,7 +382,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	}
 
 	@Override
-	public void highlightSourceCode(int line, int col) {
+	public void highlightSourceCode(int line) {
 
 		// Line out of user source code range (#include)
 		if (line <= (int) this.codeRegister.get(0)[0])
@@ -414,6 +414,11 @@ public class GUImain implements GUImainMod, PopupInterface {
 					jSourcePane.select(code.length(), code.length());
 			}
 		});
+	}
+	
+	@Override
+	public void highlightSourceCodeAbs( int line ){
+		
 	}
 
 	@Override

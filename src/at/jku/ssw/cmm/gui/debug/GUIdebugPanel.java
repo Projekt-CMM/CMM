@@ -67,7 +67,7 @@ public class GUIdebugPanel {
 		this.jVarPanel = new JPanel();
 		this.jVarPanel.setBorder(new TitledBorder(_("Variables")));
 		this.jVarPanel.setLayout(new BoxLayout(this.jVarPanel, BoxLayout.PAGE_AXIS));
-		this.varView = new TreeTableView(jVarPanel, mod.getFileName());
+		this.varView = new TreeTableView(this.modifier, this.jVarPanel, mod.getFileName());
 		this.jRightPanel.add(jVarPanel, BorderLayout.CENTER);
 		
 		this.stepTarget = -1;
@@ -164,6 +164,10 @@ public class GUIdebugPanel {
 	 */
 	public int getBeginLine() {
 		return this.sourceCodeBeginLine;
+	}
+	
+	public void setErrorLine( int line ){
+		this.line = line;
 	}
 	
 	/**
@@ -431,12 +435,16 @@ public class GUIdebugPanel {
 					this.modifier.getSourceCodeRegister(),
 					this.breakpoints);
 		} catch (final IncludeNotFoundException e1) {
+			
+			this.line = e1.getLine();
+			this.col = 0;
+			
+			Object[] e = {1,0,null};
+			this.modifier.getSourceCodeRegister().clear();
+			this.modifier.getSourceCodeRegister().add(e);
+			
 			// An include file could not be found
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					ctrlPanel.getListener().setErrorMode(_("Preprocessor error"), _("Include file not found") + ": \"" + e1.getFileName() + "\"", e1.getLine(), 0);
-				}
-			});
+			ctrlPanel.getListener().setErrorMode(_("Preprocessor error"), _("Include file not found") + ": \"" + e1.getFileName() + "\"", e1.getLine(), 0);
 			return;
 		}
 
@@ -471,7 +479,9 @@ public class GUIdebugPanel {
 		
 		// compiler returns errors
 		if( e != null ) {
-			this.ctrlPanel.getListener().setErrorMode("Compiler error", e.msg, e.line, e.col);
+			this.line = e.line;
+			this.col = e.col;
+			this.ctrlPanel.getListener().setErrorMode("Compiler error", e.msg, this.getCompleteErrorLine(), e.col);
 		}
 	}
 

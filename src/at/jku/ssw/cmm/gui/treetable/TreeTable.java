@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JTable;
 
+import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.gui.utils.JTableButtonMouseListener;
 import at.jku.ssw.cmm.gui.utils.JTableButtonRenderer;
 
@@ -24,13 +25,17 @@ public class TreeTable extends JTable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	private final GUImainMod main;
+	
 	private TreeTableCellRenderer tree;
 	private TreeTableDataModel dataModel;
 	private final JTableButtonRenderer buttonRenderer;
      
      
-    public TreeTable( TreeTableDataModel treeTableModel ){
+    public TreeTable( GUImainMod main, TreeTableDataModel treeTableModel ){
         super();
+        
+        this.main = main;
         
         //Initialize button renderer
         this.buttonRenderer = new JTableButtonRenderer(super.getDefaultRenderer(JButton.class));
@@ -55,8 +60,7 @@ public class TreeTable extends JTable {
         super.setModel(new TreeTableModelAdapter(treeTableModel, tree));
         super.getColumn("Value").setCellRenderer(this.buttonRenderer);
         super.getColumn("Type").setCellRenderer(this.buttonRenderer);
-        JTable t = this;
-        this.addMouseListener(new JTableButtonMouseListener(t));
+        this.addMouseListener(new JTableButtonMouseListener(this.main, this));
          
         //Selection of tree and table at once
         TreeTableSelectionModel selectionModel = new TreeTableSelectionModel();

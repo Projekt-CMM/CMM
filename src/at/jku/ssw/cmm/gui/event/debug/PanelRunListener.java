@@ -288,6 +288,8 @@ public class PanelRunListener implements Debugger {
 		// TODO is this thread safe???
 		if (this.timer != null)
 			timer.cancel();
+		
+		this.master.setErrorLine(node.line);
 
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -318,7 +320,7 @@ public class PanelRunListener implements Debugger {
 		// -> Node #1 - NO | Node #2 - YES
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				modMain.highlightSourceCode(arg0.line, 1);
+				modMain.highlightSourceCode(arg0.line);
 			}
 		});
 
@@ -539,9 +541,8 @@ public class PanelRunListener implements Debugger {
 
 			// Error mode -> step button has "view" function
 			else if (isErrorMode()) {
-				modMain.highlightSourceCode(master.getCompleteErrorLine(), 0);
-				System.out.println("-> error");
-				System.out.println("Highlighting error line..." + master.getCompleteErrorLine());
+				modMain.highlightSourceCode(master.getErrorLine());
+				System.out.println("Highlighting: " + master.getErrorLine() + ", " + master.getCompleteErrorLine() );
 			}
 		}
 
