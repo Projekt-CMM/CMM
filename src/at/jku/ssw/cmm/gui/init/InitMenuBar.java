@@ -2,6 +2,8 @@ package at.jku.ssw.cmm.gui.init;
 
 import static at.jku.ssw.cmm.gettext.Language._;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
 import javax.swing.JFrame;
@@ -9,6 +11,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JTextPane;
+import javax.swing.KeyStroke;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
@@ -55,6 +58,7 @@ public class InitMenuBar {
 			// --- file -> new ---
 			JMenuItem newMI = new JMenuItem(_("New"));
 			newMI.addActionListener(listener.newFileHandler);
+			newMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
 			fileM.add(newMI);
 			menuBarControl.add(newMI);
 		
@@ -62,6 +66,7 @@ public class InitMenuBar {
 			JMenuItem openMI = new JMenuItem(_("Open"));
 			fileM.add(openMI);
 			openMI.addActionListener(listener.openHandler);
+			openMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
 			menuBarControl.add(openMI);
 			
 			fileM.addSeparator();
@@ -70,12 +75,14 @@ public class InitMenuBar {
 			JMenuItem saveAsMI = new JMenuItem(_("Save As..."));
 			fileM.add(saveAsMI);
 			saveAsMI.addActionListener(listener.saveAsHandler);
+			saveAsMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
 			menuBarControl.add(saveAsMI);
 			
 			// --- file -> save ---
 			JMenuItem saveMI = new JMenuItem(_("Save..."));
 			fileM.add(saveMI);
 			saveMI.addActionListener(listener.saveHandler);
+			saveMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 			menuBarControl.add(saveMI);
 			
 			fileM.addSeparator();
@@ -83,6 +90,7 @@ public class InitMenuBar {
 			// --- file -> exit ---
 			JMenuItem exitMI = new JMenuItem(_("Exit"));
 			exitMI.addActionListener(listener.exitHandler);
+			exitMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, ActionEvent.ALT_MASK));
 			fileM.add(exitMI);
 		
 		/* --- MENU: "progress" --- */
@@ -93,11 +101,13 @@ public class InitMenuBar {
 			// --- progress -> profile ---
 			JMenuItem profileMI = new JMenuItem(_("Select Profile"));
 			profileMI.addActionListener(listener.profileHandler);
+			profileMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 			questM.add(profileMI);
 					
 			// --- progress -> quests ---
 			JMenuItem questMI = new JMenuItem(_("Select Quest"));
 			questMI.addActionListener(listener.questHandler);
+			questMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 			questM.add(questMI);
 		
 		/* --- MENU: "language" --- */
