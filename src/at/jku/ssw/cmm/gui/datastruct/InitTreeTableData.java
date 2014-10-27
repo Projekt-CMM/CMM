@@ -301,7 +301,10 @@ public class InitTreeTableData {
 		Obj count = start;
 		while( count != null ){
 			
+			System.out.println(" Found: " + count.name);
+			
 			if( count.name.equals(name) ){
+				System.out.println(" Got it!");
 				return count;
 			}
 			

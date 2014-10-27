@@ -18,6 +18,9 @@ public class DataNode {
     private final String name;
     private Object type;
     private Object value;
+    
+    private int declaration;
+    private int lastCall;
  
     private List<DataNode> children;
     
@@ -56,6 +59,14 @@ public class DataNode {
     
     public void markChanged(){
     	this.type = "" + this.type + CHANGE_TAG;
+    }
+    
+    public int getDeclarationLine(){
+    	return this.declaration;
+    }
+    
+    public int getCallLine(){
+    	return this.lastCall;
     }
     
     public void add( boolean init, DataNode n ){

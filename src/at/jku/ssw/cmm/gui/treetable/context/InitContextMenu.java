@@ -11,15 +11,16 @@ public class InitContextMenu {
 
 	public static JPopupMenu initContextMenu( GUImainMod main, String name, int decl, int call ) {
 		
-		JPopupMenu menu = new JPopupMenu();
+		JPopupMenu menu = new JPopupMenu("hello");
+		//menu
 		
 		JMenuItem id = new JMenuItem(_("Jump to Declaration"));
 		menu.add(id);
 		id.addActionListener(new ContextMenuListener(main, name, decl));
 		
-		JMenuItem ic = new JMenuItem(_("Jump to Call"));
+		/*JMenuItem ic = new JMenuItem(_("Jump to Call"));
 		menu.add(ic);
-		ic.addActionListener(new ContextMenuListener(main, name, call));
+		ic.addActionListener(new ContextMenuListener(main, name, call));*/
 		
 		return menu;
 	}

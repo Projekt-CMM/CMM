@@ -67,7 +67,7 @@ public class GUIdebugPanel {
 		this.jVarPanel = new JPanel();
 		this.jVarPanel.setBorder(new TitledBorder(_("Variables")));
 		this.jVarPanel.setLayout(new BoxLayout(this.jVarPanel, BoxLayout.PAGE_AXIS));
-		this.varView = new TreeTableView(this.modifier, this.jVarPanel, mod.getFileName());
+		this.varView = new TreeTableView(this.modifier, this, this.jVarPanel, mod.getFileName());
 		this.jRightPanel.add(jVarPanel, BorderLayout.CENTER);
 		
 		this.stepTarget = -1;
