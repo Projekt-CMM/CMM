@@ -24,7 +24,6 @@ import javax.swing.text.StyleContext;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-import at.jku.ssw.cmm.gui.event.MainKeyListener;
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.event.WindowComponentListener;
 import at.jku.ssw.cmm.gui.event.WindowEventListener;
@@ -251,11 +250,6 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.codeListener = new SourceCodeListener(this);
 		this.jSourcePane.getDocument().addDocumentListener(this.codeListener);
 		//TODO this.jInputPane.getDocument().addDocumentListener(this.codeListener);
-		
-		//Initialize the source panel key listener for ctrl+s
-		MainKeyListener keyListener = new MainKeyListener(this, this.saveDialog);
-		this.jSourcePane.addKeyListener(keyListener);
-		this.jInputPane.addKeyListener(keyListener);
 
 		// Menubar
 		this.menuBarControl = new MenuBarControl();
