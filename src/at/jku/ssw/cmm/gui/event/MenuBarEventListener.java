@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTextPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -37,9 +38,10 @@ public class MenuBarEventListener {
 	 * 		elements and the variable tree table
 	 * @param saveDialog A reference to the save dialog manager class
 	 */
-	public MenuBarEventListener( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImain main, GUImainSettings settings, GUIdebugPanel modifier, SaveDialog saveDialog ){
+	public MenuBarEventListener( JFrame jFrame, RSyntaxTextArea jSourcePane, JTextPane jInputPane, GUImain main, GUImainSettings settings, GUIdebugPanel modifier, SaveDialog saveDialog ){
 		this.jFrame = jFrame;
 		this.jSourcePane = jSourcePane;
+		this.jInputPane = jInputPane;
 		this.main = main;
 		this.settings = settings;
 		this.modifier = modifier;
@@ -55,6 +57,11 @@ public class MenuBarEventListener {
 	 * The text area for the source code
 	 */
 	private final RSyntaxTextArea jSourcePane;
+	
+	/**
+	 * The input text pane
+	 */
+	private final JTextPane jInputPane;
 	
 	/**
 	 * Reference to the main GUI
@@ -129,8 +136,13 @@ public class MenuBarEventListener {
 				
 				//User selected a file
 				if (chooser.showOpenDialog(jFrame) == JFileChooser.APPROVE_OPTION) {
+					
 					//Open file and load text t source code panel
 					jSourcePane.setText(FileManagerCode.readSourceCode(chooser.getSelectedFile()));
+					
+					//Set input data
+					jInputPane.setText(FileManagerCode.readInputData(chooser.getSelectedFile()));
+					
 					//Set the new C-- file directory
 					settings.setPath(chooser.getSelectedFile().getPath());
 					

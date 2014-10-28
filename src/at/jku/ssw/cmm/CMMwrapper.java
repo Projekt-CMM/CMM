@@ -71,6 +71,9 @@ public class CMMwrapper implements CMMrunnableMod {
 			//Make all text areas of the main GUI uneditable so that the code can not be changed during runtime 
 			this.modifier.lockInput();
 			
+			//Reset the output text panel
+			this.modifier.resetOutputTextPane();
+			
 			//Set the running flag
 			this.running = true;
 			

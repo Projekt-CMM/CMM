@@ -58,7 +58,7 @@ public class InitLeftPanel {
 	 * @param pane The main panel for the GUI (JPanel)
 	 * @return A reference to the JTextArea generated
 	 */
-	public static JTextArea initInputPane( JPanel pane ){
+	public static JTextPane initInputPane( JPanel pane ){
 		
 		//Label saying "input" above the text area for the input stream
 		JPanel valuePanel = new JPanel();
@@ -66,7 +66,7 @@ public class InitLeftPanel {
 		valuePanel.setLayout(new BorderLayout());
         
 		//The text area for the input stream
-        JTextArea tArea = new JTextArea();
+        JTextPane tArea = new JTextPane();
         tArea.setLayout(new BorderLayout());
         tArea.setMargin(new Insets(5, 5, 5, 5));
         tArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));

@@ -46,7 +46,7 @@ public class PanelErrorListener implements MouseListener {
 		System.out.println( "Showing error on line " + p.getErrorLine() + ", col " + p.getErrorCol() );
 		
 		//Highlight the given line in the source code panel
-		this.modifier.highlightSourceCode(p.getErrorLine(), p.getErrorCol());
+		this.modifier.highlightSourceCode(p.getCompleteErrorLine());
 	}
 
 	@Override

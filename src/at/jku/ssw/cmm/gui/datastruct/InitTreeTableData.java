@@ -92,10 +92,10 @@ public class InitTreeTableData {
 		
 		if( init )
 			//Initialize data node if re-creating the data model
-			funcNode = new DataNode( name + "()", "", "", new ArrayList<DataNode>() );
+			funcNode = new DataNode( name + "()", "", ""/*new JButton("Call"), new JButton("Declaration")*/, new ArrayList<DataNode>() );
 		else
 			//Update the data node
-			funcNode = node.getChild( name + "()", "", "" );
+			funcNode = node.getChild( name + "()", "", ""/*new JButton("Call"), new JButton("Declaration")*/ );
 		
 		//Read local variables of the current function
 		readVariables( init, findNodeByName(compiler.getSymbolTable().curScope.locals, name).locals, funcNode, address, popup );
@@ -255,7 +255,6 @@ public class InitTreeTableData {
 					value = Memory.loadInt(address + offset + size * i);
 					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null));
 				}
-				//TODO implement arrays of structs when compiler supports it
 				else if( count.elemType.kind == Struct.STRUCT ){
 					DataNode n = readVariables( init, count.fields, new DataNode(name, "struct", "", new ArrayList<DataNode>()), address + offset + size * i, popup );
 					node.add(init, n);
@@ -302,7 +301,10 @@ public class InitTreeTableData {
 		Obj count = start;
 		while( count != null ){
 			
+			System.out.println(" Found: " + count.name);
+			
 			if( count.name.equals(name) ){
+				System.out.println(" Got it!");
 				return count;
 			}
 			

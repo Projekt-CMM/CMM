@@ -7,6 +7,7 @@ import javax.swing.JScrollPane;
 
 import at.jku.ssw.cmm.CMMwrapper;
 import at.jku.ssw.cmm.gui.datastruct.InitTreeTableData;
+import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.gui.popup.PopupInterface;
 import at.jku.ssw.cmm.gui.treetable.DataNode;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
@@ -15,13 +16,18 @@ import at.jku.ssw.cmm.gui.treetable.TreeUtils;
 
 public class TreeTableView{
 	
-	public TreeTableView( JPanel panel, String fileName ){
+	public TreeTableView( GUImainMod main, GUIdebugPanel debug, JPanel panel, String fileName ){
 		
+		this.main = main;
+		this.debug = debug;
 		this.panel = panel;
 		this.forceUpdate = true;
 		
 		this.init(fileName);
 	}
+	
+	private final GUImainMod main;
+	private final GUIdebugPanel debug;
 	
 	// Main panel
 	private JPanel panel;
@@ -42,7 +48,7 @@ public class TreeTableView{
 		/* ---------- TREE TABLE for CALL STACK and LOCALS (optional) ---------- */
 		this.varTreeTableModel = new TreeTableDataModel(InitTreeTableData.createDataStructure(fileName));
 		
-		this.varTreeTable = new TreeTable(this.varTreeTableModel);
+		this.varTreeTable = new TreeTable(this.main, this.debug, this.varTreeTableModel);
 		
 		JScrollPane p = new JScrollPane(this.varTreeTable);
 		this.panel.add(p);

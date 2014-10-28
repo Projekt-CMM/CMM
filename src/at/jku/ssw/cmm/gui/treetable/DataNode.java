@@ -16,14 +16,17 @@ import javax.swing.JButton;
 public class DataNode {
 	 
     private final String name;
-    private String type;
+    private Object type;
     private Object value;
+    
+    private int declaration;
+    private int lastCall;
  
     private List<DataNode> children;
     
     public static final char CHANGE_TAG = ' ';
  
-    public DataNode(String name, String type, Object value, List<DataNode> children) {
+    public DataNode(String name, Object type, Object value, List<DataNode> children) {
         this.name = name;
         this.type = type;
         this.value = value;
@@ -38,7 +41,7 @@ public class DataNode {
         return name;
     }
  
-    public String getType() {
+    public Object getType() {
         return type;
     }
  
@@ -55,7 +58,15 @@ public class DataNode {
     }
     
     public void markChanged(){
-    	this.type += CHANGE_TAG;
+    	this.type = "" + this.type + CHANGE_TAG;
+    }
+    
+    public int getDeclarationLine(){
+    	return this.declaration;
+    }
+    
+    public int getCallLine(){
+    	return this.lastCall;
     }
     
     public void add( boolean init, DataNode n ){
@@ -87,7 +98,7 @@ public class DataNode {
     	this.children.add(n);
     }
     
-    public DataNode getChild(String name, String type, Object value){
+    public DataNode getChild(String name, Object type, Object value){
     	for( DataNode d : this.children ){
     		if( d.name.equals(name) )
     			return d;

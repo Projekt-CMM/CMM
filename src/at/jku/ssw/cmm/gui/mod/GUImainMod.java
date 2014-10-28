@@ -64,7 +64,7 @@ public interface GUImainMod {
 	String getWorkingDirectory();
 	
 	/**
-	 * Moves the cursor to a specific line in the source code
+	 * Moves the cursor to a specific line in the <b>user's</b> source code
 	 * (highlights the whole line - variable "col" is useless at the moment)<br>
 	 * Note: Method from interface <i>GUImod</i>
 	 * 
@@ -73,7 +73,19 @@ public interface GUImainMod {
 	 * @param line The line which is considered to be highlighted
 	 * @param col The column position [actually useless]
 	 */
-	public void highlightSourceCode( int line, int col );
+	public void highlightSourceCode( int line );
+	
+	/*
+	 * Moves the cursor to a specific line in the <b>complete</b> source code
+	 * (highlights the whole line - variable "col" is useless at the moment)<br>
+	 * Note: Method from interface <i>GUImod</i>
+	 * 
+	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
+	 * 
+	 * @param line The line which is considered to be highlighted
+	 * @param col The column position [actually useless]
+	 */
+	//public void highlightSourceCodeAbs( int line );
 	
 	/**
 	 * Increments the input highlighter (input text area), which marks the already
@@ -85,6 +97,11 @@ public interface GUImainMod {
 	 * Sets the input highlighter to 0.
 	 */
 	void resetInputHighlighter();
+	
+	/**
+	 * Resets the output text panel so that there is no text displayed
+	 */
+	void resetOutputTextPane();
 	
 	/**
 	 * Makes all text fields of the main GUI uneditable. Should happen before interpreter starts running
