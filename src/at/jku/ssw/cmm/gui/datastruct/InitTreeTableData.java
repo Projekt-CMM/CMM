@@ -36,7 +36,7 @@ public class InitTreeTableData {
 	public static TreeTableDataModel readSymbolTable( CMMwrapper compiler, PopupInterface popup, String fileName ){
 		
 		//Create root node
-		DataNode node = new DataNode(fileName, "", "", new ArrayList<DataNode>());
+		DataNode node = new DataNode(fileName, "", "", new ArrayList<DataNode>(), -1);
 		
 		//Add global variables
 		node = readVariables( true, compiler.getSymbolTable().curScope.locals, node, Memory.getGlobalPointer(), popup );
@@ -90,15 +90,17 @@ public class InitTreeTableData {
 		//Tree table data node of this function
 		DataNode funcNode;
 		
+		Obj obj = findNodeByName(compiler.getSymbolTable().curScope.locals, name);
+		
 		if( init )
 			//Initialize data node if re-creating the data model
-			funcNode = new DataNode( name + "()", "", ""/*new JButton("Call"), new JButton("Declaration")*/, new ArrayList<DataNode>() );
+			funcNode = new DataNode( name + "()", "", "", new ArrayList<DataNode>(), obj.line );
 		else
 			//Update the data node
-			funcNode = node.getChild( name + "()", "", ""/*new JButton("Call"), new JButton("Declaration")*/ );
+			funcNode = node.getChild( name + "()", "", "", obj.line );
 		
 		//Read local variables of the current function
-		readVariables( init, findNodeByName(compiler.getSymbolTable().curScope.locals, name).locals, funcNode, address, popup );
+		readVariables( init, obj.locals, funcNode, address, popup );
 		node.add(init, funcNode);
 		
 		if( name == "main" )
@@ -128,46 +130,46 @@ public class InitTreeTableData {
 			//Reading an INTEGER
 			if( obj.type.kind == Struct.INT && obj.kind != Obj.PROC ){
 				if( obj.kind == Obj.VAR && !obj.isRef ){
-					node.add(init, new DataNode(obj.name, "int", Memory.loadInt(address + obj.adr), null));
+					node.add(init, new DataNode(obj.name, "int", Memory.loadInt(address + obj.adr), null, obj.line));
 				}
 				else if( obj.kind == Obj.VAR && obj.isRef && obj.kind != Obj.PROC ){
-					node.add(init, new DataNode(obj.name, "int", Memory.loadInt(Memory.loadInt(address + obj.adr)), null));
+					node.add(init, new DataNode(obj.name, "int", Memory.loadInt(Memory.loadInt(address + obj.adr)), null, obj.line));
 				}
 				else{
-					node.add(init, new DataNode(obj.name, "int", obj.val, null));
+					node.add(init, new DataNode(obj.name, "int", obj.val, null, obj.line));
 				}
 			}
 			//Reading a CHARACTER
 			if( obj.type.kind == Struct.CHAR && obj.kind != Obj.PROC ){
 				if( obj.kind == Obj.VAR && !obj.isRef ){
-					node.add(init, new DataNode(obj.name, "char", Memory.loadChar(address + obj.adr), null));
+					node.add(init, new DataNode(obj.name, "char", Memory.loadChar(address + obj.adr), null, obj.line));
 				}
 				else if( obj.kind == Obj.VAR && obj.isRef ){
-					node.add(init, new DataNode(obj.name, "char", Memory.loadChar(Memory.loadInt(address + obj.adr)), null));
+					node.add(init, new DataNode(obj.name, "char", Memory.loadChar(Memory.loadInt(address + obj.adr)), null, obj.line));
 				}
 				else{
-					node.add(init, new DataNode(obj.name, "char", obj.val, null));
+					node.add(init, new DataNode(obj.name, "char", obj.val, null, obj.line));
 				}
 			}
 			//Reading a FLOAT
 			if( obj.type.kind == Struct.FLOAT && obj.kind != Obj.PROC ){
 				if( obj.kind == Obj.VAR && !obj.isRef ){
-					node.add(init, new DataNode(obj.name, "float", Memory.loadFloat(address + obj.adr), null));
+					node.add(init, new DataNode(obj.name, "float", Memory.loadFloat(address + obj.adr), null, obj.line));
 				}
 				else if( obj.kind == Obj.VAR && obj.isRef ){
-					node.add(init, new DataNode(obj.name, "float", Memory.loadFloat(Memory.loadInt(address + obj.adr)), null));
+					node.add(init, new DataNode(obj.name, "float", Memory.loadFloat(Memory.loadInt(address + obj.adr)), null, obj.line));
 				}
 				else{
-					node.add(init, new DataNode(obj.name, "float", obj.fVal, null));
+					node.add(init, new DataNode(obj.name, "float", obj.fVal, null, obj.line));
 				}
 			}
 			//Reading an ARRAY (any type)
 			if( obj.type.kind == Struct.ARR && obj.kind != Obj.PROC ){
-				node.add(init, readArray(init, obj, node.getChild(obj.name, "array", ""), address + obj.adr, popup));
+				node.add(init, readArray(init, obj, node.getChild(obj.name, "array", "", obj.line), address + obj.adr, popup));
 			}
 			//Reading a STRUCTURE
 			if( obj.type.kind == Struct.STRUCT && obj.kind != Obj.PROC && obj.kind != Obj.TYPE ){
-				DataNode n = readVariables( init, obj.type.fields, node.getChild(obj.name, "struct", ""), address + obj.adr, popup );
+				DataNode n = readVariables( init, obj.type.fields, node.getChild(obj.name, "struct", "", obj.line), address + obj.adr, popup );
 				node.add(init, n);
 			}
 			//READING A STRING
@@ -176,7 +178,7 @@ public class InitTreeTableData {
 				MouseListener l = new StringPopupListener(popup, Strings.get(Memory.loadStringAddress(address + obj.adr)));
 				b.addMouseListener(l);
 					
-				node.add(init, new DataNode(obj.name, "string", b, null));
+				node.add(init, new DataNode(obj.name, "string", b, null, obj.line));
 			}
 			
 			//Next symbol table node
@@ -192,17 +194,17 @@ public class InitTreeTableData {
 	 * 
 	 * @param init TRUE if the tree table data model is re-created (called from readSymbolTable())<br>
 	 * 			FALSE if the data model is updated (called from updateTreeTable())
-	 * @param count The start node in the symbol table
+	 * @param obj The start node in the symbol table
 	 * @param node The data node which has to be updated
 	 * @param address The start address of the current function
 	 * @param popup A reference to the popup interface which is necessary to invoke popups
 	 * @return The updated data node (see papam "node")
 	 */
-	private static DataNode readArray( boolean init, Obj count, DataNode node, int address, PopupInterface popup ){
+	private static DataNode readArray( boolean init, Obj obj, DataNode node, int address, PopupInterface popup ){
 		
-		System.out.println("[initTreeTable] Reading array: " + count.kind);
+		System.out.println("[initTreeTable] Reading array: " + obj.kind);
 		
-		return readArrayElements(init, count.type, count.name, node, address, 0, popup);
+		return readArrayElements(init, obj.type, obj.name, node, address, 0, popup);
 		
 	}
 	
@@ -212,7 +214,7 @@ public class InitTreeTableData {
 	 * 
 	 * @param init TRUE if the tree table data model is re-created (called from readSymbolTable())<br>
 	 * 			FALSE if the data model is updated (called from updateTreeTable())
-	 * @param count The start node in the symbol table
+	 * @param obj The start node in the symbol table
 	 * @param name
 	 * @param node The data node which has to be updated
 	 * @param address The start address of the current function
@@ -220,10 +222,10 @@ public class InitTreeTableData {
 	 * @param popup A reference to the popup interface which is necessary to invoke popups
 	 * @return The updated data node (see papam "node")
 	 */
-	public static DataNode readArrayElements( boolean init, Struct count, String name, DataNode node, int address, int offset, PopupInterface popup ){
+	public static DataNode readArrayElements( boolean init, Struct obj, String name, DataNode node, int address, int offset, PopupInterface popup ){
 		
-		int length = count.elements;
-		int size = count.size / count.elements;
+		int length = obj.elements;
+		int size = obj.size / obj.elements;
 		
 		System.out.println("[initTreeTable] reading array level. size: " + size + ", elements: " + length + ", offset: " + offset );
 		
@@ -232,39 +234,39 @@ public class InitTreeTableData {
 			Object value = "";
 			String typeName = "";
 			
-			if( count.elemType.elements > 0 ){
-				node.add(init,readArrayElements(init, count.elemType, name, node.getChild("["+i+"]", "array", ""), address, offset + size * i, popup));
+			if( obj.elemType.elements > 0 ){
+				node.add(init,readArrayElements(init, obj.elemType, name, node.getChild("["+i+"]", "array", "", -1), address, offset + size * i, popup));
 			}
 			else{
-				if( count.elemType.kind == Struct.CHAR ){
+				if( obj.elemType.kind == Struct.CHAR ){
 					typeName = "char";
 					value = Memory.loadChar(address + offset + size * i);
-					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null));
+					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, -1));
 				}
-				else if( count.elemType.kind == Struct.FLOAT ){
+				else if( obj.elemType.kind == Struct.FLOAT ){
 					typeName = "float";
 					value = Memory.loadFloat(address + offset + size * i);
-					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null));
+					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, -1));
 				}
-				else if( count.elemType.kind == Struct.BOOL ){
+				else if( obj.elemType.kind == Struct.BOOL ){
 					typeName = "bool";
-					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null));
+					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, -1));
 				}
-				else if( count.elemType.kind == Struct.INT ){
+				else if( obj.elemType.kind == Struct.INT ){
 					typeName = "int";
 					value = Memory.loadInt(address + offset + size * i);
-					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null));
+					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, -1));
 				}
-				else if( count.elemType.kind == Struct.STRUCT ){
-					DataNode n = readVariables( init, count.fields, new DataNode(name, "struct", "", new ArrayList<DataNode>()), address + offset + size * i, popup );
+				else if( obj.elemType.kind == Struct.STRUCT ){
+					DataNode n = readVariables( init, obj.fields, new DataNode(name, "struct", "", new ArrayList<DataNode>(), -1), address + offset + size * i, popup );
 					node.add(init, n);
 				}
-				else if( count.elemType.kind == Struct.STRING ){
+				else if( obj.elemType.kind == Struct.STRING ){
 					JButton b = new JButton(Strings.get(Memory.loadStringAddress(address + offset + size * i)));
 					MouseListener l = new StringPopupListener(popup, Strings.get(Memory.loadStringAddress(address + offset + size * i)));
 					b.addMouseListener(l);
 					
-					node.add(init, new DataNode("[" + i + "]", "string", b, null));
+					node.add(init, new DataNode("[" + i + "]", "string", b, null, -1));
 				}
 			}
 		}
@@ -281,7 +283,7 @@ public class InitTreeTableData {
 	 * @return The data structure containing a root node with the file name
 	 */
 	public static DataNode createDataStructure( String fileName ) {
-        DataNode root = new DataNode(fileName, "", "", null);
+        DataNode root = new DataNode(fileName, "", "", null, -1);
         return root;
     }
 	
@@ -298,22 +300,22 @@ public class InitTreeTableData {
 	 */
 	public static Obj findNodeByName( Obj start, String name ){
 		
-		Obj count = start;
-		while( count != null ){
+		Obj obj = start;
+		while( obj != null ){
 			
-			System.out.println(" Found: " + count.name);
+			System.out.println(" Found: " + obj.name);
 			
-			if( count.name.equals(name) ){
+			if( obj.name.equals(name) ){
 				System.out.println(" Got it!");
-				return count;
+				return obj;
 			}
 			
-			if( count.locals != null ){
-				Obj re = findNodeByName( count.locals, name );
+			/*if( obj.locals != null ){
+				Obj re = findNodeByName( obj.type.fields, name );
 				if( re != null )
 					return re;
-			}
-			count = count.next;
+			}*/
+			obj = obj.next;
 		}
 		
 		return null;

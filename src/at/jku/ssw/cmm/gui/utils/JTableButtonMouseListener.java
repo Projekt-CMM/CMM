@@ -1,60 +1,53 @@
 package at.jku.ssw.cmm.gui.utils;
 
-import static at.jku.ssw.cmm.gettext.Language._;
-
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
-import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumnModel;
 
-import at.jku.ssw.cmm.compiler.Obj;
-import at.jku.ssw.cmm.gui.datastruct.InitTreeTableData;
-import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
+import at.jku.ssw.cmm.gui.treetable.DataNode;
+import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.context.InitContextMenu;
 
 public class JTableButtonMouseListener implements MouseListener {
 	
-	public JTableButtonMouseListener(GUImainMod main, GUIdebugPanel debug, JTable t) {
+	public JTableButtonMouseListener(GUImainMod main, TreeTable t) {
 		this.main = main;
-		this.debug = debug;
-		this.table = t;
+		this.treeTable = t;
 	}
 	
 	private final GUImainMod main;
-	private final GUIdebugPanel debug;
-	private final JTable table;
+	private final TreeTable treeTable;
 
 	private void forwardEventToButton(MouseEvent e) {
 
-		TableColumnModel columnModel = table.getColumnModel();
+		TableColumnModel columnModel = this.treeTable.getTable().getColumnModel();
 		int column = columnModel.getColumnIndexAtX(e.getX());
-		int row = e.getY() / table.getRowHeight();
+		int row = e.getY() / this.treeTable.getTable().getRowHeight();
 		Object value;
 		JButton button;
 		MouseEvent buttonEvent;
 
-		if (row >= table.getRowCount() || row < 0
-				|| column >= table.getColumnCount() || column < 0)
+		if (row >= this.treeTable.getTable().getRowCount() || row < 0
+				|| column >= this.treeTable.getTable().getColumnCount() || column < 0)
 			return;
 
-		value = table.getValueAt(row, column);
+		value = this.treeTable.getTable().getValueAt(row, column);
 
 		if (!(value instanceof JButton))
 			return;
 
 		button = (JButton) value;
 
-		buttonEvent = (MouseEvent) SwingUtilities.convertMouseEvent(table, e,
-				button);
+		buttonEvent = (MouseEvent) SwingUtilities.convertMouseEvent(this.treeTable.getTable(), e, button);
 		button.dispatchEvent(buttonEvent);
 		// This is necessary so that when a button is pressed and released
 		// it gets rendered properly. Otherwise, the button may still appear
 		// pressed down when it has been released.
-		table.repaint();
+		this.treeTable.getTable().repaint();
 	}
 
 	public void mouseClicked(MouseEvent e) {
@@ -74,40 +67,19 @@ public class JTableButtonMouseListener implements MouseListener {
 		// Right mouse clicked
 		if (SwingUtilities.isRightMouseButton(e)) {
 
-			int row = table.rowAtPoint(e.getPoint());
-			int col = table.columnAtPoint(e.getPoint());
+			int row = this.treeTable.getTable().rowAtPoint(e.getPoint());
+			int col = this.treeTable.getTable().columnAtPoint(e.getPoint());
 			if (row >= 0 && col >= 0) {
 				
-				String name = (String)table.getValueAt(row, 0);
-				Obj obj;
+				String name = (String)this.treeTable.getTable().getValueAt(row, 0);
 				
-				System.out.println("clicked -> " + name);
+				DataNode node = (DataNode) this.treeTable.getModelAdapter().nodeForRow(row);
 				
-				//Clicked root node
-				if( name.endsWith(".cmm") || name.equals(_("Unnamed")) ){
-					return;
-				}
-				//Variable clicked is a function
-				else if( name.endsWith("()") ){
-					name = name.substring(0, name.indexOf("("));
-					
-					obj = InitTreeTableData.findNodeByName(debug.getCompileManager().getSymbolTable().curScope.locals, name);
-				}
-				//Variable clicked is a variable
-				else{
-					return;
-					/*obj = InitTreeTableData.findNodeByName(debug.getCompileManager().getSymbolTable().curScope.locals,
-							this.getFunction(row));
-					System.out.println("Function node: " + obj.name + ", " + obj.ast.line);
-					System.out.println("Looking for: " + name);
-					obj = InitTreeTableData.findNodeByName(obj.locals, name);*/
-				}
-					
+				System.out.println("Clicked Data Node: " + node.print());
 				
-					
-				System.out.println("-> " + name + ", " + obj.ast.line );
-					
-				InitContextMenu.initContextMenu(main, name, obj.ast.line, 20).show(e.getComponent(), e.getX(), e.getY());
+				if( node.getDeclarationLine() >= 0 ){
+					InitContextMenu.initContextMenu(main, name, node.getDeclarationLine(), 20).show(e.getComponent(), e.getX(), e.getY());
+				}
 			}
 
 		} else
@@ -116,22 +88,5 @@ public class JTableButtonMouseListener implements MouseListener {
 
 	public void mouseReleased(MouseEvent e) {
 		forwardEventToButton(e);
-	}
-	
-	private String getFunction( int line ){
-		
-		String name;
-		
-		for( ; line >= 0; line -- ){
-			
-			name = (String)(table.getValueAt(line, 0));
-			System.out.println("Checking " + name );
-			if( name.endsWith("()") ){
-				System.out.println("Returning " + name.substring(0, name.indexOf("(")) );
-				return name.substring(0, name.indexOf("("));
-			}
-		}
-		
-		return null;
 	}
 }
