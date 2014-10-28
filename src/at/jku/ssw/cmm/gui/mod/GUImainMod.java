@@ -75,7 +75,7 @@ public interface GUImainMod {
 	 */
 	public void highlightSourceCode( int line );
 	
-	/**
+	/*
 	 * Moves the cursor to a specific line in the <b>complete</b> source code
 	 * (highlights the whole line - variable "col" is useless at the moment)<br>
 	 * Note: Method from interface <i>GUImod</i>
@@ -85,7 +85,7 @@ public interface GUImainMod {
 	 * @param line The line which is considered to be highlighted
 	 * @param col The column position [actually useless]
 	 */
-	public void highlightSourceCodeAbs( int line );
+	//public void highlightSourceCodeAbs( int line );
 	
 	/**
 	 * Increments the input highlighter (input text area), which marks the already
