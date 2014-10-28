@@ -24,6 +24,8 @@ public class Obj {
 	public int     adr;       // VAR: address
 	public int     level;     // VAR: declaration level
 	public boolean isRef;     // VAR: ref parameter
+	
+	public int     line;	  // VAR, CON: line of declaration
 
 	public Node    ast;       // PROC: AST of this procedure
 	public int     size;      // PROC: frame size in bytes
@@ -31,7 +33,10 @@ public class Obj {
 	public Obj     locals;    // PROC: parameters and local objects
 	public boolean isForward; // PROC: is it a forward declaration
 
-	public Obj(int kind, String name, Struct type) {
-		this.kind = kind; this.name = name; this.type = type;
+	public Obj(int kind, String name, Struct type, int line) {
+		this.kind = kind; 
+		this.name = name; 
+		this.type = type; 
+		this.line = line;
 	}
 }

@@ -64,9 +64,9 @@ public class Tab {
 	 *  
 	 *  @return return created object or forward declared procedure
 	 */
-	public Obj insert(int kind, String name, Struct type) {
+	public Obj insert(int kind, String name, Struct type, int line) {
 		//--- create
-		Obj obj = new Obj(kind, name, type);
+		Obj obj = new Obj(kind, name, type, line);
 		if (kind == Obj.VAR) {
 			obj.adr = curScope.size;
 			curScope.size += type.size;
@@ -570,14 +570,14 @@ public class Tab {
 			case Obj.CON:
 			  System.out.print("Con " + o.name);
 			  if (o.type == Tab.floatType) 
-				  System.out.print(" fVal=" + o.fVal);
+				  System.out.print(" fVal=" + o.fVal + " decLine=" + o.line);
 			  else if (o.type == Tab.stringType) 
-				  System.out.print(" val=" + o.val + " string=\"" + parser.strings.get(o.val) + "\"");
+				  System.out.print(" val=" + o.val + " string=\"" + parser.strings.get(o.val) + "\"" + " decLine=" + o.line);
 			  else 
-				  System.out.print(" val=" + o.val);
+				  System.out.print(" val=" + o.val + " decLine=" + o.line);
 			  break;
 			case Obj.VAR:
-			  System.out.print("Var " + o.name + " adr=" + o.adr + " level=" + o.level);
+			  System.out.print("Var " + o.name + " adr=" + o.adr + " level=" + o.level + " decLine=" + o.line);
 			  if (o.isRef) System.out.print(" isRef");
 			  break;
 			case Obj.TYPE:
@@ -622,29 +622,29 @@ public class Tab {
 		boolType  = new Struct(Struct.BOOL);
 		stringType= new Struct(Struct.STRING);
 		noType    = new Struct(Struct.NONE);
-		noObj     = new Obj(Obj.VAR, "???", noType);
+		noObj     = new Obj(Obj.VAR, "???", noType, -1);
 		
 		// insert predeclared types into universe
-		insert(Obj.TYPE, "bool", boolType);
-		insert(Obj.TYPE, "int", intType);
-		insert(Obj.TYPE, "float", floatType);
-		insert(Obj.TYPE, "char", charType);
-		insert(Obj.TYPE, "string", stringType);
+		insert(Obj.TYPE, "bool", boolType, -1);
+		insert(Obj.TYPE, "int", intType, -1);
+		insert(Obj.TYPE, "float", floatType, -1);
+		insert(Obj.TYPE, "char", charType, -1);
+		insert(Obj.TYPE, "string", stringType, -1);
 		
 		// insert predeclared constants into universe, TODO required and useful?
-		insert(Obj.CON, "true", boolType).val = 1;
-		insert(Obj.CON, "false", boolType).val = 0;
+		insert(Obj.CON, "true", boolType, -1).val = 1;
+		insert(Obj.CON, "false", boolType, -1).val = 0;
 		
 		// declare important-functions in universe
-		printProc = insert(Obj.PROC, "print", noType);
-		printProc.locals = new Obj(Obj.VAR,"character",charType);
+		printProc = insert(Obj.PROC, "print", noType, -1);
+		printProc.locals = new Obj(Obj.VAR,"character",charType, -1);
 		printProc.size = charType.size;
 		printProc.nPars = 1;
 		
-		readProc = insert(Obj.PROC, "read", charType);
+		readProc = insert(Obj.PROC, "read", charType, -1);
 		
-		lengthProc = insert(Obj.PROC, "length", intType);
-		lengthProc.locals = new Obj(Obj.VAR,"string",stringType);
+		lengthProc = insert(Obj.PROC, "length", intType, -1);
+		lengthProc.locals = new Obj(Obj.VAR,"string",stringType, -1);
 		lengthProc.size = stringType.size;
 		lengthProc.nPars = 1;
 	}

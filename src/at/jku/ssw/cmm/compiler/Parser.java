@@ -255,10 +255,11 @@ public class Parser {
 
 	void ConstDecl() {
 		Struct type; 
+		int line = la.line; 
 		Expect(32);
 		type = Type();
 		Expect(1);
-		Obj curCon = tab.insert(Obj.CON, t.val, type); 
+		Obj curCon = tab.insert(Obj.CON, t.val, type, line); 
 		Expect(9);
 		if (la.kind == 33 || la.kind == 34) {
 			if (la.kind == 33) {
@@ -298,10 +299,11 @@ public class Parser {
 
 	void StructDecl() {
 		Node e; 
+		int line = la.line; 
 		Expect(36);
 		Struct type = new Struct(Struct.STRUCT); 
 		Expect(1);
-		tab.insert(Obj.TYPE, t.val, type); 
+		tab.insert(Obj.TYPE, t.val, type, line); 
 		Expect(37);
 		tab.openScope(); 
 		while (la.kind == 1) {
@@ -333,7 +335,7 @@ public class Parser {
 		int line = la.line; 
 		type = Type();
 		Expect(1);
-		curObj = tab.insert(Obj.VAR, t.val, type); 
+		curObj = tab.insert(Obj.VAR, t.val, type, line); 
 		if (la.kind == 9) {
 			Get();
 			e = BinExpr();
@@ -354,7 +356,7 @@ public class Parser {
 		while (la.kind == 35) {
 			Get();
 			Expect(1);
-			curObj = tab.insert(Obj.VAR, t.val, type); 
+			curObj = tab.insert(Obj.VAR, t.val, type, line); 
 			if (la.kind == 9) {
 				Get();
 				newNode = BinExpr();
@@ -393,7 +395,7 @@ public class Parser {
 			Get();
 		} else SynErr(67);
 		Expect(1);
-		curProc = tab.insert(Obj.PROC, t.val, type);
+		curProc = tab.insert(Obj.PROC, t.val, type, line);
 		                                        // check if it return the correct type
 		if(type != Tab.noType && type != Tab.stringType && !type.isPrimitive()) 
 		   SemErr("procedure must return a primitive type ,a string or is void"); 
@@ -806,6 +808,7 @@ public class Parser {
 	void FormPar() {
 		Struct type; 
 		boolean isRef = false; 
+		int line = la.line; 
 		type = Type();
 		if (la.kind == 29) {
 			Get();
@@ -815,7 +818,7 @@ public class Parser {
 		if(isRef)
 		   type.size = 4;
 		// add parameter to current scope
-		Obj curPar = tab.insert(Obj.VAR, t.val, type);
+		Obj curPar = tab.insert(Obj.VAR, t.val, type, line);
 		// copy reference-flag
 		curPar.isRef = isRef;
 		                                       // check if parameter is primitive or string
