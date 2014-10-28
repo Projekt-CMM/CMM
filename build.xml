@@ -78,10 +78,11 @@
     <target name="test-gui" depends="build" description="test gui part">
         <!-- check if gui start without exception -->
         <exec executable="timeout" failonerror="true">
-            <arg value="5"/>
+            <arg value="10"/>
             <arg value="java"/>
             <arg value="-jar"/>
             <arg value="CMM.jar"/>
+            <arg value="-t"/>
         </exec>
     </target>
 </project>
