@@ -579,6 +579,10 @@ public class PanelRunListener implements Debugger {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			
+			JButton button = (JButton)e.getSource();
+			if( !button.isEnabled() )
+				return;
 
 			master.stepOver();
 			userReply();
@@ -608,6 +612,10 @@ public class PanelRunListener implements Debugger {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			
+			JButton button = (JButton)e.getSource();
+			if( !button.isEnabled() )
+				return;
 
 			master.stepOut();
 			userReply();
@@ -630,6 +638,10 @@ public class PanelRunListener implements Debugger {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			
+			JButton button = (JButton)e.getSource();
+			if( !button.isEnabled() )
+				return;
 
 			// Stop interpreter out of RUN or PAUSE mode
 			if (keepRunning) {
