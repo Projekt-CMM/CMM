@@ -5,6 +5,7 @@ import java.awt.event.MouseListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.JButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -126,6 +127,7 @@ public class PanelRunListener implements Debugger {
 
 		this.master.getControlPanel().unsetRunTimeError();
 		this.master.getControlPanel().unsetStepOverButton();
+		this.master.getControlPanel().unsetStepOutButton();
 
 		this.master.getControlPanel().lockStopButton();
 		this.master.getControlPanel().unlockStepButton();
@@ -191,14 +193,14 @@ public class PanelRunListener implements Debugger {
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 * <hr>
 	 */
-	public void setErrorMode(String title, String message, int line, int col) {
+	public void setErrorMode(String title, String message, int line, int col, boolean view) {
 		this.run = true;
 		this.keepRunning = false;
 
 		this.master.getControlPanel().unlockStepButton();
 		this.master.getControlPanel().unlockStopButton();
 
-		this.master.getControlPanel().setRuntimeErrorMode(title + ": ", message, line, col);
+		this.master.getControlPanel().setRuntimeErrorMode(title + ": ", message, line, col, view);
 
 		System.out.println("[mode] setting error");
 	}
@@ -293,7 +295,7 @@ public class PanelRunListener implements Debugger {
 
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				setErrorMode("Runtime error: ", message, node.line, 0);
+				setErrorMode("Runtime error", message, node.line, 0, false);
 			}
 		});
 	}
@@ -349,12 +351,11 @@ public class PanelRunListener implements Debugger {
 		this.master.getControlPanel().updateStepOutButton();//*.next -> main()
 		
 		/* --- Node #5 - Variable value changed --- */
-		if( arg0.kind == Node.CALL || arg0.kind == Node.ASSIGN )
-			this.master.updateVariableTables(this.master.callStackChanged());
+		//if( arg0.kind == Node.CALL || arg0.kind == Node.ASSIGN )
+		this.master.updateVariableTables(this.master.callStackChanged());
 		
 		this.master.highlightVariable(SyntaxTreePath.getVariablePath(arg0, this.modMain.getFileName(), this.master.getCompileManager()));
 		
-
 		this.timer = null;
 
 		/* --- Node #6: Pause or Run mode --- */
@@ -471,6 +472,10 @@ public class PanelRunListener implements Debugger {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			
+			JButton button = (JButton)e.getSource();
+			if( !button.isEnabled() )
+				return;
 
 			// Ready -> Start interpreting in run mode
 			if (!keepRunning && !run) {
@@ -525,6 +530,10 @@ public class PanelRunListener implements Debugger {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			
+			JButton button = (JButton)e.getSource();
+			if( !button.isEnabled() )
+				return;
+			
 			System.out.println("Step: keep = " + keepRunning + ", run = " + run);
 
 			// Ready mode -> start interpreting in pause mode
@@ -570,6 +579,10 @@ public class PanelRunListener implements Debugger {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			
+			JButton button = (JButton)e.getSource();
+			if( !button.isEnabled() )
+				return;
 
 			master.stepOver();
 			userReply();
@@ -599,6 +612,10 @@ public class PanelRunListener implements Debugger {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			
+			JButton button = (JButton)e.getSource();
+			if( !button.isEnabled() )
+				return;
 
 			master.stepOut();
 			userReply();
@@ -621,6 +638,10 @@ public class PanelRunListener implements Debugger {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			
+			JButton button = (JButton)e.getSource();
+			if( !button.isEnabled() )
+				return;
 
 			// Stop interpreter out of RUN or PAUSE mode
 			if (keepRunning) {

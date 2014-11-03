@@ -157,7 +157,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 * If true, GUI options for quest and profile functions are shown. <br>
 	 * If false, quest/profile GUI is hidden.
 	 */
-	public static final boolean ADVANCED_GUI = true;
+	public static final boolean ADVANCED_GUI = false;
 
 	/**
 	 * The current version of C Compact, used as window title.

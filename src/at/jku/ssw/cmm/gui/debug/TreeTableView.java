@@ -16,10 +16,9 @@ import at.jku.ssw.cmm.gui.treetable.TreeUtils;
 
 public class TreeTableView{
 	
-	public TreeTableView( GUImainMod main, GUIdebugPanel debug, JPanel panel, String fileName ){
+	public TreeTableView( GUImainMod main, JPanel panel, String fileName ){
 		
 		this.main = main;
-		this.debug = debug;
 		this.panel = panel;
 		this.forceUpdate = true;
 		
@@ -27,7 +26,6 @@ public class TreeTableView{
 	}
 	
 	private final GUImainMod main;
-	private final GUIdebugPanel debug;
 	
 	// Main panel
 	private JPanel panel;
@@ -48,7 +46,7 @@ public class TreeTableView{
 		/* ---------- TREE TABLE for CALL STACK and LOCALS (optional) ---------- */
 		this.varTreeTableModel = new TreeTableDataModel(InitTreeTableData.createDataStructure(fileName));
 		
-		this.varTreeTable = new TreeTable(this.main, this.debug, this.varTreeTableModel);
+		this.varTreeTable = new TreeTable(this.main, this.varTreeTableModel);
 		
 		JScrollPane p = new JScrollPane(this.varTreeTable);
 		this.panel.add(p);
@@ -60,17 +58,27 @@ public class TreeTableView{
 	 * 
 	 * @param compiler
 	 */
-	public void update( CMMwrapper compiler, String fileName, PopupInterface popup, boolean completeUpDate ) {
+	public void update(final CMMwrapper compiler, final String fileName, final PopupInterface popup, boolean completeUpDate ) {
 		
 		if( completeUpDate || this.forceUpdate ){
 			System.out.println("[treetable][update] complete variable structure update");
-			this.varTreeTable.setTreeModel(InitTreeTableData.readSymbolTable(compiler, popup, fileName));
+			
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					varTreeTable.setTreeModel(InitTreeTableData.readSymbolTable(compiler, popup, fileName));
+				}
+			});
 			this.forceUpdate = false;
 		}
 		else{
 			System.out.println("[treeTable][update] updating variable values");
 			InitTreeTableData.updateTreeTable(this.varTreeTable.getTreeModel(), (DataNode)this.varTreeTable.getCellRenderer().getModel().getRoot(), compiler, popup, fileName);
-			this.varTreeTable.updateTreeModel();
+			
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					varTreeTable.updateTreeModel();
+				}
+			});
 			this.varTreeTable.repaint();
 		}
 	}

@@ -63,25 +63,34 @@ public class SaveDialog {
 	 * Calls the "save as" dialog. The chosen file directory is automatically saved to the
 	 * main GUI configuration object and the source code is automatically saved.
 	 */
-	public void doSaveAs(){
+	public boolean doSaveAs(){
 		
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(new FileNameExtensionFilter(
 				"C-- " + _("file"), "cmm"));
-		if (chooser.showSaveDialog(jFrame) == JFileChooser.APPROVE_OPTION) {
+		
+		int option = chooser.showSaveDialog(jFrame);
+		
+		if (option == JFileChooser.APPROVE_OPTION) {
 			FileManagerCode.saveSourceCode(chooser.getSelectedFile(), jSourcePane.getText(), jInputPane.getText());
 			settings.setPath(chooser.getSelectedFile().getPath());
 		}
+		else if(option == JFileChooser.CANCEL_OPTION)
+			return false;
+		
+		return true;
 	}
 	
 	/**
 	 * Saves the current file directly without calling a save dialog.
 	 * Save dialog is called though, if there is no working directory for the file defined.
 	 */
-	public void directSave(){
-		if( settings.getPath() != null )
+	public boolean directSave(){
+		if( settings.getPath() != null ){
 			FileManagerCode.saveSourceCode(new File(settings.getPath()), jSourcePane.getText(), jInputPane.getText());
+			return true;
+		}
 		else
-			this.doSaveAs();
+			return this.doSaveAs();
 	}
 }
