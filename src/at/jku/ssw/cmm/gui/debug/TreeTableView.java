@@ -58,17 +58,27 @@ public class TreeTableView{
 	 * 
 	 * @param compiler
 	 */
-	public void update( CMMwrapper compiler, String fileName, PopupInterface popup, boolean completeUpDate ) {
+	public void update(final CMMwrapper compiler, final String fileName, final PopupInterface popup, boolean completeUpDate ) {
 		
 		if( completeUpDate || this.forceUpdate ){
 			System.out.println("[treetable][update] complete variable structure update");
-			this.varTreeTable.setTreeModel(InitTreeTableData.readSymbolTable(compiler, popup, fileName));
+			
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					varTreeTable.setTreeModel(InitTreeTableData.readSymbolTable(compiler, popup, fileName));
+				}
+			});
 			this.forceUpdate = false;
 		}
 		else{
 			System.out.println("[treeTable][update] updating variable values");
 			InitTreeTableData.updateTreeTable(this.varTreeTable.getTreeModel(), (DataNode)this.varTreeTable.getCellRenderer().getModel().getRoot(), compiler, popup, fileName);
-			this.varTreeTable.updateTreeModel();
+			
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					varTreeTable.updateTreeModel();
+				}
+			});
 			this.varTreeTable.repaint();
 		}
 	}
