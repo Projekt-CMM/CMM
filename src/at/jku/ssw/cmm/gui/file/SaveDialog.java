@@ -76,9 +76,9 @@ public class SaveDialog {
 			settings.setPath(chooser.getSelectedFile().getPath());
 		}
 		else if(option == JFileChooser.CANCEL_OPTION)
-			return false;
+			return true;
 		
-		return true;
+		return false;
 	}
 	
 	/**
@@ -88,7 +88,7 @@ public class SaveDialog {
 	public boolean directSave(){
 		if( settings.getPath() != null ){
 			FileManagerCode.saveSourceCode(new File(settings.getPath()), jSourcePane.getText(), jInputPane.getText());
-			return true;
+			return false;
 		}
 		else
 			return this.doSaveAs();
