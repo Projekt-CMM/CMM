@@ -384,6 +384,14 @@ public class GUIcontrolPanel {
 		});
 	}
 	
+	public void unsetStepOutButton() {
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				jButtonStepOut.setEnabled(false);
+			}
+		});
+	}
+	
 	public void updateStepOutButton() {
 		if (this.debug.getCallStackSize() > 1) {
 			java.awt.EventQueue.invokeLater(new Runnable() {

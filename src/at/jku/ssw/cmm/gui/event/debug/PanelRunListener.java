@@ -126,6 +126,7 @@ public class PanelRunListener implements Debugger {
 
 		this.master.getControlPanel().unsetRunTimeError();
 		this.master.getControlPanel().unsetStepOverButton();
+		this.master.getControlPanel().unsetStepOutButton();
 
 		this.master.getControlPanel().lockStopButton();
 		this.master.getControlPanel().unlockStepButton();
