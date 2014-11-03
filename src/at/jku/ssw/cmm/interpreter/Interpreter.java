@@ -274,11 +274,13 @@ public final class Interpreter {
 		case Node.DIV:
 			if (IntExpr(p.right) != 0)
 				return IntExpr(p.left) / IntExpr(p.right);
-			else
-				debugger.abort("Divided by 0", p);
+			debugger.abort("Divided by 0", p);
+			return 0;
 		case Node.REM:
-			return IntExpr(p.left) % IntExpr(p.right);
-
+			if (IntExpr(p.right) != 0)
+				return IntExpr(p.left) % IntExpr(p.right);
+			debugger.abort("Divided by 0", p);
+			return 0;
 		/*
 		 * Bit Operators
 		 */
@@ -345,9 +347,15 @@ public final class Interpreter {
 		case Node.TIMES:
 			return FloatExpr(p.left) * FloatExpr(p.right);
 		case Node.DIV:
-			return FloatExpr(p.left) / FloatExpr(p.right);
+			if (FloatExpr(p.right) != 0)
+				return FloatExpr(p.left) / FloatExpr(p.right);
+			debugger.abort("Divided by 0", p);
+			return 0;
 		case Node.REM:
-			return FloatExpr(p.left) % FloatExpr(p.right);
+			if (FloatExpr(p.right) != 0)
+				return FloatExpr(p.left) % FloatExpr(p.right);
+			debugger.abort("Divided by 0", p);
+			return 0;
 
 			
 		case Node.I2F:							//Casts an Integer into an Float

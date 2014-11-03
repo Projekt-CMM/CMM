@@ -585,7 +585,10 @@ public class Parser {
 				else if(e == null)
 				   SemErr("right operator is not defined"); 
 				else if(design.type == Tab.stringType && !(kind == Node.ASSIGN || kind == Node.ASSIGNPLUS)) 
-				   SemErr("only = or += is allowed for string assignements"); 
+				   SemErr("only == or += is allowed for string assignements");
+				else if(design.type == Tab.boolType && !(kind == Node.ASSIGN || kind == Node.ASSIGNBITAND
+				       || kind == Node.ASSIGNBITXOR || kind == Node.ASSIGNBITOR)) 
+				   SemErr("only ==, &=, ^= or |= is allowed for boolean assignements"); 
 				else
 				   e = tab.impliciteTypeCon(e, design.type);
 				                                     // add special node if assign has operator inside (like *=, -0,...)
@@ -621,11 +624,17 @@ public class Parser {
 				tab.checkFunctionParams(design.obj,st); 
 			} else if (la.kind == 42) {
 				Get();
-				e = new Node(Node.PLUS, design, new Node(1), design.type);
+				if(!design.type.isPrimitive() || design.type == Tab.boolType)
+				   SemErr("only a primitive type except boolean is allowed for increment operator");
+				e = tab.impliciteTypeCon(new Node(1), design.type);
+				e = new Node(Node.PLUS, design, e, design.type);
 				st = new Node(Node.ASSIGN,design,e,line); 
 			} else if (la.kind == 43) {
 				Get();
-				e = new Node(Node.MINUS, design, new Node(1), design.type);
+				if(!design.type.isPrimitive() || design.type == Tab.boolType)
+				   SemErr("only a primitive type except boolean is allowed for decrement operator");
+				e = tab.impliciteTypeCon(new Node(1), design.type);
+				e = new Node(Node.MINUS, design, e, design.type);
 				st = new Node(Node.ASSIGN,design,e,line); 
 			} else SynErr(69);
 			Expect(8);
@@ -1041,10 +1050,8 @@ public class Parser {
 			} 
 		} else if (la.kind == 26) {
 			Get();
-			Expect(6);
 			con = Condition();
 			con = new Node(Node.NOT, con, null, Tab.boolType); 
-			Expect(7);
 		} else if (la.kind == 6) {
 			Get();
 			con = Condition();
@@ -1100,8 +1107,8 @@ public class Parser {
 		while (la.kind == 59 || la.kind == 60) {
 			kind = Shiftop();
 			n = Expr();
-			if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive())
-			   SemErr("type is not a primitive");
+			if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive() || n.type == Tab.boolType)
+			   SemErr("type is not a primitive except bool");
 			else {
 			   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
 			   n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
@@ -1134,8 +1141,8 @@ public class Parser {
 		while (la.kind == 55 || la.kind == 56) {
 			kind = Addop();
 			n = Term();
-			if((!res.type.isPrimitive() && res.type !=Tab.stringType) || n==null || (!n.type.isPrimitive() && n.type !=Tab.stringType))
-			   SemErr("type is not a primitive or string");
+			if((!res.type.isPrimitive() && res.type !=Tab.stringType) || n==null || (!n.type.isPrimitive() && n.type !=Tab.stringType) || n.type == Tab.boolType)
+			   SemErr("type is not a primitive or string except bool");
 			else if(res.type == Tab.stringType && n.type == Tab.stringType && kind != Node.PLUS)
 			   SemErr("for string operations, only + is allowed");
 			else if ((res.type == Tab.stringType || n.type == Tab.stringType) && ((res.type == Tab.stringType || res.type == Tab.charType) != (n.type == Tab.stringType || n.type == Tab.charType)))
@@ -1169,8 +1176,8 @@ public class Parser {
 		while (la.kind == 61 || la.kind == 62 || la.kind == 63) {
 			kind = Mulop();
 			n = Factor();
-			if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive())
-			   SemErr("type is not a primitive");
+			if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive() || n.type == Tab.boolType)
+			   SemErr("type is not a primitive except bool");
 			else {
 			   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
 			   n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
@@ -1240,22 +1247,22 @@ public class Parser {
 		} else if (la.kind == 55) {
 			Get();
 			n = Factor();
-			if(n == null || !n.type.isPrimitive())
-			   SemErr("type is not a primitive");
+			if(n == null || !n.type.isPrimitive() || n.type == Tab.boolType)
+			   SemErr("type is not a primitive except bool");
 			else
 			   n = new Node(Node.MINUS,n,null,n.type); 
 		} else if (la.kind == 56) {
 			Get();
 			n = Factor();
-			if(n == null || !n.type.isPrimitive())
-			   SemErr("type is not a primitive");
+			if(n == null || !n.type.isPrimitive() || n.type == Tab.boolType)
+			   SemErr("type is not a primitive except bool");
 			else
 			   n = new Node(Node.PLUS,n,null,n.type); 
 		} else if (la.kind == 57) {
 			Get();
 			n = Factor();
-			if(n == null || !n.type.isPrimitive())
-			   SemErr("type is not a primitive");
+			if(n == null || !n.type.isPrimitive() || n.type == Tab.boolType)
+			   SemErr("type is not a primitive except bool");
 			else
 			   n = new Node(Node.BITNEQ,n,null,n.type); 
 		} else if (isCast()) {
