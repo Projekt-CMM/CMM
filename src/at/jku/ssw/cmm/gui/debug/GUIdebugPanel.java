@@ -294,7 +294,7 @@ public class GUIdebugPanel {
 		
 		System.out.println("Error found: " + line + " -> " + this.line );
 		
-		this.ctrlPanel.setRuntimeErrorMode(title, message, this.line, this.col);
+		this.ctrlPanel.setRuntimeErrorMode(title, message, this.line, this.col, true);
 	}
 	
 	/**
@@ -444,7 +444,7 @@ public class GUIdebugPanel {
 			this.modifier.getSourceCodeRegister().add(e);
 			
 			// An include file could not be found
-			ctrlPanel.getListener().setErrorMode(_("Preprocessor error"), _("Include file not found") + ": \"" + e1.getFileName() + "\"", e1.getLine(), 0);
+			ctrlPanel.getListener().setErrorMode(_("Preprocessor error"), _("Include file not found") + ": \"" + e1.getFileName() + "\"", e1.getLine(), 0, true);
 			return;
 		}
 
@@ -481,7 +481,7 @@ public class GUIdebugPanel {
 		if( e != null ) {
 			this.line = e.line;
 			this.col = e.col;
-			this.ctrlPanel.getListener().setErrorMode("Compiler error", e.msg, this.getCompleteErrorLine(), e.col);
+			this.ctrlPanel.getListener().setErrorMode("Compiler error", e.msg, this.getCompleteErrorLine(), e.col, true);
 		}
 	}
 

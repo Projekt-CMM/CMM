@@ -177,7 +177,7 @@ public class GUIcontrolPanel {
 	 * @param message
 	 *            The error message from the interpreter
 	 */
-	public void setRuntimeErrorMode(String title, String message, int line, int col ) {
+	public void setRuntimeErrorMode(String title, String message, int line, int col, boolean view ) {
 
 		// Set standard mode elements invisible
 		this.jButtonPlay.setVisible(false);
@@ -195,8 +195,12 @@ public class GUIcontrolPanel {
 		this.jRuntimeErrorLabel3.setText("... in line " + line);
 
 		// Change step button to view button
-		this.jButtonStep.setVisible(true);
-		this.jButtonStep.setText(_("View"));
+		if( view ){
+			this.jButtonStep.setVisible(true);
+			this.jButtonStep.setText(_("View"));
+		}
+		else
+			this.jButtonStep.setVisible(false);
 	}
 
 	/**
@@ -216,6 +220,8 @@ public class GUIcontrolPanel {
 		this.jLabelTimer.setVisible(true);
 		this.jSlider.setVisible(true);
 
+		this.jButtonStep.setVisible(true);
+		
 		// Hide error mode elements
 		this.jRuntimeErrorLabel1.setVisible(false);
 		this.jRuntimeErrorLabel2.setVisible(false);

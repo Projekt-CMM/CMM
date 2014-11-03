@@ -191,14 +191,14 @@ public class PanelRunListener implements Debugger {
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 * <hr>
 	 */
-	public void setErrorMode(String title, String message, int line, int col) {
+	public void setErrorMode(String title, String message, int line, int col, boolean view) {
 		this.run = true;
 		this.keepRunning = false;
 
 		this.master.getControlPanel().unlockStepButton();
 		this.master.getControlPanel().unlockStopButton();
 
-		this.master.getControlPanel().setRuntimeErrorMode(title + ": ", message, line, col);
+		this.master.getControlPanel().setRuntimeErrorMode(title + ": ", message, line, col, view);
 
 		System.out.println("[mode] setting error");
 	}
@@ -293,7 +293,7 @@ public class PanelRunListener implements Debugger {
 
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				setErrorMode("Runtime error: ", message, node.line, 0);
+				setErrorMode("Runtime error", message, node.line, 0, false);
 			}
 		});
 	}
