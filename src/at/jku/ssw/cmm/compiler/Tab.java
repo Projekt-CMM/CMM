@@ -27,6 +27,7 @@ public class Tab {
 	public static Struct noType;
 	public static Obj noObj;		     // predefined objects
 	public static Obj printProc;
+	public static Obj printfProc;
 	public static Obj readProc;
 	public static Obj lengthProc;
 	
@@ -345,7 +346,7 @@ public class Tab {
 		Obj declObj = declFunction.locals;
 		Node buildNode = buildFunction.left;
 		Node oldNode = buildNode;
-		for(int i = 0; i < declFunction.nPars;i++) {
+		for(int i = 0; (declFunction.nPars > 0 && i < declFunction.nPars) || (declFunction.nPars < 0 && i*-1 > declFunction.nPars);i++) {
 
 			if(declObj == null) {
 				parser.SemErr("parameter not declared");
@@ -397,7 +398,7 @@ public class Tab {
 			oldNode = buildNode;
 			buildNode = buildNode.next;
 		}
-		if(buildNode != null) {
+		if(buildNode != null && !(declFunction.nPars < 0)) {
 			parser.SemErr("using of function has more parameters as the declaration");
 		}
 	}
@@ -640,6 +641,11 @@ public class Tab {
 		printProc.locals = new Obj(Obj.VAR,"character",charType, -1);
 		printProc.size = charType.size;
 		printProc.nPars = 1;
+		
+		printfProc = insert(Obj.PROC, "printf", noType, -1);
+		printfProc.locals = new Obj(Obj.VAR,"character",stringType, -1);
+		printfProc.size = stringType.size;
+		printfProc.nPars = -1;	// because procedure require 1 or more parameters
 		
 		readProc = insert(Obj.PROC, "read", charType, -1);
 		

@@ -601,6 +601,107 @@ public final class Interpreter {
 				throw new IllegalStateException("Kind" + p.kind);
 			}
 			break;
+		case "printf":
+			String s = strings.get(StringExpr(p.left));
+			Node curPrintfNode = p.left;
+			for(int i=0;i<s.length();i++) {
+				if(s.charAt(i) == '%' && s.length() > i +1 && !(i > 1 && s.charAt(i-1) == '\\')) {
+					curPrintfNode = curPrintfNode.next;
+					if(curPrintfNode == null) {
+						debugger.abort("printf doesn't contain the required amount of arguments!", p);
+					} else {
+						i++;
+						String sHelp = "%" + s.charAt(i);
+						switch(s.charAt(i)){
+							case 'd':
+								switch(curPrintfNode.type.kind) {
+									case Struct.INT:
+										sHelp = Integer.toString(IntExpr(curPrintfNode));
+										break;
+									case Struct.FLOAT:
+										sHelp = Integer.toString((int)FloatExpr(curPrintfNode));
+										break;
+									case Struct.CHAR:
+										sHelp = Integer.toString((int)CharExpr(curPrintfNode));
+										break;
+									case Struct.BOOL:
+										if(BoolExpr(curPrintfNode))
+											sHelp = "1";
+										else
+											sHelp = "0";
+										break;
+									default:
+										debugger.abort("invalid printf parameter", p);
+								} 
+								break;
+							case 'x':
+								switch(curPrintfNode.type.kind) {
+									case Struct.INT:
+										sHelp = Integer.toHexString(IntExpr(curPrintfNode));
+										break;
+									case Struct.FLOAT:
+										sHelp = Integer.toHexString((int)FloatExpr(curPrintfNode));
+										break;
+									case Struct.CHAR:
+										sHelp = Integer.toHexString((int)CharExpr(curPrintfNode));
+										break;
+									case Struct.BOOL:
+										if(BoolExpr(curPrintfNode))
+											sHelp = "1";
+										else
+											sHelp = "0";
+										break;
+									default:
+										debugger.abort("invalid printf parameter", p);
+								} 
+								break;
+							case 'f':
+								switch(curPrintfNode.type.kind) {
+									case Struct.INT:
+										sHelp = Float.toString((float)IntExpr(curPrintfNode));
+										break;
+									case Struct.FLOAT:
+										sHelp = Float.toString((float)FloatExpr(curPrintfNode));
+										break;
+									case Struct.CHAR:
+										sHelp = Float.toString((float)CharExpr(curPrintfNode));
+										break;
+									case Struct.BOOL:
+										if(BoolExpr(curPrintfNode))
+											sHelp = "1.0";
+										else
+											sHelp = "0.0";
+										break;
+									default:
+										debugger.abort("invalid printf parameter", p);
+								} 
+								break;
+							case 'c':
+								switch(curPrintfNode.type.kind) {
+									case Struct.INT:
+										sHelp = "" + (char)IntExpr(curPrintfNode);
+										break;
+									case Struct.FLOAT:
+										sHelp = "" + (char)FloatExpr(curPrintfNode);
+										break;
+									case Struct.CHAR:
+										sHelp = "" + (char)CharExpr(curPrintfNode);
+										break;
+									default:
+										debugger.abort("invalid printf parameter", p);
+								} 
+								break;
+							default:
+								break;
+						}
+						for(int y=0;y<sHelp.length();y++) {
+							inout.out(sHelp.charAt(y));
+						}
+					}
+				} else
+					inout.out(s.charAt(i));
+			}
+			break;
 		default:
 
 			Node ref = p;
