@@ -5,6 +5,7 @@ import java.awt.event.MouseListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.JButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -471,6 +472,10 @@ public class PanelRunListener implements Debugger {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			
+			JButton button = (JButton)e.getSource();
+			if( !button.isEnabled() )
+				return;
 
 			// Ready -> Start interpreting in run mode
 			if (!keepRunning && !run) {
@@ -524,6 +529,10 @@ public class PanelRunListener implements Debugger {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			
+			JButton button = (JButton)e.getSource();
+			if( !button.isEnabled() )
+				return;
 			
 			System.out.println("Step: keep = " + keepRunning + ", run = " + run);
 
