@@ -349,12 +349,11 @@ public class PanelRunListener implements Debugger {
 		this.master.getControlPanel().updateStepOutButton();//*.next -> main()
 		
 		/* --- Node #5 - Variable value changed --- */
-		if( arg0.kind == Node.CALL || arg0.kind == Node.ASSIGN )
-			this.master.updateVariableTables(this.master.callStackChanged());
+		//if( arg0.kind == Node.CALL || arg0.kind == Node.ASSIGN )
+		this.master.updateVariableTables(this.master.callStackChanged());
 		
 		this.master.highlightVariable(SyntaxTreePath.getVariablePath(arg0, this.modMain.getFileName(), this.master.getCompileManager()));
 		
-
 		this.timer = null;
 
 		/* --- Node #6: Pause or Run mode --- */

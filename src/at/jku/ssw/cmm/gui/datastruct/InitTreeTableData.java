@@ -163,6 +163,18 @@ public class InitTreeTableData {
 					node.add(init, new DataNode(obj.name, "float", obj.fVal, null, obj.line));
 				}
 			}
+			//Reading a BOOLEAN
+			if( obj.type.kind == Struct.BOOL && obj.kind != Obj.PROC ){
+				if( obj.kind == Obj.VAR && !obj.isRef ){
+					node.add(init, new DataNode(obj.name, "bool", Memory.loadBool(address + obj.adr), null, obj.line));
+				}
+				else if( obj.kind == Obj.VAR && obj.isRef ){
+					node.add(init, new DataNode(obj.name, "bool", Memory.loadBool(Memory.loadInt(address + obj.adr)), null, obj.line));
+				}
+				else{
+					node.add(init, new DataNode(obj.name, "bool", obj.val==0 ? "false" : "true", null, obj.line));
+				}
+			}
 			//Reading an ARRAY (any type)
 			if( obj.type.kind == Struct.ARR && obj.kind != Obj.PROC ){
 				node.add(init, readArray(init, obj, node.getChild(obj.name, "array", "", obj.line), address + obj.adr, popup));
@@ -250,6 +262,7 @@ public class InitTreeTableData {
 				}
 				else if( obj.elemType.kind == Struct.BOOL ){
 					typeName = "bool";
+					value = Memory.loadBool(address + offset + size * i);
 					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, -1));
 				}
 				else if( obj.elemType.kind == Struct.INT ){
@@ -309,12 +322,7 @@ public class InitTreeTableData {
 				System.out.println(" Got it!");
 				return obj;
 			}
-			
-			/*if( obj.locals != null ){
-				Obj re = findNodeByName( obj.type.fields, name );
-				if( re != null )
-					return re;
-			}*/
+
 			obj = obj.next;
 		}
 		
