@@ -512,9 +512,19 @@ public class Parser {
 		ArrayList<Integer> dimensions = new ArrayList(); 
 		while (la.kind == 40) {
 			Get();
-			Expect(2);
-			int arraySize = tab.intVal(t.val);
-			// add this dimension
+			int arraySize = 1; 
+			if (la.kind == 2) {
+				Get();
+				arraySize = tab.intVal(t.val); 
+			} else if (la.kind == 1) {
+				Get();
+				Obj helpObj = tab.find(t.val); 
+				if(helpObj.kind != Obj.CON)
+				   SemErr(helpObj.name + " is not a constant");
+				if(helpObj.type != Tab.intType)
+				   SemErr(helpObj.name + " is not an int constant");
+				arraySize = helpObj.val; 
+			} else SynErr(69);
 			dimensions.add(arraySize);
 			// check if size of dimension is at least 1 
 			if(arraySize <= 0)
@@ -636,7 +646,7 @@ public class Parser {
 				e = tab.impliciteTypeCon(new Node(1), design.type);
 				e = new Node(Node.MINUS, design, e, design.type);
 				st = new Node(Node.ASSIGN,design,e,line); 
-			} else SynErr(69);
+			} else SynErr(70);
 			Expect(8);
 			break;
 		}
@@ -710,7 +720,7 @@ public class Parser {
 					} else if (la.kind == 4) {
 						Get();
 						n = new Node(tab.charVal(t.val)); 
-					} else SynErr(70);
+					} else SynErr(71);
 					if(n.type != e.type)
 					   SemErr("type of switch has to match type of case value");
 					newStat = new Node(Node.CASE,n,null,line); 
@@ -809,7 +819,7 @@ public class Parser {
 			st = null; 
 			break;
 		}
-		default: SynErr(71); break;
+		default: SynErr(72); break;
 		}
 		return st;
 	}
@@ -965,7 +975,7 @@ public class Parser {
 			kind=Node.ASSIGNBITOR; 
 			break;
 		}
-		default: SynErr(72); break;
+		default: SynErr(73); break;
 		}
 		return kind;
 	}
@@ -1056,7 +1066,7 @@ public class Parser {
 			Get();
 			con = Condition();
 			Expect(7);
-		} else SynErr(73);
+		} else SynErr(74);
 		return con;
 	}
 
@@ -1094,7 +1104,7 @@ public class Parser {
 			kind = Node.LEQ; 
 			break;
 		}
-		default: SynErr(74); break;
+		default: SynErr(75); break;
 		}
 		return kind;
 	}
@@ -1129,7 +1139,7 @@ public class Parser {
 		} else if (la.kind == 30) {
 			Get();
 			kind=Node.BITOR; 
-		} else SynErr(75);
+		} else SynErr(76);
 		return kind;
 	}
 
@@ -1164,7 +1174,7 @@ public class Parser {
 		} else if (la.kind == 60) {
 			Get();
 			kind=Node.SHIFTRIGHT; 
-		} else SynErr(76);
+		} else SynErr(77);
 		return kind;
 	}
 
@@ -1195,7 +1205,7 @@ public class Parser {
 		} else if (la.kind == 55) {
 			Get();
 			kind=Node.MINUS; 
-		} else SynErr(77);
+		} else SynErr(78);
 		return kind;
 	}
 
@@ -1275,7 +1285,7 @@ public class Parser {
 			Get();
 			n = BinExpr();
 			Expect(7);
-		} else SynErr(78);
+		} else SynErr(79);
 		return n;
 	}
 
@@ -1290,7 +1300,7 @@ public class Parser {
 		} else if (la.kind == 63) {
 			Get();
 			kind=Node.REM; 
-		} else SynErr(79);
+		} else SynErr(80);
 		return kind;
 	}
 
@@ -1401,17 +1411,18 @@ class Errors {
 			case 66: s = "invalid ConstDecl"; break;
 			case 67: s = "invalid ProcDecl"; break;
 			case 68: s = "invalid ProcDecl"; break;
-			case 69: s = "invalid Statement"; break;
+			case 69: s = "invalid Type"; break;
 			case 70: s = "invalid Statement"; break;
 			case 71: s = "invalid Statement"; break;
-			case 72: s = "invalid AssignOp"; break;
-			case 73: s = "invalid CondFact"; break;
-			case 74: s = "invalid Relop"; break;
-			case 75: s = "invalid Binop"; break;
-			case 76: s = "invalid Shiftop"; break;
-			case 77: s = "invalid Addop"; break;
-			case 78: s = "invalid Factor"; break;
-			case 79: s = "invalid Mulop"; break;
+			case 72: s = "invalid Statement"; break;
+			case 73: s = "invalid AssignOp"; break;
+			case 74: s = "invalid CondFact"; break;
+			case 75: s = "invalid Relop"; break;
+			case 76: s = "invalid Binop"; break;
+			case 77: s = "invalid Shiftop"; break;
+			case 78: s = "invalid Addop"; break;
+			case 79: s = "invalid Factor"; break;
+			case 80: s = "invalid Mulop"; break;
 			default: s = "error " + n; break;
 		}
 		storeError(line, col, s);

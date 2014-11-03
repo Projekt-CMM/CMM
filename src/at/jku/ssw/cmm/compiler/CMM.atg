@@ -465,10 +465,16 @@ ident                               (.  // check if a type with the given name e
                                         type = obj.type;
                                         // init array-list, which store the size of the dimensions
                                         ArrayList<Integer> dimensions = new ArrayList(); .)
-{ "[" 
-  intCon                            (.  // get array size of this dimensions
-                                        int arraySize = tab.intVal(t.val);
-                                        // add this dimension
+{ "["                               (.  int arraySize = 1; .)
+  ( intCon                          (.  // get array size of this dimensions
+                                        arraySize = tab.intVal(t.val); .)
+  | ident                           (.  Obj helpObj = tab.find(t.val); 
+                                        if(helpObj.kind != Obj.CON)
+                                            SemErr(helpObj.name + " is not a constant");
+                                        if(helpObj.type != Tab.intType)
+                                            SemErr(helpObj.name + " is not an int constant");
+                                        arraySize = helpObj.val; .)
+  )                                 (.  // add this dimension
                                         dimensions.add(arraySize);
                                         // check if size of dimension is at least 1 
                                         if(arraySize <= 0)
