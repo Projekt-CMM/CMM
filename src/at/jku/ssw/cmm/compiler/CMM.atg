@@ -224,7 +224,7 @@ ident                               (.  // create new constant variable
 | charCon                           (.  curCon.val = tab.charVal(t.val); 
                                         if (type != Tab.charType) 
                                             SemErr("char constant not allowed here"); .)
-| stringCon                         (.  curCon.val = strings.put(tab.stringVal(t.val));  // TODO
+| stringCon                         (.  curCon.val = strings.put(tab.stringVal(t.val));
                                         if (type != Tab.stringType) 
                                             SemErr("string constant not allowed here"); .)
 )
@@ -882,12 +882,16 @@ ident                               (.  // get name of identifier and check if i
                                                     else
                                                         n = new Node(true);
                                                     break;
-                                                // TODO STRING
+                                                case Struct.STRING:
+                                                    n = new Node(strings.get(obj.val));
+                                                    n.val = obj.val;
+                                                    break;
                                                 default:
                                                     n = new Node(obj);
                                             }
-                                        }
-                                        else {
+                                        } else {
+                                            if(obj.kind == Obj.TYPE)
+                                                SemErr(name + " is not a constant, variable or function");
                                             // if Node is a normal identifier, using that Node
                                             n = new Node(obj);
                                         }

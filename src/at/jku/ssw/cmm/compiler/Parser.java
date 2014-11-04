@@ -871,12 +871,17 @@ public class Parser {
 		           else
 		               n = new Node(true);
 		           break;
+		       case Struct.STRING:
+		           n = new Node(strings.get(obj.val));
+		           n.val = obj.val;
+		           break;
 		       // TODO STRING
 		       default:
 		           n = new Node(obj);
 		   }
-		}
-		else {
+		} else {
+		   if(obj.kind == Obj.TYPE)
+		       SemErr(name + " is not a constant, variable or function");
 		   // if Node is a normal identifier, using that Node
 		   n = new Node(obj);
 		}
