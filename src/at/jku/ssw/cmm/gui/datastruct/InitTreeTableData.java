@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 
 import at.jku.ssw.cmm.CMMwrapper;
+import at.jku.ssw.cmm.DebugShell;
+import at.jku.ssw.cmm.DebugShell.Area;
+import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Strings;
 import at.jku.ssw.cmm.compiler.Struct;
@@ -214,7 +217,7 @@ public class InitTreeTableData {
 	 */
 	private static DataNode readArray( boolean init, Obj obj, DataNode node, int address, PopupInterface popup ){
 		
-		System.out.println("[initTreeTable] Reading array: " + obj.kind);
+		DebugShell.out(State.LOG, Area.READVAR, "[initTreeTable] Reading array: " + obj.kind);
 		
 		return readArrayElements(init, obj.type, obj.name, node, address, 0, popup);
 		
@@ -239,7 +242,7 @@ public class InitTreeTableData {
 		int length = obj.elements;
 		int size = obj.size / obj.elements;
 		
-		System.out.println("[initTreeTable] reading array level. size: " + size + ", elements: " + length + ", offset: " + offset );
+		DebugShell.out(State.LOG, Area.READVAR, "reading array level. size: " + size + ", elements: " + length + ", offset: " + offset );
 		
 		for( int i = 0; i < length; i++ ){
 			
@@ -316,10 +319,7 @@ public class InitTreeTableData {
 		Obj obj = start;
 		while( obj != null ){
 			
-			System.out.println(" Found: " + obj.name);
-			
 			if( obj.name.equals(name) ){
-				System.out.println(" Got it!");
 				return obj;
 			}
 

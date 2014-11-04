@@ -6,6 +6,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import at.jku.ssw.cmm.DebugShell;
+import at.jku.ssw.cmm.DebugShell.Area;
+import at.jku.ssw.cmm.DebugShell.State;
+
 /**
  * Contains configuration data for the main GUI. The main GUI has a reference to an object of this class.
  * The configuration is saved in the "config.cfg" file in the program's working directory.
@@ -241,7 +245,7 @@ public class GUImainSettings {
 	 */
 	public void saveConfigFile(){
 		
-		System.out.println("Updating config file...");
+		DebugShell.out(State.LOG, Area.SYSTEM, "Updating config file...");
 		
 		BufferedWriter file;
 		try {
@@ -258,9 +262,9 @@ public class GUImainSettings {
 			
 			file.close();
 			
-			System.out.println("[up to date]");
+			DebugShell.out(State.LOG, Area.SYSTEM, "config up to date");
 		} catch (IOException e) {
-			System.out.println("[failed]");
+			DebugShell.out(State.WARNING, Area.SYSTEM, "failed to save config file");
 		}
 	}
 }

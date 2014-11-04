@@ -152,11 +152,11 @@ public class GUIcontrolPanel {
 		jLabelTimer = new JLabel("1.0 sec");
 		this.panel.add(jLabelTimer);
 
-		jSlider = new JSlider(JSlider.HORIZONTAL, 1, 5, 1);
+		jSlider = new JSlider(JSlider.HORIZONTAL, 1, 9, 1);
 		jSlider.setMajorTickSpacing(1);
 		jSlider.setMinorTickSpacing(1);
 		jSlider.setPaintTicks(true);
-		jSlider.setValue(3);
+		jSlider.setValue(5);
 		jSlider.addChangeListener(this.listener.sliderListener);
 		
 		this.panel.add(jSlider);
@@ -313,7 +313,7 @@ public class GUIcontrolPanel {
 	 *            delay time in seconds
 	 */
 	public void setTimerLabelSeconds(double s) {
-		this.jLabelTimer.setText("" + s + " " + _("sec"));
+		this.jLabelTimer.setText(String.format("%1$.2f %2$s", s, _("sec")));
 	}
 
 	/**

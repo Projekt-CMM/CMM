@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import at.jku.ssw.cmm.DebugShell;
+import at.jku.ssw.cmm.DebugShell.Area;
+import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.exception.IncludeNotFoundException;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
@@ -35,7 +38,7 @@ public class ExpandSourceCode {
 	public static String expand( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints ) throws IncludeNotFoundException{
 		
 		//Debug message
-		System.out.println("[include] Starting include file scan");
+		DebugShell.out(State.LOG, Area.COMPILER, "Starting include file scan");
 		
 		//Code offset to the user's source code
 		int offset = 0;
@@ -67,14 +70,14 @@ public class ExpandSourceCode {
 			//Local include directory
 			if( s.startsWith("#include") && s.contains("<") && !finishedIncludes ){
 				p = Pattern.compile("#include <([\\w./]+)>");
-				System.out.println("Local include file: " + s);
+				DebugShell.out(State.LOG, Area.COMPILER, "Local include file: " + s);
 				localDirectory = true;
 			}
 			
 			//Project directory (working path)#include <stdilb.h>
 			else if( s.startsWith("#include") && s.contains("\"") && !finishedIncludes ){
 				p = Pattern.compile("#include \"([\\w./]+)\"");
-				System.out.println("Working directory include file: " + s);
+				DebugShell.out(State.LOG, Area.COMPILER, "Working directory include file: " + s);
 				localDirectory = false;
 			}
 			
@@ -97,7 +100,7 @@ public class ExpandSourceCode {
 				
 				//Found a file name
 				if (m.find()) {
-				    System.out.println("Reading include file: " + m.group(1));
+					DebugShell.out(State.LOG, Area.COMPILER, "Reading include file: " + m.group(1));
 				    
 				    String include;
 				    
@@ -116,7 +119,7 @@ public class ExpandSourceCode {
 				    	codeRegister.add(e);
 				    }
 				    else{
-				    	System.out.println("File not found: " + m.group(1));
+				    	DebugShell.out(State.WARNING, Area.COMPILER, "File not found: " + m.group(1));
 				    	throw new IncludeNotFoundException(m.group(1), line);
 				    }
 				}

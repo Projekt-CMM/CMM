@@ -13,6 +13,9 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 import at.jku.ssw.cmm.CMMwrapper;
+import at.jku.ssw.cmm.DebugShell;
+import at.jku.ssw.cmm.DebugShell.Area;
+import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gui.datastruct.ReadCallStack;
 import at.jku.ssw.cmm.gui.exception.IncludeNotFoundException;
 import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
@@ -292,7 +295,7 @@ public class GUIdebugPanel {
 		this.line = line - this.sourceCodeBeginLine + this.modifier.getSourceCodeRegister().size();
 		this.col = col;
 		
-		System.out.println("Error found: " + line + " -> " + this.line );
+		DebugShell.out(State.WARNING, Area.INTERPRETER, "Runtime error: " + line + " -> " + this.line );
 		
 		this.ctrlPanel.setRuntimeErrorMode(title, message, this.line, this.col, true);
 	}
@@ -318,7 +321,7 @@ public class GUIdebugPanel {
 	public boolean checkForStepEnd() {
 
 		if (this.callStackSize <= this.stepTarget) {
-			System.out.println("[interpreter][GUIdebugPanel]Step completed");
+			DebugShell.out(State.LOG, Area.INTERPRETER, "Step completed");
 			this.ctrlPanel.getListener().stepComplete();
 			this.stepTarget = -1;
 			return true;
@@ -351,7 +354,7 @@ public class GUIdebugPanel {
 	public void stepOver() {
 		this.stepTarget = this.callStackSize;
 		this.ctrlPanel.getListener().stepOver();
-		System.out.println("[interpreter][GUIdebugPanel]Stepping over...");
+		DebugShell.out(State.LOG, Area.INTERPRETER, "Stepping over...");
 	}
 
 	/**
@@ -364,7 +367,7 @@ public class GUIdebugPanel {
 		if (this.callStackSize > 1) {
 			this.stepTarget = this.callStackSize - 1;
 			this.ctrlPanel.getListener().stepOver();
-			System.out.println("[interpreter][GuidebugPanel]Stepping out...");
+			DebugShell.out(State.LOG, Area.INTERPRETER, "Stepping out...");
 		}
 	}
 	
@@ -449,29 +452,29 @@ public class GUIdebugPanel {
 		}
 
 		/* --- Code statistics --- */
-		System.out.println("\n-------------------------------------\nUsed input files: ");
+		DebugShell.out(State.STAT, Area.COMPILER, "\n-------------------------------------\nUsed input files: ");
 		for (Object[] o : this.modifier.getSourceCodeRegister()) {
-			System.out.println("" + o[2] + ", line " + o[0] + " - " + o[1]);
+			DebugShell.out(State.STAT, Area.COMPILER, "" + o[2] + ", line " + o[0] + " - " + o[1]);
 		}
-		System.out.println("-------------------------------------");
+		DebugShell.out(State.STAT, Area.COMPILER, "-------------------------------------");
 
 		this.sourceCodeBeginLine = (int) this.modifier.getSourceCodeRegister()
 				.get(0)[0];
-		System.out.println("Source code begins @ line "
+		DebugShell.out(State.STAT, Area.COMPILER, "Source code begins @ line "
 				+ this.sourceCodeBeginLine + "\n");
 
 		for(int i : this.breakpoints){
-			System.out.println("line " + i);
+			DebugShell.out(State.STAT, Area.COMPILER, "line " + i);
 		}
-		System.out.println("-------------------------------------");
+		DebugShell.out(State.STAT, Area.COMPILER, "-------------------------------------");
 
 		int i = 1;
 		for (String s : sourceCode.split("\n")) {
-			System.out.println("" + i + ": " + s);
+			DebugShell.out(State.STAT, Area.COMPILER, "" + i + ": " + s);
 			i++;
 		}
 
-		System.out.println("-------------------------------------");
+		DebugShell.out(State.STAT, Area.COMPILER, "-------------------------------------");
 		/* --- end of statistics ---*/
 
 		// Compile

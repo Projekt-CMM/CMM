@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm;
 
+import at.jku.ssw.cmm.DebugShell.Area;
+import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Error;
 import at.jku.ssw.cmm.compiler.Tab;
@@ -88,7 +90,7 @@ public class CMMwrapper implements CMMrunnableMod {
 		//Another thread is already running
 		else{
 			//Error message
-			System.out.println("[ERROR] Already running or not compiled!");
+			DebugShell.out(State.ERROR, Area.INTERPRETER, "Already running or not compiled!");
 			
 			return false;
 		}
@@ -152,7 +154,7 @@ public class CMMwrapper implements CMMrunnableMod {
 	@Override
 	public void setNotRunning( boolean success ) {
 		
-		System.out.println("Interpreter thread unregistered");
+		DebugShell.out(State.LOG, Area.INTERPRETER, "Interpreter thread unregistered");
 		this.running = false;
 		
 		if( success ){

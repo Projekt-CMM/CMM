@@ -9,6 +9,9 @@ import javax.swing.JButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import at.jku.ssw.cmm.DebugShell;
+import at.jku.ssw.cmm.DebugShell.Area;
+import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.debugger.Debugger;
 import at.jku.ssw.cmm.gui.datastruct.SyntaxTreePath;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
@@ -92,9 +95,15 @@ public class PanelRunListener implements Debugger {
 
 	/**
 	 * The delay between two interpreter steps in run mode
-	 * time [seconds] = delay/2
+	 * time [seconds] = delay/divider
 	 */
 	private int delay;
+	
+	/**
+	 * Divide delay state from the jSlider by this number to get the delay
+	 * in seconds.
+	 */
+	private static final int divider = 4;
 
 	/**
 	 * Reference to the timer which is scheduling the run mode delay <br>
@@ -120,7 +129,7 @@ public class PanelRunListener implements Debugger {
 
 		this.delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
 
-		master.getControlPanel().setTimerLabelSeconds((double) (delay) / 2);
+		master.getControlPanel().setTimerLabelSeconds((double) (delay) / divider);
 
 		if (this.timer != null)
 			this.timer.cancel();
@@ -135,7 +144,7 @@ public class PanelRunListener implements Debugger {
 		
 		this.lastNode = null;
 
-		System.out.println("[mode] setting ready by reset");
+		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting ready by reset");
 	}
 
 	/**
@@ -153,7 +162,7 @@ public class PanelRunListener implements Debugger {
 		this.master.getControlPanel().lockStepButton();
 		this.master.getControlPanel().setPause();
 
-		System.out.println("[mode] setting run, delay = " + this.delay);
+		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting run, delay = " + this.delay);
 	}
 
 	/**
@@ -171,7 +180,7 @@ public class PanelRunListener implements Debugger {
 		this.master.getControlPanel().unlockStepButton();
 		this.master.getControlPanel().setPlay();
 
-		System.out.println("[mode] setting pause");
+		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting pause");
 	}
 
 	/**
@@ -202,7 +211,7 @@ public class PanelRunListener implements Debugger {
 
 		this.master.getControlPanel().setRuntimeErrorMode(title + ": ", message, line, col, view);
 
-		System.out.println("[mode] setting error");
+		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting error");
 	}
 
 	/**
@@ -303,7 +312,7 @@ public class PanelRunListener implements Debugger {
 	@Override
 	public boolean step(final Node arg0) {
 
-		System.out.println("[node] " + arg0);
+		DebugShell.out(State.LOG, Area.DEBUGGER, "" + arg0);
 		
 		//Update latest node's line
 		this.lastNode = arg0;
@@ -332,15 +341,15 @@ public class PanelRunListener implements Debugger {
 			/* --- Node #4: Passing a breakpoint --- */
 			if( !this.master.getBreakPoints().isEmpty() && arg0.line >= this.master.getBreakPoints().get(0)-1 ){
 				this.setPauseMode();
-				System.out.println("Stopped at breakpoint: "  + arg0.line + " - " + this.master.getBreakPoints().get(0) );
+				DebugShell.out(State.LOG, Area.DEBUGGER, "Stopped at breakpoint: "  + arg0.line + " - " + this.master.getBreakPoints().get(0) );
 				this.master.getBreakPoints().remove(0);
 			}
 			
 			//Delay the interpreter for 10ms so that the GUI is still able to work
 			try {
-				Thread.sleep(10);
+				Thread.sleep(1);
 			} catch (InterruptedException e) {
-				System.out.println("[Error] Failed to delay interpreter thread!");
+				DebugShell.out(State.ERROR, Area.DEBUGGER, "Failed to delay interpreter thread!");
 				e.printStackTrace();
 			}
 			return this.keepRunning;
@@ -382,7 +391,7 @@ public class PanelRunListener implements Debugger {
 				public void run() {
 					userReply();
 				}
-			}, 500 * delay);
+			}, 1000/divider * delay);
 		}
 		/* --- Node #6: Default exit --- */
 		else {
@@ -534,7 +543,7 @@ public class PanelRunListener implements Debugger {
 			if( !button.isEnabled() )
 				return;
 			
-			System.out.println("Step: keep = " + keepRunning + ", run = " + run);
+			DebugShell.out(State.LOG, Area.DEBUGGER, "Step: keep = " + keepRunning + ", run = " + run);
 
 			// Ready mode -> start interpreting in pause mode
 			if (isReadyMode()) {
@@ -545,13 +554,12 @@ public class PanelRunListener implements Debugger {
 			// Pause mode -> next step
 			else if (isPauseMode()){
 				userReply();
-				System.out.println("-> pause");
 			}
 
 			// Error mode -> step button has "view" function
 			else if (isErrorMode()) {
 				modMain.highlightSourceCode(master.getErrorLine());
-				System.out.println("Highlighting: " + master.getErrorLine() + ", " + master.getCompleteErrorLine() );
+				DebugShell.out(State.LOG, Area.DEBUGGER, "Highlighting: " + master.getErrorLine() + ", " + master.getCompleteErrorLine() );
 			}
 		}
 
@@ -685,10 +693,10 @@ public class PanelRunListener implements Debugger {
 		public void stateChanged(ChangeEvent e) {
 
 			delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
-			master.getControlPanel().setTimerLabelSeconds((double) (delay) / 2);
+			master.getControlPanel().setTimerLabelSeconds((double) (delay) / divider);
 			
-			//Remove already passed breakpoints if in fast run mode
-			if( delay == 0 ){
+			//TODO check: Remove already passed breakpoints if in fast run mode
+			if( delay == 0 && lastNode != null ){
 				master.updateBreakPoints(lastNode.line);
 			}
 		}
