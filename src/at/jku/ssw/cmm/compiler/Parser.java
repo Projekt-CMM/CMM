@@ -871,6 +871,10 @@ public class Parser {
 		           else
 		               n = new Node(true);
 		           break;
+		       case Struct.STRING:
+		           n = new Node(strings.get(obj.val));
+		           n.val = obj.val;
+		           break;
 		       // TODO STRING
 		       default:
 		           n = new Node(obj);

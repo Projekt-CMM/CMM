@@ -882,7 +882,10 @@ ident                               (.  // get name of identifier and check if i
                                                     else
                                                         n = new Node(true);
                                                     break;
-                                                // TODO STRING
+                                                case Struct.STRING:
+                                                    n = new Node(strings.get(obj.val));
+                                                    n.val = obj.val;
+                                                    break;
                                                 default:
                                                     n = new Node(obj);
                                             }
