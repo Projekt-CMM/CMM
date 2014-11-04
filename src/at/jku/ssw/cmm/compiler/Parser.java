@@ -290,7 +290,7 @@ public class Parser {
 			   SemErr("char constant not allowed here"); 
 		} else if (la.kind == 5) {
 			Get();
-			curCon.val = strings.put(tab.stringVal(t.val));  // TODO
+			curCon.val = strings.put(tab.stringVal(t.val));
 			if (type != Tab.stringType) 
 			   SemErr("string constant not allowed here"); 
 		} else SynErr(66);
@@ -875,7 +875,6 @@ public class Parser {
 		           n = new Node(strings.get(obj.val));
 		           n.val = obj.val;
 		           break;
-		       // TODO STRING
 		       default:
 		           n = new Node(obj);
 		   }
