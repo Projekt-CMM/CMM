@@ -11,6 +11,7 @@ import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Struct;
 import at.jku.ssw.cmm.compiler.Strings;
 import at.jku.ssw.cmm.debugger.Debugger;
+import at.jku.ssw.cmm.debugger.DebuggerRequest;
 import at.jku.ssw.cmm.debugger.StdInOut;
 import at.jku.ssw.cmm.interpreter.exceptions.AbortException;
 import at.jku.ssw.cmm.interpreter.exceptions.BreakException;
@@ -22,12 +23,15 @@ import at.jku.ssw.cmm.interpreter.memory.Memory;
 import at.jku.ssw.cmm.interpreter.memory.MethodContainer;
 import at.jku.ssw.cmm.compiler.Node;
 
-public final class Interpreter {
+public final class Interpreter implements DebuggerRequest {
 
 	private final Debugger debugger;
 	private final Strings strings;
 	private final StdInOut inout;
 
+	private int debuggerLastChangedAddress;
+	private int debuggerCurrentAddress;
+	
 	// private boolean running;
 
 	/*
@@ -74,6 +78,7 @@ public final class Interpreter {
 
 		switch (p.kind) {
 		case Node.ASSIGN:
+			debuggerLastChangedAddress = Adr(p.left);
 			switch (p.right.type.kind) {
 			case Struct.BOOL:
 				Memory.storeBool(Adr(p.left), BoolExpr(p.right));
@@ -238,6 +243,7 @@ public final class Interpreter {
 			else
 				return true;
 		case Node.IDENT:							//more at @Adr
+			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadBool(IdentAdr(p.obj));
 		case Node.DOT:								//more at @Adr
 			return Memory.loadBool(Adr(p));			
@@ -312,6 +318,7 @@ public final class Interpreter {
 			else
 				return 0x00;
 		case Node.IDENT:							//more at @Adr
+			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadInt(IdentAdr(p.obj));
 		case Node.DOT:								//more at @Adr
 			return Memory.loadInt(Adr(p));			
@@ -364,6 +371,7 @@ public final class Interpreter {
 			Call(p);
 			return Memory.getFloatReturnValue();						
 		case Node.IDENT:						//more at @Adr
+			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadFloat(IdentAdr(p.obj));	
 		case Node.DOT:							//more at @Adr
 			return Memory.loadFloat(Adr(p));
@@ -389,6 +397,7 @@ public final class Interpreter {
 			if (IntExpr(p.left) >= 0)
 				return (char) IntExpr(p.left);		//Casting an IntExpression to Char
 		case Node.IDENT:
+			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadChar(IdentAdr(p.obj));			//more at @Adr
 		case Node.DOT:
 			return Memory.loadChar(Adr(p));			//more at @Adr
@@ -417,6 +426,7 @@ public final class Interpreter {
 	int StringExpr(Node p) throws AbortException, ReturnException { //TODO
 		switch (p.kind) {
 		case Node.IDENT:
+			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadStringAddress(Adr(p));
 			
 		case Node.PLUS:		//Reads the left and the right String and putting them together
@@ -460,6 +470,7 @@ public final class Interpreter {
 				return true;
 		} else if(p.kind == Node.IDENT) {
 			if(p.type.kind == Struct.BOOL) {
+				debuggerCurrentAddress = IdentAdr(p.obj);
 				return Memory.loadBool(IdentAdr(p.obj));
 			} else {
 				debugger.abort("type not supported as ident in condition", p);
@@ -809,6 +820,7 @@ public final class Interpreter {
 		
 		switch (p.kind) {
 		case Node.IDENT:					// more at @IdentAdr
+			debuggerCurrentAddress = IdentAdr(p.obj);
 			return IdentAdr(p.obj);
 		case Node.DOT:						//for structs very familiar with index
 			return Adr(p.left) + p.right.val;
@@ -835,5 +847,15 @@ public final class Interpreter {
 			return Memory.loadInt(adr); // References saves the Address in an Integer Variable
 		else
 			return adr;					//Returns the normal Address Value
+	}
+
+	@Override
+	public int getLastChangedAddress() {
+		return debuggerLastChangedAddress;
+	}
+
+	@Override
+	public int getCurrentAddress() {
+		return debuggerCurrentAddress;
 	}
 }
