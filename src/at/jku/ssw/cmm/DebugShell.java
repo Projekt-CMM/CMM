@@ -3,7 +3,7 @@ package at.jku.ssw.cmm;
 public class DebugShell {
 	
 	public static void out( State state, Area area, String msg ){
-		if( state == State.ERROR || state == State.WARNING )
+		//if( state == State.ERROR || state == State.WARNING )
 			System.out.println( State.getName(state) + Area.getName(area) + " " + msg );
 	}
 	

@@ -20,18 +20,20 @@ public class DataNode {
     private Object value;
     
     private int declaration;
-    private int lastCall;
- 
+    
+    private int address;
+
     private List<DataNode> children;
     
     public static final char CHANGE_TAG = ' ';
  
-    public DataNode(String name, Object type, Object value, List<DataNode> children, int decl) {
+    public DataNode(String name, Object type, Object value, List<DataNode> children, int address, int decl) {
         this.name = name;
         this.type = type;
         this.value = value;
         this.children = children;
         this.declaration = decl;
+        this.address = address;
  
         if (this.children == null) {
             this.children = new ArrayList<>();
@@ -66,10 +68,6 @@ public class DataNode {
     	return this.declaration;
     }
     
-    public int getCallLine(){
-    	return this.lastCall;
-    }
-    
     public void add( boolean init, DataNode n ){
     	
     	if( !init && this.children != null && this.children.size() > 0 ){
@@ -77,6 +75,7 @@ public class DataNode {
     			if( d.name.equals(n.name) ){
     				d.value = n.value;
     				d.type = n.type;
+    				d.address = n.address;
     				d.declaration = n.declaration;
     				return;
     			}
@@ -90,12 +89,12 @@ public class DataNode {
     	this.children.add(n);
     }
     
-    public DataNode getChild(String name, Object type, Object value, int decl){
+    public DataNode getChild(String name, Object type, Object value, int address, int decl){
     	for( DataNode d : this.children ){
     		if( d.name.equals(name) )
     			return d;
     	}
-    	return new DataNode( name, type, value, new ArrayList<DataNode>(), decl );
+    	return new DataNode( name, type, value, new ArrayList<DataNode>(), address, decl );
     }
     
     public static boolean equals( DataNode oldNode, DataNode newNode ){

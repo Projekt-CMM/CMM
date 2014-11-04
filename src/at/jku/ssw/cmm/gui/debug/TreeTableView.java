@@ -72,6 +72,8 @@ public class TreeTableView{
 				}
 			});
 			this.forceUpdate = false;
+			this.varTreeTable.revalidate();
+			this.varTreeTable.repaint();
 		}
 		else{
 			DebugShell.out(State.LOG, Area.READVAR, "[treeTable][update] updating variable values");
@@ -82,6 +84,7 @@ public class TreeTableView{
 					varTreeTable.updateTreeModel();
 				}
 			});
+			this.varTreeTable.revalidate();
 			this.varTreeTable.repaint();
 		}
 	}
