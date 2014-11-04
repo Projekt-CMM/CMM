@@ -224,7 +224,7 @@ ident                               (.  // create new constant variable
 | charCon                           (.  curCon.val = tab.charVal(t.val); 
                                         if (type != Tab.charType) 
                                             SemErr("char constant not allowed here"); .)
-| stringCon                         (.  curCon.val = strings.put(tab.stringVal(t.val));  // TODO
+| stringCon                         (.  curCon.val = strings.put(tab.stringVal(t.val));
                                         if (type != Tab.stringType) 
                                             SemErr("string constant not allowed here"); .)
 )
