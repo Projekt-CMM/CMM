@@ -6,6 +6,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import at.jku.ssw.cmm.CMMwrapper;
+import at.jku.ssw.cmm.DebugShell;
+import at.jku.ssw.cmm.DebugShell.Area;
+import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gui.datastruct.InitTreeTableData;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.gui.popup.PopupInterface;
@@ -61,7 +64,7 @@ public class TreeTableView{
 	public void update(final CMMwrapper compiler, final String fileName, final PopupInterface popup, boolean completeUpDate ) {
 		
 		if( completeUpDate || this.forceUpdate ){
-			System.out.println("[treetable][update] complete variable structure update");
+			DebugShell.out(State.LOG, Area.READVAR, "complete variable structure update");
 			
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
@@ -71,7 +74,7 @@ public class TreeTableView{
 			this.forceUpdate = false;
 		}
 		else{
-			System.out.println("[treeTable][update] updating variable values");
+			DebugShell.out(State.LOG, Area.READVAR, "[treeTable][update] updating variable values");
 			InitTreeTableData.updateTreeTable(this.varTreeTable.getTreeModel(), (DataNode)this.varTreeTable.getCellRenderer().getModel().getRoot(), compiler, popup, fileName);
 			
 			java.awt.EventQueue.invokeLater(new Runnable() {
@@ -91,11 +94,11 @@ public class TreeTableView{
 		this.varTreeTable.setTreeModel(new TreeTableDataModel(InitTreeTableData.createDataStructure(fileName)));
 		this.forceUpdate = true;
 		
-		System.out.println("[treetable] standby");
+		DebugShell.out(State.LOG, Area.GUI, "treetable standby");
 	}
 	
 	public void highlightVariable( Stack<String> path ){
-		System.out.println("[treetable] last variable changed " + path);
+		DebugShell.out(State.LOG, Area.GUI, "last variable changed " + path);
 		TreeUtils.expandPath(varTreeTable, path).markChanged();
 	}
 

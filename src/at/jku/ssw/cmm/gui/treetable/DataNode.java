@@ -72,16 +72,12 @@ public class DataNode {
     
     public void add( boolean init, DataNode n ){
     	
-    	System.out.println("[DataNode] Checking data node: " + n.print() );
-    	
     	if( !init && this.children != null && this.children.size() > 0 ){
     		for( DataNode d : this.children ){
-    			System.out.println("[DataNode] Possible option: " + d.name );
     			if( d.name.equals(n.name) ){
     				d.value = n.value;
     				d.type = n.type;
     				d.declaration = n.declaration;
-    				System.out.println("[DataNode] Found: " + n.name + ", new value is " + n.value + " | " + d.value + ", type is " + n.type + " | " + d.type);
     				return;
     			}
     		}

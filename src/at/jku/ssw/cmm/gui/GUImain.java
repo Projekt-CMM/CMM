@@ -24,6 +24,9 @@ import javax.swing.text.StyleContext;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+import at.jku.ssw.cmm.DebugShell;
+import at.jku.ssw.cmm.DebugShell.Area;
+import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.event.WindowComponentListener;
 import at.jku.ssw.cmm.gui.event.WindowEventListener;
@@ -188,7 +191,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	private void start(boolean test) {
 
 		if (SwingUtilities.isEventDispatchThread())
-			System.out.println("[EDT Analyse] Main GUI runnung on EDT.");
+			DebugShell.out(State.LOG, Area.SYSTEM, "main GUI running on EDT.");
 
 		// Load translations
 		// Language.loadLanguage("de.po");
@@ -513,7 +516,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 
 	@Override
 	public void startQuestGUI() {
-		System.out.println("[log][GUImain]Opening Quest Selection Window...");
+		DebugShell.out(State.LOG, Area.GUI, "Opening Quest Selection Window...");
 		// open profile selector on empty profile
 		if (Profile.getActiveProfile() == null)
 			selectProfile();
@@ -523,7 +526,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 
 	@Override
 	public void selectProfile() {
-		System.out.println("[log][GUImain]Opening Profile Selection Window...");
+		DebugShell.out(State.LOG, Area.GUI, "Opening Profile Selection Window...");
 		JFileChooser chooser = new JFileChooser(_("Select a profile..."));
 		chooser.setFileFilter(new FileNameExtensionFilter(
 				_("C Compact Profile"), "xml"));
@@ -539,7 +542,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 			} catch (XMLReadingException e) {
 				e.printStackTrace();
 			}
-			System.out.println("Profile Chooser Path:"
+			DebugShell.out(State.LOG, Area.GUI, "Profile Chooser Path:"
 					+ chooser.getSelectedFile().getAbsolutePath());
 		}
 	}

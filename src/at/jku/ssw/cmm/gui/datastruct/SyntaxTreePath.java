@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Stack;
 
 import at.jku.ssw.cmm.CMMwrapper;
+import at.jku.ssw.cmm.DebugShell;
+import at.jku.ssw.cmm.DebugShell.Area;
+import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.compiler.Node;
 import at.jku.ssw.cmm.compiler.Obj;
 
@@ -35,17 +38,17 @@ public class SyntaxTreePath {
 		
 		//A simple variable
 		if( arg0.kind == Node.ASSIGN && arg0.left.kind == Node.IDENT ){
-			System.out.println("[tableUtils] analysing var");
+			DebugShell.out(State.LOG, Area.READVAR, "[tableUtils] analysing var");
 			return getVarPath(arg0, fileName);
 		}
 		//Structure
 		else if( arg0.kind == Node.ASSIGN && arg0.left.kind == Node.DOT ){
-			System.out.println("[tableUtils] analysing struct");
+			DebugShell.out(State.LOG, Area.READVAR, "[tableUtils] analysing struct");
 			return complexSearch(arg0, fileName, compiler);
 		}
 		//Array
 		else if( arg0.kind == Node.ASSIGN && arg0.left.kind == Node.INDEX ){
-			System.out.println("[tableUtils] analysing array");
+			DebugShell.out(State.LOG, Area.READVAR, "[tableUtils] analysing array");
 			return complexSearch(arg0, fileName, compiler);
 		}
 		
@@ -92,8 +95,6 @@ public class SyntaxTreePath {
 			if( ident.kind == Node.IDENT )
 				break;
 		
-		System.out.println("[syntaxTreePath] identifier: " + ident.obj.name);
-		
 		table = ident.obj.type.fields;
 		
 		//Read complete path
@@ -108,7 +109,6 @@ public class SyntaxTreePath {
 			}
 			//Array
 			else if( n.left.kind == Node.INDEX ){
-				System.out.println("[complex] adding array index: " + n.left.right.val);
 				path.add("[" + n.left.right.val + "]");
 			}
 		}
@@ -146,13 +146,10 @@ public class SyntaxTreePath {
 			if( path.get(i).equals(NOTINITIALIZED) ){
 				
 				while( val.get(val.size()-1) > 0 ){
-					System.out.println("[struct correct] checking: " + obj.name + " with size " + obj.type.size + ", " + val.get(val.size()-1) + " | " + val);
 					val.set(val.size()-1, val.get(val.size()-1) - obj.type.size);
 					obj = obj.next;
-					System.out.println("[struct correct] new size: " + val.get(val.size()-1));
 				}
 				
-				System.out.println("[struct correct] adding: " + obj.name);
 				path.set(i, obj.name);
 
 				val.remove(val.size()-1);
