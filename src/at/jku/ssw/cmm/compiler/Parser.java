@@ -875,8 +875,9 @@ public class Parser {
 		       default:
 		           n = new Node(obj);
 		   }
-		}
-		else {
+		} else {
+		   if(obj.kind == Obj.TYPE)
+		       SemErr(name + " is not a constant, variable or function");
 		   // if Node is a normal identifier, using that Node
 		   n = new Node(obj);
 		}
