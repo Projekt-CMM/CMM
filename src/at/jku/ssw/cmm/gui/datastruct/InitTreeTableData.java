@@ -97,7 +97,7 @@ public class InitTreeTableData {
 		
 		if( init )
 			//Initialize data node if re-creating the data model TODO address
-			funcNode = new DataNode( name + "()", "", "", new ArrayList<DataNode>(), 0, obj.line );
+			funcNode = new DataNode( name + "()", "", "", new ArrayList<DataNode>(), -1, obj.line );
 		else
 			//Update the data node
 			funcNode = node.getChild( name + "()", "", "", 0, obj.line );
@@ -180,11 +180,11 @@ public class InitTreeTableData {
 			}
 			//Reading an ARRAY (any type)
 			if( obj.type.kind == Struct.ARR && obj.kind != Obj.PROC ){
-				node.add(init, readArray(init, obj, node.getChild(obj.name, "array", "", address + obj.adr, obj.line), address + obj.adr, popup));
+				node.add(init, readArray(init, obj, node.getChild(obj.name, "array", "", -1, obj.line), address + obj.adr, popup));
 			}
 			//Reading a STRUCTURE
 			if( obj.type.kind == Struct.STRUCT && obj.kind != Obj.PROC && obj.kind != Obj.TYPE ){
-				DataNode n = readVariables( init, obj.type.fields, node.getChild(obj.name, "struct", "", address + obj.adr, obj.line), address + obj.adr, popup );
+				DataNode n = readVariables( init, obj.type.fields, node.getChild(obj.name, "struct", "", -1, obj.line), address + obj.adr, popup );
 				node.add(init, n);
 			}
 			//READING A STRING
@@ -274,7 +274,7 @@ public class InitTreeTableData {
 					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
 				}
 				else if( obj.elemType.kind == Struct.STRUCT ){
-					DataNode n = readVariables( init, obj.fields, new DataNode(name, "struct", "", new ArrayList<DataNode>(), address + offset + size * i, -1), address + offset + size * i, popup );
+					DataNode n = readVariables( init, obj.fields, new DataNode(name, "struct", "", new ArrayList<DataNode>(), -1, -1), address + offset + size * i, popup );
 					node.add(init, n);
 				}
 				else if( obj.elemType.kind == Struct.STRING ){

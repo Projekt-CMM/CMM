@@ -13,7 +13,6 @@ import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.debugger.Debugger;
-import at.jku.ssw.cmm.gui.datastruct.SyntaxTreePath;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.compiler.Node;
@@ -360,10 +359,10 @@ public class PanelRunListener implements Debugger {
 		this.master.getControlPanel().updateStepOutButton();//*.next -> main()
 		
 		/* --- Node #5 - Variable value changed --- */
-		//if( arg0.kind == Node.CALL || arg0.kind == Node.ASSIGN )
 		this.master.updateVariableTables(this.master.callStackChanged());
+		int adr = this.master.getCompileManager().getRequest().getLastChangedAddress();
 		
-		this.master.highlightVariable(SyntaxTreePath.getVariablePath(arg0, this.modMain.getFileName(), this.master.getCompileManager()));
+		this.master.highlightVariable(adr);
 		
 		this.timer = null;
 

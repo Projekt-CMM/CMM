@@ -104,5 +104,12 @@ public class TreeTableView{
 		DebugShell.out(State.LOG, Area.GUI, "last variable changed " + path);
 		TreeUtils.expandPath(varTreeTable, path).markChanged();
 	}
+	
+	public void highlightVariable( int adr ){
+		TreeUtils.expandByAddress(varTreeTable, adr);
+		varTreeTable.repaint();
+	}
+	
+	
 
 }

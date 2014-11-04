@@ -68,6 +68,10 @@ public class DataNode {
     	return this.declaration;
     }
     
+    public int getAddress(){
+    	return this.address;
+    }
+    
     public void add( boolean init, DataNode n ){
     	
     	if( !init && this.children != null && this.children.size() > 0 ){

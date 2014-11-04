@@ -232,6 +232,14 @@ public class GUIdebugPanel {
 		}
 	}
 	
+	public void highlightVariable( final int adr ){
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					varView.highlightVariable(adr);
+				}
+			});
+	}
+	
 	/**
 	 * Updates the variable table, call stack or tree table according to the current view mode.
 	 */
