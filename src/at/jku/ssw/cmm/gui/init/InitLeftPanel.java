@@ -10,11 +10,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -58,7 +53,7 @@ public class InitLeftPanel {
 	 * @param pane The main panel for the GUI (JPanel)
 	 * @return A reference to the JTextArea generated
 	 */
-	public static JTextPane initInputPane( JPanel pane ){
+	public static JInputDataPane initInputPane( JPanel pane ){
 		
 		//Label saying "input" above the text area for the input stream
 		JPanel valuePanel = new JPanel();
@@ -66,7 +61,8 @@ public class InitLeftPanel {
 		valuePanel.setLayout(new BorderLayout());
         
 		//The text area for the input stream
-        JTextPane tArea = new JTextPane();
+        JInputDataPane tArea = new JInputDataPane();
+        tArea.setLineWrap(false);
         tArea.setLayout(new BorderLayout());
         tArea.setMargin(new Insets(5, 5, 5, 5));
         tArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
@@ -105,28 +101,4 @@ public class InitLeftPanel {
         
         return tArea;
 	}
-	
-	/**
-	 * Static method for setting a specific style of JTextPanes. Supports colors and bold text.
-	 * Can be used for highlighting.
-	 * 
-	 * @param tp The target JTextPane
-	 * @param msg The highlighted message
-	 * @param c The color
-	 */
-	@SuppressWarnings("unused")
-	private static void appendToPane(JTextPane tp, String msg, Color c)
-    {
-        StyleContext sc = StyleContext.getDefaultStyleContext();
-        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
-
-        aset = sc.addAttribute(aset, StyleConstants.Bold, true );
-        aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
-        aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
-
-        int len = tp.getDocument().getLength();
-        tp.setCaretPosition(len);
-        tp.setCharacterAttributes(aset, false);
-        tp.replaceSelection(msg);
-    }
 }

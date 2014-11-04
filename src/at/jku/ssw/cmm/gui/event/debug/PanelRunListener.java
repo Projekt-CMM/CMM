@@ -360,9 +360,8 @@ public class PanelRunListener implements Debugger {
 		
 		/* --- Node #5 - Variable value changed --- */
 		this.master.updateVariableTables(this.master.callStackChanged());
-		int adr = this.master.getCompileManager().getRequest().getLastChangedAddress();
 		
-		this.master.highlightVariable(adr);
+		this.master.highlightVariable(this.master.getCompileManager().getRequest().getLastChangedAddress());
 		
 		this.timer = null;
 

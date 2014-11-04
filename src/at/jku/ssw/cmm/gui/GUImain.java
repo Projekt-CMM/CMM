@@ -12,7 +12,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -35,6 +34,7 @@ import at.jku.ssw.cmm.gui.file.SaveDialog;
 import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
 import at.jku.ssw.cmm.gui.init.InitLeftPanel;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
+import at.jku.ssw.cmm.gui.init.JInputDataPane;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
 import at.jku.ssw.cmm.gui.popup.PopupInterface;
@@ -91,7 +91,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	/**
 	 * The text panel with input data for the cmm program.
 	 */
-	private JTextPane jInputPane;
+	private JInputDataPane jInputPane;
 
 	/**
 	 * The text panel for the output stream of the cmm program.
@@ -256,9 +256,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 				this.settings, this.saveDialog));
 
 		// Initialize window component listener
-		this.jFrame.addComponentListener(new WindowComponentListener(
-				this.jFrame, this.jSourcePane, this.settings,
-				this.rightPanelControl.getDebugPanel()));
+		this.jFrame.addComponentListener(new WindowComponentListener(this.jFrame, this.jSourcePane, this.jInputPane, this.settings));
 
 		// Initialize the source panel listener
 		this.codeListener = new SourceCodeListener(this);
