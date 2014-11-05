@@ -268,7 +268,10 @@ public final class Interpreter implements DebuggerRequest {
 		 * For calculation
 		 */
 		case Node.PLUS:
-			return IntExpr(p.left) + IntExpr(p.right);
+			if(p.right == null)
+				return IntExpr(p.left);
+			else
+				return IntExpr(p.left) + IntExpr(p.right);
 		case Node.MINUS:
 			if(p.right == null) {
 				return 0 - IntExpr(p.left);
@@ -344,7 +347,10 @@ public final class Interpreter implements DebuggerRequest {
 		 * For calculation
 		 */
 		case Node.PLUS:
-			return FloatExpr(p.left) + FloatExpr(p.right);
+		    if(p.right == null)
+		        return FloatExpr(p.left);
+		    else
+			    return FloatExpr(p.left) + FloatExpr(p.right);
 		case Node.MINUS:
 			if(p.right == null) {
 				return 0 - FloatExpr(p.left);
