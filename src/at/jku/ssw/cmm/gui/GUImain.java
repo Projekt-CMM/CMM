@@ -361,6 +361,8 @@ public class GUImain implements GUImainMod, PopupInterface {
 	public void setFileChanged() {
 		if (!this.jFrame.getTitle().endsWith("*"))
 			this.jFrame.setTitle(this.jFrame.getTitle() + "*");
+		
+		this.rightPanelControl.fileChanged();
 	}
 
 	public void setFileSaved() {
@@ -368,6 +370,8 @@ public class GUImain implements GUImainMod, PopupInterface {
 			this.jFrame.setTitle(this.jFrame.getTitle().substring(0,
 					this.jFrame.getTitle().length() - 1));
 		}
+		
+		this.rightPanelControl.fileSaved();
 	}
 
 	@Override

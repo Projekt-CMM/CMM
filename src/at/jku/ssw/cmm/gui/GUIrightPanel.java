@@ -3,9 +3,13 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
@@ -102,6 +106,10 @@ public class GUIrightPanel {
 	 */
 	private JButton jButtonBreakPoint;
 	
+	private JPanel jStatePanel;
+	
+	private JLabel jStateLabel;
+	
 	/**
 	 * Initializes the panel with the common control elements, eg. breakpoint button.
 	 * 
@@ -116,6 +124,18 @@ public class GUIrightPanel {
 		this.jButtonBreakPoint.setToolTipText("<html>" + _("toggle breakpoint") + "</b><br><ul><li>" + _("adds breakpoint to the current<br>line in the source code") + "</li><li>" + _("removes the breakpoint from the current<br>line if there is already one") + "</ul><html>" );
 		jTopPanel.add(this.jButtonBreakPoint);
 
+		this.jStatePanel = new JPanel();
+		this.jStateLabel = new JLabel();
+		
+		this.fileSaved();
+		this.jStatePanel.setMinimumSize(new Dimension( 100, 28 ));
+		this.jStatePanel.setPreferredSize(new Dimension( 100, 28 ));
+		this.jStatePanel.setBorder(BorderFactory.createLoweredBevelBorder());
+		
+		this.jStatePanel.add(this.jStateLabel);
+		
+		jTopPanel.add(this.jStatePanel);
+		
 		return jTopPanel;
 	}
 	
@@ -147,5 +167,17 @@ public class GUIrightPanel {
 	 */
 	public void unlockInput(){
 		this.jButtonBreakPoint.setEnabled(true);
+	}
+
+	public void fileSaved() {
+		
+		this.jStatePanel.setBackground(Color.GREEN);
+		this.jStateLabel.setText(_("file saved"));
+	}
+
+	public void fileChanged() {
+		
+		this.jStatePanel.setBackground(Color.ORANGE);
+		this.jStateLabel.setText(_("file changed"));
 	}
 }
