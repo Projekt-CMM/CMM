@@ -43,11 +43,11 @@ public class IOstream implements StdInOut {
 
 		try {
 			c = this.inputStream.get(0);
+			this.inputStream.remove(0);
 		} catch (Exception e) {
 			return '\0';
 		}
 
-		this.inputStream.remove(0);
 		this.modifier.increaseInputHighlighter();
 		return c;
 	}

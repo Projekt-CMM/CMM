@@ -113,26 +113,29 @@ public class GUIcontrolPanel {
 		/* ---------- PLAY | PAUSE buttons ---------- */
 		jButtonPlay = new JButton("\u25B6");
 		this.jButtonPlay.addMouseListener(this.listener.playButtonHandler);
+		this.jButtonPlay.setToolTipText("<html><b>" + _("compile and run") + "</b><br>" + _("compile source code<br>and run debugger") + "</html>" );
 		this.panel.add(jButtonPlay);
 
 		jButtonStep = new JButton("\u25AE\u25B6");
 		this.jButtonStep.addMouseListener(this.listener.stepButtonHandler);
+		this.jButtonStep.setToolTipText("<html><b>" + _("compile and step") + "</b><br>" + _("compile source code and<br>run debugger step by step") + "</html>" );
 		this.panel.add(jButtonStep);
 
 		jButtonStepOver = new JButton("\u21B7");
-		this.jButtonStepOver
-				.addMouseListener(this.listener.stepOverButtonHandler);
+		this.jButtonStepOver.addMouseListener(this.listener.stepOverButtonHandler);
+		this.jButtonStepOver.setToolTipText("<html><b>" + _("step over") + "</b><br>" + _("step over the function<br>which would begin next step") + "</html>" );
 		this.panel.add(jButtonStepOver);
 		this.jButtonStepOver.setEnabled(false);
 
 		jButtonStepOut = new JButton("\u21B5");
-		this.jButtonStepOut
-				.addMouseListener(this.listener.stepOutButtonHandler);
+		this.jButtonStepOut.addMouseListener(this.listener.stepOutButtonHandler);
+		this.jButtonStepOut.setToolTipText("<html><b>" + _("step out") + "</b><br>" + _("step out of the current function<br>and return to super function immediately") + "</html>" );
 		this.panel.add(jButtonStepOut);
 		this.jButtonStepOut.setEnabled(false);
 
 		jButtonStop = new JButton("\u25A0");
 		this.jButtonStop.addMouseListener(this.listener.stopButtonHandler);
+		this.jButtonStop.setToolTipText("<html><b>" + _("stop") + "</b><br>" + _("return to text edit mode immediately") + "</html>" );
 		this.panel.add(jButtonStop);
 
 		/* --- RUNTIME ERROR LABELS --- */
@@ -158,12 +161,13 @@ public class GUIcontrolPanel {
 		jSlider.setPaintTicks(true);
 		jSlider.setValue(5);
 		jSlider.addChangeListener(this.listener.sliderListener);
+		jSlider.setToolTipText("<html><b>" + _("debugger step delay") + "</b><br>" + _("change delay") + "</html>" );
 		
 		this.panel.add(jSlider);
 		// Sub-panel end
 		
-		this.panel.setPreferredSize(new Dimension(300, 85));
-		this.panel.setMinimumSize(new Dimension(200, 85));
+		this.panel.setPreferredSize(new Dimension(300, 100));
+		this.panel.setMinimumSize(new Dimension(200, 100));
 	}
 	
 	/**
@@ -198,6 +202,7 @@ public class GUIcontrolPanel {
 		if( view ){
 			this.jButtonStep.setVisible(true);
 			this.jButtonStep.setText(_("View"));
+			this.jButtonStep.setToolTipText("<html><b>" + _("view error line") + "</b><br>" + _("jump to the line where<br>the error occurred") + "</html>" );
 		}
 		else
 			this.jButtonStep.setVisible(false);
@@ -229,6 +234,7 @@ public class GUIcontrolPanel {
 
 		// Change view button to step button
 		this.jButtonStep.setText("\u25AE\u25B6");
+		this.jButtonStep.setToolTipText("<html><b>" + _("compile and step") + "</b><br>" + _("compile source code and<br>run debugger step by step") + "</html>" );
 	}
 	
 	public PanelRunListener getListener(){
@@ -244,6 +250,7 @@ public class GUIcontrolPanel {
 	 */
 	public void setPause() {
 		this.jButtonPlay.setText("\u25AE\u25AE");
+		this.jButtonPlay.setToolTipText("<html><b>" + _("pause") + "</b><br>" + _("interrupt automatic debugging") + "</html>" );
 	}
 
 	/**
@@ -255,6 +262,7 @@ public class GUIcontrolPanel {
 	 */
 	public void setPlay() {
 		this.jButtonPlay.setText("\u25B6");
+		this.jButtonPlay.setToolTipText("<html><b>" + _("run") + "</b><br>" + _("run automatic debugging") + "</html>" );
 	}
 
 	/**
@@ -406,5 +414,16 @@ public class GUIcontrolPanel {
 				}
 			});
 		}
+	}
+
+	public void standby() {
+		
+		this.jButtonPlay.setToolTipText("<html><b>" + _("compile and run") + "</b><br>" + _("compile source code<br>and run debugger") + "</html>" );
+		this.jButtonStep.setToolTipText("<html><b>" + _("compile and step") + "</b><br>" + _("compile source code and<br>run debugger step by step") + "</html>" );
+	}
+
+	public void running() {
+		
+		this.jButtonStep.setToolTipText("<html><b>" + _("next step") + "</b><br>" + _("proceed to next step") + "</html>" );
 	}
 }

@@ -141,6 +141,8 @@ public class PanelRunListener implements Debugger {
 		this.master.getControlPanel().unlockStepButton();
 		this.master.getControlPanel().setPlay();
 		
+		this.master.getControlPanel().standby();
+		
 		this.lastNode = null;
 
 		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting ready by reset");
@@ -160,6 +162,8 @@ public class PanelRunListener implements Debugger {
 		this.master.getControlPanel().unlockStopButton();
 		this.master.getControlPanel().lockStepButton();
 		this.master.getControlPanel().setPause();
+		
+		this.master.getControlPanel().running();
 
 		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting run, delay = " + this.delay);
 	}
@@ -178,6 +182,8 @@ public class PanelRunListener implements Debugger {
 		this.master.getControlPanel().unlockStopButton();
 		this.master.getControlPanel().unlockStepButton();
 		this.master.getControlPanel().setPlay();
+		
+		this.master.getControlPanel().running();
 
 		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting pause");
 	}

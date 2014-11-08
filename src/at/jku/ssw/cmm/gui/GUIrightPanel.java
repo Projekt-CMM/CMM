@@ -113,6 +113,7 @@ public class GUIrightPanel {
 		this.jButtonBreakPoint = new JButton("\u2326");
 		RightPanelBreakpointListener listener = new RightPanelBreakpointListener(this.mod, this.jButtonBreakPoint);
 		this.jButtonBreakPoint.addMouseListener(listener);
+		this.jButtonBreakPoint.setToolTipText("<html>" + _("toggle breakpoint") + "</b><br><ul><li>" + _("adds breakpoint to the current<br>line in the source code") + "</li><li>" + _("removes the breakpoint from the current<br>line if there is already one") + "</ul><html>" );
 		jTopPanel.add(this.jButtonBreakPoint);
 
 		return jTopPanel;
