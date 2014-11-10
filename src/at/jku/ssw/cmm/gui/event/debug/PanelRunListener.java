@@ -94,15 +94,8 @@ public class PanelRunListener implements Debugger {
 
 	/**
 	 * The delay between two interpreter steps in run mode
-	 * time [seconds] = delay/divider
 	 */
 	private int delay;
-	
-	/**
-	 * Divide delay state from the jSlider by this number to get the delay
-	 * in seconds.
-	 */
-	private static final int divider = 4;
 
 	/**
 	 * Reference to the timer which is scheduling the run mode delay <br>
@@ -128,7 +121,7 @@ public class PanelRunListener implements Debugger {
 
 		this.delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
 
-		master.getControlPanel().setTimerLabelSeconds((double) (delay) / divider);
+		master.getControlPanel().setTimerLabelSeconds(delayScale(delay));
 
 		if (this.timer != null)
 			this.timer.cancel();
@@ -407,7 +400,7 @@ public class PanelRunListener implements Debugger {
 				public void run() {
 					userReply();
 				}
-			}, 1000/divider * delay);
+			}, (int)(delayScale(delay)*1000) );
 		}
 		/* --- Node #6: Default exit --- */
 		else {
@@ -709,13 +702,27 @@ public class PanelRunListener implements Debugger {
 		public void stateChanged(ChangeEvent e) {
 
 			delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
-			master.getControlPanel().setTimerLabelSeconds((double) (delay) / divider);
+			master.getControlPanel().setTimerLabelSeconds(delayScale(delay));
 			
-			//TODO check: Remove already passed breakpoints if in fast run mode
 			if( delay == 0 && lastNode != null ){
 				master.updateBreakPoints(lastNode.line);
 			}
 		}
 	};
+	
+	private static double delayScale( int slider ){
+		switch( slider ){
+		case 1: return 0.05;
+		case 2: return 0.1;
+		case 3: return 0.2;
+		case 4: return 0.5;
+		case 5: return 0.75;
+		case 6: return 1;
+		case 7: return 1.5;
+		case 8: return 2;
+		case 9: return 3;
+		default: return 0;
+		}
+	}
 
 }
