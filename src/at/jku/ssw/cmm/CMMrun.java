@@ -78,7 +78,7 @@ public class CMMrun extends Thread {
 		//Thrown when runtime error occurs
 		catch( IllegalStateException e ){
 			
-			System.out.println("[ERROR] Interpreter thread threw IllegalStateException");
+			System.err.println("[ERROR] Interpreter thread threw IllegalStateException");
 			
 			//Clean thread data partly up; leave variable data for GUI runtime error mode
 			java.awt.EventQueue.invokeLater(new Runnable() {
@@ -90,6 +90,7 @@ public class CMMrun extends Thread {
 		}
 		catch( Exception e ){
 			System.err.println("Interpreter error occurred");
+			e.printStackTrace();
 		}
 		
 		//Exit message
