@@ -412,7 +412,16 @@ public final class Interpreter implements DebuggerRequest {
 				return Memory.loadChar(Adr(p));		//Normal way of getting Arrays -> more at @Adr
 			else									//Getting a String and look at a special Position
 				try {
-					return strings.get(StringExpr(p.left)).charAt(IntExpr(p.right));
+				    String s = strings.get(StringExpr(p.left));
+				    if(IntExpr(p.right) < 0) {
+				        debugger.abort("negative index choosen", p);
+				        throw new IllegalStateException("Kind" + p.kind);
+				    }
+				    if(IntExpr(p.right) >= s.length()) {
+				        debugger.abort("Too high index choosen", p);
+				        throw new IllegalStateException("Kind" + p.kind);
+				    }
+				    return strings.get(StringExpr(p.left)).charAt(IntExpr(p.right));
 				} catch (BufferOverflowException e) {
 					debugger.abort("Too high index choosen", p);
 					throw new IllegalStateException("Kind" + p.kind);

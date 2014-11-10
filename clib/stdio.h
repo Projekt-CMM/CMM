@@ -38,16 +38,19 @@ void prints(string s) {
  */
 string scanf() {
     string s = "";
+    char c;
     while(1 == 1) {
         // read character
-        s += read();
+        c = read();
         // check if end of scanf is reached
-        if(s[length(s)-1] == ' ' 
-            || s[length(s)-1] == '\t'
-            || s[length(s)-1] == '\r' 
-            || s[length(s)-1] == '\n'
-            || s[length(s)-1] == '\0') {
+        if(c == ' ' 
+            || c == '\t'
+            || c == '\r' 
+            || c == '\n'
+            || c == '\0') {
             return s;
+        } else {
+            s += c;
         }
     }
 }
