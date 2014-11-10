@@ -6,10 +6,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
@@ -82,6 +84,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 * The right panel contains the debugger and profile/quest info tabs.
 	 */
 	private GUIrightPanel rightPanelControl;
+	
+	private JPanel jStatePanel;
+	private JLabel jStateLabel;
 
 	/**
 	 * The text panel with the source code.
@@ -165,7 +170,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	/**
 	 * The current version of C Compact, used as window title.
 	 */
-	public static final String VERSION = "C Compact Alpha 1.1 (Build 3)";
+	public static final String VERSION = "C Compact Alpha 1.1 (Build 5)";
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)
@@ -221,6 +226,16 @@ public class GUImain implements GUImainMod, PopupInterface {
 		JPanel jPanelLeft = new JPanel();
 		jPanelLeft.setLayout(new BoxLayout(jPanelLeft, BoxLayout.PAGE_AXIS));
 		jPanelLeft.setBorder(new EmptyBorder(5, 5, 5, 5));
+		
+		// Panel to display the GUI mode
+		this.jStatePanel = new JPanel();
+		this.jStatePanel.setBorder(BorderFactory.createLoweredBevelBorder());
+		
+		this.jStateLabel = new JLabel();
+		
+		this.jStatePanel.add(this.jStateLabel);
+		jPanelLeft.add(this.jStatePanel);
+		
 
 		// Text area (text pane) for source code
 		this.jSourcePane = InitLeftPanel
@@ -583,5 +598,33 @@ public class GUImain implements GUImainMod, PopupInterface {
 						.getGlassPane()), popup, x, y, width, height));
 		((JPanel) this.jFrame.getGlassPane()).validate();
 		((JPanel) this.jFrame.getGlassPane()).repaint();
+	}
+
+	@Override
+	public void setReadyMode() {
+		
+		this.jStatePanel.setBackground(Color.LIGHT_GRAY);
+		this.jStateLabel.setText("--- " + _("text edit mode") + " ---");
+	}
+
+	@Override
+	public void setErrorMode(int line) {
+		
+		this.jStatePanel.setBackground(Color.RED);
+		this.jStateLabel.setText("! ! ! " + _("error in line") + " " + line + " ! ! !");
+	}
+
+	@Override
+	public void setRunMode() {
+		
+		this.jStatePanel.setBackground(Color.GREEN);
+		this.jStateLabel.setText(">>> " + _("automatic debug mode") + " >>>");
+	}
+
+	@Override
+	public void setPauseMode() {
+		
+		this.jStatePanel.setBackground(Color.YELLOW);
+		this.jStateLabel.setText("||| " + _("pause or step by step mode") + " |||");
 	}
 }

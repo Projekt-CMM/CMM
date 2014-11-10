@@ -146,6 +146,8 @@ public class PanelRunListener implements Debugger {
 		this.lastNode = null;
 
 		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting ready by reset");
+		
+		this.modMain.setReadyMode();
 	}
 
 	/**
@@ -166,6 +168,8 @@ public class PanelRunListener implements Debugger {
 		this.master.getControlPanel().running();
 
 		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting run, delay = " + this.delay);
+		
+		this.modMain.setRunMode();
 	}
 
 	/**
@@ -186,6 +190,8 @@ public class PanelRunListener implements Debugger {
 		this.master.getControlPanel().running();
 
 		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting pause");
+		
+		this.modMain.setPauseMode();
 	}
 
 	/**
@@ -217,6 +223,8 @@ public class PanelRunListener implements Debugger {
 		this.master.getControlPanel().setRuntimeErrorMode(title + ": ", message, line, col, view);
 
 		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting error");
+		
+		this.modMain.setErrorMode(line);
 	}
 
 	/**
@@ -345,7 +353,11 @@ public class PanelRunListener implements Debugger {
 			
 			/* --- Node #4: Passing a breakpoint --- */
 			if( !this.master.getBreakPoints().isEmpty() && arg0.line >= this.master.getBreakPoints().get(0)-1 ){
-				this.setPauseMode();
+				java.awt.EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						setPauseMode();
+					}
+				});
 				DebugShell.out(State.LOG, Area.DEBUGGER, "Stopped at breakpoint: "  + arg0.line + " - " + this.master.getBreakPoints().get(0) );
 				this.master.getBreakPoints().remove(0);
 			}
