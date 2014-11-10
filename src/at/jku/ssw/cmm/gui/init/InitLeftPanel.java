@@ -40,6 +40,8 @@ public class InitLeftPanel {
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
 	    textArea.setCodeFoldingEnabled(true);
 	    textArea.setAntiAliasingEnabled(true);
+	    
+	    //textArea.setToolTipText("<html><b>Title</b><br>description<br>description2<br><i>italic text</i></html>");
 	    RTextScrollPane sp = new RTextScrollPane(textArea);
 	    sp.setFoldIndicatorEnabled(true);
 	    pane.add(sp);

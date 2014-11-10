@@ -3,19 +3,13 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
-import at.jku.ssw.cmm.gui.event.RightPanelBreakpointListener;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.gui.popup.PopupInterface;
 
@@ -49,15 +43,12 @@ public class GUIrightPanel {
 	 */
 	public GUIrightPanel(JComponent cp, GUImainMod mod, PopupInterface popup) {
 		
-		this.mod = mod;
-		
 		//Main right panel
 		this.jRightContainer = new JPanel();
 		this.jRightContainer.setBorder(new EmptyBorder(5, 5, 5, 5));
 		this.jRightContainer.setLayout(new BorderLayout());
 		
-		this.jRightContainer.add(this.initCommonPanel(),
-				BorderLayout.PAGE_START);
+		//this.jRightContainer.add(this.initCommonPanel(),BorderLayout.PAGE_START);
 		
 		//Tabbed Pane
 		JTabbedPane tabbedPane = new JTabbedPane();
@@ -81,11 +72,6 @@ public class GUIrightPanel {
 	}
 	
 	/**
-	 * Modifier of main GUI data. This interface interacts with the main GUI.
-	 */
-	private final GUImainMod mod;
-	
-	/**
 	 * Main container for the right panel. All interface changes happen inside this JPanel
 	 */
 	private final JPanel jRightContainer;
@@ -99,45 +85,6 @@ public class GUIrightPanel {
 	 * A reference to the quest/profile info panel.
 	 */
 	private GUIquestPanel questPanel;
-	
-	/* --- top panel objects --- */
-	/**
-	 * The breakpoint button.
-	 */
-	private JButton jButtonBreakPoint;
-	
-	private JPanel jStatePanel;
-	
-	private JLabel jStateLabel;
-	
-	/**
-	 * Initializes the panel with the common control elements, eg. breakpoint button.
-	 * 
-	 * @return The initialized panel
-	 */
-	private JPanel initCommonPanel() {
-		JPanel jTopPanel = new JPanel();
-
-		this.jButtonBreakPoint = new JButton("\u2326");
-		RightPanelBreakpointListener listener = new RightPanelBreakpointListener(this.mod, this.jButtonBreakPoint);
-		this.jButtonBreakPoint.addMouseListener(listener);
-		this.jButtonBreakPoint.setToolTipText("<html>" + _("toggle breakpoint") + "</b><br><ul><li>" + _("adds breakpoint to the current<br>line in the source code") + "</li><li>" + _("removes the breakpoint from the current<br>line if there is already one") + "</ul><html>" );
-		jTopPanel.add(this.jButtonBreakPoint);
-
-		this.jStatePanel = new JPanel();
-		this.jStateLabel = new JLabel();
-		
-		this.fileSaved();
-		this.jStatePanel.setMinimumSize(new Dimension( 100, 28 ));
-		this.jStatePanel.setPreferredSize(new Dimension( 100, 28 ));
-		this.jStatePanel.setBorder(BorderFactory.createLoweredBevelBorder());
-		
-		this.jStatePanel.add(this.jStateLabel);
-		
-		jTopPanel.add(this.jStatePanel);
-		
-		return jTopPanel;
-	}
 	
 	/**
 	 * @return A reference to the debug panel manager
@@ -158,7 +105,7 @@ public class GUIrightPanel {
 	 * Used while cmm program in interpreted.
 	 */
 	public void lockInput(){
-		this.jButtonBreakPoint.setEnabled(false);
+		//this.jButtonBreakPoint.setEnabled(false);
 	}
 	
 	/**
@@ -166,18 +113,6 @@ public class GUIrightPanel {
 	 * Used when cmm program interpreting is finished.
 	 */
 	public void unlockInput(){
-		this.jButtonBreakPoint.setEnabled(true);
-	}
-
-	public void fileSaved() {
-		
-		this.jStatePanel.setBackground(Color.GREEN);
-		this.jStateLabel.setText(_("file saved"));
-	}
-
-	public void fileChanged() {
-		
-		this.jStatePanel.setBackground(Color.ORANGE);
-		this.jStateLabel.setText(_("file changed"));
+		//this.jButtonBreakPoint.setEnabled(true);
 	}
 }
