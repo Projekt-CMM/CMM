@@ -1,9 +1,11 @@
 package at.jku.ssw.cmm.gui.interpreter;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 
 import at.jku.ssw.cmm.debugger.StdInOut;
+import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 
 /**
@@ -19,9 +21,11 @@ public class IOstream implements StdInOut {
 	 * 
 	 * @param modifier
 	 *            Interface for main GUI manipulations
+	 * @param panelRunListener 
 	 */
-	public IOstream(GUImainMod modifier) {
+	public IOstream(GUImainMod modifier, PanelRunListener panelRunListener) {
 		this.modifier = modifier;
+		this.panelRunListener = panelRunListener;
 
 		// Get input stream characters
 		this.inputStream = new LinkedList<>();
@@ -32,6 +36,8 @@ public class IOstream implements StdInOut {
 
 	// Interface for main GUI manipulations
 	private final GUImainMod modifier;
+	
+	private final PanelRunListener panelRunListener;
 
 	// List with all input stream characters
 	private final List<Character> inputStream;
@@ -45,6 +51,17 @@ public class IOstream implements StdInOut {
 			c = this.inputStream.get(0);
 			this.inputStream.remove(0);
 		} catch (Exception e) {
+
+			try {
+				java.awt.EventQueue.invokeAndWait(new Runnable() {
+					public void run() {
+						panelRunListener.setErrorMode("IO exception", "no input data", -1, -1, false);
+					}
+				});
+			} catch (InvocationTargetException | InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			return '\0';
 		}
 

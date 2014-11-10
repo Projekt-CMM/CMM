@@ -506,6 +506,6 @@ public class GUIdebugPanel {
 	 */
 	public boolean runInterpreter() {
 		this.compile();
-		return this.compileManager.runInterpreter(ctrlPanel.getListener(), new IOstream(this.modifier));
+		return this.compileManager.runInterpreter(ctrlPanel.getListener(), new IOstream(this.modifier, this.ctrlPanel.getListener()));
 	}
 }
