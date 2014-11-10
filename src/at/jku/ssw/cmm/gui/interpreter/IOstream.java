@@ -55,7 +55,7 @@ public class IOstream implements StdInOut {
 			try {
 				java.awt.EventQueue.invokeAndWait(new Runnable() {
 					public void run() {
-						panelRunListener.setErrorMode("IO exception", "no input data", -1, -1, false);
+						panelRunListener.setErrorMode("IO exception", "no input data", -1, -1);
 					}
 				});
 			} catch (InvocationTargetException | InterruptedException e1) {

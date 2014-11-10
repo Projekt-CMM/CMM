@@ -1,7 +1,5 @@
 package at.jku.ssw.cmm.gui.debug;
 
-import java.util.Stack;
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -100,11 +98,11 @@ public class TreeTableView{
 		DebugShell.out(State.LOG, Area.GUI, "treetable standby");
 	}
 	
-	public void highlightVariable( Stack<String> path ){
-		DebugShell.out(State.LOG, Area.GUI, "last variable changed " + path);
-		TreeUtils.expandPath(varTreeTable, path).markChanged();
-	}
-	
+	/**
+	 * Highlights the variable with the given address in the variable tree table
+	 * 
+	 * @param adr The address of the variable which shall be highlighted
+	 */
 	public void highlightVariable( int adr ){
 		TreeUtils.expandByAddress(varTreeTable, adr);
 		varTreeTable.repaint();

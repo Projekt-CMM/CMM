@@ -99,20 +99,4 @@ public class GUIrightPanel {
 	public GUIquestPanel getQuestPanel(){
 		return this.questPanel;
 	}
-	
-	/**
-	 * Locks the common control elements, eg. breakpoint button.
-	 * Used while cmm program in interpreted.
-	 */
-	public void lockInput(){
-		//this.jButtonBreakPoint.setEnabled(false);
-	}
-	
-	/**
-	 * unlocks the common control elements, eg. breakpoint button.
-	 * Used when cmm program interpreting is finished.
-	 */
-	public void unlockInput(){
-		//this.jButtonBreakPoint.setEnabled(true);
-	}
 }

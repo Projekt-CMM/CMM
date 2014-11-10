@@ -132,7 +132,7 @@ public class PanelRunListener implements Debugger {
 
 		this.master.getControlPanel().lockStopButton();
 		this.master.getControlPanel().unlockStepButton();
-		this.master.getControlPanel().setPlay();
+		this.master.getControlPanel().setButtonPlay();
 		
 		this.master.getControlPanel().standby();
 		
@@ -156,7 +156,7 @@ public class PanelRunListener implements Debugger {
 
 		this.master.getControlPanel().unlockStopButton();
 		this.master.getControlPanel().lockStepButton();
-		this.master.getControlPanel().setPause();
+		this.master.getControlPanel().setButtonPause();
 		
 		this.master.getControlPanel().running();
 
@@ -178,7 +178,7 @@ public class PanelRunListener implements Debugger {
 
 		this.master.getControlPanel().unlockStopButton();
 		this.master.getControlPanel().unlockStepButton();
-		this.master.getControlPanel().setPlay();
+		this.master.getControlPanel().setButtonPlay();
 		
 		this.master.getControlPanel().running();
 
@@ -195,6 +195,8 @@ public class PanelRunListener implements Debugger {
 	 * <hr>
 	 */
 	public void setReadyMode() {
+		
+		this.master.getControlPanel().unlockPlayButton();
 
 		this.master.resetInterpreterData();
 	}
@@ -206,14 +208,11 @@ public class PanelRunListener implements Debugger {
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 * <hr>
 	 */
-	public void setErrorMode(String title, String message, int line, int col, boolean view) {
+	public void setErrorMode(String title, String message, int line, int col) {
 		this.run = true;
 		this.keepRunning = false;
 
-		this.master.getControlPanel().unlockStepButton();
-		this.master.getControlPanel().unlockStopButton();
-
-		this.master.getControlPanel().setRuntimeErrorMode(title + ": ", message, line, col, view);
+		this.master.getControlPanel().setRuntimeErrorMode(title + ": ", message, line, col);
 
 		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting error");
 		
@@ -305,12 +304,10 @@ public class PanelRunListener implements Debugger {
 		// TODO is this thread safe???
 		if (this.timer != null)
 			timer.cancel();
-		
-		this.master.setErrorLine(node.line);
 
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				setErrorMode("Runtime error", message, node.line, 0, false);
+				setErrorMode("Runtime error", message, node.line, 0);
 			}
 		});
 	}
@@ -563,12 +560,6 @@ public class PanelRunListener implements Debugger {
 			// Pause mode -> next step
 			else if (isPauseMode()){
 				userReply();
-			}
-
-			// Error mode -> step button has "view" function
-			else if (isErrorMode()) {
-				modMain.highlightSourceCode(master.getErrorLine());
-				DebugShell.out(State.LOG, Area.DEBUGGER, "Highlighting: " + master.getErrorLine() + ", " + master.getCompleteErrorLine() );
 			}
 		}
 

@@ -36,21 +36,22 @@ public class GUIcontrolPanel {
 	public GUIcontrolPanel(JPanel panel, GUIdebugPanel debug, GUImainMod mod) {
 
 		this.debug = debug;
-		this.panel = panel;
 		this.listener = new PanelRunListener(mod, debug);
 
-		this.initRunMode();
+		this.initRunMode(panel);
 	}
-
-	/**
-	 * The main panel which contains all the conntrolPanel buttons.
-	 */
-	private JPanel panel;
 
 	/**
 	 * A reference to the debug panel which contains this controlPanel.
 	 */
 	private final GUIdebugPanel debug;
+	
+	/**
+	 * Wrapper class with listeners for the "run" mode. Also contains the debug
+	 * and I/O stream interface for the interpreter as well as (interpreter)
+	 * "run" mode event routines.
+	 */
+	private final PanelRunListener listener;
 
 	/* --- run mode objects --- */
 	/**
@@ -89,18 +90,6 @@ public class GUIcontrolPanel {
 	 */
 	private JLabel jLabelTimer;
 
-	// Runtime error labels
-	private JLabel jRuntimeErrorLabel1;
-	private JLabel jRuntimeErrorLabel2;
-	private JLabel jRuntimeErrorLabel3;
-
-	/**
-	 * Wrapper class with listeners for the "run" mode. Also contains the debug
-	 * and I/O stream interface for the interpreter as well as (interpreter)
-	 * "run" mode event routines.
-	 */
-	private final PanelRunListener listener;
-
 	public static final boolean ADVANCED_CTRL = false;
 
 	/**
@@ -112,7 +101,7 @@ public class GUIcontrolPanel {
 	 * outside the constructor.
 	 * </hr>
 	 */
-	private void initRunMode() {
+	private void initRunMode( JPanel panel ) {
 
 		// Sub-panel with switches and buttons
 
@@ -122,7 +111,7 @@ public class GUIcontrolPanel {
 		this.jButtonPlay.setToolTipText("<html><b>" + _("compile and run")
 				+ "</b><br>" + _("compile source code<br>and run debugger")
 				+ "</html>");
-		this.panel.add(jButtonPlay);
+		panel.add(jButtonPlay);
 
 		jButtonStep = new JButton("\u25AE\u25B6");
 		this.jButtonStep.addMouseListener(this.listener.stepButtonHandler);
@@ -130,7 +119,7 @@ public class GUIcontrolPanel {
 				+ "</b><br>"
 				+ _("compile source code and<br>run debugger step by step")
 				+ "</html>");
-		this.panel.add(jButtonStep);
+		panel.add(jButtonStep);
 
 		if (ADVANCED_CTRL) {
 			jButtonStepOver = new JButton("\u21B7");
@@ -142,7 +131,7 @@ public class GUIcontrolPanel {
 							+ "</b><br>"
 							+ _("step over the function<br>which would begin next step")
 							+ "</html>");
-			this.panel.add(jButtonStepOver);
+			panel.add(jButtonStepOver);
 			this.jButtonStepOver.setEnabled(false);
 
 			jButtonStepOut = new JButton("\u21B5");
@@ -154,7 +143,7 @@ public class GUIcontrolPanel {
 							+ "</b><br>"
 							+ _("step out of the current function<br>and return to super function immediately")
 							+ "</html>");
-			this.panel.add(jButtonStepOut);
+			panel.add(jButtonStepOut);
 			this.jButtonStepOut.setEnabled(false);
 		}
 
@@ -162,24 +151,11 @@ public class GUIcontrolPanel {
 		this.jButtonStop.addMouseListener(this.listener.stopButtonHandler);
 		this.jButtonStop.setToolTipText("<html><b>" + _("stop") + "</b><br>"
 				+ _("return to text edit mode immediately") + "</html>");
-		this.panel.add(jButtonStop);
-
-		/* --- RUNTIME ERROR LABELS --- */
-		this.jRuntimeErrorLabel1 = new JLabel(_("Runtime Error") + ":");
-		this.panel.add(this.jRuntimeErrorLabel1);
-		this.jRuntimeErrorLabel1.setVisible(false);
-
-		this.jRuntimeErrorLabel2 = new JLabel("...");
-		this.panel.add(this.jRuntimeErrorLabel2);
-		this.jRuntimeErrorLabel2.setVisible(false);
-
-		this.jRuntimeErrorLabel3 = new JLabel("...");
-		this.panel.add(this.jRuntimeErrorLabel3);
-		this.jRuntimeErrorLabel3.setVisible(false);
+		panel.add(jButtonStop);
 
 		/* ---------- SLIDER ---------- */
 		jLabelTimer = new JLabel("1.0 sec");
-		this.panel.add(jLabelTimer);
+		panel.add(jLabelTimer);
 
 		jSlider = new JSlider(JSlider.HORIZONTAL, 1, 9, 1);
 		jSlider.setMajorTickSpacing(1);
@@ -190,11 +166,11 @@ public class GUIcontrolPanel {
 		jSlider.setToolTipText("<html><b>" + _("debugger step delay")
 				+ "</b><br>" + _("change delay") + "</html>");
 
-		this.panel.add(jSlider);
+		panel.add(jSlider);
 		// Sub-panel end
 
-		this.panel.setPreferredSize(new Dimension(300, 100));
-		this.panel.setMinimumSize(new Dimension(200, 100));
+		panel.setPreferredSize(new Dimension(300, 100));
+		panel.setMinimumSize(new Dimension(200, 100));
 	}
 
 	/**
@@ -208,40 +184,16 @@ public class GUIcontrolPanel {
 	 * @param message
 	 *            The error message from the interpreter
 	 */
-	public void setRuntimeErrorMode(String title, String message, int line,
-			int col, boolean view) {
-
-		// Set standard mode elements invisible
-		this.jButtonPlay.setVisible(false);
+	public void setRuntimeErrorMode(String title, String message, int line, int col) {
 
 		if (ADVANCED_CTRL) {
 			this.jButtonStepOver.setVisible(false);
 			this.jButtonStepOut.setVisible(false);
 		}
-
-		this.jLabelTimer.setVisible(false);
-		this.jSlider.setVisible(false);
-
-		// Make error mode elements visible
-		this.jRuntimeErrorLabel1.setVisible(true);
-		this.jRuntimeErrorLabel1.setText(title);
-		this.jRuntimeErrorLabel2.setVisible(true);
-		this.jRuntimeErrorLabel2.setText(message);
-		this.jRuntimeErrorLabel3.setVisible(true);
-		this.jRuntimeErrorLabel3.setText("... in line " + line);
-
-		// Change step button to view button
-		if (ADVANCED_CTRL) {
-			if (view) {
-				this.jButtonStep.setVisible(true);
-				this.jButtonStep.setText(_("View"));
-				this.jButtonStep.setToolTipText("<html><b>"
-						+ _("view error line") + "</b><br>"
-						+ _("jump to the line where<br>the error occurred")
-						+ "</html>");
-			} else
-				this.jButtonStep.setVisible(false);
-		}
+		
+		this.jButtonPlay.setEnabled(false);
+		this.jButtonStep.setEnabled(false);
+		this.jButtonStop.setEnabled(true);
 	}
 
 	/**
@@ -254,32 +206,18 @@ public class GUIcontrolPanel {
 	 */
 	public void unsetRunTimeError() {
 
-		// Set standard mode elements visible
-		this.jButtonPlay.setVisible(true);
 
 		if (ADVANCED_CTRL) {
 			this.jButtonStepOver.setVisible(true);
 			this.jButtonStepOut.setVisible(true);
 		}
-
-		this.jLabelTimer.setVisible(true);
-		this.jSlider.setVisible(true);
-
-		this.jButtonStep.setVisible(true);
-
-		// Hide error mode elements
-		this.jRuntimeErrorLabel1.setVisible(false);
-		this.jRuntimeErrorLabel2.setVisible(false);
-		this.jRuntimeErrorLabel3.setVisible(false);
-
-		// Change view button to step button
-		this.jButtonStep.setText("\u25AE\u25B6");
-		this.jButtonStep.setToolTipText("<html><b>" + _("compile and step")
-				+ "</b><br>"
-				+ _("compile source code and<br>run debugger step by step")
-				+ "</html>");
 	}
 
+	/**
+	 * @return The listener for the control elements which also
+	 * implements the Interpreter step request interface.
+	 * {@see at.jku.ssw.cmm.Debugger}
+	 */
 	public PanelRunListener getListener() {
 		return this.listener;
 	}
@@ -291,7 +229,7 @@ public class GUIcontrolPanel {
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 * <hr>
 	 */
-	public void setPause() {
+	public void setButtonPause() {
 		this.jButtonPlay.setText("\u25AE\u25AE");
 		this.jButtonPlay.setToolTipText("<html><b>" + _("pause") + "</b><br>"
 				+ _("interrupt automatic debugging") + "</html>");
@@ -304,7 +242,7 @@ public class GUIcontrolPanel {
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 * <hr>
 	 */
-	public void setPlay() {
+	public void setButtonPlay() {
 		this.jButtonPlay.setText("\u25B6");
 		this.jButtonPlay.setToolTipText("<html><b>" + _("run") + "</b><br>"
 				+ _("run automatic debugging") + "</html>");
@@ -483,5 +421,10 @@ public class GUIcontrolPanel {
 
 		this.jButtonStep.setToolTipText("<html><b>" + _("next step")
 				+ "</b><br>" + _("proceed to next step") + "</html>");
+	}
+
+	public void unlockPlayButton() {
+		
+		this.jButtonPlay.setEnabled(true);
 	}
 }

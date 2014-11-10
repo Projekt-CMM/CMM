@@ -5,10 +5,8 @@ import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 import javax.swing.BoxLayout;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
@@ -50,14 +48,12 @@ public class GUIdebugPanel {
 	 */
 	public GUIdebugPanel(JPanel cp, GUImainMod mod, PopupInterface popup) {
 
-		this.cp = cp;
-		
+		//Constructor parameter init
 		this.modifier = mod;
-		
 		this.popup = popup;
 
-		this.jRightPanel = new JPanel();
-		this.jRightPanel.setLayout(new BorderLayout());
+		cp = new JPanel();
+		cp.setLayout(new BorderLayout());
 
 		this.compileManager = new CMMwrapper(this.modifier, this);
 		
@@ -65,26 +61,18 @@ public class GUIdebugPanel {
 		this.jControlPanel.setBorder(new TitledBorder(_("Control elements")));
 		this.ctrlPanel = new GUIcontrolPanel( this.jControlPanel, this, mod );
 		this.ctrlPanel.getListener().reset();
-		this.jRightPanel.add(jControlPanel, BorderLayout.PAGE_START);
+		cp.add(jControlPanel, BorderLayout.PAGE_START);
 		
 		this.jVarPanel = new JPanel();
 		this.jVarPanel.setBorder(new TitledBorder(_("Variables")));
 		this.jVarPanel.setLayout(new BoxLayout(this.jVarPanel, BoxLayout.PAGE_AXIS));
 		this.varView = new TreeTableView(this.modifier, this.jVarPanel, mod.getFileName());
-		this.jRightPanel.add(jVarPanel, BorderLayout.CENTER);
+		cp.add(jVarPanel, BorderLayout.CENTER);
 		
 		this.stepTarget = -1;
-		this.sourceCodeBeginLine = 0;
-		
-		this.cp.add(this.jRightPanel, BorderLayout.CENTER);
 		
 		this.breakpoints = new ArrayList<>();
 	}
-	
-	/**
-	 * Main component of the main GUI
-	 */
-	private final JComponent cp;
 	
 	/**
 	 * Panel with variable tree table
@@ -100,25 +88,22 @@ public class GUIdebugPanel {
 	 * The manager object for the control panel.
 	 */
 	private final GUIcontrolPanel ctrlPanel;
+	
+	/**
+	 * The manager object for the variable tree table.
+	 */
+	private TreeTableView varView;
 
 	/**
 	 * Interface for main GUI manipulations
 	 */
 	private final GUImainMod modifier;
-
-	/**
-	 * Interface of the right panel (edit text, compile error, interpreter)
-	 */
-	private final JPanel jRightPanel;
 	
 	/**
 	 * Interface for popup operations. Used by static methods which invoke popups.
 	 */
 	private final PopupInterface popup;
-
-	//TODO add a comment
-	private TreeTableView varView;
-
+	
 	/**
 	 * Wrapper class for the compiler. Also initiates the interpreter thread.
 	 */
@@ -128,11 +113,6 @@ public class GUIdebugPanel {
 	 * Line of the currently displayed error (if necessary)
 	 */
 	private int line;
-	
-	/**
-	 * Column of the currently displayed error (if necessary)
-	 */
-	private int col;
 
 	/**
 	 * The Call stack size which has to be reached so that stepping over a function is finished.
@@ -148,11 +128,6 @@ public class GUIdebugPanel {
 	 * The previous call stack size
 	 */
 	private int previousCallStackSize;
-
-	/**
-	 * Begin of source code, without includes
-	 */
-	private int sourceCodeBeginLine;
 	
 	/**
 	 * List of breakpoints
@@ -160,53 +135,26 @@ public class GUIdebugPanel {
 	private final List<Integer> breakpoints;
 
 	/**
-	 * <i>THREAD SAFE by default </i>
-	 * 
 	 * @return The first line of the original source code, without includes and
 	 *         include code.
 	 */
 	public int getBeginLine() {
-		return this.sourceCodeBeginLine;
-	}
-	
-	public void setErrorLine( int line ){
-		this.line = line;
+		return (int) this.modifier.getSourceCodeRegister().get(0)[0];
 	}
 	
 	/**
-	 * <i>THREAD SAFE by default </i>
-	 * 
-	 * @return The line of the currently displayed error (if necessary)
-	 */
-	public int getErrorLine() {
-		return this.line;
-	}
-	
-	/**
-	 * <i>THREAD SAFE by default </i>
-	 * 
-	 * @return The column of the currently displayed error
-	 */
-	public int getErrorCol() {
-		return this.col;
-	}
-	
-	/**
-	 * <i>THREAD SAFE by default </i>
-	 * 
 	 * @return The line of the currently displayed error in the users's source code.
 	 * This is the error line which is highlighted in the source code panel of the main GUI.
 	 */
-	public int getCompleteErrorLine() {
-		return ExpandSourceCode.correctLine(this.line, this.sourceCodeBeginLine, this.modifier.getSourceCodeRegister().size());
+	private int getCompleteErrorLine() {
+		return ExpandSourceCode.correctLine(this.line, (int) this.modifier.getSourceCodeRegister().get(0)[0], this.modifier.getSourceCodeRegister().size());
 	}
 	
 	/**
 	 * Resets the control panel and the variable tree table (consequently the whole debug panel GUI).
 	 * Should be called after resetting interpreter so that the GUI does no longer display variable values.
-	 * 
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 */
+	//TODO rework
 	public void resetInterpreterData() {
 		
 		this.ctrlPanel.getListener().reset();
@@ -222,16 +170,11 @@ public class GUIdebugPanel {
 		this.varView.standby(this.modifier.getFileName());
 	}
 	
-	public void highlightVariable( final Stack<String> path ){
-		if( path != null){
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					varView.highlightVariable(path);
-				}
-			});
-		}
-	}
-	
+	/**
+	 * Highlights the variable with the given address in the variable tree table
+	 * 
+	 * @param adr The address of the variable to be highlighted
+	 */
 	public void highlightVariable( final int adr ){
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
@@ -248,22 +191,11 @@ public class GUIdebugPanel {
 	}
 	
 	/**
-	 * Sets the call stack counter variable to the given value
-	 * <br><br>
-	 * <i>THREAD SAFE by default </i>
-	 * 
-	 * @param size The current size of the call stack.
-	 */
-	void setCallStackSize( int size ){
-		this.previousCallStackSize = this.callStackSize;
-		this.callStackSize = size;
-	}
-	
-	/**
 	 * <i>THREAD SAFE by default </i>
 	 * <br><br>
 	 * Updates the call stack counter variable automatically by reading the call stack memory.
 	 */
+	//TODO rework
 	public void updateCallStackSize(){
 		this.previousCallStackSize = this.callStackSize;
 		this.callStackSize = ReadCallStack.readCallStack().size();
@@ -274,6 +206,7 @@ public class GUIdebugPanel {
 	 * 
 	 * @return The current size of the call stack. Updates automatically.
 	 */
+	//TODO rework
 	public int getCallStackSize() {
 		
 		return this.callStackSize;
@@ -284,28 +217,9 @@ public class GUIdebugPanel {
 	 * 
 	 * @return TRUE if the size of the call stack has changed with the last update
 	 */
+	//TODO rework
 	public boolean callStackChanged(){
 		return this.callStackSize != this.previousCallStackSize;
-	}
-	
-	/**
-	 * Sets the right panel of the main GUI to the "runtime error" mode, which
-	 * is a sub-mode of "run" mode.
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 * 
-	 * @param message
-	 *            The error message from the interpreter
-	 */
-	public void setRuntimeErrorMode(String title, String message, int line, int col ) {
-		this.line = line - this.sourceCodeBeginLine + this.modifier.getSourceCodeRegister().size();
-		this.col = col;
-		
-		DebugShell.out(State.WARNING, Area.INTERPRETER, "Runtime error: " + line + " -> " + this.line );
-		
-		this.ctrlPanel.setRuntimeErrorMode(title, message, this.line, this.col, true);
 	}
 	
 	/**
@@ -326,6 +240,7 @@ public class GUIdebugPanel {
 	 * 
 	 * @return TRUE if "step over" has ended, otherwise FALSE
 	 */
+	//TODO rework
 	public boolean checkForStepEnd() {
 
 		if (this.callStackSize <= this.stepTarget) {
@@ -359,6 +274,7 @@ public class GUIdebugPanel {
 	 * <br><br>
 	 * <i>THREAD SAFE, calls synchronized function </i>
 	 */
+	//TODO rework
 	public void stepOver() {
 		this.stepTarget = this.callStackSize;
 		this.ctrlPanel.getListener().stepOver();
@@ -371,6 +287,7 @@ public class GUIdebugPanel {
 	 * <br><br>
 	 * <i>THREAD SAFE, calls synchronized function </i>
 	 */
+	//TODO rework
 	public void stepOut() {
 		if (this.callStackSize > 1) {
 			this.stepTarget = this.callStackSize - 1;
@@ -384,6 +301,7 @@ public class GUIdebugPanel {
 	 * 
 	 * @return TRUE if source code can be modified, otherwise FALSE (during interpreting cmm program)
 	 */
+	//TODO what the hell?
 	public boolean isCodeChangeAllowed(){
 		return true;
 	}
@@ -411,15 +329,17 @@ public class GUIdebugPanel {
 		}
 	}
 	
+	/**
+	 * Updates the file name in the default root node of the variable tree table.
+	 */
 	public void updateFileName(){
 		this.varView.standby(this.modifier.getFileName());
 	}
 	
 	/**
-	 * <i>THREAD SAFE by default</i>
-	 * 
 	 * @return A reference to the control panel manager class
 	 */
+	//TODO rework
 	public GUIcontrolPanel getControlPanel(){
 		return this.ctrlPanel;
 	}
@@ -448,14 +368,13 @@ public class GUIdebugPanel {
 		} catch (final IncludeNotFoundException e1) {
 			
 			this.line = e1.getLine();
-			this.col = 0;
 			
 			Object[] e = {1,0,null};
 			this.modifier.getSourceCodeRegister().clear();
 			this.modifier.getSourceCodeRegister().add(e);
 			
 			// An include file could not be found
-			ctrlPanel.getListener().setErrorMode(_("Preprocessor error"), _("Include file not found") + ": \"" + e1.getFileName() + "\"", e1.getLine(), 0, true);
+			ctrlPanel.getListener().setErrorMode(_("Preprocessor error"), _("Include file not found") + ": \"" + e1.getFileName() + "\"", e1.getLine(), 0);
 			return;
 		}
 
@@ -466,10 +385,8 @@ public class GUIdebugPanel {
 		}
 		DebugShell.out(State.STAT, Area.COMPILER, "-------------------------------------");
 
-		this.sourceCodeBeginLine = (int) this.modifier.getSourceCodeRegister()
-				.get(0)[0];
 		DebugShell.out(State.STAT, Area.COMPILER, "Source code begins @ line "
-				+ this.sourceCodeBeginLine + "\n");
+				+ (int) this.modifier.getSourceCodeRegister().get(0)[0] + "\n");
 
 		for(int i : this.breakpoints){
 			DebugShell.out(State.STAT, Area.COMPILER, "line " + i);
@@ -491,8 +408,7 @@ public class GUIdebugPanel {
 		// compiler returns errors
 		if( e != null ) {
 			this.line = e.line;
-			this.col = e.col;
-			this.ctrlPanel.getListener().setErrorMode("Compiler error", e.msg, this.getCompleteErrorLine(), e.col, true);
+			this.ctrlPanel.getListener().setErrorMode("Compiler error", e.msg, this.getCompleteErrorLine(), e.col);
 		}
 	}
 

@@ -475,8 +475,6 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.jOutputPane.setEditable(false);
 		this.jOutputPane.setBackground(Color.LIGHT_GRAY);
 
-		this.rightPanelControl.lockInput();
-
 		this.menuBarControl.lockAll();
 	}
 
@@ -489,8 +487,6 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.jInputPane.setBackground(Color.WHITE);
 		this.jOutputPane.setEditable(true);
 		this.jOutputPane.setBackground(Color.WHITE);
-
-		this.rightPanelControl.unlockInput();
 
 		this.menuBarControl.unlockAll();
 	}
