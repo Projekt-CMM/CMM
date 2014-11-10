@@ -18,11 +18,14 @@ import org.xml.sax.SAXException;
 
 public class Package {
 	//File Seperator
-	private static String sep = System.getProperty("file.separator");
+	public static String sep = System.getProperty("file.separator");
 	
 	//Variablen abgeleitet von der package.xml
 	private String title;					//Titel des Packages
-	private int minLevel;					//Minimaler Level
+	private int minLevel = 0;				//Minimaler Level
+	private boolean description = false;	//Hat das Package eine Beschreibung
+	private boolean style = false;			//Hat das Packet ein Style für die Beschreibung
+	
 	
 	//Ordner der Quest
 	private String initPath;				//Inizialisierungspfad:
@@ -30,7 +33,9 @@ public class Package {
 	private List<Quest> questList;
 	
 	private static final String
-		FILE_PACKAGE = "package.xml";
+		FILE_PACKAGE = "package.xml",
+		FILE_DESCRIPTION = "description.html",
+		FILE_STYLE = "style.css";
 	
 	private static final String
 		XML_PACKAGE = "package",
@@ -38,10 +43,16 @@ public class Package {
 		XML_MINLEVEL = "minlevel";
 	
 	public static Package readPackage(String initPath, String packagePath){
-		Package package1;
 
+		Package package1 = readPackageFile(initPath, packagePath);
+		List<String> fileNames = Quest.ReadFileNames(initPath + sep + packagePath);
 		
-		package1 = readPackageFile(initPath, packagePath);
+		if(fileNames.contains(Package.FILE_DESCRIPTION))
+			package1.setDescription(true);
+		
+		if(fileNames.contains(Package.FILE_STYLE))
+			package1.setStyle(true);
+		
 		package1.setQuestList(readPackageQuests(initPath,packagePath,package1));
 		
 
@@ -64,17 +75,16 @@ public class Package {
 		package1.setInitPath(initPath);
 		package1.setPackagePath(packagePath);
 		
+		//Setting other default values
+		package1.setTitle(packagePath);
+
 		
 		try {
 			package1 = readPackageXML(initPath, packagePath, package1);
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
-			
-			//When an Error occurs, setting Package Levels
-			package1.setMinLevel(0);
-			package1.setTitle(packagePath);
 		}
-		
+
 		return package1;
 	}
 	
@@ -115,8 +125,7 @@ public class Package {
 				try{
 				package1.setMinLevel(Integer.parseInt(eElement.getElementsByTagName(Package.XML_MINLEVEL).item(0).getTextContent()));
 				}catch(NullPointerException e){
-					//Setting Min-Level to 0
-					package1.setMinLevel(0);
+					//nothing happens...
 				}
 			}
 		}
@@ -130,7 +139,7 @@ public class Package {
 	 * @param allPackagesPath: the initial Path of the Packages
 	 * @param packagePath: the folder Name of the Package
 	 * @return packageQuests: all Quests of one package
-	 */
+	 */	
 	private static List<Quest> readPackageQuests(String allPackagesPath, String packagePath, Package package1){
 		
 		List<String> questFolderNames = Quest.ReadFolderNames(allPackagesPath + sep + packagePath);
@@ -141,7 +150,7 @@ public class Package {
 					quest = Quest.ReadQuest(allPackagesPath, packagePath, questFolderNames.get(i));
 					
 					
-					if(quest!= null && !quest.isDescription()){
+					if(quest!= null && quest.isDescription()){
 						//min Package level is exported on the quest
 						quest.setMinLevel(package1.getMinLevel());
 						packageQuests.add(quest);			
@@ -149,10 +158,11 @@ public class Package {
 
 					
 			}
-				
-		
-		
-		return packageQuests;
+			
+		if(packageQuests.size() != 0)
+			return packageQuests;
+		else
+			return null;
 	}
 	
 	/**
@@ -180,6 +190,10 @@ public class Package {
 		}
 		return null;
 	}
+	
+    public String toString() {
+        return title;
+    }
 	
 	/**
 	 * @return the title
@@ -242,6 +256,34 @@ public class Package {
 	 */
 	public void setQuestList(List<Quest> questList) {
 		this.questList = questList;
+	}
+
+	/**
+	 * @return the hasDescription
+	 */
+	public boolean isDescription() {
+		return description;
+	}
+
+	/**
+	 * @param hasDescription the hasDescription to set
+	 */
+	public void setDescription(boolean hasDescription) {
+		this.description = hasDescription;
+	}
+
+	/**
+	 * @return the style
+	 */
+	public boolean isStyle() {
+		return style;
+	}
+
+	/**
+	 * @param style the style to set
+	 */
+	public void setStyle(boolean style) {
+		this.style = style;
 	}
 	
 	
