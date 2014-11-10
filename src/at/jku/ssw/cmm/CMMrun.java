@@ -88,6 +88,9 @@ public class CMMrun extends Thread {
 			});
 			return;
 		}
+		catch( Exception e ){
+			System.err.println("Interpreter error occurred");
+		}
 		
 		//Exit message
 		System.out.println("[thread] Interpreter thread exited");
