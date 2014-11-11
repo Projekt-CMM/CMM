@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import at.jku.ssw.cmm.gui.GUImainSettings;
-import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.init.JInputDataPane;
 
 /**
  * Event listener for the main window. Controls automatic resizing of the source code text pane.
@@ -25,18 +25,17 @@ public class WindowComponentListener implements ComponentListener {
 	 * @param jSourcePane The text pane for the source code
 	 * @param settings The main window configuration object.
 	 */
-	public WindowComponentListener( JFrame jFrame, RSyntaxTextArea jSourcePane, GUImainSettings settings, GUIdebugPanel rPanel ){
+	public WindowComponentListener( JFrame jFrame, RSyntaxTextArea jSourcePane, JInputDataPane jInputPane, GUImainSettings settings ){
 		this.jFrame = jFrame;
 		this.jSourcePane = jSourcePane;
+		this.jInputPane = jInputPane;
 		this.settings = settings;
-		this.rPanel = rPanel;
 	}
 	
 	private final JFrame jFrame;
 	private final RSyntaxTextArea jSourcePane;
+	private final JInputDataPane jInputPane;
 	private final GUImainSettings settings;
-	@SuppressWarnings("unused")
-	private final GUIdebugPanel rPanel;
 
 	@Override
 	public void componentResized(ComponentEvent e) {
@@ -48,6 +47,8 @@ public class WindowComponentListener implements ComponentListener {
 		// ...and the source code panel is resized as well.
 		this.jSourcePane.setColumns( settings.getSourceSizeX() );
 		this.jSourcePane.setRows( settings.getSourceSizeY() );
+		
+		this.jInputPane.setMaximumSize(this.jSourcePane.getMaximumSize());
 	}
 
 	@Override
@@ -60,6 +61,8 @@ public class WindowComponentListener implements ComponentListener {
 		// ...and the source code panel is resized as well.
 		this.jSourcePane.setColumns( settings.getSourceSizeX() );
 		this.jSourcePane.setRows( settings.getSourceSizeY() );
+		
+		this.jInputPane.setMaximumSize(this.jSourcePane.getMaximumSize());
 		
 		this.jFrame.revalidate();
 		this.jFrame.repaint();

@@ -3,7 +3,6 @@ package at.jku.ssw.cmm;
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
-import at.jku.ssw.cmm.gui.interpreter.IOstream;
 import at.jku.ssw.cmm.gui.mod.CMMrunnableMod;
 import at.jku.ssw.cmm.interpreter.Interpreter;
 import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
@@ -27,26 +26,24 @@ public class CMMrun extends Thread {
 	 * 			Input messages have to be entered in the "input" text field in the main GUI
 	 * @param reply Interface which enables the thread to clean up after exiting by itself, see {@link CMMwrapper}
 	 */
-	public CMMrun ( PanelRunListener debug, Compiler compiler, IOstream stream, CMMrunnableMod reply ){
-		this.debug = debug;
+	public CMMrun ( Compiler compiler, Interpreter interpreter, CMMrunnableMod reply ){
 		this.compiler = compiler;
-		this.stream = stream;
+		this.interpreter = interpreter;
 		this.reply = reply;
 	}
-	
-	//Interface for debug replies (Interpreter calls "step" method after each operation)
-	private final PanelRunListener debug;
 	
 	//The compiler containing the syntax tree and the symbol table
 	private final Compiler compiler;
 	
-	//Interface for the I/O stream.
+	/*//Interface for the I/O stream.
 	//Output messages are shown in the "output" text area of the main GUI.
 	//Input messages have to be entered in the "input" text field in the main GUI
-	private final IOstream stream;
+	private final IOstream stream;*/
 	
 	//Interface which enables the thread to clean up after exiting by itself, see CMMwrapper
 	private final CMMrunnableMod reply;
+	
+	private final Interpreter interpreter;
 
 	/**
 	 * Starts the interpreter thread
@@ -61,10 +58,7 @@ public class CMMrun extends Thread {
 		
 		//Allocating memory for interpreter
 		Memory.initialize();
-		
-		//Initializing interpreter
-		Interpreter interpreter = new Interpreter( debug, stream, compiler.getStringStorage() );
-				
+
 		//Get main function from symbol table
 		Obj main = compiler.getSymbolTable().find("main");
 				
@@ -84,7 +78,7 @@ public class CMMrun extends Thread {
 		//Thrown when runtime error occurs
 		catch( IllegalStateException e ){
 			
-			System.out.println("[ERROR] Interpreter thread threw IllegalStateException");
+			System.err.println("[ERROR] Interpreter thread threw IllegalStateException");
 			
 			//Clean thread data partly up; leave variable data for GUI runtime error mode
 			java.awt.EventQueue.invokeLater(new Runnable() {
@@ -93,6 +87,10 @@ public class CMMrun extends Thread {
 				}
 			});
 			return;
+		}
+		catch( Exception e ){
+			System.err.println("Interpreter error occurred");
+			e.printStackTrace();
 		}
 		
 		//Exit message

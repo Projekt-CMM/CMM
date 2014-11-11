@@ -67,7 +67,7 @@ public class SaveDialog {
 		
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(new FileNameExtensionFilter(
-				"C-- " + _("file"), "cmm"));
+				"CMM " + _("file"), "cmm"));
 		
 		int option = chooser.showSaveDialog(jFrame);
 		

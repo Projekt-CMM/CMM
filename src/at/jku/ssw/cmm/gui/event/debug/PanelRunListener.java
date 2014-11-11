@@ -13,7 +13,6 @@ import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.debugger.Debugger;
-import at.jku.ssw.cmm.gui.datastruct.SyntaxTreePath;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.compiler.Node;
@@ -95,15 +94,8 @@ public class PanelRunListener implements Debugger {
 
 	/**
 	 * The delay between two interpreter steps in run mode
-	 * time [seconds] = delay/divider
 	 */
 	private int delay;
-	
-	/**
-	 * Divide delay state from the jSlider by this number to get the delay
-	 * in seconds.
-	 */
-	private static final int divider = 4;
 
 	/**
 	 * Reference to the timer which is scheduling the run mode delay <br>
@@ -129,7 +121,7 @@ public class PanelRunListener implements Debugger {
 
 		this.delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
 
-		master.getControlPanel().setTimerLabelSeconds((double) (delay) / divider);
+		master.getControlPanel().setTimerLabelSeconds(delayScale(delay));
 
 		if (this.timer != null)
 			this.timer.cancel();
@@ -140,11 +132,15 @@ public class PanelRunListener implements Debugger {
 
 		this.master.getControlPanel().lockStopButton();
 		this.master.getControlPanel().unlockStepButton();
-		this.master.getControlPanel().setPlay();
+		this.master.getControlPanel().setButtonPlay();
+		
+		this.master.getControlPanel().standby();
 		
 		this.lastNode = null;
 
 		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting ready by reset");
+		
+		this.modMain.setReadyMode();
 	}
 
 	/**
@@ -160,9 +156,13 @@ public class PanelRunListener implements Debugger {
 
 		this.master.getControlPanel().unlockStopButton();
 		this.master.getControlPanel().lockStepButton();
-		this.master.getControlPanel().setPause();
+		this.master.getControlPanel().setButtonPause();
+		
+		this.master.getControlPanel().running();
 
 		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting run, delay = " + this.delay);
+		
+		this.modMain.setRunMode();
 	}
 
 	/**
@@ -178,9 +178,13 @@ public class PanelRunListener implements Debugger {
 
 		this.master.getControlPanel().unlockStopButton();
 		this.master.getControlPanel().unlockStepButton();
-		this.master.getControlPanel().setPlay();
+		this.master.getControlPanel().setButtonPlay();
+		
+		this.master.getControlPanel().running();
 
 		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting pause");
+		
+		this.modMain.setPauseMode();
 	}
 
 	/**
@@ -191,6 +195,8 @@ public class PanelRunListener implements Debugger {
 	 * <hr>
 	 */
 	public void setReadyMode() {
+		
+		this.master.getControlPanel().unlockPlayButton();
 
 		this.master.resetInterpreterData();
 	}
@@ -202,16 +208,15 @@ public class PanelRunListener implements Debugger {
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 * <hr>
 	 */
-	public void setErrorMode(String title, String message, int line, int col, boolean view) {
+	public void setErrorMode(String title, String message, int line, int col) {
 		this.run = true;
 		this.keepRunning = false;
 
-		this.master.getControlPanel().unlockStepButton();
-		this.master.getControlPanel().unlockStopButton();
-
-		this.master.getControlPanel().setRuntimeErrorMode(title + ": ", message, line, col, view);
+		this.master.getControlPanel().setRuntimeErrorMode(title + ": ", message, line, col);
 
 		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting error");
+		
+		this.modMain.setErrorMode(line);
 	}
 
 	/**
@@ -299,12 +304,10 @@ public class PanelRunListener implements Debugger {
 		// TODO is this thread safe???
 		if (this.timer != null)
 			timer.cancel();
-		
-		this.master.setErrorLine(node.line);
 
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				setErrorMode("Runtime error", message, node.line, 0, false);
+				setErrorMode("Runtime error", message, node.line, 0);
 			}
 		});
 	}
@@ -340,7 +343,11 @@ public class PanelRunListener implements Debugger {
 			
 			/* --- Node #4: Passing a breakpoint --- */
 			if( !this.master.getBreakPoints().isEmpty() && arg0.line >= this.master.getBreakPoints().get(0)-1 ){
-				this.setPauseMode();
+				java.awt.EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						setPauseMode();
+					}
+				});
 				DebugShell.out(State.LOG, Area.DEBUGGER, "Stopped at breakpoint: "  + arg0.line + " - " + this.master.getBreakPoints().get(0) );
 				this.master.getBreakPoints().remove(0);
 			}
@@ -360,10 +367,9 @@ public class PanelRunListener implements Debugger {
 		this.master.getControlPanel().updateStepOutButton();//*.next -> main()
 		
 		/* --- Node #5 - Variable value changed --- */
-		//if( arg0.kind == Node.CALL || arg0.kind == Node.ASSIGN )
 		this.master.updateVariableTables(this.master.callStackChanged());
 		
-		this.master.highlightVariable(SyntaxTreePath.getVariablePath(arg0, this.modMain.getFileName(), this.master.getCompileManager()));
+		this.master.highlightVariable(this.master.getCompileManager().getRequest().getLastChangedAddress());
 		
 		this.timer = null;
 
@@ -391,7 +397,7 @@ public class PanelRunListener implements Debugger {
 				public void run() {
 					userReply();
 				}
-			}, 1000/divider * delay);
+			}, (int)(delayScale(delay)*1000) );
 		}
 		/* --- Node #6: Default exit --- */
 		else {
@@ -555,12 +561,6 @@ public class PanelRunListener implements Debugger {
 			else if (isPauseMode()){
 				userReply();
 			}
-
-			// Error mode -> step button has "view" function
-			else if (isErrorMode()) {
-				modMain.highlightSourceCode(master.getErrorLine());
-				DebugShell.out(State.LOG, Area.DEBUGGER, "Highlighting: " + master.getErrorLine() + ", " + master.getCompleteErrorLine() );
-			}
 		}
 
 		@Override
@@ -693,13 +693,27 @@ public class PanelRunListener implements Debugger {
 		public void stateChanged(ChangeEvent e) {
 
 			delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
-			master.getControlPanel().setTimerLabelSeconds((double) (delay) / divider);
+			master.getControlPanel().setTimerLabelSeconds(delayScale(delay));
 			
-			//TODO check: Remove already passed breakpoints if in fast run mode
 			if( delay == 0 && lastNode != null ){
 				master.updateBreakPoints(lastNode.line);
 			}
 		}
 	};
+	
+	private static double delayScale( int slider ){
+		switch( slider ){
+		case 1: return 0.05;
+		case 2: return 0.1;
+		case 3: return 0.2;
+		case 4: return 0.5;
+		case 5: return 0.75;
+		case 6: return 1;
+		case 7: return 1.5;
+		case 8: return 2;
+		case 9: return 3;
+		default: return 0;
+		}
+	}
 
 }

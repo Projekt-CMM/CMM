@@ -6,14 +6,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -36,6 +37,7 @@ import at.jku.ssw.cmm.gui.file.SaveDialog;
 import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
 import at.jku.ssw.cmm.gui.init.InitLeftPanel;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
+import at.jku.ssw.cmm.gui.init.JInputDataPane;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
 import at.jku.ssw.cmm.gui.popup.PopupInterface;
@@ -83,6 +85,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 * The right panel contains the debugger and profile/quest info tabs.
 	 */
 	private GUIrightPanel rightPanelControl;
+	
+	private JPanel jStatePanel;
+	private JLabel jStateLabel;
 
 	/**
 	 * The text panel with the source code.
@@ -92,7 +97,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	/**
 	 * The text panel with input data for the cmm program.
 	 */
-	private JTextPane jInputPane;
+	private JInputDataPane jInputPane;
 
 	/**
 	 * The text panel for the output stream of the cmm program.
@@ -161,12 +166,12 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 * If true, GUI options for quest and profile functions are shown. <br>
 	 * If false, quest/profile GUI is hidden.
 	 */
-	public static final boolean ADVANCED_GUI = true;
+	public static final boolean ADVANCED_GUI = false;
 
 	/**
 	 * The current version of C Compact, used as window title.
 	 */
-	public static final String VERSION = "C Compact Alpha 1.1 dev";
+	public static final String VERSION = "C Compact Alpha 1.1 (Build 5)";
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)
@@ -222,6 +227,16 @@ public class GUImain implements GUImainMod, PopupInterface {
 		JPanel jPanelLeft = new JPanel();
 		jPanelLeft.setLayout(new BoxLayout(jPanelLeft, BoxLayout.PAGE_AXIS));
 		jPanelLeft.setBorder(new EmptyBorder(5, 5, 5, 5));
+		
+		// Panel to display the GUI mode
+		this.jStatePanel = new JPanel();
+		this.jStatePanel.setBorder(BorderFactory.createLoweredBevelBorder());
+		
+		this.jStateLabel = new JLabel();
+		
+		this.jStatePanel.add(this.jStateLabel);
+		jPanelLeft.add(this.jStatePanel);
+		
 
 		// Text area (text pane) for source code
 		this.jSourcePane = InitLeftPanel
@@ -257,9 +272,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 				this.settings, this.saveDialog));
 
 		// Initialize window component listener
-		this.jFrame.addComponentListener(new WindowComponentListener(
-				this.jFrame, this.jSourcePane, this.settings,
-				this.rightPanelControl.getDebugPanel()));
+		this.jFrame.addComponentListener(new WindowComponentListener(this.jFrame, this.jSourcePane, this.jInputPane, this.settings));
 
 		// Initialize the source panel listener
 		this.codeListener = new SourceCodeListener(this);
@@ -457,10 +470,11 @@ public class GUImain implements GUImainMod, PopupInterface {
 	public void lockInput() {
 
 		this.jSourcePane.setEditable(false);
+		this.jSourcePane.setBackground(Color.LIGHT_GRAY);
 		this.jInputPane.setEditable(false);
+		this.jInputPane.setBackground(Color.LIGHT_GRAY);
 		this.jOutputPane.setEditable(false);
-
-		this.rightPanelControl.lockInput();
+		this.jOutputPane.setBackground(Color.LIGHT_GRAY);
 
 		this.menuBarControl.lockAll();
 	}
@@ -469,10 +483,11 @@ public class GUImain implements GUImainMod, PopupInterface {
 	public void unlockInput() {
 
 		this.jSourcePane.setEditable(true);
+		this.jSourcePane.setBackground(Color.WHITE);
 		this.jInputPane.setEditable(true);
+		this.jInputPane.setBackground(Color.WHITE);
 		this.jOutputPane.setEditable(true);
-
-		this.rightPanelControl.unlockInput();
+		this.jOutputPane.setBackground(Color.WHITE);
 
 		this.menuBarControl.unlockAll();
 	}
@@ -595,5 +610,33 @@ public class GUImain implements GUImainMod, PopupInterface {
 						.getGlassPane()), popup, x, y, width, height));
 		((JPanel) this.jFrame.getGlassPane()).validate();
 		((JPanel) this.jFrame.getGlassPane()).repaint();
+	}
+
+	@Override
+	public void setReadyMode() {
+		
+		this.jStatePanel.setBackground(Color.LIGHT_GRAY);
+		this.jStateLabel.setText("--- " + _("text edit mode") + " ---");
+	}
+
+	@Override
+	public void setErrorMode(int line) {
+		
+		this.jStatePanel.setBackground(Color.RED);
+		this.jStateLabel.setText("! ! ! " + _("error in line") + " " + line + " ! ! !");
+	}
+
+	@Override
+	public void setRunMode() {
+		
+		this.jStatePanel.setBackground(Color.GREEN);
+		this.jStateLabel.setText(">>> " + _("automatic debug mode") + " >>>");
+	}
+
+	@Override
+	public void setPauseMode() {
+		
+		this.jStatePanel.setBackground(Color.YELLOW);
+		this.jStateLabel.setText("||| " + _("pause or step by step mode") + " |||");
 	}
 }

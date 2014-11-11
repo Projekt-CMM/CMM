@@ -109,6 +109,7 @@ public class SyntaxTreePath {
 			}
 			//Array
 			else if( n.left.kind == Node.INDEX ){
+				System.out.println("Array index is: "  + n.left.right.val);
 				path.add("[" + n.left.right.val + "]");
 			}
 		}

@@ -99,7 +99,7 @@ public class WindowEventListener implements WindowListener {
 			// Init warning dialog with two buttons
 			int n = JOptionPane.showOptionDialog(jFrame,
 					_("Do you want to save the new file?"),
-					_("Closing the C-- IDE"), JOptionPane.YES_NO_OPTION,
+					_("Closing the C Compact IDE"), JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE, null, // do not use a custom
 														// Icon
 					options, // the titles of buttons
@@ -126,7 +126,7 @@ public class WindowEventListener implements WindowListener {
 			// Init warning dialog with two buttons
 			int n = JOptionPane.showOptionDialog(jFrame,
 					_("The current file has not yet been saved!"),
-					_("Closing the C-- IDE"), JOptionPane.YES_NO_OPTION,
+					_("Closing the C Compact IDE"), JOptionPane.YES_NO_OPTION,
 					JOptionPane.WARNING_MESSAGE, null, // do not use a custom
 														// Icon
 					options, // the titles of buttons
