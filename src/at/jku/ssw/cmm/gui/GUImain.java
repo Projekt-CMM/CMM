@@ -391,7 +391,7 @@ public class GUImain {
 	}
 	
 public void setReadyMode() {
-		
+	
 		this.leftPanelControl.setReadyMode();
 		this.rightPanelControl.hideErrorPanel();
 	}

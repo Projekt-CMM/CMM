@@ -188,8 +188,6 @@ public class GUIdebugPanel {
 		
 		//Input lock
 		this.main.unlockInput();
-		
-		
 	}
 
 	public void setRunMode() {
