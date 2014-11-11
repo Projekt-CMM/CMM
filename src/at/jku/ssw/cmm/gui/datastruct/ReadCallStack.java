@@ -15,6 +15,7 @@ public class ReadCallStack {
 	* @return A Stack of Strings containing the Call Stack function names -
 	* the currently running function at the bottom.
 	*/
+	//TODO unused???
 	public static Stack<String> readCallStack(){
 		
 		Stack<String> stack = new Stack<>();
@@ -57,6 +58,7 @@ public class ReadCallStack {
 	* would point at this address if this function would be the highest in the
 	* call stack.
 	*/
+	//TODO unused???
 	public static int getAddressByIndex( int index ){
 		return getAddressRecursive( index, 0, Memory.getFramePointer() );
 	}
