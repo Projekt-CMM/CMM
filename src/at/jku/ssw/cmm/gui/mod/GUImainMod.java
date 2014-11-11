@@ -164,6 +164,7 @@ public interface GUImainMod {
 	public void setRunMode();
 	public void setPauseMode();
 
-	public void setFileSaved();
+	
 	public SaveDialog getSaveManager();
+	public void setFileSaved();
 }
