@@ -651,7 +651,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	public void setErrorMode(int line) {
 		
 		this.jStatePanel.setBackground(Color.RED);
-		this.jStateLabel.setText("! ! ! " + _("error") + (line >= 0 ? _("in line") + " " + line : "") + " " + line + " ! ! !");
+		this.jStateLabel.setText("! ! ! " + _("error") + (line >= 0 ? _("in line") + " " + line : "") + " ! ! !");
 	}
 
 	@Override
