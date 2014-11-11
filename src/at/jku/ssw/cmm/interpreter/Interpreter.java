@@ -268,7 +268,10 @@ public final class Interpreter implements DebuggerRequest {
 		 * For calculation
 		 */
 		case Node.PLUS:
-			return IntExpr(p.left) + IntExpr(p.right);
+			if(p.right == null)
+				return IntExpr(p.left);
+			else
+				return IntExpr(p.left) + IntExpr(p.right);
 		case Node.MINUS:
 			if(p.right == null) {
 				return 0 - IntExpr(p.left);
@@ -344,7 +347,10 @@ public final class Interpreter implements DebuggerRequest {
 		 * For calculation
 		 */
 		case Node.PLUS:
-			return FloatExpr(p.left) + FloatExpr(p.right);
+		    if(p.right == null)
+		        return FloatExpr(p.left);
+		    else
+			    return FloatExpr(p.left) + FloatExpr(p.right);
 		case Node.MINUS:
 			if(p.right == null) {
 				return 0 - FloatExpr(p.left);
@@ -406,7 +412,16 @@ public final class Interpreter implements DebuggerRequest {
 				return Memory.loadChar(Adr(p));		//Normal way of getting Arrays -> more at @Adr
 			else									//Getting a String and look at a special Position
 				try {
-					return strings.get(StringExpr(p.left)).charAt(IntExpr(p.right));
+				    String s = strings.get(StringExpr(p.left));
+				    if(IntExpr(p.right) < 0) {
+				        debugger.abort("negative index choosen", p);
+				        throw new IllegalStateException("Kind" + p.kind);
+				    }
+				    if(IntExpr(p.right) >= s.length()) {
+				        debugger.abort("Too high index choosen", p);
+				        throw new IllegalStateException("Kind" + p.kind);
+				    }
+				    return strings.get(StringExpr(p.left)).charAt(IntExpr(p.right));
 				} catch (BufferOverflowException e) {
 					debugger.abort("Too high index choosen", p);
 					throw new IllegalStateException("Kind" + p.kind);
