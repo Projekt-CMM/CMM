@@ -148,7 +148,7 @@ public class GUIcontrolPanel {
 	
 	public void setRunMode(){
 		this.jButtonPlay.setEnabled(true);
-		this.jButtonStep.setEnabled(true);
+		this.jButtonStep.setEnabled(false);
 		this.jButtonStop.setEnabled(true);
 		
 		this.jButtonPlay.setText("\u25AE\u25AE");

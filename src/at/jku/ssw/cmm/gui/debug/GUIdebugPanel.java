@@ -248,9 +248,7 @@ public class GUIdebugPanel {
 			this.modifier.getSourceCodeRegister().add(e);
 
 			// An include file could not be found
-			this.setErrorMode(
-					_("Include file not found") + ": \"" + e1.getFileName()
-							+ "\"", e1.getLine());
+			this.setErrorMode("include not found", -1);
 			return;
 		}
 
