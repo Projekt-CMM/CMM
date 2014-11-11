@@ -246,8 +246,10 @@ public final class Interpreter implements DebuggerRequest {
 			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadBool(IdentAdr(p.obj));
 		case Node.DOT:								//more at @Adr
+			debuggerCurrentAddress = Adr(p);
 			return Memory.loadBool(Adr(p));			
 		case Node.INDEX:							//more at @Adr
+			debuggerCurrentAddress = Adr(p);
 			return Memory.loadBool(Adr(p));
 		default:
 			debugger.abort("Not supportet boolexpr node kind", p);
@@ -324,8 +326,10 @@ public final class Interpreter implements DebuggerRequest {
 			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadInt(IdentAdr(p.obj));
 		case Node.DOT:								//more at @Adr
+			debuggerCurrentAddress = Adr(p);
 			return Memory.loadInt(Adr(p));			
 		case Node.INDEX:							//more at @Adr
+			debuggerCurrentAddress = Adr(p);
 			return Memory.loadInt(Adr(p));
 		default:
 			debugger.abort("Not supportet intexpr node kind", p);
@@ -380,8 +384,10 @@ public final class Interpreter implements DebuggerRequest {
 			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadFloat(IdentAdr(p.obj));	
 		case Node.DOT:							//more at @Adr
+			debuggerCurrentAddress = Adr(p);
 			return Memory.loadFloat(Adr(p));
 		case Node.INDEX:						//more at @Adr
+			debuggerCurrentAddress = Adr(p);
 			return Memory.loadFloat(Adr(p));
 
 		default:
@@ -406,11 +412,13 @@ public final class Interpreter implements DebuggerRequest {
 			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadChar(IdentAdr(p.obj));			//more at @Adr
 		case Node.DOT:
+			debuggerCurrentAddress = Adr(p);
 			return Memory.loadChar(Adr(p));			//more at @Adr
 		case Node.INDEX:
-			if (p.left.type.kind != Struct.STRING)
+			if (p.left.type.kind != Struct.STRING) {
+				debuggerCurrentAddress = Adr(p);
 				return Memory.loadChar(Adr(p));		//Normal way of getting Arrays -> more at @Adr
-			else									//Getting a String and look at a special Position
+			} else {									//Getting a String and look at a special Position
 				try {
 				    String s = strings.get(StringExpr(p.left));
 				    if(IntExpr(p.right) < 0) {
@@ -426,6 +434,7 @@ public final class Interpreter implements DebuggerRequest {
 					debugger.abort("Too high index choosen", p);
 					throw new IllegalStateException("Kind" + p.kind);
 				}
+			}
 		case Node.CALL:
 			Call(p);
 			return Memory.getCharReturnValue();
@@ -840,7 +849,16 @@ public final class Interpreter implements DebuggerRequest {
 		case Node.DOT:						//for structs very familiar with index
 			return Adr(p.left) + p.right.val;
 		case Node.INDEX:					//right value + Integer * sizeof(Integer)
-			return Adr(p.left) + p.left.type.elemType.size * IntExpr(p.right);
+			int index = IntExpr(p.right);
+			if(index < 0) {
+				debugger.abort("negative index choosen", p);
+		        throw new IllegalStateException("Kind" + p.kind);
+			}
+			if(index >= p.left.type.elements) {
+				debugger.abort("too high index choosen", p);
+		        throw new IllegalStateException("Kind" + p.kind);
+			}
+			return Adr(p.left) + p.left.type.elemType.size * index;
 		case Node.REF://TODO
 			return Adr(p.left);
 		default:

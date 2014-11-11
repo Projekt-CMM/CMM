@@ -1235,8 +1235,11 @@ public class Parser {
 				   tab.checkFunctionParams(design.obj,n); 
 				} 
 			}
-			if (n == null)
+			if (n == null) {
+			   if(design.obj != null && design.obj.kind == Obj.PROC)
+			       SemErr("invalide using of procedure"); 
 			   n = design; 
+			} 
 		} else if (la.kind == 2) {
 			Get();
 			n = new Node(tab.intVal(t.val)); 
