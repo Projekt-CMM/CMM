@@ -100,11 +100,11 @@ public class InitTreeTableData {
 			funcNode = new DataNode( name + "()", "", "", new ArrayList<DataNode>(), -1, obj.line );
 		else
 			//Update the data node
-			funcNode = node.getChild( name + "()", "", "", 0, obj.line );
+			funcNode = node.getChild( name + "()", "", "", -1, obj.line );
 		
 		//Read local variables of the current function
 		readVariables( init, obj.locals, funcNode, address, popup );
-		node.add(init, funcNode);
+		node.prepend(init, funcNode);
 		
 		if( name == "main" )
 			//Return if reached the bottom of the call stack (main)

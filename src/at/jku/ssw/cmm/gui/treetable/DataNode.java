@@ -72,6 +72,26 @@ public class DataNode {
     	return this.address;
     }
     
+    public void prepend( boolean init, DataNode n ){
+    	if( !init && this.children != null && this.children.size() > 0 ){
+    		for( DataNode d : this.children ){
+    			if( d.name.equals(n.name) ){
+    				d.value = n.value;
+    				d.type = n.type;
+    				d.address = n.address;
+    				d.declaration = n.declaration;
+    				return;
+    			}
+    		}
+    	}
+    	
+    	if( this.children == null ){
+    		this.children = new ArrayList<>();
+    	}
+    		
+    	this.children.add(0, n);
+    }
+    
     public void add( boolean init, DataNode n ){
     	
     	if( !init && this.children != null && this.children.size() > 0 ){
