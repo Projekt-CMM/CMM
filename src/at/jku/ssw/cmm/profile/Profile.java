@@ -92,7 +92,7 @@ public class Profile {
 	}	
 	
 /**
- * Returning Sorted Package Quests:
+ * Returning Sorted Profile + Package Quests:
  * Sorting: (by date)
  * 	- OPEN			
  *  - INPROGRESS
@@ -267,7 +267,7 @@ public class Profile {
 	 * @throws XMLWriteException 
 	 */
 	public static void writeProfile(Profile profile) throws XMLWriteException{
-		if(profile == null)
+		if(profile == null || profile.getInitPath() == null)
 			throw new XMLWriteException();
 		
         DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
@@ -460,6 +460,10 @@ public class Profile {
 			
 		return profile;
 	}
+	
+    public String toString() {
+        return name;
+    }
 	
 	/**
 	 * @return the initPath

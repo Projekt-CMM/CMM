@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
 public class Quest {
 
 	//File Seperator
-	private static String sep = System.getProperty("file.separator");
+	public static String sep = System.getProperty("file.separator");
 	
 	//Variablen abgeleitet von der quest.xml
 	private String title;					//Titel der Quest
@@ -42,6 +42,9 @@ public class Quest {
 	private String initPath;				//Inizialisierungspfad:
 	private String packagePath;				//Package-Ordner
 	private String questPath;				//Quest-Ordner
+	
+	//Current Quest;
+	public static Quest currentQuest;
 	
 	public static final String
 		FILE_DESCRIPTION = "description.html",
@@ -240,7 +243,11 @@ public class Quest {
 			return fileNames;
 	}
 
-
+    public String toString() {
+    	//TODO
+        return "[" + state + "] " + title;
+    }
+    
 	/**
 	 * A title can be null
 	 * @return the title

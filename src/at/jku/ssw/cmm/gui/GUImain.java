@@ -10,6 +10,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
@@ -160,7 +161,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 * If true, GUI options for quest and profile functions are shown. <br>
 	 * If false, quest/profile GUI is hidden.
 	 */
-	public static final boolean ADVANCED_GUI = false;
+	public static final boolean ADVANCED_GUI = true;
 
 	/**
 	 * The current version of C Compact, used as window title.
@@ -515,32 +516,47 @@ public class GUImain implements GUImainMod, PopupInterface {
 	}
 
 	@Override
-	public void startQuestGUI() {
+	public void startQuestGUI(){
 		DebugShell.out(State.LOG, Area.GUI, "Opening Quest Selection Window...");
-		// open profile selector on empty profile
-		if (Profile.getActiveProfile() == null)
-			selectProfile();
+		//open profile selector on empty profile
 
-		new GUIquestMain().start();
+		//Select Profile if there is no active Profile
+		if(Profile.getActiveProfile() == null)
+			selectProfile();
+		
+		//Ignoring Quest GUI if there is no active Profile
+		if(Profile.getActiveProfile() != null)
+			new GUIquestMain().start();
 	}
 
 	@Override
-	public void selectProfile() {
+	public void selectProfile(){
 		DebugShell.out(State.LOG, Area.GUI, "Opening Profile Selection Window...");
-		JFileChooser chooser = new JFileChooser(_("Select a profile..."));
-		chooser.setFileFilter(new FileNameExtensionFilter(
-				_("C Compact Profile"), "xml"));
+		JFileChooser chooser = new JFileChooser("Select a profile...");
+		//chooser.setFileFilter(new FileNameExtensionFilter("C Compact Profile", "xml"));
+		
+		//Only Directorys can be choosen
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		
 		chooser.showOpenDialog(jFrame);
+		
 		chooser.setDialogType(JFileChooser.SAVE_DIALOG);
 
-		if (chooser.getSelectedFile() != null
-				&& chooser.getSelectedFile().getPath() != null) {
+		if(chooser.getSelectedFile() != null && chooser.getSelectedFile().getPath() != null ){
 			String s = chooser.getSelectedFile().getAbsolutePath();
 			try {
-				Profile.setActiveProfile(Profile.ReadProfile(s.substring(0,
-						s.indexOf(Profile.sep + Profile.FILE_PROFILE))));
-			} catch (XMLReadingException e) {
-				e.printStackTrace();
+				//Profile.setActiveProfile(Profile.ReadProfile(s.substring(0, s.indexOf(Profile.sep +  Profile.FILE_PROFILE))));
+				Profile.setActiveProfile(Profile.ReadProfile(s));
+			} catch (XMLReadingException | IndexOutOfBoundsException e) {
+				// TODO Auto-generated catch block
+				
+				System.err.println("Wrong Profile Choosen - no profile.xml found");
+        		JFrame frame = new JFrame("Warnung");
+        		JOptionPane.showMessageDialog(frame,"Falsches Profil ausgewählt.","Warnung:",
+        			    JOptionPane.WARNING_MESSAGE);
+        		
+				//Profile Selection Error
+				selectProfile();
 			}
 			DebugShell.out(State.LOG, Area.GUI, "Profile Chooser Path:"
 					+ chooser.getSelectedFile().getAbsolutePath());
