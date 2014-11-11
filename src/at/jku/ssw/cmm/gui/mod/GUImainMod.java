@@ -2,6 +2,8 @@ package at.jku.ssw.cmm.gui.mod;
 
 import java.util.List;
 
+import at.jku.ssw.cmm.gui.file.SaveDialog;
+
 public interface GUImainMod {
 	
 	/**
@@ -161,4 +163,7 @@ public interface GUImainMod {
 	public void setErrorMode( int line );
 	public void setRunMode();
 	public void setPauseMode();
+
+	public void setFileSaved();
+	public SaveDialog getSaveManager();
 }
