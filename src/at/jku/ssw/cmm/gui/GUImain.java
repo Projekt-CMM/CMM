@@ -400,6 +400,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 			this.jFrame.setTitle(this.jFrame.getTitle() + "*");
 	}
 
+	@Override
 	public void setFileSaved() {
 		if (this.jFrame.getTitle().endsWith("*")) {
 			this.jFrame.setTitle(this.jFrame.getTitle().substring(0,
@@ -666,5 +667,10 @@ public class GUImain implements GUImainMod, PopupInterface {
 		
 		this.jStatePanel.setBackground(Color.YELLOW);
 		this.jStateLabel.setText("||| " + _("pause or step by step mode") + " |||");
+	}
+
+	@Override
+	public SaveDialog getSaveManager() {
+		return this.saveDialog;
 	}
 }

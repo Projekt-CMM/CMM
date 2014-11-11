@@ -299,6 +299,12 @@ public class GUIdebugPanel {
 	 * <hr>
 	 */
 	public boolean runInterpreter() {
+		this.modifier.getSaveManager().directSave();
+		
+		this.modifier.setFileSaved();
+		this.modifier.updateWinFileName();
+		this.updateFileName();
+		
 		this.compile();
 		return this.compileManager.runInterpreter(ctrlPanel.getListener(),
 				new IOstream(this.modifier, this));

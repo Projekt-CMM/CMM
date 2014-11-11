@@ -46,13 +46,13 @@ public class MenuBarEventListener {
 	 */
 	public MenuBarEventListener(JFrame jFrame, RSyntaxTextArea jSourcePane,
 			JTextPane jInputPane, GUImain main, GUImainSettings settings,
-			GUIdebugPanel modifier, SaveDialog saveDialog) {
+			GUIdebugPanel debug, SaveDialog saveDialog) {
 		this.jFrame = jFrame;
 		this.jSourcePane = jSourcePane;
 		this.jInputPane = jInputPane;
 		this.main = main;
 		this.settings = settings;
-		this.modifier = modifier;
+		this.debug = debug;
 		this.saveDialog = saveDialog;
 	}
 
@@ -85,7 +85,7 @@ public class MenuBarEventListener {
 	 * Reference to the debug panel of the GUI which is responsible for debug
 	 * control elements and the variable tree table
 	 */
-	private final GUIdebugPanel modifier;
+	private final GUIdebugPanel debug;
 
 	/**
 	 * A reference to the save dialog manager class
@@ -121,7 +121,7 @@ public class MenuBarEventListener {
 			jSourcePane.setText("");
 			settings.setPath(null);
 			main.updateWinFileName();
-			modifier.updateFileName();
+			debug.updateFileName();
 		}
 
 	};
@@ -154,7 +154,7 @@ public class MenuBarEventListener {
 				settings.setPath(chooser.getSelectedFile().getPath());
 
 				main.updateWinFileName();
-				modifier.updateFileName();
+				debug.updateFileName();
 			}
 		}
 
@@ -173,7 +173,7 @@ public class MenuBarEventListener {
 			saveDialog.doSaveAs();
 			main.setFileSaved();
 			main.updateWinFileName();
-			modifier.updateFileName();
+			debug.updateFileName();
 		}
 
 	};
@@ -195,7 +195,7 @@ public class MenuBarEventListener {
 
 			main.setFileSaved();
 			main.updateWinFileName();
-			modifier.updateFileName();
+			debug.updateFileName();
 
 		}
 	};
