@@ -246,8 +246,10 @@ public final class Interpreter implements DebuggerRequest {
 			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadBool(IdentAdr(p.obj));
 		case Node.DOT:								//more at @Adr
+			debuggerCurrentAddress = Adr(p);
 			return Memory.loadBool(Adr(p));			
 		case Node.INDEX:							//more at @Adr
+			debuggerCurrentAddress = Adr(p);
 			return Memory.loadBool(Adr(p));
 		default:
 			debugger.abort("Not supportet boolexpr node kind", p);
@@ -324,8 +326,10 @@ public final class Interpreter implements DebuggerRequest {
 			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadInt(IdentAdr(p.obj));
 		case Node.DOT:								//more at @Adr
+			debuggerCurrentAddress = Adr(p);
 			return Memory.loadInt(Adr(p));			
 		case Node.INDEX:							//more at @Adr
+			debuggerCurrentAddress = Adr(p);
 			return Memory.loadInt(Adr(p));
 		default:
 			debugger.abort("Not supportet intexpr node kind", p);
@@ -380,8 +384,10 @@ public final class Interpreter implements DebuggerRequest {
 			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadFloat(IdentAdr(p.obj));	
 		case Node.DOT:							//more at @Adr
+			debuggerCurrentAddress = Adr(p);
 			return Memory.loadFloat(Adr(p));
 		case Node.INDEX:						//more at @Adr
+			debuggerCurrentAddress = Adr(p);
 			return Memory.loadFloat(Adr(p));
 
 		default:
@@ -406,8 +412,10 @@ public final class Interpreter implements DebuggerRequest {
 			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadChar(IdentAdr(p.obj));			//more at @Adr
 		case Node.DOT:
+			debuggerCurrentAddress = Adr(p);
 			return Memory.loadChar(Adr(p));			//more at @Adr
 		case Node.INDEX:
+			debuggerCurrentAddress = Adr(p);
 			if (p.left.type.kind != Struct.STRING)
 				return Memory.loadChar(Adr(p));		//Normal way of getting Arrays -> more at @Adr
 			else									//Getting a String and look at a special Position
