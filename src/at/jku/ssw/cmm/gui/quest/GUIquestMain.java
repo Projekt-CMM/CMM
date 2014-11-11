@@ -4,26 +4,17 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
@@ -57,7 +48,7 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 			System.out.println("[EDT Analyse] Quest GUI runnung on EDT.");
 
 		//Only for testing purporses TODO
-		GUIProfileManager.createNewProfile();
+		//GUIProfileManager.createNewProfile();
 		
 		this.jFrame = new JFrame("C Compact - Quest Manager");
 		this.jFrame.setMinimumSize(new Dimension(400, 400));

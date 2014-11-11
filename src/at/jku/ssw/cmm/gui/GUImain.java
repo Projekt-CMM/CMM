@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
@@ -166,7 +165,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 * If true, GUI options for quest and profile functions are shown. <br>
 	 * If false, quest/profile GUI is hidden.
 	 */
-	public static final boolean ADVANCED_GUI = false;
+	public static final boolean ADVANCED_GUI = true;
 
 	/**
 	 * The current version of C Compact, used as window title.
