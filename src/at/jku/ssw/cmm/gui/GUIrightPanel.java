@@ -43,23 +43,19 @@ public class GUIrightPanel {
 	 */
 	public GUIrightPanel(JComponent cp, GUImainMod mod, PopupInterface popup) {
 		
-		//Main right panel
-		this.jRightContainer = new JPanel();
-		this.jRightContainer.setBorder(new EmptyBorder(5, 5, 5, 5));
-		this.jRightContainer.setLayout(new BorderLayout());
-		
 		//this.jRightContainer.add(this.initCommonPanel(),BorderLayout.PAGE_START);
 		
 		//Tabbed Pane
 		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.setBorder(new EmptyBorder(0, 0, 5, 5));
 		
-			//Debug Panel
+			//Initialize Debug Panel
 			JPanel jDebugPanel = new JPanel();
 			jDebugPanel.setLayout(new BorderLayout());
 			debugPanel = new GUIdebugPanel( jDebugPanel, mod, popup );
 	        tabbedPane.add(jDebugPanel, _("Debug"));
 	
-			//Quest Panel
+			//Initialize Quest Panel
 			JPanel jQuestPanel = new JPanel();
 			if( GUImain.ADVANCED_GUI ){
 				jQuestPanel.setLayout(new BorderLayout());
@@ -67,14 +63,9 @@ public class GUIrightPanel {
 				questPanel = new GUIquestPanel( jQuestPanel, mod );
 			}
 		
-		this.jRightContainer.add(tabbedPane);
-		cp.add(this.jRightContainer, BorderLayout.CENTER);
+		// Add tabbed pane to main panel
+		cp.add(tabbedPane, BorderLayout.CENTER);
 	}
-	
-	/**
-	 * Main container for the right panel. All interface changes happen inside this JPanel
-	 */
-	private final JPanel jRightContainer;
 	
 	/**
 	 * A reference to the debug panel.
