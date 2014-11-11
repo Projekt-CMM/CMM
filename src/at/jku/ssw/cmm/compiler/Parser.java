@@ -1236,7 +1236,7 @@ public class Parser {
 				} 
 			}
 			if (n == null) {
-			   if(design.obj.kind == Obj.PROC)
+			   if(design.obj != null && design.obj.kind == Obj.PROC)
 			       SemErr("invalide using of procedure"); 
 			   n = design; 
 			} 
