@@ -4,26 +4,17 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
@@ -32,6 +23,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
+import at.jku.ssw.cmm.gui.GUIquestPanel;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
@@ -48,8 +40,10 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 	private JFrame jFrame;
 	private JScrollPane editorScrollPane;
 	
-	public GUIquestMain(){
-		
+	private final GUIquestPanel questPanel;
+	
+	public GUIquestMain(GUIquestPanel questPanel){
+		this.questPanel = questPanel;
 	}
 	
 	public void start(){
@@ -57,10 +51,10 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 			System.out.println("[EDT Analyse] Quest GUI runnung on EDT.");
 
 		//Only for testing purporses TODO
-		GUIProfileManager.createNewProfile();
+		//GUIProfileManager.createNewProfile();
 		
 		this.jFrame = new JFrame("C Compact - Quest Manager");
-		this.jFrame.setMinimumSize(new Dimension(400, 400));
+		this.jFrame.setMinimumSize(new Dimension(500, 400));
 		this.jFrame.setLocationRelativeTo(null);
 		this.jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.jFrame.setLayout(new BorderLayout());
@@ -112,7 +106,7 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
         jPackageTree = new JTree(rootNode);
 	    JScrollPane scrollTree = new JScrollPane( jPackageTree );
 	    
-        jPackageTree.setScrollsOnExpand(true); //TODO
+        //jPackageTree.setScrollsOnExpand(true);
         
         
         jPackageTree.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -160,7 +154,7 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
         ctrlPanel.add(progressBar, BorderLayout.CENTER);
 
         
-        //Open and Exit Buttons TODO
+        //Open Button
         openButton = new JButton("Open");
         openButton.addActionListener(this);
         
@@ -247,8 +241,21 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
         if(ae.getSource() == this.openButton){
         	
         	if(lastClickedQuest != null){
-	        	Quest.currentQuest = lastClickedQuest;
+        		Quest.currentQuest = lastClickedQuest;
+        		
 	        	jFrame.dispose();
+        		
+	        	String path = lastClickedQuest.getInitPath() + Quest.sep + lastClickedQuest.getPackagePath() + Quest.sep + lastClickedQuest.getQuestPath();
+
+	        	if(lastClickedQuest.isDescription() && lastClickedQuest.isStyle()){
+        			this.questPanel.setDescDoc(path + Quest.sep + Quest.FILE_DESCRIPTION, path + Quest.sep + Quest.FILE_STYLE);
+		      
+        		//When the Quest only has a description
+		        }else if(lastClickedQuest.isDescription())
+		        	this.questPanel.setDescDoc(path + Quest.sep + Quest.FILE_DESCRIPTION,"packages/default/style.css");
+        		
+        		//TODO
+	        	//this.questPanel.setjQuestInfo(LoadStatics.loadHTMLdoc(file, style));
         		}
         	
         	else{

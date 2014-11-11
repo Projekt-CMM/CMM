@@ -36,6 +36,7 @@ public final class LoadStatics {
 		return picture;
 	}
 	
+	@Deprecated
 	public static final JScrollPane loadHTMLdoc( String path, String pathCSS ){
 		JEditorPane editorPane = new JEditorPane();
       	editorPane.setEditable(false);
@@ -87,5 +88,39 @@ public final class LoadStatics {
       	editorScrollPane.setMinimumSize(new Dimension(10, 10));
       	
       	return editorScrollPane;
+	}
+	
+	public static javax.swing.text.Document readStyleSheet( String path ){
+		java.net.URL cssURL = null;
+		try {
+			cssURL = new File(path).toURI().toURL();
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		}
+		
+		//Import stylesheet
+      	if( cssURL != null ){
+      		System.out.println("Reading stylesheet: " + cssURL);
+      		StyleSheet s = new StyleSheet();
+      		s.importStyleSheet(cssURL);
+      		HTMLEditorKit kit = new HTMLEditorKit();
+      		kit.setStyleSheet(s);
+      		javax.swing.text.Document doc = kit.createDefaultDocument();
+      		return doc;
+      	}
+      	return null;
+	}
+	
+	public static java.net.URL getHTMLUrl( String path ){
+		
+		java.net.URL htmlURL = null;
+		
+		try {
+			htmlURL = new File(path).toURI().toURL();
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		}
+		
+		return htmlURL;
 	}
 }

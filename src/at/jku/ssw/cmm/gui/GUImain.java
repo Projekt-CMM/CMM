@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
@@ -166,7 +165,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 * If true, GUI options for quest and profile functions are shown. <br>
 	 * If false, quest/profile GUI is hidden.
 	 */
-	public static final boolean ADVANCED_GUI = false;
+	public static final boolean ADVANCED_GUI = true;
 
 	/**
 	 * The current version of C Compact, used as window title.
@@ -285,6 +284,8 @@ public class GUImain implements GUImainMod, PopupInterface {
 		InitMenuBar.initFileM(this.jFrame, this.jSourcePane, this.jInputPane,
 				this, this.settings, this.rightPanelControl.getDebugPanel(),
 				this.menuBarControl, this.saveDialog);
+		
+		this.rightPanelControl.getDebugPanel().setReadyMode();
 
 		// Causes this Window to be sized to fit the preferred size and layouts
 		// of its subcomponents.
@@ -541,7 +542,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 		
 		//Ignoring Quest GUI if there is no active Profile
 		if(Profile.getActiveProfile() != null)
-			new GUIquestMain().start();
+			new GUIquestMain(this.rightPanelControl.getQuestPanel()).start();
 	}
 
 	@Override
@@ -623,7 +624,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	public void setErrorMode(int line) {
 		
 		this.jStatePanel.setBackground(Color.RED);
-		this.jStateLabel.setText("! ! ! " + _("error in line") + " " + line + " ! ! !");
+		this.jStateLabel.setText("! ! ! " + _("error") + (line >= 0 ? _("in line") + " " + line : "") + " " + line + " ! ! !");
 	}
 
 	@Override

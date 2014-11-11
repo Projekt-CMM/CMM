@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.debug;
 
+import java.awt.BorderLayout;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -50,7 +52,7 @@ public class TreeTableView{
 		this.varTreeTable = new TreeTable(this.main, this.varTreeTableModel);
 		
 		JScrollPane p = new JScrollPane(this.varTreeTable);
-		this.panel.add(p);
+		this.panel.add(p, BorderLayout.CENTER);
 		// Sub-panel end
 	}
 

@@ -5,6 +5,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/rsyntaxtextarea.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/home/fabian/Dokumente/C--/CMM/lib/gettext-commons-0.9.8.jar"/>
+	<classpathentry kind="lib" path="/home/peda/Dokumente/Interpreter/CMM_NEW/lib/gettext-commons-0.9.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
