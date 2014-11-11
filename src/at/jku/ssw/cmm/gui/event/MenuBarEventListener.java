@@ -132,7 +132,7 @@ public class MenuBarEventListener {
 			if( modifier.isCodeChangeAllowed() ){
 				//Create file chooser (opens a window to select a file)
 				JFileChooser chooser = new JFileChooser();
-				chooser.setFileFilter(new FileNameExtensionFilter("C-- " + _("file"), "cmm"));
+				chooser.setFileFilter(new FileNameExtensionFilter("CMM " + _("file"), "cmm"));
 				
 				//User selected a file
 				if (chooser.showOpenDialog(jFrame) == JFileChooser.APPROVE_OPTION) {

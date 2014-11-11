@@ -101,7 +101,7 @@ public class TreeTable extends JTable {
     
     public void reset(){
     	
-    	TreeTableDataModel empty = new TreeTableDataModel(new DataNode("", "", "", new ArrayList<DataNode>(), -1));
+    	TreeTableDataModel empty = new TreeTableDataModel(new DataNode("", "", "", new ArrayList<DataNode>(), -1, -1));
     	
     	this.setTreeModel(empty);
     }

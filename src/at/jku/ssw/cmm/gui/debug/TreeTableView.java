@@ -1,7 +1,5 @@
 package at.jku.ssw.cmm.gui.debug;
 
-import java.util.Stack;
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -72,6 +70,8 @@ public class TreeTableView{
 				}
 			});
 			this.forceUpdate = false;
+			this.varTreeTable.revalidate();
+			this.varTreeTable.repaint();
 		}
 		else{
 			DebugShell.out(State.LOG, Area.READVAR, "[treeTable][update] updating variable values");
@@ -82,6 +82,7 @@ public class TreeTableView{
 					varTreeTable.updateTreeModel();
 				}
 			});
+			this.varTreeTable.revalidate();
 			this.varTreeTable.repaint();
 		}
 	}
@@ -97,9 +98,16 @@ public class TreeTableView{
 		DebugShell.out(State.LOG, Area.GUI, "treetable standby");
 	}
 	
-	public void highlightVariable( Stack<String> path ){
-		DebugShell.out(State.LOG, Area.GUI, "last variable changed " + path);
-		TreeUtils.expandPath(varTreeTable, path).markChanged();
+	/**
+	 * Highlights the variable with the given address in the variable tree table
+	 * 
+	 * @param adr The address of the variable which shall be highlighted
+	 */
+	public void highlightVariable( int adr ){
+		TreeUtils.expandByAddress(varTreeTable, adr);
+		varTreeTable.repaint();
 	}
+	
+	
 
 }

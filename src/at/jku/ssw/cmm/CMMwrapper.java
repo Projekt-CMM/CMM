@@ -5,11 +5,13 @@ import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Error;
 import at.jku.ssw.cmm.compiler.Tab;
+import at.jku.ssw.cmm.debugger.DebuggerRequest;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.gui.interpreter.IOstream;
 import at.jku.ssw.cmm.gui.mod.CMMrunnableMod;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
+import at.jku.ssw.cmm.interpreter.Interpreter;
 
 /**
  * Wrapper class for the interpreter thread starter and manager class for the compiler.
@@ -43,10 +45,12 @@ public class CMMwrapper implements CMMrunnableMod {
 	private boolean running;
 	
 	//Interpreter thread class
-	private CMMrun interpreter;
+	private CMMrun thread;
 	
 	//Compiler class
 	private Compiler compiler;
+	
+	private Interpreter interpreter;
 	
 	//Interface for main GUI manipulations, for example syntax line highlighting
 	private final GUImainMod modifier;
@@ -79,11 +83,13 @@ public class CMMwrapper implements CMMrunnableMod {
 			//Set the running flag
 			this.running = true;
 			
+			this.interpreter = new Interpreter(listener, stream, compiler.getStringStorage());
+			
 			//Create new interpreter object
-			this.interpreter = new CMMrun(listener, compiler, stream, this);
+			this.thread = new CMMrun(compiler, interpreter, this);
 			
 			//Run interpreter thread
-			this.interpreter.start();
+			this.thread.start();
 			
 			return true;
 		}
@@ -180,5 +186,9 @@ public class CMMwrapper implements CMMrunnableMod {
 	 */
 	public boolean isRunning(){
 		return this.running;
+	}
+	
+	public DebuggerRequest getRequest(){
+		return (DebuggerRequest)interpreter;
 	}
 }

@@ -4,14 +4,12 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
-import at.jku.ssw.cmm.gui.event.RightPanelBreakpointListener;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.gui.popup.PopupInterface;
 
@@ -45,15 +43,12 @@ public class GUIrightPanel {
 	 */
 	public GUIrightPanel(JComponent cp, GUImainMod mod, PopupInterface popup) {
 		
-		this.mod = mod;
-		
 		//Main right panel
 		this.jRightContainer = new JPanel();
 		this.jRightContainer.setBorder(new EmptyBorder(5, 5, 5, 5));
 		this.jRightContainer.setLayout(new BorderLayout());
 		
-		this.jRightContainer.add(this.initCommonPanel(),
-				BorderLayout.PAGE_START);
+		//this.jRightContainer.add(this.initCommonPanel(),BorderLayout.PAGE_START);
 		
 		//Tabbed Pane
 		JTabbedPane tabbedPane = new JTabbedPane();
@@ -61,8 +56,8 @@ public class GUIrightPanel {
 			//Debug Panel
 			JPanel jDebugPanel = new JPanel();
 			jDebugPanel.setLayout(new BorderLayout());
-			tabbedPane.add(jDebugPanel, _("Debug"));
 			debugPanel = new GUIdebugPanel( jDebugPanel, mod, popup );
+	        tabbedPane.add(jDebugPanel, _("Debug"));
 	
 			//Quest Panel
 			JPanel jQuestPanel = new JPanel();
@@ -75,11 +70,6 @@ public class GUIrightPanel {
 		this.jRightContainer.add(tabbedPane);
 		cp.add(this.jRightContainer, BorderLayout.CENTER);
 	}
-	
-	/**
-	 * Modifier of main GUI data. This interface interacts with the main GUI.
-	 */
-	private final GUImainMod mod;
 	
 	/**
 	 * Main container for the right panel. All interface changes happen inside this JPanel
@@ -96,28 +86,6 @@ public class GUIrightPanel {
 	 */
 	private GUIquestPanel questPanel;
 	
-	/* --- top panel objects --- */
-	/**
-	 * The breakpoint button.
-	 */
-	private JButton jButtonBreakPoint;
-	
-	/**
-	 * Initializes the panel with the common control elements, eg. breakpoint button.
-	 * 
-	 * @return The initialized panel
-	 */
-	private JPanel initCommonPanel() {
-		JPanel jTopPanel = new JPanel();
-
-		this.jButtonBreakPoint = new JButton("\u2326");
-		RightPanelBreakpointListener listener = new RightPanelBreakpointListener(this.mod, this.jButtonBreakPoint);
-		this.jButtonBreakPoint.addMouseListener(listener);
-		jTopPanel.add(this.jButtonBreakPoint);
-
-		return jTopPanel;
-	}
-	
 	/**
 	 * @return A reference to the debug panel manager
 	 */
@@ -130,21 +98,5 @@ public class GUIrightPanel {
 	 */
 	public GUIquestPanel getQuestPanel(){
 		return this.questPanel;
-	}
-	
-	/**
-	 * Locks the common control elements, eg. breakpoint button.
-	 * Used while cmm program in interpreted.
-	 */
-	public void lockInput(){
-		this.jButtonBreakPoint.setEnabled(false);
-	}
-	
-	/**
-	 * unlocks the common control elements, eg. breakpoint button.
-	 * Used when cmm program interpreting is finished.
-	 */
-	public void unlockInput(){
-		this.jButtonBreakPoint.setEnabled(true);
 	}
 }

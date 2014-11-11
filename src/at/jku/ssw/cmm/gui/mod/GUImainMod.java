@@ -156,4 +156,9 @@ public interface GUImainMod {
 	 * Saves the current *.cmm file if there are unsaved changes
 	 */
 	public void saveIfNecessary();
+	
+	public void setReadyMode();
+	public void setErrorMode( int line );
+	public void setRunMode();
+	public void setPauseMode();
 }
