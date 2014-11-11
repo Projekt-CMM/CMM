@@ -68,7 +68,7 @@ public final class LoadStatics {
       	
       	//Import Text
       	if (htmlURL != null) {
-      		System.out.println("Loading HTML document: " + cssURL);
+      		System.out.println("Loading HTML document: " + htmlURL);
       	    try {
       	        editorPane.setPage(htmlURL);
       	    } catch (IOException e) {

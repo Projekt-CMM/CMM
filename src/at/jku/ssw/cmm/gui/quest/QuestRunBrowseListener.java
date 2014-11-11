@@ -6,18 +6,18 @@ import java.awt.event.MouseListener;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 
 public class QuestRunBrowseListener implements MouseListener{
-
+	
+	
+	
+	
 	public QuestRunBrowseListener( GUIdebugPanel master, boolean global ){
-		this.master = master;
-		this.global = global;
+		
 	}
 	
-	private final GUIdebugPanel master;
-	private final boolean global;
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		
+		System.out.println("Tree node clicked");
 	}
 
 	@Override
