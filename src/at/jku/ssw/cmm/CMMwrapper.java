@@ -74,9 +74,6 @@ public class CMMwrapper implements CMMrunnableMod {
 		//Check if another interpreter thread is already running
 		if( this.compiler != null && !this.running ){
 			
-			//Make all text areas of the main GUI uneditable so that the code can not be changed during runtime 
-			this.modifier.lockInput();
-			
 			//Reset the output text panel
 			this.modifier.resetOutputTextPane();
 			
@@ -164,8 +161,7 @@ public class CMMwrapper implements CMMrunnableMod {
 		this.running = false;
 		
 		if( success ){
-			this.rPanel.resetInterpreterData();
-			this.modifier.unlockInput();
+			this.rPanel.setReadyMode();
 		}
 	}
 	

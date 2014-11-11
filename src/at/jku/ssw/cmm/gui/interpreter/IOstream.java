@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import at.jku.ssw.cmm.debugger.StdInOut;
-import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
+import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 
 /**
@@ -23,9 +23,9 @@ public class IOstream implements StdInOut {
 	 *            Interface for main GUI manipulations
 	 * @param panelRunListener 
 	 */
-	public IOstream(GUImainMod modifier, PanelRunListener panelRunListener) {
+	public IOstream(GUImainMod modifier, GUIdebugPanel debug) {
 		this.modifier = modifier;
-		this.panelRunListener = panelRunListener;
+		this.debug = debug;
 
 		// Get input stream characters
 		this.inputStream = new LinkedList<>();
@@ -37,7 +37,7 @@ public class IOstream implements StdInOut {
 	// Interface for main GUI manipulations
 	private final GUImainMod modifier;
 	
-	private final PanelRunListener panelRunListener;
+	private final GUIdebugPanel debug;
 
 	// List with all input stream characters
 	private final List<Character> inputStream;
@@ -55,7 +55,7 @@ public class IOstream implements StdInOut {
 			try {
 				java.awt.EventQueue.invokeAndWait(new Runnable() {
 					public void run() {
-						panelRunListener.setErrorMode("IO exception", "no input data", -1, -1);
+						debug.setErrorMode("no input data", -1);
 					}
 				});
 			} catch (InvocationTargetException | InterruptedException e1) {

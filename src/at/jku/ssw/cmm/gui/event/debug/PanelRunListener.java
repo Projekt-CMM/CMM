@@ -13,6 +13,7 @@ import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.debugger.Debugger;
+import at.jku.ssw.cmm.gui.debug.GUIcontrolPanel;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.compiler.Node;
@@ -57,7 +58,7 @@ public class PanelRunListener implements Debugger {
 		this.stepOver = false;
 
 		// Default value of the slider
-		this.delay = 2;
+		this.delay = GUIcontrolPanel.SLIDER_START;
 	}
 
 	/**
@@ -110,9 +111,9 @@ public class PanelRunListener implements Debugger {
 
 	/* --- functional methods --- */
 	/**
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
+	 * Sets the right panel to READY mode (see documentation)
 	 */
-	public void reset() {
+	public void setReadyMode(){
 		this.run = false;
 		this.keepRunning = false;
 		this.wait = false;
@@ -120,110 +121,34 @@ public class PanelRunListener implements Debugger {
 		this.stepOver = false;
 
 		this.delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
-
-		master.getControlPanel().setTimerLabelSeconds(delayScale(delay));
-
-		if (this.timer != null)
-			this.timer.cancel();
-
-		this.master.getControlPanel().unsetRunTimeError();
-		this.master.getControlPanel().unsetStepOverButton();
-		this.master.getControlPanel().unsetStepOutButton();
-
-		this.master.getControlPanel().lockStopButton();
-		this.master.getControlPanel().unlockStepButton();
-		this.master.getControlPanel().setButtonPlay();
-		
-		this.master.getControlPanel().standby();
-		
 		this.lastNode = null;
-
-		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting ready by reset");
-		
-		this.modMain.setReadyMode();
 	}
-
-	/**
-	 * Sets the right panel to RUN mode (see documentation)
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 */
-	private void setRunMode() {
-		this.run = true;
-		this.keepRunning = true;
-
-		this.master.getControlPanel().unlockStopButton();
-		this.master.getControlPanel().lockStepButton();
-		this.master.getControlPanel().setButtonPause();
-		
-		this.master.getControlPanel().running();
-
-		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting run, delay = " + this.delay);
-		
-		this.modMain.setRunMode();
-	}
-
-	/**
-	 * Sets the right panel to PAUSE mode (see documentation)
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 */
-	private void setPauseMode() {
-		this.run = false;
-		this.keepRunning = true;
-
-		this.master.getControlPanel().unlockStopButton();
-		this.master.getControlPanel().unlockStepButton();
-		this.master.getControlPanel().setButtonPlay();
-		
-		this.master.getControlPanel().running();
-
-		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting pause");
-		
-		this.modMain.setPauseMode();
-	}
-
-	/**
-	 * Sets the right panel to READY mode (see documentation)
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 */
-	public void setReadyMode() {
-		
-		this.master.getControlPanel().unlockPlayButton();
-
-		this.master.resetInterpreterData();
-	}
-
+	
 	/**
 	 * Sets the right panel to ERROR mode (see documentation)
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
 	 */
-	public void setErrorMode(String title, String message, int line, int col) {
+	public void setErrorMode(){
 		this.run = true;
 		this.keepRunning = false;
-
-		this.master.getControlPanel().setRuntimeErrorMode(title + ": ", message, line, col);
-
-		DebugShell.out(State.LOG, Area.DEBUGMODE, "setting error");
-		
-		this.modMain.setErrorMode(line);
+	}
+	
+	/**
+	 * Sets the right panel to RUN mode (see documentation)
+	 */
+	public void setRunMode(){
+		this.run = true;
+		this.keepRunning = true;
+	}
+	
+	/**
+	 * Sets the right panel to PAUSE mode (see documentation)
+	 */
+	public void setPauseMode(){
+		this.run = false;
+		this.keepRunning = true;
 	}
 
 	/**
-	 * <hr>
-	 * <i>THREAD SAFE by default</i>
-	 * </hr>
-	 * 
 	 * @return TRUE if right GUI panel is in RUN mode, otherwise FALSE
 	 */
 	public boolean isRunMode() {
@@ -233,10 +158,6 @@ public class PanelRunListener implements Debugger {
 	}
 
 	/**
-	 * <hr>
-	 * <i>THREAD SAFE by default</i>
-	 * </hr>
-	 * 
 	 * @return TRUE if right GUI panel is in PAUSE mode, otherwise FALSE
 	 */
 	public boolean isPauseMode() {
@@ -246,10 +167,6 @@ public class PanelRunListener implements Debugger {
 	}
 
 	/**
-	 * <hr>
-	 * <i>THREAD SAFE by default</i>
-	 * </hr>
-	 * 
 	 * @return TRUE if right GUI panel is in READY mode, otherwise FALSE
 	 */
 	public boolean isReadyMode() {
@@ -259,10 +176,6 @@ public class PanelRunListener implements Debugger {
 	}
 
 	/**
-	 * <hr>
-	 * <i>THREAD SAFE by default</i>
-	 * </hr>
-	 * 
 	 * @return TRUE if right GUI panel is in ERROR mode, otherwise FALSE
 	 */
 	public boolean isErrorMode() {
@@ -276,25 +189,18 @@ public class PanelRunListener implements Debugger {
 	 * Initializes the "step over" mode within the right GUI panel. <b>Do not
 	 * call this method, </b> for a complete initialization call {@link
 	 * GUIrightPanel.stepOver()}
-	 * 
-	 * <hr>
-	 * <i>SYNCHRONIZED | THREAD SAFE </i>
-	 * <hr>
 	 */
+	//TODO rework
 	synchronized public void stepOver() {
 		this.stepOver = true;
 	}
 
 	/**
 	 * Terminates the "step over" mode. Does clean up and exits safe.
-	 * 
-	 * <hr>
-	 * <i>SYNCHRONIZED | THREAD SAFE </i>
-	 * <hr>
 	 */
+	//TODO rework
 	synchronized public void stepComplete() {
 		this.stepOver = false;
-		this.master.getControlPanel().unsetStepOverButton();
 	}
 
 	/* --- debugger interpreter listeners --- */
@@ -307,7 +213,7 @@ public class PanelRunListener implements Debugger {
 
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				setErrorMode("Runtime error", message, node.line, 0);
+				master.setErrorMode(message, node.line);
 			}
 		});
 	}
@@ -319,16 +225,15 @@ public class PanelRunListener implements Debugger {
 		
 		//Update latest node's line
 		this.lastNode = arg0;
-		this.master.updateCallStackSize();
 
 		/* --- Node #1: Step over mode? --- */
 		if (this.stepOver) {
 			// -> Node #1 - YES
 			/* --- Node #2: Step over finished? --- */
-			if (!this.master.checkForStepEnd()) {
+			//if (!this.master.checkForStepEnd()) {
 				// -> Mode #2 - NO
 				return this.keepRunning;
-			}
+			//}
 		}
 
 		// -> Node #1 - NO | Node #2 - YES
@@ -345,7 +250,7 @@ public class PanelRunListener implements Debugger {
 			if( !this.master.getBreakPoints().isEmpty() && arg0.line >= this.master.getBreakPoints().get(0)-1 ){
 				java.awt.EventQueue.invokeLater(new Runnable() {
 					public void run() {
-						setPauseMode();
+						master.setPauseMode();
 					}
 				});
 				DebugShell.out(State.LOG, Area.DEBUGGER, "Stopped at breakpoint: "  + arg0.line + " - " + this.master.getBreakPoints().get(0) );
@@ -361,34 +266,16 @@ public class PanelRunListener implements Debugger {
 			}
 			return this.keepRunning;
 		}
-
-		// -> Node #3 - DEFAULT
-		/* --- Update Block --- */
-		this.master.getControlPanel().updateStepOutButton();//*.next -> main()
 		
 		/* --- Node #5 - Variable value changed --- */
-		this.master.updateVariableTables(this.master.callStackChanged());
+		this.master.updateVariableTables(true);//TODO better update routine
 		
 		this.master.highlightVariable(this.master.getCompileManager().getRequest().getLastChangedAddress());
 		
 		this.timer = null;
 
 		/* --- Node #6: Pause or Run mode --- */
-		if (this.isPauseMode()) {
-			/* --- Node #7: Create Buttons --- */
-			if( arg0.kind == Node.ASSIGN )
-				this.doStepOverButtonCheck(arg0.right);
-			else
-				this.doStepOverButtonCheck(arg0);
-		}
-		/* --- Node #6: Pause or Run mode --- */
-		else if (this.isRunMode() && this.delay > 0) {
-
-			/* --- Node #9: Step over if external function call --- */
-			if( arg0.kind == Node.ASSIGN )
-				this.doStepOverRunCheck(arg0.right);
-			else
-				this.doStepOverRunCheck(arg0);
+		if (this.isRunMode() && this.delay > 0) {
 
 			this.timer = new Timer();
 			// Start timer
@@ -399,50 +286,12 @@ public class PanelRunListener implements Debugger {
 				}
 			}, (int)(delayScale(delay)*1000) );
 		}
-		/* --- Node #6: Default exit --- */
-		else {
-			throw new IllegalStateException();
-		}
 
 		waitForUserReply();
 
 		this.timer = null;
 
 		return keepRunning;
-	}
-	
-	/**
-	 * Checks if step over button shall be visible or not. Eventually toggles visibility.
-	 * 
-	 * @param n The current node in the abstract syntax tree
-	 */
-	private void doStepOverButtonCheck( Node n ){
-		//Is function call? (NOT predefined function)
-		if( n.kind == Node.CALL && n.obj.ast != null ){
-			//Calls function from include
-			if( n.obj.ast.line <= this.master.getBeginLine() )
-				this.master.getControlPanel().setStepOverButtonAlone();
-			//Calls local function
-			else
-				this.master.getControlPanel().setStepOverButton();
-		}
-		//No valid function call -> no step over button
-		else
-			this.master.getControlPanel().unsetStepOverButton();
-	}
-	
-	/**
-	 * This method shall always be called when the interpreter has to step over a function
-	 * for any reson. It checks wheather stepping over is possible and initiates the stepping
-	 * over process.
-	 * 
-	 * @param n The current node in the abstract syntax tree
-	 */
-	private void doStepOverRunCheck( Node n ){
-		//Is function call? (NOT predefined function) from external file
-		if( n.kind == Node.CALL && n.obj.ast != null && n.obj.ast.line <= this.master.getBeginLine() ){
-			this.master.stepOver();
-		}
 	}
 	
 	/* --- thread synchronization --- */
@@ -495,12 +344,12 @@ public class PanelRunListener implements Debugger {
 			// Ready -> Start interpreting in run mode
 			if (!keepRunning && !run) {
 				if( master.runInterpreter() )
-					setRunMode();
+					master.setRunMode();
 			}
 
 			// Run -> pause interpreting
 			else if (keepRunning && run) {
-				setPauseMode();
+				master.setPauseMode();
 
 				if (timer != null)
 					timer.cancel();
@@ -514,9 +363,6 @@ public class PanelRunListener implements Debugger {
 				//Remove already passed breakpoints if in fast run mode
 				if( delay == 0 )
 					master.updateBreakPoints(lastNode.line);
-				//Check if there is a function to jump over
-				else
-					doStepOverRunCheck(lastNode);
 			}
 		}
 
@@ -554,7 +400,7 @@ public class PanelRunListener implements Debugger {
 			// Ready mode -> start interpreting in pause mode
 			if (isReadyMode()) {
 				if( master.runInterpreter() )
-					setPauseMode();
+					master.setPauseMode();
 			}
 
 			// Pause mode -> next step
@@ -581,65 +427,6 @@ public class PanelRunListener implements Debugger {
 	};
 
 	/**
-	 * Mouse listener for the "step over" button
-	 */
-	public MouseListener stepOverButtonHandler = new MouseListener() {
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			
-			JButton button = (JButton)e.getSource();
-			if( !button.isEnabled() )
-				return;
-
-			master.stepOver();
-			userReply();
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-		}
-	};
-
-	/**
-	 * Mouse listener for the "step out" button
-	 */
-	public MouseListener stepOutButtonHandler = new MouseListener() {
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			
-			JButton button = (JButton)e.getSource();
-			if( !button.isEnabled() )
-				return;
-
-			master.stepOut();
-			userReply();
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {}
-		@Override
-		public void mouseReleased(MouseEvent e) {}
-		@Override
-		public void mouseEntered(MouseEvent e) {}
-		@Override
-		public void mouseExited(MouseEvent e) {}
-	};
-
-	/**
 	 * Mouse listener for the "stop" button
 	 */
 	public MouseListener stopButtonHandler = new MouseListener() {
@@ -653,17 +440,16 @@ public class PanelRunListener implements Debugger {
 
 			// Stop interpreter out of RUN or PAUSE mode
 			if (keepRunning) {
-				setReadyMode();
+				master.setReadyMode();
 				userReply();
 			}
 
 			// Get out of ERROR mode
 			else if (!keepRunning && run) {
-				master.getControlPanel().unsetRunTimeError();
-				setReadyMode();
+				master.setReadyMode();
 
-				// Has to be done here, as interpreter has exited in error mode
-				modMain.unlockInput();
+				//Unregister interpreter thread
+				master.getCompileManager().setNotRunning(true);
 			}
 		}
 

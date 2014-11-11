@@ -284,6 +284,8 @@ public class GUImain implements GUImainMod, PopupInterface {
 		InitMenuBar.initFileM(this.jFrame, this.jSourcePane, this.jInputPane,
 				this, this.settings, this.rightPanelControl.getDebugPanel(),
 				this.menuBarControl, this.saveDialog);
+		
+		this.rightPanelControl.getDebugPanel().setReadyMode();
 
 		// Causes this Window to be sized to fit the preferred size and layouts
 		// of its subcomponents.
@@ -622,7 +624,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	public void setErrorMode(int line) {
 		
 		this.jStatePanel.setBackground(Color.RED);
-		this.jStateLabel.setText("! ! ! " + _("error in line") + " " + line + " ! ! !");
+		this.jStateLabel.setText("! ! ! " + _("error") + (line >= 0 ? _("in line") + " " + line : "") + " " + line + " ! ! !");
 	}
 
 	@Override
