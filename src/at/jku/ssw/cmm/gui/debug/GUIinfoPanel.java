@@ -49,7 +49,7 @@ public class GUIinfoPanel {
 		}
 	}
 	
-	public void setToDesc(){
+	public void setToDesc(String msg){
 		if( this.jVarPanel.isVisible() ){
 			this.jVarPanel.setVisible(false);
 			this.jDescPanel.setVisible(true);

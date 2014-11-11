@@ -168,6 +168,8 @@ public class GUIdebugPanel {
 		
 		//Input lock
 		this.modifier.unlockInput();
+		
+		this.infoManager.setToTable();
 	}
 
 	public void setErrorMode(String msg, int line) {
@@ -178,6 +180,8 @@ public class GUIdebugPanel {
 		
 		//Input lock
 		this.modifier.unlockInput();
+		
+		this.infoManager.setToDesc(msg);
 	}
 
 	public void setRunMode() {

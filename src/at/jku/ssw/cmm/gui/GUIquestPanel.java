@@ -5,8 +5,10 @@ import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -16,6 +18,8 @@ import javax.swing.border.EmptyBorder;
 import at.jku.ssw.cmm.gui.event.quest.QuestPanelListener;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
+import at.jku.ssw.cmm.profile.Profile;
+import at.jku.ssw.cmm.profile.Quest;
 
 /**
  * This class contains all initialization and management methods for the second pane of the
@@ -26,6 +30,9 @@ import at.jku.ssw.cmm.gui.utils.LoadStatics;
  *
  */
 public class GUIquestPanel {
+	
+	//GridBagConstraints
+	private GridBagConstraints c;
 	
 	/**
 	 * This class contains all initialization and management methods for the second pane of the
@@ -46,7 +53,7 @@ public class GUIquestPanel {
 		this.listener = new QuestPanelListener(mod);
 
 		cp.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
+	    c = new GridBagConstraints();
 		
 		this.loadImages();
 		this.initObejcts();
@@ -87,7 +94,7 @@ public class GUIquestPanel {
 	private JButton jQuestSelectButton;
 	
 	//Editor pane with quest Information
-	private JScrollPane jQuestInfo;
+	private JEditorPane jQuestInfo;
 	
 	/**
 	 * Initializes lots of Swing objects for the profile and quest info
@@ -115,7 +122,7 @@ public class GUIquestPanel {
 		this.jProfileXP.setString("2560/7860 XP");
 		
 		//Quest info panel
-		this.jQuestInfo = LoadStatics.loadHTMLdoc("packages/default/Hallo Welt/index.html", "profileTest/doxygen.css");
+		//this.jQuestInfo = LoadStatics.loadHTMLdoc("packages/default/Hallo Welt/index.html", "profileTest/doxygen.css");
 	}
 	
 	/**
@@ -176,12 +183,17 @@ public class GUIquestPanel {
 		cp.add(this.jQuestSelectButton, this.setLayoutPosition(c, 1, 5, 1, 1));
 		
 		//Description Text Panel
-      	this.jQuestInfo.setBorder(new EmptyBorder(5, 5, 5, 5));
+		this.jQuestInfo = new JEditorPane();
+		this.jQuestInfo.setEditable(false);
+		this.jQuestInfo.setContentType("text/html");
+		
+      	JScrollPane scroll = new JScrollPane(this.jQuestInfo);
+      	scroll.setBorder(new EmptyBorder(5, 5, 5, 5));
       	c.weighty = 1;
       	c.weightx = 1;
       	c.ipadx = 200;
       	c.ipady = 500;
-        cp.add(this.jQuestInfo, this.setLayoutPosition(c, 0, 6, 2, 1));
+        cp.add(scroll, this.setLayoutPosition(c, 0, 6, 2, 1));
 	}
 	
 	/**
@@ -204,5 +216,137 @@ public class GUIquestPanel {
 		
 		return c;
 	}
+	
+	
+	/**
+	 * Refreshes the Right Quest Panel with new Data
+	 * @param profile
+	 * @param quest
+	 * @param questPanel
+	 */
+	public void RefreshProfile(Profile profile, Quest quest, GUIquestPanel questPanel){
+		//TODO
+		
+		questPanel.setjProfileName(new JLabel(_(profile.getName())));
+		questPanel.setjProfileLevel(new JLabel(_(profile.getLevel() + "")));
+		questPanel.setjQuestTitle(new JLabel(_(quest.getTitle())));
+		
+		String path = quest.getInitPath() + Quest.sep + quest.getPackagePath() + Quest.sep + quest.getQuestPath() + Quest.sep;
+		
+		//if(quest.isDescription())
+			// questPanel.setjQuestInfo(LoadStatics.loadHTMLdoc(path + Quest.FILE_DESCRIPTION, "packages/default/style.css"));
+		//else if(quest.isStyle() && quest.isDescription())
+			// questPanel.setjQuestInfo(LoadStatics.loadHTMLdoc(path + Quest.FILE_DESCRIPTION, path + Quest.FILE_STYLE));
+		
+		//questPanel.setjQuestInfo();
+	}
 
+	/**
+	 * @return the jProfileTitle
+	 */
+	public JLabel getjProfileTitle() {
+		return jProfileTitle;
+	}
+
+	/**
+	 * @param jProfileTitle the jProfileTitle to set
+	 */
+	public void setjProfileTitle(JLabel jProfileTitle) {
+		this.jProfileTitle = jProfileTitle;
+	}
+
+	/**
+	 * @return the jProfilePicture
+	 */
+	public JLabel getjProfilePicture() {
+		return jProfilePicture;
+	}
+
+	/**
+	 * @param jProfilePicture the jProfilePicture to set
+	 */
+	public void setjProfilePicture(JLabel jProfilePicture) {
+		this.jProfilePicture = jProfilePicture;
+	}
+
+	/**
+	 * @return the jProfileName
+	 */
+	public JLabel getjProfileName() {
+		return jProfileName;
+	}
+
+	/**
+	 * @param jProfileName the jProfileName to set
+	 */
+	public void setjProfileName(JLabel jProfileName) {
+		this.jProfileName = jProfileName;
+	}
+
+	/**
+	 * @return the jProfileAchievements
+	 */
+	public JPanel getjProfileAchievements() {
+		return jProfileAchievements;
+	}
+
+	/**
+	 * @param jProfileAchievements the jProfileAchievements to set
+	 */
+	public void setjProfileAchievements(JPanel jProfileAchievements) {
+		this.jProfileAchievements = jProfileAchievements;
+	}
+
+	/**
+	 * @return the jProfileLevel
+	 */
+	public JLabel getjProfileLevel() {
+		return jProfileLevel;
+	}
+
+	/**
+	 * @param jProfileLevel the jProfileLevel to set
+	 */
+	public void setjProfileLevel(JLabel jProfileLevel) {
+		this.jProfileLevel = jProfileLevel;
+	}
+
+	/**
+	 * @return the jProfileXP
+	 */
+	public JProgressBar getjProfileXP() {
+		return jProfileXP;
+	}
+
+	/**
+	 * @param jProfileXP the jProfileXP to set
+	 */
+	public void setjProfileXP(JProgressBar jProfileXP) {
+		this.jProfileXP = jProfileXP;
+	}
+
+	/**
+	 * @return the jQuestTitle
+	 */
+	public JLabel getjQuestTitle() {
+		return jQuestTitle;
+	}
+
+	/**
+	 * @param jQuestTitle the jQuestTitle to set
+	 */
+	public void setjQuestTitle(JLabel jQuestTitle) {
+		this.jQuestTitle = jQuestTitle;
+	}
+
+	public void setDescDoc( String html, String css ){
+		
+		try {
+			this.jQuestInfo.setPage(LoadStatics.getHTMLUrl(html));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.jQuestInfo.setDocument(LoadStatics.readStyleSheet(css));
+	}
 }

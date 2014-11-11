@@ -542,7 +542,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 		
 		//Ignoring Quest GUI if there is no active Profile
 		if(Profile.getActiveProfile() != null)
-			new GUIquestMain().start();
+			new GUIquestMain(this.rightPanelControl.getQuestPanel()).start();
 	}
 
 	@Override
