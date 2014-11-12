@@ -5,11 +5,11 @@ import static at.jku.ssw.cmm.gettext.Language._;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import at.jku.ssw.cmm.gui.mod.GUImainMod;
+import at.jku.ssw.cmm.gui.GUImain;
 
 public class InitContextMenu {
 
-	public static JPopupMenu initContextMenu( GUImainMod main, String name, int decl, int call ) {
+	public static JPopupMenu initContextMenu( GUImain main, String name, int decl, int call ) {
 		
 		JPopupMenu menu = new JPopupMenu("hello");
 		//menu

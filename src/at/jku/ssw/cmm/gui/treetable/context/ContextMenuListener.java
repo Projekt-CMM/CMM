@@ -3,17 +3,17 @@ package at.jku.ssw.cmm.gui.treetable.context;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import at.jku.ssw.cmm.gui.mod.GUImainMod;
+import at.jku.ssw.cmm.gui.GUImain;
 
 public class ContextMenuListener implements ActionListener {
 
-	public ContextMenuListener( GUImainMod main, String name, int line ){
+	public ContextMenuListener( GUImain main, String name, int line ){
 		this.main = main;
 		this.name = name;
 		this.line = line;
 	}
 	
-	private final GUImainMod main;
+	private final GUImain main;
 	private final String name;
 	private final int line;
 	

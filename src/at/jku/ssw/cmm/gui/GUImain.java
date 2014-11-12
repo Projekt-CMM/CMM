@@ -39,9 +39,7 @@ import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
 import at.jku.ssw.cmm.gui.init.InitLeftPanel;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
 import at.jku.ssw.cmm.gui.init.JInputDataPane;
-import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
-import at.jku.ssw.cmm.gui.popup.PopupInterface;
 import at.jku.ssw.cmm.gui.quest.GUIquestMain;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.XMLReadingException;
@@ -56,7 +54,7 @@ import java.util.List;
  * @author fabian
  *
  */
-public class GUImain implements GUImainMod, PopupInterface {
+public class GUImain {
 
 	/**
 	 * Launches the program and initiates the main window.
@@ -264,8 +262,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 		cp.add(jPanelLeft, BorderLayout.LINE_START);
 
 		// Right part of the GUI
-		this.rightPanelControl = new GUIrightPanel(cp, (GUImainMod) this,
-				(PopupInterface) this);
+		this.rightPanelControl = new GUIrightPanel(cp, this);
 
 		// Initialize the save dialog object
 		this.saveDialog = new SaveDialog(this.jFrame, this.jSourcePane,
@@ -340,18 +337,24 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.jInputPane.repaint();
 	}
 
-	/*
-	 * --- The methods below are implemented from the interface "GUImainMod" ---
-	 * --- ...see there for comments and descriptions ---
+	/**
+	 * Repaints the main GUI.
+	 * Note: Method from interface <i>GUImod</i>
+	 * 
+	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
 	 */
-	@Override
 	public void repaint() {
 		jFrame.repaint();
 		this.jFrame.pack();
 		this.jFrame.setVisible(true);
 	}
 
-	@Override
+	/**
+	 * Sets the title of the main GUI window.
+	 * Note: Method from interface <i>GUImod</i>
+	 * 
+	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
+	 */
 	public void updateWinFileName() {
 		if (this.settings.getPath() == null) {
 			this.jFrame.setTitle(VERSION + " - " + _("Unnamed"));
@@ -359,7 +362,10 @@ public class GUImain implements GUImainMod, PopupInterface {
 			this.jFrame.setTitle(VERSION + " - " + this.settings.getPath());
 	}
 
-	@Override
+	/**
+	 * 
+	 * @return Name of the current file without path, eg "file2.cmm"
+	 */
 	public String getFileName() {
 
 		// final String sep = System.getProperty("file.separator");
@@ -374,7 +380,11 @@ public class GUImain implements GUImainMod, PopupInterface {
 		return s;
 	}
 
-	@Override
+	/**
+	 * 
+	 * @return Name of the current cmm file with path, eg "demo/file2.cmm" <br>
+	 * <i>WARNING: File path can be absolute or relative</i>
+	 */
 	public String getFileNameAndPath() {
 
 		return this.settings.getPath();
@@ -385,7 +395,6 @@ public class GUImain implements GUImainMod, PopupInterface {
 			this.jFrame.setTitle(this.jFrame.getTitle() + "*");
 	}
 
-	@Override
 	public void setFileSaved() {
 		if (this.jFrame.getTitle().endsWith("*")) {
 			this.jFrame.setTitle(this.jFrame.getTitle().substring(0,
@@ -393,17 +402,38 @@ public class GUImain implements GUImainMod, PopupInterface {
 		}
 	}
 
-	@Override
+	/**
+	 * Note: Method from interface <i>GUImod</i>
+	 * 
+	 * <hr><i>THREAD SAFE by default</i><hr>
+	 * 
+	 * @return The source code written in the source code text area of the main GUI
+	 */
 	public String getSourceCode() {
 		return this.jSourcePane.getText();
 	}
 
-	@Override
+	/**
+	 * The source code register is a list object which saves where the specific parts of the compiled
+	 * code (not the code on the screen) are from. The data is saved as follows:<br>
+	 * The list contains arrays of three objects which save:
+	 * <ol>
+	 * <li>The start line (in the compiled code) of the sequence</li>
+	 * <li>The end line</li>
+	 * <li>The origin as String, eg. "test2.cmm" or "original file"</li>
+	 * </ol>
+	 * 
+	 * <hr><i>THREAD SAFE by default</i><hr>
+	 * 
+	 * @return The source code register list
+	 */
 	public List<Object[]> getSourceCodeRegister() {
 		return this.codeRegister;
 	}
 
-	@Override
+	/**
+	 * @return The complete path to the directory where the currently edited *.cmm file is saved
+	 */
 	public String getWorkingDirectory() {
 		if (this.settings.getPath() == null)
 			return null;
@@ -414,7 +444,16 @@ public class GUImain implements GUImainMod, PopupInterface {
 		return null;
 	}
 
-	@Override
+	/**
+	 * Moves the cursor to a specific line in the <b>user's</b> source code
+	 * (highlights the whole line - variable "col" is useless at the moment)<br>
+	 * Note: Method from interface <i>GUImod</i>
+	 * 
+	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
+	 * 
+	 * @param line The line which is considered to be highlighted
+	 * @param col The column position [actually useless]
+	 */
 	public void highlightSourceCode(int line) {
 
 		// Line out of user source code range (#include)
@@ -444,7 +483,10 @@ public class GUImain implements GUImainMod, PopupInterface {
 			jSourcePane.select(code.length(), code.length());
 	}
 
-	@Override
+	/**
+	 * Increments the input highlighter (input text area), which marks the already
+	 * read characters, by one.
+	 */
 	public void increaseInputHighlighter() {
 
 		this.inputHighlightOffset++;
@@ -456,7 +498,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 		});
 	}
 
-	@Override
+	/**
+	 * Sets the input highlighter to 0.
+	 */
 	public void resetInputHighlighter() {
 		this.inputHighlightOffset = 0;
 
@@ -467,13 +511,20 @@ public class GUImain implements GUImainMod, PopupInterface {
 		});
 	}
 
-	@Override
+	/**
+	 * Resets the output text panel so that there is no text displayed
+	 */
 	public void resetOutputTextPane() {
 
 		this.jOutputPane.setText("");
 	}
 
-	@Override
+	/**
+	 * Makes all text fields of the main GUI uneditable. Should happen before interpreter starts running
+	 * so that the source code can't be changed during runtime.
+	 * 
+	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
+	 */
 	public void lockInput() {
 
 		this.jSourcePane.setEditable(false);
@@ -486,7 +537,12 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.menuBarControl.lockAll();
 	}
 
-	@Override
+	/**
+	 * Makes all text fields of the main GUI editable. Should happen after the interpreter has
+	 * finished running.
+	 * 
+	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
+	 */
 	public void unlockInput() {
 
 		this.jSourcePane.setEditable(true);
@@ -499,19 +555,33 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.menuBarControl.unlockAll();
 	}
 
-	@Override
+	/**
+	 * Shows the given String on the output text area of the main GUI. Used for the output
+	 * stream of the interpreter.
+	 * 
+	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
+	 * 
+	 * @param s The output stream as String
+	 */
 	public void outputStream(String s) {
 
 		this.jOutputPane.append(s);
 	}
 
-	@Override
+	/**
+	 * <hr><i>THREAD SAFE by default</i><hr>
+	 * 
+	 * @return The text in the input text area of the main GUI
+	 */
 	public String getInputStream() {
 
 		return this.jInputPane.getText();
 	}
 
-	@Override
+	/**
+	 * Adds a breakpoint to the current line in the source code if there isn't yet any.
+	 * Otherwise removes the breakpoint from the current line.
+	 */
 	public void toggleBreakPoint() {
 
 		int start = this.jSourcePane.getSelectionStart();
@@ -537,7 +607,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.jSourcePane.select(start, end);
 	}
 
-	@Override
+	/**
+	 * Invokes the Quest GUI window
+	 */
 	public void startQuestGUI(){
 		DebugShell.out(State.LOG, Area.GUI, "Opening Quest Selection Window...");
 		//open profile selector on empty profile
@@ -551,7 +623,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 			new GUIquestMain().start();
 	}
 
-	@Override
+	/**
+	 * Invokes the profile selection dialog
+	 */
 	public void selectProfile(){
 		DebugShell.out(State.LOG, Area.GUI, "Opening Profile Selection Window...");
 		JFileChooser chooser = new JFileChooser("Select a profile...");
@@ -585,7 +659,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 		}
 	}
 
-	@Override
+	/**
+	 * Saves the current *.cmm file if there are unsaved changes
+	 */
 	public void saveIfNecessary() {
 
 		if (this.settings.getPath() == null)
@@ -597,18 +673,11 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.updateWinFileName();
 	}
 
-	/*
-	 * --- The methods below are implemented from the interface "PopupInterface"
-	 * --- --- ...see there for comments and descriptions ---
-	 */
-
-	@Override
 	public JPanel getGlassPane() {
 
 		return ((JPanel) this.jFrame.getGlassPane());
 	}
 
-	@Override
 	public void invokePopup(JPanel popup, int x, int y, int width, int height) {
 
 		((JPanel) this.jFrame.getGlassPane()).add(popup);
@@ -619,7 +688,6 @@ public class GUImain implements GUImainMod, PopupInterface {
 		((JPanel) this.jFrame.getGlassPane()).repaint();
 	}
 
-	@Override
 	public void setReadyMode() {
 		
 		this.jStatePanel.setBackground(Color.LIGHT_GRAY);
@@ -628,7 +696,6 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.rightPanelControl.hideErrorPanel();
 	}
 
-	@Override
 	public void setErrorMode(String msg, int line) {
 		
 		this.jStatePanel.setBackground(Color.RED);
@@ -642,7 +709,6 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.jStatePanel.add(this.jStateButton);
 	}
 
-	@Override
 	public void setRunMode() {
 		
 		if( this.jStateButton!= null )
@@ -654,7 +720,6 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.rightPanelControl.hideErrorPanel();
 	}
 
-	@Override
 	public void setPauseMode() {
 		
 		if( this.jStateButton!= null )
@@ -666,7 +731,6 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.rightPanelControl.hideErrorPanel();
 	}
 
-	@Override
 	public SaveDialog getSaveManager() {
 		return this.saveDialog;
 	}
