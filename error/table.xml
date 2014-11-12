@@ -18,4 +18,7 @@
 	<error id="Divided by 0">
 		<file>divby0.html</file>
 	</error>
+	<error id="parameter not declared">
+		<file>param.html</file>
+	</error>
 </errorTable>
