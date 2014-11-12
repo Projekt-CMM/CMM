@@ -156,12 +156,11 @@ public class GUIdebugPanel {
 	 * current view maine.
 	 */
 	public void updateVariableTables(boolean completeUpDate) {
-
 		this.varView.update(compileManager, this.main.getFileName(), completeUpDate);
 	}
 
 	public void setReadyMode() {
-		this.ctrlPanel.setReadyMode();
+		this.ctrlPanel.setReadymaine();
 		this.ctrlPanel.getListener().setReadyMode();
 		this.main.setReadyMode();
 
@@ -177,8 +176,9 @@ public class GUIdebugPanel {
 		
 		System.out.println("setting error");
 
-		this.ctrlPanel.setReadyMode();
+		this.ctrlPanel.setReadymaine();
 		this.ctrlPanel.getListener().setReadyMode();
+
 		this.main.setErrorMode(msg, ExpandSourceCode.correctLine(line,
 				(int) this.main.getLeftPanel().getSourceCodeRegister().get(0)[0],
 				this.main.getLeftPanel().getSourceCodeRegister().size()));
@@ -193,7 +193,7 @@ public class GUIdebugPanel {
 	}
 
 	public void setRunMode() {
-		this.ctrlPanel.setRunMode();
+		this.ctrlPanel.setRunmaine();
 		this.ctrlPanel.getListener().setRunMode();
 		this.main.setRunMode();
 		
@@ -202,7 +202,7 @@ public class GUIdebugPanel {
 	}
 
 	public void setPauseMode() {
-		this.ctrlPanel.setPauseMode();
+		this.ctrlPanel.setPausemaine();
 		this.ctrlPanel.getListener().setPauseMode();
 		this.main.setPauseMode();
 		
@@ -233,7 +233,7 @@ public class GUIdebugPanel {
 	// TODO make thread safe and update comments
 	/**
 	 * Runs the compiler via the compiler wrapper class, see {@link CMMwrapper}.
-	 * Automatically switches to "error" mode if necessary.
+	 * Automatically switches to "error" maine if necessary.
 	 * 
 	 * <hr>
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT.</i> This

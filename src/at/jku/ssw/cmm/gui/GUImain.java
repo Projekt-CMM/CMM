@@ -21,6 +21,7 @@ import at.jku.ssw.cmm.gui.event.WindowComponentListener;
 import at.jku.ssw.cmm.gui.event.WindowEventListener;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
+import at.jku.ssw.cmm.gui.init.JInputDataPane;
 import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
 import at.jku.ssw.cmm.gui.quest.GUIquestMain;
 import at.jku.ssw.cmm.profile.Profile;
@@ -372,7 +373,7 @@ public class GUImain {
 		((JPanel) this.jFrame.getGlassPane()).validate();
 		((JPanel) this.jFrame.getGlassPane()).repaint();
 	}
-	
+
 	public void setReadyMode() {
 	
 		this.leftPanelControl.setReadyMode();

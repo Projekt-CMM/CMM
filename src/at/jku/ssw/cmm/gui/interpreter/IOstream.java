@@ -29,6 +29,7 @@ public class IOstream implements StdInOut {
 
 		// Get input stream characters
 		this.inputStream = new LinkedList<>();
+
 		for (char c : this.main.getLeftPanel().getInputStream().toCharArray()) {
 			this.inputStream.add(c);
 		}
