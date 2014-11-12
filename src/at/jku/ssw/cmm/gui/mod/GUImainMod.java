@@ -160,7 +160,7 @@ public interface GUImainMod {
 	public void saveIfNecessary();
 	
 	public void setReadyMode();
-	public void setErrorMode( int line );
+	public void setErrorMode( String msg, int line );
 	public void setRunMode();
 	public void setPauseMode();
 

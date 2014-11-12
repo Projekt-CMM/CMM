@@ -3,15 +3,18 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
+import at.jku.ssw.cmm.gui.debug.ErrorTable;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.gui.popup.PopupInterface;
+import at.jku.ssw.cmm.gui.utils.LoadStatics;
 
 /**
  * This class is responsible for the right panel of the main GUI. The right panel contains
@@ -46,7 +49,7 @@ public class GUIrightPanel {
 		//this.jRightContainer.add(this.initCommonPanel(),BorderLayout.PAGE_START);
 		
 		//Tabbed Pane
-		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane = new JTabbedPane();
 		tabbedPane.setBorder(new EmptyBorder(0, 0, 5, 5));
 		
 			//Initialize Debug Panel
@@ -54,6 +57,9 @@ public class GUIrightPanel {
 			jDebugPanel.setLayout(new BorderLayout());
 			debugPanel = new GUIdebugPanel( jDebugPanel, mod, popup );
 	        tabbedPane.add(jDebugPanel, _("Debug"));
+	        
+	        //Initialize error panel
+	        this.errorMap = new ErrorTable(GUImain.LANGUAGE);
 	
 			//Initialize Quest Panel
 			JPanel jQuestPanel = new JPanel();
@@ -67,10 +73,14 @@ public class GUIrightPanel {
 		cp.add(tabbedPane, BorderLayout.CENTER);
 	}
 	
+	private final JTabbedPane tabbedPane;
+	
 	/**
 	 * A reference to the debug panel.
 	 */
 	private final GUIdebugPanel debugPanel;
+	
+	private final ErrorTable errorMap;
 	
 	/**
 	 * A reference to the quest/profile info panel.
@@ -89,5 +99,20 @@ public class GUIrightPanel {
 	 */
 	public GUIquestPanel getQuestPanel(){
 		return this.questPanel;
+	}
+	
+	public void showErrorPanel( String msg ){
+		if( this.tabbedPane.getTabCount() == (GUImain.ADVANCED_GUI ? 2 : 1) ){
+			JPanel panel = new JPanel();
+			panel.setLayout(new BorderLayout());
+			panel.setBackground(Color.RED);
+			panel.add(LoadStatics.loadHTMLdoc(this.errorMap.getErrorHTML(msg), "error/style.css"), BorderLayout.CENTER);
+			tabbedPane.add(panel, _("Error"), 1);
+		}
+	}
+	
+	public void hideErrorPanel(){
+		if( this.tabbedPane.getTabCount() == (GUImain.ADVANCED_GUI ? 3 : 2) )
+			tabbedPane.remove(1);
 	}
 }

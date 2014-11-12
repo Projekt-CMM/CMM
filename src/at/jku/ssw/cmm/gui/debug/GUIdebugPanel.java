@@ -59,7 +59,14 @@ public class GUIdebugPanel {
 		this.ctrlPanel = new GUIcontrolPanel(this.jControlPanel, this, mod);
 		cp.add(jControlPanel, BorderLayout.PAGE_START);
 
-		this.infoManager = new GUIinfoPanel(cp, this.modifier);
+		JPanel jVarPanel = new JPanel();
+		jVarPanel.setBorder(new TitledBorder(_("Variables")));
+		jVarPanel.setLayout(new BorderLayout());
+		
+		this.varView = new TreeTableView(modifier, jVarPanel,
+				modifier.getFileName());
+		
+		cp.add(jVarPanel, BorderLayout.CENTER);
 
 		this.breakpoints = new ArrayList<>();
 	}
@@ -74,7 +81,10 @@ public class GUIdebugPanel {
 	 */
 	private final GUIcontrolPanel ctrlPanel;
 
-	private final GUIinfoPanel infoManager;
+	/**
+	 * The manager object for the variable tree table.
+	 */
+	private final TreeTableView varView;
 
 	/**
 	 * Interface for main GUI manipulations
@@ -132,7 +142,7 @@ public class GUIdebugPanel {
 	 * table.
 	 */
 	public void updateFileName() {
-		this.infoManager.getVarView().standby(this.modifier.getFileName());
+		this.varView.standby(this.modifier.getFileName());
 	}
 
 	/**
@@ -144,7 +154,7 @@ public class GUIdebugPanel {
 	public void highlightVariable(final int adr) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				infoManager.getVarView().highlightVariable(adr);
+				varView.highlightVariable(adr);
 			}
 		});
 	}
@@ -154,7 +164,7 @@ public class GUIdebugPanel {
 	 * current view mode.
 	 */
 	public void updateVariableTables(boolean completeUpDate) {
-		this.infoManager.getVarView().update(compileManager, this.modifier.getFileName(), popup,completeUpDate);
+		this.varView.update(compileManager, this.modifier.getFileName(), popup,completeUpDate);
 	}
 
 	public void setReadyMode() {
@@ -164,24 +174,26 @@ public class GUIdebugPanel {
 
 		// Mode-specific
 		this.modifier.resetInputHighlighter();
-		this.infoManager.getVarView().standby(this.modifier.getFileName());
+		this.varView.standby(this.modifier.getFileName());
 		
 		//Input lock
 		this.modifier.unlockInput();
-		
-		this.infoManager.setToTable();
 	}
 
 	public void setErrorMode(String msg, int line) {
 
-		this.ctrlPanel.setErrorMode();
-		this.ctrlPanel.getListener().setErrorMode();
-		this.modifier.setErrorMode(line);
+		this.ctrlPanel.setReadyMode();
+		this.ctrlPanel.getListener().setReadyMode();
+		this.modifier.setErrorMode(msg, line);
+		
+		// Mode-specific
+		this.modifier.resetInputHighlighter();
+		this.varView.standby(this.modifier.getFileName());
 		
 		//Input lock
 		this.modifier.unlockInput();
 		
-		this.infoManager.setToDesc(msg);
+		
 	}
 
 	public void setRunMode() {
