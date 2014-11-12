@@ -671,6 +671,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 	@Override
 	public void setRunMode() {
 		
+		if( this.jStateButton!= null )
+			this.jStatePanel.remove(jStateButton);
+		
 		this.jStatePanel.setBackground(Color.GREEN);
 		this.jStateLabel.setText(">>> " + _("automatic debug mode") + " >>>");
 		
@@ -679,6 +682,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 
 	@Override
 	public void setPauseMode() {
+		
+		if( this.jStateButton!= null )
+			this.jStatePanel.remove(jStateButton);
 		
 		this.jStatePanel.setBackground(Color.YELLOW);
 		this.jStateLabel.setText("||| " + _("pause or step by step mode") + " |||");
