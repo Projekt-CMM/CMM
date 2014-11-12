@@ -39,6 +39,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
+import at.jku.ssw.cmm.gui.event.ErrorModeCloseListener;
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.event.WindowComponentListener;
 import at.jku.ssw.cmm.gui.event.WindowEventListener;
@@ -98,6 +99,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 	
 	private JPanel jStatePanel;
 	private JLabel jStateLabel;
+	private JButton jStateButton;
 
 	/**
 	 * The text panel with the source code.
@@ -181,7 +183,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 	/**
 	 * The current version of C Compact, used as window title.
 	 */
-	public static final String VERSION = "C Compact Alpha 1.1 (Build 5)";
+	public static final String VERSION = "C Compact Alpha 1.2 (Build 0)";
+	
+	public static final String LANGUAGE = "de";
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)
@@ -646,13 +650,22 @@ public class GUImain implements GUImainMod, PopupInterface {
 		
 		this.jStatePanel.setBackground(Color.LIGHT_GRAY);
 		this.jStateLabel.setText("--- " + _("text edit mode") + " ---");
+		
+		this.rightPanelControl.hideErrorPanel();
 	}
 
 	@Override
-	public void setErrorMode(int line) {
+	public void setErrorMode(String msg, int line) {
 		
 		this.jStatePanel.setBackground(Color.RED);
 		this.jStateLabel.setText("! ! ! " + _("error") + " " + (line >= 0 ? _("in line") + " " + line : "") + " ! ! !");
+		
+		this.rightPanelControl.showErrorPanel(msg);
+		
+		this.jStateButton = new JButton("X");
+		this.jStateButton.addMouseListener(new ErrorModeCloseListener(this, this.jStatePanel, this.jStateButton));
+		this.jStateButton.setToolTipText("<html><b>" + _("back to text edit mode") + "</b><br>" + _("leave error mode") + "</html>" );
+		this.jStatePanel.add(this.jStateButton);
 	}
 
 	@Override
@@ -660,6 +673,8 @@ public class GUImain implements GUImainMod, PopupInterface {
 		
 		this.jStatePanel.setBackground(Color.GREEN);
 		this.jStateLabel.setText(">>> " + _("automatic debug mode") + " >>>");
+		
+		this.rightPanelControl.hideErrorPanel();
 	}
 
 	@Override
@@ -667,6 +682,8 @@ public class GUImain implements GUImainMod, PopupInterface {
 		
 		this.jStatePanel.setBackground(Color.YELLOW);
 		this.jStateLabel.setText("||| " + _("pause or step by step mode") + " |||");
+		
+		this.rightPanelControl.hideErrorPanel();
 	}
 
 	@Override
