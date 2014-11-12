@@ -130,7 +130,7 @@ public class GUIquestPanel {
 	 */
 	private void loadImages(){
 		//Load Profile Image
-		this.jProfilePicture = LoadStatics.loadImage("profileTest/icon.png");
+		this.jProfilePicture = LoadStatics.loadImage("profileTest/icon.png", true, 100, 100);
 		
 		//Loading profile achievement tokens
 		this.jProfileAchievements = new JPanel();

@@ -551,6 +551,8 @@ public class GUImain implements GUImainMod, PopupInterface {
 		JFileChooser chooser = new JFileChooser("Select a profile...");
 		//chooser.setFileFilter(new FileNameExtensionFilter("C Compact Profile", "xml"));
 		
+		
+		
 		//Only Directorys can be choosen
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		

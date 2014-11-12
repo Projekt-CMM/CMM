@@ -2,6 +2,7 @@ package at.jku.ssw.cmm.gui.utils;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,18 +23,45 @@ public final class LoadStatics {
 		return loadImage( path, true );
 	}
 	
+	//TODO
 	public static final JLabel loadImage( String path, boolean createBorder ){
+		return loadImage(path, true, 20 ,20);
+	}
+	
+	public static final JLabel loadImage(String path, boolean createBorder, int width, int height){
+		
+		
 		BufferedImage loadBuffer = null;
 		try {
 			loadBuffer = ImageIO.read(new File(path));
 		} catch (IOException e) {
 			System.err.println("Error reading image");
 		}
+		
+		//Resize Window
+		if(width != -1 && height != -1)
+			loadBuffer =  scaleImage(loadBuffer, width, height);
+		
 		JLabel picture = new JLabel(new ImageIcon(loadBuffer));
 		if( createBorder )
+			
 			picture.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
 		
+		
 		return picture;
+	}
+	
+	private static final BufferedImage scaleImage(BufferedImage image, int width, int height){
+		
+		BufferedImage otherImage = image;
+				BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+				Graphics g = newImage.createGraphics();
+				g.drawImage(otherImage, 0, 0, width, height, null);
+				g.dispose();
+				
+		return newImage;
+				
 	}
 	
 	@Deprecated
