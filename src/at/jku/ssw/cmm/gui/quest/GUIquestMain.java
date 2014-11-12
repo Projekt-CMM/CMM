@@ -157,6 +157,7 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
         //Open Button
         openButton = new JButton("Open");
         openButton.addActionListener(this);
+        openButton.setEnabled(false);
         
         openButton.setLayout(null);
         openButton.setLocation(0,0);
@@ -186,7 +187,9 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 		    Object nodeInfo = node.getUserObject();
 		    
 		    //Compatible with Quest
-		    if (nodeInfo instanceof Quest) {		    
+		    if (nodeInfo instanceof Quest) {	
+		    	openButton.setEnabled(true);
+		    	
 			    if (node.isLeaf()) {
 			        Quest quest = (Quest)nodeInfo;
 			        lastClickedQuest = quest;
@@ -204,7 +207,9 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 			    }
 			    
 			//Compatible with Package 
-		    }else if(nodeInfo instanceof Package){	    
+		    }else if(nodeInfo instanceof Package){	  
+		    		openButton.setEnabled(false);
+		    	
 				        Package package1 = (Package)nodeInfo;
 			        	String path = package1.getInitPath() + Package.sep + package1.getPackagePath();
 				     
