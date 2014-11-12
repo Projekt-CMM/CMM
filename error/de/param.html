@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<body>
+	<h1> Parameter nicht gefunden </h1>
+	<h2> Was ist passiert? </h2>
+	<p>
+		Eventuell wurde eine Funktion, die aufgerufen wird, noch nicht deklariert.
+	</p>
+	<h2> Wie finde ich den Fehler? </h2>
+	<p>
+		Wenn du eine Funktion verwendest, muss sie vor ihrem ersten Aufruf deklariert worden sein. Beispiel:
+	</p>
+	<p id="code">
+		<strong class="good"><strong class="key">void</strong> foo(int a);</strong><br><br>
+		<strong class="key">void</strong> main(){<br>
+		foo();<br>
+		}
+		<br>
+		<strong class="key">void</strong> foo(<strong class="key">int</strong> a )<br>
+		...<br>
+		}
+	</p>
+</body>
