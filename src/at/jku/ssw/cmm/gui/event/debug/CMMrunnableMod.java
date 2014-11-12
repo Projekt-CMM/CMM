@@ -1,4 +1,4 @@
-package at.jku.ssw.cmm.gui.mod;
+package at.jku.ssw.cmm.gui.event.debug;
 
 public interface CMMrunnableMod {
 	

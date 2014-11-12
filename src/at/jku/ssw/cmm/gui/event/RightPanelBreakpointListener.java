@@ -5,7 +5,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 
-import at.jku.ssw.cmm.gui.mod.GUImainMod;
+import at.jku.ssw.cmm.gui.GUImain;
 
 /**
  * Listener for text manipulation control elements (at the moment only the breakpoint)
@@ -18,18 +18,18 @@ public class RightPanelBreakpointListener implements MouseListener {
 	/**
 	 * Listener for text manipulation control elements (at the moment only the breakpoint)
 	 * 
-	 * @param mod Modification interface of the main GUI
+	 * @param main mainification interface of the main GUI
 	 * @param target Target button (breakpoint button)
 	 */
-	public RightPanelBreakpointListener( GUImainMod mod, JButton target ){
-		this.mod = mod;
+	public RightPanelBreakpointListener( GUImain main, JButton target ){
+		this.main = main;
 		this.target = target;
 	}
 	
 	/**
-	 * Modification interface of the main GUI
+	 * mainification interface of the main GUI
 	 */
-	private final GUImainMod mod;
+	private final GUImain main;
 	
 	/**
 	 * Target button (breakpoint button)
@@ -40,7 +40,7 @@ public class RightPanelBreakpointListener implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		//Toggle breakpoint
 		if( target.isEnabled() )
-			mod.toggleBreakPoint();
+			main.toggleBreakPoint();
 	}
 
 	@Override

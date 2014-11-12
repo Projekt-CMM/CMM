@@ -2,8 +2,8 @@ package at.jku.ssw.cmm;
 
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Obj;
+import at.jku.ssw.cmm.gui.event.debug.CMMrunnableMod;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
-import at.jku.ssw.cmm.gui.mod.CMMrunnableMod;
 import at.jku.ssw.cmm.interpreter.Interpreter;
 import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
 import at.jku.ssw.cmm.interpreter.memory.Memory;

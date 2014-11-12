@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JTable;
 
-import at.jku.ssw.cmm.gui.mod.GUImainMod;
+import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.utils.JTableButtonMouseListener;
 import at.jku.ssw.cmm.gui.utils.JTableButtonRenderer;
 
@@ -25,7 +25,7 @@ public class TreeTable extends JTable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private final GUImainMod main;
+	private final GUImain main;
 	
 	private TreeTableCellRenderer tree;
 	private TreeTableDataModel dataModel;
@@ -33,7 +33,7 @@ public class TreeTable extends JTable {
 	private TreeTableModelAdapter modelAdapter;
      
      
-    public TreeTable( GUImainMod main, TreeTableDataModel treeTableModel ){
+    public TreeTable( GUImain main, TreeTableDataModel treeTableModel ){
         super();
         
         this.main = main;

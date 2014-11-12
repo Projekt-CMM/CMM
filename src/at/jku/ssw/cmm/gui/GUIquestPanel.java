@@ -16,7 +16,6 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import at.jku.ssw.cmm.gui.event.quest.QuestPanelListener;
-import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
@@ -46,7 +45,7 @@ public class GUIquestPanel {
 	 * @param mod
 	 *            Interface for main GUI manipulations
 	 */
-	public GUIquestPanel(JPanel cp, GUImainMod mod) {
+	public GUIquestPanel(JPanel cp, GUImain mod) {
 
 		this.cp = cp;
 		

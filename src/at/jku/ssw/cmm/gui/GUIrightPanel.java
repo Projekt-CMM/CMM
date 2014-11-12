@@ -12,8 +12,6 @@ import javax.swing.border.EmptyBorder;
 
 import at.jku.ssw.cmm.gui.debug.ErrorTable;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
-import at.jku.ssw.cmm.gui.mod.GUImainMod;
-import at.jku.ssw.cmm.gui.popup.PopupInterface;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
 
 /**
@@ -44,7 +42,7 @@ public class GUIrightPanel {
 	 * @param mod
 	 *            Interface for main GUI manipulations
 	 */
-	public GUIrightPanel(JComponent cp, GUImainMod mod, PopupInterface popup) {
+	public GUIrightPanel(JComponent cp, GUImain main) {
 		
 		//this.jRightContainer.add(this.initCommonPanel(),BorderLayout.PAGE_START);
 		
@@ -55,7 +53,7 @@ public class GUIrightPanel {
 			//Initialize Debug Panel
 			JPanel jDebugPanel = new JPanel();
 			jDebugPanel.setLayout(new BorderLayout());
-			debugPanel = new GUIdebugPanel( jDebugPanel, mod, popup );
+			debugPanel = new GUIdebugPanel( jDebugPanel, main );
 	        tabbedPane.add(jDebugPanel, _("Debug"));
 	        
 	        //Initialize error panel
@@ -66,7 +64,7 @@ public class GUIrightPanel {
 			if( GUImain.ADVANCED_GUI ){
 				jQuestPanel.setLayout(new BorderLayout());
 				tabbedPane.add(jQuestPanel, _("Quest"));
-				questPanel = new GUIquestPanel( jQuestPanel, mod );
+				questPanel = new GUIquestPanel( jQuestPanel, main );
 			}
 		
 		// Add tabbed pane to main panel

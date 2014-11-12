@@ -9,8 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
+import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
-import at.jku.ssw.cmm.gui.mod.GUImainMod;
 
 /**
  * This is the small panel with the "play", "pause", etc. buttons of the "debug"
@@ -30,24 +30,24 @@ public class GUIcontrolPanel {
 	 * @param debug
 	 *            A reference to the debug panel which contains this
 	 *            controlPanel
-	 * @param mod
-	 *            A reference to the main GUI modification interface
+	 * @param main
+	 *            A reference to the main GUI mainification interface
 	 */
-	public GUIcontrolPanel(JPanel panel, GUIdebugPanel debug, GUImainMod mod) {
+	public GUIcontrolPanel(JPanel panel, GUIdebugPanel debug, GUImain main) {
 
-		this.listener = new PanelRunListener(mod, debug);
+		this.listener = new PanelRunListener(main, debug);
 
-		this.initRunMode(panel);
+		this.initRunmaine(panel);
 	}
 	
 	/**
-	 * Wrapper class with listeners for the "run" mode. Also contains the debug
+	 * Wrapper class with listeners for the "run" maine. Also contains the debug
 	 * and I/O stream interface for the interpreter as well as (interpreter)
-	 * "run" mode event routines.
+	 * "run" maine event routines.
 	 */
 	private final PanelRunListener listener;
 
-	/* --- run mode objects --- */
+	/* --- run maine objects --- */
 	/**
 	 * This button starts or pauses interpreting.
 	 */
@@ -59,13 +59,13 @@ public class GUIcontrolPanel {
 	private JButton jButtonStep;
 
 	/**
-	 * Stops the interpreter. Also used to get out of an error message mode.
+	 * Stops the interpreter. Also used to get out of an error message maine.
 	 */
 	private JButton jButtonStop;
 
 	/**
 	 * Slider for interpreter speed (regulates the period of each interpreter
-	 * step in RUN mode).
+	 * step in RUN maine).
 	 */
 	private JSlider jSlider;
 
@@ -75,12 +75,12 @@ public class GUIcontrolPanel {
 	private JLabel jLabelTimer;
 	
 	/**
-	 * Start value of the JSlider which controls the automatic debugging speed in run mode
+	 * Start value of the JSlider which controls the automatic debugging speed in run maine
 	 */
 	public static final int SLIDER_START = 5;
 
 	/**
-	 * Initializes the objects of the "run" mode, which is active during
+	 * Initializes the objects of the "run" maine, which is active during
 	 * interpreting
 	 * <hr>
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT.</i><br>
@@ -88,7 +88,7 @@ public class GUIcontrolPanel {
 	 * outside the constructor.
 	 * </hr>
 	 */
-	private void initRunMode( JPanel panel ) {
+	private void initRunmaine( JPanel panel ) {
 
 		/* ---------- BUTTONS ---------- */
 		//"play" button
@@ -105,7 +105,7 @@ public class GUIcontrolPanel {
 		jButtonStop = new JButton("\u25A0");
 		this.jButtonStop.addMouseListener(this.listener.stopButtonHandler);
 		this.jButtonStop.setToolTipText("<html><b>" + _("stop") + "</b><br>"
-				+ _("return to text edit mode immediately") + "</html>");
+				+ _("return to text edit maine immediately") + "</html>");
 		panel.add(jButtonStop);
 
 		/* ---------- SLIDER ---------- */
@@ -129,14 +129,14 @@ public class GUIcontrolPanel {
 	}
 	
 	/**
-	 * Sets the control element panel to READY mode
+	 * Sets the control element panel to READY maine
 	 * (this is when the user can edit the source code)
 	 * <br>
 	 * <b> DO NOT CALL THIS METHOD </b>
 	 * <br>
-	 * If you need to change the mode, call the method setReadyMode() in <i>GUIdebugPanel.java</i>
+	 * If you need to change the maine, call the method setReadymaine() in <i>GUIdebugPanel.java</i>
 	 */
-	public void setReadyMode(){
+	public void setReadymaine(){
 		this.jButtonPlay.setEnabled(true);
 		this.jButtonStep.setEnabled(true);
 		this.jButtonStop.setEnabled(false);
@@ -154,14 +154,14 @@ public class GUIcontrolPanel {
 	}
 	
 	/**
-	 * Sets the control element panel to ERROR mode
+	 * Sets the control element panel to ERROR maine
 	 * (this is when an error occurred)
 	 * <br>
 	 * <b> DO NOT CALL THIS METHOD </b>
 	 * <br>
-	 * If you need to change the mode, call the method setReadyMode() in <i>GUIdebugPanel.java</i>
+	 * If you need to change the maine, call the method setReadymaine() in <i>GUIdebugPanel.java</i>
 	 */
-	public void setErrorMode(){
+	public void setErrormaine(){
 		this.jButtonPlay.setEnabled(false);
 		this.jButtonStep.setEnabled(false);
 		this.jButtonStop.setEnabled(true);
@@ -169,14 +169,14 @@ public class GUIcontrolPanel {
 	
 	
 	/**
-	 * Sets the control element panel to RUN mode, also called auto-debug mode
+	 * Sets the control element panel to RUN maine, also called auto-debug maine
 	 * (this is when the debugger steps with a defined delay)
 	 * <br>
 	 * <b> DO NOT CALL THIS METHOD </b>
 	 * <br>
-	 * If you need to change the mode, call the method setReadyMode() in <i>GUIdebugPanel.java</i>
+	 * If you need to change the maine, call the method setReadymaine() in <i>GUIdebugPanel.java</i>
 	 */
-	public void setRunMode(){
+	public void setRunmaine(){
 		this.jButtonPlay.setEnabled(true);
 		this.jButtonStep.setEnabled(false);
 		this.jButtonStop.setEnabled(true);
@@ -194,14 +194,14 @@ public class GUIcontrolPanel {
 	}
 	
 	/**
-	 * Sets the control element panel to PAUSE mode
-	 * (in debug mode, auto-debugging paused or step-by-step debugging)
+	 * Sets the control element panel to PAUSE maine
+	 * (in debug maine, auto-debugging paused or step-by-step debugging)
 	 * <br>
 	 * <b> DO NOT CALL THIS METHOD </b>
 	 * <br>
-	 * If you need to change the mode, call the method setReadyMode() in <i>GUIdebugPanel.java</i>
+	 * If you need to change the maine, call the method setReadymaine() in <i>GUIdebugPanel.java</i>
 	 */
-	public void setPauseMode(){
+	public void setPausemaine(){
 		this.jButtonPlay.setEnabled(true);
 		this.jButtonStep.setEnabled(true);
 		this.jButtonStop.setEnabled(true);
@@ -229,7 +229,7 @@ public class GUIcontrolPanel {
 	}
 
 	/**
-	 * Sets the label for the execution delay in "run" mode to the given value.
+	 * Sets the label for the execution delay in "run" maine to the given value.
 	 * Adds "sec" postfix automatically.
 	 * 
 	 * @param s
