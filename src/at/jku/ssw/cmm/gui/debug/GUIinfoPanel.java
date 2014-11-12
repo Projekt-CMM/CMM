@@ -33,7 +33,7 @@ public class GUIinfoPanel {
 		
 		this.jDescPanel.setVisible(false);
 		
-		this.errorMap = new ErrorTable();
+		this.errorMap = new ErrorTable("de");
 	}
 	
 	private final JPanel panel;

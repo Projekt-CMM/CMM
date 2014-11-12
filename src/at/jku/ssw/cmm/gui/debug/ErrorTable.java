@@ -18,30 +18,37 @@ import org.xml.sax.SAXException;
 
 public class ErrorTable {
 
-	public ErrorTable() {
+	public ErrorTable( String language ) {
+		
+		this.language = language;
 		this.readErrorTable();
 	}
 
+	private String language;
+	
 	private Map<String, String> errorMap;
 
 	public String getErrorHTML(String msg) {
 		
 		if( msg == null )
-			return this.errorMap.get("default");
+			return "error" + File.separator + language + File.separator + this.errorMap.get("default");
 
 		for (Map.Entry<String, String> entry : this.errorMap.entrySet()) {
 			if( Pattern.matches( entry.getKey(), msg ) ){
-				return entry.getValue();
+				return "error" + File.separator + language + File.separator + entry.getValue();
 			}
 		}
 		
 		System.err.println(msg);
 
-		return this.errorMap.get("default");
+		return "error" + File.separator + language + File.separator + this.errorMap.get("default");
 	}
 
 	private void readErrorTable() {
 		this.errorMap = new HashMap<>();
+		
+		if( !new File("error" + File.separator + language).exists() )
+			this.language = "en";
 
 		File fXmlFile = new File("error/table.xml");
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
