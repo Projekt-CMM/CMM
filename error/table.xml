@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 <errorTable>
 	<error id="default">
-		<file>error/de/default.html</file>
+		<file>default.html</file>
 	</error>
 	<error id="semicolon expected">
-		<file>error/de/semicolon.html</file>
+		<file>semicolon.html</file>
 	</error>
 	<error id="include not found">
-		<file>error/de/include.html</file>
+		<file>include.html</file>
 	</error>
 	<error id="invalid Type">
-		<file>error/de/type.html</file>
+		<file>type.html</file>
 	</error>
 	<error id="([\w./]+) not found">
-		<file>error/de/notfound.html</file>
+		<file>notfound.html</file>
 	</error>
 	<error id="Divided by 0">
-		<file>error/de/divby0.html</file>
+		<file>divby0.html</file>
 	</error>
 </errorTable>
