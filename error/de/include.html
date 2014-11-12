@@ -1,9 +1,32 @@
 <!DOCTYPE html>
 <body>
-	<h4> Include file not found </h4>
+	<h1> Bibliothek nicht gefunden </h1>
+	<h2> Was ist passiert? </h2>
 	<p>
-		Click one of the folders on the right side to open a quest package. <br>
-		Select a quest or package to view its description
+		Eine Bibliothek, die du verwenden willst, konnte nocht gefunden werden. Eine Bibliothek ist eine Datei, die mit <strong id="code">#include &lt;stdlib.h&gt;</strong> eingebunden wird.
 	</p>
-	<h8> Have fun! </h8>
+	<h2> Einbinden von Standardbibliotheken </h2>
+	<p>
+		Standardbibliotheken enthalten viele der Befehle, die du aus C kennst und können mit folgendem Befehl eingebunden werden:
+		<div id="code">
+			#include
+			<strong class = "error">&lt;</strong>
+			stdlib.h
+			<strong class = "error">&gt;</strong>
+		</div>
+		Achte auf Tippfehler. Folgende Bibliotheken sind derzeit implementiert:<br>
+		stdlib.h<br>
+		stdio.h<br>
+		math.h<br>
+	</p>
+	<h2> Einbinden von eigenen Bibliotheken </h2>
+	<p>
+		Beim einbinden von eigenen Bibliotheken musst du beachten, dass sich diese im selben Ordner wie deine CMM-Datei befinden muss. Außerdem ist der Syntax etwas anders:
+		<div id="code">
+			#include
+			<strong class = "error">"</strong>
+			yourlibrary.h
+			<strong class = "error">"</strong>
+		</div>
+	</p>
 </body>

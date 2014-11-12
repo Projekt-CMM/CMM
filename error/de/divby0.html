@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <body>
-	<h4> Division by 0 </h4>
+	<h1> Division durch 0 </h1>
+	<h2> Was ist passiert? </h2>
 	<p>
-		Click one of the folders on the right side to open a quest package. <br>
-		Select a quest or package to view its description
+		In der aktuellen Zeile wurde eine Division duch 0 ausgeführt. Diese Operation ist nicht möglich.
 	</p>
-	<h8> Have fun! </h8>
+	<h2> Wie finde ich den Fehler? </h2>
+	<p>
+		Oft entsteht dieser Fehler, wenn durch eine Variable dividiert wird, die den Wert 0 hat.
+	</p>
+	<p id="code">
+		<strong class="key">int</strong> a = 5, b = 0;<br>
+		...<br>
+		a = a / <strong class="error">b</strong>;
+	</p>
 </body>

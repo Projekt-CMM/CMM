@@ -1,9 +1,22 @@
 <!DOCTYPE html>
 <body>
-	<h4> Semicolon expected </h4>
+	<h1> Semikolon vergessen </h1>
+	<h2> Was ist passiert? </h2>
 	<p>
-		Click one of the folders on the right side to open a quest package. <br>
-		Select a quest or package to view its description
+		Du hast ein Semikolon (Strichpunkt ;) vergessen.
 	</p>
-	<h8> Have fun! </h8>
+	<h2> Wie finde ich den Fehler? </h2>
+	<p>
+		Beachte, dass der Compiler erst beim nächsten Befehl bemerkt, dass ein Semikolon fehlt.<br>
+		In folgendem Beispiel wird der Fehler für Zeile 18 angezeigt, obwohl er in Zeile 16 aufgetreten ist:
+	</p>
+	<p id="code">
+		15: <strong class="key">int</strong> a = 5;<br>
+		16: a = b * 7<strong class="key">&nbsp;</strong><br>
+		17:<br>
+		18: printf(<strong class="string">"a = %i"</strong>, a );
+	</p>
+	<p>
+		Du solltest also nicht nur in der Zeile nach einem Fehler suchen, in der er laut Anzeige aufgetreten ist, sondern auch in den Zeilen davor.
+	</p>
 </body>
