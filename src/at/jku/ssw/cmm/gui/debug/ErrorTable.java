@@ -4,22 +4,45 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Element;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class ReadErrorTable {
+public class ErrorTable {
 
-	public static Map<String,String> readErrorTable(){
-		Map<String,String> map = new HashMap<>();
+	public ErrorTable() {
+		this.readErrorTable();
+	}
+
+	private Map<String, String> errorMap;
+
+	public String getErrorHTML(String msg) {
 		
+		if( msg == null )
+			return this.errorMap.get("default");
+
+		for (Map.Entry<String, String> entry : this.errorMap.entrySet()) {
+			if( Pattern.matches( entry.getKey(), msg ) ){
+				return entry.getValue();
+			}
+		}
+		
+		System.err.println(msg);
+
+		return this.errorMap.get("default");
+	}
+
+	private void readErrorTable() {
+		this.errorMap = new HashMap<>();
+
 		File fXmlFile = new File("error/table.xml");
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = null;
@@ -36,20 +59,16 @@ public class ReadErrorTable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	 
-		//optional, but recommended
-		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-		doc.getDocumentElement().normalize();
-	 
-		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-	 
-		NodeList nList = ((org.w3c.dom.Document) doc).getElementsByTagName("error");
 		
+		doc.getDocumentElement().normalize();
+
+		NodeList nList = ((org.w3c.dom.Document) doc)
+				.getElementsByTagName("error");
+
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 			Element eElement = (Element) nList.item(temp);
-			map.put(eElement.getAttribute("id"), eElement.getElementsByTagName("file").item(0).getTextContent());
-			System.out.println("Reading error: " + eElement.getAttribute("id") + " : " + eElement.getElementsByTagName("file").item(0).getTextContent());
+			this.errorMap.put(eElement.getAttribute("id"), eElement
+					.getElementsByTagName("file").item(0).getTextContent());
 		}
-		return map;
 	}
 }

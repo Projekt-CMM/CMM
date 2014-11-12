@@ -3,7 +3,6 @@ package at.jku.ssw.cmm.gui.debug;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
-import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -14,7 +13,9 @@ import at.jku.ssw.cmm.gui.utils.LoadStatics;
 
 public class GUIinfoPanel {
 
-	public GUIinfoPanel( JPanel panel, GUImainMod modifier){
+	public GUIinfoPanel( JPanel panel, GUImainMod modifier ){
+		
+		this.panel = panel;
 		
 		this.jVarPanel = new JPanel();
 		this.jVarPanel.setBorder(new TitledBorder(_("Variables")));
@@ -27,13 +28,15 @@ public class GUIinfoPanel {
 		this.varView = new TreeTableView(modifier, this.jVarPanel,
 				modifier.getFileName());
 		
-		panel.add(jVarPanel, BorderLayout.CENTER);
+		this.panel.add(jVarPanel, BorderLayout.CENTER);
 		panel.add(jDescPanel, BorderLayout.PAGE_END);
 		
 		this.jDescPanel.setVisible(false);
 		
-		this.errorMap = ReadErrorTable.readErrorTable();
+		this.errorMap = new ErrorTable();
 	}
+	
+	private final JPanel panel;
 	
 	/**
 	 * Panel with variable tree table
@@ -49,7 +52,7 @@ public class GUIinfoPanel {
 	
 	private JScrollPane desc;
 	
-	private final Map<String,String> errorMap;
+	private final ErrorTable errorMap;
 	
 	public void setToTable(){
 		if( this.jDescPanel.isVisible() ){
@@ -61,33 +64,7 @@ public class GUIinfoPanel {
 	public void setToDesc(String msg){
 		if( this.jVarPanel.isVisible() ){
 			
-			String path = null;
-			
-			try{
-				path = errorMap.get(msg);
-			}catch(Exception e){
-				System.err.println("Error not found: " + msg);
-			}
-			
-			System.out.println("file is " + path);
-			
-			if( path == null ){
-				System.err.println("Error not found: " + msg);
-				try{
-					path = errorMap.get("default");
-				}catch(Exception e){
-					System.err.println("Default error not found");
-					return;
-				}
-			}
-			if( path == null ){
-				System.err.println("Default error not found");
-				return;
-			}
-			
-			System.out.println("opening file " + path);
-			
-			desc = LoadStatics.loadHTMLdoc(path, "error/style.css");
+			desc = LoadStatics.loadHTMLdoc(this.errorMap.getErrorHTML(msg), "error/style.css");
 			this.jDescPanel.add(desc, BorderLayout.CENTER);
 			
 			this.jVarPanel.setVisible(false);
