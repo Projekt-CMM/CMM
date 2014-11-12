@@ -29,7 +29,7 @@ public class Quest {
 	//Variablen abgeleitet von der quest.xml
 	private String title;					//Titel der Quest
 	private String token;					//Token welches man beim Abschluss bekommt
-	private List<String> nextQuest;			//nächste Quest
+	private List<String> nextQuest;			//nachste Quest
 	private int level;						//den zu setzendesn Level bei geschaffter Quest.
 	private int minLevel;					//Level Anforderung - vom Package vorgegeben
 	private boolean description;			//Beschreibung: description.html

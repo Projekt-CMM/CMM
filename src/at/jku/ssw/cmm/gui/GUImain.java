@@ -29,6 +29,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
+import at.jku.ssw.cmm.gettext.Language;
 import at.jku.ssw.cmm.gui.event.ErrorModeCloseListener;
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.event.WindowComponentListener;
@@ -202,7 +203,7 @@ public class GUImain {
 			DebugShell.out(State.LOG, Area.SYSTEM, "main GUI running on EDT.");
 
 		// Load translations
-		// Language.loadLanguage("de.po");
+		Language.loadLanguage(LANGUAGE + ".po");
 
 		// Initialize the window
 		this.jFrame = new JFrame(VERSION);
@@ -648,7 +649,7 @@ public class GUImain {
 				
 				System.err.println("Wrong Profile Choosen - no profile.xml found");
         		JFrame frame = new JFrame("Warnung");
-        		JOptionPane.showMessageDialog(frame,"Falsches Profil ausgewählt.","Warnung:",
+        		JOptionPane.showMessageDialog(frame,"Falsches Profil ausgewahlt.","Warnung:",
         			    JOptionPane.WARNING_MESSAGE);
         		
 				//Profile Selection Error
