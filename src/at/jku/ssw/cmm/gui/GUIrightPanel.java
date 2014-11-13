@@ -85,6 +85,8 @@ public class GUIrightPanel {
 	 */
 	private GUIquestPanel questPanel;
 	
+	private JPanel errorPanel;
+	
 	/**
 	 * @return A reference to the debug panel manager
 	 */
@@ -101,11 +103,16 @@ public class GUIrightPanel {
 	
 	public void showErrorPanel( String msg ){
 		if( this.tabbedPane.getTabCount() == (GUImain.ADVANCED_GUI ? 2 : 1) ){
-			JPanel panel = new JPanel();
-			panel.setLayout(new BorderLayout());
-			panel.setBackground(Color.RED);
-			panel.add(LoadStatics.loadHTMLdoc(this.errorMap.getErrorHTML(msg), "error/style.css"), BorderLayout.CENTER);
-			tabbedPane.add(panel, _("Error"), 1);
+			errorPanel = new JPanel();
+			errorPanel.setLayout(new BorderLayout());
+			errorPanel.setBackground(Color.RED);
+			errorPanel.add(LoadStatics.loadHTMLdoc(this.errorMap.getErrorHTML(msg), "error/style.css"), BorderLayout.CENTER);
+			tabbedPane.add(errorPanel, _("Error"), 1);
+		}
+		else{
+			errorPanel.removeAll();
+			errorPanel.add(LoadStatics.loadHTMLdoc(this.errorMap.getErrorHTML(msg), "error/style.css"), BorderLayout.CENTER);
+			tabbedPane.repaint();
 		}
 	}
 	

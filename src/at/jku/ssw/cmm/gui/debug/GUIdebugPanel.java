@@ -160,11 +160,11 @@ public class GUIdebugPanel {
 	}
 
 	public void setReadyMode() {
-		this.ctrlPanel.setReadymaine();
+		this.ctrlPanel.setReadyMode();
 		this.ctrlPanel.getListener().setReadyMode();
 		this.main.setReadyMode();
 
-		// maine-specific
+		// Mode-specific
 		this.main.resetInputHighlighter();
 		this.varView.standby(this.main.getFileName());
 		
@@ -173,14 +173,16 @@ public class GUIdebugPanel {
 	}
 
 	public void setErrorMode(String msg, int line) {
+		
+		System.out.println("setting error");
 
-		this.ctrlPanel.setReadymaine();
+		this.ctrlPanel.setReadyMode();
 		this.ctrlPanel.getListener().setReadyMode();
 		this.main.setErrorMode(msg, ExpandSourceCode.correctLine(line,
 				(int) this.main.getSourceCodeRegister().get(0)[0],
 				this.main.getSourceCodeRegister().size()));
 		
-		// maine-specific
+		// Mode-specific
 		this.main.resetInputHighlighter();
 		this.varView.standby(this.main.getFileName());
 		
@@ -191,7 +193,7 @@ public class GUIdebugPanel {
 	}
 
 	public void setRunMode() {
-		this.ctrlPanel.setRunmaine();
+		this.ctrlPanel.setRunMode();
 		this.ctrlPanel.getListener().setRunMode();
 		this.main.setRunMode();
 		
@@ -200,7 +202,7 @@ public class GUIdebugPanel {
 	}
 
 	public void setPauseMode() {
-		this.ctrlPanel.setPausemaine();
+		this.ctrlPanel.setPauseMode();
 		this.ctrlPanel.getListener().setPauseMode();
 		this.main.setPauseMode();
 		
