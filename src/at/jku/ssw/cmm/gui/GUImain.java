@@ -5,9 +5,16 @@ import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.ImageFilter;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -16,7 +23,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileView;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
@@ -195,6 +206,15 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 */
 	private void start(boolean test) {
 
+		
+		
+		//Change look and feel of the GUI
+		/*try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}*/
+		
 		if (SwingUtilities.isEventDispatchThread())
 			DebugShell.out(State.LOG, Area.SYSTEM, "main GUI running on EDT.");
 
@@ -545,40 +565,45 @@ public class GUImain implements GUImainMod, PopupInterface {
 			new GUIquestMain(this.rightPanelControl.getQuestPanel()).start();
 	}
 
+	//TODO
 	@Override
 	public void selectProfile(){
 		DebugShell.out(State.LOG, Area.GUI, "Opening Profile Selection Window...");
 		JFileChooser chooser = new JFileChooser("Select a profile...");
 		//chooser.setFileFilter(new FileNameExtensionFilter("C Compact Profile", "xml"));
-		
-		
-		
+				
 		//Only Directorys can be choosen
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		
-		chooser.showOpenDialog(jFrame);
+		//TODO
+		//chooser.setAccessory(new ProfilePreview(chooser));
 		
-		chooser.setDialogType(JFileChooser.SAVE_DIALOG);
-
-		if(chooser.getSelectedFile() != null && chooser.getSelectedFile().getPath() != null ){
-			String s = chooser.getSelectedFile().getAbsolutePath();
-			try {
-				//Profile.setActiveProfile(Profile.ReadProfile(s.substring(0, s.indexOf(Profile.sep +  Profile.FILE_PROFILE))));
-				Profile.setActiveProfile(Profile.ReadProfile(s));
-			} catch (XMLReadingException | IndexOutOfBoundsException e) {
-				// TODO Auto-generated catch block
+		//Disable Renaming etc.
+		UIManager.put("FileChooser.readOnly", Boolean.TRUE);
+		
+		//chooser.showOpenDialog(jFrame);		
+	    int ret = chooser.showDialog(null, null);
+	    
+	    if (ret == JFileChooser.APPROVE_OPTION) 
+			if(chooser.getSelectedFile() != null && chooser.getSelectedFile().getPath() != null ){
 				
-				System.err.println("Wrong Profile Choosen - no profile.xml found");
-        		JFrame frame = new JFrame("Warnung");
-        		JOptionPane.showMessageDialog(frame,"Falsches Profil ausgewählt.","Warnung:",
-        			    JOptionPane.WARNING_MESSAGE);
-        		
-				//Profile Selection Error
-				selectProfile();
+				String path = chooser.getSelectedFile().getAbsolutePath();
+				try {
+					Profile.setActiveProfile(Profile.ReadProfile(path));
+				} catch (XMLReadingException | IndexOutOfBoundsException e) {
+					
+					System.err.println(path + " Wrong Profile Choosen - no profile.xml found");
+	        		
+					JFrame frame = new JFrame("Warnung");
+	        		JOptionPane.showMessageDialog(frame,"Falsches Profil ausgewählt.","Warnung:",
+	        			    JOptionPane.WARNING_MESSAGE);
+	        		
+					//Open the Selection Window again
+					selectProfile();
+				}
+				DebugShell.out(State.LOG, Area.GUI, "Profile Chooser Path:"
+						+ chooser.getSelectedFile().getAbsolutePath());
 			}
-			DebugShell.out(State.LOG, Area.GUI, "Profile Chooser Path:"
-					+ chooser.getSelectedFile().getAbsolutePath());
-		}
 	}
 
 	@Override

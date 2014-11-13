@@ -23,9 +23,9 @@ public final class LoadStatics {
 		return loadImage( path, true );
 	}
 	
-	//TODO
+	//TODO 
 	public static final JLabel loadImage( String path, boolean createBorder ){
-		return loadImage(path, true, 20 ,20);
+		return loadImage(path, true, -1 ,-1);
 	}
 	
 	public static final JLabel loadImage(String path, boolean createBorder, int width, int height){
@@ -38,7 +38,7 @@ public final class LoadStatics {
 			System.err.println("Error reading image");
 		}
 		
-		//Resize Window
+		//Resize Window works up to 200px
 		if(width != -1 && height != -1)
 			loadBuffer =  scaleImage(loadBuffer, width, height);
 		
@@ -51,6 +51,8 @@ public final class LoadStatics {
 		return picture;
 	}
 	
+	
+	//TODO Scale image only with width or only with height
 	private static final BufferedImage scaleImage(BufferedImage image, int width, int height){
 		
 		BufferedImage otherImage = image;

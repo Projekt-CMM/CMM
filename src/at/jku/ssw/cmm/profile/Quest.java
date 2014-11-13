@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,7 +51,8 @@ public class Quest {
 	public static final String
 		FILE_DESCRIPTION = "description.html",
 		FILE_STYLE = "style.css",
-		FiLE_QUEST = "quest.xml";
+		FiLE_QUEST = "quest.xml",
+		FOLDER_TOKENS = "tokens";
 	
 	public static final String
 		XML_QUEST = "quest",
@@ -211,11 +214,13 @@ public class Quest {
 		
 		for (int i = 0; i < listOfFiles.length; i++) {	
 		//Excludes Profile Folder and execludes FileNames
-		  if(listOfFiles[i].isDirectory() && !listOfFiles[i].getName().equals("tokens")){
+		  if(listOfFiles[i].isDirectory() && !listOfFiles[i].getName().equals(Quest.FOLDER_TOKENS)){
 			  folderNames.add(listOfFiles[i].getName());  
 		  }
 		 }
 		
+		//Sort by Name
+			Collections.sort(folderNames);
 			return folderNames;
 	}
 
