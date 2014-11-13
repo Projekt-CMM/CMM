@@ -176,7 +176,9 @@ public class GUIdebugPanel {
 
 		this.ctrlPanel.setReadymaine();
 		this.ctrlPanel.getListener().setReadyMode();
-		this.main.setErrorMode(msg, line);
+		this.main.setErrorMode(msg, ExpandSourceCode.correctLine(line,
+				(int) this.main.getSourceCodeRegister().get(0)[0],
+				this.main.getSourceCodeRegister().size()));
 		
 		// maine-specific
 		this.main.resetInputHighlighter();
