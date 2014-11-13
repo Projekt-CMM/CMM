@@ -75,18 +75,19 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 
         //Getting the active Profile
 	    Profile p = Profile.getActiveProfile();
+	    
+	    //Counting Quests..
+	    int finishedquests = 0;
+	    int allQuests = 0;
 
 	    if(p != null){
 	    //Getting all Packages Folder Names
 	       List<String> s = Quest.ReadFolderNames("packages");
-	        	
+	       
 	        	for(int i = 0; i < s.size(); i++){
 	        		Package package1 = Profile.ReadPackageQuests(p, s.get(i));
 	        		
 	        		if(package1 != null){
-	        			
-	        		
-	        			
 	        			//Main Nodes:
 	        			packageNode = new DefaultMutableTreeNode(package1);
 		        		
@@ -95,6 +96,10 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 		        		
 		        		for(Quest q: package1.getQuestList()){
 		        			packageNode.add(new DefaultMutableTreeNode(q));
+		        			
+		        			allQuests++;
+		        			if(q.getState().equals(Quest.STATE_FINISHED))
+		        				finishedquests++;
 		        		}
 	        			
 	        		}
@@ -146,10 +151,12 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 
         //Progress Bar
         JProgressBar progressBar;
-        progressBar = new JProgressBar(0, 100);
-        progressBar.setValue(35);
-        progressBar.setStringPainted(true);
-        progressBar.setString(_("Total Quest Progress") + ": 35%");
+        progressBar = new JProgressBar(0, allQuests);
+        progressBar.setValue(finishedquests);
+        System.out.println("1." + allQuests + " 2." + finishedquests);
+        progressBar.setStringPainted(true);      
+        
+        //progressBar.setString(_("Total Quest Progress") + finishedquests + " von " + allQuests);
         
         ctrlPanel.add(progressBar, BorderLayout.CENTER);
 
@@ -187,12 +194,16 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 		    Object nodeInfo = node.getUserObject();
 		    
 		    //Compatible with Quest
-		    if (nodeInfo instanceof Quest) {	
-		    	openButton.setEnabled(true);
-		    	
+		    if (nodeInfo instanceof Quest) {
 			    if (node.isLeaf()) {
 			        Quest quest = (Quest)nodeInfo;
 			        lastClickedQuest = quest;
+			        
+			    	if(!lastClickedQuest.getState().equals(Quest.STATE_LOCKED))
+			    		openButton.setEnabled(true);
+			    	else
+			    		openButton.setEnabled(false);
+			        
 		        	String path = quest.getInitPath() + Quest.sep + quest.getPackagePath() + Quest.sep + quest.getQuestPath();
 		        	
 		        	//When the Quest has a description and a style
@@ -245,7 +256,7 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 	public void actionPerformed(ActionEvent ae) {
         if(ae.getSource() == this.openButton){
         	
-        	if(lastClickedQuest != null){
+        	if(lastClickedQuest != null && !lastClickedQuest.getState().equals(Quest.STATE_LOCKED)){
         		Quest.currentQuest = lastClickedQuest;
         		
 	        	jFrame.dispose();

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <profile xmlns="profileTest/profile.xml">
 <xp>200</xp>
-<state id="inprogress">
-<quest>Test Quest</quest>
-<package>default</package>
-<date>14-10-2014:09:11:775</date>
-<token>Icon_Craft.png</token>
+<state id="finished">
+	<quest>1. TestQuest</quest>
+	<package>2 Weiteres Package</package>
+	<date>14-10-2014:09:11:775</date>
+	<token>Icon_Craft.png</token>
 </state>
 </profile>

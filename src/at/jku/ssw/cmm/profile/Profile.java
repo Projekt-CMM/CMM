@@ -11,6 +11,8 @@ import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -122,10 +124,9 @@ public class Profile {
 		
 		for(Quest packageQuest : packageQuests){
 			for(Quest profileQuest : profileQuests){
-				if(profileQuest.getTitle().equals(packageQuest.getTitle()) && profileQuest.getPackagePath().equals(packageQuest.getPackagePath())){
+				if(profileQuest.getQuestPath().equals(packageQuest.getQuestPath()) && profileQuest.getPackagePath().equals(packageQuest.getPackagePath())){
 					packageQuest.setState(profileQuest.getState());
 					packageQuest.setDate(profileQuest.getDate());
-					
 				}
 			}
 		}
@@ -154,6 +155,7 @@ public class Profile {
 	 * @throws XMLReadingException 
 	 */
 	public static Profile ReadProfile(String profilePath, String packagesPath) throws XMLReadingException {
+		
 		List<String> fileNames = Quest.ReadFileNames(profilePath);
 		
 		if(!fileNames.contains(Profile.FILE_PROFILE))
@@ -222,7 +224,7 @@ public class Profile {
 				        Node currentNode = nodeList.item(i);
 				        if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
 				        	if(currentNode.getNodeName().equals(Profile.XML_QUEST)) //quest
-				        		quest.setTitle(currentNode.getTextContent());
+				        		quest.setQuestPath(currentNode.getTextContent());
 				        	if(currentNode.getNodeName().equals(Profile.XML_PACKAGE)) //package
 				        		quest.setPackagePath(currentNode.getTextContent());
 				        	if(currentNode.getNodeName().equals(Profile.XML_DATE)) //date
@@ -237,7 +239,7 @@ public class Profile {
 				    	questList = profile.getProfileQuests();
 				    
 				    //if all Components are there than only the Quest will be added to ProfileQuests
-				    if(quest != null && quest.getTitle() != null && quest.getPackagePath() != null)
+				    if(quest != null && quest.getQuestPath() != null && quest.getPackagePath() != null)
 				    	questList.add(quest);
 
 				    profile.setProfileQuests(questList);
@@ -315,7 +317,7 @@ public class Profile {
 	private static Node writeProfileState(Document doc, Quest quest){
         Element state = doc.createElement(Profile.XML_STATE);
         state.setAttribute("id", quest.getState());
-        state.appendChild(writeProfileElements(doc, state, Profile.XML_QUEST, quest.getTitle()));
+        state.appendChild(writeProfileElements(doc, state, Profile.XML_QUEST, quest.getQuestPath()));
         state.appendChild(writeProfileElements(doc, state, Profile.XML_PACKAGE, quest.getPackagePath()));
         state.appendChild(writeProfileElements(doc, state, Profile.XML_DATE, quest.getStringDate()));
         if(quest.getToken() != null)
@@ -426,6 +428,12 @@ public class Profile {
 		if(quest == null)
 			return profile;
 		
+		//TODO Copy Tokens into the wright Profile
+		if(state.equals(Quest.STATE_FINISHED)){
+			String questTokenPath = quest.getInitPath()+ sep + quest.getPackagePath() + sep + Quest.FOLDER_TOKENS + sep + quest.getToken();
+			String profileTokenPath = profile.getInitPath() + sep + Profile.FILE_PACKAGESPATH + sep + Quest.FOLDER_TOKENS;
+		}
+		
 		
 		//Setting a new Date
 		quest.setnewDate();
@@ -440,7 +448,7 @@ public class Profile {
 	
 		//only if Title & Package already exists
 		for(int i = 0; i < questList.size(); i++){
-			if(questList.get(i).getTitle().equals(quest.getTitle()) && questList.get(i).getPackagePath().equals(quest.getPackagePath())){
+			if(questList.get(i).getQuestPath().equals(quest.getQuestPath()) && questList.get(i).getPackagePath().equals(quest.getPackagePath())){
 				
 				questList.set(i, quest);
 				profile.setProfileQuests(questList);
