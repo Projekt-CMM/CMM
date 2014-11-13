@@ -37,7 +37,7 @@ public class GUIcontrolPanel {
 
 		this.listener = new PanelRunListener(main, debug);
 
-		this.initRunmaine(panel);
+		this.initRunMode(panel);
 	}
 	
 	/**
@@ -88,7 +88,7 @@ public class GUIcontrolPanel {
 	 * outside the constructor.
 	 * </hr>
 	 */
-	private void initRunmaine( JPanel panel ) {
+	private void initRunMode( JPanel panel ) {
 
 		/* ---------- BUTTONS ---------- */
 		//"play" button
@@ -136,7 +136,7 @@ public class GUIcontrolPanel {
 	 * <br>
 	 * If you need to change the maine, call the method setReadymaine() in <i>GUIdebugPanel.java</i>
 	 */
-	public void setReadymaine(){
+	public void setReadyMode(){
 		this.jButtonPlay.setEnabled(true);
 		this.jButtonStep.setEnabled(true);
 		this.jButtonStop.setEnabled(false);
@@ -161,7 +161,7 @@ public class GUIcontrolPanel {
 	 * <br>
 	 * If you need to change the maine, call the method setReadymaine() in <i>GUIdebugPanel.java</i>
 	 */
-	public void setErrormaine(){
+	public void setErrorMode(){
 		this.jButtonPlay.setEnabled(false);
 		this.jButtonStep.setEnabled(false);
 		this.jButtonStop.setEnabled(true);
@@ -176,7 +176,7 @@ public class GUIcontrolPanel {
 	 * <br>
 	 * If you need to change the maine, call the method setReadymaine() in <i>GUIdebugPanel.java</i>
 	 */
-	public void setRunmaine(){
+	public void setRunMode(){
 		this.jButtonPlay.setEnabled(true);
 		this.jButtonStep.setEnabled(false);
 		this.jButtonStop.setEnabled(true);
@@ -201,7 +201,7 @@ public class GUIcontrolPanel {
 	 * <br>
 	 * If you need to change the maine, call the method setReadymaine() in <i>GUIdebugPanel.java</i>
 	 */
-	public void setPausemaine(){
+	public void setPauseMode(){
 		this.jButtonPlay.setEnabled(true);
 		this.jButtonStep.setEnabled(true);
 		this.jButtonStop.setEnabled(true);
