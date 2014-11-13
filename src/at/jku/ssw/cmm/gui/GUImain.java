@@ -8,7 +8,6 @@ import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -30,7 +29,6 @@ import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gettext.Language;
-import at.jku.ssw.cmm.gui.event.ErrorModeCloseListener;
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.event.WindowComponentListener;
 import at.jku.ssw.cmm.gui.event.WindowEventListener;
@@ -88,7 +86,6 @@ public class GUImain {
 	
 	private JPanel jStatePanel;
 	private JLabel jStateLabel;
-	private JButton jStateButton;
 
 	/**
 	 * The text panel with the source code.
@@ -703,17 +700,9 @@ public class GUImain {
 		this.jStateLabel.setText("! ! ! " + _("error") + " " + (line >= 0 ? _("in line") + " " + line : "") + " ! ! !");
 		
 		this.rightPanelControl.showErrorPanel(msg);
-		
-		this.jStateButton = new JButton("X");
-		this.jStateButton.addMouseListener(new ErrorModeCloseListener(this, this.jStatePanel, this.jStateButton));
-		this.jStateButton.setToolTipText("<html><b>" + _("back to text edit mode") + "</b><br>" + _("leave error mode") + "</html>" );
-		this.jStatePanel.add(this.jStateButton);
 	}
 
 	public void setRunMode() {
-		
-		if( this.jStateButton!= null )
-			this.jStatePanel.remove(jStateButton);
 		
 		this.jStatePanel.setBackground(Color.GREEN);
 		this.jStateLabel.setText(">>> " + _("automatic debug mode") + " >>>");
@@ -722,9 +711,6 @@ public class GUImain {
 	}
 
 	public void setPauseMode() {
-		
-		if( this.jStateButton!= null )
-			this.jStatePanel.remove(jStateButton);
 		
 		this.jStatePanel.setBackground(Color.YELLOW);
 		this.jStateLabel.setText("||| " + _("pause or step by step mode") + " |||");
