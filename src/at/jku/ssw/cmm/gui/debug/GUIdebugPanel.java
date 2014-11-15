@@ -13,10 +13,10 @@ import at.jku.ssw.cmm.CMMwrapper;
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
+import at.jku.ssw.cmm.debugger.IOstream;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.exception.IncludeNotFoundException;
 import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
-import at.jku.ssw.cmm.gui.interpreter.IOstream;
 
 /**
  * Controls the right panel of the main GUI. This is a bit more complex, as this
