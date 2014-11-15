@@ -125,29 +125,18 @@ public class GUIrightPanel {
 	}
 	
 	public void showErrorPanel( String msg ){
-		if( this.tabbedPane.getTabCount() == (GUImain.ADVANCED_GUI ? 2 : 1) ){
-			
-	      	try {
-				this.errorDesc.setPage(LoadStatics.getHTMLUrl(this.errorMap.getErrorHTML(msg)));
-			} catch (IOException e) {
-				DebugShell.out(State.ERROR, Area.ERROR, msg + " not found");
-				e.printStackTrace();
-			}
-	      	
-			tabbedPane.add(errorPanel, _("Error"), 1);
-			
-			tabbedPane.setSelectedIndex(1);
+		
+		try {
+			this.errorDesc.setPage(LoadStatics.getHTMLUrl(this.errorMap.getErrorHTML(msg)));
+		} catch (IOException e) {
+			DebugShell.out(State.ERROR, Area.ERROR, msg + " not found");
+			e.printStackTrace();
 		}
-		else{
-			try {
-				this.errorDesc.setPage(LoadStatics.getHTMLUrl(this.errorMap.getErrorHTML(msg)));
-			} catch (IOException e) {
-				DebugShell.out(State.ERROR, Area.ERROR, msg + " not found");
-				e.printStackTrace();
-			}
-			
-			tabbedPane.setSelectedIndex(1);
-		}
+		
+		if( this.tabbedPane.getTabCount() == (GUImain.ADVANCED_GUI ? 2 : 1) )
+			this.tabbedPane.add(errorPanel, _("Error"), 1);
+		
+		this.tabbedPane.setSelectedIndex(1);
 	}
 	
 	public void hideErrorPanel(){
