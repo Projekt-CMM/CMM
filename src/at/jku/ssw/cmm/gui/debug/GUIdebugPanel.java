@@ -104,7 +104,7 @@ public class GUIdebugPanel {
 	 *         include code.
 	 */
 	public int getBeginLine() {
-		return (int) this.main.getSourceCodeRegister().get(0)[0];
+		return (int) this.main.getLeftPanel().getSourceCodeRegister().get(0)[0];
 	}
 
 	/**
@@ -165,7 +165,7 @@ public class GUIdebugPanel {
 		this.main.setReadyMode();
 
 		// Mode-specific
-		this.main.resetInputHighlighter();
+		this.main.getLeftPanel().resetInputHighlighter();
 		this.varView.standby(this.main.getFileName());
 		
 		//Input lock
@@ -179,11 +179,11 @@ public class GUIdebugPanel {
 		this.ctrlPanel.setReadyMode();
 		this.ctrlPanel.getListener().setReadyMode();
 		this.main.setErrorMode(msg, ExpandSourceCode.correctLine(line,
-				(int) this.main.getSourceCodeRegister().get(0)[0],
-				this.main.getSourceCodeRegister().size()));
+				(int) this.main.getLeftPanel().getSourceCodeRegister().get(0)[0],
+				this.main.getLeftPanel().getSourceCodeRegister().size()));
 		
 		// Mode-specific
-		this.main.resetInputHighlighter();
+		this.main.getLeftPanel().resetInputHighlighter();
 		this.varView.standby(this.main.getFileName());
 		
 		//Input lock
@@ -242,18 +242,18 @@ public class GUIdebugPanel {
 	 */
 	public void compile() {
 
-		String sourceCode = this.main.getSourceCode();
+		String sourceCode = this.main.getLeftPanel().getSourceCode();
 		this.breakpoints.clear();
 
 		try {
 			sourceCode = ExpandSourceCode.expand(sourceCode,
 					this.main.getWorkingDirectory(),
-					this.main.getSourceCodeRegister(), this.breakpoints);
+					this.main.getLeftPanel().getSourceCodeRegister(), this.breakpoints);
 		} catch (final IncludeNotFoundException e1) {
 
 			Object[] e = { 1, 0, null };
-			this.main.getSourceCodeRegister().clear();
-			this.main.getSourceCodeRegister().add(e);
+			this.main.getLeftPanel().getSourceCodeRegister().clear();
+			this.main.getLeftPanel().getSourceCodeRegister().add(e);
 
 			// An include file could not be found
 			this.setErrorMode("include not found", -1);
@@ -263,7 +263,7 @@ public class GUIdebugPanel {
 		/* --- Code statistics --- */
 		DebugShell.out(State.STAT, Area.COMPILER,
 				"\n-------------------------------------\nUsed input files: ");
-		for (Object[] o : this.main.getSourceCodeRegister()) {
+		for (Object[] o : this.main.getLeftPanel().getSourceCodeRegister()) {
 			DebugShell.out(State.STAT, Area.COMPILER, "" + o[2] + ", line "
 					+ o[0] + " - " + o[1]);
 		}
@@ -271,7 +271,7 @@ public class GUIdebugPanel {
 				"-------------------------------------");
 
 		DebugShell.out(State.STAT, Area.COMPILER, "Source code begins @ line "
-				+ (int) this.main.getSourceCodeRegister().get(0)[0] + "\n");
+				+ (int) this.main.getLeftPanel().getSourceCodeRegister().get(0)[0] + "\n");
 
 		for (int i : this.breakpoints) {
 			DebugShell.out(State.STAT, Area.COMPILER, "line " + i);

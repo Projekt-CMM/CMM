@@ -29,7 +29,7 @@ public class IOstream implements StdInOut {
 
 		// Get input stream characters
 		this.inputStream = new LinkedList<>();
-		for (char c : this.main.getInputStream().toCharArray()) {
+		for (char c : this.main.getLeftPanel().getInputStream().toCharArray()) {
 			this.inputStream.add(c);
 		}
 	}
@@ -65,7 +65,7 @@ public class IOstream implements StdInOut {
 			return '\0';
 		}
 
-		this.main.increaseInputHighlighter();
+		this.main.getLeftPanel().increaseInputHighlighter();
 		return c;
 	}
 
@@ -76,7 +76,7 @@ public class IOstream implements StdInOut {
 
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				main.outputStream("" + arg0);
+				main.getLeftPanel().outputStream("" + arg0);
 			}
 		});
 	}

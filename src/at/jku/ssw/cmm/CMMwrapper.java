@@ -75,7 +75,7 @@ public class CMMwrapper implements CMMrunnableMod {
 		if( this.compiler != null && !this.running ){
 			
 			//Reset the output text panel
-			this.main.resetOutputTextPane();
+			this.main.getLeftPanel().resetOutputTextPane();
 			
 			//Set the running flag
 			this.running = true;

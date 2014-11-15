@@ -3,7 +3,6 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
@@ -12,15 +11,11 @@ import java.awt.image.ImageFilter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -39,23 +34,16 @@ import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gettext.Language;
-import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.event.WindowComponentListener;
 import at.jku.ssw.cmm.gui.event.WindowEventListener;
-import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
-import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
-import at.jku.ssw.cmm.gui.init.InitLeftPanel;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
-import at.jku.ssw.cmm.gui.init.JInputDataPane;
 import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
 import at.jku.ssw.cmm.gui.quest.GUIquestMain;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.XMLReadingException;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Contains the main function which also initializes and controls the main GUI.
@@ -87,30 +75,14 @@ public class GUImain {
 	 * The frame of the window which contains the main GUI.
 	 */
 	private JFrame jFrame;
+	
+	private GUIleftPanel leftPanelControl;
 
 	/**
 	 * A reference to the right panel control class. <br>
 	 * The right panel contains the debugger and profile/quest info tabs.
 	 */
 	private GUIrightPanel rightPanelControl;
-	
-	private JPanel jStatePanel;
-	private JLabel jStateLabel;
-
-	/**
-	 * The text panel with the source code.
-	 */
-	private RSyntaxTextArea jSourcePane;
-
-	/**
-	 * The text panel with input data for the cmm program.
-	 */
-	private JInputDataPane jInputPane;
-
-	/**
-	 * The text panel for the output stream of the cmm program.
-	 */
-	private JTextArea jOutputPane;
 
 	/**
 	 * A reference to the general settings object which contains the path of the
@@ -125,45 +97,11 @@ public class GUImain {
 	 */
 	private SaveDialog saveDialog;
 
-	// TODO make codeRegister thread safe
-	/**
-	 * A list which contains the lines of all libraries in the complete source
-	 * code. When a library is loaded, its code is pasted to the source code of
-	 * the cmm file and this complete code is given to the compiler.
-	 * 
-	 * codeRegister contains information about the start and end line of each
-	 * library file. The array in the list is initialized as follows:
-	 * <ul>
-	 * <li>Start line</li>
-	 * <li>End line</li>
-	 * <li>File Name</li>
-	 * </ul>
-	 * 
-	 * <i>Note: Please use ExpandSourcecode.correctLine() determine the line in
-	 * the text area from the line of the complete source code. The parameters
-	 * are.
-	 * <ul>
-	 * <li><b>int line:</b> the line in the complete source code.</li>
-	 * <li><b>int codeStart:</b> the line where the original source code starts.
-	 * Use this.codeRegister.get(0)[0]</li>
-	 * <li><b>int files:</b> The total number of library files. Use
-	 * this.codeRegister.size()</li>
-	 * </ul>
-	 */
-	private List<Object[]> codeRegister;
+	
 
-	/**
-	 * When input data from the input source pane is read by the cmm program,
-	 * the input data has to be marked as "already read". This happens with
-	 * simple highlighting. <br>
-	 * The variable inputHightlightOffset is the number of characters of the
-	 * input string which has already been used.
-	 */
-	private int inputHighlightOffset;
+	
 
 	private MenuBarControl menuBarControl;
-
-	private SourceCodeListener codeListener;
 
 	/**
 	 * Unicode character of the breakpoint.
@@ -239,69 +177,31 @@ public class GUImain {
 		JComponent cp = (JComponent) this.jFrame.getContentPane();
 		cp.setLayout(new BorderLayout());
 
-		// Source code component register
-		this.codeRegister = new ArrayList<>();
-
-		// Left part of the GUI
-		JPanel jPanelLeft = new JPanel();
-		jPanelLeft.setLayout(new BoxLayout(jPanelLeft, BoxLayout.PAGE_AXIS));
-		jPanelLeft.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
-		// Panel to display the GUI mode
-		this.jStatePanel = new JPanel();
-		this.jStatePanel.setBorder(BorderFactory.createLoweredBevelBorder());
-		
-		this.jStateLabel = new JLabel();
-		
-		this.jStatePanel.add(this.jStateLabel);
-		jPanelLeft.add(this.jStatePanel);
-		
-
-		// Text area (text pane) for source code
-		this.jSourcePane = InitLeftPanel
-				.initCodePane(jPanelLeft, this.settings);
-
-		// Text area for input
-		this.jInputPane = InitLeftPanel.initInputPane(jPanelLeft);
-
-		// Text area for output
-		this.jOutputPane = InitLeftPanel.initOutputPane(jPanelLeft);
-
-		// Read last opened files
-		if (this.settings.hasPath()) {
-			this.jSourcePane.setText(FileManagerCode.readSourceCode(new File(
-					this.settings.getPath())));
-			this.jInputPane.setText(FileManagerCode.readInputData(new File(
-					this.settings.getPath())));
-		}
 		this.updateWinFileName();
 
-		cp.add(jPanelLeft, BorderLayout.LINE_START);
+		this.leftPanelControl = new GUIleftPanel(this);
+		
+		cp.add(this.leftPanelControl.init(), BorderLayout.LINE_START);
 
 		// Right part of the GUI
 		this.rightPanelControl = new GUIrightPanel(cp, this);
 
 		// Initialize the save dialog object
-		this.saveDialog = new SaveDialog(this.jFrame, this.jSourcePane,
-				this.jInputPane, this.settings);
+		this.saveDialog = new SaveDialog(this.jFrame, this.leftPanelControl.getSourcePane(),
+				this.leftPanelControl.getInputPane(), this.getSettings());
 
 		// Initialize the window listener
 		this.jFrame.addWindowListener(new WindowEventListener(this.jFrame,
-				this.settings, this.saveDialog));
-
+				this.getSettings(), this.saveDialog));
+		
 		// Initialize window component listener
-		this.jFrame.addComponentListener(new WindowComponentListener(this.jFrame, this.jSourcePane, this.jInputPane, this.settings));
-
-		// Initialize the source panel listener
-		this.codeListener = new SourceCodeListener(this);
-		this.jSourcePane.getDocument().addDocumentListener(this.codeListener);
-		// TODO
-		// this.jInputPane.getDocument().addDocumentListener(this.codeListener);
+				this.jFrame.addComponentListener(new WindowComponentListener(this.jFrame, this.leftPanelControl.getSourcePane(), this.leftPanelControl.getInputPane(), this.getSettings()));
 
 		// Menubar
 		this.menuBarControl = new MenuBarControl();
-		InitMenuBar.initFileM(this.jFrame, this.jSourcePane, this.jInputPane,
-				this, this.settings, this.rightPanelControl.getDebugPanel(),
+		InitMenuBar.initFileM(this.jFrame, this.leftPanelControl.getSourcePane(), this.leftPanelControl.getInputPane(),
+				this, this.getSettings(), this.rightPanelControl.getDebugPanel(),
 				this.menuBarControl, this.saveDialog);
 		
 		this.rightPanelControl.getDebugPanel().setReadyMode();
@@ -311,48 +211,11 @@ public class GUImain {
 		this.jFrame.pack();
 		this.jFrame.setVisible(true);
 
-		// Variable initialization
-		this.inputHighlightOffset = 0;
-
 		if (test)
 			System.exit(0);
 	}
 
-	/**
-	 * Highlights the already used characters of the input text area. Usually
-	 * called while interpreter is working.
-	 * 
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 */
-	private void highlightInputPane() {
-
-		DefaultStyledDocument document = new DefaultStyledDocument();
-
-		StyleContext context = new StyleContext();
-
-		// Highlighting style
-		Style highlightStyle = context.addStyle("highlight", null);
-		StyleConstants.setBackground(highlightStyle, Color.YELLOW);
-		StyleConstants.setBold(highlightStyle, true);
-
-		// Default style
-		Style defaultStyle = context.addStyle("default", null);
-
-		// Do highlighting
-		try {
-			document.insertString(0,
-					this.jInputPane.getText().substring(inputHighlightOffset),
-					defaultStyle);
-			document.insertString(0,
-					this.jInputPane.getText()
-							.substring(0, inputHighlightOffset), highlightStyle);
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		}
-		// TODO document.addDocumentListener(this.codeListener);
-		this.jInputPane.setDocument(document);
-		this.jInputPane.repaint();
-	}
+	
 
 	/**
 	 * Repaints the main GUI.
@@ -373,10 +236,10 @@ public class GUImain {
 	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
 	 */
 	public void updateWinFileName() {
-		if (this.settings.getPath() == null) {
+		if (this.getSettings().getPath() == null) {
 			this.jFrame.setTitle(VERSION + " - " + _("Unnamed"));
 		} else
-			this.jFrame.setTitle(VERSION + " - " + this.settings.getPath());
+			this.jFrame.setTitle(VERSION + " - " + this.getSettings().getPath());
 	}
 
 	/**
@@ -386,7 +249,7 @@ public class GUImain {
 	public String getFileName() {
 
 		// final String sep = System.getProperty("file.separator");
-		String s = this.settings.getPath();
+		String s = this.getSettings().getPath();
 
 		if (s == null)
 			return _("Unnamed");
@@ -404,7 +267,11 @@ public class GUImain {
 	 */
 	public String getFileNameAndPath() {
 
-		return this.settings.getPath();
+		return this.getSettings().getPath();
+	}
+	
+	public boolean hasPath(){
+		return this.getSettings().hasPath();
 	}
 
 	public void setFileChanged() {
@@ -419,209 +286,21 @@ public class GUImain {
 		}
 	}
 
-	/**
-	 * Note: Method from interface <i>GUImod</i>
-	 * 
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 * 
-	 * @return The source code written in the source code text area of the main GUI
-	 */
-	public String getSourceCode() {
-		return this.jSourcePane.getText();
-	}
-
-	/**
-	 * The source code register is a list object which saves where the specific parts of the compiled
-	 * code (not the code on the screen) are from. The data is saved as follows:<br>
-	 * The list contains arrays of three objects which save:
-	 * <ol>
-	 * <li>The start line (in the compiled code) of the sequence</li>
-	 * <li>The end line</li>
-	 * <li>The origin as String, eg. "test2.cmm" or "original file"</li>
-	 * </ol>
-	 * 
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 * 
-	 * @return The source code register list
-	 */
-	public List<Object[]> getSourceCodeRegister() {
-		return this.codeRegister;
+	public GUIleftPanel getLeftPanel(){
+		return this.leftPanelControl;
 	}
 
 	/**
 	 * @return The complete path to the directory where the currently edited *.cmm file is saved
 	 */
 	public String getWorkingDirectory() {
-		if (this.settings.getPath() == null)
+		if (this.getSettings().getPath() == null)
 			return null;
 
-		File f = new File(this.settings.getPath());
+		File f = new File(this.getSettings().getPath());
 		if (f.getParentFile() != null)
 			return f.getParentFile().getAbsolutePath();
 		return null;
-	}
-
-	/**
-	 * Moves the cursor to a specific line in the <b>user's</b> source code
-	 * (highlights the whole line - variable "col" is useless at the moment)<br>
-	 * Note: Method from interface <i>GUImod</i>
-	 * 
-	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
-	 * 
-	 * @param line The line which is considered to be highlighted
-	 * @param col The column position [actually useless]
-	 */
-	public void highlightSourceCode(int line) {
-
-		// Line out of user source code range (#include)
-		if (line <= (int) this.codeRegister.get(0)[0])
-			return;
-
-		// Correct offset in source code (offset caused by includes)
-		else
-			line = ExpandSourceCode
-					.correctLine(line, (int) this.codeRegister.get(0)[0],
-							this.codeRegister.size());
-
-		int i, l = 0;
-		final String code = this.jSourcePane.getText();
-
-		// TODO readLoopLock
-		for (i = 0; l < line - 1; i++) {
-			if (code.charAt(i) == '\n')
-				l++;
-		}
-
-		final int i_copy = i, l_copy = l;
-
-		if (i_copy < code.length() && l_copy < jSourcePane.getLineCount())
-			jSourcePane.select(i_copy, i_copy);
-		else
-			jSourcePane.select(code.length(), code.length());
-	}
-
-	/**
-	 * Increments the input highlighter (input text area), which marks the already
-	 * read characters, by one.
-	 */
-	public void increaseInputHighlighter() {
-
-		this.inputHighlightOffset++;
-
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				highlightInputPane();
-			}
-		});
-	}
-
-	/**
-	 * Sets the input highlighter to 0.
-	 */
-	public void resetInputHighlighter() {
-		this.inputHighlightOffset = 0;
-
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				highlightInputPane();
-			}
-		});
-	}
-
-	/**
-	 * Resets the output text panel so that there is no text displayed
-	 */
-	public void resetOutputTextPane() {
-
-		this.jOutputPane.setText("");
-	}
-
-	/**
-	 * Makes all text fields of the main GUI uneditable. Should happen before interpreter starts running
-	 * so that the source code can't be changed during runtime.
-	 * 
-	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
-	 */
-	public void lockInput() {
-
-		this.jSourcePane.setEditable(false);
-		this.jSourcePane.setBackground(Color.LIGHT_GRAY);
-		this.jInputPane.setEditable(false);
-		this.jInputPane.setBackground(Color.LIGHT_GRAY);
-		this.jOutputPane.setEditable(false);
-		this.jOutputPane.setBackground(Color.LIGHT_GRAY);
-
-		this.menuBarControl.lockAll();
-	}
-
-	/**
-	 * Makes all text fields of the main GUI editable. Should happen after the interpreter has
-	 * finished running.
-	 * 
-	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
-	 */
-	public void unlockInput() {
-
-		this.jSourcePane.setEditable(true);
-		this.jSourcePane.setBackground(Color.WHITE);
-		this.jInputPane.setEditable(true);
-		this.jInputPane.setBackground(Color.WHITE);
-		this.jOutputPane.setEditable(true);
-		this.jOutputPane.setBackground(Color.WHITE);
-
-		this.menuBarControl.unlockAll();
-	}
-
-	/**
-	 * Shows the given String on the output text area of the main GUI. Used for the output
-	 * stream of the interpreter.
-	 * 
-	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
-	 * 
-	 * @param s The output stream as String
-	 */
-	public void outputStream(String s) {
-
-		this.jOutputPane.append(s);
-	}
-
-	/**
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 * 
-	 * @return The text in the input text area of the main GUI
-	 */
-	public String getInputStream() {
-
-		return this.jInputPane.getText();
-	}
-
-	/**
-	 * Adds a breakpoint to the current line in the source code if there isn't yet any.
-	 * Otherwise removes the breakpoint from the current line.
-	 */
-	public void toggleBreakPoint() {
-
-		int start = this.jSourcePane.getSelectionStart();
-		int end = this.jSourcePane.getSelectionEnd();
-		String code = this.jSourcePane.getText();
-
-		for (int i = start; i >= 0; i--) {
-			if (code.charAt(i) == '\n') {
-				code = code.substring(0, i + 1) + BREAKPOINT
-						+ code.substring(i + 1);
-				start = start + 1;
-				end = end + 1;
-				break;
-			} else if (code.charAt(i) == BREAKPOINT) {
-				code = code.substring(0, i) + code.substring(i + 1);
-				start = start - 1;
-				end = end - 1;
-				break;
-			}
-		}
-
-		this.jSourcePane.setText(code);
-		this.jSourcePane.select(start, end);
 	}
 
 	/**
@@ -687,7 +366,7 @@ public class GUImain {
 	 */
 	public void saveIfNecessary() {
 
-		if (this.settings.getPath() == null)
+		if (this.getSettings().getPath() == null)
 			this.saveDialog.doSaveAs();
 		else
 			this.saveDialog.directSave();
@@ -710,40 +389,57 @@ public class GUImain {
 		((JPanel) this.jFrame.getGlassPane()).validate();
 		((JPanel) this.jFrame.getGlassPane()).repaint();
 	}
-
-	public void setReadyMode() {
+	
+public void setReadyMode() {
 		
-		this.jStatePanel.setBackground(Color.LIGHT_GRAY);
-		this.jStateLabel.setText("--- " + _("text edit mode") + " ---");
-		
+		this.leftPanelControl.setReadyMode();
 		this.rightPanelControl.hideErrorPanel();
 	}
 
 	public void setErrorMode(String msg, int line) {
 		
-		this.jStatePanel.setBackground(Color.RED);
-		this.jStateLabel.setText("! ! ! " + _("error") + " " + (line >= 0 ? _("in line") + " " + line : "") + " ! ! !");
-		
+		this.leftPanelControl.setErrorMode(msg, line);
 		this.rightPanelControl.showErrorPanel(msg);
 	}
 
 	public void setRunMode() {
 		
-		this.jStatePanel.setBackground(Color.GREEN);
-		this.jStateLabel.setText(">>> " + _("automatic debug mode") + " >>>");
-		
+		this.leftPanelControl.setRunMode();
 		this.rightPanelControl.hideErrorPanel();
 	}
 
 	public void setPauseMode() {
 		
-		this.jStatePanel.setBackground(Color.YELLOW);
-		this.jStateLabel.setText("||| " + _("pause or step by step mode") + " |||");
-		
+		this.leftPanelControl.setPauseMode();
 		this.rightPanelControl.hideErrorPanel();
+	}
+	
+	/**
+	 * Makes all text fields of the main GUI uneditable. Should happen before interpreter starts running
+	 * so that the source code can't be changed during runtime.
+	 * 
+	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
+	 */
+	public void lockInput() {
+	
+		this.menuBarControl.lockAll();
+	}
+	
+	/**
+	 * Makes all text fields of the main GUI editable. Should happen after the interpreter has
+	 * finished running.
+	 * 
+	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
+	 */
+	public void unlockInput() {
+		this.menuBarControl.unlockAll();
 	}
 
 	public SaveDialog getSaveManager() {
 		return this.saveDialog;
+	}
+
+	public GUImainSettings getSettings() {
+		return settings;
 	}
 }

@@ -21,6 +21,6 @@ public class ContextMenuListener implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		
 		System.out.println("Action performed: " + name + ", " + line);
-		this.main.highlightSourceCode(this.line);
+		this.main.getLeftPanel().highlightSourceCode(this.line);
 	}
 }
