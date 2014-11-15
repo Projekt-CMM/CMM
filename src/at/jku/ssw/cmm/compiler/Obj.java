@@ -17,6 +17,7 @@ public class Obj {
 	public String  name;      // object name
 	public Struct  type;      // object type
 	public Obj     next;      // next local object in this scope
+	public boolean library;   // CON, VAR, PROC declare if object is a library function
 
 	public int     val;       // CON: int or char value
 	public float   fVal;      // CON: float value

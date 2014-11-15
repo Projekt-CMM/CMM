@@ -571,21 +571,21 @@ public class Tab {
 			case Obj.CON:
 			  System.out.print("Con " + o.name);
 			  if (o.type == Tab.floatType) 
-				  System.out.print(" fVal=" + o.fVal + " decLine=" + o.line);
+				  System.out.print(" fVal=" + o.fVal + " library=" + o.library + " decLine=" + o.line);
 			  else if (o.type == Tab.stringType) 
-				  System.out.print(" val=" + o.val + " string=\"" + parser.strings.get(o.val) + "\"" + " decLine=" + o.line);
+				  System.out.print(" val=" + o.val + " library=" + o.library + " string=\"" + parser.strings.get(o.val) + "\"" + " decLine=" + o.line);
 			  else 
-				  System.out.print(" val=" + o.val + " decLine=" + o.line);
+				  System.out.print(" val=" + o.val + " library=" + o.library + " decLine=" + o.line);
 			  break;
 			case Obj.VAR:
-			  System.out.print("Var " + o.name + " adr=" + o.adr + " level=" + o.level + " decLine=" + o.line);
+			  System.out.print("Var " + o.name + " adr=" + o.adr + " level=" + o.level + " library=" + o.library + " decLine=" + o.line);
 			  if (o.isRef) System.out.print(" isRef");
 			  break;
 			case Obj.TYPE:
 			  System.out.print("Type " + o.name);
 			  break;
 			case Obj.PROC:
-			  System.out.println("Proc " + o.name + " size=" + o.size + " nPars=" + o.nPars + " isForw=" + o.isForward + " {");
+			  System.out.println("Proc " + o.name + " size=" + o.size + " nPars=" + o.nPars + " library=" + o.library + " isForw=" + o.isForward + " {");
 			  dumpScope(o.locals, indent + 1);
 			  System.out.print("}");
 			  break;

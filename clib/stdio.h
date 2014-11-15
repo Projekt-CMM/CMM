@@ -6,9 +6,9 @@
 
 //------------------- Forward declarations
 
-void putc(char ch);
-void prints(string s);
-string scanf();
+void library putc(char ch);
+void library prints(string s);
+string library scanf();
 
 //------------------- declarations
 
@@ -16,7 +16,7 @@ string scanf();
  *
  * @working yes
  */
-void putc(char ch) {
+void library putc(char ch) {
     print(ch);
 }
 
@@ -24,7 +24,7 @@ void putc(char ch) {
  *
  * @working yes
  */
-void prints(string s) {
+void library prints(string s) {
     int i = 0; 
     while(i < length(s)) {
         putc(s[i]);
@@ -36,7 +36,7 @@ void prints(string s) {
  *
  * @working yes
  */
-string scanf() {
+string library scanf() {
     string s = "";
     char c;
     while(1 == 1) {

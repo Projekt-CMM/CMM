@@ -201,14 +201,18 @@ CMM
 .
 //-------------------------------------------------------------------------
 ConstDecl                           (.  Struct type; 
-                                        int line = la.line; .)
+                                        int line = la.line; 
+                                        boolean library = false; .)
 =
 "const"
 Type<out type>
+[ "library"                         (.  library = true; .)
+]
 ident                               (.  // create new constant variable
-                                        Obj curCon = tab.insert(Obj.CON, t.val, type, line); .)
+                                        Obj curCon = tab.insert(Obj.CON, t.val, type, line); 
+                                        curCon.library = library; .)
 "="
-( ("true"                          (.  curCon.val = 1; 
+( ("true"                           (.  curCon.val = 1; 
                                         if (type != Tab.boolType) 
                                             SemErr("bool constant not allowed here"); .)
   |"false"                          (.  curCon.val = 0; 
@@ -233,13 +237,17 @@ ident                               (.  // create new constant variable
 //-------------------------------------------------------------------------
 VarDecl<out Node e>                 (.  Struct type; 
                                         Node curNode = null, newNode; 
-                                        Obj curObj; .)
+                                        Obj curObj;
+                                        boolean library = false; .)
 =                                   (.  e = null;
                                         // get current line
                                         int line = la.line; .)
 Type<out type>
+[ "library"                         (.  library = true; .)
+]
 ident                               (.  // create new variable
-                                        curObj = tab.insert(Obj.VAR, t.val, type, line); .)
+                                        curObj = tab.insert(Obj.VAR, t.val, type, line); 
+                                        curObj.library = library; .)
   [ "="
     BinExpr<out e>                  (.  // check if type of variable declaration is correct 
                                         // TODO probably direct after declaration?
@@ -319,12 +327,18 @@ ident                               (.  // insert the struct in the current scop
 //-------------------------------------------------------------------------
 ProcDecl                            (.  Struct type = Tab.noType; .)
 =                                   (.  // get current line
-                                        int line = la.line; .)
+                                        int line = la.line; 
+                                        boolean library = false; .)
 ( Type<out type>
 | "void"
 )
+[ "library"                         (.  library = true; .)
+]
 ident                               (.  // insert the procedure in the current(global) scope
                                         curProc = tab.insert(Obj.PROC, t.val, type, line);
+                                        
+                                        if(library)
+                                            curProc.library = library;
                                         
                                         // check if it return the correct type
                                         if(type != Tab.noType && type != Tab.stringType && !type.isPrimitive()) 
@@ -336,6 +350,8 @@ ident                               (.  // insert the procedure in the current(g
 ")"
 ( "{"                               (.  // check if procedure is already forward-declared
                                         if(curProc.isForward) {
+                                            if(curProc.library != library)
+                                                SemErr("forward declaration and declaration doesn't match with the library token");
                                             // check if forward-declaration match with the current declaration
                                             tab.checkForwardParams(curProc.locals,tab.curScope.locals);
                                             

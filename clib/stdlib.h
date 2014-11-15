@@ -6,11 +6,11 @@
 
 //------------------- Forward declarations
 
-string itoa(int x);
-string ftoa(float f);
+string library itoa(int x);
+string library ftoa(float f);
 
-int atoi(string s);
-//float atof(string s);
+int library atoi(string s);
+//float library atof(string s);
 
 //------------------- declarations
 
@@ -18,7 +18,7 @@ int atoi(string s);
  *
  * @working yes
  */
-string itoa(int x) {
+string library itoa(int x) {
     string s = "";
     char ch;
     int y = x;
@@ -51,7 +51,7 @@ string itoa(int x) {
  * @working yes
  * @todo using exponential formating
  */
-string ftoa(float f) {
+string library ftoa(float f) {
     // caluclate decimal
     string s = itoa((int) f);
     s += '.';
@@ -77,7 +77,7 @@ string ftoa(float f) {
  *
  * @working yes
  */
-int atoi(string s) {
+int library atoi(string s) {
     int ret = 0;
     int i = 0;
     int multpl = 1;
@@ -101,7 +101,7 @@ int atoi(string s) {
 
 
 // convert string to float
-/*float atof(string s) {
+/*float library atof(string s) {
     // TODO
     float ret = 0.;
     int i = 0;
