@@ -108,11 +108,15 @@ public class GUIrightPanel {
 			errorPanel.setBackground(Color.RED);
 			errorPanel.add(LoadStatics.loadHTMLdoc(this.errorMap.getErrorHTML(msg), "error/style.css"), BorderLayout.CENTER);
 			tabbedPane.add(errorPanel, _("Error"), 1);
+			
+			tabbedPane.setSelectedIndex(1);
 		}
 		else{
 			errorPanel.removeAll();
 			errorPanel.add(LoadStatics.loadHTMLdoc(this.errorMap.getErrorHTML(msg), "error/style.css"), BorderLayout.CENTER);
 			tabbedPane.repaint();
+			
+			tabbedPane.setSelectedIndex(1);
 		}
 	}
 	
