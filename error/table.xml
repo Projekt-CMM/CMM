@@ -21,4 +21,7 @@
 	<error id="parameter not declared">
 		<file>param.html</file>
 	</error>
+	<error id="no known cast from ([\w./\s]+)">
+		<file>param.html</file>
+	</error>
 </errorTable>
