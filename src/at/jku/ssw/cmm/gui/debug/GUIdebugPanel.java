@@ -233,7 +233,7 @@ public class GUIdebugPanel {
 	// TODO make thread safe and update comments
 	/**
 	 * Runs the compiler via the compiler wrapper class, see {@link CMMwrapper}.
-	 * Automatically switches to "error" maine if necessary.
+	 * Automatically switches to "error" mode if necessary.
 	 * 
 	 * <hr>
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT.</i> This
