@@ -239,7 +239,7 @@ public class PanelRunListener implements Debugger {
 		// -> Node #1 - NO | Node #2 - YES
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				main.highlightSourceCode(arg0.line);
+				main.getLeftPanel().highlightSourceCode(arg0.line);
 			}
 		});
 
