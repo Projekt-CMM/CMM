@@ -3,22 +3,22 @@ package at.jku.ssw.cmm.gui.event.quest;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import at.jku.ssw.cmm.gui.mod.GUImainMod;
+import at.jku.ssw.cmm.gui.GUImain;
 
 public class QuestPanelListener {
 
-	public QuestPanelListener( GUImainMod mod ){
-		this.mod = mod;
+	public QuestPanelListener( GUImain main ){
+		this.main = main;
 	}
 	
 	//Interface for main GUI manipulations
-	private final GUImainMod mod;
+	private final GUImain main;
 	
 	public MouseListener profileHandler = new MouseListener() {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			mod.selectProfile();
+			main.selectProfile();
 			
 		}
 
@@ -39,7 +39,7 @@ public class QuestPanelListener {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			mod.startQuestGUI();
+			main.startQuestGUI();
 		}
 
 		@Override

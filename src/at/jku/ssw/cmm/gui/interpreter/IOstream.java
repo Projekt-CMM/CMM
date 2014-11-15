@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import at.jku.ssw.cmm.debugger.StdInOut;
+import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
-import at.jku.ssw.cmm.gui.mod.GUImainMod;
 
 /**
  * Connects the I/O functions of the Interpreter with the GUI
@@ -23,19 +23,19 @@ public class IOstream implements StdInOut {
 	 *            Interface for main GUI manipulations
 	 * @param panelRunListener 
 	 */
-	public IOstream(GUImainMod modifier, GUIdebugPanel debug) {
-		this.modifier = modifier;
+	public IOstream(GUImain main, GUIdebugPanel debug) {
+		this.main = main;
 		this.debug = debug;
 
 		// Get input stream characters
 		this.inputStream = new LinkedList<>();
-		for (char c : this.modifier.getInputStream().toCharArray()) {
+		for (char c : this.main.getLeftPanel().getInputStream().toCharArray()) {
 			this.inputStream.add(c);
 		}
 	}
 
 	// Interface for main GUI manipulations
-	private final GUImainMod modifier;
+	private final GUImain main;
 	
 	private final GUIdebugPanel debug;
 
@@ -65,7 +65,7 @@ public class IOstream implements StdInOut {
 			return '\0';
 		}
 
-		this.modifier.increaseInputHighlighter();
+		this.main.getLeftPanel().increaseInputHighlighter();
 		return c;
 	}
 
@@ -76,7 +76,7 @@ public class IOstream implements StdInOut {
 
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				modifier.outputStream("" + arg0);
+				main.getLeftPanel().outputStream("" + arg0);
 			}
 		});
 	}

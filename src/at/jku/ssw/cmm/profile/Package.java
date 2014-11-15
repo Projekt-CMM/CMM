@@ -24,7 +24,7 @@ public class Package {
 	private String title;					//Titel des Packages
 	private int minLevel = 0;				//Minimaler Level
 	private boolean description = false;	//Hat das Package eine Beschreibung
-	private boolean style = false;			//Hat das Packet ein Style für die Beschreibung
+	private boolean style = false;			//Hat das Packet ein Style fur die Beschreibung
 	
 	
 	//Ordner der Quest

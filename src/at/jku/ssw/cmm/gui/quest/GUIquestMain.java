@@ -277,8 +277,8 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
         	else{
         		JFrame frame = new JFrame("Warnung");
         		JOptionPane.showMessageDialog(frame,
-        			    "Bitte wähle eine Quest aus.",
-        			    "Keine Quest ausgewählt:",
+        			    "Bitte wahle eine Quest aus.",
+        			    "Keine Quest ausgewahlt:",
         			    JOptionPane.WARNING_MESSAGE);
         	}
 

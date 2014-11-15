@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<errorTable>
+	<error id="default">
+		<file>default.html</file>
+	</error>
+	<error id="semicolon expected">
+		<file>semicolon.html</file>
+	</error>
+	<error id="include not found">
+		<file>include.html</file>
+	</error>
+	<error id="invalid Type">
+		<file>type.html</file>
+	</error>
+	<error id="([\w./]+) not found">
+		<file>notfound.html</file>
+	</error>
+	<error id="Divided by 0">
+		<file>divby0.html</file>
+	</error>
+	<error id="parameter not declared">
+		<file>param.html</file>
+	</error>
+</errorTable>

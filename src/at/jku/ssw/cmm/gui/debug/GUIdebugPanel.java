@@ -13,11 +13,10 @@ import at.jku.ssw.cmm.CMMwrapper;
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
+import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.exception.IncludeNotFoundException;
 import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
 import at.jku.ssw.cmm.gui.interpreter.IOstream;
-import at.jku.ssw.cmm.gui.mod.GUImainMod;
-import at.jku.ssw.cmm.gui.popup.PopupInterface;
 
 /**
  * Controls the right panel of the main GUI. This is a bit more complex, as this
@@ -25,12 +24,12 @@ import at.jku.ssw.cmm.gui.popup.PopupInterface;
  * three different states are initialized into an array of JPanels of which is
  * only shown one at a time. The three different states are: <br>
  * - user is typing code -> right panel shows a "compile" button see method
- * "private void initEditMode()" <br>
+ * "private void initEditmaine()" <br>
  * - compiler returned error messages -> right panel shows message, total errors
- * and a "view error" button see method "private void initErrorMode()" <br>
+ * and a "view error" button see method "private void initErrormaine()" <br>
  * - interpreter is running -> right panel shows tables and lists for variables
  * as well as buttons for controlling the interpreter see method
- * "private void initRunMode()"
+ * "private void initRunmaine()"
  * 
  * @author fabian
  *
@@ -41,25 +40,31 @@ public class GUIdebugPanel {
 	 * 
 	 * @param cp
 	 *            Main component of the main GUI
-	 * @param mod
+	 * @param main
 	 *            Interface for main GUI manipulations
 	 */
-	public GUIdebugPanel(JPanel cp, GUImainMod mod, PopupInterface popup) {
+	public GUIdebugPanel(JPanel cp, GUImain main) {
 
 		// Constructor parameter init
-		this.modifier = mod;
-		this.popup = popup;
+		this.main = main;
 
 		cp.setLayout(new BorderLayout());
 
-		this.compileManager = new CMMwrapper(this.modifier, this);
+		this.compileManager = new CMMwrapper(this.main, this);
 
 		this.jControlPanel = new JPanel();
 		this.jControlPanel.setBorder(new TitledBorder(_("Control elements")));
-		this.ctrlPanel = new GUIcontrolPanel(this.jControlPanel, this, mod);
+		this.ctrlPanel = new GUIcontrolPanel(this.jControlPanel, this, main);
 		cp.add(jControlPanel, BorderLayout.PAGE_START);
 
-		this.infoManager = new GUIinfoPanel(cp, this.modifier);
+		JPanel jVarPanel = new JPanel();
+		jVarPanel.setBorder(new TitledBorder(_("Variables")));
+		jVarPanel.setLayout(new BorderLayout());
+		
+		this.varView = new TreeTableView(main, jVarPanel,
+				main.getFileName());
+		
+		cp.add(jVarPanel, BorderLayout.CENTER);
 
 		this.breakpoints = new ArrayList<>();
 	}
@@ -74,18 +79,15 @@ public class GUIdebugPanel {
 	 */
 	private final GUIcontrolPanel ctrlPanel;
 
-	private final GUIinfoPanel infoManager;
+	/**
+	 * The manager object for the variable tree table.
+	 */
+	private final TreeTableView varView;
 
 	/**
 	 * Interface for main GUI manipulations
 	 */
-	private final GUImainMod modifier;
-
-	/**
-	 * Interface for popup operations. Used by static methods which invoke
-	 * popups.
-	 */
-	private final PopupInterface popup;
+	private final GUImain main;
 
 	/**
 	 * Wrapper class for the compiler. Also initiates the interpreter thread.
@@ -102,7 +104,7 @@ public class GUIdebugPanel {
 	 *         include code.
 	 */
 	public int getBeginLine() {
-		return (int) this.modifier.getSourceCodeRegister().get(0)[0];
+		return (int) this.main.getLeftPanel().getSourceCodeRegister().get(0)[0];
 	}
 
 	/**
@@ -114,7 +116,7 @@ public class GUIdebugPanel {
 
 	/**
 	 * Deletes all breakpoints before the given line. Used when the user
-	 * switches from any mode to "fast run" mode; so that the interpreter does
+	 * switches from any maine to "fast run" maine; so that the interpreter does
 	 * not stop at breakpoints which should already have been passed.
 	 * 
 	 * @param line
@@ -132,7 +134,7 @@ public class GUIdebugPanel {
 	 * table.
 	 */
 	public void updateFileName() {
-		this.infoManager.getVarView().standby(this.modifier.getFileName());
+		this.varView.standby(this.main.getFileName());
 	}
 
 	/**
@@ -144,62 +146,68 @@ public class GUIdebugPanel {
 	public void highlightVariable(final int adr) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				infoManager.getVarView().highlightVariable(adr);
+				varView.highlightVariable(adr);
 			}
 		});
 	}
 
 	/**
 	 * Updates the variable table, call stack or tree table according to the
-	 * current view mode.
+	 * current view maine.
 	 */
 	public void updateVariableTables(boolean completeUpDate) {
-		this.infoManager.getVarView().update(compileManager, this.modifier.getFileName(), popup,completeUpDate);
+		this.varView.update(compileManager, this.main.getFileName(), completeUpDate);
 	}
 
 	public void setReadyMode() {
 		this.ctrlPanel.setReadyMode();
 		this.ctrlPanel.getListener().setReadyMode();
-		this.modifier.setReadyMode();
+		this.main.setReadyMode();
 
 		// Mode-specific
-		this.modifier.resetInputHighlighter();
-		this.infoManager.getVarView().standby(this.modifier.getFileName());
+		this.main.getLeftPanel().resetInputHighlighter();
+		this.varView.standby(this.main.getFileName());
 		
 		//Input lock
-		this.modifier.unlockInput();
-		
-		this.infoManager.setToTable();
+		this.main.unlockInput();
 	}
 
 	public void setErrorMode(String msg, int line) {
+		
+		System.out.println("setting error");
 
-		this.ctrlPanel.setErrorMode();
-		this.ctrlPanel.getListener().setErrorMode();
-		this.modifier.setErrorMode(line);
+		this.ctrlPanel.setReadyMode();
+		this.ctrlPanel.getListener().setReadyMode();
+		this.main.setErrorMode(msg, ExpandSourceCode.correctLine(line,
+				(int) this.main.getLeftPanel().getSourceCodeRegister().get(0)[0],
+				this.main.getLeftPanel().getSourceCodeRegister().size()));
+		
+		// Mode-specific
+		this.main.getLeftPanel().resetInputHighlighter();
+		this.varView.standby(this.main.getFileName());
 		
 		//Input lock
-		this.modifier.unlockInput();
+		this.main.unlockInput();
 		
-		this.infoManager.setToDesc(msg);
+		
 	}
 
 	public void setRunMode() {
 		this.ctrlPanel.setRunMode();
 		this.ctrlPanel.getListener().setRunMode();
-		this.modifier.setRunMode();
+		this.main.setRunMode();
 		
 		//Input lock
-		this.modifier.lockInput();
+		this.main.lockInput();
 	}
 
 	public void setPauseMode() {
 		this.ctrlPanel.setPauseMode();
 		this.ctrlPanel.getListener().setPauseMode();
-		this.modifier.setPauseMode();
+		this.main.setPauseMode();
 		
 		//Input lock
-		this.modifier.lockInput();
+		this.main.lockInput();
 	}
 	
 	/**
@@ -234,30 +242,28 @@ public class GUIdebugPanel {
 	 */
 	public void compile() {
 
-		String sourceCode = this.modifier.getSourceCode();
+		String sourceCode = this.main.getLeftPanel().getSourceCode();
 		this.breakpoints.clear();
 
 		try {
 			sourceCode = ExpandSourceCode.expand(sourceCode,
-					this.modifier.getWorkingDirectory(),
-					this.modifier.getSourceCodeRegister(), this.breakpoints);
+					this.main.getWorkingDirectory(),
+					this.main.getLeftPanel().getSourceCodeRegister(), this.breakpoints);
 		} catch (final IncludeNotFoundException e1) {
 
 			Object[] e = { 1, 0, null };
-			this.modifier.getSourceCodeRegister().clear();
-			this.modifier.getSourceCodeRegister().add(e);
+			this.main.getLeftPanel().getSourceCodeRegister().clear();
+			this.main.getLeftPanel().getSourceCodeRegister().add(e);
 
 			// An include file could not be found
-			this.setErrorMode(
-					_("Include file not found") + ": \"" + e1.getFileName()
-							+ "\"", e1.getLine());
+			this.setErrorMode("include not found", -1);
 			return;
 		}
 
 		/* --- Code statistics --- */
 		DebugShell.out(State.STAT, Area.COMPILER,
 				"\n-------------------------------------\nUsed input files: ");
-		for (Object[] o : this.modifier.getSourceCodeRegister()) {
+		for (Object[] o : this.main.getLeftPanel().getSourceCodeRegister()) {
 			DebugShell.out(State.STAT, Area.COMPILER, "" + o[2] + ", line "
 					+ o[0] + " - " + o[1]);
 		}
@@ -265,7 +271,7 @@ public class GUIdebugPanel {
 				"-------------------------------------");
 
 		DebugShell.out(State.STAT, Area.COMPILER, "Source code begins @ line "
-				+ (int) this.modifier.getSourceCodeRegister().get(0)[0] + "\n");
+				+ (int) this.main.getLeftPanel().getSourceCodeRegister().get(0)[0] + "\n");
 
 		for (int i : this.breakpoints) {
 			DebugShell.out(State.STAT, Area.COMPILER, "line " + i);
@@ -301,8 +307,14 @@ public class GUIdebugPanel {
 	 * <hr>
 	 */
 	public boolean runInterpreter() {
+		this.main.getSaveManager().directSave();
+		
+		this.main.setFileSaved();
+		this.main.updateWinFileName();
+		this.updateFileName();
+		
 		this.compile();
 		return this.compileManager.runInterpreter(ctrlPanel.getListener(),
-				new IOstream(this.modifier, this));
+				new IOstream(this.main, this));
 	}
 }

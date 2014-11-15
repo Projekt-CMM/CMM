@@ -6,11 +6,11 @@ import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Error;
 import at.jku.ssw.cmm.compiler.Tab;
 import at.jku.ssw.cmm.debugger.DebuggerRequest;
+import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.event.debug.CMMrunnableMod;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.gui.interpreter.IOstream;
-import at.jku.ssw.cmm.gui.mod.CMMrunnableMod;
-import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.interpreter.Interpreter;
 
 /**
@@ -28,12 +28,12 @@ public class CMMwrapper implements CMMrunnableMod {
 	 * Takes care that the interpreter is not executed two times at once and that it is
 	 * not started before compiling.
 	 * 
-	 * @param modifier Interface for main GUI manipulations, for example syntax line highlighting
+	 * @param main Interface for main GUI manipulations, for example syntax line highlighting
 	 * @param rPanel Interface for manipulating the right GUI panel, in this case for showing error messages
 	 */
-	public CMMwrapper( GUImainMod modifier, GUIdebugPanel rPanel ){
+	public CMMwrapper( GUImain main, GUIdebugPanel rPanel ){
 		
-		this.modifier = modifier;
+		this.main = main;
 		this.rPanel = rPanel;
 		
 		this.running = false;
@@ -53,7 +53,7 @@ public class CMMwrapper implements CMMrunnableMod {
 	private Interpreter interpreter;
 	
 	//Interface for main GUI manipulations, for example syntax line highlighting
-	private final GUImainMod modifier;
+	private final GUImain main;
 	
 	//Interface for manipulating the right GUI panel, in this case for showing error messages
 	private final GUIdebugPanel rPanel;
@@ -75,7 +75,7 @@ public class CMMwrapper implements CMMrunnableMod {
 		if( this.compiler != null && !this.running ){
 			
 			//Reset the output text panel
-			this.modifier.resetOutputTextPane();
+			this.main.getLeftPanel().resetOutputTextPane();
 			
 			//Set the running flag
 			this.running = true;

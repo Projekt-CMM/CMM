@@ -7,19 +7,19 @@ import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumnModel;
 
-import at.jku.ssw.cmm.gui.mod.GUImainMod;
+import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.treetable.DataNode;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.context.InitContextMenu;
 
 public class JTableButtonMouseListener implements MouseListener {
 	
-	public JTableButtonMouseListener(GUImainMod main, TreeTable t) {
+	public JTableButtonMouseListener(GUImain main, TreeTable t) {
 		this.main = main;
 		this.treeTable = t;
 	}
 	
-	private final GUImainMod main;
+	private final GUImain main;
 	private final TreeTable treeTable;
 
 	private void forwardEventToButton(MouseEvent e) {

@@ -13,9 +13,9 @@ import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.debugger.Debugger;
+import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.debug.GUIcontrolPanel;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
-import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.compiler.Node;
 
 /**
@@ -41,14 +41,14 @@ public class PanelRunListener implements Debugger {
 	 * This class monitors the user actions on the interpreter runtime buttons
 	 * (top of right panel) and executes queries from the interpreter.
 	 * 
-	 * @param modMain
+	 * @param main
 	 *            Interface for main GUI manipulations, eg. source code
 	 *            highlighting
 	 * @param master
 	 *            Reference to the right panel wrapper class
 	 */
-	public PanelRunListener(GUImainMod modMain, GUIdebugPanel master) {
-		this.modMain = modMain;
+	public PanelRunListener(GUImain main, GUIdebugPanel master) {
+		this.main = main;
 		this.master = master;
 
 		this.run = false;
@@ -64,7 +64,7 @@ public class PanelRunListener implements Debugger {
 	/**
 	 * Interface for main GUI manipulations, eg. source code highlighting
 	 */
-	private final GUImainMod modMain;
+	private final GUImain main;
 
 	/**
 	 * Reference to the right panel wrapper class
@@ -239,7 +239,7 @@ public class PanelRunListener implements Debugger {
 		// -> Node #1 - NO | Node #2 - YES
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				modMain.highlightSourceCode(arg0.line);
+				main.getLeftPanel().highlightSourceCode(arg0.line);
 			}
 		});
 

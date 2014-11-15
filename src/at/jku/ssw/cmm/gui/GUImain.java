@@ -3,7 +3,6 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
@@ -12,16 +11,11 @@ import java.awt.image.ImageFilter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -39,25 +33,17 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
-import at.jku.ssw.cmm.gui.event.SourceCodeListener;
+import at.jku.ssw.cmm.gettext.Language;
 import at.jku.ssw.cmm.gui.event.WindowComponentListener;
 import at.jku.ssw.cmm.gui.event.WindowEventListener;
-import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
-import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
-import at.jku.ssw.cmm.gui.init.InitLeftPanel;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
-import at.jku.ssw.cmm.gui.init.JInputDataPane;
-import at.jku.ssw.cmm.gui.mod.GUImainMod;
 import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
-import at.jku.ssw.cmm.gui.popup.PopupInterface;
 import at.jku.ssw.cmm.gui.quest.GUIquestMain;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.XMLReadingException;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Contains the main function which also initializes and controls the main GUI.
@@ -65,7 +51,7 @@ import java.util.List;
  * @author fabian
  *
  */
-public class GUImain implements GUImainMod, PopupInterface {
+public class GUImain {
 
 	/**
 	 * Launches the program and initiates the main window.
@@ -89,30 +75,14 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 * The frame of the window which contains the main GUI.
 	 */
 	private JFrame jFrame;
+	
+	private GUIleftPanel leftPanelControl;
 
 	/**
 	 * A reference to the right panel control class. <br>
 	 * The right panel contains the debugger and profile/quest info tabs.
 	 */
 	private GUIrightPanel rightPanelControl;
-	
-	private JPanel jStatePanel;
-	private JLabel jStateLabel;
-
-	/**
-	 * The text panel with the source code.
-	 */
-	private RSyntaxTextArea jSourcePane;
-
-	/**
-	 * The text panel with input data for the cmm program.
-	 */
-	private JInputDataPane jInputPane;
-
-	/**
-	 * The text panel for the output stream of the cmm program.
-	 */
-	private JTextArea jOutputPane;
 
 	/**
 	 * A reference to the general settings object which contains the path of the
@@ -127,45 +97,11 @@ public class GUImain implements GUImainMod, PopupInterface {
 	 */
 	private SaveDialog saveDialog;
 
-	// TODO make codeRegister thread safe
-	/**
-	 * A list which contains the lines of all libraries in the complete source
-	 * code. When a library is loaded, its code is pasted to the source code of
-	 * the cmm file and this complete code is given to the compiler.
-	 * 
-	 * codeRegister contains information about the start and end line of each
-	 * library file. The array in the list is initialized as follows:
-	 * <ul>
-	 * <li>Start line</li>
-	 * <li>End line</li>
-	 * <li>File Name</li>
-	 * </ul>
-	 * 
-	 * <i>Note: Please use ExpandSourcecode.correctLine() determine the line in
-	 * the text area from the line of the complete source code. The parameters
-	 * are.
-	 * <ul>
-	 * <li><b>int line:</b> the line in the complete source code.</li>
-	 * <li><b>int codeStart:</b> the line where the original source code starts.
-	 * Use this.codeRegister.get(0)[0]</li>
-	 * <li><b>int files:</b> The total number of library files. Use
-	 * this.codeRegister.size()</li>
-	 * </ul>
-	 */
-	private List<Object[]> codeRegister;
+	
 
-	/**
-	 * When input data from the input source pane is read by the cmm program,
-	 * the input data has to be marked as "already read". This happens with
-	 * simple highlighting. <br>
-	 * The variable inputHightlightOffset is the number of characters of the
-	 * input string which has already been used.
-	 */
-	private int inputHighlightOffset;
+	
 
 	private MenuBarControl menuBarControl;
-
-	private SourceCodeListener codeListener;
 
 	/**
 	 * Unicode character of the breakpoint.
@@ -181,7 +117,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 	/**
 	 * The current version of C Compact, used as window title.
 	 */
-	public static final String VERSION = "C Compact Alpha 1.1 (Build 5)";
+	public static final String VERSION = "C Compact Alpha 1.2 (Build 0)";
+	
+	public static final String LANGUAGE = "de";
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)
@@ -219,7 +157,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 			DebugShell.out(State.LOG, Area.SYSTEM, "main GUI running on EDT.");
 
 		// Load translations
-		// Language.loadLanguage("de.po");
+		Language.loadLanguage(LANGUAGE + ".po");
 
 		// Initialize the window
 		this.jFrame = new JFrame(VERSION);
@@ -239,70 +177,31 @@ public class GUImain implements GUImainMod, PopupInterface {
 		JComponent cp = (JComponent) this.jFrame.getContentPane();
 		cp.setLayout(new BorderLayout());
 
-		// Source code component register
-		this.codeRegister = new ArrayList<>();
-
-		// Left part of the GUI
-		JPanel jPanelLeft = new JPanel();
-		jPanelLeft.setLayout(new BoxLayout(jPanelLeft, BoxLayout.PAGE_AXIS));
-		jPanelLeft.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
-		// Panel to display the GUI mode
-		this.jStatePanel = new JPanel();
-		this.jStatePanel.setBorder(BorderFactory.createLoweredBevelBorder());
-		
-		this.jStateLabel = new JLabel();
-		
-		this.jStatePanel.add(this.jStateLabel);
-		jPanelLeft.add(this.jStatePanel);
-		
-
-		// Text area (text pane) for source code
-		this.jSourcePane = InitLeftPanel
-				.initCodePane(jPanelLeft, this.settings);
-
-		// Text area for input
-		this.jInputPane = InitLeftPanel.initInputPane(jPanelLeft);
-
-		// Text area for output
-		this.jOutputPane = InitLeftPanel.initOutputPane(jPanelLeft);
-
-		// Read last opened files
-		if (this.settings.hasPath()) {
-			this.jSourcePane.setText(FileManagerCode.readSourceCode(new File(
-					this.settings.getPath())));
-			this.jInputPane.setText(FileManagerCode.readInputData(new File(
-					this.settings.getPath())));
-		}
 		this.updateWinFileName();
 
-		cp.add(jPanelLeft, BorderLayout.LINE_START);
+		this.leftPanelControl = new GUIleftPanel(this);
+		
+		cp.add(this.leftPanelControl.init(), BorderLayout.LINE_START);
 
 		// Right part of the GUI
-		this.rightPanelControl = new GUIrightPanel(cp, (GUImainMod) this,
-				(PopupInterface) this);
+		this.rightPanelControl = new GUIrightPanel(cp, this);
 
 		// Initialize the save dialog object
-		this.saveDialog = new SaveDialog(this.jFrame, this.jSourcePane,
-				this.jInputPane, this.settings);
+		this.saveDialog = new SaveDialog(this.jFrame, this.leftPanelControl.getSourcePane(),
+				this.leftPanelControl.getInputPane(), this.getSettings());
 
 		// Initialize the window listener
 		this.jFrame.addWindowListener(new WindowEventListener(this.jFrame,
-				this.settings, this.saveDialog));
-
+				this.getSettings(), this.saveDialog));
+		
 		// Initialize window component listener
-		this.jFrame.addComponentListener(new WindowComponentListener(this.jFrame, this.jSourcePane, this.jInputPane, this.settings));
-
-		// Initialize the source panel listener
-		this.codeListener = new SourceCodeListener(this);
-		this.jSourcePane.getDocument().addDocumentListener(this.codeListener);
-		// TODO
-		// this.jInputPane.getDocument().addDocumentListener(this.codeListener);
+				this.jFrame.addComponentListener(new WindowComponentListener(this.jFrame, this.leftPanelControl.getSourcePane(), this.leftPanelControl.getInputPane(), this.getSettings()));
 
 		// Menubar
 		this.menuBarControl = new MenuBarControl();
-		InitMenuBar.initFileM(this.jFrame, this.jSourcePane, this.jInputPane,
-				this, this.settings, this.rightPanelControl.getDebugPanel(),
+		InitMenuBar.initFileM(this.jFrame, this.leftPanelControl.getSourcePane(), this.leftPanelControl.getInputPane(),
+				this, this.getSettings(), this.rightPanelControl.getDebugPanel(),
 				this.menuBarControl, this.saveDialog);
 		
 		this.rightPanelControl.getDebugPanel().setReadyMode();
@@ -312,73 +211,45 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.jFrame.pack();
 		this.jFrame.setVisible(true);
 
-		// Variable initialization
-		this.inputHighlightOffset = 0;
-
 		if (test)
 			System.exit(0);
 	}
 
+	
+
 	/**
-	 * Highlights the already used characters of the input text area. Usually
-	 * called while interpreter is working.
+	 * Repaints the main GUI.
+	 * Note: Method from interface <i>GUImod</i>
 	 * 
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
+	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
 	 */
-	private void highlightInputPane() {
-
-		DefaultStyledDocument document = new DefaultStyledDocument();
-
-		StyleContext context = new StyleContext();
-
-		// Highlighting style
-		Style highlightStyle = context.addStyle("highlight", null);
-		StyleConstants.setBackground(highlightStyle, Color.YELLOW);
-		StyleConstants.setBold(highlightStyle, true);
-
-		// Default style
-		Style defaultStyle = context.addStyle("default", null);
-
-		// Do highlighting
-		try {
-			document.insertString(0,
-					this.jInputPane.getText().substring(inputHighlightOffset),
-					defaultStyle);
-			document.insertString(0,
-					this.jInputPane.getText()
-							.substring(0, inputHighlightOffset), highlightStyle);
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		}
-		// TODO document.addDocumentListener(this.codeListener);
-		this.jInputPane.setDocument(document);
-		this.jInputPane.repaint();
-	}
-
-	/*
-	 * --- The methods below are implemented from the interface "GUImainMod" ---
-	 * --- ...see there for comments and descriptions ---
-	 */
-	@Override
 	public void repaint() {
 		jFrame.repaint();
 		this.jFrame.pack();
 		this.jFrame.setVisible(true);
 	}
 
-	@Override
+	/**
+	 * Sets the title of the main GUI window.
+	 * Note: Method from interface <i>GUImod</i>
+	 * 
+	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
+	 */
 	public void updateWinFileName() {
-		if (this.settings.getPath() == null) {
+		if (this.getSettings().getPath() == null) {
 			this.jFrame.setTitle(VERSION + " - " + _("Unnamed"));
 		} else
-			this.jFrame.setTitle(VERSION + " - " + this.settings.getPath());
+			this.jFrame.setTitle(VERSION + " - " + this.getSettings().getPath());
 	}
 
-	@Override
+	/**
+	 * 
+	 * @return Name of the current file without path, eg "file2.cmm"
+	 */
 	public String getFileName() {
 
 		// final String sep = System.getProperty("file.separator");
-		String s = this.settings.getPath();
+		String s = this.getSettings().getPath();
 
 		if (s == null)
 			return _("Unnamed");
@@ -389,10 +260,18 @@ public class GUImain implements GUImainMod, PopupInterface {
 		return s;
 	}
 
-	@Override
+	/**
+	 * 
+	 * @return Name of the current cmm file with path, eg "demo/file2.cmm" <br>
+	 * <i>WARNING: File path can be absolute or relative</i>
+	 */
 	public String getFileNameAndPath() {
 
-		return this.settings.getPath();
+		return this.getSettings().getPath();
+	}
+	
+	public boolean hasPath(){
+		return this.getSettings().hasPath();
 	}
 
 	public void setFileChanged() {
@@ -407,151 +286,26 @@ public class GUImain implements GUImainMod, PopupInterface {
 		}
 	}
 
-	@Override
-	public String getSourceCode() {
-		return this.jSourcePane.getText();
+	public GUIleftPanel getLeftPanel(){
+		return this.leftPanelControl;
 	}
 
-	@Override
-	public List<Object[]> getSourceCodeRegister() {
-		return this.codeRegister;
-	}
-
-	@Override
+	/**
+	 * @return The complete path to the directory where the currently edited *.cmm file is saved
+	 */
 	public String getWorkingDirectory() {
-		if (this.settings.getPath() == null)
+		if (this.getSettings().getPath() == null)
 			return null;
 
-		File f = new File(this.settings.getPath());
+		File f = new File(this.getSettings().getPath());
 		if (f.getParentFile() != null)
 			return f.getParentFile().getAbsolutePath();
 		return null;
 	}
 
-	@Override
-	public void highlightSourceCode(int line) {
-
-		// Line out of user source code range (#include)
-		if (line <= (int) this.codeRegister.get(0)[0])
-			return;
-
-		// Correct offset in source code (offset caused by includes)
-		else
-			line = ExpandSourceCode
-					.correctLine(line, (int) this.codeRegister.get(0)[0],
-							this.codeRegister.size());
-
-		int i, l = 0;
-		final String code = this.jSourcePane.getText();
-
-		// TODO readLoopLock
-		for (i = 0; l < line - 1; i++) {
-			if (code.charAt(i) == '\n')
-				l++;
-		}
-
-		final int i_copy = i, l_copy = l;
-
-		if (i_copy < code.length() && l_copy < jSourcePane.getLineCount())
-			jSourcePane.select(i_copy, i_copy);
-		else
-			jSourcePane.select(code.length(), code.length());
-	}
-
-	@Override
-	public void increaseInputHighlighter() {
-
-		this.inputHighlightOffset++;
-
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				highlightInputPane();
-			}
-		});
-	}
-
-	@Override
-	public void resetInputHighlighter() {
-		this.inputHighlightOffset = 0;
-
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				highlightInputPane();
-			}
-		});
-	}
-
-	@Override
-	public void resetOutputTextPane() {
-
-		this.jOutputPane.setText("");
-	}
-
-	@Override
-	public void lockInput() {
-
-		this.jSourcePane.setEditable(false);
-		this.jSourcePane.setBackground(Color.LIGHT_GRAY);
-		this.jInputPane.setEditable(false);
-		this.jInputPane.setBackground(Color.LIGHT_GRAY);
-		this.jOutputPane.setEditable(false);
-		this.jOutputPane.setBackground(Color.LIGHT_GRAY);
-
-		this.menuBarControl.lockAll();
-	}
-
-	@Override
-	public void unlockInput() {
-
-		this.jSourcePane.setEditable(true);
-		this.jSourcePane.setBackground(Color.WHITE);
-		this.jInputPane.setEditable(true);
-		this.jInputPane.setBackground(Color.WHITE);
-		this.jOutputPane.setEditable(true);
-		this.jOutputPane.setBackground(Color.WHITE);
-
-		this.menuBarControl.unlockAll();
-	}
-
-	@Override
-	public void outputStream(String s) {
-
-		this.jOutputPane.append(s);
-	}
-
-	@Override
-	public String getInputStream() {
-
-		return this.jInputPane.getText();
-	}
-
-	@Override
-	public void toggleBreakPoint() {
-
-		int start = this.jSourcePane.getSelectionStart();
-		int end = this.jSourcePane.getSelectionEnd();
-		String code = this.jSourcePane.getText();
-
-		for (int i = start; i >= 0; i--) {
-			if (code.charAt(i) == '\n') {
-				code = code.substring(0, i + 1) + BREAKPOINT
-						+ code.substring(i + 1);
-				start = start + 1;
-				end = end + 1;
-				break;
-			} else if (code.charAt(i) == BREAKPOINT) {
-				code = code.substring(0, i) + code.substring(i + 1);
-				start = start - 1;
-				end = end - 1;
-				break;
-			}
-		}
-
-		this.jSourcePane.setText(code);
-		this.jSourcePane.select(start, end);
-	}
-
-	@Override
+	/**
+	 * Invokes the Quest GUI window
+	 */
 	public void startQuestGUI(){
 		DebugShell.out(State.LOG, Area.GUI, "Opening Quest Selection Window...");
 		//open profile selector on empty profile
@@ -565,8 +319,9 @@ public class GUImain implements GUImainMod, PopupInterface {
 			new GUIquestMain(this.rightPanelControl.getQuestPanel()).start();
 	}
 
-	//TODO
-	@Override
+	/**
+	 * Invokes the profile selection dialog
+	 */
 	public void selectProfile(){
 		DebugShell.out(State.LOG, Area.GUI, "Opening Profile Selection Window...");
 		JFileChooser chooser = new JFileChooser("Select a profile...");
@@ -595,7 +350,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 					System.err.println(path + " Wrong Profile Choosen - no profile.xml found");
 	        		
 					JFrame frame = new JFrame("Warnung");
-	        		JOptionPane.showMessageDialog(frame,"Falsches Profil ausgewählt.","Warnung:",
+	        		JOptionPane.showMessageDialog(frame,"Falsches Profil ausgewaehlt.","Warnung:",
 	        			    JOptionPane.WARNING_MESSAGE);
 	        		
 					//Open the Selection Window again
@@ -606,10 +361,12 @@ public class GUImain implements GUImainMod, PopupInterface {
 			}
 	}
 
-	@Override
+	/**
+	 * Saves the current *.cmm file if there are unsaved changes
+	 */
 	public void saveIfNecessary() {
 
-		if (this.settings.getPath() == null)
+		if (this.getSettings().getPath() == null)
 			this.saveDialog.doSaveAs();
 		else
 			this.saveDialog.directSave();
@@ -618,18 +375,11 @@ public class GUImain implements GUImainMod, PopupInterface {
 		this.updateWinFileName();
 	}
 
-	/*
-	 * --- The methods below are implemented from the interface "PopupInterface"
-	 * --- --- ...see there for comments and descriptions ---
-	 */
-
-	@Override
 	public JPanel getGlassPane() {
 
 		return ((JPanel) this.jFrame.getGlassPane());
 	}
 
-	@Override
 	public void invokePopup(JPanel popup, int x, int y, int width, int height) {
 
 		((JPanel) this.jFrame.getGlassPane()).add(popup);
@@ -639,32 +389,57 @@ public class GUImain implements GUImainMod, PopupInterface {
 		((JPanel) this.jFrame.getGlassPane()).validate();
 		((JPanel) this.jFrame.getGlassPane()).repaint();
 	}
-
-	@Override
-	public void setReadyMode() {
+	
+public void setReadyMode() {
 		
-		this.jStatePanel.setBackground(Color.LIGHT_GRAY);
-		this.jStateLabel.setText("--- " + _("text edit mode") + " ---");
+		this.leftPanelControl.setReadyMode();
+		this.rightPanelControl.hideErrorPanel();
 	}
 
-	@Override
-	public void setErrorMode(int line) {
+	public void setErrorMode(String msg, int line) {
 		
-		this.jStatePanel.setBackground(Color.RED);
-		this.jStateLabel.setText("! ! ! " + _("error") + (line >= 0 ? _("in line") + " " + line : "") + " " + line + " ! ! !");
+		this.leftPanelControl.setErrorMode(msg, line);
+		this.rightPanelControl.showErrorPanel(msg);
 	}
 
-	@Override
 	public void setRunMode() {
 		
-		this.jStatePanel.setBackground(Color.GREEN);
-		this.jStateLabel.setText(">>> " + _("automatic debug mode") + " >>>");
+		this.leftPanelControl.setRunMode();
+		this.rightPanelControl.hideErrorPanel();
 	}
 
-	@Override
 	public void setPauseMode() {
 		
-		this.jStatePanel.setBackground(Color.YELLOW);
-		this.jStateLabel.setText("||| " + _("pause or step by step mode") + " |||");
+		this.leftPanelControl.setPauseMode();
+		this.rightPanelControl.hideErrorPanel();
+	}
+	
+	/**
+	 * Makes all text fields of the main GUI uneditable. Should happen before interpreter starts running
+	 * so that the source code can't be changed during runtime.
+	 * 
+	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
+	 */
+	public void lockInput() {
+	
+		this.menuBarControl.lockAll();
+	}
+	
+	/**
+	 * Makes all text fields of the main GUI editable. Should happen after the interpreter has
+	 * finished running.
+	 * 
+	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
+	 */
+	public void unlockInput() {
+		this.menuBarControl.unlockAll();
+	}
+
+	public SaveDialog getSaveManager() {
+		return this.saveDialog;
+	}
+
+	public GUImainSettings getSettings() {
+		return settings;
 	}
 }

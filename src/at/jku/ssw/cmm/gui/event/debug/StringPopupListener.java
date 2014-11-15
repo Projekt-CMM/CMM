@@ -3,7 +3,7 @@ package at.jku.ssw.cmm.gui.event.debug;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import at.jku.ssw.cmm.gui.popup.PopupInterface;
+import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.popup.StringPopup;
 
 /**
@@ -23,8 +23,8 @@ public class StringPopupListener implements MouseListener {
 	 * 		This interface is necessary to invoke a popup.
 	 * @param text The text to be displayed in the popup (content of the string)
 	 */
-	public StringPopupListener( PopupInterface popup, String text ){
-		this.popup = popup;
+	public StringPopupListener( GUImain main, String text ){
+		this.main = main;
 		this.text = text;
 	}
 	
@@ -32,7 +32,7 @@ public class StringPopupListener implements MouseListener {
 	 * Popup interface of the main GUI.
 	 * This interface is necessary to invoke a popup.
 	 */
-	private final PopupInterface popup;
+	private final GUImain main;
 	
 	/**
 	 * The text to be displayed in the popup (content of the string)
@@ -43,7 +43,7 @@ public class StringPopupListener implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		
 		//Invoke popup
-		StringPopup.createPopUp(popup, text, e.getLocationOnScreen().x, e.getLocationOnScreen().y);
+		StringPopup.createPopUp(main, text, e.getLocationOnScreen().x, e.getLocationOnScreen().y);
 	}
 
 	@Override

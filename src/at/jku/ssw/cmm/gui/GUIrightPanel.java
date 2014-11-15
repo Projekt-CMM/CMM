@@ -3,15 +3,16 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
+import at.jku.ssw.cmm.gui.debug.ErrorTable;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
-import at.jku.ssw.cmm.gui.mod.GUImainMod;
-import at.jku.ssw.cmm.gui.popup.PopupInterface;
+import at.jku.ssw.cmm.gui.utils.LoadStatics;
 
 /**
  * This class is responsible for the right panel of the main GUI. The right panel contains
@@ -41,50 +42,50 @@ public class GUIrightPanel {
 	 * @param mod
 	 *            Interface for main GUI manipulations
 	 */
-	public GUIrightPanel(JComponent cp, GUImainMod mod, PopupInterface popup) {
-		
-		//Main right panel
-		this.jRightContainer = new JPanel();
-		this.jRightContainer.setBorder(new EmptyBorder(5, 5, 5, 5));
-		this.jRightContainer.setLayout(new BorderLayout());
+	public GUIrightPanel(JComponent cp, GUImain main) {
 		
 		//this.jRightContainer.add(this.initCommonPanel(),BorderLayout.PAGE_START);
 		
 		//Tabbed Pane
-		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane = new JTabbedPane();
+		tabbedPane.setBorder(new EmptyBorder(0, 0, 5, 5));
 		
-			//Debug Panel
+			//Initialize Debug Panel
 			JPanel jDebugPanel = new JPanel();
 			jDebugPanel.setLayout(new BorderLayout());
-			debugPanel = new GUIdebugPanel( jDebugPanel, mod, popup );
+			debugPanel = new GUIdebugPanel( jDebugPanel, main );
 	        tabbedPane.add(jDebugPanel, _("Debug"));
+	        
+	        //Initialize error panel
+	        this.errorMap = new ErrorTable(GUImain.LANGUAGE);
 	
-			//Quest Panel
+			//Initialize Quest Panel
 			JPanel jQuestPanel = new JPanel();
 			if( GUImain.ADVANCED_GUI ){
 				jQuestPanel.setLayout(new BorderLayout());
 				tabbedPane.add(jQuestPanel, _("Quest"));
-				questPanel = new GUIquestPanel( jQuestPanel, mod );
+				questPanel = new GUIquestPanel( jQuestPanel, main );
 			}
 		
-		this.jRightContainer.add(tabbedPane);
-		cp.add(this.jRightContainer, BorderLayout.CENTER);
+		// Add tabbed pane to main panel
+		cp.add(tabbedPane, BorderLayout.CENTER);
 	}
 	
-	/**
-	 * Main container for the right panel. All interface changes happen inside this JPanel
-	 */
-	private final JPanel jRightContainer;
+	private final JTabbedPane tabbedPane;
 	
 	/**
 	 * A reference to the debug panel.
 	 */
 	private final GUIdebugPanel debugPanel;
 	
+	private final ErrorTable errorMap;
+	
 	/**
 	 * A reference to the quest/profile info panel.
 	 */
 	private GUIquestPanel questPanel;
+	
+	private JPanel errorPanel;
 	
 	/**
 	 * @return A reference to the debug panel manager
@@ -98,5 +99,29 @@ public class GUIrightPanel {
 	 */
 	public GUIquestPanel getQuestPanel(){
 		return this.questPanel;
+	}
+	
+	public void showErrorPanel( String msg ){
+		if( this.tabbedPane.getTabCount() == (GUImain.ADVANCED_GUI ? 2 : 1) ){
+			errorPanel = new JPanel();
+			errorPanel.setLayout(new BorderLayout());
+			errorPanel.setBackground(Color.RED);
+			errorPanel.add(LoadStatics.loadHTMLdoc(this.errorMap.getErrorHTML(msg), "error/style.css"), BorderLayout.CENTER);
+			tabbedPane.add(errorPanel, _("Error"), 1);
+			
+			tabbedPane.setSelectedIndex(1);
+		}
+		else{
+			errorPanel.removeAll();
+			errorPanel.add(LoadStatics.loadHTMLdoc(this.errorMap.getErrorHTML(msg), "error/style.css"), BorderLayout.CENTER);
+			tabbedPane.repaint();
+			
+			tabbedPane.setSelectedIndex(1);
+		}
+	}
+	
+	public void hideErrorPanel(){
+		if( this.tabbedPane.getTabCount() == (GUImain.ADVANCED_GUI ? 3 : 2) )
+			tabbedPane.remove(1);
 	}
 }
