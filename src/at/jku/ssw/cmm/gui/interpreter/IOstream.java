@@ -29,7 +29,10 @@ public class IOstream implements StdInOut {
 
 		// Get input stream characters
 		this.inputStream = new LinkedList<>();
+<<<<<<< HEAD
 
+=======
+>>>>>>> New GUI structure works again
 		for (char c : this.main.getLeftPanel().getInputStream().toCharArray()) {
 			this.inputStream.add(c);
 		}

@@ -182,7 +182,6 @@ public class GUIdebugPanel {
 		this.main.setErrorMode(msg, ExpandSourceCode.correctLine(line,
 				(int) this.main.getLeftPanel().getSourceCodeRegister().get(0)[0],
 				this.main.getLeftPanel().getSourceCodeRegister().size()));
-
 		
 		// Mode-specific
 		this.main.getLeftPanel().resetInputHighlighter();
