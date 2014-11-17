@@ -213,6 +213,7 @@ public class PanelRunListener implements Debugger {
 
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
+				master.getCompileManager().setNotRunning();
 				master.setErrorMode(message, node.line);
 			}
 		});
@@ -441,15 +442,8 @@ public class PanelRunListener implements Debugger {
 			// Stop interpreter out of RUN or PAUSE mode
 			if (keepRunning) {
 				master.setReadyMode();
+				master.getCompileManager().setNotRunning();
 				userReply();
-			}
-
-			// Get out of ERROR mode
-			else if (!keepRunning && run) {
-				master.setReadyMode();
-
-				//Unregister interpreter thread
-				master.getCompileManager().setNotRunning(true);
 			}
 		}
 

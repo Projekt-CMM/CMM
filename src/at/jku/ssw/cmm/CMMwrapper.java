@@ -9,7 +9,6 @@ import at.jku.ssw.cmm.debugger.DebuggerRequest;
 import at.jku.ssw.cmm.debugger.IOstream;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
-import at.jku.ssw.cmm.gui.event.debug.CMMrunnableMod;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.interpreter.Interpreter;
 
@@ -21,7 +20,7 @@ import at.jku.ssw.cmm.interpreter.Interpreter;
  * @author fabian
  *
  */
-public class CMMwrapper implements CMMrunnableMod {
+public class CMMwrapper {
 	
 	/**
 	 * Wrapper class for the interpreter thread starter and manager class for the compiler.
@@ -31,10 +30,11 @@ public class CMMwrapper implements CMMrunnableMod {
 	 * @param main Interface for main GUI manipulations, for example syntax line highlighting
 	 * @param rPanel Interface for manipulating the right GUI panel, in this case for showing error messages
 	 */
-	public CMMwrapper( GUImain main, GUIdebugPanel rPanel ){
+	public CMMwrapper( GUImain main, GUIdebugPanel debug ){
 		
 		this.main = main;
-		this.rPanel = rPanel;
+		
+		this.debug = debug;
 		
 		this.running = false;
 	}
@@ -55,8 +55,7 @@ public class CMMwrapper implements CMMrunnableMod {
 	//Interface for main GUI manipulations, for example syntax line highlighting
 	private final GUImain main;
 	
-	//Interface for manipulating the right GUI panel, in this case for showing error messages
-	private final GUIdebugPanel rPanel;
+	private final GUIdebugPanel debug;
 	
 	/**
 	 * Runs interpreter in a separate thread. For thread synchronization see {@link PanelRunListener.java}.
@@ -83,7 +82,7 @@ public class CMMwrapper implements CMMrunnableMod {
 			this.interpreter = new Interpreter(listener, stream, compiler.getStringStorage());
 			
 			//Create new interpreter object
-			this.thread = new CMMrun(compiler, interpreter, this);
+			this.thread = new CMMrun(compiler, interpreter, this, debug);
 			
 			//Run interpreter thread
 			this.thread.start();
@@ -154,15 +153,10 @@ public class CMMwrapper implements CMMrunnableMod {
 	 * 					still read variables and the call stack from the main GUI.
 	 * 					Then, this method is called a second time and cleans everything up. 
 	 */
-	@Override
-	public void setNotRunning( boolean success ) {
+	public void setNotRunning() {
 		
 		DebugShell.out(State.LOG, Area.INTERPRETER, "Interpreter thread unregistered");
 		this.running = false;
-		
-		if( success ){
-			this.rPanel.setReadyMode();
-		}
 	}
 	
 	/**

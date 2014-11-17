@@ -2,7 +2,7 @@ package at.jku.ssw.cmm;
 
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Obj;
-import at.jku.ssw.cmm.gui.event.debug.CMMrunnableMod;
+import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.interpreter.Interpreter;
 import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
@@ -26,10 +26,11 @@ public class CMMrun extends Thread {
 	 * 			Input messages have to be entered in the "input" text field in the main GUI
 	 * @param reply Interface which enables the thread to clean up after exiting by itself, see {@link CMMwrapper}
 	 */
-	public CMMrun ( Compiler compiler, Interpreter interpreter, CMMrunnableMod reply ){
+	public CMMrun ( Compiler compiler, Interpreter interpreter, CMMwrapper reply, GUIdebugPanel debug ){
 		this.compiler = compiler;
 		this.interpreter = interpreter;
 		this.reply = reply;
+		this.debug = debug;
 	}
 	
 	//The compiler containing the syntax tree and the symbol table
@@ -41,9 +42,11 @@ public class CMMrun extends Thread {
 	private final IOstream stream;*/
 	
 	//Interface which enables the thread to clean up after exiting by itself, see CMMwrapper
-	private final CMMrunnableMod reply;
+	private final CMMwrapper reply;
 	
 	private final Interpreter interpreter;
+	
+	private final GUIdebugPanel debug;
 
 	/**
 	 * Starts the interpreter thread
@@ -83,7 +86,8 @@ public class CMMrun extends Thread {
 			//Clean thread data partly up; leave variable data for GUI runtime error mode
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					reply.setNotRunning( false );
+					reply.setNotRunning();
+					debug.setErrorMode("initiating error", 0);
 				}
 			});
 			return;
@@ -99,7 +103,7 @@ public class CMMrun extends Thread {
 		//Clean up thread data
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				reply.setNotRunning( true );
+				reply.setNotRunning();
 			}
 		});
 	}

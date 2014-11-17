@@ -22,6 +22,6 @@
 		<file>param.html</file>
 	</error>
 	<error id="no known cast from ([\w./\s]+)">
-		<file>param.html</file>
+		<file>cast.html</file>
 	</error>
 </errorTable>
