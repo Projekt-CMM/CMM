@@ -1081,7 +1081,7 @@ public class Parser {
 			if (StartOf(7)) {
 				kind = Relop();
 				e = BinExpr();
-				if(con == null || e == null)
+				if(con == null || e == null || con.type == null || e.type == null)
 				   SemErr("please check condition");
 				else {
 				   if((!con.type.isPrimitive() && con.type != Tab.stringType) || (!e.type.isPrimitive() && e.type != Tab.stringType))
