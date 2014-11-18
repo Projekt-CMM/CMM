@@ -1,7 +1,8 @@
 package at.jku.ssw.cmm.interpreter.memory;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
 import at.jku.ssw.cmm.interpreter.exceptions.StackUnderflowException;
@@ -22,7 +23,7 @@ public final class Memory {
 		}
 	}
 	
-	//private static final ArrayList<MemoryInformation> memoryInformations = new ArrayList(MEMORY_SIZE);
+	private static Map<Integer,MemoryInformation> memoryInformations = new HashMap<Integer, MemoryInformation>();
 	
 	private static int framePointer;
 	private static int stackPointer;
@@ -37,9 +38,9 @@ public final class Memory {
 		globalPointer = 0;
 
 		// initialize arrays
+		memoryInformations.clear();
 		for (int i = 0; i < MEMORY_SIZE; i++) {
 			memory.put(i, (byte) 0);
-			//memoryInformations.add(i, new MemoryInformation());
 		}
 	}
 
@@ -88,7 +89,7 @@ public final class Memory {
 	}
 
 	public static void storeBool(int address, boolean value) {
-		//memoryInformations.get(address).isInitialized = true;
+		getMemoryInformation(address).isInitialized = true;
 		if(value)
 			memory.put(address, (byte)0x01);
 		else
@@ -100,7 +101,7 @@ public final class Memory {
 	}
 
 	public static void storeInt(int address, int value) {
-		//memoryInformations.get(address).isInitialized = true;
+		getMemoryInformation(address).isInitialized = true;
 		memory.putInt(address, value);
 	}
 
@@ -109,7 +110,7 @@ public final class Memory {
 	}
 
 	public static void storeChar(int address, char value) {
-		//memoryInformations.get(address).isInitialized = true;
+		getMemoryInformation(address).isInitialized = true;
 		memory.putChar(address, value);
 	}
 
@@ -118,12 +119,12 @@ public final class Memory {
 	}
 
 	public static void storeFloat(int address, float value) {
-		//memoryInformations.get(address).isInitialized = true;
+		getMemoryInformation(address).isInitialized = true;
 		memory.putFloat(address, value);
 	}
 
 	public static void storeStringAdress(int address, int value) {
-		//memoryInformations.get(address).isInitialized = true;
+		getMemoryInformation(address).isInitialized = true;
 		memory.putInt(address, value);
 	}
 
@@ -186,5 +187,11 @@ public final class Memory {
 
 	public static int getGlobalPointer() {
 		return globalPointer;
+	}
+	
+	public static MemoryInformation getMemoryInformation(int address) {
+		if(!memoryInformations.containsKey(address))
+			memoryInformations.put(address, new MemoryInformation());
+		return memoryInformations.get(address);
 	}
 }
