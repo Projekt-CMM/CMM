@@ -854,7 +854,10 @@ public final class Interpreter implements DebuggerRequest {
 				debugger.abort("negative index choosen", p);
 		        throw new IllegalStateException("Kind" + p.kind);
 			}
-			if(index >= p.left.type.elements) {
+			if(p.left.type.elements == -1) {
+				// TODO buffer overflow detection
+			}
+			else if(index >= p.left.type.elements) {
 				debugger.abort("too high index choosen", p);
 		        throw new IllegalStateException("Kind" + p.kind);
 			}
