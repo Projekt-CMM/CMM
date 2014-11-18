@@ -129,7 +129,7 @@ public class GUImain {
 
 		//Change look and feel of the GUI
 		/*try {
-			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}*/
