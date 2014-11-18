@@ -22,7 +22,7 @@ public final class Memory {
 		}
 	}
 	
-	private static final ArrayList<MemoryInformation> memoryInformations = new ArrayList(MEMORY_SIZE);
+	//private static final ArrayList<MemoryInformation> memoryInformations = new ArrayList(MEMORY_SIZE);
 	
 	private static int framePointer;
 	private static int stackPointer;
@@ -39,7 +39,7 @@ public final class Memory {
 		// initialize arrays
 		for (int i = 0; i < MEMORY_SIZE; i++) {
 			memory.put(i, (byte) 0);
-			memoryInformations.add(i, new MemoryInformation());
+			//memoryInformations.add(i, new MemoryInformation());
 		}
 	}
 
@@ -88,7 +88,7 @@ public final class Memory {
 	}
 
 	public static void storeBool(int address, boolean value) {
-		memoryInformations.get(address).isInitialized = true;
+		//memoryInformations.get(address).isInitialized = true;
 		if(value)
 			memory.put(address, (byte)0x01);
 		else
@@ -100,7 +100,7 @@ public final class Memory {
 	}
 
 	public static void storeInt(int address, int value) {
-		memoryInformations.get(address).isInitialized = true;
+		//memoryInformations.get(address).isInitialized = true;
 		memory.putInt(address, value);
 	}
 
@@ -109,7 +109,7 @@ public final class Memory {
 	}
 
 	public static void storeChar(int address, char value) {
-		memoryInformations.get(address).isInitialized = true;
+		//memoryInformations.get(address).isInitialized = true;
 		memory.putChar(address, value);
 	}
 
@@ -118,12 +118,12 @@ public final class Memory {
 	}
 
 	public static void storeFloat(int address, float value) {
-		memoryInformations.get(address).isInitialized = true;
+		//memoryInformations.get(address).isInitialized = true;
 		memory.putFloat(address, value);
 	}
 
 	public static void storeStringAdress(int address, int value) {
-		memoryInformations.get(address).isInitialized = true;
+		//memoryInformations.get(address).isInitialized = true;
 		memory.putInt(address, value);
 	}
 

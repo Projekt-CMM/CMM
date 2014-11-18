@@ -52,7 +52,7 @@ public class CMMwrapper {
 	private CMMrun thread;
 
 	// Compiler class
-	private Compiler compiler;
+	private final Compiler compiler;
 
 	private Interpreter interpreter;
 
@@ -132,8 +132,6 @@ public class CMMwrapper {
 
 		// An error occurred
 		if (e != null) {
-			// Delete compiler data so that the interpreter can't be started
-			this.compiler = null;
 
 			// Return the errors
 			return e;
