@@ -27,6 +27,39 @@ Ein Nichtterminalsymbol\footnote{\url{https://de.wikipedia.org/wiki/Nichttermina
 
 \subsubsection{Eindeutigkeit}
 
+Die Gramatik muss so aufgebaut sein, dass es für einen Tokenstrom nur eine eindeutige Möglichkeit gibt diesen zu parsen.\footnote{\url{http://www.iai.uni-bonn.de/III//lehre/vorlesungen/Informatik_I/WS05/Folien/VLWS0506-10.pdf}}
+
+\htlParagraph{Beispiel}
+
+Es soll eine EBNF-Regel erstellt werden welche einen Mathematischen Ausdruck, aufgebaut aus Additionen und Subtraktionen korrekt parsen.
+
+\subhtlParagraph{Mehrdeutige EBNF Regel}
+
+\includegraphics[scale=0.5]{./media/images/compiler/ambiguity_wrong.png}
+
+\begin{lstlisting}[language=EBNF]
+Expr = intCon | Expr ( "+" | "-" ) Expr.
+\end{lstlisting}
+
+Der Ausdruck $1-2+5$ kann mit dieser EBNF Regel auf mehreren Arten gelöst werden. Es liegt also eine Mehrdeutigkeit vor. Der Ausdruck $1-2+5$ kann dabei sowohl als $(1-2)+5$, aber auch als $1-(2+5)$ geparst werden.
+
+\begin{tabular}{ c | c }
+  $(1-2)+5=4$ & 
+  $1-(2+5)=-6$ \\
+  \includegraphics[scale=0.5]{./media/images/compiler/ambiguity_tree_correct.png} & 
+  \includegraphics[scale=0.5]{./media/images/compiler/ambiguity_tree_wrong.png} \\
+\end{tabular}
+
+\subhtlParagraph{Eindeutige EBNF Regel}
+
+\includegraphics[scale=0.5]{./media/images/compiler/ambiguity_correct.png}
+
+\begin{lstlisting}[language=EBNF]
+Expr = intCon [ ( "+" | "-" ) Expr ].
+\end{lstlisting}
+
+Der Ausdruck $1-2+5$ kann mit dieser EBNF Regel nur mehr auf eine Art gelöst werden. Dabei werden die Operatoren links-assoziativ behandelt. Der Ausdruck $1-2+5$ wird als $(1-2)+5$ ausgewertet, was Mathematisch den korrekte Weg darstellt.
+
 \subsubsection{Beispiele}
 
 \includegraphics[scale=0.5]{./media/images/compiler/ebnf_expr.png}

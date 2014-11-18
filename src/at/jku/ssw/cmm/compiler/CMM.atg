@@ -448,27 +448,41 @@ FormPar                             (.  // Set number of procedure parameter to 
                                         n++; .)
 }.
 //-------------------------------------------------------------------------
-FormPar                             (.  Struct type; 
-                                        boolean isRef = false; 
-                                        int line = la.line; .)
+FormPar                             (.  Struct type, mainType; 
+                                        boolean isRef = false;
+                                        boolean isArray = false; 
+                                        int line = la.line; 
+                                        String ident_val; .)
 = 
-Type<out type>
+Type<out type>                      (.  mainType = type; .)
 [ "&"                               (.  // set reference-flag to true
                                         isRef = true; .)
 ]
-ident                               (.  // if parameter is give by reference, size is always 4 byte
+ident                               (.  ident_val = t.val; .)
+{ "[" "]"                           (.  // check if array declaration has reference symbol before
+                                        if(isRef && !isArray)
+                                            SemErr("array call and call by reference cannot mixed up");
+                                        // change state variables
+                                        isArray = true;
+                                        isRef = true; 
+                                        // generate array
+                                        type = new Struct(Struct.ARR, -1, type); .)
+}
+                                    (.  // if parameter is give by reference, size is always 4 byte
                                         if(isRef)
                                             type.size = 4;
 
                                         // add parameter to current scope
-                                        Obj curPar = tab.insert(Obj.VAR, t.val, type, line);
+                                        Obj curPar = tab.insert(Obj.VAR, ident_val, type, line);
 
                                         // copy reference-flag
                                         curPar.isRef = isRef;
                                        
                                         // check if parameter is primitive or string
-                                        if(!type.isPrimitive() && type != Tab.stringType) 
-                                            SemErr("var must be a primitive type or string"); .)
+                                        if(!isArray && !type.isPrimitive() && type != Tab.stringType) 
+                                            SemErr("var must be a primitive type or string");
+                                        if(isArray && !mainType.isPrimitive() && mainType != Tab.stringType)
+                                            SemErr("array reference must be a primitive type or string"); .)
 .
 //-------------------------------------------------------------------------
 Type<out Struct type>

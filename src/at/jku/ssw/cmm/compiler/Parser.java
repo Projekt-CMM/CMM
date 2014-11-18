@@ -846,24 +846,41 @@ public class Parser {
 	}
 
 	void FormPar() {
-		Struct type; 
-		boolean isRef = false; 
+		Struct type, mainType; 
+		boolean isRef = false;
+		boolean isArray = false; 
 		int line = la.line; 
+		String ident_val; 
 		type = Type();
+		mainType = type; 
 		if (la.kind == 29) {
 			Get();
 			isRef = true; 
 		}
 		Expect(1);
+		ident_val = t.val; 
+		while (la.kind == 41) {
+			Get();
+			Expect(42);
+			if(isRef && !isArray)
+			   SemErr("array call and call by reference cannot mixed up");
+			// change state variables
+			isArray = true;
+			isRef = true; 
+			// generate array
+			type = new Struct(Struct.ARR, -1, type); 
+		}
 		if(isRef)
 		   type.size = 4;
 		// add parameter to current scope
-		Obj curPar = tab.insert(Obj.VAR, t.val, type, line);
+		Obj curPar = tab.insert(Obj.VAR, ident_val, type, line);
 		// copy reference-flag
 		curPar.isRef = isRef;
 		                                       // check if parameter is primitive or string
-		if(!type.isPrimitive() && type != Tab.stringType) 
-		   SemErr("var must be a primitive type or string"); 
+		if(!isArray && !type.isPrimitive() && type != Tab.stringType) 
+		   SemErr("var must be a primitive type or string");
+		if(isArray && !mainType.isPrimitive() && mainType != Tab.stringType)
+		   SemErr("array reference must be a primitive type or string"); 
 	}
 
 	Node  Designator() {

@@ -1,9 +1,11 @@
 package at.jku.ssw.cmm.interpreter.memory;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
 import at.jku.ssw.cmm.interpreter.exceptions.StackUnderflowException;
+import at.jku.ssw.cmm.interpreter.memory.MemoryInformation;
 
 public final class Memory {
 	private static final int MEMORY_SIZE = 8388608; // 8MB
@@ -19,7 +21,9 @@ public final class Memory {
 			memory.put(i, (byte) 0);
 		}
 	}
-
+	
+	private static final ArrayList<MemoryInformation> memoryInformations = new ArrayList(MEMORY_SIZE);
+	
 	private static int framePointer;
 	private static int stackPointer;
 	private static int globalPointer;
@@ -31,6 +35,12 @@ public final class Memory {
 		framePointer = MEMORY_SIZE / 2;
 		stackPointer = MEMORY_SIZE / 2;
 		globalPointer = 0;
+
+		// initialize arrays
+		for (int i = 0; i < MEMORY_SIZE; i++) {
+			memory.put(i, (byte) 0);
+			memoryInformations.add(i, new MemoryInformation());
+		}
 	}
 
 	/*
@@ -78,6 +88,7 @@ public final class Memory {
 	}
 
 	public static void storeBool(int address, boolean value) {
+		memoryInformations.get(address).isInitialized = true;
 		if(value)
 			memory.put(address, (byte)0x01);
 		else
@@ -89,6 +100,7 @@ public final class Memory {
 	}
 
 	public static void storeInt(int address, int value) {
+		memoryInformations.get(address).isInitialized = true;
 		memory.putInt(address, value);
 	}
 
@@ -97,6 +109,7 @@ public final class Memory {
 	}
 
 	public static void storeChar(int address, char value) {
+		memoryInformations.get(address).isInitialized = true;
 		memory.putChar(address, value);
 	}
 
@@ -105,11 +118,12 @@ public final class Memory {
 	}
 
 	public static void storeFloat(int address, float value) {
+		memoryInformations.get(address).isInitialized = true;
 		memory.putFloat(address, value);
 	}
 
 	public static void storeStringAdress(int address, int value) {
-
+		memoryInformations.get(address).isInitialized = true;
 		memory.putInt(address, value);
 	}
 

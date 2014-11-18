@@ -376,8 +376,21 @@ public class Tab {
 			
 			// implicit type conversation
 			if(declObj.isRef == true && buildNode.kind == Node.REF) {
-				if(buildNode.left.type != declObj.type)
+				if(buildNode.left.type.kind != Struct.ARR &&  buildNode.left.type != declObj.type)
 					parser.SemErr("there is no type-conversation for ref-parameter(s) allowed");
+				if(declObj.type.kind == Struct.ARR) {
+					Struct declObjHelp = declObj.type;
+					Struct buildObjHelp = buildNode.left.type;
+					while(declObjHelp != null && declObjHelp.kind == Struct.ARR && 
+						  buildObjHelp != null && buildObjHelp.kind == Struct.ARR) {
+						declObjHelp = declObjHelp.elemType;
+						buildObjHelp = buildObjHelp.elemType;
+					}
+					if(declObjHelp.kind == Struct.ARR || buildObjHelp.kind == Struct.ARR)
+						parser.SemErr("the number of dimensions in the declaration isn't the same as in the call");
+					else if(declObjHelp != buildObjHelp)
+						parser.SemErr("there is no type-conversation for arrays allowed");
+				}
 				//buildNode.left = impliciteTypeCon(buildNode.left, declObj.type);
 			} else {
 				Node newNode = impliciteTypeCon(buildNode, declObj.type);
