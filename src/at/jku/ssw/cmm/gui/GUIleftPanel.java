@@ -94,6 +94,13 @@ public class GUIleftPanel {
 	 */
 	private final List<Object[]> codeRegister;
 
+	/**
+	 * Initializes the left part of the main GUI. This class is responsible for all
+	 * the objects which are initialized here, so this method should be called at when
+	 * loading the GUI.
+	 * 
+	 * @return A jPanel with all components of the main GUI
+	 */
 	public JPanel init() {
 		// Left part of the GUI
 		JPanel jPanelLeft = new JPanel();
@@ -323,6 +330,7 @@ public class GUIleftPanel {
 		
 		this.jStatePanel.setBackground(Color.RED);
 		this.jStateLabel.setText("! ! ! " + _("error") + " " + (line >= 0 ? _("in line ") + " " + line : "") + " ! ! !");
+		
 		if( line >= 0 )
 			this.highlightSourceCode(line);
 	}
