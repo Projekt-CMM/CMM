@@ -49,6 +49,9 @@ public class TreeTable extends JTable {
  
         //No spacing
         setIntercellSpacing(new Dimension(0, 0));
+        
+        //No column swapping / reordering
+        super.getTableHeader().setReorderingAllowed(false);
     }
     
     public void setTreeModel( TreeTableDataModel treeTableModel ){
