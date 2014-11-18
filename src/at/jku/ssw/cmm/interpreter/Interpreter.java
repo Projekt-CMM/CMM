@@ -27,6 +27,8 @@ public final class Interpreter implements DebuggerRequest {
 
 	private final Debugger debugger;
 	private final StdInOut inout;
+	
+	private int libraryFunctionLevel;
 
 	private int debuggerLastChangedAddress;
 	private int debuggerCurrentAddress;
@@ -75,7 +77,7 @@ public final class Interpreter implements DebuggerRequest {
 	 */
 	void Statement(Node p) throws ReturnException, AbortException, BreakException, ContinueException, RunTimeException { // b = a;
 		
-		if (p.kind != Node.NOP && !debugger.step(p))
+		if (p.kind != Node.NOP && libraryFunctionLevel == 0 && !debugger.step(p))
 			throw new AbortException();
 
 		switch (p.kind) {
@@ -598,7 +600,7 @@ public final class Interpreter implements DebuggerRequest {
 	 * @throws RunTimeException 
 	 */
 	void Call(Node p) throws AbortException, ReturnException, RunTimeException { 
-
+		
 		switch (p.obj.name) {
 		case "print":	//Our Print, can only print Characters
 			inout.out(CharExpr(p.left));
@@ -795,12 +797,18 @@ public final class Interpreter implements DebuggerRequest {
 				a++;
 		}
 			try {
+				if(p.obj.library)
+					libraryFunctionLevel ++;
+				
 				StatSeq(p.obj.ast); 		// Starting the new C-- Function
 			} catch (ReturnException e) { 	// closing the C-- Function
 			} catch(BreakException e) {
 				throw new RunTimeException("break is not allowed here", p);
 			} catch(ContinueException e) {
 				throw new RunTimeException("continue is not allowed here", p);
+			} finally {
+				if(p.obj.library)
+					libraryFunctionLevel --;
 			}
 
 			try {
