@@ -712,8 +712,12 @@ ActPars<out Node outPar>            (.  Node par, curPar = null; .)
 "(" 
 [ ActPar<out outPar>                (.  curPar = outPar; .)
   { "," 
-  ActPar<out par>                   (.  curPar.next = par;
-                                        curPar = par; .)
+  ActPar<out par>                   (.  if(curPar == null)
+                                            SemErr("empty function parameters are not allowed");
+                                        else {
+                                            curPar.next = par;
+                                            curPar = par;
+                                        } .)
   }
 ] 
 ")".

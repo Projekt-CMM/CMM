@@ -1033,8 +1033,12 @@ public class Parser {
 			while (la.kind == 36) {
 				Get();
 				par = ActPar();
-				curPar.next = par;
-				curPar = par; 
+				if(curPar == null)
+				   SemErr("empty function parameters are not allowed");
+				else {
+				   curPar.next = par;
+				   curPar = par;
+				} 
 			}
 		}
 		Expect(7);
