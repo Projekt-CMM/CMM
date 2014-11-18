@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <body>
-	<h1> Keine Eingabedaten </h1>
+	<h1> Negativer Index </h1>
 	<h2> Was ist passiert? </h2>
 	<p>
-		Es sind nicht genügend Daten im Textfeld "Eingabe" vorhanden.
+		Du hast ein Arrayelement mit einem negativen Index aufgerufen.
+	</p>
+	<p id="code">
+			<strong class="key">int</strong>[10] array;<br>
+			array[<strong class="error">-2</strong>] = 6;
 	</p>
 	<h2> Fehlersuche </h2>
 	<p>
-		Der Fehler kann ganz einfach behoben werden, indem du weitere Zeichen in das Eingabefeld eingibst.<br>
-		Es ist kein Problem, wenn zu viele Daten vorhanden sind.
+		Beachte die Zeile, die gerate ausgeführt wurde. Der Fehler muss dort aufgetreten sein.<br>
+		<b>Achtung:</b> Der Fehler kann auch durch den Rückgabewert einer Funktion entstanden sein.
 	</p>
 </body>
