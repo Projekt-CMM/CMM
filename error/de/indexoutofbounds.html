@@ -3,7 +3,13 @@
 	<h1> Index zu groß </h1>
 	<h2> Was ist passiert? </h2>
 	<p>
-		Du hast einen Array-Index verwendet, der über die Größe des Arrays hinausgeht.
+		Du hast einen Array-Index verwendet, der über die Größe des Arrays hinausgeht.<br>
+		Beispiel:
+	</p>
+	<p id="code">
+			<strong class="key">int</strong>[10] array;<br>
+			array[<strong class="error">15</strong>] = 6;
+	</p>
 	<h2> Fehlersuche </h2>
 	<p>
 		Beachte, dass der Index bei 0 beginnt. Wenn also ein Array <b>10 Elemente</b> hat,

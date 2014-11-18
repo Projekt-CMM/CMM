@@ -117,5 +117,12 @@ public class CMMrun extends Thread {
 
 		// Clean up thread data
 		reply.setNotRunning();
+		
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+
+				debug.setReadyMode();
+			}
+		});
 	}
 }

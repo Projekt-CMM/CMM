@@ -131,7 +131,7 @@ public class InitTreeTableData {
 		//Iterate through symbol table
 		while( obj != null ){
 			//Reading an INTEGER
-			if( obj.type.kind == Struct.INT && obj.kind != Obj.PROC ){
+			if( obj.type.kind == Struct.INT && obj.kind != Obj.PROC && !obj.library ){
 				if( obj.kind == Obj.VAR && !obj.isRef ){
 					node.add(init, new DataNode(obj.name, "int", Memory.loadInt(address + obj.adr), null, address + obj.adr, obj.line));
 				}
@@ -143,7 +143,7 @@ public class InitTreeTableData {
 				}
 			}
 			//Reading a CHARACTER
-			if( obj.type.kind == Struct.CHAR && obj.kind != Obj.PROC ){
+			if( obj.type.kind == Struct.CHAR && obj.kind != Obj.PROC && !obj.library ){
 				if( obj.kind == Obj.VAR && !obj.isRef ){
 					node.add(init, new DataNode(obj.name, "char", Memory.loadChar(address + obj.adr), null, address + obj.adr, obj.line));
 				}
@@ -155,7 +155,7 @@ public class InitTreeTableData {
 				}
 			}
 			//Reading a FLOAT
-			if( obj.type.kind == Struct.FLOAT && obj.kind != Obj.PROC ){
+			if( obj.type.kind == Struct.FLOAT && obj.kind != Obj.PROC && !obj.library ){
 				if( obj.kind == Obj.VAR && !obj.isRef ){
 					node.add(init, new DataNode(obj.name, "float", Memory.loadFloat(address + obj.adr), null, address + obj.adr, obj.line));
 				}
@@ -167,7 +167,7 @@ public class InitTreeTableData {
 				}
 			}
 			//Reading a BOOLEAN
-			if( obj.type.kind == Struct.BOOL && obj.kind != Obj.PROC ){
+			if( obj.type.kind == Struct.BOOL && obj.kind != Obj.PROC && !obj.library ){
 				if( obj.kind == Obj.VAR && !obj.isRef ){
 					node.add(init, new DataNode(obj.name, "bool", Memory.loadBool(address + obj.adr), null, address + obj.adr, obj.line));
 				}
@@ -179,16 +179,16 @@ public class InitTreeTableData {
 				}
 			}
 			//Reading an ARRAY (any type)
-			if( obj.type.kind == Struct.ARR && obj.kind != Obj.PROC ){
+			if( obj.type.kind == Struct.ARR && obj.kind != Obj.PROC && !obj.library ){
 				node.add(init, readArray(init, obj, node.getChild(obj.name, "array", "", -1, obj.line), address + obj.adr, main));
 			}
 			//Reading a STRUCTURE
-			if( obj.type.kind == Struct.STRUCT && obj.kind != Obj.PROC && obj.kind != Obj.TYPE ){
+			if( obj.type.kind == Struct.STRUCT && obj.kind != Obj.PROC && obj.kind != Obj.TYPE && !obj.library ){
 				DataNode n = readVariables( init, obj.type.fields, node.getChild(obj.name, "struct", "", -1, obj.line), address + obj.adr, main );
 				node.add(init, n);
 			}
 			//READING A STRING
-			if( obj.type.kind == Struct.STRING && obj.kind != Obj.PROC ){
+			if( obj.type.kind == Struct.STRING && obj.kind != Obj.PROC && !obj.library ){
 				JButton b = new JButton(Strings.get(Memory.loadStringAddress(address + obj.adr)));
 				MouseListener l = new StringPopupListener(main, Strings.get(Memory.loadStringAddress(address + obj.adr)));
 				b.addMouseListener(l);

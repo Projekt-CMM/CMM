@@ -2,14 +2,13 @@ package at.jku.ssw.cmm.gui;
 
 import static at.jku.ssw.cmm.gettext.Language._;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -17,6 +16,7 @@ import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gettext.Language;
+import at.jku.ssw.cmm.gui.event.CursorListener;
 import at.jku.ssw.cmm.gui.event.WindowComponentListener;
 import at.jku.ssw.cmm.gui.event.WindowEventListener;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
@@ -129,7 +129,7 @@ public class GUImain {
 
 		//Change look and feel of the GUI
 		/*try {
-			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}*/
@@ -155,18 +155,25 @@ public class GUImain {
 		jFrame.getGlassPane().setVisible(true);
 
 		// base class for all swing components, except the top level containers
-		JComponent cp = (JComponent) this.jFrame.getContentPane();
-		cp.setLayout(new BorderLayout());
+		//JComponent cp = (JComponent) this.jFrame.getContentPane();
+		//cp.setLayout(new BorderLayout());
+		
+		JSplitPane sp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		this.jFrame.setContentPane(sp);
 
 		
 		this.updateWinFileName();
 
 		this.leftPanelControl = new GUIleftPanel(this);
 		
-		cp.add(this.leftPanelControl.init(), BorderLayout.LINE_START);
+		sp.setLeftComponent(this.leftPanelControl.init());
 
 		// Right part of the GUI
-		this.rightPanelControl = new GUIrightPanel(cp, this);
+		this.rightPanelControl = new GUIrightPanel();
+		sp.setRightComponent(this.rightPanelControl.init(this));
+		
+		sp.setPreferredSize(new Dimension(800, 500));
+		sp.setDividerLocation(0.6);
 
 		// Initialize the save dialog object
 		this.saveDialog = new SaveDialog(this.jFrame, this.leftPanelControl.getSourcePane(),
@@ -177,8 +184,10 @@ public class GUImain {
 				this.getSettings(), this.saveDialog));
 		
 		// Initialize window component listener
-				this.jFrame.addComponentListener(new WindowComponentListener(this.jFrame, this.leftPanelControl.getSourcePane(), this.leftPanelControl.getInputPane(), this.getSettings()));
+		this.jFrame.addComponentListener(new WindowComponentListener(this.jFrame, this.leftPanelControl.getSourcePane(), this.leftPanelControl.getInputPane(), this.getSettings()));
 
+		this.jFrame.addMouseMotionListener(new CursorListener(this.leftPanelControl.getSourcePane()));
+		
 		// Menubar
 		this.menuBarControl = new MenuBarControl();
 		InitMenuBar.initFileM(this.jFrame, this.leftPanelControl.getSourcePane(), this.leftPanelControl.getInputPane(),

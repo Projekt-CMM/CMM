@@ -27,7 +27,7 @@
 	<error id="no input data">
 		<file>noinput.html</file>
 	</error>
-	<error id="negative index chosen">
+	<error id="negative index choosen">
 		<file>negativeindex.html</file>
 	</error>
 	<error id="too high index choosen">
@@ -39,12 +39,14 @@
 	<error id="type not supported as ident in condition">
 		<file>cast.html</file>
 	</error>
+	<!-- no errors for printf -->
 	<error id="printf doesn't contain the required amount of arguments">
-		<file>cast.html</file>
+		<file>printftfa.html</file>
 	</error>
 	<error id="invalid printf parameter">
-		<file>cast.html</file>
+		<file>printfip.html</file>
 	</error>
+	<!-- no errors for printf -->
 	<error id="StackOverFlow">
 		<file>cast.html</file>
 	</error>

@@ -16,6 +16,7 @@ import at.jku.ssw.cmm.debugger.Debugger;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.debug.GUIcontrolPanel;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
+import at.jku.ssw.cmm.interpreter.memory.Memory;
 import at.jku.ssw.cmm.compiler.Node;
 
 /**
@@ -55,8 +56,6 @@ public class PanelRunListener implements Debugger {
 		this.keepRunning = false;
 		this.wait = false;
 
-		this.stepOver = false;
-
 		// Default value of the slider
 		this.delay = GUIcontrolPanel.SLIDER_START;
 	}
@@ -89,11 +88,6 @@ public class PanelRunListener implements Debugger {
 	private boolean wait;
 
 	/**
-	 * TRUE -> interpreter is in step over mode | FALSE -> nothing happens
-	 */
-	private boolean stepOver;
-
-	/**
 	 * The delay between two interpreter steps in run mode
 	 */
 	private int delay;
@@ -108,6 +102,8 @@ public class PanelRunListener implements Debugger {
 	 * The last node in the user's source code which has been processed
 	 */
 	private Node lastNode;
+	
+	private int lastAdress;
 
 	/* --- functional methods --- */
 	/**
@@ -121,10 +117,10 @@ public class PanelRunListener implements Debugger {
 		if( this.timer != null )
 			this.timer.cancel();
 
-		this.stepOver = false;
-
 		this.delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
 		this.lastNode = null;
+		
+		this.lastAdress = 0;
 	}
 	
 	/**
@@ -187,25 +183,6 @@ public class PanelRunListener implements Debugger {
 		return false;
 	}
 
-	/* --- step over methods --- */
-	/**
-	 * Initializes the "step over" mode within the right GUI panel. <b>Do not
-	 * call this method, </b> for a complete initialization call {@link
-	 * GUIrightPanel.stepOver()}
-	 */
-	//TODO rework
-	synchronized public void stepOver() {
-		this.stepOver = true;
-	}
-
-	/**
-	 * Terminates the "step over" mode. Does clean up and exits safe.
-	 */
-	//TODO rework
-	synchronized public void stepComplete() {
-		this.stepOver = false;
-	}
-
 	/* --- debugger interpreter listeners --- */
 	@Override
 	public boolean step(final Node arg0) {
@@ -230,17 +207,6 @@ public class PanelRunListener implements Debugger {
 		/* --- Node #3: Quick mode? --- */
 		if (this.isRunMode() && this.delay == 0) {
 			
-			/* --- Node #4: Passing a breakpoint --- */
-			/*if( !this.master.getBreakPoints().isEmpty() && arg0.line >= this.master.getBreakPoints().get(0)-1 ){
-				java.awt.EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						master.setPauseMode();
-					}
-				});
-				DebugShell.out(State.LOG, Area.DEBUGGER, "Stopped at breakpoint: "  + arg0.line + " - " + this.master.getBreakPoints().get(0) );
-				this.master.getBreakPoints().remove(0);
-			}*/
-			
 			//Delay the interpreter for 10ms so that the GUI is still able to work
 			try {
 				Thread.sleep(1);
@@ -252,7 +218,8 @@ public class PanelRunListener implements Debugger {
 		}
 		
 		/* --- Node #5 - Variable value changed --- */
-		this.master.updateVariableTables(true);//TODO better update routine
+		this.master.updateVariableTables(Memory.getFramePointer() != this.lastAdress);
+		this.lastAdress = Memory.getFramePointer();
 		
 		this.master.highlightVariable(this.master.getCompileManager().getRequest().getLastChangedAddress());
 		
@@ -462,7 +429,7 @@ public class PanelRunListener implements Debugger {
 			
 			if( delay == 0 && lastNode != null ){
 				master.updateBreakPoints(lastNode.line);
-			}
+			}//TODO breakpoints
 		}
 	};
 	

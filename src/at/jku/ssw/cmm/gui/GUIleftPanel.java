@@ -94,6 +94,13 @@ public class GUIleftPanel {
 	 */
 	private final List<Object[]> codeRegister;
 
+	/**
+	 * Initializes the left part of the main GUI. This class is responsible for all
+	 * the objects which are initialized here, so this method should be called at when
+	 * loading the GUI.
+	 * 
+	 * @return A jPanel with all components of the main GUI
+	 */
 	public JPanel init() {
 		// Left part of the GUI
 		JPanel jPanelLeft = new JPanel();
@@ -307,23 +314,42 @@ public class GUIleftPanel {
 	
 	public void setReadyMode() {
 		
+		this.jSourcePane.setBackground(Color.WHITE);
+		this.jInputPane.setBackground(Color.WHITE);
+		this.jOutputPane.setBackground(Color.WHITE);
+		
 		this.jStatePanel.setBackground(Color.LIGHT_GRAY);
 		this.jStateLabel.setText("--- " + _("text edit mode") + " ---");
 	}
 
 	public void setErrorMode(String msg, int line) {
 		
+		this.jSourcePane.setBackground(Color.WHITE);
+		this.jInputPane.setBackground(Color.WHITE);
+		this.jOutputPane.setBackground(Color.WHITE);
+		
 		this.jStatePanel.setBackground(Color.RED);
-		this.jStateLabel.setText("! ! ! " + _("error") + " " + (line >= 0 ? _("in line ") + " " + line : " ") + "! ! !");
+		this.jStateLabel.setText("! ! ! " + _("error") + " " + (line >= 0 ? _("in line ") + " " + line : "") + " ! ! !");
+		
+		if( line >= 0 )
+			this.highlightSourceCode(line);
 	}
 
 	public void setRunMode() {
+		
+		this.jSourcePane.setBackground(new Color(230, 230, 230));
+		this.jInputPane.setBackground(new Color(230, 230, 230));
+		this.jOutputPane.setBackground(new Color(230, 230, 230));
 		
 		this.jStatePanel.setBackground(Color.GREEN);
 		this.jStateLabel.setText(">>> " + _("automatic debug mode") + " >>>");
 	}
 
 	public void setPauseMode() {
+		
+		this.jSourcePane.setBackground(new Color(230, 230, 230));
+		this.jInputPane.setBackground(new Color(230, 230, 230));
+		this.jOutputPane.setBackground(new Color(230, 230, 230));
 		
 		this.jStatePanel.setBackground(Color.YELLOW);
 		this.jStateLabel.setText("||| " + _("pause or step by step mode") + " |||");
