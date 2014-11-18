@@ -24,15 +24,14 @@
 	<error id="no known cast from ([\w./\s]+)">
 		<file>cast.html</file>
 	</error>
-	<!-- no description for errors below -->
 	<error id="no input data">
-		<file>cast.html</file>
+		<file>noinput.html</file>
 	</error>
 	<error id="negative index chosen">
-		<file>cast.html</file>
+		<file>negativeindex.html</file>
 	</error>
-	<error id="Too high index chosen">
-		<file>cast.html</file>
+	<error id="too high index choosen">
+		<file>indexoutofbounds.html</file>
 	</error>
 	<error id="Not supportet ([\w./]+) node kind">
 		<file>cast.html</file>
