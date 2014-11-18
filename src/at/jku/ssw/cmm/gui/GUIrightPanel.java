@@ -3,13 +3,20 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.Dimension;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JComponent;
+import javax.swing.JEditorPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
+import at.jku.ssw.cmm.DebugShell;
+import at.jku.ssw.cmm.DebugShell.Area;
+import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gui.debug.ErrorTable;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
@@ -58,7 +65,22 @@ public class GUIrightPanel {
 	        
 	        //Initialize error panel
 	        this.errorMap = new ErrorTable(GUImain.LANGUAGE);
-	
+	        this.errorPanel = new JPanel();
+			this.errorPanel.setLayout(new BorderLayout());
+	        
+			this.errorDesc = new JEditorPane();
+			this.errorDesc.setEditable(false);
+			this.errorDesc.setContentType("text/html");
+			this.errorDesc.setDocument(LoadStatics.readStyleSheet("error"+File.separator+"style.css"));
+			
+			JScrollPane editorScrollPane = new JScrollPane(this.errorDesc);
+	      	editorScrollPane.setVerticalScrollBarPolicy(
+	      	                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+	      	editorScrollPane.setPreferredSize(new Dimension(100, 300));
+	      	editorScrollPane.setMinimumSize(new Dimension(10, 10));
+	      	
+	      	this.errorPanel.add(editorScrollPane, BorderLayout.CENTER);
+	        
 			//Initialize Quest Panel
 			JPanel jQuestPanel = new JPanel();
 			if( GUImain.ADVANCED_GUI ){
@@ -86,6 +108,7 @@ public class GUIrightPanel {
 	private GUIquestPanel questPanel;
 	
 	private JPanel errorPanel;
+	private JEditorPane errorDesc;
 	
 	/**
 	 * @return A reference to the debug panel manager
@@ -102,22 +125,18 @@ public class GUIrightPanel {
 	}
 	
 	public void showErrorPanel( String msg ){
-		if( this.tabbedPane.getTabCount() == (GUImain.ADVANCED_GUI ? 2 : 1) ){
-			errorPanel = new JPanel();
-			errorPanel.setLayout(new BorderLayout());
-			errorPanel.setBackground(Color.RED);
-			errorPanel.add(LoadStatics.loadHTMLdoc(this.errorMap.getErrorHTML(msg), "error/style.css"), BorderLayout.CENTER);
-			tabbedPane.add(errorPanel, _("Error"), 1);
-			
-			tabbedPane.setSelectedIndex(1);
+		
+		try {
+			this.errorDesc.setPage(LoadStatics.getHTMLUrl(this.errorMap.getErrorHTML(msg)));
+		} catch (IOException e) {
+			DebugShell.out(State.ERROR, Area.ERROR, msg + " not found");
+			e.printStackTrace();
 		}
-		else{
-			errorPanel.removeAll();
-			errorPanel.add(LoadStatics.loadHTMLdoc(this.errorMap.getErrorHTML(msg), "error/style.css"), BorderLayout.CENTER);
-			tabbedPane.repaint();
-			
-			tabbedPane.setSelectedIndex(1);
-		}
+		
+		if( this.tabbedPane.getTabCount() == (GUImain.ADVANCED_GUI ? 2 : 1) )
+			this.tabbedPane.add(errorPanel, _("Error"), 1);
+		
+		this.tabbedPane.setSelectedIndex(1);
 	}
 	
 	public void hideErrorPanel(){

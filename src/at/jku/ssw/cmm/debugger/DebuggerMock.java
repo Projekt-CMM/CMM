@@ -9,11 +9,5 @@ public class DebuggerMock implements Debugger {
 		// TODO Auto-generated method stub
 		return true;
 	}
-	
-	@Override
-	public void abort(String message, Node node) {
-		// TODO Auto-generated method stub
-
-	}
 
 }
