@@ -16,6 +16,7 @@ import at.jku.ssw.cmm.debugger.Debugger;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.debug.GUIcontrolPanel;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
+import at.jku.ssw.cmm.interpreter.memory.Memory;
 import at.jku.ssw.cmm.compiler.Node;
 
 /**
@@ -108,6 +109,8 @@ public class PanelRunListener implements Debugger {
 	 * The last node in the user's source code which has been processed
 	 */
 	private Node lastNode;
+	
+	private int lastAdress;
 
 	/* --- functional methods --- */
 	/**
@@ -125,6 +128,8 @@ public class PanelRunListener implements Debugger {
 
 		this.delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
 		this.lastNode = null;
+		
+		this.lastAdress = 0;
 	}
 	
 	/**
@@ -252,7 +257,8 @@ public class PanelRunListener implements Debugger {
 		}
 		
 		/* --- Node #5 - Variable value changed --- */
-		this.master.updateVariableTables(true);//TODO better update routine
+		this.master.updateVariableTables(Memory.getFramePointer() != this.lastAdress);//TODO better update routine
+		this.lastAdress = Memory.getFramePointer();
 		
 		this.master.highlightVariable(this.master.getCompileManager().getRequest().getLastChangedAddress());
 		
