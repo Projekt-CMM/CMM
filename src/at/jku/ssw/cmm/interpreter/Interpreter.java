@@ -1,10 +1,9 @@
 package at.jku.ssw.cmm.interpreter;
 
-/*
+/**
  * General Info:
  * TODO: JUnit
  */
-
 import java.nio.BufferOverflowException;
 
 import at.jku.ssw.cmm.compiler.Obj;
@@ -17,6 +16,7 @@ import at.jku.ssw.cmm.interpreter.exceptions.AbortException;
 import at.jku.ssw.cmm.interpreter.exceptions.BreakException;
 import at.jku.ssw.cmm.interpreter.exceptions.ContinueException;
 import at.jku.ssw.cmm.interpreter.exceptions.ReturnException;
+import at.jku.ssw.cmm.interpreter.exceptions.RunTimeException;
 import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
 import at.jku.ssw.cmm.interpreter.exceptions.StackUnderflowException;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
@@ -26,7 +26,6 @@ import at.jku.ssw.cmm.compiler.Node;
 public final class Interpreter implements DebuggerRequest {
 
 	private final Debugger debugger;
-	private final Strings strings;
 	private final StdInOut inout;
 
 	private int debuggerLastChangedAddress;
@@ -34,19 +33,19 @@ public final class Interpreter implements DebuggerRequest {
 	
 	// private boolean running;
 
-	/*
+	/**
 	 * Function for starting the Debugger
 	 */
-	public Interpreter(Debugger debugger, StdInOut stdInout, Strings strings) {
+	public Interpreter(Debugger debugger, StdInOut stdInout) {
 		this.debugger = debugger;
-		this.strings = strings;
 		this.inout = stdInout;
 	}
 
-	/*
+	/**
 	 * Start Function
+	 * @throws RunTimeException 
 	 */
-	public void run(Node node) {
+	public void run(Node node) throws RunTimeException {
 		// TODO try catch abort messages
 		try {
 			StatSeq(node);
@@ -61,18 +60,21 @@ public final class Interpreter implements DebuggerRequest {
 		}
 	}
 
-	/*
+	/**
 	 * StartSequenz, Working Module
+	 * @throws RunTimeException 
 	 */
-	void StatSeq(Node p) throws ReturnException, AbortException, BreakException, ContinueException { // AST
+	void StatSeq(Node p) throws ReturnException, AbortException, BreakException, ContinueException, RunTimeException { // AST
 		for (p = p.left; p != null; p = p.next)
 			Statement(p);
 	}
 
-	/*
+	/**
 	 * Statements: assign, stateseq, if, ifelse, while, return, trap, call TODO
+	 * @throws RunTimeException 
 	 */
-	void Statement(Node p) throws ReturnException, AbortException, BreakException, ContinueException { // b = a;
+	void Statement(Node p) throws ReturnException, AbortException, BreakException, ContinueException, RunTimeException { // b = a;
+		
 		if (p.kind != Node.NOP && !debugger.step(p))
 			throw new AbortException();
 
@@ -96,8 +98,7 @@ public final class Interpreter implements DebuggerRequest {
 				Memory.storeStringAdress(Adr(p.left), StringExpr(p.right));
 				break;
 			default:
-				debugger.abort("Not supportet node kind", p);
-				throw new IllegalStateException("Kind" + p.kind);
+				throw new RunTimeException("Not supportet node kind", p);
 
 			}
 			break;
@@ -108,8 +109,7 @@ public final class Interpreter implements DebuggerRequest {
 			StatSeq(p);
 			break;
 		case Node.TRAP: // For a Function with return!
-			debugger.abort("Return Statement missing", p);
-			throw new IllegalStateException("Kind" + p.kind); 
+			throw new RunTimeException("Return Statement missing", p); 
 
 		case Node.IF:
 			if (Condition(p.left))
@@ -195,8 +195,7 @@ public final class Interpreter implements DebuggerRequest {
 				Memory.setIntReturnValue(StringExpr(p.left));
 				throw new ReturnException();
 			default:
-				debugger.abort("Not supportet return node kind", p);
-				throw new IllegalStateException("Kind" + p.kind);
+				throw new RunTimeException("Not supportet return node kind", p);
 			}
 		case Node.BREAK:
 				throw new BreakException();
@@ -205,15 +204,16 @@ public final class Interpreter implements DebuggerRequest {
 		case Node.NOP:
 				break;
 		default:
-			debugger.abort("Not supportet statement node kind", p);
-			throw new IllegalStateException("Kind" + p.kind);
+			throw new RunTimeException("Not supportet statement node kind", p);
 		}
 	}
-	/*
+	
+	/**
 	 * BoolExpr: boolcon, call, ref, i2b,
 	 * ident, dot, index
+	 * @throws RunTimeException 
 	 */
-	boolean BoolExpr(Node p) throws ReturnException, AbortException { //TODO
+	boolean BoolExpr(Node p) throws ReturnException, AbortException, RunTimeException { //TODO
 		switch (p.kind) {
 		case Node.BOOLCON:
 			// Returns a Constante
@@ -252,16 +252,16 @@ public final class Interpreter implements DebuggerRequest {
 			debuggerCurrentAddress = Adr(p);
 			return Memory.loadBool(Adr(p));
 		default:
-			debugger.abort("Not supportet boolexpr node kind", p);
-			throw new IllegalStateException("Kind" + p.kind);
+			throw new RunTimeException("Not supportet boolexpr node kind", p);
 		}
 	}
 	
-	/*
+	/**
 	 * IntExpr: intcon, plus, minus, times, div, rem, call, ref, f2i, c2i, b2i
 	 * ident, dot, index
+	 * @throws RunTimeException 
 	 */
-	int IntExpr(Node p) throws ReturnException, AbortException { //TODO
+	int IntExpr(Node p) throws ReturnException, AbortException, RunTimeException { //TODO
 		switch (p.kind) {
 		case Node.INTCON:
 			return p.val; // Returns a Constante
@@ -285,13 +285,11 @@ public final class Interpreter implements DebuggerRequest {
 		case Node.DIV:
 			if (IntExpr(p.right) != 0)
 				return IntExpr(p.left) / IntExpr(p.right);
-			debugger.abort("Divided by 0", p);
-			return 0;
+			throw new RunTimeException("Divided by 0", p);
 		case Node.REM:
 			if (IntExpr(p.right) != 0)
 				return IntExpr(p.left) % IntExpr(p.right);
-			debugger.abort("Divided by 0", p);
-			return 0;
+			throw new RunTimeException("Divided by 0", p);
 		/*
 		 * Bit Operators
 		 */
@@ -332,17 +330,16 @@ public final class Interpreter implements DebuggerRequest {
 			debuggerCurrentAddress = Adr(p);
 			return Memory.loadInt(Adr(p));
 		default:
-			debugger.abort("Not supportet intexpr node kind", p);
-			throw new IllegalStateException("Kind" + p.kind);
+			throw new RunTimeException("Not supportet intexpr node kind", p);
 		}
 	}
 
-	/*
+	/**
 	 * FloatExpr: Intcon, plus, minus, times, div, rem, call, ref, f2i, c2i,
 	 * ident, dot, index
+	 * @throws RunTimeException 
 	 */
-
-	float FloatExpr(Node p) throws AbortException, ReturnException { //TODO
+	float FloatExpr(Node p) throws AbortException, ReturnException, RunTimeException { //TODO
 		switch (p.kind) {
 		case Node.FLOATCON:						//returning the Constant value
 			return p.fVal;
@@ -366,13 +363,11 @@ public final class Interpreter implements DebuggerRequest {
 		case Node.DIV:
 			if (FloatExpr(p.right) != 0)
 				return FloatExpr(p.left) / FloatExpr(p.right);
-			debugger.abort("Divided by 0", p);
-			return 0;
+			throw new RunTimeException("Divided by 0", p);
 		case Node.REM:
 			if (FloatExpr(p.right) != 0)
 				return FloatExpr(p.left) % FloatExpr(p.right);
-			debugger.abort("Divided by 0", p);
-			return 0;
+			throw new RunTimeException("Divided by 0", p);
 
 			
 		case Node.I2F:							//Casts an Integer into an Float
@@ -391,17 +386,16 @@ public final class Interpreter implements DebuggerRequest {
 			return Memory.loadFloat(Adr(p));
 
 		default:
-			debugger.abort("Not supportet floatexpr node kind", p);
-			throw new IllegalStateException("Kind" + p.kind);
+			throw new RunTimeException("Not supportet floatexpr node kind", p);
 
 		}
 	}
 
-	/*
+	/**
 	 * Char Expressions: Charcon, i2c, ident, dot, index
+	 * @throws RunTimeException 
 	 */
-
-	char CharExpr(Node p) throws AbortException, ReturnException { //TODO
+	char CharExpr(Node p) throws AbortException, ReturnException, RunTimeException { //TODO
 		switch (p.kind) {
 		case Node.CHARCON:
 			return (char) p.val;					//Returning an Char constant
@@ -420,19 +414,16 @@ public final class Interpreter implements DebuggerRequest {
 				return Memory.loadChar(Adr(p));		//Normal way of getting Arrays -> more at @Adr
 			} else {									//Getting a String and look at a special Position
 				try {
-				    String s = strings.get(StringExpr(p.left));
+				    String s = Strings.get(StringExpr(p.left));
 				    if(IntExpr(p.right) < 0) {
-				        debugger.abort("negative index choosen", p);
-				        throw new IllegalStateException("Kind" + p.kind);
+				        throw new RunTimeException("negative index chosen", p);
 				    }
 				    if(IntExpr(p.right) >= s.length()) {
-				        debugger.abort("Too high index choosen", p);
-				        throw new IllegalStateException("Kind" + p.kind);
+				        throw new RunTimeException("Too high index chosen", p);
 				    }
-				    return strings.get(StringExpr(p.left)).charAt(IntExpr(p.right));
+				    return Strings.get(StringExpr(p.left)).charAt(IntExpr(p.right));
 				} catch (BufferOverflowException e) {
-					debugger.abort("Too high index choosen", p);
-					throw new IllegalStateException("Kind" + p.kind);
+					throw new RunTimeException("Too high index chosen", p);
 				}
 			}
 		case Node.CALL:
@@ -440,21 +431,20 @@ public final class Interpreter implements DebuggerRequest {
 			return Memory.getCharReturnValue();
 
 		default:
-			debugger.abort("Not supportet charexpr node kind", p);
-			throw new IllegalStateException("Kind" + p.kind);
+			throw new RunTimeException("Not supportet charexpr node kind", p);
 
 		}
 	}
 
 	@SuppressWarnings("unused")
-	int StringExpr(Node p) throws AbortException, ReturnException { //TODO
+	int StringExpr(Node p) throws AbortException, ReturnException, RunTimeException { //TODO
 		switch (p.kind) {
 		case Node.IDENT:
 			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadStringAddress(Adr(p));
 			
 		case Node.PLUS:		//Reads the left and the right String and putting them together
-			return strings.put(strings.get(StringExpr(p.left))+ strings.get(StringExpr(p.right)));
+			return Strings.put(Strings.get(StringExpr(p.left)) + Strings.get(StringExpr(p.right)));
 		case Node.STRINGCON:
 			return p.val;	//Returns the Address of the String
 		case Node.CALL:
@@ -469,24 +459,20 @@ public final class Interpreter implements DebuggerRequest {
 				if (ref != '0') {
 					s += ref;			//Putting the Array, together to an String
 				}
-				return strings.put(s);	//Saving the new String and returns Int Adress
+				return Strings.put(s);	//Saving the new String and returns Int Adress
 			}
 		case Node.C2S:
-			return strings.put(Character.toString(CharExpr(p.left)));
+			return Strings.put(Character.toString(CharExpr(p.left)));
 		default:
-			debugger.abort("Not supportet node kind", p);
-			throw new IllegalStateException("Kind" + p.kind);
+			throw new RunTimeException("Not supportet node kind", p);
 		}
 	}
 
-	/*
-	 * Boolean Expressions: Have to be implemented in Compiler
-	 */
-
-	/*
+	/**
 	 * Conditions EQL, NEQ, LSS, LEQ, GTR, GEQ, NOT, OR, AND
+	 * @throws RunTimeException 
 	 */
-	boolean Condition(Node p) throws AbortException, ReturnException {
+	boolean Condition(Node p) throws AbortException, ReturnException, RunTimeException {
 		if(p.kind == Node.BOOLCON) {
 			if(p.val == 0)
 				return false;
@@ -497,8 +483,7 @@ public final class Interpreter implements DebuggerRequest {
 				debuggerCurrentAddress = IdentAdr(p.obj);
 				return Memory.loadBool(IdentAdr(p.obj));
 			} else {
-				debugger.abort("type not supported as ident in condition", p);
-				throw new IllegalStateException("Kind" + p.kind);
+				throw new RunTimeException("type not supported as ident in condition", p);
 			}
 		}
 		
@@ -529,8 +514,7 @@ public final class Interpreter implements DebuggerRequest {
 			case Node.NOT:
 				return !Condition(p.left); // NOT
 			default:
-				debugger.abort("Not supportet struct node kind", p);
-				throw new IllegalStateException("Kind" + p.kind);
+				throw new RunTimeException("Not supportet struct node kind", p);
 			}
 		case Struct.FLOAT:
 			switch (p.kind) {
@@ -555,8 +539,7 @@ public final class Interpreter implements DebuggerRequest {
 			case Node.NOT:
 				return !Condition(p.left); // NOT
 			default:
-				debugger.abort("Not supportet float node kind", p);
-				throw new IllegalStateException("Kind" + p.kind);
+				throw new RunTimeException("Not supportet float node kind", p);
 			}
 
 		case Struct.CHAR:
@@ -581,8 +564,7 @@ public final class Interpreter implements DebuggerRequest {
 			case Node.NOT:
 				return !Condition(p.left); // NOT
 			default:
-				debugger.abort("Not supportet char node kind", p);
-				throw new IllegalStateException("Kind" + p.kind);
+				throw new RunTimeException("Not supportet char node kind", p);
 			}
 			
 		case Struct.BOOL:
@@ -599,25 +581,23 @@ public final class Interpreter implements DebuggerRequest {
 			case Node.NOT:
 				return !Condition(p.left); // NOT
 			default:
-				debugger.abort("Not supportet char node kind", p);
-				throw new IllegalStateException("Kind" + p.kind);
+				throw new RunTimeException("Not supportet char node kind", p);
 			}
 
 			// case Struct.BOOL: break; // Boolean Variables
 			// case Struct.STRING: break; // Compiler implentation
 
 		default:
-			debugger.abort("Not supportet condition node kind", p);
-			throw new IllegalStateException("Kind" + p.kind);
+			throw new RunTimeException("Not supportet condition node kind", p);
 
 		}
 	}
 
-	/*
+	/**
 	 * Call Function working TODO
+	 * @throws RunTimeException 
 	 */
-
-	void Call(Node p) throws AbortException, ReturnException { 
+	void Call(Node p) throws AbortException, ReturnException, RunTimeException { 
 
 		switch (p.obj.name) {
 		case "print":	//Our Print, can only print Characters
@@ -629,21 +609,20 @@ public final class Interpreter implements DebuggerRequest {
 		case "length": 	//
 			switch (p.left.type.kind) {
 			case Struct.STRING: // Size of elements in String
-				Memory.setIntReturnValue(strings.get(StringExpr(p.left)).length());
+				Memory.setIntReturnValue(Strings.get(StringExpr(p.left)).length());
 				break; 
 			default:
-				debugger.abort("Not supportet length node kind", p);
-				throw new IllegalStateException("Kind" + p.kind);
+				throw new RunTimeException("Not supportet length node kind", p);
 			}
 			break;
 		case "printf":
-			String s = strings.get(StringExpr(p.left));
+			String s = Strings.get(StringExpr(p.left));
 			Node curPrintfNode = p.left;
 			for(int i=0;i<s.length();i++) {
 				if(s.charAt(i) == '%' && s.length() > i +1 && !(i > 1 && s.charAt(i-1) == '\\')) {
 					curPrintfNode = curPrintfNode.next;
 					if(curPrintfNode == null) {
-						debugger.abort("printf doesn't contain the required amount of arguments!", p);
+						throw new RunTimeException("printf doesn't contain the required amount of arguments", p);
 					} else {
 						i++;
 						String sHelp = "%" + s.charAt(i);
@@ -666,7 +645,7 @@ public final class Interpreter implements DebuggerRequest {
 											sHelp = "0";
 										break;
 									default:
-										debugger.abort("invalid printf parameter", p);
+										throw new RunTimeException("invalid printf parameter", p);
 								} 
 								break;
 							case 'x':
@@ -687,7 +666,7 @@ public final class Interpreter implements DebuggerRequest {
 											sHelp = "0";
 										break;
 									default:
-										debugger.abort("invalid printf parameter", p);
+										throw new RunTimeException("invalid printf parameter", p);
 								} 
 								break;
 							case 'f':
@@ -708,7 +687,7 @@ public final class Interpreter implements DebuggerRequest {
 											sHelp = "0.0";
 										break;
 									default:
-										debugger.abort("invalid printf parameter", p);
+										throw new RunTimeException("invalid printf parameter", p);
 								} 
 								break;
 							case 'c':
@@ -723,7 +702,7 @@ public final class Interpreter implements DebuggerRequest {
 										sHelp = "" + (char)CharExpr(curPrintfNode);
 										break;
 									default:
-										debugger.abort("invalid printf parameter", p);
+										throw new RunTimeException("invalid printf parameter", p);
 								} 
 								break;
 							default:
@@ -780,8 +759,7 @@ public final class Interpreter implements DebuggerRequest {
 			try {
 				Memory.openStackFrame(p.line,MethodContainer.getMethodId(p.obj.name), p.obj.size);
 			} catch (StackOverflowException e) {
-				debugger.abort("StackOverFlow", p);
-				throw new IllegalStateException("Kind" + p.kind);
+				throw new RunTimeException("StackOverFlow", p);
 			}
 
 			// Saving the Object into the new C-- Function Memory Frame.
@@ -811,8 +789,7 @@ public final class Interpreter implements DebuggerRequest {
 						Memory.storeStringAdress(Memory.getFramePointer()+ form.adr, (int) object[a]);
 						break;
 					default:
-						debugger.abort("Not supportet node kind", p);
-						throw new IllegalStateException("Kind" + p.kind);
+						throw new RunTimeException("Not supportet node kind", p);
 					}
 				}
 				a++;
@@ -821,26 +798,25 @@ public final class Interpreter implements DebuggerRequest {
 				StatSeq(p.obj.ast); 		// Starting the new C-- Function
 			} catch (ReturnException e) { 	// closing the C-- Function
 			} catch(BreakException e) {
-				debugger.abort("break is not allowed here", p);
+				throw new RunTimeException("break is not allowed here", p);
 			} catch(ContinueException e) {
-				debugger.abort("continue is not allowed here", p);
+				throw new RunTimeException("continue is not allowed here", p);
 			}
 
 			try {
 				Memory.closeStackFrame(); // Closing the C-- Function Frame
 			} catch (StackUnderflowException e) {
-				debugger.abort("Stack Underflow", p);
-				throw new IllegalStateException();
+				throw new RunTimeException("Stack Underflow", p);
 			}
 			break;
 		}
 	}
 
-	/*
+	/**
 	 * Designators: Address reserving Identifier, Dot, Index, Structs
+	 * @throws RunTimeException 
 	 */
-
-	int Adr(Node p) throws ReturnException, AbortException { // TODO
+	int Adr(Node p) throws ReturnException, AbortException, RunTimeException { // TODO
 		
 		switch (p.kind) {
 		case Node.IDENT:					// more at @IdentAdr
@@ -851,26 +827,23 @@ public final class Interpreter implements DebuggerRequest {
 		case Node.INDEX:					//right value + Integer * sizeof(Integer)
 			int index = IntExpr(p.right);
 			if(index < 0) {
-				debugger.abort("negative index choosen", p);
-		        throw new IllegalStateException("Kind" + p.kind);
+		        throw new RunTimeException("negative index choosen", p);
 			}
 			if(p.left.type.elements == -1) {
 				// TODO buffer overflow detection
 			}
 			else if(index >= p.left.type.elements) {
-				debugger.abort("too high index choosen", p);
-		        throw new IllegalStateException("Kind" + p.kind);
+				throw new RunTimeException("too high index choosen", p);
 			}
 			return Adr(p.left) + p.left.type.elemType.size * index;
 		case Node.REF://TODO
 			return Adr(p.left);
 		default:
-			debugger.abort("Not supported Node Kind", p);
-			throw new IllegalStateException("p.kind" + p.kind);
+			throw new RunTimeException("Not supported Node Kind", p);
 		}
 	}
 
-	/*
+	/**
 	 * Identifier Address
 	 */
 	int IdentAdr(Obj obj) throws ReturnException, AbortException {

@@ -13,10 +13,10 @@ import at.jku.ssw.cmm.CMMwrapper;
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
+import at.jku.ssw.cmm.debugger.IOstream;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.exception.IncludeNotFoundException;
 import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
-import at.jku.ssw.cmm.gui.interpreter.IOstream;
 
 /**
  * Controls the right panel of the main GUI. This is a bit more complex, as this
@@ -178,6 +178,7 @@ public class GUIdebugPanel {
 
 		this.ctrlPanel.setReadyMode();
 		this.ctrlPanel.getListener().setReadyMode();
+
 		this.main.setErrorMode(msg, ExpandSourceCode.correctLine(line,
 				(int) this.main.getLeftPanel().getSourceCodeRegister().get(0)[0],
 				this.main.getLeftPanel().getSourceCodeRegister().size()));
@@ -188,8 +189,6 @@ public class GUIdebugPanel {
 		
 		//Input lock
 		this.main.unlockInput();
-		
-		
 	}
 
 	public void setRunMode() {
@@ -233,7 +232,7 @@ public class GUIdebugPanel {
 	// TODO make thread safe and update comments
 	/**
 	 * Runs the compiler via the compiler wrapper class, see {@link CMMwrapper}.
-	 * Automatically switches to "error" mode if necessary.
+	 * Automatically switches to "error" maine if necessary.
 	 * 
 	 * <hr>
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT.</i> This

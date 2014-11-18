@@ -117,6 +117,9 @@ public class PanelRunListener implements Debugger {
 		this.run = false;
 		this.keepRunning = false;
 		this.wait = false;
+		
+		if( this.timer != null )
+			this.timer.cancel();
 
 		this.stepOver = false;
 
@@ -127,10 +130,10 @@ public class PanelRunListener implements Debugger {
 	/**
 	 * Sets the right panel to ERROR mode (see documentation)
 	 */
-	public void setErrorMode(){
+	/*public void setErrorMode(){
 		this.run = true;
 		this.keepRunning = false;
-	}
+	}*/
 	
 	/**
 	 * Sets the right panel to RUN mode (see documentation)
@@ -205,36 +208,17 @@ public class PanelRunListener implements Debugger {
 
 	/* --- debugger interpreter listeners --- */
 	@Override
-	public void abort(final String message, final Node node) {
-
-		// TODO is this thread safe???
-		if (this.timer != null)
-			timer.cancel();
-
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				master.setErrorMode(message, node.line);
-			}
-		});
-	}
-
-	@Override
 	public boolean step(final Node arg0) {
+		
+		if( this.isReadyMode() || this.isErrorMode() ){
+			System.err.println("Interpreter is running although GUI is on editor mode");
+			return false;
+		}
 
 		DebugShell.out(State.LOG, Area.DEBUGGER, "" + arg0);
 		
 		//Update latest node's line
 		this.lastNode = arg0;
-
-		/* --- Node #1: Step over mode? --- */
-		if (this.stepOver) {
-			// -> Node #1 - YES
-			/* --- Node #2: Step over finished? --- */
-			//if (!this.master.checkForStepEnd()) {
-				// -> Mode #2 - NO
-				return this.keepRunning;
-			//}
-		}
 
 		// -> Node #1 - NO | Node #2 - YES
 		java.awt.EventQueue.invokeLater(new Runnable() {
@@ -247,7 +231,7 @@ public class PanelRunListener implements Debugger {
 		if (this.isRunMode() && this.delay == 0) {
 			
 			/* --- Node #4: Passing a breakpoint --- */
-			if( !this.master.getBreakPoints().isEmpty() && arg0.line >= this.master.getBreakPoints().get(0)-1 ){
+			/*if( !this.master.getBreakPoints().isEmpty() && arg0.line >= this.master.getBreakPoints().get(0)-1 ){
 				java.awt.EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						master.setPauseMode();
@@ -255,7 +239,7 @@ public class PanelRunListener implements Debugger {
 				});
 				DebugShell.out(State.LOG, Area.DEBUGGER, "Stopped at breakpoint: "  + arg0.line + " - " + this.master.getBreakPoints().get(0) );
 				this.master.getBreakPoints().remove(0);
-			}
+			}*/
 			
 			//Delay the interpreter for 10ms so that the GUI is still able to work
 			try {
@@ -282,7 +266,8 @@ public class PanelRunListener implements Debugger {
 			this.timer.schedule(new TimerTask() {
 				@Override
 				public void run() {
-					userReply();
+					if( isRunMode() || isPauseMode() )
+						userReply();
 				}
 			}, (int)(delayScale(delay)*1000) );
 		}
@@ -342,13 +327,15 @@ public class PanelRunListener implements Debugger {
 				return;
 
 			// Ready -> Start interpreting in run mode
-			if (!keepRunning && !run) {
-				if( master.runInterpreter() )
-					master.setRunMode();
+			if (isReadyMode()||isErrorMode()) {
+				
+				master.setRunMode();
+				if( !master.runInterpreter() )
+					master.setReadyMode();
 			}
 
 			// Run -> pause interpreting
-			else if (keepRunning && run) {
+			else if (isRunMode()) {
 				master.setPauseMode();
 
 				if (timer != null)
@@ -356,8 +343,8 @@ public class PanelRunListener implements Debugger {
 			}
 
 			// Pause -> re-run interpreting
-			else if (keepRunning && !run) {
-				setRunMode();
+			else if (isPauseMode()) {
+				master.setRunMode();
 				userReply();
 				
 				//Remove already passed breakpoints if in fast run mode
@@ -394,13 +381,12 @@ public class PanelRunListener implements Debugger {
 			JButton button = (JButton)e.getSource();
 			if( !button.isEnabled() )
 				return;
-			
-			DebugShell.out(State.LOG, Area.DEBUGGER, "Step: keep = " + keepRunning + ", run = " + run);
 
 			// Ready mode -> start interpreting in pause mode
 			if (isReadyMode()) {
-				if( master.runInterpreter() )
-					master.setPauseMode();
+				master.setPauseMode();
+				if( !master.runInterpreter() )
+					master.setReadyMode();
 			}
 
 			// Pause mode -> next step
@@ -441,15 +427,8 @@ public class PanelRunListener implements Debugger {
 			// Stop interpreter out of RUN or PAUSE mode
 			if (keepRunning) {
 				master.setReadyMode();
+				//master.getCompileManager().setNotRunning();
 				userReply();
-			}
-
-			// Get out of ERROR mode
-			else if (!keepRunning && run) {
-				master.setReadyMode();
-
-				//Unregister interpreter thread
-				master.getCompileManager().setNotRunning(true);
 			}
 		}
 

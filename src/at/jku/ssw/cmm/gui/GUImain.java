@@ -4,12 +4,6 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.LayoutManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.ImageFilter;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -18,17 +12,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileView;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
-
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
@@ -144,8 +127,6 @@ public class GUImain {
 	 */
 	private void start(boolean test) {
 
-		
-		
 		//Change look and feel of the GUI
 		/*try {
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -389,9 +370,9 @@ public class GUImain {
 		((JPanel) this.jFrame.getGlassPane()).validate();
 		((JPanel) this.jFrame.getGlassPane()).repaint();
 	}
-	
-public void setReadyMode() {
-		
+
+	public void setReadyMode() {
+
 		this.leftPanelControl.setReadyMode();
 		this.rightPanelControl.hideErrorPanel();
 	}
@@ -421,7 +402,6 @@ public void setReadyMode() {
 	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
 	 */
 	public void lockInput() {
-	
 		this.menuBarControl.lockAll();
 	}
 	

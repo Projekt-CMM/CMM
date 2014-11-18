@@ -314,7 +314,7 @@ public class GUIleftPanel {
 	public void setErrorMode(String msg, int line) {
 		
 		this.jStatePanel.setBackground(Color.RED);
-		this.jStateLabel.setText("! ! ! " + _("error") + " " + (line >= 0 ? _("in line") + " " + line : "") + " ! ! !");
+		this.jStateLabel.setText("! ! ! " + _("error") + " " + (line >= 0 ? _("in line ") + " " + line : " ") + "! ! !");
 	}
 
 	public void setRunMode() {
