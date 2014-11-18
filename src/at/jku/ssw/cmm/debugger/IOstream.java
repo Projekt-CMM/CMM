@@ -1,10 +1,9 @@
-package at.jku.ssw.cmm.gui.interpreter;
+package at.jku.ssw.cmm.debugger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 
-import at.jku.ssw.cmm.debugger.StdInOut;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 

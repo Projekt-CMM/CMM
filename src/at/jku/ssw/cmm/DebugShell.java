@@ -3,8 +3,9 @@ package at.jku.ssw.cmm;
 public class DebugShell {
 	
 	public static void out( State state, Area area, String msg ){
-		if( state == State.ERROR || state == State.WARNING )
-			System.out.println( State.getName(state) + Area.getName(area) + " " + msg );
+		if( state == State.STAT && area == Area.COMPILER )
+			return;
+		System.out.println( State.getName(state) + Area.getName(area) + " " + msg );
 	}
 	
 	public enum State{
@@ -36,7 +37,8 @@ public class DebugShell {
 		INTERPRETER,
 		DEBUGGER,
 		DEBUGMODE,
-		READVAR;
+		READVAR,
+		ERROR;
 		
 		protected static String getName( Area s ){
 			switch( s ){
@@ -54,6 +56,8 @@ public class DebugShell {
 				return "[DebugMode]";
 			case READVAR:
 				return "[UpdateVar]";
+			case ERROR:
+				return "[error]";
 			default:
 				return "[]";
 			}

@@ -6,7 +6,6 @@ import java.io.IOException;
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Error;
 import at.jku.ssw.cmm.compiler.Obj;
-import at.jku.ssw.cmm.compiler.Strings;
 import at.jku.ssw.cmm.debugger.DebuggerMock;
 import at.jku.ssw.cmm.interpreter.Interpreter;
 import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
@@ -54,8 +53,7 @@ public class CMM {
 			System.out.println(errCount + " errors detected");
 			Memory.initialize();
 
-			Strings strings = compiler.getStringStorage();
-			Interpreter interpreter = new Interpreter(new DebuggerMock(), new StdInoutMock(), strings );
+			Interpreter interpreter = new Interpreter(new DebuggerMock(), new StdInoutMock() );
 			Obj main = compiler.getSymbolTable().find("main");
 			try {
 				Memory.openStackFrame(main.ast.line, 0, main.size);
