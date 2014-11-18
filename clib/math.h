@@ -8,62 +8,62 @@
 
 //------------------- const declarations
 
-const float M_E     = 2.718281828;      //-- The base of natural logarithms (e).
-const float M_LOG2E = 1.442695040;      //-- The base-2 logarithm of e.
-const float M_LOG10E= 0.434294482;      //-- The base-10 logarithm of e.
-const float M_LN2   = 0.693147181;      //-- The natural logarithm of 2.
-const float M_LN10  = 2.302585093;      //-- The natural logarithm of 10.
+const float library M_E     = 2.718281828;      //-- The base of natural logarithms (e).
+const float library M_LOG2E = 1.442695040;      //-- The base-2 logarithm of e.
+const float library M_LOG10E= 0.434294482;      //-- The base-10 logarithm of e.
+const float library M_LN2   = 0.693147181;      //-- The natural logarithm of 2.
+const float library M_LN10  = 2.302585093;      //-- The natural logarithm of 10.
 
-const float M_PI    = 3.141592654;      //-- pi.
-const float M_PI_2  = 1.570796327;      //-- pi/2
-const float M_PI_4  = 0.785398164;      //-- pi/4
+const float library M_PI    = 3.141592654;      //-- pi.
+const float library M_PI_2  = 1.570796327;      //-- pi/2
+const float library M_PI_4  = 0.785398164;      //-- pi/4
  
-const float M_1_PI  = 0.318309886;      //-- 1/pi
-const float M_2_PI  = 0.636619772;      //-- 2/pi
+const float library M_1_PI  = 0.318309886;      //-- 1/pi
+const float library M_2_PI  = 0.636619772;      //-- 2/pi
 
-const float M_2_SQRTPI  = 1.128379167;  //-- 2/sqrt(pi)
+const float library M_2_SQRTPI  = 1.128379167;  //-- 2/sqrt(pi)
 
-const float M_SQRT2     = 1.414213562;  //-- sqrt(2)
-const float M_SQRT1_2   = 0.707106781;  //-- sqrt(1/2)
+const float library M_SQRT2     = 1.414213562;  //-- sqrt(2)
+const float library M_SQRT1_2   = 0.707106781;  //-- sqrt(1/2)
 
 // TODO
-const float MAXFLOAT    = 1.E+2000000;  //-- The maximum value of a non-infinite single- precision floating point number.
-const float HUGE        = 1.E+2000000;  //-- The maximum value of a single-precision floating-point number. 
-const float HUGE_VAL    = 1.E+2000000;  //-- positive infinity. 
+const float library MAXFLOAT    = 1.E+2000000;  //-- The maximum value of a non-infinite single- precision floating point number.
+const float library HUGE        = 1.E+2000000;  //-- The maximum value of a single-precision floating-point number. 
+const float library HUGE_VAL    = 1.E+2000000;  //-- positive infinity. 
 
 
 //------------------- Forward declarations
 
-float acos(float x);
-float asin(float x);
-float atan(float x);
-float atan2(float y, float x);
-float ceil(float x);
-float cos(float x);
-float cosh(float x);
-float exp(float x);
-int fak(int x);
-float fabs(float x);
-float floor(float x);
-float fmod(float x, float y);
-float frexp(float x);
-float ldexp(float x, int y);
-float log(float x);
-float log10(float x);
-float modf();  // TODO
-float pow(float x, int y);
-float sin(float x);
-float sinh(float x);
-float sqrt(float x);
-float tan(float x);
-float tanh(float x);
+float library acos(float x);
+float library asin(float x);
+float library atan(float x);
+float library atan2(float y, float x);
+float library ceil(float x);
+float library cos(float x);
+float library cosh(float x);
+float library exp(float x);
+int library fak(int x);
+float library fabs(float x);
+float library floor(float x);
+float library fmod(float x, float y);
+float library frexp(float x);
+float library ldexp(float x, int y);
+float library log(float x);
+float library log10(float x);
+float library modf();  // TODO
+float library pow(float x, int y);
+float library sin(float x);
+float library sinh(float x);
+float library sqrt(float x);
+float library tan(float x);
+float library tanh(float x);
 
 
 //------------------- declarations
 
 // Arkuskosinus \arccos x
 // https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
-float acos(float x) {
+float library acos(float x) {
     float result;
     result = M_PI_2-asin(x);
     result -= result*(int)((result)/M_PI);
@@ -76,7 +76,7 @@ float acos(float x) {
  *
  * https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
  */
-float asin(float x) {
+float library asin(float x) {
     float result;
     int n;
     result = 0;
@@ -90,7 +90,7 @@ float asin(float x) {
 
 // Arkustangens 	\arctan x
 // https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
-float atan(float x) {
+float library atan(float x) {
     float result;
     int n;
     result = 0;
@@ -104,7 +104,7 @@ float atan(float x) {
 
 // „Arkustangens“ mit zwei Argumenten 	\operatorname{atan2}(y, x)
 // https://en.wikipedia.org/wiki/Atan2#Definition_and_computation
-float atan2(float y, float x) {
+float library atan2(float y, float x) {
     return (2*atan(y/(sqrt(pow(x,2)+pow(y,2))+x)));
 }
 
@@ -112,7 +112,7 @@ float atan2(float y, float x) {
  *
  * @working yes
  */
-float ceil(float x) {
+float library ceil(float x) {
     int xAsInt = x;
     if(xAsInt >= x) {
         return (float)((int)x);
@@ -127,7 +127,7 @@ float ceil(float x) {
  *
  * https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
  */
-float cos(float x) {
+float library cos(float x) {
     x = fmod(x, M_PI);
     float result;
     int n;
@@ -142,7 +142,7 @@ float cos(float x) {
 
 // Kosinus Hyperbolicus 	\cosh x
 // https://de.wikipedia.org/wiki/Sinus_Hyperbolicus_und_Kosinus_Hyperbolicus#Reihenentwicklungen
-float cosh(float x) {
+float library cosh(float x) {
     float result;
     int n;
     result = 0;
@@ -156,7 +156,7 @@ float cosh(float x) {
 
 // Exponentialfunktion 	e^x
 // https://de.wikipedia.org/wiki/Taylorreihe#Exponentialfunktionen_und_Logarithmen
-float exp(float x) {
+float library exp(float x) {
     float result;
     int n;
     result = 0;
@@ -172,7 +172,7 @@ float exp(float x) {
  *
  * @working yes
  */
-int fak(int x) {
+int library fak(int x) {
     int result, n;
     result = 1;
     n = 1;
@@ -184,7 +184,7 @@ int fak(int x) {
 }
 
 // Betragsfunktion |x|
-float fabs(float x) {
+float library fabs(float x) {
     if(x >= 0) {
         return x;    
     } else {
@@ -193,7 +193,7 @@ float fabs(float x) {
 }
 
 // Ganzteilfunktion 	\lfloor x \rfloor
-float floor(float x) {
+float library floor(float x) {
     int xAsInt = x;
     if(xAsInt <= x) {
         return (float)((int)x);
@@ -206,32 +206,32 @@ float floor(float x) {
  *
  * @working yes
  */
-float fmod(float x, float y) {
+float library fmod(float x, float y) {
     x -= y*floor((x)/y);
     return x;
 }
 
 // Teilt eine Gleitkommazahl in Faktor und Potenz mit der Basis 2 auf 	
-float frexp(float x) {
+float library frexp(float x) {
     return 0.;
 }
 
 // Multipliziert den ersten Parameter mit 2 um den zweiten Parameter potenziert 	x 2^y
-float ldexp(float x, int y) {
+float library ldexp(float x, int y) {
     return pow(x*2,y);
 }
 
 // Natürlicher Logarithmus 	\ln x
-float log(float x) {
+float library log(float x) {
     return 0.;
 }
 
 // Logarithmus zur Basis 10 	\log_{10} x
-float log10(float x) {
+float library log10(float x) {
 }
 
 // Teilt eine Gleitkommazahl in zwei Zahlen auf, vor und nach dem Komma
-float modf() {
+float library modf() {
     return 0.; // TODO
 }
 
@@ -242,7 +242,7 @@ float modf() {
  * https://de.wikipedia.org/wiki/Bin%C3%A4re_Exponentiation
  * http://www.programminglogic.com/fast-exponentiation-algorithms/
  */
-float pow(float x, int y)  {
+float library pow(float x, int y)  {
     float result;
     result = 1;
 
@@ -262,7 +262,7 @@ float pow(float x, int y)  {
  *
  * https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
  */
-float sin(float x) {
+float library sin(float x) {
     x = fmod(x, M_PI);
     float result;
     int n;
@@ -277,7 +277,7 @@ float sin(float x) {
 
 // Sinus Hyperbolicus 	\sinh x
 // https://de.wikipedia.org/wiki/Sinus_Hyperbolicus_und_Kosinus_Hyperbolicus#Reihenentwicklungen
-float sinh(float x) {
+float library sinh(float x) {
     float result;
     int n;
     result = 0;
@@ -291,7 +291,7 @@ float sinh(float x) {
 
 // Quadratwurzel 	\sqrt x
 // https://de.wikipedia.org/wiki/Babylonisches_Wurzelziehen
-float sqrt(float x) {
+float library sqrt(float x) {
     float xn;
     int n;
     xn = (x+1)/2; // TODO
@@ -304,11 +304,11 @@ float sqrt(float x) {
 }
 
 // Tangens 	\tan x
-float tan(float x) {
+float library tan(float x) {
     return 0.;
 }
 
 // Tangens Hyperbolicus 	\tanh x
-float tanh(float x) {
+float library tanh(float x) {
     return 0.;
 }
