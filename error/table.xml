@@ -58,12 +58,8 @@
 	<error id="continue is not allowed here">
 		<file>cast.html</file>
 	</error>
-	<!-- illegalStateException -->
-	<error id="initiating error">
-		<file>cast.html</file>
-	</error>
 	<!-- unknown interpreter error -->
-	<error id="Interpreter error occurred">
+	<error id="unknown interpreter error occurred">
 		<file>cast.html</file>
 	</error>
 </errorTable>
