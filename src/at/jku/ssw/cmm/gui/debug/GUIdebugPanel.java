@@ -289,7 +289,9 @@ public class GUIdebugPanel {
 		/* --- end of statistics --- */
 
 		// Compile
+		System.out.println("[compiler] starting compilation");
 		at.jku.ssw.cmm.compiler.Error e = compileManager.compile(sourceCode);
+		System.out.println("[compiler] done");
 
 		// compiler returns errors
 		if (e != null) {

@@ -86,7 +86,7 @@ public class CMMrun extends Thread {
 			throw new IllegalStateException(e1);
 		}
 
-		System.err.println("[thread] interpreter thread started");
+		System.out.println("[thread] interpreter thread started");
 
 		// Run main function
 		try {
@@ -113,7 +113,7 @@ public class CMMrun extends Thread {
 		}
 
 		// Exit message
-		System.err.println("[thread] Interpreter thread exited");
+		System.out.println("[thread] Interpreter thread exited");
 
 		// Clean up thread data
 		reply.setNotRunning();

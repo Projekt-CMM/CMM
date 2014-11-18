@@ -121,8 +121,6 @@ public class CMMwrapper {
 	 * @return The compiler errors (null if no errors)
 	 */
 	public Error compile(String code) {
-		
-		System.err.println("[compiler] compiling");
 
 		// Compile current file
 		this.compiler.compile(code);
