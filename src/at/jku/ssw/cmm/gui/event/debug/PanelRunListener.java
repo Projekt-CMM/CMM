@@ -127,10 +127,10 @@ public class PanelRunListener implements Debugger {
 	/**
 	 * Sets the right panel to ERROR mode (see documentation)
 	 */
-	public void setErrorMode(){
+	/*public void setErrorMode(){
 		this.run = true;
 		this.keepRunning = false;
-	}
+	}*/
 	
 	/**
 	 * Sets the right panel to RUN mode (see documentation)
@@ -205,22 +205,10 @@ public class PanelRunListener implements Debugger {
 
 	/* --- debugger interpreter listeners --- */
 	@Override
-	public void abort(final String message, final Node node) {
-
-		// TODO is this thread safe???
-		if (this.timer != null)
-			timer.cancel();
-
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				master.getCompileManager().setNotRunning();
-				master.setErrorMode(message, node.line);
-			}
-		});
-	}
-
-	@Override
 	public boolean step(final Node arg0) {
+		
+		if( this.isReadyMode() || this.isErrorMode() )
+			return false;
 
 		DebugShell.out(State.LOG, Area.DEBUGGER, "" + arg0);
 		
@@ -442,7 +430,7 @@ public class PanelRunListener implements Debugger {
 			// Stop interpreter out of RUN or PAUSE mode
 			if (keepRunning) {
 				master.setReadyMode();
-				master.getCompileManager().setNotRunning();
+				//master.getCompileManager().setNotRunning();
 				userReply();
 			}
 		}

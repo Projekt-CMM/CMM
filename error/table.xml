@@ -24,4 +24,46 @@
 	<error id="no known cast from ([\w./\s]+)">
 		<file>cast.html</file>
 	</error>
+	<!-- no description for errors below -->
+	<error id="no input data">
+		<file>cast.html</file>
+	</error>
+	<error id="negative index chosen">
+		<file>cast.html</file>
+	</error>
+	<error id="Too high index chosen">
+		<file>cast.html</file>
+	</error>
+	<error id="Not supportet ([\w./]+) node kind">
+		<file>cast.html</file>
+	</error>
+	<error id="type not supported as ident in condition">
+		<file>cast.html</file>
+	</error>
+	<error id="printf doesn't contain the required amount of arguments">
+		<file>cast.html</file>
+	</error>
+	<error id="invalid printf parameter">
+		<file>cast.html</file>
+	</error>
+	<error id="StackOverFlow">
+		<file>cast.html</file>
+	</error>
+	<error id="Stack Underflow">
+		<file>cast.html</file>
+	</error>
+	<error id="break is not allowed here">
+		<file>cast.html</file>
+	</error>
+	<error id="continue is not allowed here">
+		<file>cast.html</file>
+	</error>
+	<!-- illegalStateException -->
+	<error id="initiating error">
+		<file>cast.html</file>
+	</error>
+	<!-- unknown interpreter error -->
+	<error id="Interpreter error occurred">
+		<file>cast.html</file>
+	</error>
 </errorTable>
