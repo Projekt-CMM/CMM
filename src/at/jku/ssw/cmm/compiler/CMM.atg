@@ -741,7 +741,7 @@ CondFact<out Node con>              (.  Node e = null; int kind; .)
 =                                   (.  con = null; .)
 ( IF (isExpr()) BinExpr<out con>
   [ Relop<out kind>
-  BinExpr<out e>                    (.  if(con == null || e == null)
+  BinExpr<out e>                    (.  if(con == null || e == null || con.type == null || e.type == null)
                                             SemErr("please check condition");
                                         else {
                                             if((!con.type.isPrimitive() && con.type != Tab.stringType) || (!e.type.isPrimitive() && e.type != Tab.stringType))
