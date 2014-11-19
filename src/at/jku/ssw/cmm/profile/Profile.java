@@ -41,6 +41,7 @@ public class Profile {
 	//General Profile Fields
 	private String name;			//OrdnerName = ProfilName
 	private int xp;					//Anzahl der XP des Benutzers
+	private String profileimage;	//Profile Image
 	
 	//Folder Names
 	private String profilePath;		//inizialer Profile Pfad
@@ -64,7 +65,8 @@ public class Profile {
 		XML_ID = "id",
 		XML_PACKAGE = "package",
 		XML_DATE ="date",
-		XML_TOKEN = "token";
+		XML_TOKEN = "token",
+		XML_PROFILEIMAGE = "profileimage";
 
 	private static Profile activeProfile;
 	
@@ -208,9 +210,14 @@ public class Profile {
 	    
 		List<Quest> questList = new ArrayList<>();
 		Quest quest = new Quest();
-		 
+			if(node.getNodeName().equals(Profile.XML_NAME))
+				 profile.setName(node.getTextContent());
+		
 			if(node.getNodeName().equals(Profile.XML_XP))
 				 profile.setXp(Integer.parseInt(node.getTextContent()));
+			
+			if(node.getNodeName().equals(Profile.XML_PROFILEIMAGE))
+        		profile.setProfileimage(node.getTextContent());
 			
 			if(node.getNodeName().equals(Profile.XML_STATE)){
 				String s = node.getAttributes().item(0).getTextContent();
@@ -283,8 +290,9 @@ public class Profile {
             Document doc = icBuilder.newDocument();
             Element mainRootElement = doc.createElementNS(path, Profile.XML_PROFILE);
             doc.appendChild(mainRootElement);
+            mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_NAME, profile.getName()));
             mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_XP, profile.getXp() + ""));
-            
+            mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_PROFILEIMAGE, profile.getProfileimage()));
             
             if(profile.getProfileQuests() != null)
             // append xp and state to root element
@@ -585,5 +593,21 @@ public class Profile {
 	public static void setActiveProfile(Profile activeProfile) {
 		Profile.activeProfile = activeProfile;
 	}
+
+	/**
+	 * @return the profileimage
+	 */
+	public String getProfileimage() {
+		return profileimage;
+	}
+
+	/**
+	 * @param profileimage the profileimage to set
+	 */
+	public void setProfileimage(String profileimage) {
+		this.profileimage = profileimage;
+	}
+	
+	
 	
 }

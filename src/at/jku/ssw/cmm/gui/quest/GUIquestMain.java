@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
@@ -40,6 +41,9 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 	private JFrame jFrame;
 	private JScrollPane editorScrollPane;
 	
+	//Split Pane
+	private JSplitPane sp;
+	
 	private final GUIquestPanel questPanel;
 	
 	public GUIquestMain(GUIquestPanel questPanel){
@@ -47,6 +51,9 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 	}
 	
 	public void start(){
+		
+		this.sp =  new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		
 		if( SwingUtilities.isEventDispatchThread() )
 			System.out.println("[EDT Analyse] Quest GUI runnung on EDT.");
 
@@ -63,7 +70,7 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 		JPanel jTreePanel = new JPanel(); 
 		jTreePanel.setBorder(new TitledBorder("Packages and Quest")); //Space between fields
         jTreePanel.setLayout(new BorderLayout());
-        jTreePanel.setMinimumSize(new Dimension(200, 200));
+        jTreePanel.setMinimumSize(new Dimension(150, 200));
         jTreePanel.setPreferredSize(new Dimension(200, 200));
 		
 		//Initialize Node
@@ -122,7 +129,10 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
         jPackageTree.putClientProperty("JTree.lineStyle", "Horizontal");
         jTreePanel.add(scrollTree, BorderLayout.CENTER );
         
-        jFrame.add(jTreePanel, BorderLayout.WEST);
+        
+        //TODO
+        sp.setLeftComponent(jTreePanel);
+        //jFrame.add(jTreePanel, BorderLayout.WEST);
         
         //Panel with Quests and Packages
       	jDescPane = new JPanel();
@@ -142,7 +152,9 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
       	editorScrollPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         jDescPane.add(editorScrollPane, BorderLayout.CENTER);
 
-        jFrame.add(jDescPane, BorderLayout.CENTER);
+        
+        sp.setRightComponent(jDescPane);
+        jFrame.add(sp, BorderLayout.CENTER);
      
         
         //Control Panel Bottom
@@ -260,16 +272,17 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
         		Quest.currentQuest = lastClickedQuest;
         		
 	        	jFrame.dispose();
-        		
+	        	        		
 	        	String path = lastClickedQuest.getInitPath() + Quest.sep + lastClickedQuest.getPackagePath() + Quest.sep + lastClickedQuest.getQuestPath();
 
 	        	if(lastClickedQuest.isDescription() && lastClickedQuest.isStyle()){
         			this.questPanel.setDescDoc(path + Quest.sep + Quest.FILE_DESCRIPTION, path + Quest.sep + Quest.FILE_STYLE);
+		        	this.questPanel.setjQuestTitle(Quest.currentQuest.getTitle());
 		      
         		//When the Quest only has a description
-		        }else if(lastClickedQuest.isDescription())
+		        }else if(lastClickedQuest.isDescription()){
 		        	this.questPanel.setDescDoc(path + Quest.sep + Quest.FILE_DESCRIPTION,"packages/default/style.css");
-        		
+		        	this.questPanel.setjQuestTitle(Quest.currentQuest.getTitle());		        }
         		//TODO
 	        	//this.questPanel.setjQuestInfo(LoadStatics.loadHTMLdoc(file, style));
         		}

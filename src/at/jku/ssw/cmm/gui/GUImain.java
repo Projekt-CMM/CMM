@@ -126,7 +126,7 @@ public class GUImain {
 	 *            TRUE if program shall exit after init (for GUI test)
 	 */
 	private void start(boolean test) {
-
+		
 		//Change look and feel of the GUI
 		/*try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -321,7 +321,7 @@ public class GUImain {
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		
 		//TODO
-		//chooser.setAccessory(new ProfilePreview(chooser));
+		chooser.setAccessory(new ProfilePreview(chooser));
 		
 		//Disable Renaming etc.
 		UIManager.put("FileChooser.readOnly", Boolean.TRUE);
@@ -335,6 +335,10 @@ public class GUImain {
 				String path = chooser.getSelectedFile().getAbsolutePath();
 				try {
 					Profile.setActiveProfile(Profile.ReadProfile(path));
+					GUIquestPanel questPanel = this.rightPanelControl.getQuestPanel();
+					
+					questPanel.RefreshProfile(Profile.getActiveProfile());
+					
 				} catch (XMLReadingException | IndexOutOfBoundsException e) {
 					
 					System.err.println(path + " Wrong Profile Choosen - no profile.xml found");
