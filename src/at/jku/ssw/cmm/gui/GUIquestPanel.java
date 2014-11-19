@@ -2,6 +2,7 @@ package at.jku.ssw.cmm.gui;
 
 import static at.jku.ssw.cmm.gettext.Language._;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -130,7 +131,7 @@ public class GUIquestPanel {
 	 */
 	private void loadImages(){
 		//Load Profile Image
-		this.jProfilePicture = LoadStatics.loadImage("profileTest/icon.png", true, 100, 100);
+		this.jProfilePicture = LoadStatics.loadImage("profileTest/icon.png", false, 120, 120);
 		
 		//Loading profile achievement tokens
 		this.jProfileAchievements = new JPanel();
@@ -224,21 +225,11 @@ public class GUIquestPanel {
 	 * @param quest
 	 * @param questPanel
 	 */
-	public void RefreshProfile(Profile profile, Quest quest, GUIquestPanel questPanel){
+	public void RefreshProfile(Profile profile){
 		//TODO
 		
-		questPanel.setjProfileName(new JLabel(_(profile.getName())));
-		questPanel.setjProfileLevel(new JLabel(_(profile.getLevel() + "")));
-		questPanel.setjQuestTitle(new JLabel(_(quest.getTitle())));
-		
-		String path = quest.getInitPath() + Quest.sep + quest.getPackagePath() + Quest.sep + quest.getQuestPath() + Quest.sep;
-		
-		//if(quest.isDescription())
-			// questPanel.setjQuestInfo(LoadStatics.loadHTMLdoc(path + Quest.FILE_DESCRIPTION, "packages/default/style.css"));
-		//else if(quest.isStyle() && quest.isDescription())
-			// questPanel.setjQuestInfo(LoadStatics.loadHTMLdoc(path + Quest.FILE_DESCRIPTION, path + Quest.FILE_STYLE));
-		
-		//questPanel.setjQuestInfo();
+		this.setjProfileName(profile.getName());
+		this.setjProfileLevel(profile.getLevel());
 	}
 
 	/**
@@ -252,6 +243,7 @@ public class GUIquestPanel {
 	 * @param jProfileTitle the jProfileTitle to set
 	 */
 	public void setjProfileTitle(JLabel jProfileTitle) {
+		this.jProfileTitle.repaint();
 		this.jProfileTitle = jProfileTitle;
 	}
 
@@ -266,6 +258,7 @@ public class GUIquestPanel {
 	 * @param jProfilePicture the jProfilePicture to set
 	 */
 	public void setjProfilePicture(JLabel jProfilePicture) {
+		this.jProfilePicture.repaint();
 		this.jProfilePicture = jProfilePicture;
 	}
 
@@ -279,8 +272,8 @@ public class GUIquestPanel {
 	/**
 	 * @param jProfileName the jProfileName to set
 	 */
-	public void setjProfileName(JLabel jProfileName) {
-		this.jProfileName = jProfileName;
+	public void setjProfileName(String profileName) {
+		this.jProfileName.setText("Profile: " + profileName);
 	}
 
 	/**
@@ -294,6 +287,7 @@ public class GUIquestPanel {
 	 * @param jProfileAchievements the jProfileAchievements to set
 	 */
 	public void setjProfileAchievements(JPanel jProfileAchievements) {
+		this.jProfileAchievements.repaint();
 		this.jProfileAchievements = jProfileAchievements;
 	}
 
@@ -305,10 +299,10 @@ public class GUIquestPanel {
 	}
 
 	/**
-	 * @param jProfileLevel the jProfileLevel to set
+	 * @param i the jProfileLevel to set
 	 */
-	public void setjProfileLevel(JLabel jProfileLevel) {
-		this.jProfileLevel = jProfileLevel;
+	public void setjProfileLevel(int i) {
+		this.jProfileLevel.setText("Level: " + i);
 	}
 
 	/**
@@ -322,6 +316,7 @@ public class GUIquestPanel {
 	 * @param jProfileXP the jProfileXP to set
 	 */
 	public void setjProfileXP(JProgressBar jProfileXP) {
+		this.jProfileXP.repaint();
 		this.jProfileXP = jProfileXP;
 	}
 
@@ -335,8 +330,9 @@ public class GUIquestPanel {
 	/**
 	 * @param jQuestTitle the jQuestTitle to set
 	 */
-	public void setjQuestTitle(JLabel jQuestTitle) {
-		this.jQuestTitle = jQuestTitle;
+	public void setjQuestTitle(String questTitle) {
+		this.jQuestTitle.setText(questTitle);
+
 	}
 
 	public void setDescDoc( String html, String css ){

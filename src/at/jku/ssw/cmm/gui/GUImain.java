@@ -207,6 +207,11 @@ public class GUImain implements GUImainMod, PopupInterface {
 	private void start(boolean test) {
 
 		
+		/*try { 
+		    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}*/
 		
 		//Change look and feel of the GUI
 		/*try {
@@ -576,7 +581,7 @@ public class GUImain implements GUImainMod, PopupInterface {
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		
 		//TODO
-		//chooser.setAccessory(new ProfilePreview(chooser));
+		chooser.setAccessory(new ProfilePreview(chooser));
 		
 		//Disable Renaming etc.
 		UIManager.put("FileChooser.readOnly", Boolean.TRUE);
@@ -590,6 +595,10 @@ public class GUImain implements GUImainMod, PopupInterface {
 				String path = chooser.getSelectedFile().getAbsolutePath();
 				try {
 					Profile.setActiveProfile(Profile.ReadProfile(path));
+					GUIquestPanel questPanel = this.rightPanelControl.getQuestPanel();
+					
+					questPanel.RefreshProfile(Profile.getActiveProfile());
+					
 				} catch (XMLReadingException | IndexOutOfBoundsException e) {
 					
 					System.err.println(path + " Wrong Profile Choosen - no profile.xml found");
