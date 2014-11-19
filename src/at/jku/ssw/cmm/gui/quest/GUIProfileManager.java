@@ -38,7 +38,7 @@ public class GUIProfileManager {
 				JFileChooser fileChooser = new JFileChooser();
 
 				fileChooser.setDialogTitle("Wahle einen Ordner zum Speichern aus:");				
-				
+
 				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				 
 				int userSelection = fileChooser.showSaveDialog(jFrame);
