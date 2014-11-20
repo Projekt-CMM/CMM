@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.profile.settings;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.BorderLayout;
 
 import javax.swing.JButton;
@@ -45,11 +47,11 @@ private static final long serialVersionUID = 1L;
 		
 		JPanel buttonPanel = new JPanel();
 		
-		this.jButtonCancel = new JButton("Cancel");
+		this.jButtonCancel = new JButton(_("Cancel"));
 		buttonPanel.add(this.jButtonCancel);
 		this.jButtonCancel.addMouseListener(this.listener.cancelButtonListener);
 		
-		this.jButtonSave = new JButton("Save");
+		this.jButtonSave = new JButton(_("Save"));
 		buttonPanel.add(this.jButtonSave);
 		this.jButtonSave.addMouseListener(this.listener.saveButtonListener);
 		

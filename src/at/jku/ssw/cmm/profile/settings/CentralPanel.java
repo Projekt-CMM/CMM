@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.profile.settings;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -36,7 +38,7 @@ public class CentralPanel extends JPanel {
 	private void init(){
 		
 		this.setLayout(new BorderLayout());
-		this.setBorder(new TitledBorder("Achievements"));
+		this.setBorder(new TitledBorder(_("Achievements")));
 		
 		this.achievements = new JList<>(initList());
 		this.achievements.setCellRenderer(new TokenListRenderer((DefaultListModel<JPanel>)this.achievements.getModel()));

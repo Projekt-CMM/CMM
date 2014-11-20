@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.profile.settings;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -54,11 +56,12 @@ public class UpperPanel extends JPanel {
 		JLabel profilePicture;
 		
 		if( this.profile == null )
+			//TODO better default image
 			profilePicture = LoadStatics.loadImage("images/prodef.png", true, 128, 128);
 		else
 			profilePicture = LoadStatics.loadImage(profile.getInitPath() + File.separator + "icon.png", true, 128, 128);
 		
-		profilePicture.setToolTipText("<html><b>click to change image</b><br>click here and select your<br>profile image</html>");
+		profilePicture.setToolTipText("<html><b>" + _("click to change image") + "</b><br>" + _("click here and select your<br>profile image") + "</html>");
 		profilePicture.addMouseListener(listener.profileImageListener);
 		this.add(profilePicture, BorderLayout.LINE_START);
 		
@@ -68,11 +71,11 @@ public class UpperPanel extends JPanel {
 		c.anchor = GridBagConstraints.LINE_START;
 		c.insets = new Insets(5,5,5,5);
 			
-		inside.add(new JLabel("Name:"), setLayoutPosition(0, 0, 1, 1));
+		inside.add(new JLabel(_("Name:")), setLayoutPosition(0, 0, 1, 1));
 		this.jTextField = new JTextField(profile == null ? "" : profile.getName());
-		this.jTextField.setToolTipText("<html><b>profile name</b><br>you can edit your name here</html>");
+		this.jTextField.setToolTipText("<html><b>" + _("profile name") + "</b><br>" + _("you can edit your name here") + "</html>");
 		inside.add(this.jTextField, setLayoutPosition(1, 0, 1, 1));
-		inside.add(new JLabel("Level: " + (profile == null ? "0" : profile.getLevel()) ), setLayoutPosition(0, 1, 2, 1));
+		inside.add(new JLabel(_("Level") + ": " + (profile == null ? "0" : profile.getLevel()) ), setLayoutPosition(0, 1, 2, 1));
 		
 		inside.add(new JLabel("Stat 1:"), setLayoutPosition(0, 2, 1, 1));
 		inside.add(new JLabel("Stat 2:"), setLayoutPosition(1, 2, 1, 1));
@@ -110,6 +113,11 @@ public class UpperPanel extends JPanel {
 		return c;
 	}
 
+	/**
+	 * @return The (new) name of the profile which is currently edited/created.
+	 * This is not the name which is saved in the profile.xml file, this is the
+	 * text from the JTextField "name"
+	 */
 	public String getProfileName() {
 
 		return this.jTextField.getText();
