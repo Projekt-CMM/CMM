@@ -73,4 +73,9 @@
     <error id="Float overflow">
 		<file>float_overflow.html</file>
 	</error>
+	
+	<!-- memory handling errors -->
+	<error id="variable is not initialized">
+		<file>variable_uninitialized.html</file>
+	</error>
 </errorTable>

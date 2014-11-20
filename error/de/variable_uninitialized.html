@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<body>
+	<h1> Zugriff auf eine uninitialisierte Variable </h1>
+	<h2> Was ist passiert? </h2>
+	<p>
+		Es wurde versucht lesend auf eine Variable zuzugreifen, welche noch nicht initialisiert wurde.
+	</p>
+	<p id="code">
+			<strong class="key">int</strong> a, b;<br/>
+			a = <strong class="error">b</strong>;
+	</p>
+	<h2> Fehlersuche </h2>
+	<p>
+		Alle Variablen müssen initialisiert werden, bevor von ihnen gelesen wird.
+	</p>
+</body>
