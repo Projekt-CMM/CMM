@@ -100,11 +100,17 @@ public class GUIquestPanel {
 	 * Initializes lots of Swing objects for the profile and quest info
 	 */
 	private void initObejcts(){
-		
+	
+		if(Profile.getActiveProfile() != null){
 		//Labels
-		this.jProfileTitle = new JLabel(_("Profile Information"));
-		this.jProfileName = new JLabel(_("Name") + ": John Doe");
-		this.jProfileLevel = new JLabel(_("Level") + ": 3");
+			this.jProfileTitle = new JLabel(_("Profile Information"));
+			this.jProfileName = new JLabel(_("Name") + ": " + Profile.getActiveProfile().getName());
+			this.jProfileLevel = new JLabel(_("Level") + ": " + Profile.getActiveProfile().getLevel());
+		}else{
+			this.jProfileTitle = new JLabel(_("No Profile choosen"));
+			this.jProfileName = new JLabel();
+			this.jProfileLevel = new JLabel();
+		}
 		
 		this.jQuestTitle = new JLabel(_("Current Quest"));
 		
@@ -115,11 +121,16 @@ public class GUIquestPanel {
 		this.jQuestSelectButton.addMouseListener(listener.questHandler);
 		
 		//Level progress scroll bar
-		this.jProfileLevel = new JLabel(_("Level") + " 3");
-		this.jProfileXP = new JProgressBar(0, 100);
-		this.jProfileXP.setValue(35);
-		this.jProfileXP.setStringPainted(true);
-		this.jProfileXP.setString("2560/7860 XP");
+		if(Profile.getActiveProfile() != null)
+			this.jProfileLevel = new JLabel(_("Level") + ": " + Profile.getActiveProfile().getLevel());
+		else
+			this.jProfileLevel = new JLabel();
+
+		
+		//this.jProfileXP = new JProgressBar(0, 100);
+		//this.jProfileXP.setValue(35);
+		//this.jProfileXP.setStringPainted(true);
+		//this.jProfileXP.setString("2560/7860 XP");
 		
 		//Quest info panel
 		//this.jQuestInfo = LoadStatics.loadHTMLdoc("packages/default/Hallo Welt/index.html", "profileTest/doxygen.css");
@@ -169,6 +180,7 @@ public class GUIquestPanel {
 		c.anchor = GridBagConstraints.LINE_START;
 		c.insets = new Insets(5,5,5,5);
 		
+		
 		cp.add(this.jProfileTitle, this.setLayoutPosition(c, 0, 0, 1, 1));
 		cp.add(this.jProfileSelectButton, this.setLayoutPosition(c, 1, 0, 1, 1));
 		
@@ -177,7 +189,7 @@ public class GUIquestPanel {
 		cp.add(this.jProfileName, this.setLayoutPosition(c, 1, 1, 1, 1));
 		cp.add(this.jProfileAchievements, this.setLayoutPosition(c, 1, 2, 1, 1));
 		cp.add(this.jProfileLevel, this.setLayoutPosition(c, 1, 3, 1, 1));
-		cp.add(this.jProfileXP, this.setLayoutPosition(c, 1, 4, 1, 1));
+		//cp.add(this.jProfileXP, this.setLayoutPosition(c, 1, 4, 1, 1));
 		
 		cp.add(this.jQuestTitle, this.setLayoutPosition(c, 0, 5, 1, 1));
 		cp.add(this.jQuestSelectButton, this.setLayoutPosition(c, 1, 5, 1, 1));
@@ -193,7 +205,7 @@ public class GUIquestPanel {
       	c.weightx = 1;
       	c.ipadx = 200;
       	c.ipady = 500;
-        cp.add(scroll, this.setLayoutPosition(c, 0, 6, 2, 1));
+      	cp.add(scroll, this.setLayoutPosition(c, 0, 6, 2, 1));
 	}
 	
 	/**
@@ -326,7 +338,7 @@ public class GUIquestPanel {
 		return jQuestTitle;
 	}
 
-	/**
+	/**x
 	 * @param jQuestTitle the jQuestTitle to set
 	 */
 	public void setjQuestTitle(String questTitle) {
@@ -339,7 +351,7 @@ public class GUIquestPanel {
 		try {
 			this.jQuestInfo.setPage(LoadStatics.getHTMLUrl(html));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		this.jQuestInfo.setDocument(LoadStatics.readStyleSheet(css));

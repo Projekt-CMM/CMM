@@ -146,6 +146,7 @@ public class GUImainSettings {
 	 * @param p The new path of the c-- file. Loading null or "*" means
 	 * that no working directory is registered.
 	 */
+	//TODO profile
 	public void setPath( String p ){
 		if( p == "#" || p == null )
 			this.path = null;
@@ -159,6 +160,7 @@ public class GUImainSettings {
 	 * 
 	 * @return The path of the current c-- file.
 	 */
+	//TODO profile
 	public String getPath(){
 		return this.path;
 	}
@@ -169,6 +171,7 @@ public class GUImainSettings {
 	 * @return TRUE if the config contains a working path for the current c-- file
 	 * 		<br> FALSE if the working path is null or "*"
 	 */
+	//TODO profile
 	public boolean hasPath(){
 		if( this.path == null )
 			return false;

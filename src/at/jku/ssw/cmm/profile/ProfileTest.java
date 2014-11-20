@@ -18,7 +18,7 @@ public class ProfileTest {
 		} catch (XMLReadingException e) {
 			e.printStackTrace();
 		}
-		List<Quest> qlist = Profile.ReadPackageQuests(profile, "packages", "default").getQuestList();
+		List<Quest> qlist = Profile.ReadPackageQuests(profile, "packages", "1 Erste Schritte").getQuestList();
 		
 		//System.out.println(profile.getXp() + " " +  profile.getProfileQuests().get(0).getTitle() + " " + profile.getProfileQuests().get(0).getPackagePath() + " " +profile.getProfileQuests().get(0).getStringDate());
 		
@@ -31,10 +31,11 @@ public class ProfileTest {
 		profile.setXp(200);
 		profile.setInitPath("profileTest");
 		
+		System.out.println("Quest: " + qlist.get(0).getTitle());
 		
 		try {
 			Profile.writeProfile(profile);
-			profile = Profile.changeQuestState(profile, qlist.get(0), Quest.STATE_INPROGRESS);
+			profile = Profile.changeQuestState(profile, qlist.get(0), Quest.STATE_FINISHED);
 		} catch (XMLWriteException e) {
 			e.printStackTrace();
 		}

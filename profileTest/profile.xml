@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <profile xmlns="profileTest/profile.xml">
-<name>hallo</name>
+<name>testname</name>
 <xp>200</xp>
-<profileimage>avatar.png</profileimage>
 <state id="finished">
-	<quest>1. TestQuest</quest>
-	<package>2 Weiteres Package</package>
-	<date>14-10-2014:09:11:775</date>
-	<token>Icon_Craft.png</token>
+<quest>1. Hello World</quest>
+<package>1 Erste Schritte</package>
+<date>20-11-2014:19:51:788</date>
+<token>Icon_Craft.png</token>
+</state>
+<state id="finished">
+<quest>2. Int Variablen</quest>
+<package>1 Erste Schritte</package>
+<date>20-11-2014:19:49:312</date>
+<token>Icon_Craft.png</token>
 </state>
 </profile>
