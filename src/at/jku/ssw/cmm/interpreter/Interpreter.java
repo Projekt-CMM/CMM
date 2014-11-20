@@ -264,75 +264,79 @@ public final class Interpreter implements DebuggerRequest {
 	 * @throws RunTimeException 
 	 */
 	int IntExpr(Node p) throws ReturnException, AbortException, RunTimeException { //TODO
-		switch (p.kind) {
-		case Node.INTCON:
-			return p.val; // Returns a Constante
-			
-		/*
-		 * For calculation
-		 */
-		case Node.PLUS:
-			if(p.right == null)
-				return IntExpr(p.left);
-			else
-				return IntExpr(p.left) + IntExpr(p.right);
-		case Node.MINUS:
-			if(p.right == null) {
-				return 0 - IntExpr(p.left);
-			} else {
-				return IntExpr(p.left) - IntExpr(p.right);
+		try{
+			switch (p.kind) {
+			case Node.INTCON:
+				return p.val; // Returns a Constante
+				
+			/*
+			 * For calculation
+			 */
+			case Node.PLUS:
+				if(p.right == null)
+					return IntExpr(p.left);
+				else
+					return SaveIntOperator.add(IntExpr(p.left),IntExpr(p.right));
+			case Node.MINUS:
+				if(p.right == null) {
+					return SaveIntOperator.subtract(0, IntExpr(p.left));
+				} else {
+					return SaveIntOperator.subtract(IntExpr(p.left), IntExpr(p.right));
+				}
+			case Node.TIMES:
+				return SaveIntOperator.multiply(IntExpr(p.left), IntExpr(p.right));
+			case Node.DIV:
+				if (IntExpr(p.right) != 0)
+					return SaveIntOperator.divide(IntExpr(p.left), IntExpr(p.right));
+				throw new RunTimeException("Divided by 0", p);
+			case Node.REM:
+				if (IntExpr(p.right) != 0)
+					return IntExpr(p.left) % IntExpr(p.right);
+				throw new RunTimeException("Divided by 0", p);
+			/*
+			 * Bit Operators
+			 */
+			case Node.BITAND:
+				return IntExpr(p.left) & IntExpr(p.right);
+			case Node.BITNEQ:
+				return ~IntExpr(p.left);
+			case Node.BITOR:
+				return IntExpr(p.left) | IntExpr(p.right);
+			case Node.BITXOR:
+				return IntExpr(p.left) ^ IntExpr(p.right);
+			case Node.SHIFTLEFT:
+				return IntExpr(p.left) << IntExpr(p.right);
+			case Node.SHIFTRIGHT:
+				return IntExpr(p.left) >> IntExpr(p.right);
+				
+			case Node.CALL:								//Opens new Integer c-- Function
+				Call(p);
+				return Memory.getIntReturnValue();		//getting return Value						
+				
+			case Node.F2I:								//casting float to Integer
+				return (int) FloatExpr(p.left);
+			case Node.C2I:								//casting char to Integer
+				return (int) CharExpr(p.left);
+			case Node.B2I:								//casting char to Integer
+				boolean retBoolExpr = BoolExpr(p.left);
+				if(retBoolExpr)
+					return 0x01;
+				else
+					return 0x00;
+			case Node.IDENT:							//more at @Adr
+				debuggerCurrentAddress = IdentAdr(p.obj);
+				return Memory.loadIntSave(IdentAdr(p.obj), p);
+			case Node.DOT:								//more at @Adr
+				debuggerCurrentAddress = Adr(p);
+				return Memory.loadIntSave(Adr(p), p);			
+			case Node.INDEX:							//more at @Adr
+				debuggerCurrentAddress = Adr(p);
+				return Memory.loadIntSave(Adr(p), p);
+			default:
+				throw new RunTimeException("Not supportet intexpr node kind", p);
 			}
-		case Node.TIMES:
-			return IntExpr(p.left) * IntExpr(p.right);
-		case Node.DIV:
-			if (IntExpr(p.right) != 0)
-				return IntExpr(p.left) / IntExpr(p.right);
-			throw new RunTimeException("Divided by 0", p);
-		case Node.REM:
-			if (IntExpr(p.right) != 0)
-				return IntExpr(p.left) % IntExpr(p.right);
-			throw new RunTimeException("Divided by 0", p);
-		/*
-		 * Bit Operators
-		 */
-		case Node.BITAND:
-			return IntExpr(p.left) & IntExpr(p.right);
-		case Node.BITNEQ:
-			return ~IntExpr(p.left);
-		case Node.BITOR:
-			return IntExpr(p.left) | IntExpr(p.right);
-		case Node.BITXOR:
-			return IntExpr(p.left) ^ IntExpr(p.right);
-		case Node.SHIFTLEFT:
-			return IntExpr(p.left) << IntExpr(p.right);
-		case Node.SHIFTRIGHT:
-			return IntExpr(p.left) >> IntExpr(p.right);
-			
-		case Node.CALL:								//Opens new Integer c-- Function
-			Call(p);
-			return Memory.getIntReturnValue();		//getting return Value						
-			
-		case Node.F2I:								//casting float to Integer
-			return (int) FloatExpr(p.left);
-		case Node.C2I:								//casting char to Integer
-			return (int) CharExpr(p.left);
-		case Node.B2I:								//casting char to Integer
-			boolean retBoolExpr = BoolExpr(p.left);
-			if(retBoolExpr)
-				return 0x01;
-			else
-				return 0x00;
-		case Node.IDENT:							//more at @Adr
-			debuggerCurrentAddress = IdentAdr(p.obj);
-			return Memory.loadIntSave(IdentAdr(p.obj), p);
-		case Node.DOT:								//more at @Adr
-			debuggerCurrentAddress = Adr(p);
-			return Memory.loadIntSave(Adr(p), p);			
-		case Node.INDEX:							//more at @Adr
-			debuggerCurrentAddress = Adr(p);
-			return Memory.loadIntSave(Adr(p), p);
-		default:
-			throw new RunTimeException("Not supportet intexpr node kind", p);
+		} catch(ArithmeticException e) {
+			throw new RunTimeException(e.getMessage(), p);
 		}
 	}
 
@@ -342,54 +346,58 @@ public final class Interpreter implements DebuggerRequest {
 	 * @throws RunTimeException 
 	 */
 	float FloatExpr(Node p) throws AbortException, ReturnException, RunTimeException { //TODO
-		switch (p.kind) {
-		case Node.FLOATCON:						//returning the Constant value
-			return p.fVal;
-			
-		/*
-		 * For calculation
-		 */
-		case Node.PLUS:
-		    if(p.right == null)
-		        return FloatExpr(p.left);
-		    else
-			    return FloatExpr(p.left) + FloatExpr(p.right);
-		case Node.MINUS:
-			if(p.right == null) {
-				return 0 - FloatExpr(p.left);
-			} else {
-				return FloatExpr(p.left) - FloatExpr(p.right);
+		try {
+			switch (p.kind) {
+			case Node.FLOATCON:						//returning the Constant value
+				return p.fVal;
+				
+			/*
+			 * For calculation
+			 */
+			case Node.PLUS:
+			    if(p.right == null)
+			        return FloatExpr(p.left);
+			    else
+				    return SaveFloatOperator.add(FloatExpr(p.left), FloatExpr(p.right));
+			case Node.MINUS:
+				if(p.right == null) {
+					return SaveFloatOperator.subtract(0, FloatExpr(p.left));
+				} else {
+					return SaveFloatOperator.subtract(FloatExpr(p.left), FloatExpr(p.right));
+				}
+			case Node.TIMES:
+				return SaveFloatOperator.multiply(FloatExpr(p.left), FloatExpr(p.right));
+			case Node.DIV:
+				if (FloatExpr(p.right) != 0)
+					return SaveFloatOperator.divide(FloatExpr(p.left), FloatExpr(p.right));
+				throw new RunTimeException("Divided by 0", p);
+			case Node.REM:
+				if (FloatExpr(p.right) != 0)
+					return FloatExpr(p.left) % FloatExpr(p.right);
+				throw new RunTimeException("Divided by 0", p);
+	
+				
+			case Node.I2F:							//Casts an Integer into an Float
+				return (float) IntExpr(p.left);		
+			case Node.CALL:							//Opens a new C-- Function and returns the Return Value
+				Call(p);
+				return Memory.getFloatReturnValue();						
+			case Node.IDENT:						//more at @Adr
+				debuggerCurrentAddress = IdentAdr(p.obj);
+				return Memory.loadFloatSave(IdentAdr(p.obj),p);	
+			case Node.DOT:							//more at @Adr
+				debuggerCurrentAddress = Adr(p);
+				return Memory.loadFloatSave(Adr(p),p);
+			case Node.INDEX:						//more at @Adr
+				debuggerCurrentAddress = Adr(p);
+				return Memory.loadFloatSave(Adr(p),p);
+	
+			default:
+				throw new RunTimeException("Not supportet floatexpr node kind", p);
+	
 			}
-		case Node.TIMES:
-			return FloatExpr(p.left) * FloatExpr(p.right);
-		case Node.DIV:
-			if (FloatExpr(p.right) != 0)
-				return FloatExpr(p.left) / FloatExpr(p.right);
-			throw new RunTimeException("Divided by 0", p);
-		case Node.REM:
-			if (FloatExpr(p.right) != 0)
-				return FloatExpr(p.left) % FloatExpr(p.right);
-			throw new RunTimeException("Divided by 0", p);
-
-			
-		case Node.I2F:							//Casts an Integer into an Float
-			return (float) IntExpr(p.left);		
-		case Node.CALL:							//Opens a new C-- Function and returns the Return Value
-			Call(p);
-			return Memory.getFloatReturnValue();						
-		case Node.IDENT:						//more at @Adr
-			debuggerCurrentAddress = IdentAdr(p.obj);
-			return Memory.loadFloatSave(IdentAdr(p.obj),p);	
-		case Node.DOT:							//more at @Adr
-			debuggerCurrentAddress = Adr(p);
-			return Memory.loadFloatSave(Adr(p),p);
-		case Node.INDEX:						//more at @Adr
-			debuggerCurrentAddress = Adr(p);
-			return Memory.loadFloatSave(Adr(p),p);
-
-		default:
-			throw new RunTimeException("Not supportet floatexpr node kind", p);
-
+		} catch(ArithmeticException e) {
+			throw new RunTimeException(e.getMessage(), p);
 		}
 	}
 

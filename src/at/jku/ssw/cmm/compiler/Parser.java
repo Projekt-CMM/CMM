@@ -316,11 +316,10 @@ public class Parser {
 			if(la.val.equals(struct.name)) {
 			   SemErr("it is not allowed to declare the same struct in a struct");
 			   break;
-			}
+			} 
 			e = VarDecl();
 			if(e!=null) 
-			   SemErr("variable assigment is not allowed in struct");
-			
+			   SemErr("variable assigment is not allowed in struct"); 
 		}
 		Expect(39);
 		type.fields = tab.curScope.locals;
