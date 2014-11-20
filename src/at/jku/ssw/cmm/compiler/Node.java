@@ -62,28 +62,26 @@ public final class Node {
 		BITXOR		= 41,	// ^
 		SHIFTLEFT 	= 42,	// <<
 		SHIFTRIGHT 	= 43,	// >>
-		//INC			= 44,	// ++	// Todo x++
-		//DEC			= 45,	// --	// Todo x--
-		I2F      	= 46,   // conversion from int to float
-		F2I      	= 47,   // conversion from float to int
-		I2C      	= 48,   // conversion from int to char
-		C2I      	= 49,   // conversion from char to int
-		A2S      	= 50,   // conversion from char-array to string
-		C2S			= 51,	// conversion from char to string
-		B2I			= 52,	// conversion from bool to int
-		I2B			= 53,	// conversion from int to bool
+		I2F      	= 44,   // conversion from int to float
+		F2I      	= 45,   // conversion from float to int
+		I2C      	= 46,   // conversion from int to char
+		C2I      	= 47,   // conversion from char to int
+		A2S      	= 48,   // conversion from char-array to string
+		C2S			= 49,	// conversion from char to string
+		B2I			= 50,	// conversion from bool to int
+		I2B			= 51,	// conversion from int to bool
 		//------------ conditionals
-		EQL      	= 54,  	// ==
-		NEQ      	= 55,  	// !=
-		LSS      	= 56,  	// <
-		LEQ      	= 57,  	// <=
-		GTR      	= 58,  	// >
-		GEQ      	= 59,  	// >=
-		NOT      	= 60,  	// !
-		OR       	= 61,  	// ||
-		AND      	= 62,  	// &&
+		EQL      	= 52,  	// ==
+		NEQ      	= 53,  	// !=
+		LSS      	= 54,  	// <
+		LEQ      	= 55,  	// <=
+		GTR      	= 56,  	// >
+		GEQ      	= 57,  	// >=
+		NOT      	= 58,  	// !
+		OR       	= 59,  	// ||
+		AND      	= 60,  	// &&
 		//------------ special nodes
-		NOP			= 63;	// No operation
+		NOP			= 61;	// No operation
 
 	public int kind;        // STATSEQ, ASSIGN, ...
 	public Struct type;     // only used in expressions
@@ -150,8 +148,6 @@ public final class Node {
 		this.type = Tab.stringType;
 		//this.val = ch;	// TODO
 	}
-	
-	// TODO string
 
 	//----------------------- for dumping ASTs -----------------------------------
 
@@ -162,7 +158,7 @@ public final class Node {
 		"SWITCH", "CASE", "IDENT", "BOOLCON", "INTCON", "FLOATCON", "CHARCON", "STRINGCON",
 		"DOT", "INDEX", "REF",
 		"PLUS", "MINUS", "TIMES", "DIV", "REM", "BITNEQ", "BITAND", "BITOR", "BITXOR", 
-		"SHIFTLEFT", "SHIFTRIGHT", "INC", "DEC", "I2F", "F2I", "I2C", "C2I", "A2S", "C2S", "B2I", "I2B",
+		"SHIFTLEFT", "SHIFTRIGHT", "I2F", "F2I", "I2C", "C2I", "A2S", "C2S", "B2I", "I2B",
 		"EQL", "NEQ", "LSS", "LEQ", "GTR", "GEQ", "NOT", "OR", "AND",
 		"NOP"
 	};

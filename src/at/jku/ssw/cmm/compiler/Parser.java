@@ -309,14 +309,18 @@ public class Parser {
 		Expect(37);
 		Struct type = new Struct(Struct.STRUCT); 
 		Expect(1);
-		tab.insert(Obj.TYPE, t.val, type, line); 
+		Obj struct = tab.insert(Obj.TYPE, t.val, type, line); 
 		Expect(38);
 		tab.openScope(); 
 		while (la.kind == 1) {
+			if(la.val.equals(struct.name)) {
+			   SemErr("it is not allowed to declare the same struct in a struct");
+			   break;
+			}
 			e = VarDecl();
 			if(e!=null) 
 			   SemErr("variable assigment is not allowed in struct");
-			                                        /*if(tab)*/
+			
 		}
 		Expect(39);
 		type.fields = tab.curScope.locals;

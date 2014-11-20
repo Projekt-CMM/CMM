@@ -148,6 +148,21 @@ public class Tab {
 		parser.SemErr(name + " not found in current scope");
 		return noObj;
 	}
+	
+	/**
+	 * Check if type is declared in current scope
+	 *  
+	 * @param checkType type of object
+	 * 
+	 * @return return true if found.
+	 */
+	public boolean lookupType(Struct checkType) {
+		for (Obj p = curScope.locals; p != null ; p = p.next) {
+			if (p.type == checkType)
+				return true;
+		}
+		return false;
+	}
 
 	//----------------- handling of forward declaration  -----------------
 
@@ -252,8 +267,9 @@ public class Tab {
 					return '\'';
 				case '\\':
 					return '\\';
-			default:
-					return 	'\0';	// TODO
+				default:
+					parser.SemErr("unknow character");
+					return 	'\0';
 			}
 		}
 	}
