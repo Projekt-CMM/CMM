@@ -17,23 +17,19 @@ public class JTableButtonRenderer implements TableCellRenderer {
 	  
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
 	{
+		Component c = (Component)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		
 		if(value instanceof Component)
 			return (Component)value;
-		
-		else if( table.getValueAt(row, 0).toString().endsWith(")") ){
-			Component c = (Component)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		else if( table.getValueAt(row, 0).toString().endsWith(")") )
 			c.setBackground(Color.CYAN);
-			return c;
-		}
-		
-		else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.CHANGE_TAG) ){
-			Component c = (Component)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.CHANGE_TAG) )
 			c.setBackground(Color.YELLOW);
-			return c;
-		}
+		else if ( table.getValueAt(row, 2).toString().equals("undef") )
+    		c.setBackground(new Color(240, 240, 240));
+		else
+			c.setBackground(table.getBackground());
 		
-		Component c = (Component)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-		c.setBackground(table.getBackground());
 		return c;
 	}
 }
