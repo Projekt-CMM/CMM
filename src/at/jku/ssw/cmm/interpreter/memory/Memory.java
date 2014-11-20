@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+import at.jku.ssw.cmm.compiler.Node;
+import at.jku.ssw.cmm.interpreter.exceptions.RunTimeException;
 import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
 import at.jku.ssw.cmm.interpreter.exceptions.StackUnderflowException;
 import at.jku.ssw.cmm.interpreter.memory.MemoryInformation;
@@ -88,6 +90,11 @@ public final class Memory {
 			return true;
 	}
 
+	public static boolean loadBoolSave(int address, Node p) throws RunTimeException {
+		checkIfMemoryIsInitialized(address, p);
+		return loadBool(address);
+	}
+	
 	public static void storeBool(int address, boolean value) {
 		getMemoryInformation(address).isInitialized = true;
 		if(value)
@@ -99,7 +106,12 @@ public final class Memory {
 	public static int loadInt(int address) {
 		return memory.getInt(address);
 	}
-
+	
+	public static int loadIntSave(int address, Node p) throws RunTimeException {
+		checkIfMemoryIsInitialized(address, p);
+		return loadInt(address);
+	}
+	
 	public static void storeInt(int address, int value) {
 		getMemoryInformation(address).isInitialized = true;
 		memory.putInt(address, value);
@@ -109,6 +121,11 @@ public final class Memory {
 		return memory.getChar(address);
 	}
 
+	public static char loadCharSave(int address, Node p) throws RunTimeException {
+		checkIfMemoryIsInitialized(address, p);
+		return loadChar(address);
+	}
+	
 	public static void storeChar(int address, char value) {
 		getMemoryInformation(address).isInitialized = true;
 		memory.putChar(address, value);
@@ -118,6 +135,11 @@ public final class Memory {
 		return memory.getFloat(address);
 	}
 
+	public static float loadFloatSave(int address, Node p) throws RunTimeException {
+		checkIfMemoryIsInitialized(address, p);
+		return loadFloat(address);
+	}
+	
 	public static void storeFloat(int address, float value) {
 		getMemoryInformation(address).isInitialized = true;
 		memory.putFloat(address, value);
@@ -132,6 +154,11 @@ public final class Memory {
 		return memory.getInt(address);
 	}
 
+	public static int loadStringAddressSave(int address, Node p) throws RunTimeException {
+		checkIfMemoryIsInitialized(address, p);
+		return loadStringAddress(address);
+	}
+	
 	public static void setBoolReturnValue(boolean value) {
 		if(value)
 			returnValue = 1;
@@ -193,5 +220,10 @@ public final class Memory {
 		if(!memoryInformations.containsKey(address))
 			memoryInformations.put(address, new MemoryInformation());
 		return memoryInformations.get(address);
+	}
+	
+	public static void checkIfMemoryIsInitialized(int address, Node p) throws RunTimeException {
+		if(!getMemoryInformation(address).isInitialized)
+			throw new RunTimeException("variable is not initialized", p); 
 	}
 }
