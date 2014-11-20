@@ -102,7 +102,7 @@ public class CMMrun extends Thread {
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
 
-					debug.setErrorMode(e.getMessage(), e.getNode().line);
+					debug.setErrorMode(e.getMessage(), -1);
 				}
 			});
 			reply.setNotRunning();

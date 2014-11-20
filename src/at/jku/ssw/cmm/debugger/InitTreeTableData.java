@@ -1,4 +1,4 @@
-package at.jku.ssw.cmm.gui.datastruct;
+package at.jku.ssw.cmm.debugger;
 
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -282,22 +282,37 @@ public class InitTreeTableData {
 				if( obj.elemType.kind == Struct.CHAR ){
 					typeName = "char";
 					value = Memory.loadChar(address + offset + size * i);
-					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
+					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized)
+						node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
+					else
+						node.add(init, new DataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
 				}
 				else if( obj.elemType.kind == Struct.FLOAT ){
 					typeName = "float";
 					value = Memory.loadFloat(address + offset + size * i);
-					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
+					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized)
+						node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
+					else
+						node.add(init, new DataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
+					//node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
 				}
 				else if( obj.elemType.kind == Struct.BOOL ){
 					typeName = "bool";
 					value = Memory.loadBool(address + offset + size * i);
-					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
+					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized)
+						node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
+					else
+						node.add(init, new DataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
+					//node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
 				}
 				else if( obj.elemType.kind == Struct.INT ){
 					typeName = "int";
 					value = Memory.loadInt(address + offset + size * i);
-					node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
+					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized)
+						node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
+					else
+						node.add(init, new DataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
+					//node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
 				}
 				else if( obj.elemType.kind == Struct.STRUCT ){
 					DataNode n = readVariables( init, obj.fields, new DataNode(name, "struct", "", new ArrayList<DataNode>(), -1, -1), address + offset + size * i, main );
@@ -308,7 +323,10 @@ public class InitTreeTableData {
 					MouseListener l = new StringPopupListener(main, Strings.get(Memory.loadStringAddress(address + offset + size * i)));
 					b.addMouseListener(l);
 					
-					node.add(init, new DataNode("[" + i + "]", "string", b, null, address + offset + size * i, -1));
+					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized)
+						node.add(init, new DataNode("[" + i + "]", "string", b, null, address + offset + size * i, -1));
+					else
+						node.add(init, new DataNode("[" + i + "]", "string", "undef", null, address + offset + size * i, -1));
 				}
 			}
 		}

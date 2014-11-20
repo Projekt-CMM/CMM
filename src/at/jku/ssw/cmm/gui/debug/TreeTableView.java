@@ -9,7 +9,7 @@ import at.jku.ssw.cmm.CMMwrapper;
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
-import at.jku.ssw.cmm.gui.datastruct.InitTreeTableData;
+import at.jku.ssw.cmm.debugger.InitTreeTableData;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.treetable.DataNode;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
