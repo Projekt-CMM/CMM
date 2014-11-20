@@ -127,15 +127,9 @@ public class CMMwrapper {
 
 		// Error displaying and error count
 		Error e = this.compiler.getError();
-
-		// An error occurred
-		if (e != null) {
-
-			// Return the errors
-			return e;
-		}
-
-		return null;
+		
+		// Return the errors
+		return e;
 	}
 
 	/**

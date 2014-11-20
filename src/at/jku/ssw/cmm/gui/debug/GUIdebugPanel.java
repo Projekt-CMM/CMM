@@ -239,7 +239,7 @@ public class GUIdebugPanel {
 	 * method is not thread safe as it changes the right panel of the main GUI.
 	 * <hr>
 	 */
-	public void compile() {
+	public boolean compile() {
 
 		String sourceCode = this.main.getLeftPanel().getSourceCode();
 		this.breakpoints.clear();
@@ -256,7 +256,7 @@ public class GUIdebugPanel {
 
 			// An include file could not be found
 			this.setErrorMode("include not found", -1);
-			return;
+			return false;
 		}
 
 		/* --- Code statistics --- */
@@ -289,14 +289,15 @@ public class GUIdebugPanel {
 		/* --- end of statistics --- */
 
 		// Compile
-		System.out.println("[compiler] starting compilation");
 		at.jku.ssw.cmm.compiler.Error e = compileManager.compile(sourceCode);
-		System.out.println("[compiler] done");
 
 		// compiler returns errors
 		if (e != null) {
 			this.setErrorMode(e.msg, e.line);
+			return false;
 		}
+		
+		return true;
 	}
 
 	/**
@@ -314,8 +315,10 @@ public class GUIdebugPanel {
 		this.main.updateWinFileName();
 		this.updateFileName();
 		
-		this.compile();
-		return this.compileManager.runInterpreter(ctrlPanel.getListener(),
+		if( this.compile() )
+			return this.compileManager.runInterpreter(ctrlPanel.getListener(),
 				new IOstream(this.main, this));
+		else
+			return false;
 	}
 }
