@@ -22,13 +22,16 @@ public class UpperPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	public UpperPanel( Profile profile, ProfileSettingsListener listener ) {
+	public UpperPanel(Profile profile, ProfileSettingsListener listener) {
 
+		// Call super constructor (JPanel)
 		super();
 
+		// Save local variables
 		this.profile = profile;
 		this.listener = listener;
 
+		// Initialize all components of this panel
 		this.init();
 	}
 
@@ -37,51 +40,63 @@ public class UpperPanel extends JPanel {
 
 	// GridBagConstraints
 	private GridBagConstraints c;
-	
+
 	private JTextField jTextField;
 
+	/**
+	 * Initializes all components of this panel. <b>Should only be called once
+	 * in constructor</b>
+	 */
 	private void init() {
-		
-		//Init gridBagLayout
+
+		// Init gridBagLayout
 		super.setLayout(new BorderLayout());
 		this.setBorder(new EmptyBorder(5, 5, 5, 5));
-		
+
 		JPanel inside = new JPanel();
-		
+
 		inside.setLayout(new GridBagLayout());
 		inside.setBackground(Color.WHITE);
 		inside.setBorder(BorderFactory.createLoweredBevelBorder());
 		c = new GridBagConstraints();
-		
+
 		JLabel profilePicture;
-		
-		if( this.profile == null )
-			//TODO better default image
-			profilePicture = LoadStatics.loadImage("images/prodef.png", true, 128, 128);
+
+		if (this.profile == null)
+			// TODO better default image
+			profilePicture = LoadStatics.loadImage("images/prodef.png", true,
+					128, 128);
 		else
-			profilePicture = LoadStatics.loadImage(profile.getInitPath() + File.separator + "icon.png", true, 128, 128);
-		
-		profilePicture.setToolTipText("<html><b>" + _("click to change image") + "</b><br>" + _("click here and select your<br>profile image") + "</html>");
+			profilePicture = LoadStatics.loadImage(profile.getInitPath()
+					+ File.separator + "icon.png", true, 128, 128);
+
+		profilePicture.setToolTipText("<html><b>" + _("click to change image")
+				+ "</b><br>" + _("click here and select your<br>profile image")
+				+ "</html>");
 		profilePicture.addMouseListener(listener.profileImageListener);
 		this.add(profilePicture, BorderLayout.LINE_START);
-		
-		//Initialize common layout parameters
+
+		// Initialize common layout parameters
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 0.5;   //request any extra vertical space
+		c.weightx = 0.5; // request any extra vertical space
 		c.anchor = GridBagConstraints.LINE_START;
-		c.insets = new Insets(5,5,5,5);
-			
+		c.insets = new Insets(5, 5, 5, 5);
+
 		inside.add(new JLabel(_("Name:")), setLayoutPosition(0, 0, 1, 1));
-		this.jTextField = new JTextField(profile == null ? "" : profile.getName());
-		this.jTextField.setToolTipText("<html><b>" + _("profile name") + "</b><br>" + _("you can edit your name here") + "</html>");
+		this.jTextField = new JTextField(profile == null ? ""
+				: profile.getName());
+		this.jTextField.setToolTipText("<html><b>" + _("profile name")
+				+ "</b><br>" + _("you can edit your name here") + "</html>");
 		inside.add(this.jTextField, setLayoutPosition(1, 0, 1, 1));
-		inside.add(new JLabel(_("Level") + ": " + (profile == null ? "0" : profile.getLevel()) ), setLayoutPosition(0, 1, 2, 1));
-		
+		inside.add(new JLabel(_("Level") + ": "
+				+ (profile == null ? "0" : profile.getLevel())),
+				setLayoutPosition(0, 1, 2, 1));
+
 		inside.add(new JLabel("Stat 1:"), setLayoutPosition(0, 2, 1, 1));
 		inside.add(new JLabel("Stat 2:"), setLayoutPosition(1, 2, 1, 1));
 		inside.add(new JLabel("Stat 3:"), setLayoutPosition(0, 3, 1, 1));
 		inside.add(new JLabel("Stat 4:"), setLayoutPosition(1, 3, 1, 1));
-		
+
 		this.add(inside, BorderLayout.CENTER);
 	}
 
@@ -103,8 +118,8 @@ public class UpperPanel extends JPanel {
 	 *         parameter c is called by reference, however you can use the
 	 *         return value directly inside another function call.
 	 */
-	private GridBagConstraints setLayoutPosition(int x,
-			int y, int width, int height) {
+	private GridBagConstraints setLayoutPosition(int x, int y, int width,
+			int height) {
 		c.gridx = x;
 		c.gridy = y;
 		c.gridwidth = width;
@@ -115,8 +130,8 @@ public class UpperPanel extends JPanel {
 
 	/**
 	 * @return The (new) name of the profile which is currently edited/created.
-	 * This is not the name which is saved in the profile.xml file, this is the
-	 * text from the JTextField "name"
+	 *         This is not the name which is saved in the profile.xml file, this
+	 *         is the text from the JTextField "name"
 	 */
 	public String getProfileName() {
 
