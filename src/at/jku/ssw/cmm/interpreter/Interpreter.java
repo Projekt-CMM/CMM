@@ -246,13 +246,13 @@ public final class Interpreter implements DebuggerRequest {
 				return true;
 		case Node.IDENT:							//more at @Adr
 			debuggerCurrentAddress = IdentAdr(p.obj);
-			return Memory.loadBool(IdentAdr(p.obj));
+			return Memory.loadBoolSave(IdentAdr(p.obj), p);
 		case Node.DOT:								//more at @Adr
 			debuggerCurrentAddress = Adr(p);
-			return Memory.loadBool(Adr(p));			
+			return Memory.loadBoolSave(Adr(p),p);			
 		case Node.INDEX:							//more at @Adr
 			debuggerCurrentAddress = Adr(p);
-			return Memory.loadBool(Adr(p));
+			return Memory.loadBoolSave(Adr(p),p);
 		default:
 			throw new RunTimeException("Not supportet boolexpr node kind", p);
 		}
@@ -264,75 +264,79 @@ public final class Interpreter implements DebuggerRequest {
 	 * @throws RunTimeException 
 	 */
 	int IntExpr(Node p) throws ReturnException, AbortException, RunTimeException { //TODO
-		switch (p.kind) {
-		case Node.INTCON:
-			return p.val; // Returns a Constante
-			
-		/*
-		 * For calculation
-		 */
-		case Node.PLUS:
-			if(p.right == null)
-				return IntExpr(p.left);
-			else
-				return IntExpr(p.left) + IntExpr(p.right);
-		case Node.MINUS:
-			if(p.right == null) {
-				return 0 - IntExpr(p.left);
-			} else {
-				return IntExpr(p.left) - IntExpr(p.right);
+		try{
+			switch (p.kind) {
+			case Node.INTCON:
+				return p.val; // Returns a Constante
+				
+			/*
+			 * For calculation
+			 */
+			case Node.PLUS:
+				if(p.right == null)
+					return IntExpr(p.left);
+				else
+					return SaveIntOperator.add(IntExpr(p.left),IntExpr(p.right));
+			case Node.MINUS:
+				if(p.right == null) {
+					return SaveIntOperator.subtract(0, IntExpr(p.left));
+				} else {
+					return SaveIntOperator.subtract(IntExpr(p.left), IntExpr(p.right));
+				}
+			case Node.TIMES:
+				return SaveIntOperator.multiply(IntExpr(p.left), IntExpr(p.right));
+			case Node.DIV:
+				if (IntExpr(p.right) != 0)
+					return SaveIntOperator.divide(IntExpr(p.left), IntExpr(p.right));
+				throw new RunTimeException("Divided by 0", p);
+			case Node.REM:
+				if (IntExpr(p.right) != 0)
+					return IntExpr(p.left) % IntExpr(p.right);
+				throw new RunTimeException("Divided by 0", p);
+			/*
+			 * Bit Operators
+			 */
+			case Node.BITAND:
+				return IntExpr(p.left) & IntExpr(p.right);
+			case Node.BITNEQ:
+				return ~IntExpr(p.left);
+			case Node.BITOR:
+				return IntExpr(p.left) | IntExpr(p.right);
+			case Node.BITXOR:
+				return IntExpr(p.left) ^ IntExpr(p.right);
+			case Node.SHIFTLEFT:
+				return IntExpr(p.left) << IntExpr(p.right);
+			case Node.SHIFTRIGHT:
+				return IntExpr(p.left) >> IntExpr(p.right);
+				
+			case Node.CALL:								//Opens new Integer c-- Function
+				Call(p);
+				return Memory.getIntReturnValue();		//getting return Value						
+				
+			case Node.F2I:								//casting float to Integer
+				return (int) FloatExpr(p.left);
+			case Node.C2I:								//casting char to Integer
+				return (int) CharExpr(p.left);
+			case Node.B2I:								//casting char to Integer
+				boolean retBoolExpr = BoolExpr(p.left);
+				if(retBoolExpr)
+					return 0x01;
+				else
+					return 0x00;
+			case Node.IDENT:							//more at @Adr
+				debuggerCurrentAddress = IdentAdr(p.obj);
+				return Memory.loadIntSave(IdentAdr(p.obj), p);
+			case Node.DOT:								//more at @Adr
+				debuggerCurrentAddress = Adr(p);
+				return Memory.loadIntSave(Adr(p), p);			
+			case Node.INDEX:							//more at @Adr
+				debuggerCurrentAddress = Adr(p);
+				return Memory.loadIntSave(Adr(p), p);
+			default:
+				throw new RunTimeException("Not supportet intexpr node kind", p);
 			}
-		case Node.TIMES:
-			return IntExpr(p.left) * IntExpr(p.right);
-		case Node.DIV:
-			if (IntExpr(p.right) != 0)
-				return IntExpr(p.left) / IntExpr(p.right);
-			throw new RunTimeException("Divided by 0", p);
-		case Node.REM:
-			if (IntExpr(p.right) != 0)
-				return IntExpr(p.left) % IntExpr(p.right);
-			throw new RunTimeException("Divided by 0", p);
-		/*
-		 * Bit Operators
-		 */
-		case Node.BITAND:
-			return IntExpr(p.left) & IntExpr(p.right);
-		case Node.BITNEQ:
-			return ~IntExpr(p.left);
-		case Node.BITOR:
-			return IntExpr(p.left) | IntExpr(p.right);
-		case Node.BITXOR:
-			return IntExpr(p.left) ^ IntExpr(p.right);
-		case Node.SHIFTLEFT:
-			return IntExpr(p.left) << IntExpr(p.right);
-		case Node.SHIFTRIGHT:
-			return IntExpr(p.left) >> IntExpr(p.right);
-			
-		case Node.CALL:								//Opens new Integer c-- Function
-			Call(p);
-			return Memory.getIntReturnValue();		//getting return Value						
-			
-		case Node.F2I:								//casting float to Integer
-			return (int) FloatExpr(p.left);
-		case Node.C2I:								//casting char to Integer
-			return (int) CharExpr(p.left);
-		case Node.B2I:								//casting char to Integer
-			boolean retBoolExpr = BoolExpr(p.left);
-			if(retBoolExpr)
-				return 0x01;
-			else
-				return 0x00;
-		case Node.IDENT:							//more at @Adr
-			debuggerCurrentAddress = IdentAdr(p.obj);
-			return Memory.loadInt(IdentAdr(p.obj));
-		case Node.DOT:								//more at @Adr
-			debuggerCurrentAddress = Adr(p);
-			return Memory.loadInt(Adr(p));			
-		case Node.INDEX:							//more at @Adr
-			debuggerCurrentAddress = Adr(p);
-			return Memory.loadInt(Adr(p));
-		default:
-			throw new RunTimeException("Not supportet intexpr node kind", p);
+		} catch(ArithmeticException e) {
+			throw new RunTimeException(e.getMessage(), p);
 		}
 	}
 
@@ -342,54 +346,58 @@ public final class Interpreter implements DebuggerRequest {
 	 * @throws RunTimeException 
 	 */
 	float FloatExpr(Node p) throws AbortException, ReturnException, RunTimeException { //TODO
-		switch (p.kind) {
-		case Node.FLOATCON:						//returning the Constant value
-			return p.fVal;
-			
-		/*
-		 * For calculation
-		 */
-		case Node.PLUS:
-		    if(p.right == null)
-		        return FloatExpr(p.left);
-		    else
-			    return FloatExpr(p.left) + FloatExpr(p.right);
-		case Node.MINUS:
-			if(p.right == null) {
-				return 0 - FloatExpr(p.left);
-			} else {
-				return FloatExpr(p.left) - FloatExpr(p.right);
+		try {
+			switch (p.kind) {
+			case Node.FLOATCON:						//returning the Constant value
+				return p.fVal;
+				
+			/*
+			 * For calculation
+			 */
+			case Node.PLUS:
+			    if(p.right == null)
+			        return FloatExpr(p.left);
+			    else
+				    return SaveFloatOperator.add(FloatExpr(p.left), FloatExpr(p.right));
+			case Node.MINUS:
+				if(p.right == null) {
+					return SaveFloatOperator.subtract(0, FloatExpr(p.left));
+				} else {
+					return SaveFloatOperator.subtract(FloatExpr(p.left), FloatExpr(p.right));
+				}
+			case Node.TIMES:
+				return SaveFloatOperator.multiply(FloatExpr(p.left), FloatExpr(p.right));
+			case Node.DIV:
+				if (FloatExpr(p.right) != 0)
+					return SaveFloatOperator.divide(FloatExpr(p.left), FloatExpr(p.right));
+				throw new RunTimeException("Divided by 0", p);
+			case Node.REM:
+				if (FloatExpr(p.right) != 0)
+					return FloatExpr(p.left) % FloatExpr(p.right);
+				throw new RunTimeException("Divided by 0", p);
+	
+				
+			case Node.I2F:							//Casts an Integer into an Float
+				return (float) IntExpr(p.left);		
+			case Node.CALL:							//Opens a new C-- Function and returns the Return Value
+				Call(p);
+				return Memory.getFloatReturnValue();						
+			case Node.IDENT:						//more at @Adr
+				debuggerCurrentAddress = IdentAdr(p.obj);
+				return Memory.loadFloatSave(IdentAdr(p.obj),p);	
+			case Node.DOT:							//more at @Adr
+				debuggerCurrentAddress = Adr(p);
+				return Memory.loadFloatSave(Adr(p),p);
+			case Node.INDEX:						//more at @Adr
+				debuggerCurrentAddress = Adr(p);
+				return Memory.loadFloatSave(Adr(p),p);
+	
+			default:
+				throw new RunTimeException("Not supportet floatexpr node kind", p);
+	
 			}
-		case Node.TIMES:
-			return FloatExpr(p.left) * FloatExpr(p.right);
-		case Node.DIV:
-			if (FloatExpr(p.right) != 0)
-				return FloatExpr(p.left) / FloatExpr(p.right);
-			throw new RunTimeException("Divided by 0", p);
-		case Node.REM:
-			if (FloatExpr(p.right) != 0)
-				return FloatExpr(p.left) % FloatExpr(p.right);
-			throw new RunTimeException("Divided by 0", p);
-
-			
-		case Node.I2F:							//Casts an Integer into an Float
-			return (float) IntExpr(p.left);		
-		case Node.CALL:							//Opens a new C-- Function and returns the Return Value
-			Call(p);
-			return Memory.getFloatReturnValue();						
-		case Node.IDENT:						//more at @Adr
-			debuggerCurrentAddress = IdentAdr(p.obj);
-			return Memory.loadFloat(IdentAdr(p.obj));	
-		case Node.DOT:							//more at @Adr
-			debuggerCurrentAddress = Adr(p);
-			return Memory.loadFloat(Adr(p));
-		case Node.INDEX:						//more at @Adr
-			debuggerCurrentAddress = Adr(p);
-			return Memory.loadFloat(Adr(p));
-
-		default:
-			throw new RunTimeException("Not supportet floatexpr node kind", p);
-
+		} catch(ArithmeticException e) {
+			throw new RunTimeException(e.getMessage(), p);
 		}
 	}
 
@@ -406,14 +414,14 @@ public final class Interpreter implements DebuggerRequest {
 				return (char) IntExpr(p.left);		//Casting an IntExpression to Char
 		case Node.IDENT:
 			debuggerCurrentAddress = IdentAdr(p.obj);
-			return Memory.loadChar(IdentAdr(p.obj));			//more at @Adr
+			return Memory.loadCharSave(IdentAdr(p.obj),p);			//more at @Adr
 		case Node.DOT:
 			debuggerCurrentAddress = Adr(p);
-			return Memory.loadChar(Adr(p));			//more at @Adr
+			return Memory.loadCharSave(Adr(p),p);			//more at @Adr
 		case Node.INDEX:
 			if (p.left.type.kind != Struct.STRING) {
 				debuggerCurrentAddress = Adr(p);
-				return Memory.loadChar(Adr(p));		//Normal way of getting Arrays -> more at @Adr
+				return Memory.loadCharSave(Adr(p),p);		//Normal way of getting Arrays -> more at @Adr
 			} else {									//Getting a String and look at a special Position
 				try {
 				    String s = Strings.get(StringExpr(p.left));
@@ -443,7 +451,7 @@ public final class Interpreter implements DebuggerRequest {
 		switch (p.kind) {
 		case Node.IDENT:
 			debuggerCurrentAddress = IdentAdr(p.obj);
-			return Memory.loadStringAddress(Adr(p));
+			return Memory.loadStringAddressSave(Adr(p),p);
 			
 		case Node.PLUS:		//Reads the left and the right String and putting them together
 			return Strings.put(Strings.get(StringExpr(p.left)) + Strings.get(StringExpr(p.right)));
@@ -457,7 +465,7 @@ public final class Interpreter implements DebuggerRequest {
 			char ref;
 
 			for (int a = 0; a <= p.left.type.size; a++) { 
-				ref = Memory.loadChar(Adr(p.left) + p.left.type.elemType.size* a); //Left side * CharSize + Main Address 
+				ref = Memory.loadCharSave(Adr(p.left) + p.left.type.elemType.size* a, p); //Left side * CharSize + Main Address 
 				if (ref != '0') {
 					s += ref;			//Putting the Array, together to an String
 				}
@@ -483,7 +491,7 @@ public final class Interpreter implements DebuggerRequest {
 		} else if(p.kind == Node.IDENT) {
 			if(p.type.kind == Struct.BOOL) {
 				debuggerCurrentAddress = IdentAdr(p.obj);
-				return Memory.loadBool(IdentAdr(p.obj));
+				return Memory.loadBoolSave(IdentAdr(p.obj), p);
 			} else {
 				throw new RunTimeException("type not supported as ident in condition", p);
 			}
@@ -853,15 +861,16 @@ public final class Interpreter implements DebuggerRequest {
 
 	/**
 	 * Identifier Address
+	 * @throws RunTimeException 
 	 */
-	int IdentAdr(Obj obj) throws ReturnException, AbortException {
+	int IdentAdr(Obj obj) throws ReturnException, AbortException, RunTimeException {
 		int adr;
 		if (obj.level == 0)					// Is the variable global?
 			adr = Memory.getGlobalPointer() + obj.adr;	//yes - GlobalPointer + Address
 		else
 			adr = Memory.getFramePointer() + obj.adr;	//no - FramePointer + Address
 		if (obj.isRef)
-			return Memory.loadInt(adr); // References saves the Address in an Integer Variable
+			return Memory.loadIntSave(adr, null); // References saves the Address in an Integer Variable
 		else
 			return adr;					//Returns the normal Address Value
 	}

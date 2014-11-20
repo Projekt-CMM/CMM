@@ -48,19 +48,34 @@
 	</error>
 	<!-- no errors for printf -->
 	<error id="StackOverFlow">
-		<file>cast.html</file>
+		<file>default.html</file>
 	</error>
 	<error id="Stack Underflow">
-		<file>cast.html</file>
+		<file>default.html</file>
 	</error>
 	<error id="break is not allowed here">
-		<file>cast.html</file>
+		<file>default.html</file>
 	</error>
 	<error id="continue is not allowed here">
-		<file>cast.html</file>
+		<file>default.html</file>
 	</error>
 	<!-- unknown interpreter error -->
 	<error id="unknown interpreter error occurred">
-		<file>cast.html</file>
+		<file>default.html</file>
+	</error>
+	
+    <!--#### Runtime Exceptions ####-->
+
+    <!-- operator overflow -->
+    <error id="Integer overflow">
+		<file>int_overflow.html</file>
+	</error>
+    <error id="Float overflow">
+		<file>float_overflow.html</file>
+	</error>
+	
+	<!-- memory handling errors -->
+	<error id="variable is not initialized">
+		<file>variable_uninitialized.html</file>
 	</error>
 </errorTable>

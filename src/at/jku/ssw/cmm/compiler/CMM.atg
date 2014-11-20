@@ -303,14 +303,16 @@ StructDecl                          (.  Node e;
 "struct"                            (.  // create a struct
                                         Struct type = new Struct(Struct.STRUCT); .)
 ident                               (.  // insert the struct in the current scope
-                                        tab.insert(Obj.TYPE, t.val, type, line); .)
+                                        Obj struct = tab.insert(Obj.TYPE, t.val, type, line); .)
 "{"                                 (.  // open new scope
                                         tab.openScope(); .)
-{ VarDecl<out e>                    (.  // if a VarDecl return not null, there is a assignment in the Declaration
+{                                   (.  if(la.val.equals(struct.name)) {
+                                            SemErr("it is not allowed to declare the same struct in a struct");
+                                            break;
+                                        } .)
+  VarDecl<out e>                    (.  // if a VarDecl return not null, there is a assignment in the Declaration
                                         if(e!=null) 
-                                            SemErr("variable assigment is not allowed in struct");
-                                        
-                                        /*if(tab)*/.)
+                                            SemErr("variable assigment is not allowed in struct"); .)
 } 
 "}"                                 (.  // copy variables from local scope int struct
                                         type.fields = tab.curScope.locals;
