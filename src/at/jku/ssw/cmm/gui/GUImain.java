@@ -385,6 +385,8 @@ public class GUImain {
 	}
 
 	public void setReadyMode() {
+		
+		System.out.println(" <<< Hiding error panel ");
 
 		this.leftPanelControl.setReadyMode();
 		this.rightPanelControl.hideErrorPanel();
@@ -392,17 +394,23 @@ public class GUImain {
 
 	public void setErrorMode(String msg, int line) {
 		
+		System.out.println(" >>> Showing error panel ");
+		
 		this.leftPanelControl.setErrorMode(msg, line);
 		this.rightPanelControl.showErrorPanel(msg);
 	}
 
 	public void setRunMode() {
 		
+		System.out.println(" <<< Hiding error panel ");
+		
 		this.leftPanelControl.setRunMode();
 		this.rightPanelControl.hideErrorPanel();
 	}
 
 	public void setPauseMode() {
+		
+		System.out.println(" <<< Hiding error panel ");
 		
 		this.leftPanelControl.setPauseMode();
 		this.rightPanelControl.hideErrorPanel();

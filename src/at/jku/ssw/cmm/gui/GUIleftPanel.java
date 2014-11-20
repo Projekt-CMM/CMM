@@ -331,8 +331,8 @@ public class GUIleftPanel {
 		this.jStatePanel.setBackground(Color.RED);
 		this.jStateLabel.setText("! ! ! " + _("error") + " " + (line >= 0 ? _("in line ") + " " + line : "") + " ! ! !");
 		
-		if( line >= 0 )
-			this.highlightSourceCode(line);
+		//if( line >= 0 )
+			//this.highlightSourceCode(line);
 	}
 
 	public void setRunMode() {

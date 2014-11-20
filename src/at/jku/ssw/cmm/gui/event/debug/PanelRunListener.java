@@ -297,8 +297,7 @@ public class PanelRunListener implements Debugger {
 			if (isReadyMode()||isErrorMode()) {
 				
 				master.setRunMode();
-				if( !master.runInterpreter() )
-					master.setReadyMode();
+				master.runInterpreter();
 			}
 
 			// Run -> pause interpreting
@@ -352,8 +351,7 @@ public class PanelRunListener implements Debugger {
 			// Ready mode -> start interpreting in pause mode
 			if (isReadyMode()) {
 				master.setPauseMode();
-				if( !master.runInterpreter() )
-					master.setReadyMode();
+				master.runInterpreter();
 			}
 
 			// Pause mode -> next step
