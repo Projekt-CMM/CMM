@@ -18,10 +18,26 @@ import javax.swing.border.EmptyBorder;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
 import at.jku.ssw.cmm.profile.Profile;
 
+/**
+ * The upper panel of the profile settings GUI contains all the user's data: the
+ * profile image, the nickname, the level and some statistics.
+ * 
+ * @author fabian
+ *
+ */
 public class UpperPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * The upper panel of the profile settings GUI contains all the user's data:
+	 * the profile image, the nickname, the level and some statistics.
+	 * 
+	 * @param profile
+	 *            The profile which is currently displayed and edited
+	 * @param listener
+	 *            The listener for the profile settings GUI
+	 */
 	public UpperPanel(Profile profile, ProfileSettingsListener listener) {
 
 		// Call super constructor (JPanel)
@@ -35,7 +51,14 @@ public class UpperPanel extends JPanel {
 		this.init();
 	}
 
+	/**
+	 * The profile which is currently displayed and edited
+	 */
 	private final Profile profile;
+	
+	/**
+	 * The listener for the profile settings GUI
+	 */
 	private final ProfileSettingsListener listener;
 
 	// GridBagConstraints
