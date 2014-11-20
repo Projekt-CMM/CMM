@@ -52,6 +52,7 @@ public class GUImain {
 				test = true;
 
 		app.start(test);
+	
 	}
 
 	/**
@@ -310,6 +311,7 @@ public class GUImain {
 	}
 
 	/**
+	 * TODO Profile Preview
 	 * Invokes the profile selection dialog
 	 */
 	public void selectProfile(){
@@ -321,7 +323,7 @@ public class GUImain {
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		
 		//TODO
-		chooser.setAccessory(new ProfilePreview(chooser));
+		//chooser.setAccessory(new ProfilePreview(chooser));
 		
 		//Disable Renaming etc.
 		UIManager.put("FileChooser.readOnly", Boolean.TRUE);

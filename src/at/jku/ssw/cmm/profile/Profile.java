@@ -26,11 +26,14 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import at.jku.ssw.cmm.gui.utils.LoadStatics;
 
 public class Profile {
 	
@@ -42,11 +45,11 @@ public class Profile {
 	private String name;			//OrdnerName = ProfilName
 	private int xp;					//Anzahl der XP des Benutzers
 	private String profileimage;	//Profile Image
+	private String current;
 	
 	//Folder Names
 	private String profilePath;		//inizialer Profile Pfad
 	private String packagesPath;	//Pfad der Quest Packages
-	private String packagePath;		//Package Pfad
 	
 	//Temporary variables
 	private List<Quest> profileQuests;
@@ -54,7 +57,8 @@ public class Profile {
 	//Static final Strings
 	public static final String
 		FILE_PROFILE = "profile.xml",
-		FILE_PACKAGESPATH = "packages";
+		FILE_PACKAGESPATH = "packages",
+		FILE_PROFILEIMAGE = "avatar";
 	
 	public static final String
 		XML_NAME = "name",
@@ -66,7 +70,8 @@ public class Profile {
 		XML_PACKAGE = "package",
 		XML_DATE ="date",
 		XML_TOKEN = "token",
-		XML_PROFILEIMAGE = "profileimage";
+		XML_PROFILEIMAGE = "profileimage",
+		XML_CURRENT = "current";
 
 	private static Profile activeProfile;
 	
@@ -164,6 +169,8 @@ public class Profile {
 			throw new XMLReadingException();
 		
 		Profile profile = new Profile(profilePath,packagesPath);
+		
+		//setting default Name, can be changed by .xml
 		profile.setName(profilePath.split(sep)[profilePath.split(sep).length-1]);
 		profile.setInitPath(profilePath);
 		
@@ -218,6 +225,9 @@ public class Profile {
 			
 			if(node.getNodeName().equals(Profile.XML_PROFILEIMAGE))
         		profile.setProfileimage(node.getTextContent());
+			
+			if(node.getNodeName().equals(Profile.XML_CURRENT))
+				profile.setCurrent(node.getTextContent());
 			
 			if(node.getNodeName().equals(Profile.XML_STATE)){
 				String s = node.getAttributes().item(0).getTextContent();
@@ -284,7 +294,6 @@ public class Profile {
         
         String path = profile.getInitPath() + sep + Profile.FILE_PROFILE;
         
-
             try {
 				icBuilder = icFactory.newDocumentBuilder();
             Document doc = icBuilder.newDocument();
@@ -292,7 +301,12 @@ public class Profile {
             doc.appendChild(mainRootElement);
             mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_NAME, profile.getName()));
             mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_XP, profile.getXp() + ""));
-            mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_PROFILEIMAGE, profile.getProfileimage()));
+           
+           if(profile.getProfileimage() != null)
+            	mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_PROFILEIMAGE, profile.getProfileimage()));
+            
+            if(profile.getCurrent() != null)
+                mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_CURRENT, profile.getCurrent()));
             
             if(profile.getProfileQuests() != null)
             // append xp and state to root element
@@ -306,8 +320,10 @@ public class Profile {
             DOMSource source = new DOMSource(doc);
             
             //Writing into file
-            StreamResult result = new StreamResult(new File(path));
-            transformer.transform(source, result);
+            if(source != null){
+            	StreamResult result = new StreamResult(new File(path));
+            	transformer.transform(source, result);
+            }
             
             //Debug output
             //System.out.println("\nXML DOM Created Successfully..");
@@ -315,14 +331,14 @@ public class Profile {
 			} catch (ParserConfigurationException | TransformerConfigurationException
 					| TransformerFactoryConfigurationError e) {
 				e.printStackTrace();
-			} catch (TransformerException e) {
+			} catch (TransformerException | DOMException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 	}
 	
-	private static Node writeProfileState(Document doc, Quest quest){
+	private static Node writeProfileState(Document doc, Quest quest) throws DOMException, XMLWriteException{
         Element state = doc.createElement(Profile.XML_STATE);
         state.setAttribute("id", quest.getState());
         state.appendChild(writeProfileElements(doc, state, Profile.XML_QUEST, quest.getQuestPath()));
@@ -334,10 +350,16 @@ public class Profile {
         return state;
 	}
 	
-    private static Node writeProfileElements(Document doc, Element element, String name, String value) {
-        Element node = doc.createElement(name);
-        node.appendChild(doc.createTextNode(value));
-        return node;
+    private static Node writeProfileElements(Document doc, Element element, String name, String value) throws XMLWriteException{
+        if(value == null)
+        	throw new XMLWriteException();
+    	
+	    	Element node = doc.createElement(name);
+	        node.appendChild(doc.createTextNode(value));
+	        return node;
+	        
+        	
+        
     }
     
 	private static List<Quest> sortQuestList(List<Quest> quests){
@@ -384,7 +406,7 @@ public class Profile {
 				
 	    return quests;
 	}
-    
+	
 	/**
 	 * Adding the specific Quest to the Profile and sets the quest to inprogress
 	 * @param profile
@@ -436,10 +458,21 @@ public class Profile {
 		if(quest == null)
 			return profile;
 		
-		//TODO Copy Tokens into the wright Profile
+		//TODO Copy Tokens into the right Profile
 		if(state.equals(Quest.STATE_FINISHED)){
-			String questTokenPath = quest.getInitPath()+ sep + quest.getPackagePath() + sep + Quest.FOLDER_TOKENS + sep + quest.getToken();
-			String profileTokenPath = profile.getInitPath() + sep + Profile.FILE_PACKAGESPATH + sep + Quest.FOLDER_TOKENS;
+			if(quest.getToken() != null){
+				String questTokenPathFile = quest.getInitPath()+ sep + quest.getPackagePath() + sep + Quest.FOLDER_TOKENS + sep + quest.getToken();
+				String profileTokenPath = profile.getInitPath() + sep + Profile.FILE_PACKAGESPATH + sep +  quest.getPackagePath() + sep + Quest.FOLDER_TOKENS ;
+			
+				try {
+					File dir = new File(profileTokenPath);
+					dir.mkdirs();
+					
+					LoadStatics.copyFileUsingStream(new File(questTokenPathFile), new File(profileTokenPath + sep + quest.getToken()));
+				} catch (IOException e) {
+					System.err.println("Token could not be copyed");
+				}
+			}
 		}
 		
 		
@@ -463,6 +496,8 @@ public class Profile {
 				
 				//save Profile
 				writeProfile(profile);
+				
+				System.out.println("Quest State changed!");
 				return profile;
 			}
 		}
@@ -476,6 +511,44 @@ public class Profile {
 			
 		return profile;
 	}
+	
+	/**
+	 * 
+	 * TODO more file Types
+	 * 
+	 * Deleting old Profile Pic and Copying new Profile pic to the choosen destination + writes into the profile.xml
+	 * @param profile
+	 * @param sorce
+	 * @return Profile
+	 * @throws IOException 
+	 * @throws XMLWriteException 
+	 */
+	public static Profile changeProfileImage(Profile profile, String sourcePath) throws IOException, XMLWriteException{
+		
+		String extension = sourcePath.substring(sourcePath.lastIndexOf('.'), sourcePath.length());
+		
+		if(sourcePath.endsWith(".png") ||
+				sourcePath.endsWith(".jpg") ||
+				sourcePath.endsWith(".gif") ){
+			
+				String destPath = profile.getInitPath() + Profile.sep + Profile.FILE_PROFILEIMAGE + extension;
+			
+				File source  = new File(sourcePath);
+				File dest = new File(destPath);
+				
+				LoadStatics.copyFileUsingStream(source, dest);
+				profile.setProfileimage(destPath);
+				
+				Profile.writeProfile(profile);
+		}else
+			throw new IOException();
+				
+				
+
+		
+		return profile;
+	}
+	
 	
     public String toString() {
         return name;
@@ -607,6 +680,21 @@ public class Profile {
 	public void setProfileimage(String profileimage) {
 		this.profileimage = profileimage;
 	}
+
+	/**
+	 * @return the current
+	 */
+	public String getCurrent() {
+		return current;
+	}
+
+	/**
+	 * @param current the current to set
+	 */
+	public void setCurrent(String current) {
+		this.current = current;
+	}
+
 	
 	
 	

@@ -27,6 +27,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
+import at.jku.ssw.cmm.profile.Profile;
+import at.jku.ssw.cmm.profile.XMLReadingException;
 
 
 public class GUILauncherMain {
@@ -36,6 +38,11 @@ public class GUILauncherMain {
 	
 	
 	public static void main(String[] args) {
+		init();
+
+	}
+	
+	public static void init(){
 		
 		try { 
 		    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -65,7 +72,6 @@ public class GUILauncherMain {
 		jFrame.setVisible(true);
 		
 		System.out.println("finished");
-
 	}
 	
 	private static void addWelcomeBlock(){
@@ -75,7 +81,10 @@ public class GUILauncherMain {
 		jWelcomePanel.add(welcomeMessage,BorderLayout.LINE_START);
 		welcomeMessage.setFont (welcomeMessage.getFont().deriveFont (64.0f));
 		
-		JLabel logo = new JLabel("Logo");
+		
+		JPanel logo = new JPanel();
+		logo.add(LoadStatics.loadImage("logo.png", false, 75, 75));
+		
 		jWelcomePanel.add(logo,BorderLayout.LINE_END);
 	
 		
@@ -97,7 +106,9 @@ public class GUILauncherMain {
 				JButton jFindProfile = new JButton("Find");
 				jRightButtons.add(jFindProfile);
 				
+				
 				JButton jCreateProfile = new JButton("New");
+				jCreateProfile.addMouseListener(new AddProfileListener(jFrame));
 				jRightButtons.add(jCreateProfile);
 				
 			jSelectProfilePanel.add(jRightButtons,BorderLayout.LINE_END);
@@ -115,8 +126,10 @@ public class GUILauncherMain {
 			
 				JPanel jPreviewProfile = new JPanel();
 				
-				for(int i = 0; i<= 20; i++)
-					jPreviewProfile.add(addProfilePreview());
+				for(int i = 0; i< 5; i++)
+					jPreviewProfile.add(addProfilePreview(new Profile(),0));
+
+				jPreviewProfile.add(addProfilePreview(new Profile(),2));
 				
 			JScrollPane scrollPane = new JScrollPane(jPreviewProfile);
 			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -131,7 +144,7 @@ public class GUILauncherMain {
 	//Profile Panel finished
 	}
 	
-	public static JPanel addProfilePreview(){
+	public static JPanel addProfilePreview(Profile profile, int state){
 		JPanel jMarginPanel = new JPanel(new BorderLayout());
 
 		
@@ -147,10 +160,16 @@ public class GUILauncherMain {
 		
 		JPanel jProfileTop = new JPanel(new BorderLayout());
 			jProfileTop.setBackground(Color.WHITE);
-			JLabel name = new JLabel("Name: Nick");
-			JLabel level = new JLabel("Level: 14");
-			jProfileTop.add(name,BorderLayout.PAGE_START);
-			jProfileTop.add(level,BorderLayout.CENTER);
+			
+			if(state == 0 || state == 1){	
+				
+				JLabel name = new JLabel("Name: Nick");
+				JLabel level = new JLabel("Level: 14");
+			
+			
+				jProfileTop.add(name,BorderLayout.PAGE_START);
+				jProfileTop.add(level,BorderLayout.CENTER);
+			}
 			
 		jProfile.add(jProfileTop, BorderLayout.PAGE_START);
 		
@@ -165,13 +184,22 @@ public class GUILauncherMain {
 		
 		profilePicPanel.setPreferredSize(new Dimension(200,200));
 		profilePicPanel.setMinimumSize(new Dimension(200,200));
-
-		profilePicPanel.add(LoadStatics.loadImage("profileTest/icon.png", false, 200, 200));
 		
+		if(state == 0 || state == 1){
+			profilePicPanel.add(LoadStatics.loadImage("profileTest/icon.png", false, 200, 200));
+		}
+		else{
+			profilePicPanel.add(LoadStatics.loadImage("addProfile.png", false, 200, 200));
+			profilePicPanel.addMouseListener(new AddProfileListener(jFrame));
+		}
+			
 		jProfile.add(profilePicPanel, BorderLayout.CENTER);
 		
+		if(state == 0 || state == 1){
 			JButton openProfile = new JButton("OPEN");
+			openProfile.addMouseListener(new LauncherListener(profile,jFrame));
 		jProfile.add(openProfile,BorderLayout.PAGE_END);
+		}
 			
 		jMarginPanel.add(jProfile,BorderLayout.CENTER);
 		
@@ -180,7 +208,7 @@ public class GUILauncherMain {
 		
 	}
 	
-	public static void addBottomPanel(){
+	private static void addBottomPanel(){
 		JPanel jFinishPanel = new JPanel(new BorderLayout());
 		
 		String[] languages = { "Englisch", "Deutsch"};
