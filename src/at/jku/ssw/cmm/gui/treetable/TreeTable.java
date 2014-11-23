@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.treetable;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.Dimension;
 import java.util.ArrayList;
 
@@ -62,9 +64,9 @@ public class TreeTable extends JTable {
     	
     	//Save old column width
     	if( this.modelAdapter != null ){
-	    	width1 = super.getColumn("Name").getWidth();
-	    	width2 = super.getColumn("Type").getWidth();
-	    	width3 = super.getColumn("Value").getWidth();
+	    	width1 = super.getColumn(_("Name")).getWidth();
+	    	width2 = super.getColumn(_("Type")).getWidth();
+	    	width3 = super.getColumn(_("Value")).getWidth();
     	}
     	
     	this.dataModel = treeTableModel;
@@ -75,8 +77,8 @@ public class TreeTable extends JTable {
         
         this.modelAdapter = new TreeTableModelAdapter(treeTableModel, tree);
         super.setModel(this.modelAdapter);
-        super.getColumn("Value").setCellRenderer(this.buttonRenderer);
-        super.getColumn("Type").setCellRenderer(this.buttonRenderer);
+        super.getColumn(_("Value")).setCellRenderer(this.buttonRenderer);
+        super.getColumn(_("Type")).setCellRenderer(this.buttonRenderer);
         this.addMouseListener(new JTableButtonMouseListener(this.main, this));
          
         //Selection of tree and table at once
@@ -98,9 +100,9 @@ public class TreeTable extends JTable {
         
         //Set columns to old width
         if( width1 > 0 && width2 > 0 && width3 > 0 ){
-        	super.getColumn("Name").setPreferredWidth(width1);
-        	super.getColumn("Type").setPreferredWidth(width2);
-        	super.getColumn("Value").setPreferredWidth(width3);
+        	super.getColumn(_("Name")).setPreferredWidth(width1);
+        	super.getColumn(_("Type")).setPreferredWidth(width2);
+        	super.getColumn(_("Value")).setPreferredWidth(width3);
         }
         
         this.repaint();
@@ -113,22 +115,22 @@ public class TreeTable extends JTable {
     public void updateTreeModel(){
     	
     	//Save old column width
-    	int width1 = super.getColumn("Name").getWidth();
-    	int width2 = super.getColumn("Type").getWidth();
-    	int width3 = super.getColumn("Value").getWidth();
+    	int width1 = super.getColumn(_("Name")).getWidth();
+    	int width2 = super.getColumn(_("Type")).getWidth();
+    	int width3 = super.getColumn(_("Value")).getWidth();
     	
     	//Update tree table data
     	this.modelAdapter = new TreeTableModelAdapter(this.dataModel, tree);
         super.setModel(this.modelAdapter);
         
         //Re-initialize listeners
-    	super.getColumn("Value").setCellRenderer(this.buttonRenderer);
-    	super.getColumn("Type").setCellRenderer(this.buttonRenderer);
+    	super.getColumn(_("Value")).setCellRenderer(this.buttonRenderer);
+    	super.getColumn(_("Type")).setCellRenderer(this.buttonRenderer);
     	
     	//Set columns to old width
-    	super.getColumn("Name").setPreferredWidth(width1);
-    	super.getColumn("Type").setPreferredWidth(width2);
-    	super.getColumn("Value").setPreferredWidth(width3);
+    	super.getColumn(_("Name")).setPreferredWidth(width1);
+    	super.getColumn(_("Type")).setPreferredWidth(width2);
+    	super.getColumn(_("Value")).setPreferredWidth(width3);
         
         this.repaint();
     }

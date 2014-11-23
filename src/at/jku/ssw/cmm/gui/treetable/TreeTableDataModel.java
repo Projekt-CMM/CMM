@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.treetable;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import javax.swing.JButton;
 
 /**
@@ -12,7 +14,7 @@ import javax.swing.JButton;
  */
 public class TreeTableDataModel extends AbstractTreeTableModel {
     // Column names
-    static protected String[] columnNames = { "Name", "Type", "Value" };
+    static protected String[] columnNames = { _("Name"), _("Type"), _("Value") };
  
     // Column types
     static protected Class<?>[] columnTypes = { TreeTableModel.class, String.class, Object.class };
