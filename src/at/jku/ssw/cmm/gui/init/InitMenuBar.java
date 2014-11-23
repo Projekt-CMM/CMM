@@ -4,7 +4,6 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -19,7 +18,6 @@ import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.GUImainSettings;
 import at.jku.ssw.cmm.gui.MenuBarControl;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
-import at.jku.ssw.cmm.gui.event.LanguageListener;
 import at.jku.ssw.cmm.gui.event.MenuBarEventListener;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
 
@@ -109,24 +107,6 @@ public class InitMenuBar {
 			questMI.addActionListener(listener.questHandler);
 			questMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 			questM.add(questMI);
-		
-			/* --- MENU: "language" --- */
-			JMenu langM = new JMenu(_("Language"));
-			menubar.add(langM);
-		
-			File folder = new File("po");
-			File[] listOfFiles = folder.listFiles();
-
-		    for (int i = 0; listOfFiles != null && i < listOfFiles.length; i++) {
-		    	if (listOfFiles[i].isFile()) {
-		    		System.out.println("File " + listOfFiles[i].getName());
-		    		if( listOfFiles[i].getName().endsWith(".po") ){
-			    		JMenuItem mi = new JMenuItem(listOfFiles[i].getName());
-			    		mi.addActionListener(new LanguageListener(main, listOfFiles[i].getName()));
-			    		langM.add(mi);
-		    		}
-		    	}
-		    }
 		}
 	}
 }

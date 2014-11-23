@@ -117,7 +117,7 @@ public class GUIcontrolPanel {
 		jButtonStop = new JButton("\u25A0");
 		this.jButtonStop.addMouseListener(this.listener.stopButtonHandler);
 		this.jButtonStop.setToolTipText("<html><b>" + _("stop") + " (F7)" + "</b><br>"
-				+ _("return to text edit maine immediately") + "</html>");
+				+ _("return to text edit mode immediately") + "</html>");
 		panel.add(jButtonStop);
 
 		/* ---------- SLIDER ---------- */
