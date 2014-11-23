@@ -378,6 +378,10 @@ public class PanelRunListener implements Debugger {
 	};
 	
 	public void stepButtonPerformed(){
+		
+		//Not possible in run mode
+		if( this.isRunMode() )
+			return;
 
 		// Ready mode -> start interpreting in pause mode
 		if (isReadyMode()) {
@@ -428,6 +432,10 @@ public class PanelRunListener implements Debugger {
 	};
 	
 	public void stopButtonPerformed(){
+		
+		//This action is not possible in ready mode
+		if( this.isReadyMode() )
+			return;
 		
 		// Stop interpreter out of RUN or PAUSE mode
 		if (keepRunning) {
