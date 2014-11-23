@@ -5,9 +5,11 @@ import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.Dimension;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.KeyStroke;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
@@ -89,6 +91,16 @@ public class GUIcontrolPanel {
 	 * </hr>
 	 */
 	private void initRunMode( JPanel panel ) {
+		
+		/* ---------- KEYBOARD SHORCUTS ---------- */
+		panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("F5"), "F5_run");
+		panel.getActionMap().put("F5_run", this.listener.F5_run);
+		
+		panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("F6"), "F6_step");
+		panel.getActionMap().put("F6_step", this.listener.F6_step);
+		
+		panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("F7"), "F7_stop");
+		panel.getActionMap().put("F7_stop", this.listener.F7_stop);
 
 		/* ---------- BUTTONS ---------- */
 		//"play" button
@@ -104,12 +116,12 @@ public class GUIcontrolPanel {
 		//"pause" button
 		jButtonStop = new JButton("\u25A0");
 		this.jButtonStop.addMouseListener(this.listener.stopButtonHandler);
-		this.jButtonStop.setToolTipText("<html><b>" + _("stop") + "</b><br>"
+		this.jButtonStop.setToolTipText("<html><b>" + _("stop") + " (F7)" + "</b><br>"
 				+ _("return to text edit maine immediately") + "</html>");
 		panel.add(jButtonStop);
 
 		/* ---------- SLIDER ---------- */
-		jLabelTimer = new JLabel("0.50 sec");
+		jLabelTimer = new JLabel("0.50 " + _("sec"));
 		panel.add(jLabelTimer);
 
 		jSlider = new JSlider(JSlider.HORIZONTAL, 1, 9, 1);
@@ -143,12 +155,12 @@ public class GUIcontrolPanel {
 		
 		this.jButtonPlay.setText("\u25B6");
 		
-		this.jButtonStep.setToolTipText("<html><b>" + _("compile and step")
+		this.jButtonStep.setToolTipText("<html><b>" + _("compile and step") + " (F6)" 
 				+ "</b><br>"
 				+ _("compile source code and<br>run debugger step by step")
 				+ "</html>");
 		
-		this.jButtonPlay.setToolTipText("<html><b>" + _("compile and run")
+		this.jButtonPlay.setToolTipText("<html><b>" + _("compile and run") + " (F5)" 
 				+ "</b><br>" + _("compile source code<br>and run debugger")
 				+ "</html>");
 	}
@@ -183,12 +195,12 @@ public class GUIcontrolPanel {
 		
 		this.jButtonPlay.setText("\u25AE\u25AE");
 		
-		this.jButtonStep.setToolTipText("<html><b>" + _("pause")
+		this.jButtonStep.setToolTipText("<html><b>" + _("pause") + " (F5)" 
 				+ "</b><br>"
 				+ _("pause automatic debugging")
 				+ "</html>");
 		
-		this.jButtonPlay.setToolTipText("<html><b>" + _("next step")
+		this.jButtonPlay.setToolTipText("<html><b>" + _("next step") + " (F6)"
 				+ "</b><br>" + _("proceed to next step manually")
 				+ "</html>");
 	}
@@ -208,12 +220,12 @@ public class GUIcontrolPanel {
 		
 		this.jButtonPlay.setText("\u25B6");
 		
-		this.jButtonStep.setToolTipText("<html><b>" + _("play")
+		this.jButtonStep.setToolTipText("<html><b>" + _("play") + " (F5)" 
 				+ "</b><br>"
 				+ _("run automatic debugging")
 				+ "</html>");
 		
-		this.jButtonPlay.setToolTipText("<html><b>" + _("next step")
+		this.jButtonPlay.setToolTipText("<html><b>" + _("next step") + " (F6)" 
 				+ "</b><br>" + _("proceed to next step manually")
 				+ "</html>");
 	}

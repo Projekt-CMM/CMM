@@ -1,11 +1,13 @@
 package at.jku.ssw.cmm.gui.event.debug;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.JButton;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -288,53 +290,54 @@ public class PanelRunListener implements Debugger {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			
-			JButton button = (JButton)e.getSource();
-			if( !button.isEnabled() )
-				return;
-
-			// Ready -> Start interpreting in run mode
-			if (isReadyMode()||isErrorMode()) {
-				
-				master.setRunMode();
-				master.runInterpreter();
-			}
-
-			// Run -> pause interpreting
-			else if (isRunMode()) {
-				master.setPauseMode();
-
-				if (timer != null)
-					timer.cancel();
-			}
-
-			// Pause -> re-run interpreting
-			else if (isPauseMode()) {
-				master.setRunMode();
-				userReply();
-				
-				//Remove already passed breakpoints if in fast run mode
-				if( delay == 0 )
-					master.updateBreakPoints(lastNode.line);
-			}
+			runButtonPerformed();
 		}
-
 		@Override
-		public void mousePressed(MouseEvent e) {
-		}
-
+		public void mousePressed(MouseEvent e) {}
 		@Override
-		public void mouseReleased(MouseEvent e) {
-		}
-
+		public void mouseReleased(MouseEvent e) {}
 		@Override
-		public void mouseEntered(MouseEvent e) {
-		}
-
+		public void mouseEntered(MouseEvent e) {}
 		@Override
-		public void mouseExited(MouseEvent e) {
-		}
+		public void mouseExited(MouseEvent e) {}
 	};
+	
+	public Action F5_run = new AbstractAction() {
+		
+		private static final long serialVersionUID = 7572186456956931071L;
+
+		public void actionPerformed(ActionEvent e) {
+	        runButtonPerformed();
+	    }
+	};
+	
+	private void runButtonPerformed(){
+
+		// Ready -> Start interpreting in run mode
+		if (isReadyMode()||isErrorMode()) {
+			
+			master.setRunMode();
+			master.runInterpreter();
+		}
+
+		// Run -> pause interpreting
+		else if (isRunMode()) {
+			master.setPauseMode();
+
+			if (timer != null)
+				timer.cancel();
+		}
+
+		// Pause -> re-run interpreting
+		else if (isPauseMode()) {
+			master.setRunMode();
+			userReply();
+			
+			//Remove already passed breakpoints if in fast run mode
+			if( delay == 0 )
+				master.updateBreakPoints(lastNode.line);
+		}
+	}
 
 	/**
 	 * Mouse listener for the "next step" button
@@ -344,20 +347,7 @@ public class PanelRunListener implements Debugger {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			
-			JButton button = (JButton)e.getSource();
-			if( !button.isEnabled() )
-				return;
-
-			// Ready mode -> start interpreting in pause mode
-			if (isReadyMode()) {
-				master.setPauseMode();
-				master.runInterpreter();
-			}
-
-			// Pause mode -> next step
-			else if (isPauseMode()){
-				userReply();
-			}
+			stepButtonPerformed();
 		}
 
 		@Override
@@ -376,6 +366,30 @@ public class PanelRunListener implements Debugger {
 		public void mouseExited(MouseEvent e) {
 		}
 	};
+	
+	public Action F6_step = new AbstractAction() {
+
+		private static final long serialVersionUID = 1L;
+
+		public void actionPerformed(ActionEvent e) {
+
+	        stepButtonPerformed();
+	    }
+	};
+	
+	public void stepButtonPerformed(){
+
+		// Ready mode -> start interpreting in pause mode
+		if (isReadyMode()) {
+			master.setPauseMode();
+			master.runInterpreter();
+		}
+
+		// Pause mode -> next step
+		else if (isPauseMode()){
+			userReply();
+		}
+	}
 
 	/**
 	 * Mouse listener for the "stop" button
@@ -384,17 +398,7 @@ public class PanelRunListener implements Debugger {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			
-			JButton button = (JButton)e.getSource();
-			if( !button.isEnabled() )
-				return;
-
-			// Stop interpreter out of RUN or PAUSE mode
-			if (keepRunning) {
-				master.setReadyMode();
-				//master.getCompileManager().setNotRunning();
-				userReply();
-			}
+			stopButtonPerformed();
 		}
 
 		@Override
@@ -413,6 +417,25 @@ public class PanelRunListener implements Debugger {
 		public void mouseExited(MouseEvent e) {
 		}
 	};
+	
+	public Action F7_stop = new AbstractAction() {
+
+		private static final long serialVersionUID = 1L;
+
+		public void actionPerformed(ActionEvent e) {
+	        stopButtonPerformed();
+	    }
+	};
+	
+	public void stopButtonPerformed(){
+		
+		// Stop interpreter out of RUN or PAUSE mode
+		if (keepRunning) {
+			master.setReadyMode();
+			//master.getCompileManager().setNotRunning();
+			userReply();
+		}
+	}
 
 	/**
 	 * Mouse listener for the run mode speed slider
