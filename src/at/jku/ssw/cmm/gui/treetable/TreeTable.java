@@ -56,6 +56,17 @@ public class TreeTable extends JTable {
     
     public void setTreeModel( TreeTableDataModel treeTableModel ){
     	
+    	int width1 = 0;
+    	int width2 = 0;
+    	int width3 = 0;
+    	
+    	//Save old column width
+    	if( this.modelAdapter != null ){
+	    	width1 = super.getColumn("Name").getWidth();
+	    	width2 = super.getColumn("Type").getWidth();
+	    	width3 = super.getColumn("Value").getWidth();
+    	}
+    	
     	this.dataModel = treeTableModel;
     	
     	//Create JTree
@@ -85,6 +96,13 @@ public class TreeTable extends JTable {
         //Editor for the tree table
         setDefaultEditor(TreeTableModel.class, new TreeTableCellEditor(tree, this));
         
+        //Set columns to old width
+        if( width1 > 0 && width2 > 0 && width3 > 0 ){
+        	super.getColumn("Name").setPreferredWidth(width1);
+        	super.getColumn("Type").setPreferredWidth(width2);
+        	super.getColumn("Value").setPreferredWidth(width3);
+        }
+        
         this.repaint();
     }
     
@@ -93,11 +111,24 @@ public class TreeTable extends JTable {
     }
     
     public void updateTreeModel(){
-        
+    	
+    	//Save old column width
+    	int width1 = super.getColumn("Name").getWidth();
+    	int width2 = super.getColumn("Type").getWidth();
+    	int width3 = super.getColumn("Value").getWidth();
+    	
+    	//Update tree table data
     	this.modelAdapter = new TreeTableModelAdapter(this.dataModel, tree);
         super.setModel(this.modelAdapter);
+        
+        //Re-initialize listeners
     	super.getColumn("Value").setCellRenderer(this.buttonRenderer);
     	super.getColumn("Type").setCellRenderer(this.buttonRenderer);
+    	
+    	//Set columns to old width
+    	super.getColumn("Name").setPreferredWidth(width1);
+    	super.getColumn("Type").setPreferredWidth(width2);
+    	super.getColumn("Value").setPreferredWidth(width3);
         
         this.repaint();
     }
