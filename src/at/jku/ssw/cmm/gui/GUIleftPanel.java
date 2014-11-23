@@ -197,18 +197,12 @@ public class GUIleftPanel {
 	}
 
 	/**
-	 * Moves the cursor to a specific line in the <b>user's</b> source code
-	 * (highlights the whole line - variable "col" is useless at the moment)<br>
-	 * Note: Method from interface <i>GUImod</i>
+	 * Moves the cursor to the given line in the source code (highlights the whole line).<br>
+	 * <br><b> Parameter line is absolute. </b>
+	 * This means that you have to take the line number in the complete source code (including
+	 * libraries). Otherwise take <i>highlightSourceCodeDirectly()</i>.
 	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 * 
-	 * @param line
-	 *            The line which is considered to be highlighted
-	 * @param col
-	 *            The column position [actually useless]
+	 * @param line The line which shall be highlighted.
 	 */
 	public void highlightSourceCode(int line) {
 
@@ -217,11 +211,22 @@ public class GUIleftPanel {
 			return;
 
 		// Correct offset in source code (offset caused by includes)
-		else
-			line = ExpandSourceCode
-					.correctLine(line, (int) this.codeRegister.get(0)[0],
+		line = ExpandSourceCode.correctLine(line, (int) this.codeRegister.get(0)[0],
 							this.codeRegister.size());
 
+		// Do highlighting
+		this.highlightSourceCodeDirectly(line);
+	}
+	
+	/**
+	 * Moves the cursor to the given line in the source code (highlights the whole line).<br>
+	 * <br><b> Parameter line is direct. </b>
+	 * This means that you have to take the line number in the user's source code (without
+	 * libraries). Otherwise take <i>highlightSourceCode()</i>.
+	 * 
+	 * @param line The line which shall be highlighted.
+	 */
+	public void highlightSourceCodeDirectly( int line ){
 		int i, l = 0;
 		final String code = this.jSourcePane.getText();
 
@@ -329,10 +334,10 @@ public class GUIleftPanel {
 		this.jOutputPane.setBackground(Color.WHITE);
 		
 		this.jStatePanel.setBackground(Color.RED);
-		this.jStateLabel.setText("! ! ! " + _("error") + " " + (line >= 0 ? _("in line ") + " " + line : "") + " ! ! !");
+		this.jStateLabel.setText("! ! ! " + _("error") + " " + (line >= 0 ? _("in line") + " " + line : "") + " ! ! !");
 		
-		//if( line >= 0 )
-			//this.highlightSourceCode(line);
+		if( line >= 0 )
+			this.highlightSourceCodeDirectly(line);
 	}
 
 	public void setRunMode() {
