@@ -63,4 +63,7 @@
 	<error id="unknown interpreter error occurred">
 		<file>cast.html</file>
 	</error>
+	<error id="([\w./]+) declared twice">
+		<file>cast.html</file>
+	</error>
 </errorTable>
