@@ -18,12 +18,6 @@
 	<error id="Divided by 0">
 		<file>divby0.html</file>
 	</error>
-	<error id="parameter not declared">
-		<file>param.html</file>
-	</error>
-	<error id="no known cast from ([\w./\s]+)">
-		<file>cast.html</file>
-	</error>
 	<error id="no input data">
 		<file>noinput.html</file>
 	</error>
@@ -63,6 +57,70 @@
 	<error id="unknown interpreter error occurred">
 		<file>default.html</file>
 	</error>
+	
+	
+	<!--#### Compiler Errors ####-->
+	
+	<!-- function declaration -->
+	<error id="declaration of function has more parameter as using of itself">
+		<file>compiler/function/decl_more_parameter.html</file>
+	</error>
+	<error id="using of function has more parameters as the declaration">
+		<file>compiler/function/using_more_parameter.html</file>
+	</error>
+	<!--<error id="function has more parameters as forward-declaration declare">
+		<file>default.html</file>
+	</error>
+	<error id="forward-declaration of function has more parameter as function itself">
+		<file>default.html</file>
+	</error>
+	<error id="parameter of function and forward declaration has not the same type">
+		<file>default.html</file>
+	</error>
+	<error id="parameter of function or forward declaration is ref, in the other not">
+		<file>default.html</file>
+	</error>
+	<error id="return value of forware declaration does not match declaration">
+		<file>default.html</file>
+	</error>
+	<error id="([\w./]+) has only a forward-declaration">
+		<file>default.html</file>
+	</error>
+	<error id="no function declared">
+		<file>default.html</file>
+	</error>-->
+	<error id="parameter not declared">
+		<file>compiler/function/param_not_decl.html</file>
+	</error>
+	<!--<error id="there is no type-conversation for ref-parameter(s) allowed">
+		<file>default.html</file>
+	</error>
+	<error id="the number of dimensions in the declaration isn't the same as in the call">
+		<file>default.html</file>
+	</error>
+	<error id="there is no type-conversation for arrays allowed">
+		<file>default.html</file>
+	</error>-->
+	
+	<!-- const value parser -->
+	<!--<error id="([\w./]+) is not an integer">
+		<file>default.html</file>
+	</error>
+	<error id="([\w./]+) is not an float">
+		<file>default.html</file>
+	</error>
+	<error id="unknow character">
+		<file>default.html</file>
+	</error>
+	<error id="([\w./\s]+) string doesn't have \" at start end endpoint">
+		<file>default.html</file>
+	</error>
+	<error id="([\w./]+) no single \\ at the end of a string allowed">
+		<file>default.html</file>
+	</error>-->
+	<error id="no known cast from ([\w./\s]+)">
+		<file>cast.html</file>
+	</error>	
 	
     <!--#### Runtime Exceptions ####-->
 
