@@ -39,6 +39,7 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
      
     public TreeTableCellRenderer(TreeTable treeTable, TreeModel model) {
         super(model);
+        super.setCellRenderer(new TreeRenderer());
         this.treeTable = treeTable;
         
         setRowHeight(getRowHeight());
@@ -78,8 +79,9 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
      */
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
     	
-    	//Set background of cell with function name green
-    	if ( table.getValueAt(row, 0).toString().endsWith(")") ){
+    	/*if (isSelected)
+	        setBackground(table.getSelectionBackground());
+    	else if ( table.getValueAt(row, 0).toString().endsWith(")") ){
         	setBackground(Color.CYAN);
         }
     	else if ( table.getValueAt(row, 1).toString().endsWith("" + DataNode.CHANGE_TAG) ){
@@ -88,10 +90,35 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
     	else if ( table.getValueAt(row, 2).toString().equals("undef") ){
     		setBackground(new Color(240, 240, 240));
     	}
-    	else if (isSelected)
-	        setBackground(table.getSelectionBackground());
 	    else
-	    	setBackground(table.getBackground());
+	    	setBackground(table.getBackground());*/
+    	
+    	if( isSelected ){
+			if( table.getValueAt(row, 0).toString().endsWith(")") )
+				setBackground(new Color(0, 159, 153));
+			
+			else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.CHANGE_TAG) )
+				setBackground(new Color(215, 200, 0));
+			
+			else if ( table.getValueAt(row, 2).toString().equals("undef") )
+	    		setBackground(new Color(200, 200, 200));
+			
+			else
+				setBackground(table.getSelectionBackground());
+		}
+		else{
+			if( table.getValueAt(row, 0).toString().endsWith(")") )
+				setBackground(Color.CYAN);
+			
+			else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.CHANGE_TAG) )
+				setBackground(Color.YELLOW);
+			
+			else if ( table.getValueAt(row, 2).toString().equals("undef") )
+	    		setBackground(new Color(240, 240, 240));
+			
+			else
+				setBackground(table.getBackground());
+		}
     	
         visibleRow = row;
         return this;
