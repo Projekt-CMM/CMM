@@ -44,6 +44,8 @@ public class GUILauncherMain {
 	
 	public static void init(){
 		
+		GUILauncherMain launcher = new GUILauncherMain();
+		
 		try { 
 		    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
@@ -60,9 +62,9 @@ public class GUILauncherMain {
 		jGlobalPanel.setLayout(new BorderLayout());
 		jGlobalPanel.setBorder(new EmptyBorder(10, 10, 10, 10) );
 		
-			addWelcomeBlock();
-			addProfilePanel();
-			addBottomPanel();
+		launcher.addWelcomeBlock();
+		launcher.addProfilePanel();
+		launcher.addBottomPanel();
 			
 			//jGlobalPanel.add(addProfilePreview());
 		
@@ -74,7 +76,7 @@ public class GUILauncherMain {
 		System.out.println("finished");
 	}
 	
-	private static void addWelcomeBlock(){
+	private void addWelcomeBlock(){
 		JPanel jWelcomePanel = new JPanel(new BorderLayout());
 		
 		JLabel welcomeMessage = new JLabel("Welcome");
@@ -92,7 +94,7 @@ public class GUILauncherMain {
 	//Welcome Panel finished
 	}
 	
-	private static void addProfilePanel(){
+	private void addProfilePanel(){
 		JPanel jProfilePanel = new JPanel(new BorderLayout());
 		JPanel jSelectProfilePanel = new JPanel(new BorderLayout());
 		
@@ -144,7 +146,7 @@ public class GUILauncherMain {
 	//Profile Panel finished
 	}
 	
-	public static JPanel addProfilePreview(Profile profile, int state){
+	public JPanel addProfilePreview(Profile profile, int state){
 		JPanel jMarginPanel = new JPanel(new BorderLayout());
 
 		
@@ -208,7 +210,7 @@ public class GUILauncherMain {
 		
 	}
 	
-	private static void addBottomPanel(){
+	private void addBottomPanel(){
 		JPanel jFinishPanel = new JPanel(new BorderLayout());
 		
 		String[] languages = { "Englisch", "Deutsch"};
