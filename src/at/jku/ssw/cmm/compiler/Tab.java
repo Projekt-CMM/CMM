@@ -285,7 +285,7 @@ public class Tab {
 		if(s.matches("^\".*\"$")) {
 			s = s.substring(1, s.length()-1);
 		} else 
-			parser.SemErr(s + "string doesn't have \" at start end endpoint");
+			parser.SemErr(s + " string doesn't have \" at start end endpoint");
 		String returnStr = new String();
 		while(s.length() != 0) {
 			if(s.charAt(0) != '\\') {
@@ -317,7 +317,7 @@ public class Tab {
 				}
 				s = s.substring(2);	// remove 2 letters
 			} else {
-				parser.SemErr(s + "no single \\ at the end of a string allowed");
+				parser.SemErr(s + " no single \\ at the end of a string allowed");
 			}
 		}
 		return returnStr;
