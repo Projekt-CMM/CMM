@@ -124,13 +124,6 @@ public class GUImain {
 	 */
 	private void start(boolean test) {
 		
-		//Change look and feel of the GUI
-		/*try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}*/
-		
 		if (SwingUtilities.isEventDispatchThread())
 			DebugShell.out(State.LOG, Area.SYSTEM, "main GUI running on EDT.");
 
