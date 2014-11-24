@@ -3,7 +3,7 @@ jdk:
   - openjdk7
 before_install:
  - sudo apt-get -qq update
- - sudo apt-get -qq install coco-java
+ - sudo apt-get -qq install coco-java jflex
  - "export DISPLAY=:99.0"
  - "sh -e /etc/init.d/xvfb start"
 script:

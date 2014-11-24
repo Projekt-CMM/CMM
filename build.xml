@@ -7,6 +7,8 @@
     <property name="name" value="CMM"/>
     <property name="manifest" value="manifest.txt"/>
     <property name="coco-ant.file" value="${java.dir}/at/jku/ssw/cmm/compiler/CMM.atg"/>
+    <property name="flex-ccompact.file" value="${java.dir}/at/jku/ssw/cmm/gui/init/CCompactTokenMaker.flex"/>
+    <property name="java-flex-ccompact.file" value="${java.dir}/at/jku/ssw/cmm/gui/init/CCompactTokenMaker.java"/>
 
     <path id="classpath">
         <pathelement location="."/>
@@ -21,9 +23,28 @@
             <arg value="${coco-ant.file}"/>
         </exec>
     </target>
+    
+    <!-- generate CCompactTokenMaker.java from CCompactTokenMaker.flex, using jflex -->
+    <target name="flex" description="generate CCompactTokenMaker.java from CCompactTokenMaker.flex">
+        <exec executable="jflex" failonerror="true">
+            <arg value="${flex-ccompact.file}"/>
+        </exec>
+        
+        <!-- remove functions which are generating errors -->
+        <exec executable="sed" failonerror="true">
+            <arg value="-i"/>
+            <arg value="s/public final void yyreset(java.io.Reader reader)/public final void yyreset_old(java.io.Reader reader)/g"/>
+            <arg value="${java-flex-ccompact.file}"/>
+        </exec>
+        <exec executable="sed" failonerror="true">
+            <arg value="-i"/>
+            <arg value="s/private boolean zzRefill() throws java.io.IOException/private boolean zzRefill_old() throws java.io.IOException/g"/>
+            <arg value="${java-flex-ccompact.file}"/>
+        </exec>
+    </target>
 
     <!-- build project -->
-    <target name="build" depends="coco" description="build project">
+    <target name="build" depends="coco, flex" description="build project">
 
         <!-- add directory -->
         <mkdir dir="${build.classes}"/>

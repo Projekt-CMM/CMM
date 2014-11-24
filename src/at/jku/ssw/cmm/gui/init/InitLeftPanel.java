@@ -11,8 +11,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 import at.jku.ssw.cmm.gui.GUImainSettings;
@@ -39,8 +41,11 @@ public class InitLeftPanel {
 		RSyntaxTextArea textArea = new RSyntaxTextArea(settings.getSourceSizeY(), settings.getSourceSizeX());
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
 		
-		//((AbstractTokenMakerFactory) TokenMakerFactory.getDefaultInstance()).putMapping(CMMtokenMaker.StyleName, CMMtokenMaker.class.getName());
-	      //textArea.setSyntaxEditingStyle(CMMtokenMaker.StyleName);
+		
+		AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory)TokenMakerFactory.getDefaultInstance();
+		atmf.putMapping("text/ccompact", "at.jku.ssw.cmm.gui.init.CCompactTokenMaker");
+		textArea.setSyntaxEditingStyle("text/ccompact");
+
 		
 	    textArea.setCodeFoldingEnabled(true);
 	    textArea.setAntiAliasingEnabled(true);
