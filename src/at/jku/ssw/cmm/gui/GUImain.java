@@ -23,6 +23,7 @@ import at.jku.ssw.cmm.gui.file.SaveDialog;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
 import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
 import at.jku.ssw.cmm.gui.quest.GUIquestMain;
+import at.jku.ssw.cmm.launcher.GUILauncherMain;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.XMLReadingException;
 
@@ -300,59 +301,15 @@ public class GUImain {
 		//open profile selector on empty profile
 
 		//Select Profile if there is no active Profile
-		if(Profile.getActiveProfile() == null)
-			selectProfile();
+		if(Profile.getActiveProfile() == null){
+			this.dispose();
+			GUILauncherMain.init();
+			//selectProfile();
+		}
 		
 		//Ignoring Quest GUI if there is no active Profile
 		if(Profile.getActiveProfile() != null)
 			new GUIquestMain(this.rightPanelControl.getQuestPanel()).start();
-	}
-
-	/**
-	 * TODO Profile Preview
-	 * Invokes the profile selection dialog
-	 */
-	public void selectProfile(){
-		DebugShell.out(State.LOG, Area.GUI, "Opening Profile Selection Window...");
-		JFileChooser chooser = new JFileChooser("Select a profile...");
-		//chooser.setFileFilter(new FileNameExtensionFilter("C Compact Profile", "xml"));
-				
-		//Only Directorys can be choosen
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		
-		//TODO
-		//chooser.setAccessory(new ProfilePreview(chooser));
-		
-		//Disable Renaming etc.
-		UIManager.put("FileChooser.readOnly", Boolean.TRUE);
-		
-		//chooser.showOpenDialog(jFrame);		
-	    int ret = chooser.showDialog(null, null);
-	    
-	    if (ret == JFileChooser.APPROVE_OPTION) 
-			if(chooser.getSelectedFile() != null && chooser.getSelectedFile().getPath() != null ){
-				
-				String path = chooser.getSelectedFile().getAbsolutePath();
-				try {
-					Profile.setActiveProfile(Profile.ReadProfile(path));
-					GUIquestPanel questPanel = this.rightPanelControl.getQuestPanel();
-					
-					questPanel.RefreshProfile(Profile.getActiveProfile());
-					
-				} catch (XMLReadingException | IndexOutOfBoundsException e) {
-					
-					System.err.println(path + " Wrong Profile Choosen - no profile.xml found");
-	        		
-					JFrame frame = new JFrame("Warnung");
-	        		JOptionPane.showMessageDialog(frame,"Falsches Profil ausgewaehlt.","Warnung:",
-	        			    JOptionPane.WARNING_MESSAGE);
-	        		
-					//Open the Selection Window again
-					selectProfile();
-				}
-				DebugShell.out(State.LOG, Area.GUI, "Profile Chooser Path:"
-						+ chooser.getSelectedFile().getAbsolutePath());
-			}
 	}
 
 	/**
@@ -442,5 +399,10 @@ public class GUImain {
 
 	public GUImainSettings getSettings() {
 		return settings;
+	}
+	
+	//TODO
+	public void dispose(){
+		this.jFrame.dispose();
 	}
 }

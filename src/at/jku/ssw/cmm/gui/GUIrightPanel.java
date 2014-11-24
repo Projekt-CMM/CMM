@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.JTextComponent;
 
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
@@ -103,7 +104,7 @@ public class GUIrightPanel {
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		editorScrollPane.setPreferredSize(new Dimension(100, 300));
 		editorScrollPane.setMinimumSize(new Dimension(10, 10));
-
+		
 		this.errorPanel.add(editorScrollPane, BorderLayout.CENTER);
 
 		// Initialize Quest Panel
@@ -135,7 +136,9 @@ public class GUIrightPanel {
 	}
 
 	public void showErrorPanel(String msg) {
-
+		this.errorDesc.setDocument(LoadStatics.readStyleSheet("error"
+				+ File.separator + "style.css"));
+		
 		try {
 			this.errorDesc.setPage(LoadStatics.getHTMLUrl(this.errorMap
 					.getErrorHTML(msg)));
