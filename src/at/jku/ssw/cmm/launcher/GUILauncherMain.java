@@ -46,12 +46,6 @@ public class GUILauncherMain {
 		
 		GUILauncherMain launcher = new GUILauncherMain();
 		
-		try { 
-		    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
-		
 		jFrame = new JFrame("C Compact Launcher");
 		
 		jFrame.setMinimumSize(new Dimension(700,550));
@@ -106,6 +100,7 @@ public class GUILauncherMain {
 			
 			
 				JButton jFindProfile = new JButton("Find");
+				jFindProfile.addMouseListener(new FindProfileListener(jFrame));
 				jRightButtons.add(jFindProfile);
 				
 				

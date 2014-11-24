@@ -56,7 +56,7 @@ public class Profile {
 	
 	//Static final Strings
 	public static final String
-		FILE_PROFILE = "profile.xml",
+		FILE_PROFILE = "profile.cp",
 		FILE_PACKAGESPATH = "packages",
 		FILE_PROFILEIMAGE = "avatar";
 	
@@ -170,7 +170,7 @@ public class Profile {
 		
 		Profile profile = new Profile(profilePath,packagesPath);
 		
-		//setting default Name, can be changed by .xml
+		//setting default Name, can be changed by .profile
 		profile.setName(profilePath.split(sep)[profilePath.split(sep).length-1]);
 		profile.setInitPath(profilePath);
 		
@@ -299,8 +299,15 @@ public class Profile {
             Document doc = icBuilder.newDocument();
             Element mainRootElement = doc.createElementNS(path, Profile.XML_PROFILE);
             doc.appendChild(mainRootElement);
-            mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_NAME, profile.getName()));
-            mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_XP, profile.getXp() + ""));
+            
+           if(profile.getName() != null) 
+        	   mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_NAME, profile.getName()));
+          
+           
+           if(profile.getXp() != 0) 
+        	   mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_XP, profile.getXp() + ""));
+           else
+               mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_XP, 0 + ""));
            
            if(profile.getProfileimage() != null)
             	mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_PROFILEIMAGE, profile.getProfileimage()));

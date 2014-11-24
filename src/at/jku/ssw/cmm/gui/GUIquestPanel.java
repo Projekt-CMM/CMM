@@ -70,7 +70,7 @@ public class GUIquestPanel {
 	private JLabel jProfileTitle;
 	
 	//"Select Profile"-Button
-	private JButton jProfileSelectButton;
+	//private JButton jProfileSelectButton;
 	
 	//Profile picture
 	private JLabel jProfilePicture;
@@ -115,8 +115,8 @@ public class GUIquestPanel {
 		this.jQuestTitle = new JLabel(_("Current Quest"));
 		
 		//Buttons
-		this.jProfileSelectButton = new JButton(_("Select Profile"));
-		this.jProfileSelectButton.addMouseListener(listener.profileHandler);
+		//this.jProfileSelectButton = new JButton(_("Select Profile"));
+		//this.jProfileSelectButton.addMouseListener(listener.profileHandler);
 		this.jQuestSelectButton = new JButton(_("Select Quest"));
 		this.jQuestSelectButton.addMouseListener(listener.questHandler);
 		
@@ -181,8 +181,8 @@ public class GUIquestPanel {
 		c.insets = new Insets(5,5,5,5);
 		
 		
-		cp.add(this.jProfileTitle, this.setLayoutPosition(c, 0, 0, 1, 1));
-		cp.add(this.jProfileSelectButton, this.setLayoutPosition(c, 1, 0, 1, 1));
+		cp.add(this.jProfileTitle, this.setLayoutPosition(c, 0, 0, 2, 1));
+		//cp.add(this.jProfileSelectButton, this.setLayoutPosition(c, 1, 0, 1, 1));
 		
 		cp.add(this.jProfilePicture, this.setLayoutPosition(c, 0, 1, 1, 4));
 		
