@@ -113,7 +113,7 @@ public class GUIcontrolPanel {
 		this.jButtonStep.addMouseListener(this.listener.stepButtonHandler);
 		panel.add(jButtonStep);
 
-		//"pause" button
+		//"stop" button
 		jButtonStop = new JButton("\u25A0");
 		this.jButtonStop.addMouseListener(this.listener.stopButtonHandler);
 		this.jButtonStop.setToolTipText("<html><b>" + _("stop") + " (F7)" + "</b><br>"
