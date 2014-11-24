@@ -292,11 +292,11 @@ public class GUIleftPanel {
 	public void lockInput() {
 
 		this.jSourcePane.setEditable(false);
-		this.jSourcePane.setBackground(Color.LIGHT_GRAY);
+		this.jSourcePane.setBackground(new Color(230, 230, 230));
 		this.jInputPane.setEditable(false);
-		this.jInputPane.setBackground(Color.LIGHT_GRAY);
+		this.jInputPane.setBackground(new Color(230, 230, 230));
 		this.jOutputPane.setEditable(false);
-		this.jOutputPane.setBackground(Color.LIGHT_GRAY);
+		this.jOutputPane.setBackground(new Color(230, 230, 230));
 	}
 
 	/**
@@ -308,7 +308,7 @@ public class GUIleftPanel {
 	 * <hr>
 	 */
 	public void unlockInput() {
-
+		
 		this.jSourcePane.setEditable(true);
 		this.jSourcePane.setBackground(Color.WHITE);
 		this.jInputPane.setEditable(true);
@@ -319,9 +319,7 @@ public class GUIleftPanel {
 	
 	public void setReadyMode() {
 		
-		this.jSourcePane.setBackground(Color.WHITE);
-		this.jInputPane.setBackground(Color.WHITE);
-		this.jOutputPane.setBackground(Color.WHITE);
+		this.unlockInput();
 		
 		this.jStatePanel.setBackground(Color.LIGHT_GRAY);
 		this.jStateLabel.setText("--- " + _("text edit mode") + " ---");
@@ -329,9 +327,7 @@ public class GUIleftPanel {
 
 	public void setErrorMode(String msg, int line) {
 		
-		this.jSourcePane.setBackground(Color.WHITE);
-		this.jInputPane.setBackground(Color.WHITE);
-		this.jOutputPane.setBackground(Color.WHITE);
+		this.unlockInput();
 		
 		this.jStatePanel.setBackground(Color.RED);
 		this.jStateLabel.setText("! ! ! " + _("error") + " " + (line >= 0 ? _("in line") + " " + line : "") + " ! ! !");
@@ -342,9 +338,8 @@ public class GUIleftPanel {
 
 	public void setRunMode() {
 		
-		this.jSourcePane.setBackground(new Color(230, 230, 230));
-		this.jInputPane.setBackground(new Color(230, 230, 230));
-		this.jOutputPane.setBackground(new Color(230, 230, 230));
+		
+		this.lockInput();
 		
 		this.jStatePanel.setBackground(Color.GREEN);
 		this.jStateLabel.setText(">>> " + _("automatic debug mode") + " >>>");
@@ -352,9 +347,7 @@ public class GUIleftPanel {
 
 	public void setPauseMode() {
 		
-		this.jSourcePane.setBackground(new Color(230, 230, 230));
-		this.jInputPane.setBackground(new Color(230, 230, 230));
-		this.jOutputPane.setBackground(new Color(230, 230, 230));
+		this.lockInput();
 		
 		this.jStatePanel.setBackground(Color.YELLOW);
 		this.jStateLabel.setText("||| " + _("pause or step by step mode") + " |||");
