@@ -10,7 +10,7 @@ java based compiler for a minimal c-dialect
 ##### Install required packages on Debian/Ubuntu
 
 ```
-sudo apt-get install ant coco-java openjdk-7-jdk
+sudo apt-get install ant coco-java jflex openjdk-7-jdk
 ```
 
 ##### using ant to build project
