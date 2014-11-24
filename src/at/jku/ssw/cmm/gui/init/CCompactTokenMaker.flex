@@ -211,13 +211,17 @@ Identifier            = ({IdentifierStart}{IdentifierPart}*)
    "default" |
    "do" |
    "else" |
-   /* "for" |*/
+/* "for" | */
    "if" |   
    "library" |
    "return" |
    "struct" |
    "switch" |
    "while"      { addToken(Token.RESERVED_WORD); }   
+
+   /* Boolean literals. */
+   "true" |
+   "false" |
 
    /* Data types */   
    "bool" |   
@@ -227,11 +231,48 @@ Identifier            = ({IdentifierStart}{IdentifierPart}*)
    "string" | 
    "void"      { addToken(Token.DATA_TYPE); }   
 
-   /* Functions */   
-   "read" |   
-   "write" |   
-   "printf" |   
-   "length"      { addToken(Token.FUNCTION); }   
+   /* basic Functions */   
+   "length" |
+   "print" |
+   "printf" |
+   "read" |
+   "write" |
+   
+   /* math.h Functions*/
+   "acos" |
+   "asin" | 
+   "atan" |
+   "atan2" |
+   "ceil" |
+   "cos" |
+   "cosh" |
+   "exp" |
+   "fak" |
+   "fabs" |
+   "floor" |
+   "fmod" |
+   "frexp" |
+   "ldexp" |
+   "log" |
+   "log10" |
+   "modf" |
+   "pow" |
+   "sin" |
+   "sinh" |
+   "sqrt" |
+   "tan" |
+   "tanh" |
+   
+   /* stdlib.h Functions*/
+   "atoi" |
+/* "atof" | */
+   "ftoa" |
+   "itoa" |
+   
+   /* stdio.h Functions*/
+   "prints" |
+   "putc" |
+   "scanf" { addToken(Token.FUNCTION); }   
 
    {Identifier}            { addToken(Token.IDENTIFIER); }   
 
@@ -258,7 +299,7 @@ Identifier            = ({IdentifierStart}{IdentifierPart}*)
 
    /* Operators. */   
    "!" | "%" | "%=" | "&" | "&&" | "*" | "*=" | "+" | "++" | "+=" | "," | "-" | "--" | "-=" |   
-   "/" | "/=" | ":" | "<" | "<<" | "<<=" | "=" | "==" | ">" | ">>" | ">>=" | "?" | "^" | "|" |   
+   "/" | "/=" | ":" | "<" | "<<" | "<<=" | "=" | "==" | ">" | ">>" | ">>=" | "^" | "|" |   
    "||" | "~"      { addToken(Token.OPERATOR); }   
 
    /* Numbers */   
