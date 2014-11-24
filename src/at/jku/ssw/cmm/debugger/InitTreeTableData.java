@@ -42,7 +42,7 @@ public class InitTreeTableData {
 		DataNode node = new DataNode(fileName, "", "", new ArrayList<DataNode>(), -1, -1);
 		
 		//Add global variables
-		node = readVariables( true, compiler.getSymbolTable().curScope.locals, node, Memory.getGlobalPointer(), main );
+		node = readVariables( true, compiler.getSymbolTable().curScope.locals, node, Memory.getGlobalPointer(), main, 0 );
 		
 		//Read local variables recursively
 		getNextAddress( true, compiler, Memory.getFramePointer(), node, main );
@@ -67,7 +67,7 @@ public class InitTreeTableData {
 	public static void updateTreeTable( TreeTableDataModel model, DataNode node, CMMwrapper compiler, GUImain main, String fileName ){
 		
 		//Read global variables
-		readVariables( false, compiler.getSymbolTable().curScope.locals, node, Memory.getGlobalPointer(), main );
+		readVariables( false, compiler.getSymbolTable().curScope.locals, node, Memory.getGlobalPointer(), main, 0 );
 				
 		//Read local variables recursively
 		getNextAddress( false, compiler, Memory.getFramePointer(), node, main );
@@ -103,7 +103,7 @@ public class InitTreeTableData {
 			funcNode = node.getChild( name + "()", "", "", -1, obj.line );
 		
 		//Read local variables of the current function
-		readVariables( init, obj.locals, funcNode, address, main );
+		readVariables( init, obj.locals, funcNode, address, main, obj.nPars );
 		node.prepend(init, funcNode);
 		
 		if( name == "main" )
@@ -126,7 +126,7 @@ public class InitTreeTableData {
 	 * @param main A reference to the main interface which is necessary to invoke mains
 	 * @return The updated data node (see papam "node")
 	 */
-	private static DataNode readVariables( boolean init, Obj obj, DataNode node, int address, GUImain main ){
+	private static DataNode readVariables( boolean init, Obj obj, DataNode node, int address, GUImain main, int nPars ){
 		
 		//Iterate through symbol table
 		while( obj != null ){
@@ -134,15 +134,15 @@ public class InitTreeTableData {
 			if( obj.type.kind == Struct.INT && obj.kind != Obj.PROC && !obj.library ){
 				if( obj.kind == Obj.VAR && !obj.isRef ){
 					if(!Memory.getMemoryInformation(address + obj.adr).isInitialized)
-						node.add(init, new DataNode(obj.name, "int", "undef", null, address + obj.adr, obj.line));
+						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>int</b></html>" : "int", "undef", null, address + obj.adr, obj.line));
 					else
-						node.add(init, new DataNode(obj.name, "int", Memory.loadInt(address + obj.adr), null, address + obj.adr, obj.line));
+						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>int</b></html>" : "int", Memory.loadInt(address + obj.adr), null, address + obj.adr, obj.line));
 				}
 				else if( obj.kind == Obj.VAR && obj.isRef && obj.kind != Obj.PROC ){
 					if(!Memory.getMemoryInformation(Memory.loadInt(address + obj.adr)).isInitialized)
-						node.add(init, new DataNode(obj.name, "int", "undef", null, address + obj.adr, obj.line));
+						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>int</b></html>" : "int", "undef", null, address + obj.adr, obj.line));
 					else
-						node.add(init, new DataNode(obj.name, "int", Memory.loadInt(Memory.loadInt(address + obj.adr)), null, address + obj.adr, obj.line));
+						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>int</b></html>" : "int", Memory.loadInt(Memory.loadInt(address + obj.adr)), null, address + obj.adr, obj.line));
 				}
 				else{
 					node.add(init, new DataNode(obj.name, "int", obj.val, null, -1, obj.line));
@@ -152,15 +152,15 @@ public class InitTreeTableData {
 			else if( obj.type.kind == Struct.CHAR && obj.kind != Obj.PROC && !obj.library ){
 				if( obj.kind == Obj.VAR && !obj.isRef ){
 					if(!Memory.getMemoryInformation(address + obj.adr).isInitialized)
-						node.add(init, new DataNode(obj.name, "char", "undef", null, address + obj.adr, obj.line));
+						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>char</b></html>" : "char", "undef", null, address + obj.adr, obj.line));
 					else
-						node.add(init, new DataNode(obj.name, "char", Memory.loadChar(address + obj.adr), null, address + obj.adr, obj.line));
+						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>char</b></html>" : "char", Memory.loadChar(address + obj.adr), null, address + obj.adr, obj.line));
 				}
 				else if( obj.kind == Obj.VAR && obj.isRef ){
 					if(!Memory.getMemoryInformation(Memory.loadInt(address + obj.adr)).isInitialized)
-						node.add(init, new DataNode(obj.name, "char", "undef", null, address + obj.adr, obj.line));
+						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>char</b></html>" : "char", "undef", null, address + obj.adr, obj.line));
 					else
-						node.add(init, new DataNode(obj.name, "char", Memory.loadChar(Memory.loadInt(address + obj.adr)), null, address + obj.adr, obj.line));
+						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>char</b></html>" : "char", Memory.loadChar(Memory.loadInt(address + obj.adr)), null, address + obj.adr, obj.line));
 				}
 				else{
 					node.add(init, new DataNode(obj.name, "char", obj.val, null, -1, obj.line));
@@ -170,15 +170,15 @@ public class InitTreeTableData {
 			else if( obj.type.kind == Struct.FLOAT && obj.kind != Obj.PROC && !obj.library ){
 				if( obj.kind == Obj.VAR && !obj.isRef ){
 					if(!Memory.getMemoryInformation(address + obj.adr).isInitialized)
-						node.add(init, new DataNode(obj.name, "float", "undef", null, address + obj.adr, obj.line));
+						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>float</b></html>" : "float", "undef", null, address + obj.adr, obj.line));
 					else
-						node.add(init, new DataNode(obj.name, "float", Memory.loadFloat(address + obj.adr), null, address + obj.adr, obj.line));
+						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>float</b></html>" : "float", Memory.loadFloat(address + obj.adr), null, address + obj.adr, obj.line));
 				}
 				else if( obj.kind == Obj.VAR && obj.isRef ){
 					if(!Memory.getMemoryInformation(Memory.loadInt(address + obj.adr)).isInitialized)
-						node.add(init, new DataNode(obj.name, "float", "undef", null, address + obj.adr, obj.line));
+						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>float</b></html>" : "float", "undef", null, address + obj.adr, obj.line));
 					else
-						node.add(init, new DataNode(obj.name, "float", Memory.loadFloat(Memory.loadInt(address + obj.adr)), null, address + obj.adr, obj.line));
+						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>float</b></html>" : "float", Memory.loadFloat(Memory.loadInt(address + obj.adr)), null, address + obj.adr, obj.line));
 				}
 				else{
 					node.add(init, new DataNode(obj.name, "float", obj.fVal, null, -1, obj.line));
@@ -188,15 +188,15 @@ public class InitTreeTableData {
 			else if( obj.type.kind == Struct.BOOL && obj.kind != Obj.PROC && !obj.library ){
 				if( obj.kind == Obj.VAR && !obj.isRef ){
 					if(!Memory.getMemoryInformation(address + obj.adr).isInitialized)
-						node.add(init, new DataNode(obj.name, "bool", "undef", null, address + obj.adr, obj.line));
+						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>bool</b></html>" : "bool", "undef", null, address + obj.adr, obj.line));
 					else
-						node.add(init, new DataNode(obj.name, "bool", Memory.loadBool(address + obj.adr), null, address + obj.adr, obj.line));
+						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>bool</b></html>" : "bool", Memory.loadBool(address + obj.adr), null, address + obj.adr, obj.line));
 				}
 				else if( obj.kind == Obj.VAR && obj.isRef ){
 					if(!Memory.getMemoryInformation(Memory.loadInt(address + obj.adr)).isInitialized)
-						node.add(init, new DataNode(obj.name, "bool", "undef", null, address + obj.adr, obj.line));
+						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>bool</b></html>" : "bool", "undef", null, address + obj.adr, obj.line));
 					else
-						node.add(init, new DataNode(obj.name, "bool", Memory.loadBool(Memory.loadInt(address + obj.adr)), null, address + obj.adr, obj.line));
+						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>bool</b></html>" : "bool", Memory.loadBool(Memory.loadInt(address + obj.adr)), null, address + obj.adr, obj.line));
 				}
 				else{
 					node.add(init, new DataNode(obj.name, "bool", obj.val==0 ? "false" : "true", null, -1, obj.line));
@@ -204,26 +204,27 @@ public class InitTreeTableData {
 			}
 			//Reading an ARRAY (any type)
 			else if( obj.type.kind == Struct.ARR && obj.kind != Obj.PROC && !obj.library ){
-				node.add(init, readArray(init, obj, node.getChild(obj.name, "array", "", -1, obj.line), address + obj.adr, main));
+				System.out.println("Reading array: " + obj.name);
+				node.add(init, readArray(init, obj, node.getChild(obj.name, nPars > 0 ? "<html><b>array</b></html>" : "array", "", -1, obj.line), address + obj.adr, main));
 			}
 			//Reading a STRUCTURE
 			else if( obj.type.kind == Struct.STRUCT && obj.kind != Obj.PROC && obj.kind != Obj.TYPE && !obj.library ){
-				DataNode n = readVariables( init, obj.type.fields, node.getChild(obj.name, "struct", "", -1, obj.line), address + obj.adr, main );
+				DataNode n = readVariables( init, obj.type.fields, node.getChild(obj.name, nPars > 0 ? "<html><b>struct</b></html>" : "struct", "", -1, obj.line), address + obj.adr, main, 0 );
 				node.add(init, n);
 			}
 			//READING A STRING
 			else if( obj.type.kind == Struct.STRING && obj.kind != Obj.PROC && !obj.library ){
-				// TODO isInitialized
-				// TODO reference
 				JButton b = new JButton(Strings.get(Memory.loadStringAddress(address + obj.adr)));
 				MouseListener l = new StringPopupListener(main, Strings.get(Memory.loadStringAddress(address + obj.adr)));
 				b.addMouseListener(l);
 					
-				node.add(init, new DataNode(obj.name, "string", b, null, address + obj.adr, obj.line));
+				node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>string</b></html>" : "string", b, null, address + obj.adr, obj.line));
 			}
 			
 			//Next symbol table node
 			obj = obj.next;
+			if( nPars > 0 )
+				nPars--;
 		}
 		
 		//Return the updated tree table data node
@@ -315,7 +316,7 @@ public class InitTreeTableData {
 					//node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
 				}
 				else if( obj.elemType.kind == Struct.STRUCT ){
-					DataNode n = readVariables( init, obj.fields, new DataNode(name, "struct", "", new ArrayList<DataNode>(), -1, -1), address + offset + size * i, main );
+					DataNode n = readVariables( init, obj.fields, new DataNode(name, "struct", "", new ArrayList<DataNode>(), -1, -1), address + offset + size * i, main, 0 );
 					node.add(init, n);
 				}
 				else if( obj.elemType.kind == Struct.STRING ){

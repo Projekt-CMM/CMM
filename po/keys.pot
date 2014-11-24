@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-12 20:22+0100\n"
+"POT-Creation-Date: 2014-11-23 14:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,29 +17,67 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:97
-msgid "Profile Information"
+#: src/at/jku/ssw/cmm/profile/settings/LowerPanel.java:93
+msgid "Cancel"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:98
-msgid "Name"
+#: src/at/jku/ssw/cmm/profile/settings/LowerPanel.java:98
+msgid "Save"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:99
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:110
+#: src/at/jku/ssw/cmm/profile/settings/CentralPanel.java:75
+msgid "Achievements"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:96
+msgid "click to change image"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:97
+msgid "click here and select your<br>profile image"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:108
+msgid "Name:"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:111
+msgid "profile name"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:112
+msgid "you can edit your name here"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:114
+#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:107
+#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:118
 msgid "Level"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:101
+#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:105
+msgid "Profile Information"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:106
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTableDataModel.java:17
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:67
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:103
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:118
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:131
+msgid "Name"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:109
 msgid "Current Quest"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:104
+#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:112
 #: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:102
 msgid "Select Profile"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:106
+#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:114
 #: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:108
 msgid "Select Quest"
 msgstr ""
@@ -76,31 +114,51 @@ msgstr ""
 msgid "Language"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/init/InitLeftPanel.java:62
+#: src/at/jku/ssw/cmm/gui/init/InitLeftPanel.java:66
 msgid "Input"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/init/InitLeftPanel.java:90
+#: src/at/jku/ssw/cmm/gui/init/InitLeftPanel.java:94
 msgid "Output"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/quest/GUIquestMain.java:149
-msgid "Total Quest Progress"
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTableDataModel.java:17
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:68
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:81
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:104
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:119
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:128
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:132
+msgid "Type"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTableDataModel.java:17
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:69
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:80
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:105
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:120
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:127
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:133
+msgid "Value"
 msgstr ""
 
 #: src/at/jku/ssw/cmm/gui/treetable/context/InitContextMenu.java:17
 msgid "Jump to Declaration"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:57
+#: src/at/jku/ssw/cmm/gui/ProfilePreview.java:104
+msgid "Level:"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:88
 msgid "Debug"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:66
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:113
 msgid "Quest"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:108
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:148
 msgid "Error"
 msgstr ""
 
@@ -109,66 +167,67 @@ msgstr ""
 msgid "file"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:107
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:119
 msgid "stop"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:108
-msgid "return to text edit maine immediately"
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:120
+msgid "return to text edit mode immediately"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:121
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:124
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:251
+msgid "sec"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:133
 msgid "debugger step delay"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:122
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:134
 msgid "change delay"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:146
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:158
 msgid "compile and step"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:148
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:160
 msgid "compile source code and<br>run debugger step by step"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:151
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:163
 msgid "compile and run"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:152
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:164
 msgid "compile source code<br>and run debugger"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:186
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:198
 msgid "pause"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:188
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:200
 msgid "pause automatic debugging"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:191
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:216
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:203
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:228
 msgid "next step"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:192
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:217
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:204
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:229
 msgid "proceed to next step manually"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:211
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:223
 msgid "play"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:213
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:225
 msgid "run automatic debugging"
-msgstr ""
-
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:239
-msgid "sec"
 msgstr ""
 
 #: src/at/jku/ssw/cmm/gui/debug/GUIdebugPanel.java:56
@@ -218,35 +277,27 @@ msgstr ""
 msgid "Opening new file"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/GUImain.java:360
-#: src/at/jku/ssw/cmm/gui/GUImain.java:375
-msgid "Unnamed"
-msgstr ""
-
-#: src/at/jku/ssw/cmm/gui/GUImain.java:694
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:327
 msgid "text edit mode"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/GUImain.java:702
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:337
 msgid "error"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/GUImain.java:702
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:337
 msgid "in line"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/GUImain.java:708
-msgid "back to text edit mode"
-msgstr ""
-
-#: src/at/jku/ssw/cmm/gui/GUImain.java:708
-msgid "leave error mode"
-msgstr ""
-
-#: src/at/jku/ssw/cmm/gui/GUImain.java:718
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:350
 msgid "automatic debug mode"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/GUImain.java:729
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:360
 msgid "pause or step by step mode"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/gui/GUImain.java:228
+#: src/at/jku/ssw/cmm/gui/GUImain.java:243
+msgid "Unnamed"
 msgstr ""

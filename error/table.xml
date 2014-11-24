@@ -78,4 +78,7 @@
 	<error id="variable is not initialized">
 		<file>variable_uninitialized.html</file>
 	</error>
+	<error id="([\w./]+) declared twice">
+		<file>cast.html</file>
+	</error>
 </errorTable>

@@ -81,10 +81,6 @@ public class GUImain {
 	 */
 	private SaveDialog saveDialog;
 
-	
-
-	
-
 	private MenuBarControl menuBarControl;
 
 	/**
@@ -175,6 +171,8 @@ public class GUImain {
 		
 		sp.setPreferredSize(new Dimension(800, 500));
 		sp.setDividerLocation(0.6);
+		sp.setOneTouchExpandable(true);
+		sp.setResizeWeight(1.0);
 
 		// Initialize the save dialog object
 		this.saveDialog = new SaveDialog(this.jFrame, this.leftPanelControl.getSourcePane(),
