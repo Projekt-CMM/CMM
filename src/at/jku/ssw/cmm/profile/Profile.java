@@ -45,7 +45,8 @@ public class Profile {
 	private String name;			//OrdnerName = ProfilName
 	private int xp;					//Anzahl der XP des Benutzers
 	private String profileimage;	//Profile Image
-	private String current;
+	private String current;			//Current Quest, bzw. current File
+	private boolean master;			//Master
 	
 	//Folder Names
 	private String profilePath;		//inizialer Profile Pfad
@@ -71,7 +72,8 @@ public class Profile {
 		XML_DATE ="date",
 		XML_TOKEN = "token",
 		XML_PROFILEIMAGE = "profileimage",
-		XML_CURRENT = "current";
+		XML_CURRENT = "current",
+		XML_MASTER = "master";
 
 	private static Profile activeProfile;
 	
@@ -223,6 +225,10 @@ public class Profile {
 			if(node.getNodeName().equals(Profile.XML_XP))
 				 profile.setXp(Integer.parseInt(node.getTextContent()));
 			
+			if(node.getNodeName().equals(Profile.XML_MASTER))
+				if(node.getTextContent().equals("true"))
+					profile.setMaster(true);
+							
 			if(node.getNodeName().equals(Profile.XML_PROFILEIMAGE))
         		profile.setProfileimage(node.getTextContent());
 			
@@ -309,6 +315,10 @@ public class Profile {
            else
                mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_XP, 0 + ""));
            
+           //TODO Check
+           if(profile.isMaster())
+               mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_MASTER, profile.isMaster() +""));
+        	   
            if(profile.getProfileimage() != null)
             	mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_PROFILEIMAGE, profile.getProfileimage()));
             
@@ -327,10 +337,9 @@ public class Profile {
             DOMSource source = new DOMSource(doc);
             
             //Writing into file
-            if(source != null){
             	StreamResult result = new StreamResult(new File(path));
             	transformer.transform(source, result);
-            }
+            
             
             //Debug output
             //System.out.println("\nXML DOM Created Successfully..");
@@ -523,7 +532,9 @@ public class Profile {
 	 * 
 	 * TODO more file Types
 	 * 
-	 * Deleting old Profile Pic and Copying new Profile pic to the choosen destination + writes into the profile.xml
+	 * Deleting old Profile Pic and Copying new Profile pic to the choosen destination + writes into the Profile
+	 * Useable file Types:
+	 * bmp jpg jpeg wbmp png gif
 	 * @param profile
 	 * @param sorce
 	 * @return Profile
@@ -534,8 +545,14 @@ public class Profile {
 		
 		String extension = sourcePath.substring(sourcePath.lastIndexOf('.'), sourcePath.length());
 		
-		if(sourcePath.endsWith(".png") ||
+		System.out.println("SorcePath: "+sourcePath + " " + extension);
+		
+		//TODO add all file extensions
+		if(sourcePath.endsWith(".bmp") ||
 				sourcePath.endsWith(".jpg") ||
+				sourcePath.endsWith(".png") ||
+				sourcePath.endsWith(".jpeg") ||
+				sourcePath.endsWith(".wbmp") ||
 				sourcePath.endsWith(".gif") ){
 			
 				String destPath = profile.getInitPath() + Profile.sep + Profile.FILE_PROFILEIMAGE + extension;
@@ -546,7 +563,6 @@ public class Profile {
 				LoadStatics.copyFileUsingStream(source, dest);
 				profile.setProfileimage(destPath);
 				
-				Profile.writeProfile(profile);
 		}else
 			throw new IOException();
 				
@@ -700,6 +716,20 @@ public class Profile {
 	 */
 	public void setCurrent(String current) {
 		this.current = current;
+	}
+
+	/**
+	 * @return the master
+	 */
+	public boolean isMaster() {
+		return master;
+	}
+
+	/**
+	 * @param master the master to set
+	 */
+	public void setMaster(boolean master) {
+		this.master = master;
 	}
 
 	

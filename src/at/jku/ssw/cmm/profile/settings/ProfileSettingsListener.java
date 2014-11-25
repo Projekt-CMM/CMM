@@ -2,10 +2,23 @@ package at.jku.ssw.cmm.profile.settings;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.ImageFilter;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.sound.midi.SysexMessage;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
+import at.jku.ssw.cmm.gui.utils.LoadStatics;
+import at.jku.ssw.cmm.launcher.GUILauncherMain;
+import at.jku.ssw.cmm.launcher.ProfileCreateException;
 import at.jku.ssw.cmm.profile.Profile;
+import at.jku.ssw.cmm.profile.Quest;
 import at.jku.ssw.cmm.profile.XMLWriteException;
 
 /**
@@ -59,6 +72,7 @@ public class ProfileSettingsListener {
 		@Override
 		public void mousePressed(MouseEvent arg0) {
 			
+			GUILauncherMain.init();
 			//Close window
 			jFrame.dispose();
 		}
@@ -80,21 +94,110 @@ public class ProfileSettingsListener {
 
 		@Override
 		public void mousePressed(MouseEvent arg0) {
-			
-			//Actualize profile name (in case user has changed it
-			gui.getProfile().setName(gui.getUpperPanel().getProfileName());
-			
-			//TODO Peda, bitte Profil richtig speichern
-			//Es sollte auch das Bild mitgespeichert werden
-			try {
+			try {		
+				if(gui.getProfile() == null)
+					gui.setProfile(new Profile());					
+				
+				if(gui.getUpperPanel().getProfileName() == null || gui.getUpperPanel().getProfileName().equals("")){
+	        		JOptionPane.showMessageDialog(new JFrame(),"No Name choosen","Warnung:",
+	        			    JOptionPane.WARNING_MESSAGE);
+					throw new ProfileCreateException();
+				}	
+				else
+					//New Profile Name
+					gui.getProfile().setName(gui.getUpperPanel().getProfileName());
+				
+
+				//Setting new Initial Path, if no Path exists
+				if(gui.getProfile().getInitPath() == null){
+					
+						File fileToSave = selectPath();
+	
+	
+				    gui.getProfile().setInitPath(fileToSave.getAbsolutePath());
+				}
+				
+				try {
+					String profileImagePath = gui.getProfile().getProfileimage();
+					
+					if(profileImagePath != null){
+						File file = new File( profileImagePath);
+						if(file != null && file.isAbsolute()){
+							Profile.changeProfileImage(gui.getProfile(), profileImagePath);
+							gui.getProfile().setProfileimage(file.getName());
+						}
+					}
+				} catch (IOException e) {
+					System.out.println("");
+				}
+				
+				//Saving Profile
 				Profile.writeProfile(gui.getProfile());
-			} catch (XMLWriteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+				//Setting as active Profile
+				Profile.setActiveProfile(gui.getProfile());
+		        
+		        
+				
+			} catch (XMLWriteException | ProfileCreateException e) {
+				
+				System.err.println("Profile creation cancelled");
+			}
+		}
+		
+		
+		@Override
+		public void mouseClicked(MouseEvent arg0) {}
+		@Override
+		public void mouseEntered(MouseEvent arg0) {}
+		@Override
+		public void mouseExited(MouseEvent arg0) {}
+		@Override
+		public void mouseReleased(MouseEvent arg0) {}
+	};
+	
+
+	
+	private File selectPath() throws ProfileCreateException{
+        // JFileChooser-Objekt erstellen
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        
+        int rueckgabeWert = chooser.showOpenDialog(null);
+        
+        if(rueckgabeWert == JFileChooser.APPROVE_OPTION)
+        {
+             
+        	return chooser.getSelectedFile();
+                  
+        }
+        else
+        	throw new ProfileCreateException();
+	}
+	
+	/**
+	 * Listener for the profile image. If the iser clicks his profile image,
+	 * an image selection GUI shall open.
+	 */
+	public MouseListener profileImageListener = new MouseListener() {
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+		
+			try {
+				File file = chooseProfileImage();
+				System.out.println(file.getAbsolutePath());
+				
+				if(gui.getProfile() == null)
+					gui.setProfile(new Profile());
+				
+				gui.getProfile().setProfileimage(file.getAbsolutePath());
+				
+			} catch (ProfileCreateException e) {
+				//Nothing happens..
 			}
 			
-			//Close window
-			jFrame.dispose();
+			System.out.println("Profile image changed");
 		}
 		
 		@Override
@@ -107,27 +210,27 @@ public class ProfileSettingsListener {
 		public void mouseReleased(MouseEvent arg0) {}
 	};
 	
-	/**
-	 * Listener for the profile image. If the iser clicks his profile image,
-	 * an image selection GUI shall open.
-	 */
-	public MouseListener profileImageListener = new MouseListener() {
-
-		@Override
-		public void mousePressed(MouseEvent arg0) {
-			
-			//TODO Peda
-			//Open file handler, select image, copy image to profile folder
-			System.out.println("Profile image clicked");
-		}
+	private File chooseProfileImage() throws ProfileCreateException{
 		
-		@Override
-		public void mouseClicked(MouseEvent arg0) {}
-		@Override
-		public void mouseEntered(MouseEvent arg0) {}
-		@Override
-		public void mouseExited(MouseEvent arg0) {}
-		@Override
-		public void mouseReleased(MouseEvent arg0) {}
-	};
+		JFileChooser chooser = new JFileChooser();
+		ImagePreviewPanel preview = new ImagePreviewPanel();
+		chooser.setAccessory(preview);
+		chooser.addPropertyChangeListener(preview);
+		
+		FileFilter imageFilter = new FileNameExtensionFilter(
+			    "Image files", ImageIO.getReaderFileSuffixes()); 
+		chooser.addChoosableFileFilter(imageFilter);
+		
+		int rueckgabeWert = chooser.showOpenDialog(null);
+        
+        if(rueckgabeWert == JFileChooser.APPROVE_OPTION)
+        {
+             
+        	return chooser.getSelectedFile();
+                  
+        }
+        else
+        	throw new ProfileCreateException();
+		
+	}
 }

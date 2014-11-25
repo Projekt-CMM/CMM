@@ -124,9 +124,9 @@ public class GUILauncherMain {
 				JPanel jPreviewProfile = new JPanel();
 				
 				for(int i = 0; i< 5; i++)
-					jPreviewProfile.add(addProfilePreview(new Profile(),0));
+					jPreviewProfile.add(addProfilePreview(new Profile()));
 
-				jPreviewProfile.add(addProfilePreview(new Profile(),2));
+				jPreviewProfile.add(addProfilePreview(new Profile()));
 				
 			JScrollPane scrollPane = new JScrollPane(jPreviewProfile);
 			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -141,7 +141,7 @@ public class GUILauncherMain {
 	//Profile Panel finished
 	}
 	
-	public JPanel addProfilePreview(Profile profile, int state){
+	public JPanel addProfilePreview(Profile profile){
 		JPanel jMarginPanel = new JPanel(new BorderLayout());
 
 		
@@ -158,7 +158,7 @@ public class GUILauncherMain {
 		JPanel jProfileTop = new JPanel(new BorderLayout());
 			jProfileTop.setBackground(Color.WHITE);
 			
-			if(state == 0 || state == 1){	
+			if(!profile.isMaster()){	
 				
 				JLabel name = new JLabel("Name: Nick");
 				JLabel level = new JLabel("Level: 14");
@@ -182,7 +182,7 @@ public class GUILauncherMain {
 		profilePicPanel.setPreferredSize(new Dimension(200,200));
 		profilePicPanel.setMinimumSize(new Dimension(200,200));
 		
-		if(state == 0 || state == 1){
+		if(!profile.isMaster()){
 			profilePicPanel.add(LoadStatics.loadImage("profileTest/icon.png", false, 200, 200));
 		}
 		else{
@@ -192,7 +192,7 @@ public class GUILauncherMain {
 			
 		jProfile.add(profilePicPanel, BorderLayout.CENTER);
 		
-		if(state == 0 || state == 1){
+		if(!profile.isMaster()){
 			JButton openProfile = new JButton("OPEN");
 			openProfile.addMouseListener(new LauncherListener(profile,jFrame));
 		jProfile.add(openProfile,BorderLayout.PAGE_END);

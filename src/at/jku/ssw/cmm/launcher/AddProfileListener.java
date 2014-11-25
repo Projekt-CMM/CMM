@@ -22,14 +22,15 @@ public class AddProfileListener implements MouseListener {
 		
 		//try {
 			GUIprofileSettings.init();
-			//GUIProfileManager.createNewProfile();
 			jFrame.dispose();
+			//GUIProfileManager.createNewProfile();
 			
-			String[] a = { "" };
+			
+			/*String[] a = { "" };
 			GUImain.main(a);
 			
 		//} catch (ProfileCreateException e) {
-			System.err.println("Profile was not created");
+			System.err.println("Profile was not created");*/
 	//	}
 
 		
