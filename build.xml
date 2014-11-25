@@ -59,8 +59,6 @@
             optimize="true" 
             includeantruntime="false">
             <classpath refid="classpath"/>
-            <include name="error/**"/>
-            <include name="clib/**"/>
         </javac>
 
         <!-- copy required files -->
@@ -77,9 +75,8 @@
         <jar jarfile="${name}.jar" manifest="${manifest}" includes="clib/*.h" >
             <fileset dir="${build.classes}"/>
             <zipgroupfileset dir="${build.lib}" includes="*.jar"/>
-            
         </jar>
-        <!--<zipgroupfileset dir="clib" includes="*.h"/>-->
+
         <jar update="yes"
              jarfile="${name}.jar">
            <zipfileset src="${name}.jar" includes="../clib/error.h"/>
