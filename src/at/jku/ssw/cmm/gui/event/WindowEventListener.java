@@ -147,14 +147,10 @@ public class WindowEventListener implements WindowListener {
 	}
 
 	private static void updateAndExit(JFrame jFrame, GUImainSettings settings) {
-		// Configuration data of the window is updated...
-		settings.setSizeX(jFrame.getWidth());
-		settings.setSizeY(jFrame.getHeight());
-		settings.setPosX(jFrame.getX());
-		settings.setPosY(jFrame.getY());
 
 		// ...and saved
-		settings.saveConfigFile();
+		System.out.println("[up to date]");
+		settings.writeXMLsettings();
 
 		System.exit(0);
 	}
