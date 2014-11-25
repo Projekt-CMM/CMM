@@ -3,6 +3,7 @@ package at.jku.ssw.cmm.gui.event.debug;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -187,7 +188,7 @@ public class PanelRunListener implements Debugger {
 
 	/* --- debugger interpreter listeners --- */
 	@Override
-	public boolean step(final Node arg0) {
+	public boolean step(final Node arg0, List<Integer> readVariables, List<Integer> changedVariables) {
 		
 		if( this.isReadyMode() || this.isErrorMode() ){
 			System.err.println("Interpreter is running although GUI is on editor mode");

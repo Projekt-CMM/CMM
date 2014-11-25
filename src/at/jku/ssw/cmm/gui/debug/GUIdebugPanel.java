@@ -317,7 +317,7 @@ public class GUIdebugPanel {
 		
 		if( this.compile() )
 			return this.compileManager.runInterpreter(ctrlPanel.getListener(),
-				new IOstream(this.main, this));
+				new IOstream(this.main));
 		else
 			return false;
 	}

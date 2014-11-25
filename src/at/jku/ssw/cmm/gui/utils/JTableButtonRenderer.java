@@ -21,14 +21,33 @@ public class JTableButtonRenderer implements TableCellRenderer {
 		
 		if(value instanceof Component)
 			return (Component)value;
-		else if( table.getValueAt(row, 0).toString().endsWith(")") )
-			c.setBackground(Color.CYAN);
-		else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.CHANGE_TAG) )
-			c.setBackground(Color.YELLOW);
-		else if ( table.getValueAt(row, 2).toString().equals("undef") )
-    		c.setBackground(new Color(240, 240, 240));
-		else
-			c.setBackground(table.getBackground());
+		
+		else if( isSelected ){
+			if( table.getValueAt(row, 0).toString().endsWith(")") )
+				c.setBackground(new Color(0, 159, 153));
+			
+			else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.CHANGE_TAG) )
+				c.setBackground(new Color(215, 200, 0));
+			
+			else if ( table.getValueAt(row, 2).toString().equals("undef") )
+	    		c.setBackground(new Color(200, 200, 200));
+			
+			else
+				c.setBackground(table.getSelectionBackground());
+		}
+		else{
+			if( table.getValueAt(row, 0).toString().endsWith(")") )
+				c.setBackground(Color.CYAN);
+			
+			else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.CHANGE_TAG) )
+				c.setBackground(Color.YELLOW);
+			
+			else if ( table.getValueAt(row, 2).toString().equals("undef") )
+	    		c.setBackground(new Color(240, 240, 240));
+			
+			else
+				c.setBackground(table.getBackground());
+		}
 		
 		return c;
 	}

@@ -95,7 +95,7 @@ public class CMMrun extends Thread {
 		// Thrown when runtime error occurs
 		catch (final RunTimeException e) {
 
-			System.err.println("[ERROR] Interpreter thread threw IllegalStateException");
+			System.err.println("[ERROR] Interpreter thread threw RunTimeException");
 
 			// Clean thread data partly up; leave variable data for GUI runtime
 			// error mode

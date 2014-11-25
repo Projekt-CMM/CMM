@@ -1,11 +1,10 @@
 package at.jku.ssw.cmm.debugger;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 
 import at.jku.ssw.cmm.gui.GUImain;
-import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
+import at.jku.ssw.cmm.interpreter.exceptions.RunTimeException;
 
 /**
  * Connects the I/O functions of the Interpreter with the GUI
@@ -22,9 +21,8 @@ public class IOstream implements StdInOut {
 	 *            Interface for main GUI manipulations
 	 * @param panelRunListener 
 	 */
-	public IOstream(GUImain main, GUIdebugPanel debug) {
+	public IOstream(GUImain main) {
 		this.main = main;
-		this.debug = debug;
 
 		// Get input stream characters
 		this.inputStream = new LinkedList<>();
@@ -35,14 +33,12 @@ public class IOstream implements StdInOut {
 
 	// Interface for main GUI manipulations
 	private final GUImain main;
-	
-	private final GUIdebugPanel debug;
 
 	// List with all input stream characters
 	private final List<Character> inputStream;
 
 	@Override
-	public char in() {
+	public char in() throws RunTimeException {
 
 		char c;
 
@@ -50,18 +46,8 @@ public class IOstream implements StdInOut {
 			c = this.inputStream.get(0);
 			this.inputStream.remove(0);
 		} catch (Exception e) {
-
-			try {
-				java.awt.EventQueue.invokeAndWait(new Runnable() {
-					public void run() {
-						debug.setErrorMode("no input data", -1);
-					}
-				});
-			} catch (InvocationTargetException | InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			return '\0';
+			
+			throw new RunTimeException("no input data", null);
 		}
 
 		this.main.getLeftPanel().increaseInputHighlighter();

@@ -93,7 +93,7 @@ public class GUImain {
 	 * If true, GUI options for quest and profile functions are shown. <br>
 	 * If false, quest/profile GUI is hidden.
 	 */
-	public static final boolean ADVANCED_GUI = true;
+	public static final boolean ADVANCED_GUI = false;
 
 	/**
 	 * The current version of C Compact, used as window title.
@@ -124,13 +124,6 @@ public class GUImain {
 	 *            TRUE if program shall exit after init (for GUI test)
 	 */
 	private void start(boolean test) {
-		
-		//Change look and feel of the GUI
-		/*try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}*/
 		
 		if (SwingUtilities.isEventDispatchThread())
 			DebugShell.out(State.LOG, Area.SYSTEM, "main GUI running on EDT.");
@@ -172,7 +165,6 @@ public class GUImain {
 		
 		sp.setPreferredSize(new Dimension(800, 500));
 		sp.setDividerLocation(0.6);
-		sp.setOneTouchExpandable(true);
 		sp.setResizeWeight(1.0);
 
 		// Initialize the save dialog object
