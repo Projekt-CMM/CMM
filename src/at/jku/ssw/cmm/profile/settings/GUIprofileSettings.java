@@ -102,4 +102,8 @@ public class GUIprofileSettings {
 	public Profile getProfile(){
 		return this.profile;
 	}
+	
+	public void setProfile(Profile profile){
+		this.profile = profile;
+	}
 }
