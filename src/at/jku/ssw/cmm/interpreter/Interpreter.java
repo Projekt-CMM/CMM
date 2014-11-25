@@ -842,7 +842,7 @@ public final class Interpreter {
 		case Node.REF://TODO
 			return Adr(p.left);
 		default:
-			throw new RunTimeException("Not supported Node Kind", p);
+			throw new RunTimeException("Not supportet node kind", p);
 		}
 	}
 
