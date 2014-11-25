@@ -77,7 +77,8 @@ public final class Interpreter implements DebuggerRequest {
 	 */
 	void Statement(Node p) throws ReturnException, AbortException, BreakException, ContinueException, RunTimeException { // b = a;
 		
-		if (p.kind != Node.NOP && libraryFunctionLevel == 0 && !debugger.step(p))
+		//TODO add changed variable list
+		if (p.kind != Node.NOP && libraryFunctionLevel == 0 && !debugger.step(p, null, null))
 			throw new AbortException();
 
 		switch (p.kind) {

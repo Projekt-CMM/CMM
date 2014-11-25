@@ -79,20 +79,6 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
      */
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
     	
-    	/*if (isSelected)
-	        setBackground(table.getSelectionBackground());
-    	else if ( table.getValueAt(row, 0).toString().endsWith(")") ){
-        	setBackground(Color.CYAN);
-        }
-    	else if ( table.getValueAt(row, 1).toString().endsWith("" + DataNode.CHANGE_TAG) ){
-        	setBackground(Color.YELLOW);
-        }
-    	else if ( table.getValueAt(row, 2).toString().equals("undef") ){
-    		setBackground(new Color(240, 240, 240));
-    	}
-	    else
-	    	setBackground(table.getBackground());*/
-    	
     	if( isSelected ){
 			if( table.getValueAt(row, 0).toString().endsWith(")") )
 				setBackground(new Color(0, 159, 153));
