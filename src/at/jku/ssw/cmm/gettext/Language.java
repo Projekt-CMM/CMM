@@ -34,7 +34,7 @@ public class Language {
 					
 					//Save translated String
 					langMap.put(line.substring(line.indexOf("\"")+1, line.length()-1), line2.substring(line2.indexOf("\"")+1, line2.length()-1));
-					System.out.println("Reading String: " + line.substring(line.indexOf("\"")+1, line.length()-1) + " -> " + line2.substring(line2.indexOf("\"")+1, line2.length()-1));
+					//System.out.println("Reading String: " + line.substring(line.indexOf("\"")+1, line.length()-1) + " -> " + line2.substring(line2.indexOf("\"")+1, line2.length()-1));
 				}
 			}
 			file.close();

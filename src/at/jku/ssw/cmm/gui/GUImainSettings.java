@@ -1,255 +1,212 @@
 package at.jku.ssw.cmm.gui;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import at.jku.ssw.cmm.DebugShell;
-import at.jku.ssw.cmm.DebugShell.Area;
-import at.jku.ssw.cmm.DebugShell.State;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import at.jku.ssw.cmm.profile.XMLWriteException;
 
 /**
- * Contains configuration data for the main GUI. The main GUI has a reference to an object of this class.
- * The configuration is saved in the "config.cfg" file in the program's working directory.
- * For loading the config data, see the method readConfigFile below.
- * For saving config data, see {@link WindowEventListener}
- * <br>
+ * Contains configuration data for the main GUI. The main GUI has a reference to
+ * an object of this class. The configuration is saved in the "config.cfg" file
+ * in the program's working directory. For loading the config data, see the
+ * method readConfigFile below. For saving config data, see
+ * {@link WindowEventListener} <br>
  * The config data includes variables like:
  * <ul>
- * <li> screen resolution </li>
- * <li> directory of the current c-- file </li>
+ * <li>screen resolution</li>
+ * <li>directory of the current c-- file</li>
  * </ul>
  * 
  * @author fabian
  *
  */
 public class GUImainSettings {
-	
+
+	public static final String settings_XML = "settings.xml";
+
+	public static final String XML_SETTINGS = "settings";
+	public static final String XML_LANGUAGE = "language";
+	public static final String XML_LASTPROFILE = "lastopened";
+
 	/**
 	 * Contains configuration data for the main GUI.
 	 */
-	public GUImainSettings(){
-		this.readConfigFile();
+	public GUImainSettings() {
+		this.readConfigXML();
 	}
-	
-	//Size of the main GUI window
-	private int sizeX;
-	private int sizeY;
-	
-	//Position of the main GUI window
-	private int posX;
-	private int posY;
-	
-	//Path of the current c-- file (null if no current file available)
+
+	/**
+	 * Path of the current c-- file (null if no current file available)
+	 */
 	private String path;
-	
-	//Constant variable for the minimum width of the right panel
-	private static final int RIGHT_OFFSET = 150;
-	
-	/**
-	 * NOTE: The position is not actualized by events, as this is not necessary at the moment.
-	 * 
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 * 
-	 * @return The current x position of the main GUI window, according to the configuration object.
-	 */
-	public int getSourceSizeX(){
-		return (int)( (this.sizeX-RIGHT_OFFSET) * 0.0857 );
-	}
-	
-	/**
-	 * NOTE: The position is not actualized by events, as this is not necessary at the moment.
-	 * 
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 * 
-	 * @return The current x position of the main GUI window, according to the configuration object.
-	 */
-	public int getSourceSizeY(){
-		return (int)(this.sizeY*0.0357);
-	}
-	
-	/**
-	 * NOTE: This method does <b>not</b> change the actual size of any graphical object.
-	 * It is considered for actualizing configuration data basing on the current window parameters.
-	 * See {@link WindowComponentListener}
-	 * 
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 * 
-	 * @param x The current width of the main GUI window.
-	 */
-	public void setSizeX( int x ){
-		this.sizeX = x;
-	}
-	
-	/**
-	 * NOTE: This method does <b>not</b> change the actual size of any graphical object.
-	 * It is considered for actualizing configuration data basing on the current window parameters.
-	 * See {@link WindowComponentListener}
-	 * 
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 * 
-	 * @param y The current height of the main GUI window.
-	 */
-	public void setSizeY( int y ){
-		this.sizeY = y;
-	}
-	
-	/**
-	 * NOTE: This method does <b>not</b> change the actual size of any graphical object.
-	 * It is considered for actualizing configuration data basing on the current window parameters.
-	 * 
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 * 
-	 * @param x The current x position of the main GUI window.
-	 */
-	public void setPosX( int x ){
-		this.posX = x;
-	}
-	
-	/**
-	 * NOTE: This method does <b>not</b> change the actual size of any graphical object.
-	 * It is considered for actualizing configuration data basing on the current window parameters.
-	 * 
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 * 
-	 * @param y The current y position of the main GUI window.
-	 */
-	public void setPosY( int y ){
-		this.posY = y;
-	}
-	
+
+	private List<String> lastProfiles;
+	private String lastLanguage;
+
 	/**
 	 * Set the path of the current c-- file.
 	 * 
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 * 
-	 * @param p The new path of the c-- file. Loading null or "*" means
-	 * that no working directory is registered.
+	 * @param p
+	 *            The new path of the c-- file. Loading null or "*" means that
+	 *            no working directory is registered.
 	 */
-	//TODO profile
-	public void setPath( String p ){
-		if( p == "#" || p == null )
+	// TODO profile
+	public void setPath(String p) {
+		if (p == "#" || p == null)
 			this.path = null;
-		else{
+		else {
 			this.path = p.endsWith(".cmm") ? p : p + ".cmm";
 		}
 	}
-	
+
 	/**
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 * 
 	 * @return The path of the current c-- file.
 	 */
-	//TODO profile
-	public String getPath(){
+	// TODO profile
+	public String getPath() {
 		return this.path;
 	}
-	
+
 	/**
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 * 
-	 * @return TRUE if the config contains a working path for the current c-- file
-	 * 		<br> FALSE if the working path is null or "*"
+	 * @return TRUE if the config contains a working path for the current c--
+	 *         file <br>
+	 *         FALSE if the working path is null or "*"
 	 */
-	//TODO profile
-	public boolean hasPath(){
-		if( this.path == null )
+	// TODO profile
+	public boolean hasPath() {
+		if (this.path == null)
 			return false;
 		return true;
 	}
-	
-	/**
-	 * <ul>
-	 * <li> Opens the file "config.cfg" in the program's working directory. </li>
-	 * <li> Reads the config file and locally saves configurations. </li>
-	 * <li> Creates a new config file with standard config if "config.cfg" not found. </li>
-	 * </ul>
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 */
-	private void readConfigFile(){
-		
-		BufferedReader file;
-		System.out.println("Searching for config file...");
-		
+
+	public void readConfigXML() {
+
+		if (!new File(settings_XML).exists())
+			return;
+
+		File fXmlFile = new File(settings_XML);
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = null;
 		try {
+			dBuilder = dbFactory.newDocumentBuilder();
+		} catch (ParserConfigurationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		Document doc = null;
+		try {
+			doc = dBuilder.parse(fXmlFile);
+		} catch (SAXException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		doc.getDocumentElement().normalize();
+
+		this.lastProfiles = new ArrayList<>();
+
+		this.findXMLsettings(doc.getDocumentElement());
+
+		System.out.println(" >>> language: " + this.lastLanguage);
+
+		for (String s : this.lastProfiles)
+			System.out.println(" >>> recent profile: " + s);
+	}
+
+	private void findXMLsettings(Node node) {
+
+		if (node.getNodeName().equals(XML_LANGUAGE))
+			this.lastLanguage = node.getTextContent();
+
+		else if (node.getNodeName().equals(XML_LASTPROFILE))
+			lastProfiles.add(node.getTextContent());
+
+		NodeList nodeList = node.getChildNodes();
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			Node currentNode = nodeList.item(i);
+			if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
+				// calls this method for all the children which is Element
+				findXMLsettings(currentNode);
+			}
+		}
+	}
+
+	public void writeXMLsettings() {
+		DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder icBuilder;
+
+		String path = settings_XML;
+
+		try {
+			icBuilder = icFactory.newDocumentBuilder();
+			Document doc = icBuilder.newDocument();
+			Element mainRootElement = doc.createElementNS(path,XML_SETTINGS);
+			doc.appendChild(mainRootElement);
+
+			if( this.lastLanguage != null )
+				mainRootElement.appendChild(writeNode(doc, mainRootElement, XML_LANGUAGE, this.lastLanguage));
 			
-			file = new BufferedReader(new FileReader("config.cfg"));
+			if( this.lastProfiles != null && !this.lastProfiles.isEmpty() ){
+				for( String profile : this.lastProfiles ){
+					mainRootElement.appendChild(writeNode(doc, mainRootElement, XML_LASTPROFILE, profile));
+				}
+			}
 			
-			this.sizeX = Integer.parseInt(file.readLine());
-			this.sizeY = Integer.parseInt(file.readLine());
-			this.posX  = Integer.parseInt(file.readLine());
-			this.posY  = Integer.parseInt(file.readLine());
-			
-			String path = file.readLine();
-			if( path.endsWith("#") )
-				this.setPath("#");
-			else
-				this.setPath(path);
-			
-			file.close();
-			
-			System.out.println("Config is: " + this.sizeX + " | " + this.sizeY + " | " + this.posX + " | " + this.posY);
-			System.out.println("Current file: " + this.path);
-			
-		} catch (IOException e) {
-			System.out.println("Config file not found. Replacing...");
-			this.createConfigFile();
-			this.path = null;
-			this.sizeX = 600;
-			this.sizeY = 400;
-			this.posX  = 0;
-			this.posY  = 0;
+			// output DOM XML to console
+            Transformer transformer;
+			transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(doc);
+            
+            //Writing into file
+            if(source != null){
+            	StreamResult result = new StreamResult(new File(path));
+            	transformer.transform(source, result);
+            }
+
+		} catch (ParserConfigurationException
+				| TransformerFactoryConfigurationError
+				| XMLWriteException e) {
+			e.printStackTrace();
+		} catch (DOMException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
-	/**
-	 * Creates a config file with standard configurations (see method readConfigFile())
-	 * 
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 */
-	private void createConfigFile(){
-		BufferedWriter file;
-		try {
-			file = new BufferedWriter(new FileWriter("config.cfg"));
-			file.write("600\n");
-			file.write("400\n");
-			file.write("0\n");
-			file.write("0\n");
-			file.write("#");
-			file.close();
-		} catch (IOException e) {}
-	}
-	
-	/**
-	 * Saves the current configuration in "config.cfg" in the program's working directory.
-	 * See {@link WindowEventListener}
-	 * 
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 */
-	public void saveConfigFile(){
-		
-		DebugShell.out(State.LOG, Area.SYSTEM, "Updating config file...");
-		
-		BufferedWriter file;
-		try {
-			file = new BufferedWriter(new FileWriter("config.cfg"));
-			file.write(this.sizeX + "\n");
-			file.write(this.sizeY + "\n");
-			file.write(this.posX + "\n");
-			file.write(this.posY + "\n");
-			
-			if( this.path == null )
-				file.write("#");
-			else
-				file.write(this.path);
-			
-			file.close();
-			
-			DebugShell.out(State.LOG, Area.SYSTEM, "config up to date");
-		} catch (IOException e) {
-			DebugShell.out(State.WARNING, Area.SYSTEM, "failed to save config file");
-		}
-	}
+	private Node writeNode(Document doc, Element element, String name, String value) throws XMLWriteException{
+        if(value == null)
+        	throw new XMLWriteException();
+    	
+	    	Element node = doc.createElement(name);
+	        node.appendChild(doc.createTextNode(value));
+	        return node;
+    }
 }
