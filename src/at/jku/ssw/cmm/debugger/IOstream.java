@@ -31,15 +31,21 @@ public class IOstream implements StdInOut {
 			this.inputStream.add(c);
 		}
 		
+		// Add a stop bit to input string if there are any characters, see (1)
+		// This is important to avoid bugs with the library function scanf()
 		if( this.inputStream.size() > 0 )
 			this.inputStream.add('\0');
 			
 	}
 
-	// Interface for main GUI manipulations
+	/**
+	 * Interface for main GUI manipulations
+	 */
 	private final GUImain main;
 
-	// List with all input stream characters
+	/**
+	 * List with all input stream characters
+	 */
 	private final List<Character> inputStream;
 
 	@Override
@@ -47,30 +53,37 @@ public class IOstream implements StdInOut {
 
 		char c;
 		
+		// Remove '\0' character at the end of the input stream
+		// This has to be done separately because it can not be highlighted in
+		// the input text are, see constructor of this class (1)
 		if( this.inputStream.size() == 1 ){
 			this.inputStream.remove(0);
 			return '\0';
 		}
 
 		try {
+			// Read and remove next character
 			c = this.inputStream.get(0);
 			this.inputStream.remove(0);
 		} catch (Exception e) {
 			
+			// Throw interpreter runtime error if no more input data available
 			throw new RunTimeException("no input data", null);
 		}
-
+		
+		// Highlight the characters which have just been read in the input
+		// text area of the main GUI
 		this.main.getLeftPanel().increaseInputHighlighter();
+		
 		return c;
 	}
 
 	@Override
 	public void out(final char arg0) {
 
-		System.out.println("Stream from interpreter: " + arg0);
-
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
+				// Add given character to output text area of the main GUI
 				main.getLeftPanel().outputStream("" + arg0);
 			}
 		});
