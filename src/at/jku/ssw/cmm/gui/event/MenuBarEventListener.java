@@ -18,6 +18,7 @@ import at.jku.ssw.cmm.gui.GUImainSettings;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
+import at.jku.ssw.cmm.launcher.GUILauncherMain;
 
 /**
  * Contains event listeners for the menu bar in the main GUI.
@@ -222,8 +223,8 @@ public class MenuBarEventListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-
-			//main.selectProfile();
+			main.dispose();
+			GUILauncherMain.init();
 		}
 	};
 

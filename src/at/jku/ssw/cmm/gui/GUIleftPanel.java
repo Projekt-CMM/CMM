@@ -348,7 +348,7 @@ public class GUIleftPanel {
 		
 		this.unlockInput();
 		
-		this.jStatePanel.setBackground(Color.RED);
+		this.jStatePanel.setBackground(new Color(255, 131, 131));
 		this.jStateLabel.setText("! ! ! " + _("error") + " " + (line >= 0 ? _("in line") + " " + line : "") + " ! ! !");
 		
 		if( line >= 0 )

@@ -6,9 +6,11 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -39,7 +41,7 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 	private JButton openButton;
 	
 	private JFrame jFrame;
-	private JScrollPane editorScrollPane;
+	private JEditorPane editorScrollPane;
 	
 	//Split Pane
 	private JSplitPane sp;
@@ -146,8 +148,25 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
         //Listen for when the selection changes.
       	jPackageTree.addTreeSelectionListener(this);
       	
-      	//Load standart html document
-      	editorScrollPane = LoadStatics.loadHTMLdoc("packages/default/de.html", "packages/default/style.css");
+      	//Load standart html document		
+      	//editorScrollPane = LoadStatics.loadHTMLdoc("packages/default/de.html", "packages/default/style.css");
+      	//Init:
+      	
+      //Description Text Panel
+      		this.editorScrollPane = new JEditorPane();
+      		this.editorScrollPane.setEditable(false);
+      		this.editorScrollPane.setContentType("text/html");
+      	
+      	
+		try {
+			this.editorScrollPane.setPage(LoadStatics.getHTMLUrl("packages/default/de.html"));
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		this.editorScrollPane.setDocument(LoadStatics.readStyleSheet("packages/default/style.css"));
+	
+      	
       	//Quest description
       	editorScrollPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         jDescPane.add(editorScrollPane, BorderLayout.CENTER);
@@ -257,7 +276,15 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 	private void displayURL(String file, String style) {
 		jDescPane.remove(editorScrollPane);
 		
-		editorScrollPane = LoadStatics.loadHTMLdoc(file, style);
+		try {
+			this.editorScrollPane.setPage(LoadStatics.getHTMLUrl(file));
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		this.editorScrollPane.setDocument(LoadStatics.readStyleSheet(style));
+		
+		//editorScrollPane = LoadStatics.loadHTMLdoc(file, style);
       	editorScrollPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         jDescPane.add(editorScrollPane, BorderLayout.CENTER);
         jDescPane.updateUI();

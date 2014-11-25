@@ -18,6 +18,7 @@ import at.jku.ssw.cmm.gui.file.SaveDialog;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
 import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
 import at.jku.ssw.cmm.gui.quest.GUIquestMain;
+import at.jku.ssw.cmm.launcher.GUILauncherMain;
 import at.jku.ssw.cmm.profile.Profile;
 
 import java.io.File;
@@ -283,8 +284,11 @@ public class GUImain {
 		//open profile selector on empty profile
 
 		//Select Profile if there is no active Profile
-		//if(Profile.getActiveProfile() == null)
+		if(Profile.getActiveProfile() == null){
+			this.dispose();
+			GUILauncherMain.init();
 			//selectProfile();
+		}
 		
 		//Ignoring Quest GUI if there is no active Profile
 		if(Profile.getActiveProfile() != null)
@@ -292,6 +296,7 @@ public class GUImain {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * TODO Profile Preview
 	 * Invokes the profile selection dialog
 	 */
@@ -349,6 +354,8 @@ public class GUImain {
 	}*/
 
 	/**
+=======
+>>>>>>> d98910a6c415bf93a4dceb84ca57ba3b23526686
 	 * Saves the current *.cmm file if there are unsaved changes
 	 */
 	public void saveIfNecessary() {
@@ -428,5 +435,10 @@ public class GUImain {
 
 	public GUImainSettings getSettings() {
 		return settings;
+	}
+	
+	//TODO
+	public void dispose(){
+		this.jFrame.dispose();
 	}
 }

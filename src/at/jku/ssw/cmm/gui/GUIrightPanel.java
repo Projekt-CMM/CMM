@@ -101,7 +101,7 @@ public class GUIrightPanel {
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		editorScrollPane.setPreferredSize(new Dimension(100, 300));
 		editorScrollPane.setMinimumSize(new Dimension(10, 10));
-
+		
 		this.errorPanel.add(editorScrollPane, BorderLayout.CENTER);
 		
 		this.errorMsg = new JTextField();
@@ -140,6 +140,9 @@ public class GUIrightPanel {
 
 	public void showErrorPanel(String html) {
 
+		this.errorDesc.setDocument(LoadStatics.readStyleSheet("error"
+				+ File.separator + "style.css"));
+		
 		try {
 			this.errorDesc.setPage(LoadStatics.getHTMLUrl(this.errorMap
 					.getErrorHTML(html)));

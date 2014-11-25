@@ -17,7 +17,6 @@ import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 import at.jku.ssw.cmm.gui.GUImainSettings;
-import at.jku.ssw.cmm.gui.include.CMMtokenMaker;
 
 /**
  * Class containing static methods to initialize the left part of the main GUI. This includes functions to
@@ -39,10 +38,10 @@ public class InitLeftPanel {
 	public static RSyntaxTextArea initCodePane( JPanel pane, GUImainSettings settings ){
 		
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		//textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
 		
-		((AbstractTokenMakerFactory) TokenMakerFactory.getDefaultInstance()).putMapping(CMMtokenMaker.StyleName, CMMtokenMaker.class.getName());
-	      textArea.setSyntaxEditingStyle(CMMtokenMaker.StyleName);
+		AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory)TokenMakerFactory.getDefaultInstance();
+		atmf.putMapping("text/ccompact", "at.jku.ssw.cmm.gui.init.CCompactTokenMaker");
+		textArea.setSyntaxEditingStyle("text/ccompact");
 		
 	    textArea.setCodeFoldingEnabled(true);
 	    textArea.setAntiAliasingEnabled(true);
