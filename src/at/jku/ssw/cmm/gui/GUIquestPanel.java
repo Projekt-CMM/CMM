@@ -140,8 +140,17 @@ public class GUIquestPanel {
 	 * Loads the profile image and the player's reward tokens
 	 */
 	private void loadImages(){
+		Profile profile = Profile.getActiveProfile();
+		
 		//Load Profile Image
-		this.jProfilePicture = LoadStatics.loadImage("profileTest/icon.png", false, 120, 120);
+		if(Profile.getActiveProfile().getProfileimage() != null){
+			String path = profile.getInitPath() + Profile.sep + profile.getProfileimage();
+			System.out.println(path);
+			
+			this.jProfilePicture = LoadStatics.loadImage(path, false, 120, 120);
+		}else{
+			this.jProfilePicture = new JLabel("no Profile Image");
+		}
 		
 		//Loading profile achievement tokens
 		this.jProfileAchievements = new JPanel();
@@ -191,7 +200,7 @@ public class GUIquestPanel {
 		cp.add(this.jProfileLevel, this.setLayoutPosition(c, 1, 3, 1, 1));
 		//cp.add(this.jProfileXP, this.setLayoutPosition(c, 1, 4, 1, 1));
 		
-		cp.add(this.jQuestTitle, this.setLayoutPosition(c, 0, 5, 1, 1));
+		cp.add(this.jQuestTitle, this.setLayoutPosition(c, 0, 5 , 1, 1));
 		cp.add(this.jQuestSelectButton, this.setLayoutPosition(c, 1, 5, 1, 1));
 		
 		//Description Text Panel

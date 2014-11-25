@@ -52,11 +52,11 @@ public class GUIprofileSettings {
 			System.out.println("[EDT Analyse] Quest GUI runnung on EDT.");
 		
 		//Standard look and feel
-		try {
+		/*try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 		    e.printStackTrace();
-		}
+		}*/
 				
 		//Initialize quest settings window
 		this.jFrame = new JFrame("C Compact - " + title );

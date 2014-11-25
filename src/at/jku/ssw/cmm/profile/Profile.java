@@ -59,7 +59,11 @@ public class Profile {
 	public static final String
 		FILE_PROFILE = "profile.cp",
 		FILE_PACKAGESPATH = "packages",
-		FILE_PROFILEIMAGE = "avatar";
+		FILE_PROFILEIMAGE = "avatar",
+		FILE_BEFORE_PROFILE = "profile_";
+	
+	public static final String
+		FILE_EXTENDSION = "cp";
 	
 	public static final String
 		XML_NAME = "name",
@@ -545,7 +549,6 @@ public class Profile {
 		
 		String extension = sourcePath.substring(sourcePath.lastIndexOf('.'), sourcePath.length());
 		
-		System.out.println("SorcePath: "+sourcePath + " " + extension);
 		
 		//TODO add all file extensions
 		if(sourcePath.endsWith(".bmp") ||
@@ -557,11 +560,14 @@ public class Profile {
 			
 				String destPath = profile.getInitPath() + Profile.sep + Profile.FILE_PROFILEIMAGE + extension;
 			
+				if(destPath.equals(sourcePath))
+					return profile;
+				
 				File source  = new File(sourcePath);
 				File dest = new File(destPath);
 				
 				LoadStatics.copyFileUsingStream(source, dest);
-				profile.setProfileimage(destPath);
+				profile.setProfileimage(dest.getName());
 				
 		}else
 			throw new IOException();

@@ -106,7 +106,7 @@ public class GUIProfileManager {
 				
 		//Only Directorys can be choosen
 		//chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		FileFilter filter = new FileNameExtensionFilter("CMM Profile", "profile");
+		FileFilter filter = new FileNameExtensionFilter("CMM Profile", Profile.FILE_EXTENDSION);
 		//chooser.addChoosableFileFilter(filter);
 		chooser.setFileFilter(filter);
 		
