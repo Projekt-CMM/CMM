@@ -384,12 +384,12 @@ public class GUImain {
 		this.rightPanelControl.hideErrorPanel();
 	}
 
-	public void setErrorMode(String msg, int line) {
+	public void setErrorMode(String html, int line) {
 		
 		System.out.println(" >>> Showing error panel ");
 		
-		this.leftPanelControl.setErrorMode(msg, line);
-		this.rightPanelControl.showErrorPanel(msg);
+		this.leftPanelControl.setErrorMode(line);
+		this.rightPanelControl.showErrorPanel(html);
 	}
 
 	public void setRunMode() {

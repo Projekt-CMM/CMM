@@ -11,6 +11,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import at.jku.ssw.cmm.DebugShell;
@@ -74,6 +75,8 @@ public class GUIrightPanel {
 
 	private JPanel errorPanel;
 	private JEditorPane errorDesc;
+	
+	private JTextField errorMsg;
 
 	public JTabbedPane init(GUImain main) {
 		
@@ -105,6 +108,12 @@ public class GUIrightPanel {
 		editorScrollPane.setMinimumSize(new Dimension(10, 10));
 
 		this.errorPanel.add(editorScrollPane, BorderLayout.CENTER);
+		
+		this.errorMsg = new JTextField();
+		this.errorMsg.setEditable(false);
+		
+		if( GUImain.ADVANCED_GUI )
+			this.errorPanel.add(this.errorMsg, BorderLayout.PAGE_END);
 
 		// Initialize Quest Panel
 		JPanel jQuestPanel = new JPanel();
@@ -134,18 +143,20 @@ public class GUIrightPanel {
 		return this.questPanel;
 	}
 
-	public void showErrorPanel(String msg) {
+	public void showErrorPanel(String html) {
 
 		try {
 			this.errorDesc.setPage(LoadStatics.getHTMLUrl(this.errorMap
-					.getErrorHTML(msg)));
+					.getErrorHTML(html)));
 		} catch (IOException e) {
-			DebugShell.out(State.ERROR, Area.ERROR, msg + " not found");
+			DebugShell.out(State.ERROR, Area.ERROR, html + " not found");
 			e.printStackTrace();
 		}
 
 		if (this.tabbedPane.getTabCount() == (GUImain.ADVANCED_GUI ? 2 : 1))
 			this.tabbedPane.add(errorPanel, _("Error"), 1);
+		
+		this.errorMsg.setText(html);
 
 		this.tabbedPane.setSelectedIndex(1);
 	}

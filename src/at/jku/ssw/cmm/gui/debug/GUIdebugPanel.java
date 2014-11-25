@@ -172,14 +172,14 @@ public class GUIdebugPanel {
 		this.main.unlockInput();
 	}
 
-	public void setErrorMode(String msg, int line) {
+	public void setErrorMode(String html, int line) {
 		
 		System.out.println("setting error");
 
 		this.ctrlPanel.setReadyMode();
 		this.ctrlPanel.getListener().setReadyMode();
 
-		this.main.setErrorMode(msg, ExpandSourceCode.correctLine(line,
+		this.main.setErrorMode(html, ExpandSourceCode.correctLine(line,
 				(int) this.main.getLeftPanel().getSourceCodeRegister().get(0)[0],
 				this.main.getLeftPanel().getSourceCodeRegister().size()));
 		

@@ -325,7 +325,7 @@ public class GUIleftPanel {
 		this.jStateLabel.setText("--- " + _("text edit mode") + " ---");
 	}
 
-	public void setErrorMode(String msg, int line) {
+	public void setErrorMode(int line) {
 		
 		this.unlockInput();
 		
