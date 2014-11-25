@@ -223,7 +223,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			main.selectProfile();
+			//main.selectProfile();
 		}
 	};
 

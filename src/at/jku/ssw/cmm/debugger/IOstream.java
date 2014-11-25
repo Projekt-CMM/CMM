@@ -5,6 +5,7 @@ import java.util.List;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.interpreter.exceptions.RunTimeException;
+import at.jku.ssw.cmm.debugger.StdInOut;
 
 /**
  * Connects the I/O functions of the Interpreter with the GUI

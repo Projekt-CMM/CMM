@@ -18,7 +18,7 @@ public class QuestPanelListener {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			main.selectProfile();
+			//main.selectProfile();
 			
 		}
 

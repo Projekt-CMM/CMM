@@ -256,6 +256,7 @@ public class GUIdebugPanel {
 
 			// An include file could not be found
 			this.setErrorMode("include not found", -1);
+			
 			return false;
 		}
 

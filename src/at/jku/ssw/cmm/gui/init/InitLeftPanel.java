@@ -11,11 +11,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 import at.jku.ssw.cmm.gui.GUImainSettings;
+import at.jku.ssw.cmm.gui.include.CMMtokenMaker;
 
 /**
  * Class containing static methods to initialize the left part of the main GUI. This includes functions to
@@ -37,10 +39,10 @@ public class InitLeftPanel {
 	public static RSyntaxTextArea initCodePane( JPanel pane, GUImainSettings settings ){
 		
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
+		//textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
 		
-		//((AbstractTokenMakerFactory) TokenMakerFactory.getDefaultInstance()).putMapping(CMMtokenMaker.StyleName, CMMtokenMaker.class.getName());
-	      //textArea.setSyntaxEditingStyle(CMMtokenMaker.StyleName);
+		((AbstractTokenMakerFactory) TokenMakerFactory.getDefaultInstance()).putMapping(CMMtokenMaker.StyleName, CMMtokenMaker.class.getName());
+	      textArea.setSyntaxEditingStyle(CMMtokenMaker.StyleName);
 		
 	    textArea.setCodeFoldingEnabled(true);
 	    textArea.setAntiAliasingEnabled(true);
