@@ -49,24 +49,6 @@ public class GUImainSettings {
 	private static final int RIGHT_OFFSET = 150;
 	
 	/**
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 * 
-	 * @return The current width of the main GUI window, according to the configuration object.
-	 */
-	public int getSizeX(){
-		return this.sizeX;
-	}
-	
-	/**
-	 * <hr><i>THREAD SAFE by default</i><hr>
-	 * 
-	 * @return The current height of the main GUI window, according to the configuration object.
-	 */
-	public int getSizeY(){
-		return this.sizeY;
-	}
-	
-	/**
 	 * NOTE: The position is not actualized by events, as this is not necessary at the moment.
 	 * 
 	 * <hr><i>THREAD SAFE by default</i><hr>

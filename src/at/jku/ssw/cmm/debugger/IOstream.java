@@ -29,6 +29,10 @@ public class IOstream implements StdInOut {
 		for (char c : this.main.getLeftPanel().getInputStream().toCharArray()) {
 			this.inputStream.add(c);
 		}
+		
+		if( this.inputStream.size() > 0 )
+			this.inputStream.add('\0');
+			
 	}
 
 	// Interface for main GUI manipulations
@@ -41,6 +45,11 @@ public class IOstream implements StdInOut {
 	public char in() throws RunTimeException {
 
 		char c;
+		
+		if( this.inputStream.size() == 1 ){
+			this.inputStream.remove(0);
+			return '\0';
+		}
 
 		try {
 			c = this.inputStream.get(0);

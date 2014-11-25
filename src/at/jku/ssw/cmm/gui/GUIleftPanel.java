@@ -3,6 +3,7 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.BadLocationException;
@@ -101,30 +103,44 @@ public class GUIleftPanel {
 	 * 
 	 * @return A jPanel with all components of the main GUI
 	 */
-	public JPanel init() {
+	public JSplitPane init() {
 		// Left part of the GUI
-		JPanel jPanelLeft = new JPanel();
-		jPanelLeft.setLayout(new BoxLayout(jPanelLeft, BoxLayout.PAGE_AXIS));
+		JSplitPane jPanelLeft = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		jPanelLeft.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		// Panel to display the GUI mode
+		JPanel panel1 = new JPanel();
+		panel1.setLayout(new BoxLayout(panel1, BoxLayout.PAGE_AXIS));
+		
+		JPanel panel2 = new JPanel();
+		panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
+		
 		this.jStatePanel = new JPanel();
 		this.jStatePanel.setBorder(BorderFactory.createLoweredBevelBorder());
 
 		this.jStateLabel = new JLabel();
 
 		this.jStatePanel.add(this.jStateLabel);
-		jPanelLeft.add(this.jStatePanel);
+		panel1.add(this.jStatePanel);
 
 		// Text area (text pane) for source code
-		this.jSourcePane = InitLeftPanel.initCodePane(jPanelLeft,
+		this.jSourcePane = InitLeftPanel.initCodePane(panel1,
 				this.main.getSettings());
 
 		// Text area for input
-		this.jInputPane = InitLeftPanel.initInputPane(jPanelLeft);
+		this.jInputPane = InitLeftPanel.initInputPane(panel2);
 
 		// Text area for output
-		this.jOutputPane = InitLeftPanel.initOutputPane(jPanelLeft);
+		this.jOutputPane = InitLeftPanel.initOutputPane(panel2);
+		
+		panel2.setMinimumSize(new Dimension(200, 150));
+		panel2.setPreferredSize(new Dimension(200, 200));
+		panel2.setMaximumSize(new Dimension(2000, 2000));
+		
+		jPanelLeft.setTopComponent(panel1);
+		jPanelLeft.setBottomComponent(panel2);
+		jPanelLeft.setDividerLocation(0.4);
+		jPanelLeft.setResizeWeight(1.0);
 
 		// Read last opened files
 		if (this.main.hasPath()) {

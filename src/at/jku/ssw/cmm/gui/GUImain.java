@@ -17,7 +17,6 @@ import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gettext.Language;
 import at.jku.ssw.cmm.gui.event.CursorListener;
-import at.jku.ssw.cmm.gui.event.WindowComponentListener;
 import at.jku.ssw.cmm.gui.event.WindowEventListener;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
@@ -92,7 +91,7 @@ public class GUImain {
 	 * If true, GUI options for quest and profile functions are shown. <br>
 	 * If false, quest/profile GUI is hidden.
 	 */
-	public static final boolean ADVANCED_GUI = false;
+	public static final boolean ADVANCED_GUI = true;
 
 	/**
 	 * The current version of C Compact, used as window title.
@@ -175,7 +174,7 @@ public class GUImain {
 				this.getSettings(), this.saveDialog));
 		
 		// Initialize window component listener
-		this.jFrame.addComponentListener(new WindowComponentListener(this.jFrame, this.leftPanelControl.getSourcePane(), this.leftPanelControl.getInputPane(), this.getSettings()));
+		//this.jFrame.addComponentListener(new WindowComponentListener(this.jFrame, this.leftPanelControl.getSourcePane(), this.leftPanelControl.getInputPane(), this.getSettings()));
 
 		this.jFrame.addMouseMotionListener(new CursorListener(this.leftPanelControl.getSourcePane()));
 		

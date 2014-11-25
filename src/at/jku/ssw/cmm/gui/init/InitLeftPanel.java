@@ -36,7 +36,7 @@ public class InitLeftPanel {
 	 */
 	public static RSyntaxTextArea initCodePane( JPanel pane, GUImainSettings settings ){
 		
-		RSyntaxTextArea textArea = new RSyntaxTextArea(settings.getSourceSizeY(), settings.getSourceSizeX());
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
 		
 		//((AbstractTokenMakerFactory) TokenMakerFactory.getDefaultInstance()).putMapping(CMMtokenMaker.StyleName, CMMtokenMaker.class.getName());
