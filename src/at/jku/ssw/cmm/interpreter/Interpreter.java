@@ -10,7 +10,6 @@ import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Struct;
 import at.jku.ssw.cmm.compiler.Strings;
 import at.jku.ssw.cmm.debugger.Debugger;
-import at.jku.ssw.cmm.debugger.DebuggerRequest;
 import at.jku.ssw.cmm.debugger.StdInOut;
 import at.jku.ssw.cmm.interpreter.exceptions.AbortException;
 import at.jku.ssw.cmm.interpreter.exceptions.BreakException;
@@ -23,15 +22,12 @@ import at.jku.ssw.cmm.interpreter.memory.Memory;
 import at.jku.ssw.cmm.interpreter.memory.MethodContainer;
 import at.jku.ssw.cmm.compiler.Node;
 
-public final class Interpreter implements DebuggerRequest {
+public final class Interpreter {
 
 	private final Debugger debugger;
 	private final StdInOut inout;
 	
 	private int libraryFunctionLevel;
-
-	private int debuggerLastChangedAddress;
-	private int debuggerCurrentAddress;
 	
 	// private boolean running;
 
@@ -78,12 +74,17 @@ public final class Interpreter implements DebuggerRequest {
 	void Statement(Node p) throws ReturnException, AbortException, BreakException, ContinueException, RunTimeException { // b = a;
 		
 		//TODO add changed variable list
-		if (p.kind != Node.NOP && libraryFunctionLevel == 0 && !debugger.step(p, null, null))
+		if (p.kind != Node.NOP && libraryFunctionLevel == 0 && !debugger.step(p, Memory.readVariables, Memory.changedVariables))
 			throw new AbortException();
 
+		// clear ArrayLists
+		if(libraryFunctionLevel == 0) {
+			Memory.readVariables.clear();
+			Memory.changedVariables.clear();
+		}
+		
 		switch (p.kind) {
 		case Node.ASSIGN:
-			debuggerLastChangedAddress = Adr(p.left);
 			switch (p.right.type.kind) {
 			case Struct.BOOL:
 				Memory.storeBool(Adr(p.left), BoolExpr(p.right));
@@ -246,13 +247,10 @@ public final class Interpreter implements DebuggerRequest {
 			else
 				return true;
 		case Node.IDENT:							//more at @Adr
-			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadBoolSave(IdentAdr(p.obj), p);
 		case Node.DOT:								//more at @Adr
-			debuggerCurrentAddress = Adr(p);
 			return Memory.loadBoolSave(Adr(p),p);			
 		case Node.INDEX:							//more at @Adr
-			debuggerCurrentAddress = Adr(p);
 			return Memory.loadBoolSave(Adr(p),p);
 		default:
 			throw new RunTimeException("Not supportet boolexpr node kind", p);
@@ -325,13 +323,10 @@ public final class Interpreter implements DebuggerRequest {
 				else
 					return 0x00;
 			case Node.IDENT:							//more at @Adr
-				debuggerCurrentAddress = IdentAdr(p.obj);
 				return Memory.loadIntSave(IdentAdr(p.obj), p);
 			case Node.DOT:								//more at @Adr
-				debuggerCurrentAddress = Adr(p);
 				return Memory.loadIntSave(Adr(p), p);			
 			case Node.INDEX:							//more at @Adr
-				debuggerCurrentAddress = Adr(p);
 				return Memory.loadIntSave(Adr(p), p);
 			default:
 				throw new RunTimeException("Not supportet intexpr node kind", p);
@@ -384,13 +379,10 @@ public final class Interpreter implements DebuggerRequest {
 				Call(p);
 				return Memory.getFloatReturnValue();						
 			case Node.IDENT:						//more at @Adr
-				debuggerCurrentAddress = IdentAdr(p.obj);
 				return Memory.loadFloatSave(IdentAdr(p.obj),p);	
 			case Node.DOT:							//more at @Adr
-				debuggerCurrentAddress = Adr(p);
 				return Memory.loadFloatSave(Adr(p),p);
 			case Node.INDEX:						//more at @Adr
-				debuggerCurrentAddress = Adr(p);
 				return Memory.loadFloatSave(Adr(p),p);
 	
 			default:
@@ -414,14 +406,11 @@ public final class Interpreter implements DebuggerRequest {
 			if (IntExpr(p.left) >= 0)
 				return (char) IntExpr(p.left);		//Casting an IntExpression to Char
 		case Node.IDENT:
-			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadCharSave(IdentAdr(p.obj),p);			//more at @Adr
 		case Node.DOT:
-			debuggerCurrentAddress = Adr(p);
 			return Memory.loadCharSave(Adr(p),p);			//more at @Adr
 		case Node.INDEX:
 			if (p.left.type.kind != Struct.STRING) {
-				debuggerCurrentAddress = Adr(p);
 				return Memory.loadCharSave(Adr(p),p);		//Normal way of getting Arrays -> more at @Adr
 			} else {									//Getting a String and look at a special Position
 				try {
@@ -451,7 +440,6 @@ public final class Interpreter implements DebuggerRequest {
 	int StringExpr(Node p) throws AbortException, ReturnException, RunTimeException { //TODO
 		switch (p.kind) {
 		case Node.IDENT:
-			debuggerCurrentAddress = IdentAdr(p.obj);
 			return Memory.loadStringAddressSave(Adr(p),p);
 			
 		case Node.PLUS:		//Reads the left and the right String and putting them together
@@ -491,7 +479,6 @@ public final class Interpreter implements DebuggerRequest {
 				return true;
 		} else if(p.kind == Node.IDENT) {
 			if(p.type.kind == Struct.BOOL) {
-				debuggerCurrentAddress = IdentAdr(p.obj);
 				return Memory.loadBoolSave(IdentAdr(p.obj), p);
 			} else {
 				throw new RunTimeException("type not supported as ident in condition", p);
@@ -837,7 +824,6 @@ public final class Interpreter implements DebuggerRequest {
 		
 		switch (p.kind) {
 		case Node.IDENT:					// more at @IdentAdr
-			debuggerCurrentAddress = IdentAdr(p.obj);
 			return IdentAdr(p.obj);
 		case Node.DOT:						//for structs very familiar with index
 			return Adr(p.left) + p.right.val;
@@ -856,7 +842,7 @@ public final class Interpreter implements DebuggerRequest {
 		case Node.REF://TODO
 			return Adr(p.left);
 		default:
-			throw new RunTimeException("Not supported Node Kind", p);
+			throw new RunTimeException("Not supportet node kind", p);
 		}
 	}
 
@@ -874,15 +860,5 @@ public final class Interpreter implements DebuggerRequest {
 			return Memory.loadIntSave(adr, null); // References saves the Address in an Integer Variable
 		else
 			return adr;					//Returns the normal Address Value
-	}
-
-	@Override
-	public int getLastChangedAddress() {
-		return debuggerLastChangedAddress;
-	}
-
-	@Override
-	public int getCurrentAddress() {
-		return debuggerCurrentAddress;
 	}
 }

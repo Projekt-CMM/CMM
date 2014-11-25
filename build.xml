@@ -47,6 +47,7 @@
     <target name="build" depends="coco, flex" description="build project">
 
         <!-- add directory -->
+        <delete dir="${build.classes}"/>
         <mkdir dir="${build.classes}"/>
 
         <!-- Quelltext kompilieren -->
@@ -63,12 +64,22 @@
         <!-- copy required files -->
         <copy todir="${build.classes}">
             <fileset dir="${java.dir}"/>
+            <fileset dir="./">  
+                <include name="error/**"/>
+                <include name="clib/*.h"/>
+                <include name="po/**"/>
+            </fileset>
         </copy>
 
         <!-- build jar file -->
-        <jar jarfile="${name}.jar" manifest="${manifest}">
+        <jar jarfile="${name}.jar" manifest="${manifest}" includes="clib/*.h" >
             <fileset dir="${build.classes}"/>
             <zipgroupfileset dir="${build.lib}" includes="*.jar"/>
+        </jar>
+
+        <jar update="yes"
+             jarfile="${name}.jar">
+           <zipfileset src="${name}.jar" includes="../clib/error.h"/>
         </jar>
     </target>
 

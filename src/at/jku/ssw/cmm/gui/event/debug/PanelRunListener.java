@@ -19,6 +19,7 @@ import at.jku.ssw.cmm.debugger.Debugger;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.debug.GUIcontrolPanel;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
+import at.jku.ssw.cmm.interpreter.Interpreter;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
 import at.jku.ssw.cmm.compiler.Node;
 
@@ -224,7 +225,8 @@ public class PanelRunListener implements Debugger {
 		this.master.updateVariableTables(Memory.getFramePointer() != this.lastAdress);
 		this.lastAdress = Memory.getFramePointer();
 		
-		this.master.highlightVariable(this.master.getCompileManager().getRequest().getLastChangedAddress());
+		for( int i : changedVariables )
+			this.master.highlightVariable(i);
 		
 		this.timer = null;
 

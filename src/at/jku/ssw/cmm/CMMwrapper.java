@@ -5,7 +5,7 @@ import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Error;
 import at.jku.ssw.cmm.compiler.Tab;
-import at.jku.ssw.cmm.debugger.DebuggerRequest;
+import at.jku.ssw.cmm.debugger.Debugger;
 import at.jku.ssw.cmm.debugger.IOstream;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
@@ -184,9 +184,5 @@ public class CMMwrapper {
 	 */
 	public boolean isRunning() {
 		return this.thread != null;
-	}
-
-	public DebuggerRequest getRequest() {
-		return (DebuggerRequest) interpreter;
 	}
 }

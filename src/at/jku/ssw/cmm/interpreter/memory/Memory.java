@@ -1,7 +1,9 @@
 package at.jku.ssw.cmm.interpreter.memory;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import at.jku.ssw.cmm.compiler.Node;
@@ -34,11 +36,16 @@ public final class Memory {
 	private static int returnValue;
 	private static float floatreturnValue;
 
+	public static List<Integer> readVariables, changedVariables;
+	
 	public static void initialize() {
 		framePointer = MEMORY_SIZE / 2;
 		stackPointer = MEMORY_SIZE / 2;
 		globalPointer = 0;
 
+		readVariables = new ArrayList<Integer>();
+		changedVariables = new ArrayList<Integer>();
+		
 		// initialize arrays
 		memoryInformations.clear();
 		for (int i = 0; i < MEMORY_SIZE; i++) {
@@ -84,6 +91,7 @@ public final class Memory {
 	}
 
 	public static boolean loadBool(int address) {
+		readVariables.add(address);
 		if(memory.get(address) == 0)
 			return false;
 		else
@@ -96,6 +104,7 @@ public final class Memory {
 	}
 	
 	public static void storeBool(int address, boolean value) {
+		changedVariables.add(address);
 		getMemoryInformation(address).isInitialized = true;
 		if(value)
 			memory.put(address, (byte)0x01);
@@ -104,6 +113,7 @@ public final class Memory {
 	}
 	
 	public static int loadInt(int address) {
+		readVariables.add(address);
 		return memory.getInt(address);
 	}
 	
@@ -113,11 +123,13 @@ public final class Memory {
 	}
 	
 	public static void storeInt(int address, int value) {
+		changedVariables.add(address);
 		getMemoryInformation(address).isInitialized = true;
 		memory.putInt(address, value);
 	}
 
 	public static char loadChar(int address) {
+		readVariables.add(address);
 		return memory.getChar(address);
 	}
 
@@ -127,11 +139,13 @@ public final class Memory {
 	}
 	
 	public static void storeChar(int address, char value) {
+		changedVariables.add(address);
 		getMemoryInformation(address).isInitialized = true;
 		memory.putChar(address, value);
 	}
 
 	public static float loadFloat(int address) {
+		readVariables.add(address);
 		return memory.getFloat(address);
 	}
 
@@ -141,16 +155,19 @@ public final class Memory {
 	}
 	
 	public static void storeFloat(int address, float value) {
+		changedVariables.add(address);
 		getMemoryInformation(address).isInitialized = true;
 		memory.putFloat(address, value);
 	}
 
 	public static void storeStringAdress(int address, int value) {
+		changedVariables.add(address);
 		getMemoryInformation(address).isInitialized = true;
 		memory.putInt(address, value);
 	}
 
 	public static int loadStringAddress(int address) {
+		readVariables.add(address);
 		return memory.getInt(address);
 	}
 

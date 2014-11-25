@@ -3,9 +3,6 @@
 	<error id="default">
 		<file>default.html</file>
 	</error>
-	<error id="semicolon expected">
-		<file>semicolon.html</file>
-	</error>
 	<error id="include not found">
 		<file>include.html</file>
 	</error>
@@ -15,51 +12,24 @@
 	<error id="([\w./]+) not found">
 		<file>notfound.html</file>
 	</error>
-	<error id="Divided by 0">
-		<file>divby0.html</file>
-	</error>
-	<error id="no input data">
-		<file>noinput.html</file>
-	</error>
-	<error id="negative index choosen">
-		<file>negativeindex.html</file>
-	</error>
-	<error id="too high index choosen">
-		<file>indexoutofbounds.html</file>
-	</error>
-	<error id="Not supportet ([\w./]+) node kind">
-		<file>cast.html</file>
-	</error>
-	<error id="type not supported as ident in condition">
+    <error id="([\w./]+) declared twice">
 		<file>cast.html</file>
 	</error>
 	<!-- no errors for printf -->
-	<error id="printf doesn't contain the required amount of arguments">
-		<file>printftfa.html</file>
-	</error>
-	<error id="invalid printf parameter">
-		<file>printfip.html</file>
-	</error>
-	<!-- no errors for printf -->
-	<error id="StackOverFlow">
-		<file>default.html</file>
-	</error>
-	<error id="Stack Underflow">
-		<file>default.html</file>
-	</error>
+
 	<error id="break is not allowed here">
 		<file>default.html</file>
 	</error>
 	<error id="continue is not allowed here">
 		<file>default.html</file>
 	</error>
-	<!-- unknown interpreter error -->
-	<error id="unknown interpreter error occurred">
-		<file>default.html</file>
-	</error>
-	
 	
 	<!--#### Compiler Errors ####-->
+	
+	<!-- parser errors -->
+	<error id="semicolon expected">
+		<file>compiler/parser/semicolon.html</file>
+	</error>
 	
 	<!-- function declaration -->
 	<error id="declaration of function has more parameter as using of itself">
@@ -68,7 +38,16 @@
 	<error id="using of function has more parameters as the declaration">
 		<file>compiler/function/using_more_parameter.html</file>
 	</error>
-	<!--<error id="function has more parameters as forward-declaration declare">
+	<error id="procedure must return a primitive type ,a string or is void">
+		<file>default.html</file>
+	</error>
+	<error id="forward declaration and declaration doesn't match with the library token">
+		<file>default.html</file>
+	</error>
+	<error id="function is already forward declared">
+		<file>default.html</file>
+	</error>
+	<error id="function has more parameters as forward-declaration declare">
 		<file>default.html</file>
 	</error>
 	<error id="forward-declaration of function has more parameter as function itself">
@@ -89,10 +68,10 @@
 	<error id="no function declared">
 		<file>default.html</file>
 	</error>-->
-	<error id="parameter not declared">
+	<!--<error id="parameter not declared">
 		<file>compiler/function/param_not_decl.html</file>
-	</error>
-	<!--<error id="there is no type-conversation for ref-parameter(s) allowed">
+	</error>-->
+	<error id="there is no type-conversation for ref-parameter(s) allowed">
 		<file>default.html</file>
 	</error>
 	<error id="the number of dimensions in the declaration isn't the same as in the call">
@@ -100,10 +79,10 @@
 	</error>
 	<error id="there is no type-conversation for arrays allowed">
 		<file>default.html</file>
-	</error>-->
+	</error>
 	
 	<!-- const value parser -->
-	<!--<error id="([\w./]+) is not an integer">
+	<error id="([\w./]+) is not an integer">
 		<file>default.html</file>
 	</error>
 	<error id="([\w./]+) is not an float">
@@ -112,31 +91,134 @@
 	<error id="unknow character">
 		<file>default.html</file>
 	</error>
-	<error id="([\w./\s]+) string doesn't have \" at start end endpoint">
-		<file>default.html</file>
-	</error>
-	<error id="([\w./]+) no single \\ at the end of a string allowed">
+	<!--<error id="([\w./\s]+) string doesn't have \" at start end endpoint">
 		<file>default.html</file>
 	</error>-->
+	<error id="([\w./]+) no single \\ at the end of a string allowed">
+		<file>default.html</file>
+	</error>
+	
+	<!-- casts -->
 	<error id="no known cast from ([\w./\s]+)">
 		<file>cast.html</file>
 	</error>	
+	
+	<!-- main -->
+	<error id="main is not declared as function">
+		<file>default.html</file>
+	</error>
+	<error id="function parameters not allowed for main function">
+		<file>default.html</file>
+	</error>
+	
+	<!-- variable handling -->
+	<error id="variable assigment is not allowed for global variables">
+	    <file>cast.html</file>
+	</error>
+	<error id="it is not allowed to declare the same struct in a struct">
+		<file>default.html</file>
+	</error>
+	<error id="variable assigment is not allowed in struct">
+		<file>default.html</file>
+	</error>
+	<error id="struct must contain at least one variable">
+		<file>default.html</file>
+	</error>
+	
+	<!-- const handling -->
+	<error id="bool constant not allowed here">
+		<file>default.html</file>
+	</error>
+	<error id="int constant not allowed here">
+		<file>default.html</file>
+	</error>
+	<error id="float constant not allowed here">
+		<file>default.html</file>
+	</error>
+	<error id="char constant not allowed here">
+		<file>default.html</file>
+	</error>
+	<error id="string constant not allowed here">
+		<file>default.html</file>
+	</error>
+	
+	<!-- type handling-->
+	<error id="type is not a primitive or string">
+		<file>default.html</file>
+	</error>
+	
+	<!-- other -->
+	<error id="right operator is not defined">
+		<file>default.html</file>
+	</error>
+	<error id="array call and call by reference cannot mixed up">
+		<file>default.html</file>
+	</error>
+	<error id="array reference must be a primitive type or string">
+		<file>default.html</file>
+	</error>
 	
     <!--#### Runtime Exceptions ####-->
 
     <!-- operator overflow -->
     <error id="Integer overflow">
-		<file>int_overflow.html</file>
+		<file>interpreter/operator/int_overflow.html</file>
 	</error>
     <error id="Float overflow">
-		<file>float_overflow.html</file>
+		<file>interpreter/operator/float_overflow.html</file>
+	</error>
+	<error id="Divided by 0">
+		<file>interpreter/operator/divby0.html</file>
 	</error>
 	
+	<!-- array out of bounds -->
+	<error id="negative index choosen">
+		<file>interpreter/array/negativeindex.html</file>
+	</error>
+	<error id="too high index choosen">
+		<file>interpreter/array/indexoutofbounds.html</file>
+	</error>
+
 	<!-- memory handling errors -->
 	<error id="variable is not initialized">
-		<file>variable_uninitialized.html</file>
+		<file>interpreter/memory/variable_uninitialized.html</file>
 	</error>
-	<error id="([\w./]+) declared twice">
-		<file>cast.html</file>
+	<error id="Return Statement missing">
+		<file>interpreter/memory/no_return.html</file>
+	</error>
+	
+	<!-- printf errors -->
+	<error id="printf doesn't contain the required amount of arguments">
+		<file>interpreter/printf/printftf_arguments.html</file>
+	</error>
+	<error id="invalid printf parameter">
+		<file>interpreter/printf/printf_argument_type.html</file>
+	</error>
+	
+	<!-- other -->
+	<error id="unknown interpreter error occurred">
+		<file>interpreter/default.html</file>
+	</error>
+	<error id="StackOverFlow">
+		<file>interpreter/error.html</file>
+	</error>
+	<error id="Stack Underflow">
+		<file>interpreter/error.html</file>
+	</error>
+	<error id="Not supportet node kind">
+		<file>interpreter/error.html</file>
+	</error>
+	<error id="Not supportet ([\w./]+) node kind">
+		<file>interpreter/error.html</file>
+	</error>
+	<error id="type not supported as ident in condition">
+		<file>interpreter/error.html</file>
+	</error>
+
+	
+	<!--#### Gui Exceptions ####-->
+
+	<error id="no input data">
+		<file>gui/noinput.html</file>
 	</error>
 </errorTable>

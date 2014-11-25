@@ -22,6 +22,11 @@ h2 {
 	font-size: 1.2em;
 	font-weight:bold;
 }
+h3 {
+	color:gray;
+	font-size: 1.1em;
+	font-weight:bold;
+}
 
 p{
 	margin-bottom:10px;
