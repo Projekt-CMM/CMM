@@ -3,14 +3,10 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.Dimension;
-
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
@@ -23,7 +19,6 @@ import at.jku.ssw.cmm.gui.init.InitMenuBar;
 import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
 import at.jku.ssw.cmm.gui.quest.GUIquestMain;
 import at.jku.ssw.cmm.profile.Profile;
-import at.jku.ssw.cmm.profile.XMLReadingException;
 
 import java.io.File;
 
@@ -172,9 +167,6 @@ public class GUImain {
 		// Initialize the window listener
 		this.jFrame.addWindowListener(new WindowEventListener(this.jFrame,
 				this.getSettings(), this.saveDialog));
-		
-		// Initialize window component listener
-		//this.jFrame.addComponentListener(new WindowComponentListener(this.jFrame, this.leftPanelControl.getSourcePane(), this.leftPanelControl.getInputPane(), this.getSettings()));
 
 		this.jFrame.addMouseMotionListener(new CursorListener(this.leftPanelControl.getSourcePane()));
 		
@@ -291,8 +283,8 @@ public class GUImain {
 		//open profile selector on empty profile
 
 		//Select Profile if there is no active Profile
-		if(Profile.getActiveProfile() == null)
-			selectProfile();
+		//if(Profile.getActiveProfile() == null)
+			//selectProfile();
 		
 		//Ignoring Quest GUI if there is no active Profile
 		if(Profile.getActiveProfile() != null)
@@ -303,7 +295,7 @@ public class GUImain {
 	 * TODO Profile Preview
 	 * Invokes the profile selection dialog
 	 */
-	public void selectProfile(){
+	/*public void selectProfile(){
 		DebugShell.out(State.LOG, Area.GUI, "Opening Profile Selection Window...");
 		JFileChooser chooser = new JFileChooser("Select a profile...");
 		//chooser.setFileFilter(new FileNameExtensionFilter("C Compact Profile", "xml"));
@@ -323,6 +315,7 @@ public class GUImain {
 	    if (ret == JFileChooser.APPROVE_OPTION) 
 			if(chooser.getSelectedFile() != null && chooser.getSelectedFile().getPath() != null ){
 				
+<<<<<<< HEAD
 				String path = chooser.getSelectedFile().getAbsolutePath();
 				try {
 					Profile.setActiveProfile(Profile.ReadProfile(path));
@@ -343,8 +336,17 @@ public class GUImain {
 				}
 				DebugShell.out(State.LOG, Area.GUI, "Profile Chooser Path:"
 						+ chooser.getSelectedFile().getAbsolutePath());
+=======
+				System.err.println("Wrong Profile Choosen - no profile.xml found");
+        		JFrame frame = new JFrame("Warnung");
+        		JOptionPane.showMessageDialog(frame,"Falsches Profil ausgewahlt.","Warnung:",
+        			    JOptionPane.WARNING_MESSAGE);
+        		
+				//Profile Selection Error
+				selectProfile();
+>>>>>>> f12b64e19fbda5b4f13416b6f38752d33413eac0
 			}
-	}
+	}*/
 
 	/**
 	 * Saves the current *.cmm file if there are unsaved changes
@@ -377,31 +379,23 @@ public class GUImain {
 
 	public void setReadyMode() {
 		
-		System.out.println(" <<< Hiding error panel ");
-
 		this.leftPanelControl.setReadyMode();
 		this.rightPanelControl.hideErrorPanel();
 	}
 
-	public void setErrorMode(String html, int line) {
-		
-		System.out.println(" >>> Showing error panel ");
+	public void setErrorMode(String msg, int line) {
 		
 		this.leftPanelControl.setErrorMode(line);
-		this.rightPanelControl.showErrorPanel(html);
+		this.rightPanelControl.showErrorPanel(msg);
 	}
 
 	public void setRunMode() {
-		
-		System.out.println(" <<< Hiding error panel ");
 		
 		this.leftPanelControl.setRunMode();
 		this.rightPanelControl.hideErrorPanel();
 	}
 
 	public void setPauseMode() {
-		
-		System.out.println(" <<< Hiding error panel ");
 		
 		this.leftPanelControl.setPauseMode();
 		this.rightPanelControl.hideErrorPanel();
@@ -414,6 +408,7 @@ public class GUImain {
 	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
 	 */
 	public void lockInput() {
+		
 		this.menuBarControl.lockAll();
 	}
 	

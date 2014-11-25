@@ -49,25 +49,20 @@ public class GUIrightPanel {
 	 * </ul>
 	 * Also, the right panel contains basic control elements for the main GUI,
 	 * eg. the breakpoint button.
-	 * 
-	 * @param cp
-	 *            Main component of the main GUI
-	 * @param mod
-	 *            Interface for main GUI manipulations
 	 */
 	public GUIrightPanel() {
-
+		
 	}
-
+	
 	private JTabbedPane tabbedPane;
-
+	
 	/**
 	 * A reference to the debug panel.
 	 */
 	private GUIdebugPanel debugPanel;
-
+	
 	private ErrorTable errorMap;
-
+	
 	/**
 	 * A reference to the quest/profile info panel.
 	 */
@@ -128,7 +123,7 @@ public class GUIrightPanel {
 
 		return tabbedPane;
 	}
-
+	
 	/**
 	 * @return A reference to the debug panel manager
 	 */

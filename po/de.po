@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-23 14:46+0100\n"
+"POT-Creation-Date: 2014-11-23 14:36+0100\n"
 "PO-Revision-Date: 2014-11-23 14:41+0100\n"
 "Last-Translator: Fabian Hummer f.hummer@traunseenet.at\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -172,11 +172,10 @@ msgstr "Datei"
 
 #: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:119
 msgid "stop"
-msgstr "Stop"
+msgstr "stop"
 
 #: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:120
-#, fuzzy
-msgid "return to text edit mode immediately"
+msgid "return to text edit maine immediately"
 msgstr "zurück zum Editormodus"
 
 #: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:124
@@ -198,8 +197,7 @@ msgstr "Compilieren und Schrittweise debuggen"
 
 #: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:160
 msgid "compile source code and<br>run debugger step by step"
-msgstr ""
-"Compiliere source code und<br>führe das Programm Schritt für Schritt aus"
+msgstr "Compiliere source code und<br>führe das Programm Schritt für Schritt aus"
 
 #: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:163
 msgid "compile and run"

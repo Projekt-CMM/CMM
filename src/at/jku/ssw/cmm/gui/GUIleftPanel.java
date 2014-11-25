@@ -96,6 +96,7 @@ public class GUIleftPanel {
 	 */
 	private final List<Object[]> codeRegister;
 
+
 	/**
 	 * Initializes the left part of the main GUI. This class is responsible for all
 	 * the objects which are initialized here, so this method should be called at when
@@ -121,6 +122,7 @@ public class GUIleftPanel {
 		this.jStateLabel = new JLabel();
 
 		this.jStatePanel.add(this.jStateLabel);
+
 		panel1.add(this.jStatePanel);
 
 		// Text area (text pane) for source code
@@ -243,6 +245,7 @@ public class GUIleftPanel {
 	 * @param line The line which shall be highlighted.
 	 */
 	public void highlightSourceCodeDirectly( int line ){
+
 		int i, l = 0;
 		final String code = this.jSourcePane.getText();
 
@@ -354,9 +357,8 @@ public class GUIleftPanel {
 
 	public void setRunMode() {
 		
-		
 		this.lockInput();
-		
+
 		this.jStatePanel.setBackground(Color.GREEN);
 		this.jStateLabel.setText(">>> " + _("automatic debug mode") + " >>>");
 	}
