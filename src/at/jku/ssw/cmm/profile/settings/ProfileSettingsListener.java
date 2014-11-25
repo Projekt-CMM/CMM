@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
 import at.jku.ssw.cmm.launcher.ProfileCreateException;
@@ -110,21 +111,31 @@ public class ProfileSettingsListener {
 
 				//Setting new Initial Path, if no Path exists
 				if(gui.getProfile().getInitPath() == null){
+					String initPath = selectPath().getAbsolutePath() + Quest.sep + Profile.FILE_BEFORE_PROFILE + gui.getProfile().getName();
+					File dir = new File(initPath);
+				     
+				    // attempt to create the directory here
+				    boolean successful = dir.mkdirs();
+				    if (!successful){
+				    	System.err.println("Profile could not be created at:" + initPath);
+
+				    	throw new ProfileCreateException();
+				    }
 					
-						File fileToSave = selectPath();
-	
-	
-				    gui.getProfile().setInitPath(fileToSave.getAbsolutePath());
+				    System.out.println("Setting initial Path:" + initPath);
+				    gui.getProfile().setInitPath(initPath);
+				  				    
 				}
 				
 				try {
 					String profileImagePath = gui.getProfile().getProfileimage();
 					
 					if(profileImagePath != null){
+						
 						File file = new File( profileImagePath);
-						if(file != null && file.isAbsolute()){
-							Profile.changeProfileImage(gui.getProfile(), profileImagePath);
-							gui.getProfile().setProfileimage(file.getName());
+						
+						if(file != null){
+							gui.setProfile(Profile.changeProfileImage(gui.getProfile(), profileImagePath));
 						}
 					}
 				} catch (IOException e) {
@@ -137,11 +148,18 @@ public class ProfileSettingsListener {
 				//Setting as active Profile
 				Profile.setActiveProfile(gui.getProfile());
 		        
+				jFrame.dispose();
+				
+				String[] a = { "" };
+				GUImain.main(a);
 		        
 				
 			} catch (XMLWriteException | ProfileCreateException e) {
 				
 				System.err.println("Profile creation cancelled");
+				JFrame frame = new JFrame("Warnung");
+        		JOptionPane.showMessageDialog(frame,"Profil wurde hier bereits erstellt.","Warnung:",
+        			    JOptionPane.WARNING_MESSAGE);
 			}
 		}
 		
@@ -190,7 +208,7 @@ public class ProfileSettingsListener {
 				
 				if(gui.getProfile() == null)
 					gui.setProfile(new Profile());
-				
+							
 				gui.getProfile().setProfileimage(file.getAbsolutePath());
 				
 			} catch (ProfileCreateException e) {
@@ -219,7 +237,7 @@ public class ProfileSettingsListener {
 		
 		FileFilter imageFilter = new FileNameExtensionFilter(
 			    "Image files", ImageIO.getReaderFileSuffixes()); 
-		chooser.addChoosableFileFilter(imageFilter);
+		chooser.setFileFilter(imageFilter);
 		
 		int rueckgabeWert = chooser.showOpenDialog(null);
         
