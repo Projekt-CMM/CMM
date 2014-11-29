@@ -28,7 +28,29 @@
 	
 	<!-- parser errors -->
 	<error id="semicolon expected">
-		<file>compiler/parser/semicolon.html</file>
+		<file>compiler/parser/semicolon_expected.html</file>
+	</error>
+	<error id="rpar expected">
+		<file>compiler/parser/rpar_expected.html</file>
+	</error>
+	<error id="lpar expected">
+		<file>compiler/parser/lpar_expected.html</file>
+	</error>
+	<error id="ident expected">
+		<file>compiler/parser/ident_expected.html</file>
+	</error>
+	<error id="assign expected">
+		<file>compiler/parser/assign_expected.html</file>
+	</error>
+	
+	<error id="invalid Factor">
+	    <file>default.html</file>
+	</error>
+	<error id="invalid Statement">
+		<file>default.html</file>
+	</error>
+	<error id="invalid ConstDecl">
+		<file>default.html</file>
 	</error>
 	
 	<!-- function declaration -->
@@ -105,46 +127,49 @@
 	
 	<!-- main -->
 	<error id="main is not declared as function">
-		<file>default.html</file>
+		<file>compiler/main/no_main.html</file>
 	</error>
 	<error id="function parameters not allowed for main function">
-		<file>default.html</file>
+		<file>compiler/main/function_pars_main.html</file>
 	</error>
 	
 	<!-- variable handling -->
 	<error id="variable assigment is not allowed for global variables">
-	    <file>cast.html</file>
+	    <file>compiler/variable_decl/global_assign.html</file>
 	</error>
 	<error id="it is not allowed to declare the same struct in a struct">
-		<file>default.html</file>
+		<file>compiler/variable_decl/same_struct_in_struct.html</file>
 	</error>
 	<error id="variable assigment is not allowed in struct">
-		<file>default.html</file>
+		<file>compiler/variable_decl/struct_var_assign.html</file>
 	</error>
 	<error id="struct must contain at least one variable">
-		<file>default.html</file>
+		<file>compiler/variable_decl/struct_no_var.html</file>
 	</error>
 	
 	<!-- const handling -->
 	<error id="bool constant not allowed here">
-		<file>default.html</file>
+		<file>compiler/const_definition/bool_not_allowed.html</file>
 	</error>
 	<error id="int constant not allowed here">
-		<file>default.html</file>
+		<file>compiler/const_definition/int_not_allowed.html</file>
 	</error>
 	<error id="float constant not allowed here">
-		<file>default.html</file>
+		<file>compiler/const_definition/float_not_allowed.html</file>
 	</error>
 	<error id="char constant not allowed here">
-		<file>default.html</file>
+		<file>compiler/const_definition/char_not_allowed.html</file>
 	</error>
 	<error id="string constant not allowed here">
-		<file>default.html</file>
+		<file>compiler/const_definition/string_not_allowed.html</file>
 	</error>
 	
 	<!-- type handling-->
 	<error id="type is not a primitive or string">
-		<file>default.html</file>
+		<file>compiler/type_error/primitive_or_string.html</file>
+	</error>
+	<error id="var must be a primitive type or string">
+		<file>compiler/type_error/primitive_or_string.html</file>
 	</error>
 	
 	<!-- other -->
@@ -214,7 +239,6 @@
 	<error id="type not supported as ident in condition">
 		<file>interpreter/error.html</file>
 	</error>
-
 	
 	<!--#### Gui Exceptions ####-->
 
