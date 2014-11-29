@@ -32,6 +32,10 @@ p{
 	margin-bottom:10px;
 }
 
+ul {
+    margin-left:10px;
+}
+
 #code{
 	padding: 5px;
 	background-color: rgb(197, 197, 197);
