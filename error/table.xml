@@ -3,9 +3,6 @@
 	<error id="default">
 		<file>default.html</file>
 	</error>
-	<error id="include not found">
-		<file>include.html</file>
-	</error>
 	<error id="invalid Type">
 		<file>type.html</file>
 	</error>
@@ -13,7 +10,7 @@
 		<file>notfound.html</file>
 	</error>
     <error id="([\w./]+) declared twice">
-		<file>cast.html</file>
+		<file>default.html</file>
 	</error>
 	<!-- no errors for printf -->
 
@@ -22,6 +19,12 @@
 	</error>
 	<error id="continue is not allowed here">
 		<file>default.html</file>
+	</error>
+
+    <!--#### Preprocessor Errors ####-->
+
+	<error id="include not found">
+		<file>preprocessor/include.html</file>
 	</error>
 	
 	<!--#### Compiler Errors ####-->
