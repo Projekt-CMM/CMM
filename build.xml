@@ -120,6 +120,9 @@
         <!-- delete generated files -->
         <delete dir="${build.classes}"/>
         <delete file="${name}.jar"/>
+        <delete file="${java.dir}/at/jku/ssw/cmm/gui/init/CCompactTokenMaker.java"/>
+        <delete file="${java.dir}/at/jku/ssw/cmm/compiler/Scanner.java"/>
+        <delete file="${java.dir}/at/jku/ssw/cmm/compiler/Parser.java"/>
     </target>
 
     <!-- test project -->
