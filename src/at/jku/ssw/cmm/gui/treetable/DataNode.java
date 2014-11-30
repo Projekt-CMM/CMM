@@ -26,6 +26,7 @@ public class DataNode {
     private List<DataNode> children;
     
     public static final char CHANGE_TAG = ' ';
+    public static final char READ_TAG = '*';
  
     public DataNode(String name, Object type, Object value, List<DataNode> children, int address, int decl) {
         this.name = name;
@@ -62,6 +63,10 @@ public class DataNode {
     
     public void markChanged(){
     	this.type = "" + this.type + CHANGE_TAG;
+    }
+    
+    public void markRead(){
+    	this.type = "" + this.type + READ_TAG;
     }
     
     public int getDeclarationLine(){

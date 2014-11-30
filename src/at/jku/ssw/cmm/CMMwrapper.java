@@ -5,7 +5,6 @@ import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Error;
 import at.jku.ssw.cmm.compiler.Tab;
-import at.jku.ssw.cmm.debugger.Debugger;
 import at.jku.ssw.cmm.debugger.IOstream;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
@@ -36,8 +35,8 @@ public class CMMwrapper {
 	 */
 	public CMMwrapper(GUImain main, GUIdebugPanel debug) {
 
+		//Init local references
 		this.main = main;
-
 		this.debug = debug;
 
 		// Object for the compiler is allocated
@@ -48,18 +47,31 @@ public class CMMwrapper {
 		compiler.debug[1] = false;
 	}
 
-	// Interpreter thread class
+	/**
+	 * Interpreter thread class
+	 * (inherits from Thread, starts interpreter)
+	 */
 	private CMMrun thread;
 
-	// Compiler class
+	/**
+	 * The compiler
+	 */
 	private final Compiler compiler;
 
+	/**
+	 * The interpreter is reinitialized every time the debugger is started
+	 */
 	private Interpreter interpreter;
 
-	// Interface for main GUI manipulations, for example syntax line
-	// highlighting
+	/**
+	 * Interface for main GUI manipulations, for example syntax line highlighting
+	 */
 	private final GUImain main;
 
+	/**
+	 * A reference to the debug panel class which contains all objects of the
+	 * tab "debug" on the right side of the main GUI.
+	 */
 	private final GUIdebugPanel debug;
 
 	/**
@@ -100,8 +112,7 @@ public class CMMwrapper {
 		// Another thread is already running
 		else {
 			// Error message
-			DebugShell.out(State.ERROR, Area.INTERPRETER,
-					"Already running or not compiled!");
+			DebugShell.out(State.ERROR, Area.INTERPRETER, "Already running or not compiled!");
 
 			return false;
 		}
@@ -158,8 +169,7 @@ public class CMMwrapper {
 	 */
 	public void setNotRunning() {
 
-		DebugShell.out(State.LOG, Area.INTERPRETER,
-				"Interpreter thread unregistered");
+		DebugShell.out(State.LOG, Area.INTERPRETER, "Interpreter thread unregistered");
 		this.thread = null;
 	}
 

@@ -62,6 +62,8 @@ public class TreeTableView{
 	 */
 	public void update(final CMMwrapper compiler, final String fileName, boolean completeUpDate ) {
 		
+		System.out.println("updating #1234");
+		
 		if( completeUpDate || this.forceUpdate ){
 			DebugShell.out(State.LOG, Area.READVAR, "complete variable structure update");
 			
@@ -75,7 +77,7 @@ public class TreeTableView{
 			this.varTreeTable.repaint();
 		}
 		else{
-			DebugShell.out(State.LOG, Area.READVAR, "[treeTable][update] updating variable values");
+			DebugShell.out(State.LOG, Area.READVAR, "updating variable values");
 			InitTreeTableData.updateTreeTable(this.varTreeTable.getTreeModel(), (DataNode)this.varTreeTable.getCellRenderer().getModel().getRoot(), compiler, main, fileName);
 			
 			java.awt.EventQueue.invokeLater(new Runnable() {
@@ -103,9 +105,11 @@ public class TreeTableView{
 	 * Highlights the variable with the given address in the variable tree table
 	 * 
 	 * @param adr The address of the variable which shall be highlighted
+	 * @param changed TRUE if highlighting changed variables,
+	 * 		FALSE if highlighting read variables
 	 */
-	public void highlightVariable( int adr ){
-		TreeUtils.expandByAddress(varTreeTable, adr);
+	public void highlightVariable( int adr, boolean changed ){
+		TreeUtils.expandByAddress(varTreeTable, adr, changed);
 		varTreeTable.repaint();
 	}
 	

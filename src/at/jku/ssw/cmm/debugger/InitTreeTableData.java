@@ -93,6 +93,8 @@ public class InitTreeTableData {
 		//Tree table data node of this function
 		DataNode funcNode;
 		
+		System.out.println("Reading function: " + name);
+		
 		Obj obj = findNodeByName(compiler.getSymbolTable().curScope.locals, name);
 		
 		if( init )
@@ -104,6 +106,7 @@ public class InitTreeTableData {
 		
 		//Read local variables of the current function
 		readVariables( init, obj.locals, funcNode, address, main, obj.nPars );
+		node.prepend(init, funcNode);
 		
 		if( name == "main" )
 			//Return if reached the bottom of the call stack (main)

@@ -47,27 +47,25 @@ public class CMMrun extends Thread {
 	// The compiler containing the syntax tree and the symbol table
 	private final Compiler compiler;
 
-	/*
-	 * //Interface for the I/O stream. //Output messages are shown in the
-	 * "output" text area of the main GUI. //Input messages have to be entered
-	 * in the "input" text field in the main GUI private final IOstream stream;
+	/**
+	 * Interface which enables the thread to clean up after exiting by itself,
+	 * see CMMwrapper
 	 */
-
-	// Interface which enables the thread to clean up after exiting by itself,
-	// see CMMwrapper
 	private final CMMwrapper reply;
 
+	/**
+	 * A reference to the interpreter which is the main task of this thread
+	 */
 	private final Interpreter interpreter;
 
+	/**
+	 * A reference to the debug panel class which contains all objects of the
+	 * tab "debug" on the right side of the main GUI.
+	 */
 	private final GUIdebugPanel debug;
 
 	/**
 	 * Starts the interpreter thread
-	 * 
-	 * <hr>
-	 * <i>THREAD SAVE, opens its own thread, used functions are invoked by
-	 * EDT</i>
-	 * <hr>
 	 */
 	@Override
 	public void run() {
@@ -115,12 +113,12 @@ public class CMMrun extends Thread {
 		// Exit message
 		System.out.println("[thread] Interpreter thread exited");
 
-		// Clean up thread data
+		// Set running flag to false so that the interpreter can be started again
 		reply.setNotRunning();
 		
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-
+				// Set main GUI to ready mode (where the user can edit source code)
 				debug.setReadyMode();
 			}
 		});

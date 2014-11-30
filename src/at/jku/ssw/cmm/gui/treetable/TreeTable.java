@@ -22,9 +22,6 @@ import at.jku.ssw.cmm.gui.utils.JTableButtonRenderer;
  */
 public class TreeTable extends JTable {
 	 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private final GUImain main;

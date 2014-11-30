@@ -29,6 +29,9 @@ public class JTableButtonRenderer implements TableCellRenderer {
 			else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.CHANGE_TAG) )
 				c.setBackground(new Color(215, 200, 0));
 			
+			else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.READ_TAG) )
+				c.setBackground(new Color(30, 180, 0));
+			
 			else if ( table.getValueAt(row, 2).toString().equals("undef") )
 	    		c.setBackground(new Color(200, 200, 200));
 			
@@ -41,6 +44,9 @@ public class JTableButtonRenderer implements TableCellRenderer {
 			
 			else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.CHANGE_TAG) )
 				c.setBackground(Color.YELLOW);
+			
+			else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.READ_TAG) )
+				c.setBackground(Color.GREEN);
 			
 			else if ( table.getValueAt(row, 2).toString().equals("undef") )
 	    		c.setBackground(new Color(240, 240, 240));
