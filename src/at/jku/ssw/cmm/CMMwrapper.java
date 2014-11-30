@@ -195,4 +195,9 @@ public class CMMwrapper {
 	public boolean isRunning() {
 		return this.thread != null;
 	}
+
+	//Will be removed in future
+	public DebuggerRequest getRequest() {
+		return (DebuggerRequest) interpreter;
+	}
 }
