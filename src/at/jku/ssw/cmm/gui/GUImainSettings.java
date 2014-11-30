@@ -50,11 +50,18 @@ public class GUImainSettings {
 	public static final String XML_LASTFILE = "lastfile";
 	
 	public static final int MAX_LASTFILES = 10;
+	
+	/**
+	 * If true, GUI options for quest and profile functions are shown. <br>
+	 * If false, quest/profile GUI is hidden.
+	 */
+	private final boolean advancedGUI;
 
 	/**
 	 * Contains configuration data for the main GUI.
 	 */
-	public GUImainSettings() {
+	public GUImainSettings( boolean advancedGUI ) {
+		this.advancedGUI = advancedGUI;
 		this.readConfigXML();
 	}
 	
@@ -72,11 +79,12 @@ public class GUImainSettings {
 	 *            no working directory is registered.
 	 */
 	// TODO profile
-	public void setPath(String p) {
+	public void setCMMFilePath(String p) {
 		if( p == null )
 			this.currentFile = null;
 		else{
-			this.lastFiles.add(0, p);
+			if( !this.advancedGUI )
+				this.lastFiles.add(0, p);
 			this.currentFile = p;
 		}
 	}
@@ -84,11 +92,11 @@ public class GUImainSettings {
 	/**
 	 * @return The path of the current c-- file.
 	 */
-	public String getPath() {
-		if( !this.hasPath() )
+	public String getCMMFilePath() {
+		if( !this.hasCMMFilePath() )
 			return null;
 					
-		return this.lastFiles.get(0);
+		return this.currentFile;
 	}
 
 	/**
@@ -97,8 +105,8 @@ public class GUImainSettings {
 	 *         FALSE if the working path is null or "*"
 	 */
 	// TODO profile
-	public boolean hasPath() {
-		if (this.lastFiles.size() > 0 && this.currentFile != null)
+	public boolean hasCMMFilePath() {
+		if (this.currentFile != null)
 			return true;
 		return false;
 	}
@@ -136,7 +144,7 @@ public class GUImainSettings {
 		for (String s : this.lastFiles)
 			System.out.println(" >>> recent profile: " + s);
 		
-		if( this.lastFiles.size() > 0 )
+		if( this.lastFiles.size() > 0 && !this.advancedGUI )
 			this.currentFile = this.lastFiles.get(0);
 		else
 			this.currentFile = null;
@@ -220,4 +228,8 @@ public class GUImainSettings {
 	        node.appendChild(doc.createTextNode(value));
 	        return node;
     }
+
+	public boolean hasAdvancedGUI() {
+		return this.advancedGUI;
+	}
 }

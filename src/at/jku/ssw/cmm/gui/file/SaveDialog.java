@@ -74,7 +74,7 @@ public class SaveDialog {
 		if (option == JFileChooser.APPROVE_OPTION) {
 			FileManagerCode.saveSourceCode(chooser.getSelectedFile(), jSourcePane.getText(), jInputPane.getText());
 			String path = chooser.getSelectedFile().getPath();
-			settings.setPath(path.endsWith(".cmm") ? path : path + ".cmm");
+			settings.setCMMFilePath(path.endsWith(".cmm") ? path : path + ".cmm");
 		}
 		else if(option == JFileChooser.CANCEL_OPTION)
 			return true;
@@ -87,8 +87,8 @@ public class SaveDialog {
 	 * Save dialog is called though, if there is no working directory for the file defined.
 	 */
 	public boolean directSave(){
-		if( settings.getPath() != null ){
-			FileManagerCode.saveSourceCode(new File(settings.getPath()), jSourcePane.getText(), jInputPane.getText());
+		if( settings.getCMMFilePath() != null ){
+			FileManagerCode.saveSourceCode(new File(settings.getCMMFilePath()), jSourcePane.getText(), jInputPane.getText());
 			return false;
 		}
 		else

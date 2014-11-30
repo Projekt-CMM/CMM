@@ -39,7 +39,7 @@ public class GUImain {
 	 *            The shell arguments.
 	 */
 	public static void main(String[] args) {
-		GUImain app = new GUImain(new GUImainSettings(), false);
+		GUImain app = new GUImain(new GUImainSettings(false));
 
 		boolean test = false;
 
@@ -91,11 +91,7 @@ public class GUImain {
 	 */
 	public static final String VERSION = "C Compact Alpha 1.2 (Build 1)";
 	
-	/**
-	 * If true, GUI options for quest and profile functions are shown. <br>
-	 * If false, quest/profile GUI is hidden.
-	 */
-	private final boolean advancedGUI;
+	
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)
@@ -103,9 +99,8 @@ public class GUImain {
 	 * @param settings
 	 *            Configuration object for the main GUI.
 	 */
-	private GUImain(GUImainSettings settings, boolean advancedGUI) {
+	private GUImain(GUImainSettings settings) {
 		this.settings = settings;
-		this.advancedGUI = advancedGUI;
 	}
 
 	/**
@@ -211,10 +206,10 @@ public class GUImain {
 	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
 	 */
 	public void updateWinFileName() {
-		if (this.getSettings().getPath() == null) {
+		if (this.getSettings().getCMMFilePath() == null) {
 			this.jFrame.setTitle(VERSION + " - " + _("Unnamed"));
 		} else
-			this.jFrame.setTitle(VERSION + " - " + this.getSettings().getPath());
+			this.jFrame.setTitle(VERSION + " - " + this.getSettings().getCMMFilePath());
 	}
 
 	/**
@@ -223,7 +218,7 @@ public class GUImain {
 	 */
 	public String getFileName() {
 
-		String s = this.getSettings().getPath();
+		String s = this.getSettings().getCMMFilePath();
 
 		if (s == null)
 			return _("Unnamed");
@@ -241,11 +236,11 @@ public class GUImain {
 	 */
 	public String getFileNameAndPath() {
 
-		return this.getSettings().getPath();
+		return this.getSettings().getCMMFilePath();
 	}
 	
 	public boolean hasPath(){
-		return this.getSettings().hasPath();
+		return this.getSettings().hasCMMFilePath();
 	}
 
 	public void setFileChanged() {
@@ -268,10 +263,10 @@ public class GUImain {
 	 * @return The complete path to the directory where the currently edited *.cmm file is saved
 	 */
 	public String getWorkingDirectory() {
-		if (this.getSettings().getPath() == null)
+		if (this.getSettings().getCMMFilePath() == null)
 			return null;
 
-		File f = new File(this.getSettings().getPath());
+		File f = new File(this.getSettings().getCMMFilePath());
 		if (f.getParentFile() != null)
 			return f.getParentFile().getAbsolutePath();
 		return null;
@@ -361,7 +356,7 @@ public class GUImain {
 	 */
 	public void saveIfNecessary() {
 
-		if (this.getSettings().getPath() == null)
+		if (this.getSettings().getCMMFilePath() == null)
 			this.saveDialog.doSaveAs();
 		else
 			this.saveDialog.directSave();
@@ -444,6 +439,6 @@ public class GUImain {
 	}
 	
 	public boolean hasAdvancedGUI(){
-		return this.advancedGUI;
+		return this.settings.hasAdvancedGUI();
 	}
 }

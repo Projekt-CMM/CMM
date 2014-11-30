@@ -101,7 +101,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			if (settings.getPath() == null) {
+			if (settings.getCMMFilePath() == null) {
 				// Custom button text
 				Object[] options = { _("Save now"), _("Proceed without saving") };
 
@@ -120,7 +120,7 @@ public class MenuBarEventListener {
 			}
 
 			jSourcePane.setText("");
-			settings.setPath(null);
+			settings.setCMMFilePath(null);
 			main.updateWinFileName();
 			debug.updateFileName();
 		}
@@ -152,7 +152,7 @@ public class MenuBarEventListener {
 						.getSelectedFile()));
 
 				// Set the new C-- file directory
-				settings.setPath(chooser.getSelectedFile().getPath());
+				settings.setCMMFilePath(chooser.getSelectedFile().getPath());
 
 				main.updateWinFileName();
 				debug.updateFileName();
@@ -187,7 +187,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			if (settings.getPath() != null)
+			if (settings.getCMMFilePath() != null)
 				// Save to working directory
 				saveDialog.directSave();
 			else

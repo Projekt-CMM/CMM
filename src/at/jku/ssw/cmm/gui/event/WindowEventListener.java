@@ -91,7 +91,7 @@ public class WindowEventListener implements WindowListener {
 
 	public static void doSaveCloseProgram(JFrame jFrame, GUImainSettings settings, SaveDialog saveDialog) {
 		// Warning if current file is not saved -> opens a warning dialog
-		if (settings.getPath() == null) {
+		if (settings.getCMMFilePath() == null) {
 
 			// Custom button text
 			Object[] options = { _("Yes"), _("No") };
