@@ -47,7 +47,9 @@ public class GUImainSettings {
 
 	public static final String XML_SETTINGS = "settings";
 	public static final String XML_LANGUAGE = "language";
-	public static final String XML_LASTPROFILE = "lastopened";
+	public static final String XML_LASTFILE = "lastfile";
+	
+	public static final int MAX_LASTFILES = 10;
 
 	/**
 	 * Contains configuration data for the main GUI.
@@ -55,13 +57,11 @@ public class GUImainSettings {
 	public GUImainSettings() {
 		this.readConfigXML();
 	}
-
-	/**
-	 * Path of the current c-- file (null if no current file available)
-	 */
-	private String path;
-
-	private List<String> lastProfiles;
+	
+	private List<String> lastFiles;
+	
+	private String currentFile;
+	
 	private String lastLanguage;
 
 	/**
@@ -73,19 +73,22 @@ public class GUImainSettings {
 	 */
 	// TODO profile
 	public void setPath(String p) {
-		if (p == "#" || p == null)
-			this.path = null;
-		else {
-			this.path = p.endsWith(".cmm") ? p : p + ".cmm";
+		if( p == null )
+			this.currentFile = null;
+		else{
+			this.lastFiles.add(0, p);
+			this.currentFile = p;
 		}
 	}
 
 	/**
 	 * @return The path of the current c-- file.
 	 */
-	// TODO profile
 	public String getPath() {
-		return this.path;
+		if( !this.hasPath() )
+			return null;
+					
+		return this.lastFiles.get(0);
 	}
 
 	/**
@@ -95,9 +98,9 @@ public class GUImainSettings {
 	 */
 	// TODO profile
 	public boolean hasPath() {
-		if (this.path == null)
-			return false;
-		return true;
+		if (this.lastFiles.size() > 0 && this.currentFile != null)
+			return true;
+		return false;
 	}
 
 	public void readConfigXML() {
@@ -124,14 +127,21 @@ public class GUImainSettings {
 
 		doc.getDocumentElement().normalize();
 
-		this.lastProfiles = new ArrayList<>();
+		this.lastFiles = new ArrayList<>();
 
 		this.findXMLsettings(doc.getDocumentElement());
 
 		System.out.println(" >>> language: " + this.lastLanguage);
 
-		for (String s : this.lastProfiles)
+		for (String s : this.lastFiles)
 			System.out.println(" >>> recent profile: " + s);
+		
+		if( this.lastFiles.size() > 0 )
+			this.currentFile = this.lastFiles.get(0);
+		else
+			this.currentFile = null;
+		
+		System.out.println("the current file is: " + this.currentFile);
 	}
 
 	private void findXMLsettings(Node node) {
@@ -139,8 +149,8 @@ public class GUImainSettings {
 		if (node.getNodeName().equals(XML_LANGUAGE))
 			this.lastLanguage = node.getTextContent();
 
-		else if (node.getNodeName().equals(XML_LASTPROFILE))
-			lastProfiles.add(node.getTextContent());
+		else if (node.getNodeName().equals(XML_LASTFILE))
+			lastFiles.add(node.getTextContent());
 
 		NodeList nodeList = node.getChildNodes();
 		for (int i = 0; i < nodeList.getLength(); i++) {
@@ -167,9 +177,10 @@ public class GUImainSettings {
 			if( this.lastLanguage != null )
 				mainRootElement.appendChild(writeNode(doc, mainRootElement, XML_LANGUAGE, this.lastLanguage));
 			
-			if( this.lastProfiles != null && !this.lastProfiles.isEmpty() ){
-				for( String profile : this.lastProfiles ){
-					mainRootElement.appendChild(writeNode(doc, mainRootElement, XML_LASTPROFILE, profile));
+			if( this.lastFiles != null && !this.lastFiles.isEmpty() ){
+				
+				for( int i = 0; i < this.lastFiles.size() && i < MAX_LASTFILES; i++ ){
+					mainRootElement.appendChild(writeNode(doc, mainRootElement, XML_LASTFILE, this.lastFiles.get(i)));
 				}
 			}
 			

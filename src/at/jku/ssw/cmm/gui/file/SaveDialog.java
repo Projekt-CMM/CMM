@@ -73,7 +73,8 @@ public class SaveDialog {
 		
 		if (option == JFileChooser.APPROVE_OPTION) {
 			FileManagerCode.saveSourceCode(chooser.getSelectedFile(), jSourcePane.getText(), jInputPane.getText());
-			settings.setPath(chooser.getSelectedFile().getPath());
+			String path = chooser.getSelectedFile().getPath();
+			settings.setPath(path.endsWith(".cmm") ? path : path + ".cmm");
 		}
 		else if(option == JFileChooser.CANCEL_OPTION)
 			return true;

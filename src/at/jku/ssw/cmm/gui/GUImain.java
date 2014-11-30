@@ -3,6 +3,7 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.Dimension;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -38,7 +39,7 @@ public class GUImain {
 	 *            The shell arguments.
 	 */
 	public static void main(String[] args) {
-		GUImain app = new GUImain(new GUImainSettings());
+		GUImain app = new GUImain(new GUImainSettings(), false);
 
 		boolean test = false;
 
@@ -82,19 +83,19 @@ public class GUImain {
 	 * Unicode character of the breakpoint.
 	 */
 	public static final char BREAKPOINT = '\u2326';
-
+	
+	public static final String LANGUAGE = "de";
+	
+	/**
+	 * The current version of C Compact, used as window title.
+	 */
+	public static final String VERSION = "C Compact Alpha 1.2 (Build 1)";
+	
 	/**
 	 * If true, GUI options for quest and profile functions are shown. <br>
 	 * If false, quest/profile GUI is hidden.
 	 */
-	public static final boolean ADVANCED_GUI = true;
-
-	/**
-	 * The current version of C Compact, used as window title.
-	 */
-	public static final String VERSION = "C Compact Alpha 1.2 (Build 0)";
-	
-	public static final String LANGUAGE = "de";
+	private final boolean advancedGUI;
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)
@@ -102,8 +103,9 @@ public class GUImain {
 	 * @param settings
 	 *            Configuration object for the main GUI.
 	 */
-	private GUImain(GUImainSettings settings) {
+	private GUImain(GUImainSettings settings, boolean advancedGUI) {
 		this.settings = settings;
+		this.advancedGUI = advancedGUI;
 	}
 
 	/**
@@ -154,8 +156,8 @@ public class GUImain {
 		sp.setLeftComponent(this.leftPanelControl.init());
 
 		// Right part of the GUI
-		this.rightPanelControl = new GUIrightPanel();
-		sp.setRightComponent(this.rightPanelControl.init(this));
+		this.rightPanelControl = new GUIrightPanel(this);
+		sp.setRightComponent(this.rightPanelControl.init());
 		
 		sp.setPreferredSize(new Dimension(800, 500));
 		sp.setDividerLocation(0.6);
@@ -439,5 +441,9 @@ public class GUImain {
 	//TODO
 	public void dispose(){
 		this.jFrame.dispose();
+	}
+	
+	public boolean hasAdvancedGUI(){
+		return this.advancedGUI;
 	}
 }

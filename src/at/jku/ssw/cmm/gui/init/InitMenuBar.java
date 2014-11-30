@@ -92,7 +92,7 @@ public class InitMenuBar {
 			fileM.add(exitMI);
 		
 		/* --- MENU: "progress" --- */
-		if( GUImain.ADVANCED_GUI ){
+		if( main.hasAdvancedGUI() ){
 			JMenu questM = new JMenu(_("Progress"));
 			menubar.add(questM);
 		

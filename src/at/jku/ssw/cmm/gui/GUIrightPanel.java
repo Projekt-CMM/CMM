@@ -50,8 +50,8 @@ public class GUIrightPanel {
 	 * Also, the right panel contains basic control elements for the main GUI,
 	 * eg. the breakpoint button.
 	 */
-	public GUIrightPanel() {
-		
+	public GUIrightPanel(GUImain main) {
+		this.main = main;
 	}
 	
 	private JTabbedPane tabbedPane;
@@ -72,8 +72,10 @@ public class GUIrightPanel {
 	private JEditorPane errorDesc;
 	
 	private JTextField errorMsg;
+	
+	private final GUImain main;
 
-	public JTabbedPane init(GUImain main) {
+	public JTabbedPane init() {
 		
 		// Tabbed Pane
 		tabbedPane = new JTabbedPane();
@@ -107,12 +109,12 @@ public class GUIrightPanel {
 		this.errorMsg = new JTextField();
 		this.errorMsg.setEditable(false);
 		
-		if( GUImain.ADVANCED_GUI )
+		if(main.hasAdvancedGUI())
 			this.errorPanel.add(this.errorMsg, BorderLayout.PAGE_END);
 
 		// Initialize Quest Panel
 		JPanel jQuestPanel = new JPanel();
-		if (GUImain.ADVANCED_GUI) {
+		if (main.hasAdvancedGUI()) {
 			jQuestPanel.setLayout(new BorderLayout());
 			tabbedPane.add(jQuestPanel, _("Quest"));
 			questPanel = new GUIquestPanel(jQuestPanel, main);
@@ -151,7 +153,7 @@ public class GUIrightPanel {
 			e.printStackTrace();
 		}
 
-		if (this.tabbedPane.getTabCount() == (GUImain.ADVANCED_GUI ? 2 : 1))
+		if (this.tabbedPane.getTabCount() == (main.hasAdvancedGUI() ? 2 : 1))
 			this.tabbedPane.add(errorPanel, _("Error"), 1);
 		
 		this.errorMsg.setText(html);
@@ -160,7 +162,7 @@ public class GUIrightPanel {
 	}
 
 	public void hideErrorPanel() {
-		if (this.tabbedPane.getTabCount() == (GUImain.ADVANCED_GUI ? 3 : 2))
+		if (this.tabbedPane.getTabCount() == (main.hasAdvancedGUI() ? 3 : 2))
 			tabbedPane.remove(1);
 	}
 }
