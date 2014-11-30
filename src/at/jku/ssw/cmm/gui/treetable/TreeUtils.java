@@ -97,23 +97,26 @@ public class TreeUtils {
 		return lowest;
 	}
 	
-	public static void expandByAddress(TreeTable tree, int address){
+	public static void expandByAddress(TreeTable tree, int address, boolean changed){
 		//System.err.println("Starting search: " + address);
 		DataNode root = (DataNode)tree.getCellRenderer().getModel().getRoot();
 		
 		Stack<DataNode> path = new Stack<>();
 		path.push(root);
 		
-		expandByAddress(tree.getCellRenderer(), root, address, path);
+		expandByAddress(tree.getCellRenderer(), root, address, path, changed);
 	}
 	
-	private static boolean expandByAddress(TreeTableCellRenderer tree, DataNode node, int address, Stack<DataNode> path){
+	private static boolean expandByAddress(TreeTableCellRenderer tree, DataNode node, int address, Stack<DataNode> path, boolean changed){
 		
 		System.out.println("Checking search: " + node.print());
 		
 		if( node.getAddress() == address ){
 			System.out.println("Located: " + node.print());
-			node.markChanged();
+			if( changed )
+				node.markChanged();
+			else
+				node.markRead();
 			return true;
 		}
 		
@@ -121,7 +124,7 @@ public class TreeUtils {
 			for (DataNode e : node.getChildren()) {
 				
 				path.push(e);
-				if(expandByAddress(tree, e, address, path)){
+				if(expandByAddress(tree, e, address, path, changed)){
 					System.out.println("Expanding: " + path.toArray());
 					
 					tree.expandPath(new TreePath(path.toArray()));

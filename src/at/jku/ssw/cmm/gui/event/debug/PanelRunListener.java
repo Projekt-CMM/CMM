@@ -19,7 +19,6 @@ import at.jku.ssw.cmm.debugger.Debugger;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.debug.GUIcontrolPanel;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
-import at.jku.ssw.cmm.interpreter.Interpreter;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
 import at.jku.ssw.cmm.compiler.Node;
 
@@ -195,7 +194,7 @@ public class PanelRunListener implements Debugger {
 			System.err.println("Interpreter is running although GUI is on editor mode");
 			return false;
 		}
-
+		
 		DebugShell.out(State.LOG, Area.DEBUGGER, "" + arg0);
 		
 		//Update latest node's line
@@ -226,7 +225,10 @@ public class PanelRunListener implements Debugger {
 		this.lastAdress = Memory.getFramePointer();
 		
 		for( int i : changedVariables )
-			this.master.highlightVariable(i);
+			this.master.highlightVariable(i, true);
+		
+		///for( int i : readVariables )
+			//this.master.highlightVariable(i, false);
 		
 		this.timer = null;
 

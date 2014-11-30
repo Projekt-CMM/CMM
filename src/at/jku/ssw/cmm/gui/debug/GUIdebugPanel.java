@@ -140,13 +140,14 @@ public class GUIdebugPanel {
 	/**
 	 * Highlights the variable with the given address in the variable tree table
 	 * 
-	 * @param adr
-	 *            The address of the variable to be highlighted
+	 * @param adr The address of the variable to be highlighted
+	 * @param changed TRUE if highlighting changed variables,
+	 * 		FALSE if highlighting read variables
 	 */
-	public void highlightVariable(final int adr) {
+	public void highlightVariable(final int adr, final boolean changed) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				varView.highlightVariable(adr);
+				varView.highlightVariable(adr, changed);
 			}
 		});
 	}

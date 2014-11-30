@@ -221,7 +221,6 @@ public class GUImain {
 	 */
 	public String getFileName() {
 
-		// final String sep = System.getProperty("file.separator");
 		String s = this.getSettings().getPath();
 
 		if (s == null)
