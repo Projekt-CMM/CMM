@@ -43,18 +43,18 @@ public final class LoadStatics {
 			loadBuffer = ImageIO.read(new File(path));
 		} catch (IOException e) {
 			System.err.println("Error reading image");
+			return new JLabel();
 		}
 
 		// Resize Window works up to 200px
 		if (width != -1 && height != -1)
 			loadBuffer = scaleImage(loadBuffer, width, height);
-
-		JLabel picture = new JLabel(new ImageIcon(loadBuffer));
-		if (createBorder)
-
-			picture.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-
-		return picture;
+			JLabel picture = new JLabel(new ImageIcon(loadBuffer));
+			if (createBorder)
+	
+				picture.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+	
+			return picture;
 	}
 
 	// TODO Scale image only with width or only with height

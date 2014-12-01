@@ -143,14 +143,14 @@ public class GUIquestPanel {
 		Profile profile = Profile.getActiveProfile();
 		
 		//Load Profile Image
-		if(Profile.getActiveProfile().getProfileimage() != null){
+		if(Profile.getActiveProfile() != null && Profile.getActiveProfile().getProfileimage() != null){
 			String path = profile.getInitPath() + Profile.sep + profile.getProfileimage();
 			System.out.println(path);
 			
 			this.jProfilePicture = LoadStatics.loadImage(path, false, 120, 120);
-		}else{
-			this.jProfilePicture = new JLabel("no Profile Image");
 		}
+		else 
+			this.jProfilePicture = new JLabel();
 		
 		//Loading profile achievement tokens
 		this.jProfileAchievements = new JPanel();

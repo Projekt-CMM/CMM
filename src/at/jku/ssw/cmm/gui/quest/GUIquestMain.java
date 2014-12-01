@@ -93,6 +93,9 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 	    //Getting all Packages Folder Names
 	       List<String> s = Quest.ReadFolderNames("packages");
 	       
+	       if(s == null)
+	    	   return ;
+	       
 	        	for(int i = 0; i < s.size(); i++){
 	        		Package package1 = Profile.ReadPackageQuests(p, s.get(i));
 	        		
