@@ -6,18 +6,6 @@
 	<error id="invalid Type">
 		<file>type.html</file>
 	</error>
-	<error id="([\w./]+) not found">
-		<file>notfound.html</file>
-	</error>
-    <error id="([\w./]+) declared twice">
-		<file>default.html</file>
-	</error>
-	<error id="break is not allowed here">
-		<file>default.html</file>
-	</error>
-	<error id="continue is not allowed here">
-		<file>default.html</file>
-	</error>
 
     <!--#### Preprocessor Errors ####-->
 
@@ -174,6 +162,18 @@
 	</error>
 	
 	<!-- other -->
+	<error id="([\w./]+) not found">
+		<file>compiler/notfound.html</file>
+	</error>
+    <error id="([\w./]+) declared twice">
+		<file>compiler/delc_twice.html</file>
+	</error>
+	<error id="break is not allowed here">
+		<file>default.html</file>
+	</error>
+	<error id="continue is not allowed here">
+		<file>default.html</file>
+	</error>
 	<error id="right operator is not defined">
 		<file>default.html</file>
 	</error>
