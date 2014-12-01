@@ -21,8 +21,8 @@ public class AddProfileListener implements MouseListener {
 	public void mouseClicked(MouseEvent arg0) {
 		
 		//try {
-			GUIprofileSettings.init();
 			jFrame.dispose();
+			GUIprofileSettings.init();
 			//GUIProfileManager.createNewProfile();
 			
 			
