@@ -420,7 +420,7 @@ public class Parser {
 		   curProc.library = library;
 		                                        // check if it return the correct type
 		if(type != Tab.noType && type != Tab.stringType && !type.isPrimitive()) 
-		   SemErr("procedure must return a primitive type ,a string or is void"); 
+		   SemErr("procedure must return a primitive type, a string or is void"); 
 		Expect(6);
 		tab.openScope(); 
 		if (la.kind == 1) {

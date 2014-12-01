@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<body>
+	<h1> Vorw&auml;rtsdeklaration und deklaration der Funktion unterscheiden sich </h1>
+	<h2> Was ist passiert? </h2>
+	<p>
+		Die Deklaration der Funktion stimmt nicht mit der Vorw&auml;rtsdeklaration &uuml;berein.
+	</p>
+	<h3>Beispiel</h3>
+	<p id="code">
+			<strong class="key">int</strong> foo();<br/>
+			...<br/>
+			<strong class="error">void</strong> foo(<strong class="error">int a</strong>) {<br/>
+			}
+	</p>
+	<h2> Fehlersuche </h2>
+	<p>
+		Schaue dir die Vorw&auml;rtsdeklaration und die Deklaration der konkreten Funktion an. Diese m&uuml;ssen genau &uuml;bereinstimmen.
+	</p>
+</body>
