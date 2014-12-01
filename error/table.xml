@@ -12,8 +12,6 @@
     <error id="([\w./]+) declared twice">
 		<file>default.html</file>
 	</error>
-	<!-- no errors for printf -->
-
 	<error id="break is not allowed here">
 		<file>default.html</file>
 	</error>
@@ -63,36 +61,36 @@
 	<error id="using of function has more parameters as the declaration">
 		<file>compiler/function/using_more_parameter.html</file>
 	</error>
-	<error id="procedure must return a primitive type ,a string or is void">
-		<file>default.html</file>
+	<error id="procedure must return a primitive type, a string or is void">
+		<file>compiler/function/return_wrong_decl.html</file>
 	</error>
 	<error id="forward declaration and declaration doesn't match with the library token">
-		<file>default.html</file>
+		<file>compiler/function/forward_neq_delc.html</file>
 	</error>
 	<error id="function is already forward declared">
-		<file>default.html</file>
+		<file>compiler/function/multibl_forward_delc.html</file>
 	</error>
 	<error id="function has more parameters as forward-declaration declare">
-		<file>default.html</file>
+		<file>compiler/function/forward_neq_delc.html</file>
 	</error>
 	<error id="forward-declaration of function has more parameter as function itself">
-		<file>default.html</file>
+		<file>compiler/function/forward_neq_delc.html</file>
 	</error>
 	<error id="parameter of function and forward declaration has not the same type">
-		<file>default.html</file>
+		<file>compiler/function/forward_neq_delc.html</file>
 	</error>
 	<error id="parameter of function or forward declaration is ref, in the other not">
-		<file>default.html</file>
+		<file>compiler/function/forward_neq_delc.html</file>
 	</error>
 	<error id="return value of forware declaration does not match declaration">
-		<file>default.html</file>
+		<file>compiler/function/forward_neq_delc.html</file>
 	</error>
 	<error id="([\w./]+) has only a forward-declaration">
-		<file>default.html</file>
+		<file>compiler/function/only_forward.html</file>
 	</error>
 	<error id="no function declared">
 		<file>default.html</file>
-	</error>-->
+	</error>
 	<!--<error id="parameter not declared">
 		<file>compiler/function/param_not_decl.html</file>
 	</error>-->

@@ -344,7 +344,7 @@ ident                               (.  // insert the procedure in the current(g
                                         
                                         // check if it return the correct type
                                         if(type != Tab.noType && type != Tab.stringType && !type.isPrimitive()) 
-                                            SemErr("procedure must return a primitive type ,a string or is void"); .)
+                                            SemErr("procedure must return a primitive type, a string or is void"); .)
 "("                                 (.  // open new scope
                                         tab.openScope(); .)
 [ FormPars<out curProc.nPars>

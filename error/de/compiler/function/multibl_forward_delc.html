@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<body>
+	<h1> Funktion besitzt bereits Vorw&auml;rtsdeklaration </h1>
+	<h2> Was ist passiert? </h2>
+	<p>
+		Du hast eine Funktion mehr als 1. mal Vorw&auml;rtsdeklariert.
+	</p>
+	<h3>Beispiel</h3>
+	<p id="code">
+			<strong class="key">void</strong> foo();<br/>
+			...<br/>
+			<strong class="error">void foo();</strong>
+	</p>
+	<h2> Fehlersuche </h2>
+	<p>
+		Schaue dir an wo die Funktion überall vorw&auml;rtsdeklariert wird, und lösche die &uuml;berfl&uuml;sigen deklarationen.<br/>
+		Beachte dass die Funktionsdeklaration bzw. vorw&auml;rtsdeklaration vor dem ersten aufruf der Funktion stehen muss.
+	</p>
+</body>
