@@ -55,7 +55,7 @@ public class WindowEventListener implements WindowListener {
 	@Override
 	public void windowClosing(WindowEvent e) {
 
-		if (main.safeCheck(_("Closing C Compact")))
+		if (main.getSaveManager().safeCheck(_("Closing C Compact")))
 			updateAndExit(jFrame, main.getSettings());
 	}
 

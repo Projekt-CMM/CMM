@@ -149,11 +149,11 @@ public class GUIleftPanel {
 		jPanelLeft.setResizeWeight(1.0);
 
 		// Read last opened files
-		if (this.main.hasPath()) {
+		if (this.main.getSettings().hasCMMFilePath()) {
 			this.jSourcePane.setText(FileManagerCode.readSourceCode(new File(
-					this.main.getFileNameAndPath())));
+					this.main.getSettings().getCMMFilePath())));
 			this.jInputPane.setText(FileManagerCode.readInputData(new File(
-					this.main.getFileNameAndPath())));
+					this.main.getSettings().getCMMFilePath())));
 		}
 
 		// Variable initialization

@@ -151,7 +151,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			
-			main.safeCheck(_("Opening new file"));
+			main.getSaveManager().safeCheck(_("Opening new file"));
 
 			// Create file chooser (opens a window to select a file)
 			JFileChooser chooser = new JFileChooser();
@@ -197,7 +197,7 @@ public class MenuBarEventListener {
 		public void actionPerformed(ActionEvent e) {
 			File file = new File(path);
 			
-			main.safeCheck(_("Opening new file"));
+			main.getSaveManager().safeCheck(_("Opening new file"));
 			
 			if (!file.exists()){
 				//Show error message with information about the error
@@ -260,7 +260,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			if(main.safeCheck(_("Closing C Compact")))
+			if(main.getSaveManager().safeCheck(_("Closing C Compact")))
 				WindowEventListener.updateAndExit(jFrame, settings);
 		}
 	};

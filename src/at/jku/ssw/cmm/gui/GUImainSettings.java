@@ -124,6 +124,34 @@ public class GUImainSettings {
 			this.currentFile = p;
 		}
 	}
+	
+	/**
+	 * 
+	 * @return Name of the current file without path, eg "file2.cmm"
+	 */
+	public String setCMMFile() {
+
+		if (this.currentFile == null)
+			return _("Unnamed");
+
+		File file = new File(this.currentFile);
+
+		return file.getName();
+	}
+	
+	/**
+	 * @return The complete path to the directory where the currently edited
+	 *         *.cmm file is saved
+	 */
+	public String getWorkingDirectory() {
+		if (this.currentFile == null)
+			return null;
+
+		File f = new File(this.currentFile);
+		if (f.getParentFile() != null)
+			return f.getParentFile().getAbsolutePath();
+		return null;
+	}
 
 	/**
 	 * @return The path of the current cmm file.
