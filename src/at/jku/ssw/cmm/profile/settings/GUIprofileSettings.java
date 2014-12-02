@@ -1,5 +1,6 @@
 package at.jku.ssw.cmm.profile.settings;
 
+import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
@@ -13,15 +14,15 @@ public class GUIprofileSettings {
 	
 	/**
 	 * Launches the program and initiates the main window.
+	 * @param profile 
 	 * 
 	 * @param args
 	 *            The shell arguments.
 	 */
-	public static void init() {
+	public static void init(Profile profile) {
 		
 		GUIprofileSettings app = new GUIprofileSettings();
 		
-		Profile profile = null;
 		/*try {
 			profile = Profile.ReadProfile("profileTest");
 		} catch (XMLReadingException e) {
@@ -29,7 +30,10 @@ public class GUIprofileSettings {
 			e.printStackTrace();
 		}*/
 		
-		app.start("Create new profile", profile );
+		if(profile == null)
+			app.start(_("Create new profile"), profile );
+		else
+			app.start(_("Edit Profile"), profile);
 	}
 	
 	//The main window frame
@@ -50,21 +54,21 @@ public class GUIprofileSettings {
 		//Thread analysis
 		if (SwingUtilities.isEventDispatchThread())
 			System.out.println("[EDT Analyse] Quest GUI runnung on EDT.");
-		
-		//Standard look and feel
-		/*try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}*/
 				
 		//Initialize quest settings window
 		this.jFrame = new JFrame("C Compact - " + title );
-		this.jFrame.setMinimumSize(new Dimension(500, 400));
+		
 		this.jFrame.setLocationRelativeTo(null);
 		this.jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.jFrame.setLayout(new BorderLayout());
 		this.jFrame.setResizable(false);
+		
+		//Change Sizes of the window specific
+		if(profile != null){
+			this.jFrame.setMinimumSize(new Dimension(500, 400));
+		}else{
+			this.jFrame.setMinimumSize(new Dimension(500, 200));
+		}
 		
 		//Initialize central listener
 		this.listener = new ProfileSettingsListener(jFrame, this);
@@ -73,13 +77,16 @@ public class GUIprofileSettings {
 		this.upperPanel = new UpperPanel(profile, listener);
 		this.jFrame.add(this.upperPanel, BorderLayout.PAGE_START);
 		
-		//Load central panel
-		this.centralPanel = new CentralPanel(profile, listener);
-		this.jFrame.add(this.centralPanel, BorderLayout.CENTER);
-		
-		//Load lower panel
-		this.lowerPanel = new LowerPanel(profile, listener);
-		this.jFrame.add(this.lowerPanel, BorderLayout.PAGE_END);
+		//Load only if it is an existing Profile
+		if(profile != null){
+			//Load central panel
+			this.centralPanel = new CentralPanel(profile, listener);
+			this.jFrame.add(this.centralPanel, BorderLayout.CENTER);
+			
+			//Load lower panel
+			this.lowerPanel = new LowerPanel(profile, listener);
+			this.jFrame.add(this.lowerPanel, BorderLayout.PAGE_END);
+		}
 
 		// Causes this Window to be sized to fit the preferred size and layouts
 		// of its subcomponents.

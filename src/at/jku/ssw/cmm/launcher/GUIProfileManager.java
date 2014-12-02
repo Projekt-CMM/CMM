@@ -99,19 +99,14 @@ public class GUIProfileManager {
 	 * TODO Profile Preview
 	 * Invokes the profile selection dialog
 	 */
-	public static void selectProfile() throws ProfileSelectionException{
+	public static Profile selectProfile() throws ProfileSelectionException{
 		DebugShell.out(State.LOG, Area.GUI, "Opening Profile Selection Window...");
 		JFileChooser chooser = new JFileChooser("Select a profile...");
 		//chooser.setFileFilter(new FileNameExtensionFilter("C Compact Profile", "xml"));
 				
-		//Only Directorys can be choosen
-		//chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		//only .cp files can be choosen
 		FileFilter filter = new FileNameExtensionFilter("CMM Profile", Profile.FILE_EXTENDSION);
-		//chooser.addChoosableFileFilter(filter);
 		chooser.setFileFilter(filter);
-		
-		//TODO
-		//chooser.setAccessory(new ProfilePreview(chooser));
 		
 		//Disable Renaming etc.
 		UIManager.put("FileChooser.readOnly", Boolean.TRUE);
@@ -123,14 +118,22 @@ public class GUIProfileManager {
 			if(chooser.getSelectedFile() != null && chooser.getSelectedFile().getPath() != null ){
 				
 				String path = chooser.getSelectedFile().getAbsolutePath();
+				DebugShell.out(State.LOG, Area.GUI, "Profile Chooser Path:"
+						+ chooser.getSelectedFile().getAbsolutePath());
 				try {
-					if(path.endsWith(Profile.FILE_PROFILE))
-						Profile.setActiveProfile(Profile.ReadProfile(path.substring(0,path.indexOf(Profile.FILE_PROFILE))));
-					else
-						Profile.setActiveProfile(Profile.ReadProfile(path));
+					Profile profile;
+					
+					if(path.endsWith(Profile.FILE_PROFILE)){
+						profile = Profile.ReadProfile(path.substring(0,path.indexOf(Profile.FILE_PROFILE)));
+					}else{
+						profile =Profile.ReadProfile(path);
+					}
+					
+					Profile.setActiveProfile(profile);
+					return profile;
 					//GUIquestPanel questPanel = this.rightPanelControl.getQuestPanel();
 					
-					//questPanel.RefreshProfile(Profile.getActiveProfile());
+					//questPanel.RefreshProfile(Profile.getActiveProfile());}
 					
 				} catch (XMLReadingException | IndexOutOfBoundsException e) {
 					e.printStackTrace();
@@ -143,11 +146,9 @@ public class GUIProfileManager {
 					//Open the Selection Window again
 	        		throw new ProfileSelectionException();
 				}
-				DebugShell.out(State.LOG, Area.GUI, "Profile Chooser Path:"
-						+ chooser.getSelectedFile().getAbsolutePath());
 			}
-	    }else
-				throw new ProfileSelectionException();
+	    }	
+	    throw new ProfileSelectionException();
 	}
-
+	
 }

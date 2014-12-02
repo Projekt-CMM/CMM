@@ -20,6 +20,8 @@ import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
+import at.jku.ssw.cmm.profile.Profile;
+import at.jku.ssw.cmm.profile.settings.GUIprofileSettings;
 
 /**
  * Contains event listeners for the menu bar in the main GUI.
@@ -57,6 +59,13 @@ public class MenuBarEventListener {
 		this.debug = debug;
 		this.saveDialog = saveDialog;
 	}
+	
+	public MenuBarEventListener(JFrame jFrame, RSyntaxTextArea jSourcePane,
+			JTextPane jInputPane, GUImain main, GUImainSettings settings,
+			GUIdebugPanel debug, SaveDialog saveDialog, Profile profile) {
+		this(jFrame, jSourcePane, jInputPane, main, settings, debug, saveDialog);
+		this.profile = profile;
+	}
 
 	/**
 	 * The main window frame
@@ -93,11 +102,17 @@ public class MenuBarEventListener {
 	 * A reference to the save dialog manager class
 	 */
 	private final SaveDialog saveDialog;
+	
+	/**
+	 * A profile reference
+	 */
+	private Profile profile;
 
 	/**
 	 * Event listener for the "new file" entry in the "file" drop-down menu
 	 */
 	public ActionListener newFileHandler = new ActionListener() {
+		
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -275,4 +290,19 @@ public class MenuBarEventListener {
 			main.startQuestGUI();
 		}
 	};
+	
+	/**
+	 * Event listener for the "edit profile" option in the "progress"
+	 * drop-down menu of menu bar
+	 */
+	public ActionListener editProfileHandler = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			main.dispose();
+			GUIprofileSettings.init(profile);
+			//main.selectProfile();
+		}
+	};
+	
 }
