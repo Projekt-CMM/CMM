@@ -109,8 +109,7 @@ public class GUIrightPanel {
 		this.errorMsg = new JTextField();
 		this.errorMsg.setEditable(false);
 		
-		if(main.hasAdvancedGUI())
-			this.errorPanel.add(this.errorMsg, BorderLayout.PAGE_END);
+		this.errorPanel.add(this.errorMsg, BorderLayout.PAGE_END);
 
 		// Initialize Quest Panel
 		JPanel jQuestPanel = new JPanel();
@@ -141,6 +140,8 @@ public class GUIrightPanel {
 	}
 
 	public void showErrorPanel(String html) {
+		
+		System.out.println("Error: " + html);
 
 		this.errorDesc.setDocument(LoadStatics.readStyleSheet("error"
 				+ File.separator + "style.css"));

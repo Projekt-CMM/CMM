@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.utils;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -35,8 +37,12 @@ public class JTableButtonMouseListener implements MouseListener {
 				|| column >= this.treeTable.getTable().getColumnCount() || column < 0)
 			return;
 
+		if( this.treeTable.getTable().getValueAt(row, 2) instanceof String && 
+				((String)this.treeTable.getTable().getValueAt(row, 2)).equals(_("reference")) )
+			System.out.println("Reference clicked");
+		
 		value = this.treeTable.getTable().getValueAt(row, column);
-
+		
 		if (!(value instanceof JButton))
 			return;
 

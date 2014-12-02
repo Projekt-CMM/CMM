@@ -106,6 +106,9 @@ public class PanelRunListener implements Debugger {
 	 */
 	private Node lastNode;
 	
+	/**
+	 * The start address of the previous node's function
+	 */
 	private int lastAdress;
 
 	/* --- functional methods --- */
@@ -113,26 +116,23 @@ public class PanelRunListener implements Debugger {
 	 * Sets the right panel to READY mode (see documentation)
 	 */
 	public void setReadyMode(){
+		
+		// Reset mode flags
 		this.run = false;
 		this.keepRunning = false;
 		this.wait = false;
 		
+		// Reset timer
 		if( this.timer != null )
 			this.timer.cancel();
 
+		// Read debugger speed slider (useful for initializing
 		this.delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
 		this.lastNode = null;
 		
+		// Reset last address
 		this.lastAdress = 0;
 	}
-	
-	/**
-	 * Sets the right panel to ERROR mode (see documentation)
-	 */
-	/*public void setErrorMode(){
-		this.run = true;
-		this.keepRunning = false;
-	}*/
 	
 	/**
 	 * Sets the right panel to RUN mode (see documentation)
@@ -177,62 +177,52 @@ public class PanelRunListener implements Debugger {
 		return false;
 	}
 
-	/**
-	 * @return TRUE if right GUI panel is in ERROR mode, otherwise FALSE
-	 */
-	public boolean isErrorMode() {
-		if (this.run && !this.keepRunning)
-			return true;
-		return false;
-	}
-
 	/* --- debugger interpreter listeners --- */
 	@Override
 	public boolean step(final Node arg0, List<Integer> readVariables, List<Integer> changedVariables) {
 		
-		if( this.isReadyMode() || this.isErrorMode() ){
-			System.err.println("Interpreter is running although GUI is on editor mode");
+		// Check if debugger is in ready mode -> stop interpreter
+		if( this.isReadyMode() ){
+			DebugShell.out(State.ERROR, Area.DEBUGGER, "Interpreter is running although GUI is on editor mode");
 			return false;
 		}
 		
-		DebugShell.out(State.LOG, Area.DEBUGGER, "" + arg0);
+		// Debugger log
+		DebugShell.out(State.LOG, Area.DEBUGGER, "Step: " + arg0);
 		
-		//Update latest node's line
+		// Update latest node's line
 		this.lastNode = arg0;
 
-		// -> Node #1 - NO | Node #2 - YES
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				main.getLeftPanel().highlightSourceCode(arg0.line);
-			}
-		});
-
-		/* --- Node #3: Quick mode? --- */
-		if (this.isRunMode() && this.delay == 0) {
-			
+		/* --- Quick run mode --- */
+		if( this.isRunMode() && this.delay == 0 ){
 			//Delay the interpreter for 10ms so that the GUI is still able to work
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
+				// Timer delay failed
 				DebugShell.out(State.ERROR, Area.DEBUGGER, "Failed to delay interpreter thread!");
 				e.printStackTrace();
 			}
 			return this.keepRunning;
 		}
 		
-		/* --- Node #5 - Variable value changed --- */
+		/* --- Source code line update --- */
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				// Highlight the current line in the source code
+				main.getLeftPanel().highlightSourceCode(arg0.line);
+			}
+		});
+		
+		/* --- Variable table update --- */
 		this.master.updateVariableTables(Memory.getFramePointer() != this.lastAdress);
 		this.lastAdress = Memory.getFramePointer();
 		
+		//Highlight the changed variables
 		for( int i : changedVariables )
 			this.master.highlightVariable(i, true);
-		
-		///for( int i : readVariables )
-			//this.master.highlightVariable(i, false);
-		
-		this.timer = null;
 
-		/* --- Node #6: Pause or Run mode --- */
+		/* --- Initialize auto-debugging delay timer --- */
 		if (this.isRunMode() && this.delay > 0) {
 
 			this.timer = new Timer();
@@ -246,11 +236,12 @@ public class PanelRunListener implements Debugger {
 			}, (int)(delayScale(delay)*1000) );
 		}
 
+		// Wait until timer runs out or user presses "next step" button
 		waitForUserReply();
 
 		this.timer = null;
 
-		return keepRunning;
+		return this.keepRunning;
 	}
 	
 	/* --- thread synchronization --- */
@@ -307,6 +298,9 @@ public class PanelRunListener implements Debugger {
 		public void mouseExited(MouseEvent e) {}
 	};
 	
+	/**
+	 * Listener for F5 -> play/pause
+	 */
 	public Action F5_run = new AbstractAction() {
 		
 		private static final long serialVersionUID = 7572186456956931071L;
@@ -319,7 +313,7 @@ public class PanelRunListener implements Debugger {
 	private void runButtonPerformed(){
 
 		// Ready -> Start interpreting in run mode
-		if (isReadyMode()||isErrorMode()) {
+		if (isReadyMode()) {
 			
 			master.setRunMode();
 			master.runInterpreter();
@@ -463,7 +457,7 @@ public class PanelRunListener implements Debugger {
 			
 			if( delay == 0 && lastNode != null ){
 				master.updateBreakPoints(lastNode.line);
-			}//TODO breakpoints
+			}
 		}
 	};
 	

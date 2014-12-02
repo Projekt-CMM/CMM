@@ -241,9 +241,9 @@ public class GUImainSettings {
 		catch( SAXException | IOException | ParserConfigurationException e ){
 			
 			//Show error message with information about the error
-			JOptionPane.showMessageDialog(new JFrame(), _("The file") + " \"settings.xml\" " +
+			/*JOptionPane.showMessageDialog(new JFrame(), _("The file") + " \"settings.xml\" " +
 					_("has not been found") + "\n" + _("The program returned") + ": " + e.getMessage(),
-					_("Configuration file not found"), JOptionPane.ERROR_MESSAGE);
+					_("Configuration file not found"), JOptionPane.ERROR_MESSAGE);*/
 			
 			//Initialize default settings
 			this.currentFile = null;
