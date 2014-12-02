@@ -14,6 +14,7 @@ import javax.swing.KeyStroke;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.MenuBarControl;
 import at.jku.ssw.cmm.gui.event.MenuBarEventListener;
+import at.jku.ssw.cmm.profile.Profile;
 
 /**
  * Contains a static method to initialize the menu bar and its drop-down menus for the main GUI
@@ -33,8 +34,9 @@ public class InitMenuBar {
 	 * @param jSourcePane A reference to the text area containing the source code
 	 * @param settings A reference to the main GUI's configuration object
 	 * @param saveDialog A reference to the save dialog manager initialized with the main GUI
+	 * @param profile A reference to the profile
 	 */
-	public static void initFileM( JFrame jFrame, GUImain main, MenuBarControl menuBarControl, MenuBarEventListener listener ){
+	public static void initFileM( JFrame jFrame, GUImain main, MenuBarControl menuBarControl, MenuBarEventListener listener){
 		
 		
 		
@@ -102,12 +104,19 @@ public class InitMenuBar {
 			profileMI.addActionListener(listener.profileHandler);
 			profileMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 			questM.add(profileMI);
+			
+			// --- progress -> edit ---
+			JMenuItem profileep = new JMenuItem(_("Edit Profile"));
+			profileep.addActionListener(listener.editProfileHandler);
+			profileep.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
+			questM.add(profileep);
 					
 			// --- progress -> quests ---
 			JMenuItem questMI = new JMenuItem(_("Select Quest"));
 			questMI.addActionListener(listener.questHandler);
 			questMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 			questM.add(questMI);
+			
 		}
 	}
 }

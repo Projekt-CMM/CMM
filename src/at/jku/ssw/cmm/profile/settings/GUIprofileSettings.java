@@ -19,7 +19,7 @@ public class GUIprofileSettings {
 	 * @param args
 	 *            The shell arguments.
 	 */
-	public static void init(Profile profile) {
+	public static Profile init(Profile profile) {
 		
 		GUIprofileSettings app = new GUIprofileSettings();
 		
@@ -34,6 +34,8 @@ public class GUIprofileSettings {
 			app.start(_("Create new profile"), profile );
 		else
 			app.start(_("Edit Profile"), profile);
+		
+		return profile;
 	}
 	
 	//The main window frame
@@ -63,6 +65,9 @@ public class GUIprofileSettings {
 		this.jFrame.setLayout(new BorderLayout());
 		this.jFrame.setResizable(false);
 		
+		//Exit ProfileSettings and starting the right jFrame on Close
+		this.jFrame.addWindowListener(new ProfileWindowEventListener(profile, jFrame));
+		
 		//Change Sizes of the window specific
 		if(profile != null){
 			this.jFrame.setMinimumSize(new Dimension(500, 400));
@@ -82,11 +87,11 @@ public class GUIprofileSettings {
 			//Load central panel
 			this.centralPanel = new CentralPanel(profile, listener);
 			this.jFrame.add(this.centralPanel, BorderLayout.CENTER);
-			
+		}	
 			//Load lower panel
 			this.lowerPanel = new LowerPanel(profile, listener);
 			this.jFrame.add(this.lowerPanel, BorderLayout.PAGE_END);
-		}
+		
 
 		// Causes this Window to be sized to fit the preferred size and layouts
 		// of its subcomponents.

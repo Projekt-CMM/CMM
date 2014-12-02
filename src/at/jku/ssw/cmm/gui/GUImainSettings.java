@@ -205,6 +205,10 @@ public class GUImainSettings {
 	public boolean hasProfile() {
 		return this.profile != null;
 	}
+	
+	public Profile getProfile(){
+		return this.profile;
+	}
 
 	/**
 	 * Reads the settings from the "settings.xml" file

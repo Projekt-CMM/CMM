@@ -95,7 +95,7 @@ public class GUImain {
 	 * @param settings
 	 *            Configuration object for the main GUI.
 	 */
-	private GUImain(GUImainSettings settings) {
+	public GUImain(GUImainSettings settings) {
 		this.settings = settings;
 	}
 
@@ -110,7 +110,7 @@ public class GUImain {
 	 * @param test
 	 *            TRUE if program shall exit after init (for GUI test)
 	 */
-	private void start(boolean test) {
+	public void start(boolean test) {
 
 		// EDT Thread analysis
 		if (SwingUtilities.isEventDispatchThread())
@@ -167,7 +167,7 @@ public class GUImain {
 		MenuBarEventListener listener = new MenuBarEventListener(this.jFrame,
 				this.leftPanelControl.getSourcePane(),
 				this.leftPanelControl.getInputPane(), this, this.getSettings(),
-				this.rightPanelControl.getDebugPanel(), this.saveDialog);
+				this.rightPanelControl.getDebugPanel(), this.saveDialog, this.settings.getProfile());
 
 		this.menuBarControl = new MenuBarControl(listener);
 
@@ -332,8 +332,10 @@ public class GUImain {
 		return settings;
 	}
 
-	// TODO
+	// TODO Save dialog
 	public void dispose() {
+		saveDialog.safeCheck(_("Disposing"));
+		
 		this.jFrame.dispose();
 	}
 

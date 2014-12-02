@@ -21,7 +21,6 @@ public class LauncherListener implements MouseListener{
 	
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		if(profile != null){
 			Profile.setActiveProfile(profile);
 			
@@ -29,8 +28,8 @@ public class LauncherListener implements MouseListener{
 			jFrame.dispose();
 			System.out.println("Profile set");
 			
-			String[] a = { "" };
-			GUImain.main(a);
+			GUImain app = new GUImain(new GUImainSettings(profile));
+			app.start(false);
 		}
 		
 	}

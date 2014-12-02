@@ -85,13 +85,13 @@ public class UpperPanel extends JPanel {
 
 		JLabel profilePicture;
 
-		if (this.profile == null)
+		if (this.profile == null || this.profile.getProfileimage() == null)
 			// TODO better default image
 			profilePicture = LoadStatics.loadImage("images/prodef.png", true,
 					128, 128);
 		else
 			profilePicture = LoadStatics.loadImage(profile.getInitPath()
-					+ File.separator + "icon.png", true, 128, 128);
+					+ File.separator + profile.getProfileimage(), true, 128, 128);
 
 		profilePicture.setToolTipText("<html><b>" + _("click to change image")
 				+ "</b><br>" + _("click here and select your<br>profile image")
