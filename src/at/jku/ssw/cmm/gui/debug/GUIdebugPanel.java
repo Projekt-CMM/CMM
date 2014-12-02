@@ -62,7 +62,7 @@ public class GUIdebugPanel {
 		jVarPanel.setLayout(new BorderLayout());
 		
 		this.varView = new TreeTableView(main, jVarPanel,
-				main.getFileName());
+				main.getSettings().setCMMFile());
 		
 		cp.add(jVarPanel, BorderLayout.CENTER);
 
@@ -134,7 +134,7 @@ public class GUIdebugPanel {
 	 * table.
 	 */
 	public void updateFileName() {
-		this.varView.standby(this.main.getFileName());
+		this.varView.standby(this.main.getSettings().setCMMFile());
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class GUIdebugPanel {
 	 * current view maine.
 	 */
 	public void updateVariableTables(boolean completeUpDate) {
-		this.varView.update(compileManager, this.main.getFileName(), completeUpDate);
+		this.varView.update(compileManager, this.main.getSettings().setCMMFile(), completeUpDate);
 	}
 
 	public void setReadyMode() {
@@ -167,7 +167,7 @@ public class GUIdebugPanel {
 
 		// Mode-specific
 		this.main.getLeftPanel().resetInputHighlighter();
-		this.varView.standby(this.main.getFileName());
+		this.varView.standby(this.main.getSettings().setCMMFile());
 		
 		//Input lock
 		this.main.unlockInput();
@@ -186,7 +186,7 @@ public class GUIdebugPanel {
 		
 		// Mode-specific
 		this.main.getLeftPanel().resetInputHighlighter();
-		this.varView.standby(this.main.getFileName());
+		this.varView.standby(this.main.getSettings().setCMMFile());
 		
 		//Input lock
 		this.main.unlockInput();
@@ -247,7 +247,7 @@ public class GUIdebugPanel {
 
 		try {
 			sourceCode = ExpandSourceCode.expand(sourceCode,
-					this.main.getWorkingDirectory(),
+					this.main.getSettings().getWorkingDirectory(),
 					this.main.getLeftPanel().getSourceCodeRegister(), this.breakpoints);
 		} catch (final IncludeNotFoundException e1) {
 

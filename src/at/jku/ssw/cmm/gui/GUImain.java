@@ -24,8 +24,6 @@ import at.jku.ssw.cmm.gui.quest.GUIquestMain;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
 import at.jku.ssw.cmm.profile.Profile;
 
-import java.io.File;
-
 /**
  * Contains the main function which also initializes and controls the main GUI.
  * 
@@ -114,6 +112,7 @@ public class GUImain {
 	 */
 	private void start(boolean test) {
 
+		// EDT Thread analysis
 		if (SwingUtilities.isEventDispatchThread())
 			DebugShell.out(State.LOG, Area.SYSTEM, "main GUI running on EDT.");
 
@@ -127,24 +126,29 @@ public class GUImain {
 		this.jFrame.setMinimumSize(new Dimension(600, 400));
 		this.jFrame.setLocation(10, 10);
 
+		// Initialize glass pane -> used for popups
 		JPanel glassPane = new JPanel();
 		glassPane.setOpaque(false);
 		glassPane.setLayout(null);
 
+		// Assign glass pane to jFrame
 		jFrame.setGlassPane(glassPane);
 		jFrame.getGlassPane().setVisible(true);
 
+		// Initialize the split pane which separates the text fields from
+		// the debugging, error and quest panels
 		JSplitPane sp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		this.jFrame.setContentPane(sp);
 
+		// Initialize left panel (text fields, ...)
 		this.leftPanelControl = new GUIleftPanel(this);
-
 		sp.setLeftComponent(this.leftPanelControl.init());
 
-		// Right part of the GUI
+		// Initialize right part of the GUI
 		this.rightPanelControl = new GUIrightPanel(this);
 		sp.setRightComponent(this.rightPanelControl.init());
-
+		
+		// Set split pane properties
 		sp.setPreferredSize(new Dimension(800, 500));
 		sp.setDividerLocation(0.6);
 		sp.setResizeWeight(1.0);
@@ -154,13 +158,12 @@ public class GUImain {
 				this.leftPanelControl.getSourcePane(),
 				this.leftPanelControl.getInputPane(), this.getSettings());
 
-		// Initialize the window listener
+		// Initialize the window listeners
 		this.jFrame.addWindowListener(new WindowEventListener(this.jFrame, this));
-
 		this.jFrame.addMouseMotionListener(new CursorListener(
 				this.leftPanelControl.getSourcePane()));
 
-		// Menubar
+		// Initialize the menubar
 		MenuBarEventListener listener = new MenuBarEventListener(this.jFrame,
 				this.leftPanelControl.getSourcePane(),
 				this.leftPanelControl.getInputPane(), this, this.getSettings(),
@@ -172,6 +175,7 @@ public class GUImain {
 
 		this.menuBarControl.updateRecentFiles(this.settings.getRecentFiles(), this.settings.getCMMFilePath());
 
+		// Set debug panel to ready mode
 		this.rightPanelControl.getDebugPanel().setReadyMode();
 
 		// Update window name
@@ -182,6 +186,7 @@ public class GUImain {
 		this.jFrame.pack();
 		this.jFrame.setVisible(true);
 
+		// Exit if this was just a test
 		if (test)
 			System.exit(0);
 	}
@@ -218,36 +223,6 @@ public class GUImain {
 		}
 	}
 
-	/**
-	 * 
-	 * @return Name of the current file without path, eg "file2.cmm"
-	 */
-	public String getFileName() {
-
-		String s = this.getSettings().getCMMFilePath();
-
-		if (s == null)
-			return _("Unnamed");
-
-		File file = new File(s);
-		s = file.getName();
-
-		return s;
-	}
-
-	/**
-	 * 
-	 * @return Name of the current cmm file with path, eg "demo/file2.cmm" <br>
-	 *         <i>WARNING: File path can be absolute or relative</i>
-	 */
-	public String getFileNameAndPath() {
-		return this.getSettings().getCMMFilePath();
-	}
-
-	public boolean hasPath() {
-		return this.getSettings().hasCMMFilePath();
-	}
-
 	public void setFileChanged() {
 		if (!this.jFrame.getTitle().endsWith("*"))
 			this.jFrame.setTitle(this.jFrame.getTitle() + "*");
@@ -260,75 +235,8 @@ public class GUImain {
 		}
 	}
 
-	public boolean safeCheck(String title) {
-		// Warning if current file is not saved -> opens a warning dialog
-		if (settings.getCMMFilePath() == null) {
-
-			// Custom button text
-			Object[] options = { _("Yes"), _("No") };
-
-			// Init warning dialog with two buttons
-			int n = JOptionPane.showOptionDialog(jFrame,
-					_("Do you want to save the new file?"),
-					title, JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE, null, // do not use a custom
-														// Icon
-					options, // the titles of buttons
-					options[0]); // default button title
-
-			if (n == JOptionPane.YES_OPTION) {
-				// Open a save dialog to save current source code
-				if (saveDialog.doSaveAs())
-					return true;
-			} else if (n == JOptionPane.NO_OPTION)
-				return true;
-			else
-				return false;
-		}
-
-		// Warning if last changes are not saved -> opens a warning dialog
-		else if (jFrame.getTitle().endsWith("*")) {
-
-			// Custom button text
-			Object[] options = { _("Save now"), _("Close without saving") };
-
-			// Init warning dialog with two buttons
-			int n = JOptionPane.showOptionDialog(jFrame,
-					_("The current file has not yet been saved!"),
-					title, JOptionPane.YES_NO_OPTION,
-					JOptionPane.WARNING_MESSAGE, null, // do not use a custom
-														// Icon
-					options, // the titles of buttons
-					options[0]); // default button title
-
-			if (n == JOptionPane.YES_OPTION) {
-				// Save the last changes to current file path
-				saveDialog.directSave();
-				return true;
-			} else if (n == JOptionPane.NO_OPTION)
-				return true;
-			else
-				return false;
-		}
-		return true;
-	}
-
 	public GUIleftPanel getLeftPanel() {
 		return this.leftPanelControl;
-	}
-
-	/**
-	 * @return The complete path to the directory where the currently edited
-	 *         *.cmm file is saved
-	 */
-	public String getWorkingDirectory() {
-		if (this.getSettings().getCMMFilePath() == null)
-			return null;
-
-		File f = new File(this.getSettings().getCMMFilePath());
-		if (f.getParentFile() != null)
-			return f.getParentFile().getAbsolutePath();
-		return null;
 	}
 
 	/**

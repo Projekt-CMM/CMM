@@ -6,6 +6,7 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -93,5 +94,58 @@ public class SaveDialog {
 		}
 		else
 			return this.doSaveAs();
+	}
+	
+	public boolean safeCheck(String title) {
+		// Warning if current file is not saved -> opens a warning dialog
+		if (settings.getCMMFilePath() == null) {
+
+			// Custom button text
+			Object[] options = { _("Yes"), _("No") };
+
+			// Init warning dialog with two buttons
+			int n = JOptionPane.showOptionDialog(jFrame,
+					_("Do you want to save the new file?"),
+					title, JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE, null, // do not use a custom
+														// Icon
+					options, // the titles of buttons
+					options[0]); // default button title
+
+			if (n == JOptionPane.YES_OPTION) {
+				// Open a save dialog to save current source code
+				if (doSaveAs())
+					return true;
+			} else if (n == JOptionPane.NO_OPTION)
+				return true;
+			else
+				return false;
+		}
+
+		// Warning if last changes are not saved -> opens a warning dialog
+		else if (jFrame.getTitle().endsWith("*")) {
+
+			// Custom button text
+			Object[] options = { _("Save now"), _("Close without saving") };
+
+			// Init warning dialog with two buttons
+			int n = JOptionPane.showOptionDialog(jFrame,
+					_("The current file has not yet been saved!"),
+					title, JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE, null, // do not use a custom
+														// Icon
+					options, // the titles of buttons
+					options[0]); // default button title
+
+			if (n == JOptionPane.YES_OPTION) {
+				// Save the last changes to current file path
+				directSave();
+				return true;
+			} else if (n == JOptionPane.NO_OPTION)
+				return true;
+			else
+				return false;
+		}
+		return true;
 	}
 }
