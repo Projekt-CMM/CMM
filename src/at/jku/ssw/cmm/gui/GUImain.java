@@ -5,7 +5,6 @@ import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
@@ -87,7 +86,7 @@ public class GUImain {
 	/**
 	 * The current version of C Compact, used as window title.
 	 */
-	public static final String VERSION = "C Compact Alpha 1.2 (Build 1)";
+	public static final String VERSION = "C Compact Alpha 1.2 (Build 3)";
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)
