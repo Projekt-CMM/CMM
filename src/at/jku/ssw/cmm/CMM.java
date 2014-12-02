@@ -2,6 +2,8 @@ package at.jku.ssw.cmm;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Error;
@@ -10,6 +12,7 @@ import at.jku.ssw.cmm.debugger.DebuggerMock;
 import at.jku.ssw.cmm.interpreter.Interpreter;
 import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
+import at.jku.ssw.cmm.preprocessor.Preprocessor;
 
 /*--------------------------------------------------------------------------------
  CMM   Main program of the C-- compiler
@@ -41,12 +44,20 @@ public class CMM {
 						compiler.debug[val] = true;
 				}
 			}
-			compiler.compile(new String(code));
+			
+			List<Object[]> codeRegister = new ArrayList();
+			List<Integer> breakpoints = new ArrayList();
+			String preprocessorOutput = Preprocessor.expand(new String(code), "./clib", codeRegister, breakpoints);
+			
+			System.out.println("######################\n" + preprocessorOutput + "\n######################");
+			
+			compiler.compile(preprocessorOutput);
 
 			Error e = compiler.getError();
 			int errCount = 0;
 			while (e != null) {
-				System.out.println("line " + e.line + ", col " + e.col + ": "+ e.msg);
+				Object[] errorElement = Preprocessor.returnFileAndNumber(e.line, codeRegister);
+				System.out.println("error: " + errorElement[0] + ":" + errorElement[1] + ", col " + e.col + ": "+ e.msg);
 				errCount++;
 				e = e.next;
 			}
