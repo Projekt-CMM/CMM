@@ -10,6 +10,8 @@ public class Language {
 	
 	private static Map<String, String> langMap = null;
 	
+	public static final String DEFAULT_LANGUAGE = "en";
+	
 	public static void loadLanguage(String langCode){
 		
 		System.out.println("Loading language -> " + langCode);
@@ -17,7 +19,7 @@ public class Language {
 		langMap = new HashMap<>();
 		
 		//Reset to default language
-		if( langCode == null ){
+		if( langCode == null || langCode.equals(DEFAULT_LANGUAGE) ){
 			langMap = null;
 			return;
 		}

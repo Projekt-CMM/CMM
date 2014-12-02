@@ -3,7 +3,9 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.Dimension;
+
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
@@ -13,6 +15,7 @@ import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gettext.Language;
 import at.jku.ssw.cmm.gui.event.CursorListener;
+import at.jku.ssw.cmm.gui.event.MenuBarEventListener;
 import at.jku.ssw.cmm.gui.event.WindowEventListener;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
@@ -38,7 +41,7 @@ public class GUImain {
 	 *            The shell arguments.
 	 */
 	public static void main(String[] args) {
-		GUImain app = new GUImain(new GUImainSettings());
+		GUImain app = new GUImain(new GUImainSettings(null));
 
 		boolean test = false;
 
@@ -47,14 +50,14 @@ public class GUImain {
 				test = true;
 
 		app.start(test);
-	
+
 	}
 
 	/**
 	 * The frame of the window which contains the main GUI.
 	 */
 	private JFrame jFrame;
-	
+
 	private GUIleftPanel leftPanelControl;
 
 	/**
@@ -84,17 +87,9 @@ public class GUImain {
 	public static final char BREAKPOINT = '\u2326';
 
 	/**
-	 * If true, GUI options for quest and profile functions are shown. <br>
-	 * If false, quest/profile GUI is hidden.
-	 */
-	public static final boolean ADVANCED_GUI = true;
-
-	/**
 	 * The current version of C Compact, used as window title.
 	 */
-	public static final String VERSION = "C Compact Alpha 1.2 (Build 0)";
-	
-	public static final String LANGUAGE = "de";
+	public static final String VERSION = "C Compact Alpha 1.2 (Build 1)";
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)
@@ -118,12 +113,12 @@ public class GUImain {
 	 *            TRUE if program shall exit after init (for GUI test)
 	 */
 	private void start(boolean test) {
-		
+
 		if (SwingUtilities.isEventDispatchThread())
 			DebugShell.out(State.LOG, Area.SYSTEM, "main GUI running on EDT.");
 
 		// Load translations
-		Language.loadLanguage(LANGUAGE + ".po");
+		Language.loadLanguage(this.settings.getLanguage() + ".po");
 
 		// Initialize the window
 		this.jFrame = new JFrame(VERSION);
@@ -139,45 +134,48 @@ public class GUImain {
 		jFrame.setGlassPane(glassPane);
 		jFrame.getGlassPane().setVisible(true);
 
-		// base class for all swing components, except the top level containers
-		//JComponent cp = (JComponent) this.jFrame.getContentPane();
-		//cp.setLayout(new BorderLayout());
-		
 		JSplitPane sp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		this.jFrame.setContentPane(sp);
 
-		
-		this.updateWinFileName();
-
 		this.leftPanelControl = new GUIleftPanel(this);
-		
+
 		sp.setLeftComponent(this.leftPanelControl.init());
 
 		// Right part of the GUI
-		this.rightPanelControl = new GUIrightPanel();
-		sp.setRightComponent(this.rightPanelControl.init(this));
-		
+		this.rightPanelControl = new GUIrightPanel(this);
+		sp.setRightComponent(this.rightPanelControl.init());
+
 		sp.setPreferredSize(new Dimension(800, 500));
 		sp.setDividerLocation(0.6);
 		sp.setResizeWeight(1.0);
 
 		// Initialize the save dialog object
-		this.saveDialog = new SaveDialog(this.jFrame, this.leftPanelControl.getSourcePane(),
+		this.saveDialog = new SaveDialog(this.jFrame,
+				this.leftPanelControl.getSourcePane(),
 				this.leftPanelControl.getInputPane(), this.getSettings());
 
 		// Initialize the window listener
-		this.jFrame.addWindowListener(new WindowEventListener(this.jFrame,
-				this.getSettings(), this.saveDialog));
+		this.jFrame.addWindowListener(new WindowEventListener(this.jFrame, this));
 
-		this.jFrame.addMouseMotionListener(new CursorListener(this.leftPanelControl.getSourcePane()));
-		
+		this.jFrame.addMouseMotionListener(new CursorListener(
+				this.leftPanelControl.getSourcePane()));
+
 		// Menubar
-		this.menuBarControl = new MenuBarControl();
-		InitMenuBar.initFileM(this.jFrame, this.leftPanelControl.getSourcePane(), this.leftPanelControl.getInputPane(),
-				this, this.getSettings(), this.rightPanelControl.getDebugPanel(),
-				this.menuBarControl, this.saveDialog);
-		
+		MenuBarEventListener listener = new MenuBarEventListener(this.jFrame,
+				this.leftPanelControl.getSourcePane(),
+				this.leftPanelControl.getInputPane(), this, this.getSettings(),
+				this.rightPanelControl.getDebugPanel(), this.saveDialog);
+
+		this.menuBarControl = new MenuBarControl(listener);
+
+		InitMenuBar.initFileM(this.jFrame, this, this.menuBarControl, listener);
+
+		this.menuBarControl.updateRecentFiles(this.settings.getRecentFiles(), this.settings.getCMMFilePath());
+
 		this.rightPanelControl.getDebugPanel().setReadyMode();
+
+		// Update window name
+		this.updateWinFileName();
 
 		// Causes this Window to be sized to fit the preferred size and layouts
 		// of its subcomponents.
@@ -188,13 +186,12 @@ public class GUImain {
 			System.exit(0);
 	}
 
-	
-
 	/**
-	 * Repaints the main GUI.
-	 * Note: Method from interface <i>GUImod</i>
+	 * Repaints the main GUI. Note: Method from interface <i>GUImod</i>
 	 * 
-	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
+	 * <hr>
+	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
+	 * <hr>
 	 */
 	public void repaint() {
 		jFrame.repaint();
@@ -203,16 +200,22 @@ public class GUImain {
 	}
 
 	/**
-	 * Sets the title of the main GUI window.
-	 * Note: Method from interface <i>GUImod</i>
+	 * Sets the title of the main GUI window. Note: Method from interface
+	 * <i>GUImod</i>
 	 * 
-	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
+	 * <hr>
+	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
+	 * <hr>
 	 */
 	public void updateWinFileName() {
-		if (this.getSettings().getPath() == null) {
+		if (this.getSettings().getCMMFilePath() == null) {
 			this.jFrame.setTitle(VERSION + " - " + _("Unnamed"));
-		} else
-			this.jFrame.setTitle(VERSION + " - " + this.getSettings().getPath());
+		} else {
+			this.jFrame.setTitle(VERSION + " - "
+					+ this.getSettings().getCMMFilePath());
+			this.menuBarControl.updateRecentFiles(this.settings
+					.getRecentFiles(), this.settings.getCMMFilePath());
+		}
 	}
 
 	/**
@@ -221,7 +224,7 @@ public class GUImain {
 	 */
 	public String getFileName() {
 
-		String s = this.getSettings().getPath();
+		String s = this.getSettings().getCMMFilePath();
 
 		if (s == null)
 			return _("Unnamed");
@@ -235,15 +238,14 @@ public class GUImain {
 	/**
 	 * 
 	 * @return Name of the current cmm file with path, eg "demo/file2.cmm" <br>
-	 * <i>WARNING: File path can be absolute or relative</i>
+	 *         <i>WARNING: File path can be absolute or relative</i>
 	 */
 	public String getFileNameAndPath() {
-
-		return this.getSettings().getPath();
+		return this.getSettings().getCMMFilePath();
 	}
-	
-	public boolean hasPath(){
-		return this.getSettings().hasPath();
+
+	public boolean hasPath() {
+		return this.getSettings().hasCMMFilePath();
 	}
 
 	public void setFileChanged() {
@@ -258,18 +260,72 @@ public class GUImain {
 		}
 	}
 
-	public GUIleftPanel getLeftPanel(){
+	public boolean safeCheck(String title) {
+		// Warning if current file is not saved -> opens a warning dialog
+		if (settings.getCMMFilePath() == null) {
+
+			// Custom button text
+			Object[] options = { _("Yes"), _("No") };
+
+			// Init warning dialog with two buttons
+			int n = JOptionPane.showOptionDialog(jFrame,
+					_("Do you want to save the new file?"),
+					title, JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE, null, // do not use a custom
+														// Icon
+					options, // the titles of buttons
+					options[0]); // default button title
+
+			if (n == JOptionPane.YES_OPTION) {
+				// Open a save dialog to save current source code
+				if (saveDialog.doSaveAs())
+					return true;
+			} else if (n == JOptionPane.NO_OPTION)
+				return true;
+			else
+				return false;
+		}
+
+		// Warning if last changes are not saved -> opens a warning dialog
+		else if (jFrame.getTitle().endsWith("*")) {
+
+			// Custom button text
+			Object[] options = { _("Save now"), _("Close without saving") };
+
+			// Init warning dialog with two buttons
+			int n = JOptionPane.showOptionDialog(jFrame,
+					_("The current file has not yet been saved!"),
+					title, JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE, null, // do not use a custom
+														// Icon
+					options, // the titles of buttons
+					options[0]); // default button title
+
+			if (n == JOptionPane.YES_OPTION) {
+				// Save the last changes to current file path
+				saveDialog.directSave();
+				return true;
+			} else if (n == JOptionPane.NO_OPTION)
+				return true;
+			else
+				return false;
+		}
+		return true;
+	}
+
+	public GUIleftPanel getLeftPanel() {
 		return this.leftPanelControl;
 	}
 
 	/**
-	 * @return The complete path to the directory where the currently edited *.cmm file is saved
+	 * @return The complete path to the directory where the currently edited
+	 *         *.cmm file is saved
 	 */
 	public String getWorkingDirectory() {
-		if (this.getSettings().getPath() == null)
+		if (this.getSettings().getCMMFilePath() == null)
 			return null;
 
-		File f = new File(this.getSettings().getPath());
+		File f = new File(this.getSettings().getCMMFilePath());
 		if (f.getParentFile() != null)
 			return f.getParentFile().getAbsolutePath();
 		return null;
@@ -278,94 +334,21 @@ public class GUImain {
 	/**
 	 * Invokes the Quest GUI window
 	 */
-	public void startQuestGUI(){
-		DebugShell.out(State.LOG, Area.GUI, "Opening Quest Selection Window...");
-		//open profile selector on empty profile
+	public void startQuestGUI() {
+		DebugShell
+				.out(State.LOG, Area.GUI, "Opening Quest Selection Window...");
+		// open profile selector on empty profile
 
-		//Select Profile if there is no active Profile
-		if(Profile.getActiveProfile() == null){
+		// Select Profile if there is no active Profile
+		if (Profile.getActiveProfile() == null) {
 			this.dispose();
 			GUILauncherMain.init();
-			//selectProfile();
+			// selectProfile();
 		}
-		
-		//Ignoring Quest GUI if there is no active Profile
-		if(Profile.getActiveProfile() != null)
+
+		// Ignoring Quest GUI if there is no active Profile
+		if (Profile.getActiveProfile() != null)
 			new GUIquestMain(this.rightPanelControl.getQuestPanel()).start();
-	}
-
-	/**
-<<<<<<< HEAD
-	 * TODO Profile Preview
-	 * Invokes the profile selection dialog
-	 */
-	/*public void selectProfile(){
-		DebugShell.out(State.LOG, Area.GUI, "Opening Profile Selection Window...");
-		JFileChooser chooser = new JFileChooser("Select a profile...");
-		//chooser.setFileFilter(new FileNameExtensionFilter("C Compact Profile", "xml"));
-				
-		//Only Directorys can be choosen
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		
-		//TODO
-		//chooser.setAccessory(new ProfilePreview(chooser));
-		
-		//Disable Renaming etc.
-		UIManager.put("FileChooser.readOnly", Boolean.TRUE);
-		
-		//chooser.showOpenDialog(jFrame);		
-	    int ret = chooser.showDialog(null, null);
-	    
-	    if (ret == JFileChooser.APPROVE_OPTION) 
-			if(chooser.getSelectedFile() != null && chooser.getSelectedFile().getPath() != null ){
-				
-<<<<<<< HEAD
-				String path = chooser.getSelectedFile().getAbsolutePath();
-				try {
-					Profile.setActiveProfile(Profile.ReadProfile(path));
-					GUIquestPanel questPanel = this.rightPanelControl.getQuestPanel();
-					
-					questPanel.RefreshProfile(Profile.getActiveProfile());
-					
-				} catch (XMLReadingException | IndexOutOfBoundsException e) {
-					
-					System.err.println(path + " Wrong Profile Choosen - no profile.xml found");
-	        		
-					JFrame frame = new JFrame("Warnung");
-	        		JOptionPane.showMessageDialog(frame,"Falsches Profil ausgewaehlt.","Warnung:",
-	        			    JOptionPane.WARNING_MESSAGE);
-	        		
-					//Open the Selection Window again
-					selectProfile();
-				}
-				DebugShell.out(State.LOG, Area.GUI, "Profile Chooser Path:"
-						+ chooser.getSelectedFile().getAbsolutePath());
-=======
-				System.err.println("Wrong Profile Choosen - no profile.xml found");
-        		JFrame frame = new JFrame("Warnung");
-        		JOptionPane.showMessageDialog(frame,"Falsches Profil ausgewahlt.","Warnung:",
-        			    JOptionPane.WARNING_MESSAGE);
-        		
-				//Profile Selection Error
-				selectProfile();
->>>>>>> f12b64e19fbda5b4f13416b6f38752d33413eac0
-			}
-	}*/
-
-	/**
-=======
->>>>>>> d98910a6c415bf93a4dceb84ca57ba3b23526686
-	 * Saves the current *.cmm file if there are unsaved changes
-	 */
-	public void saveIfNecessary() {
-
-		if (this.getSettings().getPath() == null)
-			this.saveDialog.doSaveAs();
-		else
-			this.saveDialog.directSave();
-
-		this.setFileSaved();
-		this.updateWinFileName();
 	}
 
 	public JPanel getGlassPane() {
@@ -384,45 +367,50 @@ public class GUImain {
 	}
 
 	public void setReadyMode() {
-		
+
 		this.leftPanelControl.setReadyMode();
 		this.rightPanelControl.hideErrorPanel();
 	}
 
 	public void setErrorMode(String msg, int line) {
-		
+
 		this.leftPanelControl.setErrorMode(line);
 		this.rightPanelControl.showErrorPanel(msg);
 	}
 
 	public void setRunMode() {
-		
+
 		this.leftPanelControl.setRunMode();
 		this.rightPanelControl.hideErrorPanel();
 	}
 
 	public void setPauseMode() {
-		
+
 		this.leftPanelControl.setPauseMode();
 		this.rightPanelControl.hideErrorPanel();
 	}
-	
+
 	/**
-	 * Makes all text fields of the main GUI uneditable. Should happen before interpreter starts running
-	 * so that the source code can't be changed during runtime.
+	 * Makes all text fields of the main GUI uneditable. Should happen before
+	 * interpreter starts running so that the source code can't be changed
+	 * during runtime.
 	 * 
-	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
+	 * <hr>
+	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
+	 * <hr>
 	 */
 	public void lockInput() {
-		
+
 		this.menuBarControl.lockAll();
 	}
-	
+
 	/**
-	 * Makes all text fields of the main GUI editable. Should happen after the interpreter has
-	 * finished running.
+	 * Makes all text fields of the main GUI editable. Should happen after the
+	 * interpreter has finished running.
 	 * 
-	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
+	 * <hr>
+	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
+	 * <hr>
 	 */
 	public void unlockInput() {
 		this.menuBarControl.unlockAll();
@@ -435,9 +423,13 @@ public class GUImain {
 	public GUImainSettings getSettings() {
 		return settings;
 	}
-	
-	//TODO
-	public void dispose(){
+
+	// TODO
+	public void dispose() {
 		this.jFrame.dispose();
+	}
+
+	public boolean hasAdvancedGUI() {
+		return this.settings.hasProfile();
 	}
 }
