@@ -1,6 +1,7 @@
 package at.jku.ssw.cmm.preprocessor;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,17 +27,19 @@ public class Preprocessor {
 		// Reset breakpoints list
 		breakpoints.clear();
 		
-		newSourceCode = parseFile(sourceCode, workingDirectory, codeRegister, breakpoints, 0, "main");
+		List<Object[]> defines = new ArrayList();
+		
+		newSourceCode = parseFile(sourceCode, workingDirectory, codeRegister, breakpoints, defines, 0, "main");
 
-		for(Object[] codePart : codeRegister) {
+		/*for(Object[] codePart : codeRegister) {
 			System.out.println(codePart[0] + "|" + codePart[1] + "|" + codePart[2]);
 			
-		}
+		}*/
 		
 		return newSourceCode;
 	}
 	
-	public static String parseFile( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints, int offset, String file) throws IncludeNotFoundException{
+	public static String parseFile( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints, List<Object[]> defines, int offset, String file) throws IncludeNotFoundException{
 		// Debug message
 		DebugShell.out(State.LOG, Area.COMPILER, "parse File");
 		
@@ -48,7 +51,9 @@ public class Preprocessor {
     	
 		// TODO check if code inside string
 		//boolean insideString = false;
-
+		
+		List<Boolean> ifConditions = new ArrayList();
+		
 		int lastCodeRegisterInsert = offset;
 		
 		// parse code
@@ -96,6 +101,7 @@ public class Preprocessor {
 				s = "//## pre-command: " + s;
 
 				if(preString.isEmpty()) {
+					// TODO 
 					// not known preprocessor command
 				} else if(preString.matches("^\\s*include.*$")) {
 					String path = null;
@@ -105,7 +111,7 @@ public class Preprocessor {
 						Matcher m = Pattern.compile("^\\s*include\\s*<(.*)>\\s*$").matcher(preString);
 						if(m.matches()) {
 							path = m.group(1);
-							System.out.println("clib include: " + path);
+							//System.out.println("clib include: " + path);
 						}
 					} else if(preString.matches("^\\s*include\\s*\".*\"\\s*$")) {
 						localDirectory = false;
@@ -113,7 +119,7 @@ public class Preprocessor {
 						Matcher m = Pattern.compile("^\\s*include\\s*\"(.*)\"\\s*$").matcher(preString);
 						if(m.matches()) {
 							path = m.group(1);
-							System.out.println("normal include: " + path);
+							//System.out.println("normal include: " + path);
 						}
 					}
 					
@@ -131,7 +137,7 @@ public class Preprocessor {
 							newSourceCode += addString(s,commentString);
 							
 							// parse file
-							String newSourceCodeHelp = parseFile(includeCode, workingDirectory, codeRegister, breakpoints, line, path);
+							String newSourceCodeHelp = parseFile(includeCode, workingDirectory, codeRegister, breakpoints, defines, line, path);
 							
 							// copy source-code
 							newSourceCode += newSourceCodeHelp;
@@ -151,19 +157,45 @@ public class Preprocessor {
 					    }
 						continue;
 					} else {
+						// TODO 
 						// incorrect include
 					}
 				} else if(preString.matches("^\\s*(pause|wait)\\s*$")) {
+					// TODO 
 					// add breakpoint
 					breakpoints.add(line);
+				} else if(preString.matches("^\\s*define\\s.*$")) {
+					
+				} else if(preString.matches("^\\s*undef\\s.*$")) {
+					
+				} else if(preString.matches("^\\s*(ifdef|ifndef)\\s.*$")) {
+				} else if(preString.matches("^\\s*else\\s*$")) {
+					if(ifConditions.size() != 0) {
+						// toggle state of condition
+						// TODO detect multible else statements
+						ifConditions.set(ifConditions.size()-1, !ifConditions.get(ifConditions.size()-1).booleanValue());
+					}
+				} else if(preString.matches("^\\s*endif\\s*$")) {
+					
 				} else {
+					// TODO 
 					// not known preprocessor command
 				}
+			}
+			
+			if(ifConditions.size() != 0 && ifConditions.get(ifConditions.size()-1) == false) {
+				newSourceCode += addString("// ign " + s,commentString);
+				continue;
 			}
 			
 			newSourceCode += addString(s,commentString);
 		}
 
+		if(!ifConditions.isEmpty()) {
+			// TODO 
+			// preprocessor if-conditions not endet
+		}
+		
 		Object[] newCodeInsert = {lastCodeRegisterInsert+1, line, file};
     	codeRegister.add(newCodeInsert);
     	
