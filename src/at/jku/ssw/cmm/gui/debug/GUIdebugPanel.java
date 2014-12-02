@@ -16,7 +16,7 @@ import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.debugger.IOstream;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.exception.IncludeNotFoundException;
-import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
+import at.jku.ssw.cmm.preprocessor.Preprocessor;
 
 /**
  * Controls the right panel of the main GUI. This is a bit more complex, as this
@@ -179,10 +179,10 @@ public class GUIdebugPanel {
 
 		this.ctrlPanel.setReadyMode();
 		this.ctrlPanel.getListener().setReadyMode();
-
-		this.main.setErrorMode(html, ExpandSourceCode.correctLine(line,
-				(int) this.main.getLeftPanel().getSourceCodeRegister().get(0)[0],
-				this.main.getLeftPanel().getSourceCodeRegister().size()));
+		
+		this.main.setErrorMode(html, Integer.parseInt(
+			Preprocessor.returnFileAndNumber(line, 
+					this.main.getLeftPanel().getSourceCodeRegister())[1].toString()));
 		
 		// Mode-specific
 		this.main.getLeftPanel().resetInputHighlighter();
@@ -246,7 +246,7 @@ public class GUIdebugPanel {
 		this.breakpoints.clear();
 
 		try {
-			sourceCode = ExpandSourceCode.expand(sourceCode,
+			sourceCode = Preprocessor.expand(sourceCode,
 					this.main.getSettings().getWorkingDirectory(),
 					this.main.getLeftPanel().getSourceCodeRegister(), this.breakpoints);
 		} catch (final IncludeNotFoundException e1) {

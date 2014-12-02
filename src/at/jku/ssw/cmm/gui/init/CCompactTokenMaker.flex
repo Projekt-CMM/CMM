@@ -176,7 +176,7 @@ IdentifierStart               = ({Letter}|"_")
 IdentifierPart                  = ({IdentifierStart}|{Digit})   
 WhiteSpace            = ([ \t\f]+)   
 
-PreprocessorWord = include
+PreprocessorWord = include|wait|pause
 
 CharLiteral               = ([\']({AnyCharacterButApostropheOrBackSlash})[\'])   
 UnclosedCharLiteral         = ([\'][^\'\n]*)   
