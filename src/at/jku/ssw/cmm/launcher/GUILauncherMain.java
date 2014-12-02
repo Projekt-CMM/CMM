@@ -1,4 +1,6 @@
 package at.jku.ssw.cmm.launcher;
+
+import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -49,19 +51,18 @@ public class GUILauncherMain {
 		jFrame = new JFrame("C Compact Launcher");
 		
 		jFrame.setMinimumSize(new Dimension(700,550));
-		//jFrame.setPreferredSize(new Dimension(700,-1));
 		
 		
 		jGlobalPanel = new JPanel();
 		jGlobalPanel.setLayout(new BorderLayout());
 		jGlobalPanel.setBorder(new EmptyBorder(10, 10, 10, 10) );
 		
+		//Block contains Welcome Block and CMM Logo
 		launcher.addWelcomeBlock();
-		launcher.addProfilePanel();
-		launcher.addBottomPanel();
-			
-			//jGlobalPanel.add(addProfilePreview());
 		
+		//Block contains 
+		launcher.addProfilePanel();
+		launcher.addBottomPanel();	
 		
 		jFrame.add(jGlobalPanel);
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,44 +71,53 @@ public class GUILauncherMain {
 		System.out.println("finished");
 	}
 	
+	/**
+	 * 
+	 */
 	private void addWelcomeBlock(){
 		JPanel jWelcomePanel = new JPanel(new BorderLayout());
 		
-		JLabel welcomeMessage = new JLabel("Welcome");
+		//setting the welcome label
+		JLabel welcomeMessage = new JLabel(_("Welcome"));
 		jWelcomePanel.add(welcomeMessage,BorderLayout.LINE_START);
+		
+		//setting the size of the welcome message
 		welcomeMessage.setFont (welcomeMessage.getFont().deriveFont (64.0f));
 		
 		
 		JPanel logo = new JPanel();
-		logo.add(LoadStatics.loadImage("logo.png", false, 75, 75));
+		//Path for the logo image
+		logo.add(LoadStatics.loadImage("images/logo.png", false, 75, 75));
 		
 		jWelcomePanel.add(logo,BorderLayout.LINE_END);
 	
 		
-	jGlobalPanel.add(jWelcomePanel,BorderLayout.PAGE_START);
-	//Welcome Panel finished
+		jGlobalPanel.add(jWelcomePanel,BorderLayout.PAGE_START);
 	}
 	
 	private void addProfilePanel(){
 		JPanel jProfilePanel = new JPanel(new BorderLayout());
 		JPanel jSelectProfilePanel = new JPanel(new BorderLayout());
 		
-			JLabel jSelectProfileLabel = new JLabel("Select Profile:");
+		//Profile selection Bar
+			JLabel jSelectProfileLabel = new JLabel(_("Select Profile:"));
 			jSelectProfilePanel.add(jSelectProfileLabel, BorderLayout.LINE_START);
 			
 			JPanel jRightButtons = new JPanel(new FlowLayout());
 			jRightButtons.setBackground(Color.WHITE);
 			
-			
-				JButton jFindProfile = new JButton("Find");
+				//creating the find button
+				JButton jFindProfile = new JButton(_("Find"));
 				jFindProfile.addMouseListener(new FindProfileListener(jFrame));
 				jRightButtons.add(jFindProfile);
 				
 				
+				//creating new button
 				JButton jCreateProfile = new JButton("New");
 				jCreateProfile.addMouseListener(new AddProfileListener(jFrame));
 				jRightButtons.add(jCreateProfile);
-				
+			
+			//adding the buttons to the selection Panel
 			jSelectProfilePanel.add(jRightButtons,BorderLayout.LINE_END);
 			
 			jSelectProfilePanel.setBackground(Color.white);
@@ -115,6 +125,7 @@ public class GUILauncherMain {
 		jProfilePanel.add(jSelectProfilePanel, BorderLayout.PAGE_START);
 		
 		
+		//creating profile Preview Panel
 		JPanel jPreviewPanel = new JPanel();
 			
 			
@@ -123,22 +134,22 @@ public class GUILauncherMain {
 			
 				JPanel jPreviewProfile = new JPanel();
 				
+				//TODO implement real Profile settings.xml
 				for(int i = 0; i< 5; i++)
 					jPreviewProfile.add(addProfilePreview(new Profile()));
 
 				jPreviewProfile.add(addProfilePreview(new Profile()));
 				
 			JScrollPane scrollPane = new JScrollPane(jPreviewProfile);
-			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-			//scrollPane.add(addProfilePreview());
 			
-			scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS); 
+			//Scrollbar only Horizontal activated
+			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+			//scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS); 
 			
 		jProfilePanel.add(scrollPane);
 		
-	
-	jGlobalPanel.add(jProfilePanel,BorderLayout.CENTER);
-	//Profile Panel finished
+		//Adding panel to Global panel	
+		jGlobalPanel.add(jProfilePanel,BorderLayout.CENTER);
 	}
 	
 	public JPanel addProfilePreview(Profile profile){

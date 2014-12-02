@@ -20,42 +20,28 @@ public class AddProfileListener implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		
-		//try {
-			jFrame.dispose();
-			GUIprofileSettings.init();
-			//GUIProfileManager.createNewProfile();
-			
-			
-			/*String[] a = { "" };
-			GUImain.main(a);
-			
-		//} catch (ProfileCreateException e) {
-			System.err.println("Profile was not created");*/
-	//	}
+		
+		Profile profile = null;
+		
+		//Disposing the Launcher
+		jFrame.dispose();
+		
+		//Setting the profile to null, for creating a new one
+		GUIprofileSettings.init(profile);
 
 		
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		
-		
-	}
+	public void mouseEntered(MouseEvent arg0) {}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
-
-		
-	}
+	public void mouseExited(MouseEvent e) {}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
-				
-	}
+	public void mousePressed(MouseEvent e) {}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		
-	}
+	public void mouseReleased(MouseEvent e){}
 
 }
