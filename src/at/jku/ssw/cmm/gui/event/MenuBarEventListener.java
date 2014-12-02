@@ -135,6 +135,8 @@ public class MenuBarEventListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			
+			main.safeCheck(_("Opening new file"));
 
 			// Create file chooser (opens a window to select a file)
 			JFileChooser chooser = new JFileChooser();
@@ -164,6 +166,10 @@ public class MenuBarEventListener {
 		debug.updateFileName();
 	}
 	
+	public RecentFileHandler getRecentFileHandler( String path ){
+		return new RecentFileHandler(path);
+	}
+	
 	public class RecentFileHandler implements ActionListener{
 		
 		public RecentFileHandler( String path ){
@@ -176,11 +182,14 @@ public class MenuBarEventListener {
 		public void actionPerformed(ActionEvent e) {
 			File file = new File(path);
 			
+			main.safeCheck(_("Opening new file"));
+			
 			if (!file.exists()){
 				//Show error message with information about the error
 				JOptionPane.showMessageDialog(new JFrame(),
 						_("The following file could not be found: ") + "\n" + path,
 						_("File does not exist"), JOptionPane.ERROR_MESSAGE);
+				return;
 			}
 			
 			openFile(new File(path));
@@ -236,8 +245,8 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			WindowEventListener
-					.doSaveCloseProgram(jFrame, settings, saveDialog);
+			if(main.safeCheck(_("Closing C Compact")))
+				WindowEventListener.updateAndExit(jFrame, settings);
 		}
 	};
 

@@ -41,7 +41,7 @@ public class MenuBarControl {
 		this.recentMI = mi;
 	}
 	
-	public void updateRecentFiles( List<String> recentFiles ){
+	public void updateRecentFiles( List<String> recentFiles, String currentFile ){
 		
 		if( this.recentMI == null )
 			return;
@@ -56,8 +56,13 @@ public class MenuBarControl {
 		
 		for( String s : recentFiles ){
 			JMenuItem mi = new JMenuItem(s);
+			
+			if( s.equals(currentFile) )
+				mi.setEnabled(false);
+			else
+				mi.addActionListener(this.listener.getRecentFileHandler(s));
+			
 			this.recentMI.add(mi);
-			//TODO nested class
 		}
 	}
 }

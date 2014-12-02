@@ -28,6 +28,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import at.jku.ssw.cmm.gettext.Language;
+import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.XMLWriteException;
 
 /**
@@ -56,9 +57,14 @@ public class GUImainSettings {
 	private static final String XML_LANGUAGE = "language";
 	
 	/**
-	 * The XML tage name for the list of recently opened files or profiles
+	 * The XML tag name for the list of recently opened <b>files</b>
 	 */
 	private static final String XML_LASTFILE = "lastfile";
+	
+	/**
+	 * The XML tag name for the list of recently opened <b>profiles</b>
+	 */
+	private static final String XML_PROFILE = "profile";
 	
 	/**
 	 * The maximum number of recently opened files which are saved in the settings
@@ -71,8 +77,8 @@ public class GUImainSettings {
 	 * @param advancedGUI TRUE if profile options shall be shown in the GUI,
 	 * 						FALSE if C Compact shall launch the IDE only
 	 */
-	public GUImainSettings( boolean advancedGUI ) {
-		this.advancedGUI = advancedGUI;
+	public GUImainSettings( Profile profile ) {
+		this.profile = profile;
 		this.readConfigXML();
 	}
 	
@@ -97,7 +103,7 @@ public class GUImainSettings {
 	 * If true, GUI options for quest and profile functions are shown. <br>
 	 * If false, quest/profile GUI is hidden.
 	 */
-	private final boolean advancedGUI;
+	private final Profile profile;
 
 	/**
 	 * Set the path of the current cmm file.
@@ -110,8 +116,11 @@ public class GUImainSettings {
 		if( p == null )
 			this.currentFile = null;
 		else{
-			if( !this.advancedGUI )
+			if( this.profile == null ){
+				if( this.lastFiles.contains(p) )
+					this.lastFiles.remove(p);
 				this.lastFiles.add(0, p);
+			}
 			this.currentFile = p;
 		}
 	}
@@ -165,8 +174,8 @@ public class GUImainSettings {
 	 * @return TRUE if profile options shall be shown in the GUI,
 	 * 			FALSE if C Compact shall launch the IDE only
 	 */
-	public boolean hasAdvancedGUI() {
-		return this.advancedGUI;
+	public boolean hasProfile() {
+		return this.profile != null;
 	}
 
 	/**
@@ -210,7 +219,7 @@ public class GUImainSettings {
 		}
 		
 		//Initialize the current *.cmm file
-		if( this.lastFiles.size() > 0 && !this.advancedGUI )
+		if( this.lastFiles.size() > 0 )
 			//Take first file from recent files as latest file
 			this.currentFile = this.lastFiles.get(0);
 		else
@@ -230,8 +239,12 @@ public class GUImainSettings {
 		if (node.getNodeName().equals(XML_LANGUAGE))
 			this.lastLanguage = node.getTextContent();
 
-		//Contains information about recent files or profiles?
-		else if (node.getNodeName().equals(XML_LASTFILE))
+		//Contains information about recent files?
+		else if (node.getNodeName().equals(XML_LASTFILE) && this.profile == null)
+			lastFiles.add(node.getTextContent());
+		
+		//Contains information about recent profiles?
+		else if (node.getNodeName().equals(XML_PROFILE) && this.profile != null)
 			lastFiles.add(node.getTextContent());
 
 		//Iterate through child nodes
@@ -272,7 +285,7 @@ public class GUImainSettings {
 				
 				//Only add a certain number of recent files
 				for( int i = 0; i < this.lastFiles.size() && i < MAX_LASTFILES; i++ ){
-					mainRootElement.appendChild(writeNode(doc, mainRootElement, XML_LASTFILE, this.lastFiles.get(i)));
+					mainRootElement.appendChild(writeNode(doc, mainRootElement, profile == null ? XML_LASTFILE : XML_PROFILE, this.lastFiles.get(i)));
 				}
 			}
 			
