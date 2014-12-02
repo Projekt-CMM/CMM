@@ -88,7 +88,7 @@ public class GUIrightPanel {
 		tabbedPane.add(jDebugPanel, _("Debug"));
 
 		// Initialize error panel
-		this.errorMap = new ErrorTable(GUImain.LANGUAGE);
+		this.errorMap = new ErrorTable(main.getSettings().getLanguage());
 		this.errorPanel = new JPanel();
 		this.errorPanel.setLayout(new BorderLayout());
 

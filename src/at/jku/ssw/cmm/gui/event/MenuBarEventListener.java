@@ -4,6 +4,7 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -143,23 +144,48 @@ public class MenuBarEventListener {
 			// User selected a file
 			if (chooser.showOpenDialog(jFrame) == JFileChooser.APPROVE_OPTION) {
 
-				// Open file and load text t source code panel
-				jSourcePane.setText(FileManagerCode.readSourceCode(chooser
-						.getSelectedFile()));
-
-				// Set input data
-				jInputPane.setText(FileManagerCode.readInputData(chooser
-						.getSelectedFile()));
-
-				// Set the new C-- file directory
-				settings.setCMMFilePath(chooser.getSelectedFile().getPath());
-
-				main.updateWinFileName();
-				debug.updateFileName();
+				openFile(chooser.getSelectedFile());
 			}
 		}
 
 	};
+	
+	public void openFile( File file ){
+		// Open file and load text t source code panel
+		jSourcePane.setText(FileManagerCode.readSourceCode(file));
+
+		// Set input data
+		jInputPane.setText(FileManagerCode.readInputData(file));
+
+		// Set the new C-- file directory
+		settings.setCMMFilePath(file.getPath());
+
+		main.updateWinFileName();
+		debug.updateFileName();
+	}
+	
+	public class RecentFileHandler implements ActionListener{
+		
+		public RecentFileHandler( String path ){
+			this.path = path;
+		}
+		
+		private final String path;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			File file = new File(path);
+			
+			if (!file.exists()){
+				//Show error message with information about the error
+				JOptionPane.showMessageDialog(new JFrame(),
+						_("The following file could not be found: ") + "\n" + path,
+						_("File does not exist"), JOptionPane.ERROR_MESSAGE);
+			}
+			
+			openFile(new File(path));
+		}
+	}
 
 	/**
 	 * Event listener for the "save as" entry in the "file" drop-down menu

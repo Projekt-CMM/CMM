@@ -9,17 +9,11 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
 import at.jku.ssw.cmm.gui.GUImain;
-import at.jku.ssw.cmm.gui.GUImainSettings;
 import at.jku.ssw.cmm.gui.MenuBarControl;
-import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.event.MenuBarEventListener;
-import at.jku.ssw.cmm.gui.file.SaveDialog;
 
 /**
  * Contains a static method to initialize the menu bar and its drop-down menus for the main GUI
@@ -40,10 +34,9 @@ public class InitMenuBar {
 	 * @param settings A reference to the main GUI's configuration object
 	 * @param saveDialog A reference to the save dialog manager initialized with the main GUI
 	 */
-	public static void initFileM( JFrame jFrame, RSyntaxTextArea jSourcePane, JTextPane jInputPane, GUImain main, GUImainSettings settings, GUIdebugPanel modifier, MenuBarControl menuBarControl, SaveDialog saveDialog ){
+	public static void initFileM( JFrame jFrame, GUImain main, MenuBarControl menuBarControl, MenuBarEventListener listener ){
 		
-		//Initialize listener for the menu bar
-		MenuBarEventListener listener = new MenuBarEventListener( jFrame, jSourcePane, jInputPane, main, settings, modifier, saveDialog );
+		
 		
 		//Initialize MenuBar
 		JMenuBar menubar = new JMenuBar();
@@ -66,6 +59,14 @@ public class InitMenuBar {
 			openMI.addActionListener(listener.openHandler);
 			openMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
 			menuBarControl.add(openMI);
+			
+			// --- file -> recent files ---
+			if( !main.hasAdvancedGUI() ){
+				JMenu recentMI = new JMenu(_("Recent files"));
+				fileM.add(recentMI);
+				menuBarControl.add(recentMI);
+				menuBarControl.setRecentMenu(recentMI);
+			}
 			
 			fileM.addSeparator();
 			

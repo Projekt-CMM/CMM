@@ -14,6 +14,7 @@ import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gettext.Language;
 import at.jku.ssw.cmm.gui.event.CursorListener;
+import at.jku.ssw.cmm.gui.event.MenuBarEventListener;
 import at.jku.ssw.cmm.gui.event.WindowEventListener;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
@@ -84,8 +85,6 @@ public class GUImain {
 	 */
 	public static final char BREAKPOINT = '\u2326';
 	
-	public static final String LANGUAGE = "de";
-	
 	/**
 	 * The current version of C Compact, used as window title.
 	 */
@@ -120,7 +119,7 @@ public class GUImain {
 			DebugShell.out(State.LOG, Area.SYSTEM, "main GUI running on EDT.");
 
 		// Load translations
-		Language.loadLanguage(LANGUAGE + ".po");
+		Language.loadLanguage(this.settings.getLanguage() + ".po");
 
 		// Initialize the window
 		this.jFrame = new JFrame(VERSION);
@@ -135,10 +134,6 @@ public class GUImain {
 
 		jFrame.setGlassPane(glassPane);
 		jFrame.getGlassPane().setVisible(true);
-
-		// base class for all swing components, except the top level containers
-		//JComponent cp = (JComponent) this.jFrame.getContentPane();
-		//cp.setLayout(new BorderLayout());
 		
 		JSplitPane sp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		this.jFrame.setContentPane(sp);
@@ -169,10 +164,15 @@ public class GUImain {
 		this.jFrame.addMouseMotionListener(new CursorListener(this.leftPanelControl.getSourcePane()));
 		
 		// Menubar
-		this.menuBarControl = new MenuBarControl();
-		InitMenuBar.initFileM(this.jFrame, this.leftPanelControl.getSourcePane(), this.leftPanelControl.getInputPane(),
-				this, this.getSettings(), this.rightPanelControl.getDebugPanel(),
-				this.menuBarControl, this.saveDialog);
+		MenuBarEventListener listener = new MenuBarEventListener(
+				this.jFrame, this.leftPanelControl.getSourcePane(), this.leftPanelControl.getInputPane(),
+				this, this.getSettings(), this.rightPanelControl.getDebugPanel(), this.saveDialog);
+		
+		this.menuBarControl = new MenuBarControl(listener);
+		
+		InitMenuBar.initFileM(this.jFrame, this, this.menuBarControl, listener);
+		
+		this.menuBarControl.updateRecentFiles(this.settings.getRecentFiles());
 		
 		this.rightPanelControl.getDebugPanel().setReadyMode();
 
@@ -208,8 +208,10 @@ public class GUImain {
 	public void updateWinFileName() {
 		if (this.getSettings().getCMMFilePath() == null) {
 			this.jFrame.setTitle(VERSION + " - " + _("Unnamed"));
-		} else
+		} else {
 			this.jFrame.setTitle(VERSION + " - " + this.getSettings().getCMMFilePath());
+			this.menuBarControl.updateRecentFiles(this.settings.getRecentFiles());
+		}
 	}
 
 	/**
