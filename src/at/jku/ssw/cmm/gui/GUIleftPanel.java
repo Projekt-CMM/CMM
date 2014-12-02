@@ -25,9 +25,9 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
-import at.jku.ssw.cmm.gui.include.ExpandSourceCode;
 import at.jku.ssw.cmm.gui.init.InitLeftPanel;
 import at.jku.ssw.cmm.gui.init.JInputDataPane;
+import at.jku.ssw.cmm.preprocessor.Preprocessor;
 
 public class GUIleftPanel {
 
@@ -233,8 +233,8 @@ public class GUIleftPanel {
 			return;
 
 		// Correct offset in source code (offset caused by includes)
-		line = ExpandSourceCode.correctLine(line, (int) this.codeRegister.get(0)[0],
-							this.codeRegister.size());
+		line = Integer.parseInt(Preprocessor.returnFileAndNumber(line, 
+						this.main.getLeftPanel().getSourceCodeRegister())[1].toString());
 
 		// Do highlighting
 		this.highlightSourceCodeDirectly(line);
@@ -353,6 +353,7 @@ public class GUIleftPanel {
 		this.unlockInput();
 		
 		this.jStatePanel.setBackground(new Color(255, 131, 131));
+		// TODO parse filename from Parser
 		this.jStateLabel.setText("! ! ! " + _("error") + " " + (line >= 0 ? _("in line") + " " + line : "") + " ! ! !");
 		
 		if( line >= 0 )
