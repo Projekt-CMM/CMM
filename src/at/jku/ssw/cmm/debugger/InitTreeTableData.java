@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.debugger;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
@@ -213,7 +215,7 @@ public class InitTreeTableData {
 					node.add(init, readArray(init, obj, node.getChild(obj.name, nPars > 0 ? "<html><b>array</b></html>" : "array", "", -1, obj.line), address + obj.adr, main));
 				//Reference array
 				else
-					node.add(init, node.getChild(obj.name, nPars > 0 ? "<html><b>array</b></html>" : "array", "reference", -1, obj.line));
+					node.add(init, node.getChild(obj.name, nPars > 0 ? "<html><b>array</b></html>" : "array", _("reference"), -1, obj.line));
 			}
 			//Reading a STRUCTURE
 			else if( obj.type.kind == Struct.STRUCT && obj.kind != Obj.PROC && obj.kind != Obj.TYPE && !obj.library ){
