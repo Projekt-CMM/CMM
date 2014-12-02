@@ -86,7 +86,7 @@ public class GUImain {
 	/**
 	 * The current version of C Compact, used as window title.
 	 */
-	public static final String VERSION = "C Compact Alpha 1.2 (Build 3)";
+	public static final String VERSION = "C Compact Alpha 1.2 (Build 4)";
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)

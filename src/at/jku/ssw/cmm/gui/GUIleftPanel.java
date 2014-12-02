@@ -121,7 +121,7 @@ public class GUIleftPanel {
 		
 		this.jStatePanel.setMinimumSize(new Dimension(20, 30));
 		this.jStatePanel.setPreferredSize(new Dimension(30, 30));
-		this.jStatePanel.setMaximumSize(new Dimension(1000, 30));
+		this.jStatePanel.setMaximumSize(new Dimension(8000, 30));
 
 		this.jStateLabel = new JLabel();
 

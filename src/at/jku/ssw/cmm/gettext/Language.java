@@ -10,7 +10,8 @@ public class Language {
 	
 	private static Map<String, String> langMap = null;
 	
-	public static final String DEFAULT_LANGUAGE = "en";
+	//TODO default language should be english
+	public static final String DEFAULT_LANGUAGE = "de";
 	
 	public static void loadLanguage(String langCode){
 		

@@ -110,7 +110,7 @@ public class ProfileSettingsListener {
 					gui.setProfile(new Profile());					
 				
 				if(gui.getUpperPanel().getProfileName() == null || gui.getUpperPanel().getProfileName().equals("")){
-	        		JOptionPane.showMessageDialog(new JFrame(),_("Please choose a Profile Name!"),_("Warnung:"),
+	        		JOptionPane.showMessageDialog(new JFrame(),_("Please choose a Profile Name!"),_("Warnung") + ":",
 	        			    JOptionPane.WARNING_MESSAGE);
 					throw new ProfileCreateException();
 				}	

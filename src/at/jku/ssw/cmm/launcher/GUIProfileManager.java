@@ -36,7 +36,7 @@ public class GUIProfileManager {
 		
 		String input = (String)JOptionPane.showInputDialog(
                 chooseFrame,
-                "Bitte wähle einen Namen", "Name Chooser", JOptionPane.PLAIN_MESSAGE,null,null,"Name");
+                "Bitte wahle einen Namen", "Name Chooser", JOptionPane.PLAIN_MESSAGE,null,null,"Name");
 		
 		//If a string was returned, say so.
 		if ((input != null) && (input.length() > 0)) {

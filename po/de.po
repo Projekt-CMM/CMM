@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-23 14:36+0100\n"
+"POT-Creation-Date: 2014-12-02 22:01+0100\n"
 "PO-Revision-Date: 2014-11-23 14:41+0100\n"
 "Last-Translator: Fabian Hummer f.hummer@traunseenet.at\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:81
+msgid "Welcome"
+msgstr "Willkommen"
+
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:103
+#, fuzzy
+msgid "Select Profile:"
+msgstr "Profil wählen"
+
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:110
+msgid "Find"
+msgstr "Finden"
 
 #: src/at/jku/ssw/cmm/profile/settings/LowerPanel.java:93
 msgid "Cancel"
@@ -26,9 +39,27 @@ msgstr "Abbrechen"
 msgid "Save"
 msgstr "Speichern"
 
+#: src/at/jku/ssw/cmm/profile/settings/GUIprofileSettings.java:34
+msgid "Create new profile"
+msgstr "Neues Profil erstellen"
+
+#: src/at/jku/ssw/cmm/profile/settings/GUIprofileSettings.java:36
+#, fuzzy
+msgid "Edit Profile"
+msgstr "Profil wählen"
+
 #: src/at/jku/ssw/cmm/profile/settings/CentralPanel.java:75
 msgid "Achievements"
 msgstr "Auszeichnungen"
+
+#: src/at/jku/ssw/cmm/profile/settings/ProfileSettingsListener.java:104
+msgid "Please choose a Profile Name!"
+msgstr "Bitte einen Namen wählen"
+
+#: src/at/jku/ssw/cmm/profile/settings/ProfileSettingsListener.java:104
+#, fuzzy
+msgid "Warnung"
+msgstr "Warnung"
 
 #: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:96
 msgid "click to change image"
@@ -52,95 +83,130 @@ msgid "you can edit your name here"
 msgstr "Hier kannst du deinen Namen ändern"
 
 #: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:114
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:107
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:118
+#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:108
+#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:125
 msgid "Level"
 msgstr "Level"
 
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:105
+#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:106
 msgid "Profile Information"
 msgstr "Profilinformation"
 
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:106
+#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:107
 #: src/at/jku/ssw/cmm/gui/treetable/TreeTableDataModel.java:17
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:67
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:103
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:118
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:131
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:64
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:100
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:115
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:128
 msgid "Name"
 msgstr "Name"
 
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:109
+#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:110
+msgid "No Profile choosen"
+msgstr "Kein Profil ausgewählt"
+
+#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:115
 msgid "Current Quest"
 msgstr "Aktuelle Quest"
 
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:112
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:102
-msgid "Select Profile"
-msgstr "Profil wählen"
-
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:114
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:108
+#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:120
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:107
 msgid "Select Quest"
 msgstr "Quest wählen"
 
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:55
+#: src/at/jku/ssw/cmm/gui/GUImainSettings.java:135
+#: src/at/jku/ssw/cmm/gui/GUImain.java:216
+msgid "Unnamed"
+msgstr "Unbenannt"
+
+#: src/at/jku/ssw/cmm/gui/GUImainSettings.java:240
+#, fuzzy
+msgid "The file"
+msgstr "Die Datei"
+
+#: src/at/jku/ssw/cmm/gui/GUImainSettings.java:241
+msgid "has not been found"
+msgstr "wurde nicht gefunden"
+
+#: src/at/jku/ssw/cmm/gui/GUImainSettings.java:241
+#: src/at/jku/ssw/cmm/gui/GUImainSettings.java:345
+msgid "The program returned"
+msgstr "Das Programm endete mit"
+
+#: src/at/jku/ssw/cmm/gui/GUImainSettings.java:242
+msgid "Configuration file not found"
+msgstr "Konfigurationsdatei nicht gefunden"
+
+#: src/at/jku/ssw/cmm/gui/GUImainSettings.java:344
+msgid "C Compact was not able to save your personal settings"
+msgstr "C Compact konnte deine persönlichen Einstellungen nicht speichern"
+
+#: src/at/jku/ssw/cmm/gui/GUImainSettings.java:346
+msgid "Unable to save your settings"
+msgstr "Einstellungen konnten nicht gespeichert werden"
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:46
 msgid "File"
 msgstr "Datei"
 
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:59
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:50
 msgid "New"
 msgstr "Neu"
 
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:66
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:57
 msgid "Open"
 msgstr "Öffnen"
 
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:75
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:65
+#, fuzzy
+msgid "Recent files"
+msgstr "Profil wählen"
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:74
 msgid "Save As..."
 msgstr "Speichern unter"
 
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:82
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:81
 msgid "Save..."
 msgstr "Speichern"
 
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:91
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:90
 msgid "Exit"
 msgstr "Beenden"
 
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:98
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:97
 msgid "Progress"
 msgstr "Fortschritt"
 
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:114
-msgid "Language"
-msgstr "Sprache"
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:101
+msgid "Select Profile"
+msgstr "Profil wählen"
 
-#: src/at/jku/ssw/cmm/gui/init/InitLeftPanel.java:66
+#: src/at/jku/ssw/cmm/gui/init/InitLeftPanel.java:67
 msgid "Input"
 msgstr "Eingabe"
 
-#: src/at/jku/ssw/cmm/gui/init/InitLeftPanel.java:94
+#: src/at/jku/ssw/cmm/gui/init/InitLeftPanel.java:95
 msgid "Output"
 msgstr "Ausgabe"
 
 #: src/at/jku/ssw/cmm/gui/treetable/TreeTableDataModel.java:17
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:68
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:81
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:104
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:119
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:128
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:132
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:65
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:78
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:101
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:116
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:125
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:129
 msgid "Type"
 msgstr "Datentyp"
 
 #: src/at/jku/ssw/cmm/gui/treetable/TreeTableDataModel.java:17
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:69
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:80
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:105
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:120
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:127
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:133
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:66
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:77
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:102
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:117
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:124
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:130
 msgid "Value"
 msgstr "Wert"
 
@@ -157,25 +223,57 @@ msgstr "Level"
 msgid "Debug"
 msgstr "Debug"
 
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:113
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:119
 msgid "Quest"
 msgstr "Quest"
 
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:148
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:159
 msgid "Error"
 msgstr "Fehler"
 
-#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:70
-#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:140
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:71
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:159
 msgid "file"
 msgstr "Datei"
+
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:104
+msgid "Yes"
+msgstr "Ja"
+
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:104
+msgid "No"
+msgstr "Nein"
+
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:108
+msgid "Do you want to save the new file?"
+msgstr "Willst du die neue Datei speichern?"
+
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:129
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:122
+msgid "Save now"
+msgstr "Speichern"
+
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:129
+msgid "Close without saving"
+msgstr "Nicht speichern"
+
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:133
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:126
+msgid "The current file has not yet been saved!"
+msgstr "Die aktuelle Datei wurde noch nicht gespeichert"
+
+#: src/at/jku/ssw/cmm/gui/utils/JTableButtonMouseListener.java:41
+#: src/at/jku/ssw/cmm/debugger/InitTreeTableData.java:218
+msgid "reference"
+msgstr "reference"
 
 #: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:119
 msgid "stop"
 msgstr "stop"
 
 #: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:120
-msgid "return to text edit maine immediately"
+#, fuzzy
+msgid "return to text edit mode immediately"
 msgstr "zurück zum Editormodus"
 
 #: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:124
@@ -241,69 +339,52 @@ msgstr "Kontrollelemente"
 msgid "Variables"
 msgstr "Variablen"
 
-#: src/at/jku/ssw/cmm/gui/event/WindowEventListener.java:97
-msgid "Yes"
-msgstr "Ja"
-
-#: src/at/jku/ssw/cmm/gui/event/WindowEventListener.java:97
-msgid "No"
-msgstr "Nein"
-
-#: src/at/jku/ssw/cmm/gui/event/WindowEventListener.java:101
-msgid "Do you want to save the new file?"
-msgstr "Willst du die neue Datei speichern?"
-
-#: src/at/jku/ssw/cmm/gui/event/WindowEventListener.java:102
-#: src/at/jku/ssw/cmm/gui/event/WindowEventListener.java:129
-msgid "Closing the C Compact IDE"
+#: src/at/jku/ssw/cmm/gui/event/WindowEventListener.java:58
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:263
+#, fuzzy
+msgid "Closing C Compact"
 msgstr "C Compact wird geschlossen"
 
-#: src/at/jku/ssw/cmm/gui/event/WindowEventListener.java:124
-#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:105
-msgid "Save now"
-msgstr "Speichern"
-
-#: src/at/jku/ssw/cmm/gui/event/WindowEventListener.java:124
-msgid "Close without saving"
-msgstr "Nicht speichern"
-
-#: src/at/jku/ssw/cmm/gui/event/WindowEventListener.java:128
-#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:109
-msgid "The current file has not yet been saved!"
-msgstr "Die aktuelle Datei wurde noch nicht gespeichert"
-
-#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:105
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:122
 msgid "Proceed without saving"
 msgstr "Fortsetzen ohne zu speichern"
 
-#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:110
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:127
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:154
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:200
 msgid "Opening new file"
 msgstr "Neue Datei öffnen"
 
-#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:327
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:205
+msgid "The following file could not be found: "
+msgstr "Die folgende Datei wurde nicht gefunden: "
+
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:206
+msgid "File does not exist"
+msgstr "Datei existiert nicht"
+
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:348
 msgid "text edit mode"
 msgstr "Editormodus"
 
-#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:337
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:356
 msgid "error"
 msgstr "Fehler"
 
-#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:337
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:356
 msgid "in line"
 msgstr "in Zeile"
 
-#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:350
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:367
 msgid "automatic debug mode"
 msgstr "Automatischer Debugmodus"
 
-#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:360
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:375
 msgid "pause or step by step mode"
 msgstr "Pause oder schrittweises Debuggen"
 
-#: src/at/jku/ssw/cmm/gui/GUImain.java:228
-#: src/at/jku/ssw/cmm/gui/GUImain.java:243
-msgid "Unnamed"
-msgstr "Unbenannt"
+#~ msgid "Language"
+#~ msgstr "Sprache"
 
 #~ msgid "Total Quest Progress"
 #~ msgstr "Gesamter Quest-Fortschritt"
