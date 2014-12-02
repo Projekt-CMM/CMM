@@ -301,7 +301,6 @@ public class MenuBarEventListener {
 		public void actionPerformed(ActionEvent arg0) {
 			main.dispose();
 			GUIprofileSettings.init(profile);
-			//main.selectProfile();
 		}
 	};
 	

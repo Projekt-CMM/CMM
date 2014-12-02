@@ -135,6 +135,7 @@ public final class LoadStatics {
 	 * @throws IOException
 	 */
 	public static void copyFileUsingStream(File source, File dest) throws IOException {
+		System.out.println("Copying files from:" + source + " to " + dest); 
 	    InputStream is = null;
 	    OutputStream os = null;
 	    try {

@@ -1,6 +1,7 @@
 package at.jku.ssw.cmm.profile.settings;
 
 import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.ImageFilter;
@@ -16,6 +17,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import at.jku.ssw.cmm.gui.GUImain;
+import at.jku.ssw.cmm.gui.GUImainSettings;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
 import at.jku.ssw.cmm.launcher.ProfileCreateException;
@@ -74,7 +76,14 @@ public class ProfileSettingsListener {
 		@Override
 		public void mousePressed(MouseEvent arg0) {
 			
-			GUILauncherMain.init();
+			
+			if(gui.getProfile() == null)
+				GUILauncherMain.init();
+			else{
+				GUImain app = new GUImain(new GUImainSettings(gui.getProfile()));
+				app.start(false);
+			}
+				
 			//Close window
 			jFrame.dispose();
 		}
@@ -131,7 +140,7 @@ public class ProfileSettingsListener {
 				try {
 					String profileImagePath = gui.getProfile().getProfileimage();
 					
-					if(profileImagePath != null){
+					if(profileImagePath != null ){
 						
 						File file = new File( profileImagePath);
 						
@@ -151,8 +160,8 @@ public class ProfileSettingsListener {
 		        
 				jFrame.dispose();
 				
-				String[] a = { "" };
-				GUImain.main(a);
+				GUImain app = new GUImain(new GUImainSettings(gui.getProfile()));
+				app.start(false);
 		        
 				
 			} catch (XMLWriteException | ProfileCreateException e) {
@@ -212,11 +221,11 @@ public class ProfileSettingsListener {
 							
 				gui.getProfile().setProfileimage(file.getAbsolutePath());
 				
+				System.out.println("Profile image changed");
+				
 			} catch (ProfileCreateException e) {
-				//Nothing happens..
+				//Nothing happens
 			}
-			
-			System.out.println("Profile image changed");
 		}
 		
 		@Override

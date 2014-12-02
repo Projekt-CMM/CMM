@@ -72,7 +72,8 @@ public class GUILauncherMain {
 	}
 	
 	/**
-	 * 
+	 * Adding a Panel whitch contains:
+	 * Welcome Message and logo
 	 */
 	private void addWelcomeBlock(){
 		JPanel jWelcomePanel = new JPanel(new BorderLayout());
@@ -95,6 +96,9 @@ public class GUILauncherMain {
 		jGlobalPanel.add(jWelcomePanel,BorderLayout.PAGE_START);
 	}
 	
+	/**
+	 * Adding selection Bar + Last Profiles Preview
+	 */
 	private void addProfilePanel(){
 		JPanel jProfilePanel = new JPanel(new BorderLayout());
 		JPanel jSelectProfilePanel = new JPanel(new BorderLayout());

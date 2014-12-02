@@ -97,7 +97,7 @@ public class GUIProfileManager {
 	
 	/**
 	 * TODO Profile Preview
-	 * Invokes the profile selection dialog
+	 * Invokes the profile selection dialog, and returns the selected Profile
 	 */
 	public static Profile selectProfile() throws ProfileSelectionException{
 		DebugShell.out(State.LOG, Area.GUI, "Opening Profile Selection Window...");
