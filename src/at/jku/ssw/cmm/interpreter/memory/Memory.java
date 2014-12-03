@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import at.jku.ssw.cmm.compiler.Node;
+import at.jku.ssw.cmm.interpreter.Interpreter;
 import at.jku.ssw.cmm.interpreter.exceptions.RunTimeException;
 import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
 import at.jku.ssw.cmm.interpreter.exceptions.StackUnderflowException;
@@ -242,9 +243,9 @@ public final class Memory {
 	public static void checkIfMemoryIsInitialized(int address, Node p) throws RunTimeException {
 		if(!getMemoryInformation(address).isInitialized) {
 			if(getMemoryInformation(address).varName != null)
-				throw new RunTimeException(getMemoryInformation(address).varName + " is not initialized", p);
+				throw new RunTimeException(getMemoryInformation(address).varName + " is not initialized", p, Interpreter.currentLine);
 			else
-				throw new RunTimeException("variable is not initialized", p);
+				throw new RunTimeException("variable is not initialized", p, Interpreter.currentLine);
 		}
 	}
 }

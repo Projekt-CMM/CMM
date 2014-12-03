@@ -12,6 +12,8 @@ package at.jku.ssw.cmm;
  */
 public class DebugShell {
 	
+	public static State maxLogLevel = State.LOG;
+	
 	/**
 	 * Write the given text to the system's output stream. This method should replace
 	 * System.out.println("...").

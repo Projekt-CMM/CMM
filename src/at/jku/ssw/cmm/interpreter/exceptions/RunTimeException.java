@@ -9,13 +9,15 @@ public class RunTimeException extends Exception {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public RunTimeException( String msg, Node node ){
+	public RunTimeException( String msg, Node node, int line){
 		this.msg = msg;
 		this.node = node;
+		this.line = line;
 	}
 	
 	private final String msg;
 	private final Node node;
+	private final int line;
 	
 	public String getMessage(){
 		return msg;
@@ -25,4 +27,8 @@ public class RunTimeException extends Exception {
 		return node;
 	}
 
+	public int getLine(){
+		return line;
+	}
+	
 }
