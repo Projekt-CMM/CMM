@@ -192,8 +192,25 @@ public class Tab {
 	 */
 	public void checkForwardParams(Obj oldPar, Obj newPar) {
 		while(oldPar != null && newPar != null) {
-			if(oldPar.type != newPar.type) {
+			if(oldPar.type.kind != newPar.type.kind) {
 				parser.SemErr("parameter of function and forward declaration has not the same type");
+			} else if(oldPar.type.kind == Struct.ARR) {
+				Struct oldParElemType = oldPar.type.elemType;
+				Struct newParElemType = newPar.type.elemType;
+
+				while(oldParElemType.kind == Struct.ARR && newParElemType.kind == Struct.ARR) {
+					oldParElemType = oldParElemType.elemType;
+					newParElemType = newParElemType.elemType;
+				}
+				if(oldParElemType.kind == Struct.ARR || newParElemType.kind == Struct.ARR) {
+					parser.SemErr("array parameter of function and forward declaration have not the same dimenstions");
+				} else if(oldParElemType.kind != newParElemType.kind) {
+					parser.SemErr("parameter of function and forward declaration has not the same type");
+				}
+				if(oldPar.type.elemType.kind == Struct.STRUCT) {
+					parser.SemErr("struct array as parameter is not allowed");
+				}
+				
 			}
 			if(oldPar.isRef != newPar.isRef) {
 				parser.SemErr("parameter of function or forward declaration is ref, in the other not");
