@@ -65,6 +65,8 @@ public class UpperPanel extends JPanel {
 	private GridBagConstraints c;
 
 	private JTextField jTextField;
+	
+	private JLabel profilePicture;
 
 	/**
 	 * Initializes all components of this panel. <b>Should only be called once
@@ -83,15 +85,7 @@ public class UpperPanel extends JPanel {
 		inside.setBorder(BorderFactory.createLoweredBevelBorder());
 		c = new GridBagConstraints();
 
-		JLabel profilePicture;
-
-		if (this.profile == null || this.profile.getProfileimage() == null)
-			// TODO better default image
-			profilePicture = LoadStatics.loadImage("images/prodef.png", true,
-					128, 128);
-		else
-			profilePicture = LoadStatics.loadImage(profile.getInitPath()
-					+ File.separator + profile.getProfileimage(), true, 128, 128);
+		refreshProfilePic(this.profile);
 
 		profilePicture.setToolTipText("<html><b>" + _("click to change image")
 				+ "</b><br>" + _("click here and select your<br>profile image")
@@ -159,6 +153,32 @@ public class UpperPanel extends JPanel {
 	public String getProfileName() {
 
 		return this.jTextField.getText();
+	}
+	
+	
+	/**
+	 * Refreshing the current profile Image
+	 */
+	public void refreshProfilePic(Profile profile){
+		
+		if (profile == null || profile.getProfileimage() == null)
+			// TODO better default image
+			profilePicture = LoadStatics.loadImage("images/prodef.png", true,
+					128, 128);
+		else
+			//Loading fixed profile image
+			if(profile.getInitPath() != null)
+				profilePicture = LoadStatics.loadImage(profile.getInitPath()
+						+ File.separator + profile.getProfileimage(), true, 128, 128);
+		
+			//Loading temporary choosen Image files
+			else{
+				profilePicture = LoadStatics.loadImage(profile.getProfileimage(), true, 128, 128);
+				System.out.println("Current ProfilePic: " + profile.getProfileimage());
+			}
+
+		profilePicture.revalidate();
+		profilePicture.repaint();
 	}
 
 }

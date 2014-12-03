@@ -1,6 +1,7 @@
 package at.jku.ssw.cmm.profile.settings;
 
 import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
@@ -8,6 +9,9 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import at.jku.ssw.cmm.gui.GUImain;
+import at.jku.ssw.cmm.gui.GUImainSettings;
+import at.jku.ssw.cmm.launcher.GUILauncherMain;
 import at.jku.ssw.cmm.profile.Profile;
 
 public class GUIprofileSettings {
@@ -117,5 +121,18 @@ public class GUIprofileSettings {
 	
 	public void setProfile(Profile profile){
 		this.profile = profile;
+	}
+	
+	public static void dispose(Profile profile, JFrame jFrame){
+		
+		if(profile == null || profile.getInitPath() == null)
+			GUILauncherMain.init();
+		else{
+			GUImain app = new GUImain(new GUImainSettings(profile));
+			app.start(false);
+		}
+			
+		//Close window
+		jFrame.dispose();
 	}
 }

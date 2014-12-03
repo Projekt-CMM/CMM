@@ -76,16 +76,7 @@ public class ProfileSettingsListener {
 		@Override
 		public void mousePressed(MouseEvent arg0) {
 			
-			
-			if(gui.getProfile() == null)
-				GUILauncherMain.init();
-			else{
-				GUImain app = new GUImain(new GUImainSettings(gui.getProfile()));
-				app.start(false);
-			}
-				
-			//Close window
-			jFrame.dispose();
+			GUIprofileSettings.dispose(gui.getProfile(), jFrame);
 		}
 		
 		@Override
@@ -129,6 +120,11 @@ public class ProfileSettingsListener {
 				    if (!successful){
 				    	System.err.println("Profile could not be created at:" + initPath);
 
+				  
+						JFrame frame = new JFrame("Warnung");
+		        		JOptionPane.showMessageDialog(frame,"Profile was already created tgere","Warning:",
+		        			    JOptionPane.WARNING_MESSAGE);
+		        		
 				    	throw new ProfileCreateException();
 				    }
 					
@@ -140,11 +136,14 @@ public class ProfileSettingsListener {
 				try {
 					String profileImagePath = gui.getProfile().getProfileimage();
 					
-					if(profileImagePath != null ){
+					//Only copying files if the File is not the Profile image
+					if(profileImagePath != null && !profileImagePath.equals(Profile.FILE_PROFILEIMAGE)){
 						
+						//Creating the file
 						File file = new File( profileImagePath);
 						
 						if(file != null){
+							//Copying the Profile image into the Profile Folder
 							gui.setProfile(Profile.changeProfileImage(gui.getProfile(), profileImagePath));
 						}
 					}
@@ -165,11 +164,7 @@ public class ProfileSettingsListener {
 		        
 				
 			} catch (XMLWriteException | ProfileCreateException e) {
-				
-				System.err.println("Profile creation cancelled");
-				JFrame frame = new JFrame("Warnung");
-        		JOptionPane.showMessageDialog(frame,"Profil wurde hier bereits erstellt.","Warnung:",
-        			    JOptionPane.WARNING_MESSAGE);
+				System.out.println("Profile creation aborted");
 			}
 		}
 		
@@ -204,7 +199,7 @@ public class ProfileSettingsListener {
 	}
 	
 	/**
-	 * Listener for the profile image. If the iser clicks his profile image,
+	 * Listener for the profile image. If the User clicks his profile image,
 	 * an image selection GUI shall open.
 	 */
 	public MouseListener profileImageListener = new MouseListener() {
@@ -214,6 +209,7 @@ public class ProfileSettingsListener {
 		
 			try {
 				File file = chooseProfileImage();
+				
 				System.out.println(file.getAbsolutePath());
 				
 				if(gui.getProfile() == null)
@@ -222,6 +218,7 @@ public class ProfileSettingsListener {
 				gui.getProfile().setProfileimage(file.getAbsolutePath());
 				
 				System.out.println("Profile image changed");
+				gui.getUpperPanel().refreshProfilePic(gui.getProfile());
 				
 			} catch (ProfileCreateException e) {
 				//Nothing happens

@@ -37,12 +37,12 @@ public final class LoadStatics {
 
 	public static final JLabel loadImage(String path, boolean createBorder,
 			int width, int height) {
-
+		
 		BufferedImage loadBuffer = null;
 		try {
 			loadBuffer = ImageIO.read(new File(path));
 		} catch (IOException e) {
-			System.err.println("Error reading image");
+			System.err.println("Error reading image:" + path);
 			return new JLabel();
 		}
 
