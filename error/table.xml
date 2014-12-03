@@ -227,7 +227,7 @@
 	</error>
 
 	<!-- memory handling errors -->
-	<error id="variable is not initialized">
+	<error id="([\w./]+) is not initialized">
 		<file>interpreter/memory/variable_uninitialized.html</file>
 	</error>
 	<error id="Return Statement missing">

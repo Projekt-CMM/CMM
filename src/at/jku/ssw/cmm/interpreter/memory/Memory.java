@@ -240,7 +240,11 @@ public final class Memory {
 	}
 	
 	public static void checkIfMemoryIsInitialized(int address, Node p) throws RunTimeException {
-		if(!getMemoryInformation(address).isInitialized)
-			throw new RunTimeException("variable is not initialized", p); 
+		if(!getMemoryInformation(address).isInitialized) {
+			if(getMemoryInformation(address).varName != null)
+				throw new RunTimeException(getMemoryInformation(address).varName + " is not initialized", p);
+			else
+				throw new RunTimeException("variable is not initialized", p);
+		}
 	}
 }

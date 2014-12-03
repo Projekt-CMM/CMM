@@ -53,12 +53,8 @@ public class Tests implements StdInOut {
 
 			Interpreter interpreter = new Interpreter(new DebuggerMock(), this);
 			Obj main = compiler.getSymbolTable().find("main");
-			try {
-				Memory.openStackFrame(main.ast.line, 0, main.size);
-			} catch (StackOverflowException e1) {
-				throw new IllegalStateException(e1);
-			}
-			interpreter.run(main.ast);
+
+			interpreter.run(main);
 		} catch (IOException e) {
 			System.out.println("could not open file " + args[0]);
 		} finally {

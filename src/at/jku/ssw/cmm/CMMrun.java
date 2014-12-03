@@ -76,19 +76,11 @@ public class CMMrun extends Thread {
 		// Get main function from symbol table
 		Obj main = compiler.getSymbolTable().find("main");
 
-		// Try to open main function
-		try {
-			Memory.openStackFrame(main.ast.line,
-					MethodContainer.getMethodId("main"), main.size);
-		} catch (StackOverflowException e1) {
-			throw new IllegalStateException(e1);
-		}
-
 		System.out.println("[thread] interpreter thread started");
 
 		// Run main function
 		try {
-			interpreter.run(main.ast);
+			interpreter.run(main);
 		}
 		// Thrown when runtime error occurs
 		catch (final RunTimeException e) {

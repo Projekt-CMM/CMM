@@ -43,10 +43,20 @@ public final class Interpreter {
 	 * Start Function
 	 * @throws RunTimeException 
 	 */
-	public void run(Node node) throws RunTimeException {
+	public void run(Obj main) throws RunTimeException {
+		try {
+			Memory.openStackFrame(main.ast.line, 0, main.size);
+			// add variable names into MemoryInformation Array
+			for(Obj form = main.locals;form != null;form = form.next) {
+				Memory.getMemoryInformation(Memory.getFramePointer() + form.adr).varName = form.name;
+			}
+		} catch (StackOverflowException e1) {
+			throw new IllegalStateException(e1);
+		}
+		
 		// TODO try catch abort messages
 		try {
-			StatSeq(node);
+			StatSeq(main.ast);
 		} catch (ReturnException e) {
 			return;
 		} catch (AbortException e) {
@@ -760,6 +770,11 @@ public final class Interpreter {
 				throw new RunTimeException("StackOverFlow", p);
 			}
 
+			// add variable names into MemoryInformation Array
+			for(form = p.obj.locals;form != null;form = form.next) {
+				Memory.getMemoryInformation(Memory.getFramePointer() + form.adr).varName = form.name;
+			}
+			
 			// Saving the Object into the new C-- Function Memory Frame.
 			form = p.obj.locals;
 			a = 0;
