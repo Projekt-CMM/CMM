@@ -108,13 +108,6 @@
 		<file>default.html</file>
 	</error>
 	
-	<!-- const value parser -->
-	<error id="([\w./]+) is not an integer">
-		<file>default.html</file>
-	</error>
-	<error id="([\w./]+) is not an float">
-		<file>default.html</file>
-	</error>
 	<error id="unknow character">
 		<file>default.html</file>
 	</error>
@@ -178,6 +171,15 @@
 	</error>
 	<error id="name must be an designator">
 		<file>compiler/type_error/must_be_designator.html</file>
+	</error>
+	<error id="([\w./]+) is not an integer">
+		<file>default.html</file>
+	</error>
+	<error id="([\w./]+) is not an float">
+		<file>default.html</file>
+	</error>
+	<error id="([\w./]+) is not an array">
+		<file>compiler/type_error/is_not_array.html</file>
 	</error>
 	
 	<!-- other -->
