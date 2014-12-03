@@ -73,6 +73,24 @@ public class Tab {
 			curScope.size += type.size;
 			obj.level = curLevel;
 		}
+		
+		//--- check if function or type already exists in universe scope
+		if(kind == Obj.PROC || kind == Obj.TYPE) {
+			Scope checkScope = curScope;
+			while(checkScope.outer != null) {
+				checkScope = checkScope.outer;
+				Obj p =  checkScope.locals;
+				while (p != null) {
+					if (p.name.equals(name)) {
+						if(p.isForward) {
+							return p;
+						}
+						parser.SemErr(name + " declared twice");
+					}
+					p = p.next;
+				}
+			}
+		}
 		//--- insert
 		Obj p = curScope.locals, last = null;
 		while (p != null) {
