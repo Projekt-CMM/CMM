@@ -18,30 +18,34 @@ public class Parser {
 	public static final int _stringCon = 5;
 	public static final int _lpar = 6;
 	public static final int _rpar = 7;
-	public static final int _semicolon = 8;
-	public static final int _assign = 9;
-	public static final int _assignplus = 10;
-	public static final int _assignminus = 11;
-	public static final int _assigntimes = 12;
-	public static final int _assigndiv = 13;
-	public static final int _assignrem = 14;
-	public static final int _assignleftshift = 15;
-	public static final int _assignrightshift = 16;
-	public static final int _assignbitand = 17;
-	public static final int _assignbitxor = 18;
-	public static final int _assignbitor = 19;
-	public static final int _eql = 20;
-	public static final int _neq = 21;
-	public static final int _lss = 22;
-	public static final int _leq = 23;
-	public static final int _gtr = 24;
-	public static final int _geq = 25;
-	public static final int _bang = 26;
-	public static final int _and = 27;
-	public static final int _or = 28;
-	public static final int _bitand = 29;
-	public static final int _bitor = 30;
-	public static final int _bitxor = 31;
+	public static final int _lbrac = 8;
+	public static final int _rbrac = 9;
+	public static final int _lsqu = 10;
+	public static final int _rsqu = 11;
+	public static final int _semicolon = 12;
+	public static final int _assign = 13;
+	public static final int _assignplus = 14;
+	public static final int _assignminus = 15;
+	public static final int _assigntimes = 16;
+	public static final int _assigndiv = 17;
+	public static final int _assignrem = 18;
+	public static final int _assignleftshift = 19;
+	public static final int _assignrightshift = 20;
+	public static final int _assignbitand = 21;
+	public static final int _assignbitxor = 22;
+	public static final int _assignbitor = 23;
+	public static final int _eql = 24;
+	public static final int _neq = 25;
+	public static final int _lss = 26;
+	public static final int _leq = 27;
+	public static final int _gtr = 28;
+	public static final int _geq = 29;
+	public static final int _bang = 30;
+	public static final int _and = 31;
+	public static final int _or = 32;
+	public static final int _bitand = 33;
+	public static final int _bitor = 34;
+	public static final int _bitxor = 35;
 	public static final int maxT = 65;
 
 	static final boolean T = true;
@@ -225,9 +229,9 @@ public class Parser {
 		breakLevel = 0;
 		Node e; 
 		while (StartOf(1)) {
-			if (la.kind == 32) {
+			if (la.kind == 36) {
 				ConstDecl();
-			} else if (la.kind == 37) {
+			} else if (la.kind == 41) {
 				StructDecl();
 			} else if (isVarDecl()) {
 				e = VarDecl();
@@ -257,18 +261,18 @@ public class Parser {
 		Struct type; 
 		int line = la.line; 
 		boolean library = false; 
-		Expect(32);
+		Expect(36);
 		type = Type();
-		if (la.kind == 33) {
+		if (la.kind == 37) {
 			Get();
 			library = true; 
 		}
 		Expect(1);
 		Obj curCon = tab.insert(Obj.CON, t.val, type, line); 
 		curCon.library = library; 
-		Expect(9);
-		if (la.kind == 34 || la.kind == 35) {
-			if (la.kind == 34) {
+		Expect(13);
+		if (la.kind == 38 || la.kind == 39) {
+			if (la.kind == 38) {
 				Get();
 				curCon.val = 1; 
 				if (type != Tab.boolType) 
@@ -300,17 +304,17 @@ public class Parser {
 			if (type != Tab.stringType) 
 			   SemErr("string constant not allowed here"); 
 		} else SynErr(67);
-		Expect(8);
+		Expect(12);
 	}
 
 	void StructDecl() {
 		Node e; 
 		int line = la.line; 
-		Expect(37);
+		Expect(41);
 		Struct type = new Struct(Struct.STRUCT); 
 		Expect(1);
 		Obj struct = tab.insert(Obj.TYPE, t.val, type, line); 
-		Expect(38);
+		Expect(8);
 		tab.openScope(); 
 		while (la.kind == 1) {
 			if(la.val.equals(struct.name)) {
@@ -321,7 +325,7 @@ public class Parser {
 			if(e!=null) 
 			   SemErr("variable assigment is not allowed in struct"); 
 		}
-		Expect(39);
+		Expect(9);
 		type.fields = tab.curScope.locals;
 		// copy size
 		type.size = tab.curScope.size;
@@ -344,14 +348,14 @@ public class Parser {
 		// get current line
 		int line = la.line; 
 		type = Type();
-		if (la.kind == 33) {
+		if (la.kind == 37) {
 			Get();
 			library = true; 
 		}
 		Expect(1);
 		curObj = tab.insert(Obj.VAR, t.val, type, line); 
 		curObj.library = library; 
-		if (la.kind == 9) {
+		if (la.kind == 13) {
 			Get();
 			e = BinExpr();
 			if(type == null || (!type.isPrimitive() && type != Tab.stringType)) 
@@ -368,11 +372,11 @@ public class Parser {
 			e = new Node(Node.ASSIGN,new Node(curObj),e,line);
 			                                       curNode = e; 
 		}
-		while (la.kind == 36) {
+		while (la.kind == 40) {
 			Get();
 			Expect(1);
 			curObj = tab.insert(Obj.VAR, t.val, type, line); 
-			if (la.kind == 9) {
+			if (la.kind == 13) {
 				Get();
 				newNode = BinExpr();
 				if(type == null || (!type.isPrimitive() && type != Tab.stringType)) 
@@ -397,7 +401,7 @@ public class Parser {
 				} 
 			}
 		}
-		Expect(8);
+		Expect(12);
 		return e;
 	}
 
@@ -407,10 +411,10 @@ public class Parser {
 		boolean library = false; 
 		if (la.kind == 1) {
 			type = Type();
-		} else if (la.kind == 40) {
+		} else if (la.kind == 42) {
 			Get();
 		} else SynErr(68);
-		if (la.kind == 33) {
+		if (la.kind == 37) {
 			Get();
 			library = true; 
 		}
@@ -427,7 +431,7 @@ public class Parser {
 			curProc.nPars = FormPars();
 		}
 		Expect(7);
-		if (la.kind == 38) {
+		if (la.kind == 8) {
 			Get();
 			if(curProc.isForward) {
 			   if(curProc.library != library)
@@ -444,7 +448,7 @@ public class Parser {
 			}
 			Node startNode = null, curNode = null, newNode; 
 			while (StartOf(3)) {
-				if (la.kind == 32) {
+				if (la.kind == 36) {
 					ConstDecl();
 				} else if (isVarDecl()) {
 					newNode = VarDecl();
@@ -489,7 +493,7 @@ public class Parser {
 					curNode = newNode; 
 				}
 			}
-			Expect(39);
+			Expect(9);
 			if(curProc.type != Tab.noType) {
 			   // add Node.TRAP at end of procedure if possible
 			   if(startNode == null) {
@@ -508,7 +512,7 @@ public class Parser {
 			// generate debug-output if the correct flags are set
 			if (debug[1]) 
 			   Node.dump(curProc.ast, 0); 
-		} else if (la.kind == 8) {
+		} else if (la.kind == 12) {
 			Get();
 			if(curProc.isForward) 
 			   SemErr("function is already forward declared");
@@ -534,7 +538,7 @@ public class Parser {
 		type = obj.type;
 		// init array-list, which store the size of the dimensions
 		ArrayList<Integer> dimensions = new ArrayList(); 
-		while (la.kind == 41) {
+		while (la.kind == 10) {
 			Get();
 			int arraySize = 1; 
 			if (la.kind == 2) {
@@ -553,7 +557,7 @@ public class Parser {
 			// check if size of dimension is at least 1 
 			if(arraySize <= 0)
 			   SemErr("array-size must be 1 or higher"); 
-			Expect(42);
+			Expect(11);
 		}
 		for(int i = dimensions.size()-1; i>=0;i--) {
 		   type = new Struct(Struct.ARR, dimensions.get(i), type);
@@ -566,7 +570,7 @@ public class Parser {
 		int kind;
 		Node n = null; 
 		res = Shift();
-		while (la.kind == 29 || la.kind == 30 || la.kind == 31) {
+		while (la.kind == 33 || la.kind == 34 || la.kind == 35) {
 			kind = Binop();
 			n = Shift();
 			if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive())
@@ -584,7 +588,7 @@ public class Parser {
 		int  n;
 		FormPar();
 		n = 1; 
-		while (la.kind == 36) {
+		while (la.kind == 40) {
 			Get();
 			FormPar();
 			n++; 
@@ -677,7 +681,7 @@ public class Parser {
 				e = new Node(Node.MINUS, design, e, design.type);
 				st = new Node(Node.ASSIGN,design,e,line); 
 			} else SynErr(71);
-			Expect(8);
+			Expect(12);
 			break;
 		}
 		case 45: {
@@ -719,7 +723,7 @@ public class Parser {
 			Expect(6);
 			con = Condition();
 			Expect(7);
-			Expect(8);
+			Expect(12);
 			st = new Node(Node.DOWHILE,con,st,line); 
 			
 			break;
@@ -735,7 +739,7 @@ public class Parser {
 			Node n, defaultNode = null;
 			Node firstCaseStatement;
 			Node lastStatement = new Node(Node.NOP,null,null,line); 
-			Expect(38);
+			Expect(8);
 			while (la.kind == 50 || la.kind == 51) {
 				n = null; 
 				newStat = null; 
@@ -786,7 +790,7 @@ public class Parser {
 				   curStat = newStat; 
 				} 
 			}
-			Expect(39);
+			Expect(9);
 			if(defaultNode != null) {
 			   if(curStat == null)
 			       st.right = defaultNode;
@@ -796,7 +800,7 @@ public class Parser {
 			breakLevel --; 
 			break;
 		}
-		case 38: {
+		case 8: {
 			Get();
 			curStat = null; con=null; 
 			while (StartOf(5)) {
@@ -809,7 +813,7 @@ public class Parser {
 				   curStat = curStat.next;
 				} 
 			}
-			Expect(39);
+			Expect(9);
 			st = new Node(Node.STATSEQ,con,null,line); 
 			break;
 		}
@@ -822,7 +826,7 @@ public class Parser {
 				// do implicite type convertation if required
 				e = tab.impliciteTypeCon(e, curProc.type); 
 			}
-			Expect(8);
+			Expect(12);
 			if(e == null && curProc.type.kind != Struct.NONE)
 			   SemErr("return require parameter from correct type");
 			st = new Node(Node.RETURN,e,null,line); 
@@ -830,7 +834,7 @@ public class Parser {
 		}
 		case 54: {
 			Get();
-			Expect(8);
+			Expect(12);
 			if(breakLevel <= 0)
 			   SemErr("break is not allowed here");
 			st = new Node(Node.BREAK,null,null,line); 
@@ -838,13 +842,13 @@ public class Parser {
 		}
 		case 55: {
 			Get();
-			Expect(8);
+			Expect(12);
 			if(continueLevel <= 0)
 			   SemErr("continue is not allowed here");
 			st = new Node(Node.CONTINUE,null,null,line); 
 			break;
 		}
-		case 8: {
+		case 12: {
 			Get();
 			st = null; 
 			break;
@@ -862,15 +866,15 @@ public class Parser {
 		String ident_val; 
 		type = Type();
 		mainType = type; 
-		if (la.kind == 29) {
+		if (la.kind == 33) {
 			Get();
 			isRef = true; 
 		}
 		Expect(1);
 		ident_val = t.val; 
-		while (la.kind == 41) {
+		while (la.kind == 10) {
 			Get();
-			Expect(42);
+			Expect(11);
 			if(isRef && !isArray)
 			   SemErr("array call and call by reference cannot mixed up");
 			// change state variables
@@ -933,7 +937,7 @@ public class Parser {
 		}
 		// set type of identifier
 		type = obj.type; 
-		while (la.kind == 41 || la.kind == 59) {
+		while (la.kind == 10 || la.kind == 59) {
 			if (la.kind == 59) {
 				Get();
 				if(type.kind != Struct.STRUCT) 
@@ -962,7 +966,7 @@ public class Parser {
 				       type = type.elemType;
 				   } 
 				} 
-				Expect(42);
+				Expect(11);
 			}
 		}
 		return n;
@@ -972,56 +976,56 @@ public class Parser {
 		int  kind;
 		kind=Node.ASSIGN; 
 		switch (la.kind) {
-		case 9: {
-			Get();
-			break;
-		}
-		case 10: {
-			Get();
-			kind=Node.ASSIGNPLUS; 
-			break;
-		}
-		case 11: {
-			Get();
-			kind=Node.ASSIGNMINUS; 
-			break;
-		}
-		case 12: {
-			Get();
-			kind=Node.ASSIGNTIMES; 
-			break;
-		}
 		case 13: {
 			Get();
-			kind=Node.ASSIGNDIV; 
 			break;
 		}
 		case 14: {
 			Get();
-			kind=Node.ASSIGNREM; 
+			kind=Node.ASSIGNPLUS; 
 			break;
 		}
 		case 15: {
 			Get();
-			kind=Node.ASSIGNSHIFTLEFT; 
+			kind=Node.ASSIGNMINUS; 
 			break;
 		}
 		case 16: {
 			Get();
-			kind=Node.ASSIGNSHIFTRIGHT; 
+			kind=Node.ASSIGNTIMES; 
 			break;
 		}
 		case 17: {
 			Get();
-			kind=Node.ASSIGNBITAND; 
+			kind=Node.ASSIGNDIV; 
 			break;
 		}
 		case 18: {
 			Get();
-			kind=Node.ASSIGNBITXOR; 
+			kind=Node.ASSIGNREM; 
 			break;
 		}
 		case 19: {
+			Get();
+			kind=Node.ASSIGNSHIFTLEFT; 
+			break;
+		}
+		case 20: {
+			Get();
+			kind=Node.ASSIGNSHIFTRIGHT; 
+			break;
+		}
+		case 21: {
+			Get();
+			kind=Node.ASSIGNBITAND; 
+			break;
+		}
+		case 22: {
+			Get();
+			kind=Node.ASSIGNBITXOR; 
+			break;
+		}
+		case 23: {
 			Get();
 			kind=Node.ASSIGNBITOR; 
 			break;
@@ -1039,7 +1043,7 @@ public class Parser {
 		if (StartOf(6)) {
 			outPar = ActPar();
 			curPar = outPar; 
-			while (la.kind == 36) {
+			while (la.kind == 40) {
 				Get();
 				par = ActPar();
 				if(curPar == null)
@@ -1058,7 +1062,7 @@ public class Parser {
 		Node  con;
 		Node newCon; 
 		con = CondTerm();
-		while (la.kind == 28) {
+		while (la.kind == 32) {
 			Get();
 			newCon = CondTerm();
 			con = new Node(Node.OR, con, newCon, Tab.boolType); 
@@ -1076,7 +1080,7 @@ public class Parser {
 	Node  CondTerm() {
 		Node  con;
 		con = CondFact();
-		while (la.kind == 27) {
+		while (la.kind == 31) {
 			Get();
 			Node con2; 
 			con2 = CondFact();
@@ -1113,7 +1117,7 @@ public class Parser {
 			       
 			   con = tab.impliciteTypeCon(con, Tab.boolType);
 			} 
-		} else if (la.kind == 26) {
+		} else if (la.kind == 30) {
 			Get();
 			con = Condition();
 			con = new Node(Node.NOT, con, null, Tab.boolType); 
@@ -1129,32 +1133,32 @@ public class Parser {
 		int  kind;
 		kind = Node.EQL; 
 		switch (la.kind) {
-		case 20: {
+		case 24: {
 			Get();
 			kind = Node.EQL; 
 			break;
 		}
-		case 21: {
+		case 25: {
 			Get();
 			kind = Node.NEQ; 
 			break;
 		}
-		case 24: {
+		case 28: {
 			Get();
 			kind = Node.GTR; 
 			break;
 		}
-		case 25: {
+		case 29: {
 			Get();
 			kind = Node.GEQ; 
 			break;
 		}
-		case 22: {
+		case 26: {
 			Get();
 			kind = Node.LSS; 
 			break;
 		}
-		case 23: {
+		case 27: {
 			Get();
 			kind = Node.LEQ; 
 			break;
@@ -1186,12 +1190,12 @@ public class Parser {
 	int  Binop() {
 		int  kind;
 		kind=Node.BITAND; 
-		if (la.kind == 29) {
+		if (la.kind == 33) {
 			Get();
-		} else if (la.kind == 31) {
+		} else if (la.kind == 35) {
 			Get();
 			kind=Node.BITXOR; 
-		} else if (la.kind == 30) {
+		} else if (la.kind == 34) {
 			Get();
 			kind=Node.BITOR; 
 		} else SynErr(77);
@@ -1304,8 +1308,8 @@ public class Parser {
 			Get();
 			n = new Node(tab.stringVal(t.val)); 
 			n.val = strings.put(tab.stringVal(t.val)); 
-		} else if (la.kind == 34 || la.kind == 35) {
-			if (la.kind == 34) {
+		} else if (la.kind == 38 || la.kind == 39) {
+			if (la.kind == 38) {
 				Get();
 				n = new Node(true); 
 			} else {
@@ -1374,14 +1378,14 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,T,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,T,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,T,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,T,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,T,x, x,x,x,x, x,T,x,T, T,T,x,x, x,T,T,T, x,x,x,x, x,x,x,x, x,x,x},
-		{x,x,x,x, x,x,x,x, x,T,T,T, T,T,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,T,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,x, x,x,x,x, x,T,x,T, T,T,x,x, x,T,T,T, x,x,x,x, x,x,x,x, x,x,x},
-		{x,T,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,x, x,x,x,x, x,x,x},
-		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x}
+		{T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
+		{x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
+		{T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
+		{x,T,x,x, x,x,x,x, T,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,T,x,T, T,T,x,x, x,T,T,T, x,x,x,x, x,x,x,x, x,x,x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, x,T,T,T, T,T,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
+		{x,T,x,x, x,x,x,x, T,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,x,T, T,T,x,x, x,T,T,T, x,x,x,x, x,x,x,x, x,x,x},
+		{x,T,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,x, x,x,x,x, x,x,x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x}
 
 	};
 } // end Parser
@@ -1408,41 +1412,41 @@ class Errors {
 			case 5: s = "stringCon expected"; break;
 			case 6: s = "lpar expected"; break;
 			case 7: s = "rpar expected"; break;
-			case 8: s = "semicolon expected"; break;
-			case 9: s = "assign expected"; break;
-			case 10: s = "assignplus expected"; break;
-			case 11: s = "assignminus expected"; break;
-			case 12: s = "assigntimes expected"; break;
-			case 13: s = "assigndiv expected"; break;
-			case 14: s = "assignrem expected"; break;
-			case 15: s = "assignleftshift expected"; break;
-			case 16: s = "assignrightshift expected"; break;
-			case 17: s = "assignbitand expected"; break;
-			case 18: s = "assignbitxor expected"; break;
-			case 19: s = "assignbitor expected"; break;
-			case 20: s = "eql expected"; break;
-			case 21: s = "neq expected"; break;
-			case 22: s = "lss expected"; break;
-			case 23: s = "leq expected"; break;
-			case 24: s = "gtr expected"; break;
-			case 25: s = "geq expected"; break;
-			case 26: s = "bang expected"; break;
-			case 27: s = "and expected"; break;
-			case 28: s = "or expected"; break;
-			case 29: s = "bitand expected"; break;
-			case 30: s = "bitor expected"; break;
-			case 31: s = "bitxor expected"; break;
-			case 32: s = "\"const\" expected"; break;
-			case 33: s = "\"library\" expected"; break;
-			case 34: s = "\"true\" expected"; break;
-			case 35: s = "\"false\" expected"; break;
-			case 36: s = "\",\" expected"; break;
-			case 37: s = "\"struct\" expected"; break;
-			case 38: s = "\"{\" expected"; break;
-			case 39: s = "\"}\" expected"; break;
-			case 40: s = "\"void\" expected"; break;
-			case 41: s = "\"[\" expected"; break;
-			case 42: s = "\"]\" expected"; break;
+			case 8: s = "lbrac expected"; break;
+			case 9: s = "rbrac expected"; break;
+			case 10: s = "lsqu expected"; break;
+			case 11: s = "rsqu expected"; break;
+			case 12: s = "semicolon expected"; break;
+			case 13: s = "assign expected"; break;
+			case 14: s = "assignplus expected"; break;
+			case 15: s = "assignminus expected"; break;
+			case 16: s = "assigntimes expected"; break;
+			case 17: s = "assigndiv expected"; break;
+			case 18: s = "assignrem expected"; break;
+			case 19: s = "assignleftshift expected"; break;
+			case 20: s = "assignrightshift expected"; break;
+			case 21: s = "assignbitand expected"; break;
+			case 22: s = "assignbitxor expected"; break;
+			case 23: s = "assignbitor expected"; break;
+			case 24: s = "eql expected"; break;
+			case 25: s = "neq expected"; break;
+			case 26: s = "lss expected"; break;
+			case 27: s = "leq expected"; break;
+			case 28: s = "gtr expected"; break;
+			case 29: s = "geq expected"; break;
+			case 30: s = "bang expected"; break;
+			case 31: s = "and expected"; break;
+			case 32: s = "or expected"; break;
+			case 33: s = "bitand expected"; break;
+			case 34: s = "bitor expected"; break;
+			case 35: s = "bitxor expected"; break;
+			case 36: s = "\"const\" expected"; break;
+			case 37: s = "\"library\" expected"; break;
+			case 38: s = "\"true\" expected"; break;
+			case 39: s = "\"false\" expected"; break;
+			case 40: s = "\",\" expected"; break;
+			case 41: s = "\"struct\" expected"; break;
+			case 42: s = "\"void\" expected"; break;
 			case 43: s = "\"++\" expected"; break;
 			case 44: s = "\"--\" expected"; break;
 			case 45: s = "\"if\" expected"; break;

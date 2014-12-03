@@ -130,6 +130,10 @@ TOKENS
   //--- token definitions for lookahead peeking
   lpar      = "(".
   rpar      = ")".
+  lbrac      = "{".
+  rbrac      = "}".
+  lsqu      = "[".
+  rsqu      = "]".
   semicolon = ";".
   assign    = '='.
   assignplus    = "+=".
