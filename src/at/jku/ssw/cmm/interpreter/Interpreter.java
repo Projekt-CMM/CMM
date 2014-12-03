@@ -45,7 +45,7 @@ public final class Interpreter {
 	 */
 	public void run(Obj main) throws RunTimeException {
 		try {
-			Memory.openStackFrame(main.ast.line, 0, main.size);
+			Memory.openStackFrame(main.ast.line, MethodContainer.getMethodId("main"), main.size);
 			// add variable names into MemoryInformation Array
 			for(Obj form = main.locals;form != null;form = form.next) {
 				Memory.getMemoryInformation(Memory.getFramePointer() + form.adr).varName = form.name;
