@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<body>
+	<h1> aufgerufene Variable ist kein Array </h1>
+	<h2> Was ist passiert? </h2>
+	<p>
+		Du hast versucht auf einen Index einer normalen Variable zuzugreifen, bzw. auf eine zu hohe Dimension eines Arrays.
+	</p>
+	<h3>Beispiel</h3>
+	<p id="code">
+		<strong class="key">int</strong> a;<br>
+		...<br>
+		a<strong class="error">[1]</strong> = 7;
+	</p>
+	<p id="code">
+		<strong class="key">int</strong>[8] b;<br>
+		...<br>
+		b[1]<strong class="error">[1]</strong> = 3;
+	</p>
+</body>

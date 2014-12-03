@@ -25,12 +25,25 @@
 	<error id="lpar expected">
 		<file>compiler/parser/lpar_expected.html</file>
 	</error>
+	<error id='rbrac expected'>
+		<file>compiler/parser/rbrac_expected.html</file>
+	</error>
+	<error id='lbrac expected'>
+		<file>compiler/parser/lbrac_expected.html</file>
+	</error>
+	<error id='rsqu expected'>
+		<file>compiler/parser/rsqu_expected.html</file>
+	</error>
+	<error id='lsqu expected'>
+		<file>compiler/parser/lsqu_expected.html</file>
+	</error>
 	<error id="ident expected">
 		<file>compiler/parser/ident_expected.html</file>
 	</error>
 	<error id="assign expected">
 		<file>compiler/parser/assign_expected.html</file>
 	</error>
+	
 	
 	<error id="invalid Factor">
 	    <file>default.html</file>
@@ -91,14 +104,10 @@
 	<error id="there is no type-conversation for arrays allowed">
 		<file>default.html</file>
 	</error>
+	<error id="only void is allowed">
+		<file>default.html</file>
+	</error>
 	
-	<!-- const value parser -->
-	<error id="([\w./]+) is not an integer">
-		<file>default.html</file>
-	</error>
-	<error id="([\w./]+) is not an float">
-		<file>default.html</file>
-	</error>
 	<error id="unknow character">
 		<file>default.html</file>
 	</error>
@@ -160,6 +169,18 @@
 	<error id="var must be a primitive type or string">
 		<file>compiler/type_error/primitive_or_string.html</file>
 	</error>
+	<error id="name must be an designator">
+		<file>compiler/type_error/must_be_designator.html</file>
+	</error>
+	<error id="([\w./]+) is not an integer">
+		<file>default.html</file>
+	</error>
+	<error id="([\w./]+) is not an float">
+		<file>default.html</file>
+	</error>
+	<error id="([\w./]+) is not an array">
+		<file>compiler/type_error/is_not_array.html</file>
+	</error>
 	
 	<!-- other -->
 	<error id="([\w./]+) not found">
@@ -206,7 +227,7 @@
 	</error>
 
 	<!-- memory handling errors -->
-	<error id="variable is not initialized">
+	<error id="([\w./]+) is not initialized">
 		<file>interpreter/memory/variable_uninitialized.html</file>
 	</error>
 	<error id="Return Statement missing">

@@ -28,7 +28,7 @@ public final class Interpreter {
 	private final StdInOut inout;
 	
 	private int libraryFunctionLevel;
-	
+	public static int currentLine;
 	// private boolean running;
 
 	/**
@@ -43,10 +43,20 @@ public final class Interpreter {
 	 * Start Function
 	 * @throws RunTimeException 
 	 */
-	public void run(Node node) throws RunTimeException {
+	public void run(Obj main) throws RunTimeException {
+		try {
+			Memory.openStackFrame(main.ast.line, MethodContainer.getMethodId("main"), main.size);
+			// add variable names into MemoryInformation Array
+			for(Obj form = main.locals;form != null;form = form.next) {
+				Memory.getMemoryInformation(Memory.getFramePointer() + form.adr).varName = form.name;
+			}
+		} catch (StackOverflowException e1) {
+			throw new IllegalStateException(e1);
+		}
+		
 		// TODO try catch abort messages
 		try {
-			StatSeq(node);
+			StatSeq(main.ast);
 		} catch (ReturnException e) {
 			return;
 		} catch (AbortException e) {
@@ -63,6 +73,7 @@ public final class Interpreter {
 	 * @throws RunTimeException 
 	 */
 	void StatSeq(Node p) throws ReturnException, AbortException, BreakException, ContinueException, RunTimeException { // AST
+		selectCurrentLine(p);
 		for (p = p.left; p != null; p = p.next)
 			Statement(p);
 	}
@@ -72,7 +83,7 @@ public final class Interpreter {
 	 * @throws RunTimeException 
 	 */
 	void Statement(Node p) throws ReturnException, AbortException, BreakException, ContinueException, RunTimeException { // b = a;
-		
+		selectCurrentLine(p);
 		//TODO add changed variable list
 		if (p.kind != Node.NOP && libraryFunctionLevel == 0 && !debugger.step(p, Memory.readVariables, Memory.changedVariables))
 			throw new AbortException();
@@ -102,7 +113,7 @@ public final class Interpreter {
 				Memory.storeStringAdress(Adr(p.left), StringExpr(p.right));
 				break;
 			default:
-				throw new RunTimeException("Not supportet node kind", p);
+				throw new RunTimeException("Not supportet node kind", p, currentLine);
 
 			}
 			break;
@@ -113,7 +124,7 @@ public final class Interpreter {
 			StatSeq(p);
 			break;
 		case Node.TRAP: // For a Function with return!
-			throw new RunTimeException("Return Statement missing", p); 
+			throw new RunTimeException("Return Statement missing", p, currentLine); 
 
 		case Node.IF:
 			if (Condition(p.left))
@@ -199,7 +210,7 @@ public final class Interpreter {
 				Memory.setIntReturnValue(StringExpr(p.left));
 				throw new ReturnException();
 			default:
-				throw new RunTimeException("Not supportet return node kind", p);
+				throw new RunTimeException("Not supportet return node kind", p, currentLine);
 			}
 		case Node.BREAK:
 				throw new BreakException();
@@ -208,7 +219,7 @@ public final class Interpreter {
 		case Node.NOP:
 				break;
 		default:
-			throw new RunTimeException("Not supportet statement node kind", p);
+			throw new RunTimeException("Not supportet statement node kind", p, currentLine);
 		}
 	}
 	
@@ -218,6 +229,8 @@ public final class Interpreter {
 	 * @throws RunTimeException 
 	 */
 	boolean BoolExpr(Node p) throws ReturnException, AbortException, RunTimeException { //TODO
+		selectCurrentLine(p);
+		
 		switch (p.kind) {
 		case Node.BOOLCON:
 			// Returns a Constante
@@ -253,7 +266,7 @@ public final class Interpreter {
 		case Node.INDEX:							//more at @Adr
 			return Memory.loadBoolSave(Adr(p),p);
 		default:
-			throw new RunTimeException("Not supportet boolexpr node kind", p);
+			throw new RunTimeException("Not supportet boolexpr node kind", p, currentLine);
 		}
 	}
 	
@@ -263,6 +276,8 @@ public final class Interpreter {
 	 * @throws RunTimeException 
 	 */
 	int IntExpr(Node p) throws ReturnException, AbortException, RunTimeException { //TODO
+		selectCurrentLine(p);
+		
 		try{
 			switch (p.kind) {
 			case Node.INTCON:
@@ -287,11 +302,11 @@ public final class Interpreter {
 			case Node.DIV:
 				if (IntExpr(p.right) != 0)
 					return SaveIntOperator.divide(IntExpr(p.left), IntExpr(p.right));
-				throw new RunTimeException("Divided by 0", p);
+				throw new RunTimeException("Divided by 0", p, currentLine);
 			case Node.REM:
 				if (IntExpr(p.right) != 0)
 					return IntExpr(p.left) % IntExpr(p.right);
-				throw new RunTimeException("Divided by 0", p);
+				throw new RunTimeException("Divided by 0", p, currentLine);
 			/*
 			 * Bit Operators
 			 */
@@ -329,10 +344,10 @@ public final class Interpreter {
 			case Node.INDEX:							//more at @Adr
 				return Memory.loadIntSave(Adr(p), p);
 			default:
-				throw new RunTimeException("Not supportet intexpr node kind", p);
+				throw new RunTimeException("Not supportet intexpr node kind", p, currentLine);
 			}
 		} catch(ArithmeticException e) {
-			throw new RunTimeException(e.getMessage(), p);
+			throw new RunTimeException(e.getMessage(), p, currentLine);
 		}
 	}
 
@@ -342,6 +357,8 @@ public final class Interpreter {
 	 * @throws RunTimeException 
 	 */
 	float FloatExpr(Node p) throws AbortException, ReturnException, RunTimeException { //TODO
+		selectCurrentLine(p);
+		
 		try {
 			switch (p.kind) {
 			case Node.FLOATCON:						//returning the Constant value
@@ -366,11 +383,11 @@ public final class Interpreter {
 			case Node.DIV:
 				if (FloatExpr(p.right) != 0)
 					return SaveFloatOperator.divide(FloatExpr(p.left), FloatExpr(p.right));
-				throw new RunTimeException("Divided by 0", p);
+				throw new RunTimeException("Divided by 0", p, currentLine);
 			case Node.REM:
 				if (FloatExpr(p.right) != 0)
 					return FloatExpr(p.left) % FloatExpr(p.right);
-				throw new RunTimeException("Divided by 0", p);
+				throw new RunTimeException("Divided by 0", p, currentLine);
 	
 				
 			case Node.I2F:							//Casts an Integer into an Float
@@ -386,11 +403,11 @@ public final class Interpreter {
 				return Memory.loadFloatSave(Adr(p),p);
 	
 			default:
-				throw new RunTimeException("Not supportet floatexpr node kind", p);
+				throw new RunTimeException("Not supportet floatexpr node kind", p, currentLine);
 	
 			}
 		} catch(ArithmeticException e) {
-			throw new RunTimeException(e.getMessage(), p);
+			throw new RunTimeException(e.getMessage(), p, currentLine);
 		}
 	}
 
@@ -399,6 +416,8 @@ public final class Interpreter {
 	 * @throws RunTimeException 
 	 */
 	char CharExpr(Node p) throws AbortException, ReturnException, RunTimeException { //TODO
+		selectCurrentLine(p);
+		
 		switch (p.kind) {
 		case Node.CHARCON:
 			return (char) p.val;					//Returning an Char constant
@@ -416,14 +435,14 @@ public final class Interpreter {
 				try {
 				    String s = Strings.get(StringExpr(p.left));
 				    if(IntExpr(p.right) < 0) {
-				        throw new RunTimeException("negative index chosen", p);
+				        throw new RunTimeException("negative index chosen", p, currentLine);
 				    }
 				    if(IntExpr(p.right) >= s.length()) {
-				        throw new RunTimeException("Too high index chosen", p);
+				        throw new RunTimeException("Too high index chosen", p, currentLine);
 				    }
 				    return Strings.get(StringExpr(p.left)).charAt(IntExpr(p.right));
 				} catch (BufferOverflowException e) {
-					throw new RunTimeException("Too high index chosen", p);
+					throw new RunTimeException("Too high index chosen", p, currentLine);
 				}
 			}
 		case Node.CALL:
@@ -431,13 +450,15 @@ public final class Interpreter {
 			return Memory.getCharReturnValue();
 
 		default:
-			throw new RunTimeException("Not supportet charexpr node kind", p);
+			throw new RunTimeException("Not supportet charexpr node kind", p, currentLine);
 
 		}
 	}
 
 	@SuppressWarnings("unused")
 	int StringExpr(Node p) throws AbortException, ReturnException, RunTimeException { //TODO
+		selectCurrentLine(p);
+		
 		switch (p.kind) {
 		case Node.IDENT:
 			return Memory.loadStringAddressSave(Adr(p),p);
@@ -463,7 +484,7 @@ public final class Interpreter {
 		case Node.C2S:
 			return Strings.put(Character.toString(CharExpr(p.left)));
 		default:
-			throw new RunTimeException("Not supportet node kind", p);
+			throw new RunTimeException("Not supportet node kind", p, currentLine);
 		}
 	}
 
@@ -472,6 +493,8 @@ public final class Interpreter {
 	 * @throws RunTimeException 
 	 */
 	boolean Condition(Node p) throws AbortException, ReturnException, RunTimeException {
+		selectCurrentLine(p);
+		
 		if(p.kind == Node.BOOLCON) {
 			if(p.val == 0)
 				return false;
@@ -481,7 +504,7 @@ public final class Interpreter {
 			if(p.type.kind == Struct.BOOL) {
 				return Memory.loadBoolSave(IdentAdr(p.obj), p);
 			} else {
-				throw new RunTimeException("type not supported as ident in condition", p);
+				throw new RunTimeException("type not supported as ident in condition", p, currentLine);
 			}
 		}
 		
@@ -512,7 +535,7 @@ public final class Interpreter {
 			case Node.NOT:
 				return !Condition(p.left); // NOT
 			default:
-				throw new RunTimeException("Not supportet struct node kind", p);
+				throw new RunTimeException("Not supportet struct node kind", p, currentLine);
 			}
 		case Struct.FLOAT:
 			switch (p.kind) {
@@ -537,7 +560,7 @@ public final class Interpreter {
 			case Node.NOT:
 				return !Condition(p.left); // NOT
 			default:
-				throw new RunTimeException("Not supportet float node kind", p);
+				throw new RunTimeException("Not supportet float node kind", p, currentLine);
 			}
 
 		case Struct.CHAR:
@@ -562,7 +585,7 @@ public final class Interpreter {
 			case Node.NOT:
 				return !Condition(p.left); // NOT
 			default:
-				throw new RunTimeException("Not supportet char node kind", p);
+				throw new RunTimeException("Not supportet char node kind", p, currentLine);
 			}
 			
 		case Struct.BOOL:
@@ -579,14 +602,14 @@ public final class Interpreter {
 			case Node.NOT:
 				return !Condition(p.left); // NOT
 			default:
-				throw new RunTimeException("Not supportet char node kind", p);
+				throw new RunTimeException("Not supportet char node kind", p, currentLine);
 			}
 
 			// case Struct.BOOL: break; // Boolean Variables
 			// case Struct.STRING: break; // Compiler implentation
 
 		default:
-			throw new RunTimeException("Not supportet condition node kind", p);
+			throw new RunTimeException("Not supportet condition node kind", p, currentLine);
 
 		}
 	}
@@ -595,7 +618,8 @@ public final class Interpreter {
 	 * Call Function working TODO
 	 * @throws RunTimeException 
 	 */
-	void Call(Node p) throws AbortException, ReturnException, RunTimeException { 
+	void Call(Node p) throws AbortException, ReturnException, RunTimeException {
+		selectCurrentLine(p);
 		
 		switch (p.obj.name) {
 		case "print":	//Our Print, can only print Characters
@@ -610,7 +634,7 @@ public final class Interpreter {
 				Memory.setIntReturnValue(Strings.get(StringExpr(p.left)).length());
 				break; 
 			default:
-				throw new RunTimeException("Not supportet length node kind", p);
+				throw new RunTimeException("Not supportet length node kind", p, currentLine);
 			}
 			break;
 		case "printf":
@@ -620,7 +644,7 @@ public final class Interpreter {
 				if(s.charAt(i) == '%' && s.length() > i +1 && !(i > 1 && s.charAt(i-1) == '\\')) {
 					curPrintfNode = curPrintfNode.next;
 					if(curPrintfNode == null) {
-						throw new RunTimeException("printf doesn't contain the required amount of arguments", p);
+						throw new RunTimeException("printf doesn't contain the required amount of arguments", p, currentLine);
 					} else {
 						i++;
 						String sHelp = "%" + s.charAt(i);
@@ -643,7 +667,7 @@ public final class Interpreter {
 											sHelp = "0";
 										break;
 									default:
-										throw new RunTimeException("invalid printf parameter", p);
+										throw new RunTimeException("invalid printf parameter", p, currentLine);
 								} 
 								break;
 							case 'x':
@@ -664,7 +688,7 @@ public final class Interpreter {
 											sHelp = "0";
 										break;
 									default:
-										throw new RunTimeException("invalid printf parameter", p);
+										throw new RunTimeException("invalid printf parameter", p, currentLine);
 								} 
 								break;
 							case 'f':
@@ -685,7 +709,7 @@ public final class Interpreter {
 											sHelp = "0.0";
 										break;
 									default:
-										throw new RunTimeException("invalid printf parameter", p);
+										throw new RunTimeException("invalid printf parameter", p, currentLine);
 								} 
 								break;
 							case 'c':
@@ -700,7 +724,7 @@ public final class Interpreter {
 										sHelp = "" + (char)CharExpr(curPrintfNode);
 										break;
 									default:
-										throw new RunTimeException("invalid printf parameter", p);
+										throw new RunTimeException("invalid printf parameter", p, currentLine);
 								} 
 								break;
 							default:
@@ -757,9 +781,14 @@ public final class Interpreter {
 			try {
 				Memory.openStackFrame(p.line,MethodContainer.getMethodId(p.obj.name), p.obj.size);
 			} catch (StackOverflowException e) {
-				throw new RunTimeException("StackOverFlow", p);
+				throw new RunTimeException("StackOverFlow", p, currentLine);
 			}
 
+			// add variable names into MemoryInformation Array
+			for(form = p.obj.locals;form != null;form = form.next) {
+				Memory.getMemoryInformation(Memory.getFramePointer() + form.adr).varName = form.name;
+			}
+			
 			// Saving the Object into the new C-- Function Memory Frame.
 			form = p.obj.locals;
 			a = 0;
@@ -787,7 +816,7 @@ public final class Interpreter {
 						Memory.storeStringAdress(Memory.getFramePointer()+ form.adr, (int) object[a]);
 						break;
 					default:
-						throw new RunTimeException("Not supportet node kind", p);
+						throw new RunTimeException("Not supportet node kind", p, currentLine);
 					}
 				}
 				a++;
@@ -799,9 +828,9 @@ public final class Interpreter {
 				StatSeq(p.obj.ast); 		// Starting the new C-- Function
 			} catch (ReturnException e) { 	// closing the C-- Function
 			} catch(BreakException e) {
-				throw new RunTimeException("break is not allowed here", p);
+				throw new RunTimeException("break is not allowed here", p, currentLine);
 			} catch(ContinueException e) {
-				throw new RunTimeException("continue is not allowed here", p);
+				throw new RunTimeException("continue is not allowed here", p, currentLine);
 			} finally {
 				if(p.obj.library)
 					libraryFunctionLevel --;
@@ -810,7 +839,7 @@ public final class Interpreter {
 			try {
 				Memory.closeStackFrame(); // Closing the C-- Function Frame
 			} catch (StackUnderflowException e) {
-				throw new RunTimeException("Stack Underflow", p);
+				throw new RunTimeException("Stack Underflow", p, currentLine);
 			}
 			break;
 		}
@@ -821,6 +850,7 @@ public final class Interpreter {
 	 * @throws RunTimeException 
 	 */
 	int Adr(Node p) throws ReturnException, AbortException, RunTimeException { // TODO
+		//selectCurrentLine(p);
 		
 		switch (p.kind) {
 		case Node.IDENT:					// more at @IdentAdr
@@ -830,19 +860,19 @@ public final class Interpreter {
 		case Node.INDEX:					//right value + Integer * sizeof(Integer)
 			int index = IntExpr(p.right);
 			if(index < 0) {
-		        throw new RunTimeException("negative index choosen", p);
+		        throw new RunTimeException("negative index choosen", p, currentLine);
 			}
 			if(p.left.type.elements == -1) {
 				// TODO buffer overflow detection
 			}
 			else if(index >= p.left.type.elements) {
-				throw new RunTimeException("too high index choosen", p);
+				throw new RunTimeException("too high index choosen", p, currentLine);
 			}
 			return Adr(p.left) + p.left.type.elemType.size * index;
 		case Node.REF://TODO
 			return Adr(p.left);
 		default:
-			throw new RunTimeException("Not supportet node kind", p);
+			throw new RunTimeException("Not supportet node kind", p, currentLine);
 		}
 	}
 
@@ -860,5 +890,10 @@ public final class Interpreter {
 			return Memory.loadIntSave(adr, null); // References saves the Address in an Integer Variable
 		else
 			return adr;					//Returns the normal Address Value
+	}
+	
+	void selectCurrentLine(Node p) {
+		if(p.line > 0)
+			currentLine = p.line;
 	}
 }

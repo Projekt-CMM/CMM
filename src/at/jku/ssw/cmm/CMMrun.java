@@ -2,6 +2,7 @@ package at.jku.ssw.cmm;
 
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Obj;
+import at.jku.ssw.cmm.debugger.Debugger;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.interpreter.Interpreter;
@@ -76,31 +77,30 @@ public class CMMrun extends Thread {
 		// Get main function from symbol table
 		Obj main = compiler.getSymbolTable().find("main");
 
-		// Try to open main function
-		try {
-			Memory.openStackFrame(main.ast.line,
-					MethodContainer.getMethodId("main"), main.size);
-		} catch (StackOverflowException e1) {
-			throw new IllegalStateException(e1);
-		}
-
 		System.out.println("[thread] interpreter thread started");
 
 		// Run main function
 		try {
-			interpreter.run(main.ast);
+			interpreter.run(main);
 		}
 		// Thrown when runtime error occurs
 		catch (final RunTimeException e) {
 
 			System.err.println("[ERROR] Interpreter thread threw RunTimeException");
+			
+			// print detailed StackTrace
+			if(DebugShell.maxLogLevel == DebugShell.State.LOG) {
+				e.printStackTrace();
+			}
 
 			// Clean thread data partly up; leave variable data for GUI runtime
 			// error mode
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-
-					debug.setErrorMode(e.getMessage(), -1);
+					if(e.getNode().line>0)
+						debug.setErrorMode(e.getMessage(), e.getNode().line);
+					else
+						debug.setErrorMode(e.getMessage(), e.getLine());
 				}
 			});
 			reply.setNotRunning();
