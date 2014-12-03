@@ -53,16 +53,7 @@ public class ProfileWindowEventListener implements WindowListener {
 	 */
 	@Override
 	public void windowClosing(WindowEvent e) {
-		if(profile == null)
-			GUILauncherMain.init();
-		else{
-			GUImain app = new GUImain(new GUImainSettings(profile));
-			app.start(false);
-		}
-			
-		//Close window
-		jFrame.dispose();
-		
+		GUIprofileSettings.dispose(profile, jFrame);		
 	}
 
 	@Override
