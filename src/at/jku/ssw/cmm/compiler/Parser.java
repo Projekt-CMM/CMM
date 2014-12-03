@@ -604,8 +604,10 @@ public class Parser {
 			design = Designator();
 			if (StartOf(4)) {
 				kind = AssignOp();
-				if(design.kind == Node.IDENT && design.obj.kind == Obj.CON) {
-				   SemErr(design.obj.name + " is declared as const");
+				if(design.kind == Node.BOOLCON || design.kind == Node.INTCON
+				   || design.kind == Node.FLOATCON || design.kind == Node.CHARCON
+				   || design.kind == Node.STRINGCON) {
+				   SemErr("assignment is not allowed for const values");
 				} else if(design.kind == Node.IDENT && design.obj.kind == Obj.PROC) {
 				   SemErr(design.obj.name + " is declared as function");
 				} 
@@ -658,6 +660,8 @@ public class Parser {
 				tab.checkFunctionParams(design.obj,st); 
 			} else if (la.kind == 43) {
 				Get();
+				if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
+				   SemErr("name must be an designator");
 				if(!design.type.isPrimitive() || design.type == Tab.boolType)
 				   SemErr("only a primitive type except boolean is allowed for increment operator");
 				e = tab.impliciteTypeCon(new Node(1), design.type);
@@ -665,6 +669,8 @@ public class Parser {
 				st = new Node(Node.ASSIGN,design,e,line); 
 			} else if (la.kind == 44) {
 				Get();
+				if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
+				   SemErr("name must be an designator");
 				if(!design.type.isPrimitive() || design.type == Tab.boolType)
 				   SemErr("only a primitive type except boolean is allowed for decrement operator");
 				e = tab.impliciteTypeCon(new Node(1), design.type);

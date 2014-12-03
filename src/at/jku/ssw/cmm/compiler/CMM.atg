@@ -525,8 +525,10 @@ Statement<out Node st>              (.  Node design;
                                         int line = la.line; .)
 ( Designator<out design>            
   ( AssignOp<out kind>              (.  // check if designator is from the correct kind
-                                        if(design.kind == Node.IDENT && design.obj.kind == Obj.CON) {
-                                            SemErr(design.obj.name + " is declared as const");
+                                        if(design.kind == Node.BOOLCON || design.kind == Node.INTCON
+                                            || design.kind == Node.FLOATCON || design.kind == Node.CHARCON
+                                            || design.kind == Node.STRINGCON) {
+                                            SemErr("assignment is not allowed for const values");
                                         } else if(design.kind == Node.IDENT && design.obj.kind == Obj.PROC) {
                                             SemErr(design.obj.name + " is declared as function");
                                         } .)
@@ -579,12 +581,16 @@ Statement<out Node st>              (.  Node design;
                                         st = new Node(Node.CALL,e,null,line);
                                         st.obj = design.obj;
                                         tab.checkFunctionParams(design.obj,st); .) 
-  | "++"                            (.  if(!design.type.isPrimitive() || design.type == Tab.boolType)
+  | "++"                            (.  if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
+                                            SemErr("name must be an designator");
+                                        if(!design.type.isPrimitive() || design.type == Tab.boolType)
                                             SemErr("only a primitive type except boolean is allowed for increment operator");
                                         e = tab.impliciteTypeCon(new Node(1), design.type);
                                         e = new Node(Node.PLUS, design, e, design.type);
                                         st = new Node(Node.ASSIGN,design,e,line); .)
-  | "--"                            (.  if(!design.type.isPrimitive() || design.type == Tab.boolType)
+  | "--"                            (.  if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
+                                            SemErr("name must be an designator");
+                                        if(!design.type.isPrimitive() || design.type == Tab.boolType)
                                             SemErr("only a primitive type except boolean is allowed for decrement operator");
                                         e = tab.impliciteTypeCon(new Node(1), design.type);
                                         e = new Node(Node.MINUS, design, e, design.type);

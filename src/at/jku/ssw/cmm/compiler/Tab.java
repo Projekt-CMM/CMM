@@ -73,6 +73,24 @@ public class Tab {
 			curScope.size += type.size;
 			obj.level = curLevel;
 		}
+		
+		//--- check if function or type already exists in universe scope
+		if(kind == Obj.PROC || kind == Obj.TYPE) {
+			Scope checkScope = curScope;
+			while(checkScope.outer != null) {
+				checkScope = checkScope.outer;
+				Obj p =  checkScope.locals;
+				while (p != null) {
+					if (p.name.equals(name)) {
+						if(p.isForward) {
+							return p;
+						}
+						parser.SemErr(name + " declared twice");
+					}
+					p = p.next;
+				}
+			}
+		}
 		//--- insert
 		Obj p = curScope.locals, last = null;
 		while (p != null) {
@@ -174,8 +192,25 @@ public class Tab {
 	 */
 	public void checkForwardParams(Obj oldPar, Obj newPar) {
 		while(oldPar != null && newPar != null) {
-			if(oldPar.type != newPar.type) {
+			if(oldPar.type.kind != newPar.type.kind) {
 				parser.SemErr("parameter of function and forward declaration has not the same type");
+			} else if(oldPar.type.kind == Struct.ARR) {
+				Struct oldParElemType = oldPar.type.elemType;
+				Struct newParElemType = newPar.type.elemType;
+
+				while(oldParElemType.kind == Struct.ARR && newParElemType.kind == Struct.ARR) {
+					oldParElemType = oldParElemType.elemType;
+					newParElemType = newParElemType.elemType;
+				}
+				if(oldParElemType.kind == Struct.ARR || newParElemType.kind == Struct.ARR) {
+					parser.SemErr("array parameter of function and forward declaration have not the same dimenstions");
+				} else if(oldParElemType.kind != newParElemType.kind) {
+					parser.SemErr("parameter of function and forward declaration has not the same type");
+				}
+				if(oldPar.type.elemType.kind == Struct.STRUCT) {
+					parser.SemErr("struct array as parameter is not allowed");
+				}
+				
 			}
 			if(oldPar.isRef != newPar.isRef) {
 				parser.SemErr("parameter of function or forward declaration is ref, in the other not");
