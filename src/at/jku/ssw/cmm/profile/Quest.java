@@ -25,35 +25,94 @@ import org.xml.sax.SAXException;
 
 public class Quest {
 
-	//File Seperator
+	/**
+	 * The File Seperator of the System
+	 */
 	public static String sep = System.getProperty("file.separator");
 	
-	//Variablen abgeleitet von der quest.xml
-	private String title;					//Titel der Quest
-	private String token;					//Token welches man beim Abschluss bekommt
-	private List<String> nextQuest;			//nachste Quest
-	private int level;						//den zu setzendesn Level bei geschaffter Quest.
-	private int minLevel;					//Level Anforderung - vom Package vorgegeben
-	private boolean description;			//Beschreibung: description.html
-	private boolean style;					//Stylesheet: style.css
-	private String state;					//Status wird mit Profil abgeglichen
-	private String reward;					//Reward welcher beim Abschluss einer Quest angezeigt wird.
-	private Date date;						//Datum der letzten Bearbeitung
-		
-	//Ordner der Quest
-	private String initPath;				//Inizialisierungspfad:
-	private String packagePath;				//Package-Ordner
-	private String questPath;				//Quest-Ordner
+	/**
+	 * Main Title of the Quest
+	 */
+	private String title;					
+
+	/**
+	 * TODO Tokens String
+	 */
+	private String token;					
+
+	/**
+	 * List for next Quests, there are opened when the current quest is finished
+	 */
+	private List<String> nextQuest;			
+
+	/**
+	 * Level to set on quest finish
+	 */
+	private int level;						
+
+	/**
+	 * The minimun Lefel of the quest
+	 */
+	private int minLevel;					
+
+	/**
+	 * true if the quest has a description.html
+	 */
+	private boolean description;			
+
+	/**
+	 * true if the quest has a style.css
+	 */
+	private boolean style;					
 	
-	//Current Quest;
+	/**
+	 * State of the Quest, this can be: locked, selectable, inprogress, open or finished
+	 */
+	private String state;					
+
+	/**
+	 * Reward which is shown on Quest finish
+	 */
+	private String reward;					
+
+	/**
+	 * Last edited Date
+	 */
+	private Date date;						
+		
+	/**
+	 * Initial path of the Quest
+	 */
+	private String initPath;				
+
+	/**
+	 * Packages folderName of the Quest
+	 */
+	private String packagePath;				
+	
+	/**
+	 * FolderName of the Quest
+	 */
+	private String questPath;				
+	
+	/**
+	 * Only one quest can be done at once
+	 */
 	public static Quest currentQuest;
 	
+	
+	/**
+	 * Files and folderNames
+	 */
 	public static final String
 		FILE_DESCRIPTION = "description.html",
 		FILE_STYLE = "style.css",
 		FiLE_QUEST = "quest.xml",
 		FOLDER_TOKENS = "tokens";
 	
+	/**
+	 * Strings for reading the XML file
+	 */
 	public static final String
 		XML_QUEST = "quest",
 		XML_TITLE = "title",
@@ -63,6 +122,9 @@ public class Quest {
 		XML_STATE = "state",
 		XML_REWARD = "reward";
 
+	/**
+	 * Strings for the correct State
+	 */
 	public static final String
 		STATE_LOCKED = "locked",
 		STATE_SELECTABLE = "selectable",
@@ -70,28 +132,28 @@ public class Quest {
 		STATE_OPEN = "open",
 		STATE_FINISHED = "finished";
 	
-	//Time Format
-	public static final String
-	TIME_FORMAT = "dd-MM-yyyy:HH:mm:SS";
+	/**
+	 * The Time format for saving Quests, or getting Quests
+	 */
+	public static final String TIME_FORMAT = "dd-MM-yyyy:HH:mm:SS";
 		
 	/**
-	 * Reads one Quest
+	 * Reads only one Quest, but only the .xml file.
 	 * @param allPackagesPath: the path where all Packages are saved
 	 * @param packagePath: the foldername of the packagePath
 	 * @param questPath: the foldername of the quests folder
 	 * @return quest
 	 */
 	public static Quest ReadQuest(String allPackagesFolder, String packageFolder, String questFolder) {	
+			
 			Quest quest = new Quest();
 			String path = allPackagesFolder + sep + packageFolder + sep + questFolder;
 			
+			//Read all FileNames of the current path set before
 			List<String> fileNames = ReadFileNames(path);
 			
-			//Folder has to have any Files and a Quest File.
 			
-				//Foldername = questtitle was earlier so
-				//quest.setTitle(questFolder);
-				
+			//if the files are there, setting them to true
 				if(fileNames.contains(Quest.FILE_DESCRIPTION))
 					quest.setDescription(true);
 				if(fileNames.contains(Quest.FILE_STYLE))
@@ -103,16 +165,30 @@ public class Quest {
 				quest.setQuestPath(questFolder);
 				
 				try {
+					//Reading the XML File
 					quest = ReadQuestXML(path,quest);
 				} catch (ParserConfigurationException | SAXException | IOException e) {
+					
+					//For Debugging diseases
 					e.printStackTrace();
 				}
 				
+				//Returning the loaded Quest
 				return quest;
 				
 
 	}
 	
+	/**
+	 * Only reads the .xml File and adding the current files into the quest
+	 * @param path: Path of the Profile
+	 * @param quest: quest file without .xml
+	 * @return the quest file
+	 * 
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
 	private static Quest ReadQuestXML(String path, Quest quest) throws ParserConfigurationException, SAXException, IOException{
 
 		List<String> nextQuest = new ArrayList<>();
