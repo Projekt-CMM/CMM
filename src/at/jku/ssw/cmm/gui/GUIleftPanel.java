@@ -5,6 +5,7 @@ import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -280,12 +281,14 @@ public class GUIleftPanel {
 	/**
 	 * Increments the input highlighter (input text area), which marks the
 	 * already read characters, by one.
+	 * @throws InterruptedException 
+	 * @throws InvocationTargetException 
 	 */
-	public void increaseInputHighlighter() {
+	public void increaseInputHighlighter() throws InvocationTargetException, InterruptedException {
 
 		this.inputHighlightOffset++;
 
-		java.awt.EventQueue.invokeLater(new Runnable() {
+		java.awt.EventQueue.invokeAndWait(new Runnable() {
 			public void run() {
 				highlightInputPane();
 			}
