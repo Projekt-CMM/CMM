@@ -35,4 +35,14 @@ public class PropertiesSliderListener {
 			master.updateTextSize();
 		}
 	};
+	
+	public ChangeListener sliderVarListener = new ChangeListener() {
+
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			JSlider slider = (JSlider)e.getSource();
+			main.getSettings().setVarSize(GUIProperties.sliderPosToFont(slider.getValue()));
+			master.updateTextSize();
+		}
+	};
 }

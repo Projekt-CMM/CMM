@@ -254,6 +254,10 @@ public class GUImain {
 	public GUIleftPanel getLeftPanel() {
 		return this.leftPanelControl;
 	}
+	
+	public GUIrightPanel getRightPanel() {
+		return this.rightPanelControl;
+	}
 
 	/**
 	 * Invokes the Quest GUI window
