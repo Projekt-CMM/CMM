@@ -195,12 +195,12 @@ public class GUIcontrolPanel {
 		
 		this.jButtonPlay.setText("\u25AE\u25AE");
 		
-		this.jButtonStep.setToolTipText("<html><b>" + _("pause") + " (F5)" 
+		this.jButtonPlay.setToolTipText("<html><b>" + _("pause") + " (F5)" 
 				+ "</b><br>"
 				+ _("pause automatic debugging")
 				+ "</html>");
 		
-		this.jButtonPlay.setToolTipText("<html><b>" + _("next step") + " (F6)"
+		this.jButtonStep.setToolTipText("<html><b>" + _("next step") + " (F6)"
 				+ "</b><br>" + _("proceed to next step manually")
 				+ "</html>");
 	}
@@ -220,12 +220,12 @@ public class GUIcontrolPanel {
 		
 		this.jButtonPlay.setText("\u25B6");
 		
-		this.jButtonStep.setToolTipText("<html><b>" + _("play") + " (F5)" 
+		this.jButtonPlay.setToolTipText("<html><b>" + _("play") + " (F5)" 
 				+ "</b><br>"
 				+ _("run automatic debugging")
 				+ "</html>");
 		
-		this.jButtonPlay.setToolTipText("<html><b>" + _("next step") + " (F6)" 
+		this.jButtonStep.setToolTipText("<html><b>" + _("next step") + " (F6)" 
 				+ "</b><br>" + _("proceed to next step manually")
 				+ "</html>");
 	}
