@@ -14,7 +14,6 @@ import javax.swing.KeyStroke;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.MenuBarControl;
 import at.jku.ssw.cmm.gui.event.MenuBarEventListener;
-import at.jku.ssw.cmm.profile.Profile;
 
 /**
  * Contains a static method to initialize the menu bar and its drop-down menus for the main GUI
@@ -93,6 +92,16 @@ public class InitMenuBar {
 			exitMI.addActionListener(listener.exitHandler);
 			exitMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, ActionEvent.ALT_MASK));
 			fileM.add(exitMI);
+			
+		/* --- MENU: "edit" --- */
+		JMenu editM = new JMenu(_("Edit"));
+		menubar.add(editM);
+				
+			// --- edit -> properties ---
+			JMenuItem propertiesMI = new JMenuItem(_("Properties"));
+			propertiesMI.addActionListener(listener.propertiesHandler);
+			propertiesMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
+			editM.add(propertiesMI);
 		
 		/* --- MENU: "progress" --- */
 		if( main.hasAdvancedGUI() ){

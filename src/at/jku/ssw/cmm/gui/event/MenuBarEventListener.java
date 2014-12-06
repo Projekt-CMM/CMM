@@ -15,10 +15,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import at.jku.ssw.cmm.gui.GUImain;
-import at.jku.ssw.cmm.gui.GUImainSettings;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
+import at.jku.ssw.cmm.gui.properties.GUIProperties;
+import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.settings.GUIprofileSettings;
@@ -262,6 +263,16 @@ public class MenuBarEventListener {
 
 			if(main.getSaveManager().safeCheck(_("Closing C Compact")))
 				WindowEventListener.updateAndExit(jFrame, settings);
+		}
+	};
+	
+	public ActionListener propertiesHandler = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			GUIProperties p = new GUIProperties(main);
+			p.start();
 		}
 	};
 

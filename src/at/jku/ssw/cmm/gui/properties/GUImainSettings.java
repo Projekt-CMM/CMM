@@ -1,4 +1,4 @@
-package at.jku.ssw.cmm.gui;
+package at.jku.ssw.cmm.gui.properties;
 
 import static at.jku.ssw.cmm.gettext.Language._;
 

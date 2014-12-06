@@ -16,7 +16,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
-import at.jku.ssw.cmm.gui.GUImainSettings;
+import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 
 /**
  * Class containing static methods to initialize the left part of the main GUI. This includes functions to
