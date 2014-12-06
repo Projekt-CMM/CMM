@@ -35,6 +35,9 @@ public class TreeTable extends JTable {
     public TreeTable( GUImain main, TreeTableDataModel treeTableModel ){
         super();
         
+        super.getTableHeader().setToolTipText("<html><b>" + _("Variable table columns") + "</b><br>" +
+        		_("You can change the width a column by<br>dragging and sliding its border.") + "</html>");
+        
         this.main = main;
         
         //Initialize button renderer
