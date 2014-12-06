@@ -42,7 +42,7 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
         super.setCellRenderer(new TreeRenderer());
         this.treeTable = treeTable;
         
-        setRowHeight(getRowHeight());
+        setRowHeight(getRowHeight()+1);
     }
  
     /**
@@ -52,7 +52,7 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
         if (rowHeight > 0) {
             super.setRowHeight(rowHeight);
             if (treeTable != null && treeTable.getRowHeight() != rowHeight) {
-                treeTable.setRowHeight(getRowHeight());
+                treeTable.setRowHeight(getRowHeight()+1);
             }
         }
     }

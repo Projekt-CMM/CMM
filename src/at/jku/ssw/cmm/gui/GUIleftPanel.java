@@ -139,6 +139,9 @@ public class GUIleftPanel {
 		// Text area for output
 		this.jOutputPane = InitLeftPanel.initOutputPane(panel2);
 		
+		// Update text panel font sizes
+		this.updateFontSize();
+		
 		panel2.setMinimumSize(new Dimension(200, 150));
 		panel2.setPreferredSize(new Dimension(200, 200));
 		panel2.setMaximumSize(new Dimension(2000, 2000));
@@ -166,6 +169,13 @@ public class GUIleftPanel {
 		// this.jInputPane.getDocument().addDocumentListener(this.codeListener);
 
 		return jPanelLeft;
+	}
+	
+	public void updateFontSize(){
+		this.jInputPane.setFont(this.jInputPane.getFont().deriveFont((float)this.main.getSettings().getTextSize()));
+		this.jOutputPane.setFont(this.jOutputPane.getFont().deriveFont((float)this.main.getSettings().getTextSize()));
+		
+		this.jSourcePane.setFont(this.jSourcePane.getFont().deriveFont((float)this.main.getSettings().getCodeSize()));
 	}
 
 	/**

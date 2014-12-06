@@ -117,6 +117,22 @@ public class GUImain {
 
 		// Load translations
 		Language.loadLanguage(this.settings.getLanguage() + ".po");
+		
+		/*try {
+			UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		
+		/*try {
+            UIManager.setLookAndFeel("com.seaglasslookandfeel.SeaGlassLookAndFeel");
+            UIManager.put("Synthetica.rootPane.titlePane.title.center", true);
+            UIManager.put("Synthetica.translucency4DisabledIcons.enabled", true); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
 
 		// Initialize the window
 		this.jFrame = new JFrame(VERSION);

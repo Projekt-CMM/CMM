@@ -51,6 +51,8 @@ public class TreeTable extends JTable {
         
         //No column swapping / reordering
         super.getTableHeader().setReorderingAllowed(false);
+        
+        super.setFont(super.getFont().deriveFont((float)20.0));
     }
     
     public void setTreeModel( TreeTableDataModel treeTableModel ){
@@ -70,6 +72,8 @@ public class TreeTable extends JTable {
     	
     	//Create JTree
         tree = new TreeTableCellRenderer(this, treeTableModel);
+        
+        tree.setFont(tree.getFont().deriveFont((float)20.0));
         
         
         this.modelAdapter = new TreeTableModelAdapter(treeTableModel, tree);
