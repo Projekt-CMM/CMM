@@ -3,11 +3,14 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.Dimension;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
@@ -39,15 +42,19 @@ public class GUImain {
 	 *            The shell arguments.
 	 */
 	public static void main(String[] args) {
-		GUImain app = new GUImain(new GUImainSettings(null));
+		final GUImain app = new GUImain(new GUImainSettings(null));
 
-		boolean test = false;
-
-		for (String s : args)
+		final boolean test = false;
+		/*for (String s : args)
 			if (s.equals("-t"))
-				test = true;
-
-		app.start(test);
+				test = true;*/
+		
+		SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+            	app.start(test);
+            }
+		});
+		
 
 	}
 
@@ -109,23 +116,40 @@ public class GUImain {
 	 * 
 	 * @param test
 	 *            TRUE if program shall exit after init (for GUI test)
+	 * @throws InterruptedException 
+	 * @throws InvocationTargetException 
 	 */
 	public void start(boolean test) {
-
+		/*try {
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());*/
+		
+		// Set look and feel
+        
+        // set SeaGlass laf if available
+        try {
+            UIManager.installLookAndFeel("SeaGlass", "com.seaglasslookandfeel.SeaGlassLookAndFeel");
+            UIManager.setLookAndFeel("com.seaglasslookandfeel.SeaGlassLookAndFeel");
+        } catch (Exception e) {
+            System.err.println("Seaglass LAF not available using Ocean.");
+            try {
+                UIManager.setLookAndFeel(new MetalLookAndFeel());
+            } catch (Exception e2) {
+                System.err.println("Unable to use Ocean LAF using default.");
+            }
+        }
+		
 		// EDT Thread analysis
 		if (SwingUtilities.isEventDispatchThread())
 			DebugShell.out(State.LOG, Area.SYSTEM, "main GUI running on EDT.");
 
 		// Load translations
 		Language.loadLanguage(this.settings.getLanguage() + ".po");
-		
-		/*try {
-			UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException | UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 		
 		/*try {
             UIManager.setLookAndFeel("com.seaglasslookandfeel.SeaGlassLookAndFeel");

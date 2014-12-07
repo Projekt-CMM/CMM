@@ -16,7 +16,7 @@ public class QuestTester {
 	
 	public static void main(String[] args){
 		String[] ignore = {"\n", ",", ";"};//TODO user regex
-		QuestTester qt = new QuestTester("qt/input.txt", "qt/ref.cmm", "qt/user.cmm", ignore);
+		QuestTester qt = new QuestTester("qt/input.cmm", "qt/ref.cmm", "qt/user.cmm", ignore);
 		
 		QuestMatchError e = qt.test();
 		
@@ -153,13 +153,6 @@ public class QuestTester {
 		
 		if( sourceCode == null )
 			throw new CompilerErrorException("Source code is null", null);
-		
-		/*String[] sc = sourceCode.split("\n");
-		int i = 1;
-		for( String s : sc ){
-			System.out.println("" + i + ": " + s);
-			i++;
-		}*/
 
 		// Object for the compiler is allocated
 		Compiler compiler = new Compiler();

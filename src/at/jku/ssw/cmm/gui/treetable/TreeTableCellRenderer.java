@@ -55,7 +55,8 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
      */
     public void setRowHeight(int rowHeight) {
         if (rowHeight > 0) {
-            super.setRowHeight(rowHeight+this.main.getSettings().getVarOffset());
+            //TODO The line below causes NullPointerException with some L&Fs
+        	super.setRowHeight(rowHeight+this.main.getSettings().getVarOffset());
             if (treeTable != null && treeTable.getRowHeight() != rowHeight+this.main.getSettings().getVarOffset()) {
                 treeTable.setRowHeight(getRowHeight()+this.main.getSettings().getVarOffset());
             }
