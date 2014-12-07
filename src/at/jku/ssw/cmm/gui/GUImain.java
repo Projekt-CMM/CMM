@@ -44,14 +44,16 @@ public class GUImain {
 	public static void main(String[] args) {
 		final GUImain app = new GUImain(new GUImainSettings(null));
 
-		final boolean test = false;
-		/*for (String s : args)
+		boolean test = false;
+		for (String s : args)
 			if (s.equals("-t"))
-				test = true;*/
+				test = true;
+		
+		final boolean t = test;
 		
 		SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-            	app.start(test);
+            	app.start(t);
             }
 		});
 		
@@ -128,8 +130,6 @@ public class GUImain {
 			e.printStackTrace();
 		}
 		MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());*/
-		
-		// Set look and feel
         
         // set SeaGlass laf if available
         try {
@@ -150,14 +150,6 @@ public class GUImain {
 
 		// Load translations
 		Language.loadLanguage(this.settings.getLanguage() + ".po");
-		
-		/*try {
-            UIManager.setLookAndFeel("com.seaglasslookandfeel.SeaGlassLookAndFeel");
-            UIManager.put("Synthetica.rootPane.titlePane.title.center", true);
-            UIManager.put("Synthetica.translucency4DisabledIcons.enabled", true); 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
 
 		// Initialize the window
 		this.jFrame = new JFrame(VERSION);
