@@ -36,6 +36,7 @@ public class Tab {
 	public static Obj __is_def_float__Proc;
 	public static Obj __is_def_char__Proc;
 	public static Obj __is_def_string__Proc;
+	public static Obj __assert__Proc;
 	
 	private Parser parser;           // for error messages
 
@@ -725,6 +726,13 @@ public class Tab {
 		lengthProc.nPars = 1;
 		
 		timeProc = insert(Obj.PROC, "time", intType, -1);
+		
+		__assert__Proc = insert(Obj.PROC, "__assert__",  noType, -1);
+		__assert__Proc.locals = new Obj(Obj.VAR,"__condition__",boolType, -1);
+		__assert__Proc.size = boolType.size;
+		__assert__Proc.locals.next = new Obj(Obj.VAR,"__error_message__",stringType, -1);
+		__assert__Proc.size += stringType.size;
+		__assert__Proc.nPars = 2;
 		
 		__is_def_bool__Proc = insert(Obj.PROC, "__is_def_bool__", boolType, -1);
 		__is_def_bool__Proc.locals = new Obj(Obj.VAR,"__bool__",boolType, -1);

@@ -684,6 +684,12 @@ public final class Interpreter {
 		case "__is_def_string__":
 			Memory.setBoolReturnValue(Memory.getMemoryInformation(IdentAdr(p.left.obj)).isInitialized);
 			break;
+		case "__assert__":
+			if(!BoolExpr(p.left)) {
+				String s = Strings.get(StringExpr(p.left.next));
+				throw new RunTimeException(s, p, currentLine);
+			}
+			break;
 		case "printf":
 			String s = Strings.get(StringExpr(p.left));
 			Node curPrintfNode = p.left;
