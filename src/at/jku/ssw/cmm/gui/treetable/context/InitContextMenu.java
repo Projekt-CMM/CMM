@@ -22,6 +22,8 @@ public class InitContextMenu {
 		menu.add(ic);
 		ic.addActionListener(new ContextMenuListener(main, name, call));*/
 		
+		menu.repaint();
+		
 		return menu;
 	}
 }
