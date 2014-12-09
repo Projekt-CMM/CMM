@@ -677,6 +677,13 @@ public final class Interpreter {
 			// TODO overflow-time: Tue, 19 Jan 2038 03:14:07 GMT
 			Memory.setIntReturnValue((int)(date.getTime()/1000));
 			break;
+		case "__is_def_bool__":
+		case "__is_def_int__":
+		case "__is_def_float__":
+		case "__is_def_char__":
+		case "__is_def_string__":
+			Memory.setBoolReturnValue(Memory.getMemoryInformation(IdentAdr(p.left.obj)).isInitialized);
+			break;
 		case "printf":
 			String s = Strings.get(StringExpr(p.left));
 			Node curPrintfNode = p.left;

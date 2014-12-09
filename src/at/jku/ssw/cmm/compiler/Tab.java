@@ -31,6 +31,11 @@ public class Tab {
 	public static Obj readProc;
 	public static Obj lengthProc;
 	public static Obj timeProc;
+	public static Obj __is_def_bool__Proc;
+	public static Obj __is_def_int__Proc;
+	public static Obj __is_def_float__Proc;
+	public static Obj __is_def_char__Proc;
+	public static Obj __is_def_string__Proc;
 	
 	private Parser parser;           // for error messages
 
@@ -720,5 +725,30 @@ public class Tab {
 		lengthProc.nPars = 1;
 		
 		timeProc = insert(Obj.PROC, "time", intType, -1);
+		
+		__is_def_bool__Proc = insert(Obj.PROC, "__is_def_bool__", boolType, -1);
+		__is_def_bool__Proc.locals = new Obj(Obj.VAR,"__bool__",boolType, -1);
+		__is_def_bool__Proc.size = boolType.size;
+		__is_def_bool__Proc.nPars = 1;
+		
+		__is_def_int__Proc = insert(Obj.PROC, "__is_def_int__", boolType, -1);
+		__is_def_int__Proc.locals = new Obj(Obj.VAR,"__int__",intType, -1);
+		__is_def_int__Proc.size = intType.size;
+		__is_def_int__Proc.nPars = 1;
+		
+		__is_def_float__Proc = insert(Obj.PROC, "__is_def_float__", boolType, -1);
+		__is_def_float__Proc.locals = new Obj(Obj.VAR,"__float__",floatType, -1);
+		__is_def_float__Proc.size = floatType.size;
+		__is_def_float__Proc.nPars = 1;
+		
+		__is_def_char__Proc = insert(Obj.PROC, "__is_def_char__", boolType, -1);
+		__is_def_char__Proc.locals = new Obj(Obj.VAR,"__char__",charType, -1);
+		__is_def_char__Proc.size = charType.size;
+		__is_def_char__Proc.nPars = 1;
+		
+		__is_def_string__Proc = insert(Obj.PROC, "__is_def_string__", boolType, -1);
+		__is_def_string__Proc.locals = new Obj(Obj.VAR,"__string__",stringType, -1);
+		__is_def_string__Proc.size = stringType.size;
+		__is_def_string__Proc.nPars = 1;
 	}
 }
