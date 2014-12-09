@@ -127,6 +127,7 @@ int library atoi(string s) {
 }*/
 
 /** get random number
+ *
  * implemented as Xorshift
  * https://de.wikipedia.org/wiki/Xorshift
  *

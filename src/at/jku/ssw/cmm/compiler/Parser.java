@@ -652,18 +652,32 @@ public class Parser {
 		}
 		case 47: {
 			Get();
-			Node commands, relopCommand, relSt; 
+			Node command = null, relopCommand = null, relSt; 
+			breakLevel ++; 
+			continueLevel ++; 
 			Expect(6);
-			commands = Command();
+			if (la.kind == 1) {
+				command = Command();
+			} else if (la.kind == 12) {
+			} else SynErr(72);
+			if(command == null)
+			   command = new Node(Node.NOP,null,null,line); 
 			Expect(12);
 			con = Condition();
 			Expect(12);
-			relopCommand = Command();
+			if (la.kind == 1) {
+				relopCommand = Command();
+			} else if (la.kind == 7) {
+			} else SynErr(73);
+			if(relopCommand == null)
+			   relopCommand = new Node(Node.NOP,null,null,line); 
 			Expect(7);
 			relSt = Statement();
+			breakLevel --; 
+			continueLevel --;
 			relopCommand.next = relSt;
-			commands.next = relopCommand;
-			st = new Node(Node.FOR,con,commands,line); 
+			command.next = relopCommand;
+			st = new Node(Node.FOR,con,command,line); 
 			break;
 		}
 		case 48: {
@@ -692,7 +706,7 @@ public class Parser {
 					} else if (la.kind == 4) {
 						Get();
 						n = new Node(tab.charVal(t.val)); 
-					} else SynErr(72);
+					} else SynErr(74);
 					if(n.type != e.type)
 					   SemErr("type of switch has to match type of case value");
 					newStat = new Node(Node.CASE,n,null,line); 
@@ -791,7 +805,7 @@ public class Parser {
 			st = null; 
 			break;
 		}
-		default: SynErr(73); break;
+		default: SynErr(75); break;
 		}
 		return st;
 	}
@@ -916,7 +930,7 @@ public class Parser {
 			e = tab.impliciteTypeCon(new Node(1), design.type);
 			e = new Node(Node.MINUS, design, e, design.type);
 			st = new Node(Node.ASSIGN,design,e,line); 
-		} else SynErr(74);
+		} else SynErr(76);
 		return st;
 	}
 
@@ -1066,7 +1080,7 @@ public class Parser {
 			kind=Node.ASSIGNBITOR; 
 			break;
 		}
-		default: SynErr(75); break;
+		default: SynErr(77); break;
 		}
 		return kind;
 	}
@@ -1149,7 +1163,7 @@ public class Parser {
 			Get();
 			con = Condition();
 			Expect(7);
-		} else SynErr(76);
+		} else SynErr(78);
 		return con;
 	}
 
@@ -1187,7 +1201,7 @@ public class Parser {
 			kind = Node.LEQ; 
 			break;
 		}
-		default: SynErr(77); break;
+		default: SynErr(79); break;
 		}
 		return kind;
 	}
@@ -1222,7 +1236,7 @@ public class Parser {
 		} else if (la.kind == 34) {
 			Get();
 			kind=Node.BITOR; 
-		} else SynErr(78);
+		} else SynErr(80);
 		return kind;
 	}
 
@@ -1257,7 +1271,7 @@ public class Parser {
 		} else if (la.kind == 62) {
 			Get();
 			kind=Node.SHIFTRIGHT; 
-		} else SynErr(79);
+		} else SynErr(81);
 		return kind;
 	}
 
@@ -1288,7 +1302,7 @@ public class Parser {
 		} else if (la.kind == 57) {
 			Get();
 			kind=Node.MINUS; 
-		} else SynErr(80);
+		} else SynErr(82);
 		return kind;
 	}
 
@@ -1370,7 +1384,7 @@ public class Parser {
 			Get();
 			n = BinExpr();
 			Expect(7);
-		} else SynErr(81);
+		} else SynErr(83);
 		return n;
 	}
 
@@ -1385,7 +1399,7 @@ public class Parser {
 		} else if (la.kind == 65) {
 			Get();
 			kind=Node.REM; 
-		} else SynErr(82);
+		} else SynErr(84);
 		return kind;
 	}
 
@@ -1501,15 +1515,17 @@ class Errors {
 			case 71: s = "invalid Type"; break;
 			case 72: s = "invalid Statement"; break;
 			case 73: s = "invalid Statement"; break;
-			case 74: s = "invalid Command"; break;
-			case 75: s = "invalid AssignOp"; break;
-			case 76: s = "invalid CondFact"; break;
-			case 77: s = "invalid Relop"; break;
-			case 78: s = "invalid Binop"; break;
-			case 79: s = "invalid Shiftop"; break;
-			case 80: s = "invalid Addop"; break;
-			case 81: s = "invalid Factor"; break;
-			case 82: s = "invalid Mulop"; break;
+			case 74: s = "invalid Statement"; break;
+			case 75: s = "invalid Statement"; break;
+			case 76: s = "invalid Command"; break;
+			case 77: s = "invalid AssignOp"; break;
+			case 78: s = "invalid CondFact"; break;
+			case 79: s = "invalid Relop"; break;
+			case 80: s = "invalid Binop"; break;
+			case 81: s = "invalid Shiftop"; break;
+			case 82: s = "invalid Addop"; break;
+			case 83: s = "invalid Factor"; break;
+			case 84: s = "invalid Mulop"; break;
 			default: s = "error " + n; break;
 		}
 		storeError(line, col, s);
