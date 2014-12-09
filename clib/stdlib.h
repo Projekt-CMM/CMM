@@ -12,6 +12,13 @@ string library ftoa(float f);
 int library atoi(string s);
 //float library atof(string s);
 
+int library rand();
+void library srand (int seed);
+
+//------------------- variable declarations
+
+int library __cur_rand_generator_state__;
+
 //------------------- declarations
 
 /** convert int to string
@@ -118,3 +125,34 @@ int library atoi(string s) {
     }
     return ret;
 }*/
+
+/** get random number
+ * implemented as Xorshift
+ * https://de.wikipedia.org/wiki/Xorshift
+ *
+ * @working yes
+ */
+int library rand() {
+    // the random number generator cannot work with 0
+    if(__cur_rand_generator_state__ == 0)
+        __cur_rand_generator_state__ += 97;
+
+    // doing Xorshift
+    __cur_rand_generator_state__ ^= __cur_rand_generator_state__ << 13;
+    __cur_rand_generator_state__ ^= __cur_rand_generator_state__ >> 17;
+    __cur_rand_generator_state__ ^= __cur_rand_generator_state__ << 5;
+
+    // only positive results are allowed
+    if(__cur_rand_generator_state__ < 0)
+        __cur_rand_generator_state__ *= -1;
+
+    return __cur_rand_generator_state__;
+}
+
+/** init random number generator
+ *
+ * @working yes
+ */
+void library srand (int seed) {
+    __cur_rand_generator_state__ = seed;
+}

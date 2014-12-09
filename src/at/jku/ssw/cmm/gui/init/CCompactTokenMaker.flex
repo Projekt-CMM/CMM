@@ -262,6 +262,7 @@ URL                 = (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCh
    "printf" |
    "read"   |
    "write"  |
+   "time"   |
    
    /* math.h Functions*/
    "acos"   |
@@ -293,6 +294,8 @@ URL                 = (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCh
 /* "atof"   | */
    "ftoa"   |
    "itoa"   |
+   "rand"   |
+   "srand"  |
    
    /* stdio.h Functions*/
    "prints" |

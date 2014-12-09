@@ -30,6 +30,7 @@ public class Tab {
 	public static Obj printfProc;
 	public static Obj readProc;
 	public static Obj lengthProc;
+	public static Obj timeProc;
 	
 	private Parser parser;           // for error messages
 
@@ -717,5 +718,7 @@ public class Tab {
 		lengthProc.locals = new Obj(Obj.VAR,"string",stringType, -1);
 		lengthProc.size = stringType.size;
 		lengthProc.nPars = 1;
+		
+		timeProc = insert(Obj.PROC, "time", intType, -1);
 	}
 }

@@ -5,6 +5,8 @@ package at.jku.ssw.cmm.interpreter;
  * TODO: JUnit
  */
 import java.nio.BufferOverflowException;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Struct;
@@ -140,7 +142,9 @@ public final class Interpreter {
 			try {
 				while (Condition(p.left)) {
 					try {
-						Statement(p.right);
+						if(p.right != null)
+							Statement(p.right);
+						// TODO infinite loop in the current state
 					} catch(ContinueException e) {
 					} finally {
 						selectCurrentLine(p);
@@ -153,7 +157,9 @@ public final class Interpreter {
 			try {
 				do
 					try {
-						Statement(p.right);
+						if(p.right != null)
+							Statement(p.right);
+						// TODO infinite loop in the current state
 					} catch(ContinueException e) {
 					} finally {
 						selectCurrentLine(p);
@@ -664,6 +670,12 @@ public final class Interpreter {
 			default:
 				throw new RunTimeException("Not supportet length node kind", p, currentLine);
 			}
+			break;
+		case "time":	//Read, can read in Characters
+			Date date= new Date();
+			// get Timestamp: Startdate: 1 Jan. 1970
+			// TODO overflow-time: Tue, 19 Jan 2038 03:14:07 GMT
+			Memory.setIntReturnValue((int)(date.getTime()/1000));
 			break;
 		case "printf":
 			String s = Strings.get(StringExpr(p.left));
