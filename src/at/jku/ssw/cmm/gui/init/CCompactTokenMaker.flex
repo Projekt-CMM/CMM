@@ -229,74 +229,74 @@ URL                 = (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCh
 <YYINITIAL> {   
 
    /* Keywords */
-   "break" |
-   "case" |
-   "const" |
-   "continue" |  
-   "default" |
-   "do" |
-   "else" |
-/* "for" | */
-   "if" |   
-   "library" |
+   "break"  |
+   "case"   |
+   "const"  |
+   "continue"   |  
+   "default"    |
+   "do"     |
+   "else"   |
+    "for"   |
+   "if"     |
+   "library"    |
    "return" |
    "struct" |
    "switch" |
    "while"              { addToken(Token.RESERVED_WORD); }   
 
    /* Boolean literals. */
-   "true" |
-   "false" |
+   "true"   |
+   "false"  |
 
    /* Data types */   
-   "bool" |   
-   "char" |   
-   "float" |
-   "int" |
+   "bool"   |   
+   "char"   |   
+   "float"  |
+   "int"    |
    "string" | 
    "void"               { addToken(Token.DATA_TYPE); }   
 
    /* basic Functions */   
    "length" |
-   "print" |
+   "print"  |
    "printf" |
-   "read" |
-   "write" |
+   "read"   |
+   "write"  |
    
    /* math.h Functions*/
-   "acos" |
-   "asin" | 
-   "atan" |
-   "atan2" |
-   "ceil" |
-   "cos" |
-   "cosh" |
-   "exp" |
-   "fak" |
-   "fabs" |
-   "floor" |
-   "fmod" |
-   "frexp" |
-   "ldexp" |
-   "log" |
-   "log10" |
-   "modf" |
-   "pow" |
-   "sin" |
-   "sinh" |
-   "sqrt" |
-   "tan" |
-   "tanh" |
+   "acos"   |
+   "asin"   |
+   "atan"   |
+   "atan2"  |
+   "ceil"   |
+   "cos"    |
+   "cosh"   |
+   "exp"    |
+   "fak"    |
+   "fabs"   |
+   "floor"  |
+   "fmod"   |
+   "frexp"  |
+   "ldexp"  |
+   "log"    |
+   "log10"  |
+   "modf"   |
+   "pow"    |
+   "sin"    |
+   "sinh"   |
+   "sqrt"   |
+   "tan"    |
+   "tanh"   |
    
    /* stdlib.h Functions*/
-   "atoi" |
-/* "atof" | */
-   "ftoa" |
-   "itoa" |
+   "atoi"   |
+/* "atof"   | */
+   "ftoa"   |
+   "itoa"   |
    
    /* stdio.h Functions*/
    "prints" |
-   "putc" |
+   "putc"   |
    "scanf"              { addToken(Token.FUNCTION); }   
 
     {LineTerminator}    { addNullToken(); return firstToken; }
