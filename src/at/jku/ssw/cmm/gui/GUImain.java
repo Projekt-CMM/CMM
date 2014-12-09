@@ -9,8 +9,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
@@ -128,11 +126,11 @@ public class GUImain {
 				| IllegalAccessException | UnsupportedLookAndFeelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());*/
+		}*/
+		//MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
         
         // set SeaGlass laf if available
-        try {
+        /*try {
             UIManager.installLookAndFeel("SeaGlass", "com.seaglasslookandfeel.SeaGlassLookAndFeel");
             UIManager.setLookAndFeel("com.seaglasslookandfeel.SeaGlassLookAndFeel");
         } catch (Exception e) {
@@ -142,7 +140,7 @@ public class GUImain {
             } catch (Exception e2) {
                 System.err.println("Unable to use Ocean LAF using default.");
             }
-        }
+        }*/
 		
 		// EDT Thread analysis
 		if (SwingUtilities.isEventDispatchThread())

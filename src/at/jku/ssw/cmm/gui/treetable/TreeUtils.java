@@ -109,7 +109,7 @@ public class TreeUtils {
 	
 	private static boolean expandByAddress(TreeTableCellRenderer tree, DataNode node, int address, Stack<DataNode> path, boolean changed){
 		
-		System.out.println("Checking search: " + node.print());
+		//System.out.println("Checking search: " + node.print());
 		
 		if( node.getAddress() == address ){
 			System.out.println("Located: " + node.print());
@@ -125,7 +125,7 @@ public class TreeUtils {
 				
 				path.push(e);
 				if(expandByAddress(tree, e, address, path, changed)){
-					System.out.println("Expanding: " + path.toArray());
+					//System.out.println("Expanding: " + path.toArray());
 					
 					tree.expandPath(new TreePath(path.toArray()));
 					path.pop();
