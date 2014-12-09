@@ -142,6 +142,8 @@ public final class Interpreter {
 					try {
 						Statement(p.right);
 					} catch(ContinueException e) {
+					} finally {
+						selectCurrentLine(p);
 					}
 				}
 			} catch(BreakException e) {
@@ -153,9 +155,35 @@ public final class Interpreter {
 					try {
 						Statement(p.right);
 					} catch(ContinueException e) {
+					} finally {
+						selectCurrentLine(p);
 					}
 				while (Condition(p.left));
 			} catch(BreakException e) {	
+			}
+			break;
+		case Node.FOR:
+			Node relopNode;
+			if(p.right.next != null)
+				relopNode = p.right.next;
+			else
+				throw new RunTimeException("not defined relop statement", p, currentLine);
+			
+			Node statement = relopNode.next;
+			
+			try {
+				Statement(p.right);
+				while (Condition(p.left)) {
+					try {
+						if(statement != null)
+							Statement(statement);
+					} catch(ContinueException e) {
+					} finally {
+						Statement(relopNode);
+						selectCurrentLine(p);	// TODO test
+					}
+				}
+			} catch(BreakException e) {
 			}
 			break;
 		case Node.SWITCH:

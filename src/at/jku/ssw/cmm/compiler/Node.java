@@ -32,7 +32,7 @@ public final class Node {
 		IFELSE   	= 14,  	// if statement with else branch
 		WHILE    	= 15,  	// while statement
 		DOWHILE		= 16,
-		//FOR    		= 17,  	// print statement
+		FOR    		= 17,  	// print statement
 		RETURN   	= 18,  	// return statement
 		TRAP     	= 19,  	// trap if a function reaches its end without a return
 		BREAK		= 20,

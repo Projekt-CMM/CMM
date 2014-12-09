@@ -251,8 +251,8 @@ class StartStates {
 public class Scanner {
 	static final char EOL = '\n';
 	static final int  eofSym = 0;
-	static final int maxT = 65;
-	static final int noSym = 65;
+	static final int maxT = 66;
+	static final int noSym = 66;
 
 
 	public Buffer buffer; // scanner buffer
@@ -305,7 +305,7 @@ public class Scanner {
 		start.set(124, 43); 
 		start.set(33, 44); 
 		start.set(44, 45); 
-		start.set(58, 48); 
+		start.set(58, 46); 
 		start.set(126, 49); 
 		start.set(46, 50); 
 		start.set(Buffer.EOF, -1);
@@ -315,16 +315,17 @@ public class Scanner {
 		literals.put("false", new Integer(39));
 		literals.put("struct", new Integer(41));
 		literals.put("void", new Integer(42));
-		literals.put("if", new Integer(45));
-		literals.put("else", new Integer(46));
-		literals.put("while", new Integer(47));
-		literals.put("do", new Integer(48));
-		literals.put("switch", new Integer(49));
-		literals.put("case", new Integer(50));
-		literals.put("default", new Integer(51));
-		literals.put("return", new Integer(53));
-		literals.put("break", new Integer(54));
-		literals.put("continue", new Integer(55));
+		literals.put("if", new Integer(43));
+		literals.put("else", new Integer(44));
+		literals.put("while", new Integer(45));
+		literals.put("do", new Integer(46));
+		literals.put("for", new Integer(47));
+		literals.put("switch", new Integer(48));
+		literals.put("case", new Integer(49));
+		literals.put("default", new Integer(50));
+		literals.put("return", new Integer(52));
+		literals.put("break", new Integer(53));
+		literals.put("continue", new Integer(54));
 
 	}
 	
@@ -592,37 +593,37 @@ public class Scanner {
 				case 45:
 					{t.kind = 40; break loop;}
 				case 46:
-					{t.kind = 43; break loop;}
+					{t.kind = 51; break loop;}
 				case 47:
-					{t.kind = 44; break loop;}
+					{t.kind = 55; break loop;}
 				case 48:
-					{t.kind = 52; break loop;}
+					{t.kind = 56; break loop;}
 				case 49:
-					{t.kind = 58; break loop;}
-				case 50:
 					{t.kind = 59; break loop;}
+				case 50:
+					{t.kind = 60; break loop;}
 				case 51:
-					recEnd = pos; recKind = 57;
+					recEnd = pos; recKind = 58;
 					if (ch == '=') {AddCh(); state = 22; break;}
-					else if (ch == '+') {AddCh(); state = 46; break;}
-					else {t.kind = 57; break loop;}
+					else if (ch == '+') {AddCh(); state = 47; break;}
+					else {t.kind = 58; break loop;}
 				case 52:
-					recEnd = pos; recKind = 56;
+					recEnd = pos; recKind = 57;
 					if (ch == '=') {AddCh(); state = 23; break;}
-					else if (ch == '-') {AddCh(); state = 47; break;}
-					else {t.kind = 56; break loop;}
+					else if (ch == '-') {AddCh(); state = 48; break;}
+					else {t.kind = 57; break loop;}
 				case 53:
-					recEnd = pos; recKind = 62;
-					if (ch == '=') {AddCh(); state = 24; break;}
-					else {t.kind = 62; break loop;}
-				case 54:
 					recEnd = pos; recKind = 63;
-					if (ch == '=') {AddCh(); state = 25; break;}
+					if (ch == '=') {AddCh(); state = 24; break;}
 					else {t.kind = 63; break loop;}
-				case 55:
+				case 54:
 					recEnd = pos; recKind = 64;
-					if (ch == '=') {AddCh(); state = 26; break;}
+					if (ch == '=') {AddCh(); state = 25; break;}
 					else {t.kind = 64; break loop;}
+				case 55:
+					recEnd = pos; recKind = 65;
+					if (ch == '=') {AddCh(); state = 26; break;}
+					else {t.kind = 65; break loop;}
 				case 56:
 					recEnd = pos; recKind = 26;
 					if (ch == '<') {AddCh(); state = 58; break;}
@@ -634,13 +635,13 @@ public class Scanner {
 					else if (ch == '=') {AddCh(); state = 35; break;}
 					else {t.kind = 28; break loop;}
 				case 58:
-					recEnd = pos; recKind = 60;
-					if (ch == '=') {AddCh(); state = 27; break;}
-					else {t.kind = 60; break loop;}
-				case 59:
 					recEnd = pos; recKind = 61;
-					if (ch == '=') {AddCh(); state = 28; break;}
+					if (ch == '=') {AddCh(); state = 27; break;}
 					else {t.kind = 61; break loop;}
+				case 59:
+					recEnd = pos; recKind = 62;
+					if (ch == '=') {AddCh(); state = 28; break;}
+					else {t.kind = 62; break loop;}
 
 			}
 		}
