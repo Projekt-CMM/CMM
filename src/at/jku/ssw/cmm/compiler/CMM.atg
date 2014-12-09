@@ -130,8 +130,8 @@ TOKENS
   //--- token definitions for lookahead peeking
   lpar      = "(".
   rpar      = ")".
-  lbrac      = "{".
-  rbrac      = "}".
+  lbrac     = "{".
+  rbrac     = "}".
   lsqu      = "[".
   rsqu      = "]".
   semicolon = ";".
@@ -500,7 +500,7 @@ ident                               (.  // check if a type with the given name e
                                           
                                         type = obj.type;
                                         // init array-list, which store the size of the dimensions
-                                        ArrayList<Integer> dimensions = new ArrayList(); .)
+                                        ArrayList<Integer> dimensions = new ArrayList<>(); .)
 { "["                               (.  int arraySize = 1; .)
   ( intCon                          (.  // get array size of this dimensions
                                         arraySize = tab.intVal(t.val); .)
@@ -522,84 +522,10 @@ ident                               (.  // check if a type with the given name e
                                         } .)
 .
 //-------------------------------------------------------------------------
-Statement<out Node st>              (.  Node design; 
-                                        Node e = null, con, curStat, newStat; 
-                                        int kind;.)
+Statement<out Node st>              (.  Node e = null, con, curStat, newStat; .)
 =                                   (.  st = null; 
                                         int line = la.line; .)
-( Designator<out design>            
-  ( AssignOp<out kind>              (.  // check if designator is from the correct kind
-                                        if(design.kind == Node.BOOLCON || design.kind == Node.INTCON
-                                            || design.kind == Node.FLOATCON || design.kind == Node.CHARCON
-                                            || design.kind == Node.STRINGCON) {
-                                            SemErr("assignment is not allowed for const values");
-                                        } else if(design.kind == Node.IDENT && design.obj.kind == Obj.PROC) {
-                                            SemErr(design.obj.name + " is declared as function");
-                                        } .)
-  BinExpr<out e>                    (.  // check context conditions
-                                        if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
-                                            SemErr("name must be an designator");
-                                        if(design.type == null || (!design.type.isPrimitive() && design.type != Tab.stringType)) 
-                                            SemErr("type is not a primitive or string");
-                                        else if(design.kind == Node.INDEX && design.left.type == Tab.stringType)
-                                            SemErr("string manipulation is not allowed"); 
-                                        else if(e == null)
-                                            SemErr("right operator is not defined"); 
-                                        else if(design.type == Tab.stringType && !(kind == Node.ASSIGN || kind == Node.ASSIGNPLUS)) 
-                                            SemErr("only == or += is allowed for string assignements");
-                                        else if(design.type == Tab.boolType && !(kind == Node.ASSIGN || kind == Node.ASSIGNBITAND
-                                                || kind == Node.ASSIGNBITXOR || kind == Node.ASSIGNBITOR)) 
-                                            SemErr("only ==, &=, ^= or |= is allowed for boolean assignements"); 
-                                        else
-                                            e = tab.impliciteTypeCon(e, design.type);
-                                     
-                                        // add special node if assign has operator inside (like *=, -0,...)
-                                        if(kind == Node.ASSIGNPLUS)
-                                            e = new Node(Node.PLUS, design, e, design.type);
-                                        else if(kind == Node.ASSIGNMINUS)
-                                            e = new Node(Node.MINUS, design, e, design.type);
-                                        else if(kind == Node.ASSIGNTIMES)
-                                            e = new Node(Node.TIMES, design, e, design.type);
-                                        else if(kind == Node.ASSIGNDIV)
-                                            e = new Node(Node.DIV, design, e, design.type);
-                                        else if(kind == Node.ASSIGNREM)
-                                            e = new Node(Node.REM, design, e, design.type);
-                                        else if(kind == Node.ASSIGNSHIFTLEFT)
-                                            e = new Node(Node.SHIFTLEFT, design, e, design.type);
-                                        else if(kind == Node.ASSIGNSHIFTRIGHT)
-                                            e = new Node(Node.SHIFTRIGHT, design, e, design.type);
-                                        else if(kind == Node.ASSIGNBITAND)
-                                            e = new Node(Node.BITAND, design, e, design.type);
-                                        else if(kind == Node.ASSIGNBITXOR)
-                                            e = new Node(Node.BITXOR, design, e, design.type);
-                                        else if(kind == Node.ASSIGNBITOR)
-                                            e = new Node(Node.BITOR, design, e, design.type);                                   
-
-                                        // add node
-                                        st = new Node(Node.ASSIGN,design,e,line); .)
-  | ActPars<out e>                  (.  // only function whith void as return statement are allowed
-                                        if(design.type != Tab.noType)
-                                            SemErr("only void is allowed");
-                                     
-                                        // create CALL node
-                                        st = new Node(Node.CALL,e,null,line);
-                                        st.obj = design.obj;
-                                        tab.checkFunctionParams(design.obj,st); .) 
-  | "++"                            (.  if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
-                                            SemErr("name must be an designator");
-                                        if(!design.type.isPrimitive() || design.type == Tab.boolType)
-                                            SemErr("only a primitive type except boolean is allowed for increment operator");
-                                        e = tab.impliciteTypeCon(new Node(1), design.type);
-                                        e = new Node(Node.PLUS, design, e, design.type);
-                                        st = new Node(Node.ASSIGN,design,e,line); .)
-  | "--"                            (.  if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
-                                            SemErr("name must be an designator");
-                                        if(!design.type.isPrimitive() || design.type == Tab.boolType)
-                                            SemErr("only a primitive type except boolean is allowed for decrement operator");
-                                        e = tab.impliciteTypeCon(new Node(1), design.type);
-                                        e = new Node(Node.MINUS, design, e, design.type);
-                                        st = new Node(Node.ASSIGN,design,e,line); .)
-  ) ";"
+( Command<out st> ";"
 | "if" "("                          (.  Node ifYes, ifNo; .)
     Condition<out con>
     ")" 
@@ -618,10 +544,13 @@ Statement<out Node st>              (.  Node design;
                                         continueLevel --; .)
   "while" "(" Condition<out con> 
   ")" ";"                           (.  st = new Node(Node.DOWHILE,con,st,line); .)
-(. /*| "for" "(" Statement<out con>    (.  e = con; .)
-  ";" Condition<out e.next>         (.  e = e.next; .)
-  ";" Statement<out e.next>
-  ")" Statement<out st>             (.  st = new Node(Node.FOR,con,st,line); .)*/.)
+| "for"                             (.  Node commands, relopCommand, relSt; .)
+  "(" Command<out commands>               
+  ";" Condition<out con>            
+  ";" Command<out relopCommand>
+  ")" Statement<out relSt>          (.  relopCommand.next = relSt;
+                                        commands.next = relopCommand;
+                                        st = new Node(Node.FOR,con,commands,line); .)
 | "switch" "(" BinExpr<out e> ")"   (.  st = new Node(Node.SWITCH,e,null,line);
                                         curStat = null;
                                         breakLevel ++; 
@@ -701,6 +630,85 @@ Statement<out Node st>              (.  Node design;
                                         st = new Node(Node.CONTINUE,null,null,line); .)
 | ";"                               (.  st = null; .)
 ).
+//-------------------------------------------------------------------------
+Command<out Node st>                (.  Node design; 
+                                        Node e = null; 
+                                        int kind;.)
+=                                   (.  st = null; 
+                                        int line = la.line; .)
+Designator<out design>            
+  ( AssignOp<out kind>              (.  // check if designator is from the correct kind
+                                        if(design.kind == Node.BOOLCON || design.kind == Node.INTCON
+                                            || design.kind == Node.FLOATCON || design.kind == Node.CHARCON
+                                            || design.kind == Node.STRINGCON) {
+                                            SemErr("assignment is not allowed for const values");
+                                        } else if(design.kind == Node.IDENT && design.obj.kind == Obj.PROC) {
+                                            SemErr(design.obj.name + " is declared as function");
+                                        } .)
+  BinExpr<out e>                    (.  // check context conditions
+                                        if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
+                                            SemErr("name must be an designator");
+                                        if(design.type == null || (!design.type.isPrimitive() && design.type != Tab.stringType)) 
+                                            SemErr("type is not a primitive or string");
+                                        else if(design.kind == Node.INDEX && design.left.type == Tab.stringType)
+                                            SemErr("string manipulation is not allowed"); 
+                                        else if(e == null)
+                                            SemErr("right operator is not defined"); 
+                                        else if(design.type == Tab.stringType && !(kind == Node.ASSIGN || kind == Node.ASSIGNPLUS)) 
+                                            SemErr("only == or += is allowed for string assignements");
+                                        else if(design.type == Tab.boolType && !(kind == Node.ASSIGN || kind == Node.ASSIGNBITAND
+                                                || kind == Node.ASSIGNBITXOR || kind == Node.ASSIGNBITOR)) 
+                                            SemErr("only ==, &=, ^= or |= is allowed for boolean assignements"); 
+                                        else
+                                            e = tab.impliciteTypeCon(e, design.type);
+                                     
+                                        // add special node if assign has operator inside (like *=, -0,...)
+                                        if(kind == Node.ASSIGNPLUS)
+                                            e = new Node(Node.PLUS, design, e, design.type);
+                                        else if(kind == Node.ASSIGNMINUS)
+                                            e = new Node(Node.MINUS, design, e, design.type);
+                                        else if(kind == Node.ASSIGNTIMES)
+                                            e = new Node(Node.TIMES, design, e, design.type);
+                                        else if(kind == Node.ASSIGNDIV)
+                                            e = new Node(Node.DIV, design, e, design.type);
+                                        else if(kind == Node.ASSIGNREM)
+                                            e = new Node(Node.REM, design, e, design.type);
+                                        else if(kind == Node.ASSIGNSHIFTLEFT)
+                                            e = new Node(Node.SHIFTLEFT, design, e, design.type);
+                                        else if(kind == Node.ASSIGNSHIFTRIGHT)
+                                            e = new Node(Node.SHIFTRIGHT, design, e, design.type);
+                                        else if(kind == Node.ASSIGNBITAND)
+                                            e = new Node(Node.BITAND, design, e, design.type);
+                                        else if(kind == Node.ASSIGNBITXOR)
+                                            e = new Node(Node.BITXOR, design, e, design.type);
+                                        else if(kind == Node.ASSIGNBITOR)
+                                            e = new Node(Node.BITOR, design, e, design.type);                                   
+
+                                        // add node
+                                        st = new Node(Node.ASSIGN,design,e,line); .)
+  | ActPars<out e>                  (.  // only function whith void as return statement are allowed
+                                        if(design.type != Tab.noType)
+                                            SemErr("only void is allowed");
+                                     
+                                        // create CALL node
+                                        st = new Node(Node.CALL,e,null,line);
+                                        st.obj = design.obj;
+                                        tab.checkFunctionParams(design.obj,st); .) 
+  | "++"                            (.  if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
+                                            SemErr("name must be an designator");
+                                        if(!design.type.isPrimitive() || design.type == Tab.boolType)
+                                            SemErr("only a primitive type except boolean is allowed for increment operator");
+                                        e = tab.impliciteTypeCon(new Node(1), design.type);
+                                        e = new Node(Node.PLUS, design, e, design.type);
+                                        st = new Node(Node.ASSIGN,design,e,line); .)
+  | "--"                            (.  if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
+                                            SemErr("name must be an designator");
+                                        if(!design.type.isPrimitive() || design.type == Tab.boolType)
+                                            SemErr("only a primitive type except boolean is allowed for decrement operator");
+                                        e = tab.impliciteTypeCon(new Node(1), design.type);
+                                        e = new Node(Node.MINUS, design, e, design.type);
+                                        st = new Node(Node.ASSIGN,design,e,line); .)
+  ).
 //-------------------------------------------------------------------------
 AssignOp<out int kind>
 =                                   (.  // default kind is ASSIGN
@@ -856,8 +864,7 @@ Factor<out res>
 .
 //-------------------------------------------------------------------------
 Factor<out Node n>                  (.  Struct type; 
-                                        Node design, arrDesign; 
-                                        int kind; .)
+                                        Node design; .)
 =                                   (.  n = null; 
                                         int line = la.line; .)
 ( Designator<out design>            
