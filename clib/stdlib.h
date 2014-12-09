@@ -134,7 +134,10 @@ int library atoi(string s) {
  * @working yes
  */
 int library rand() {
-    // the random number generator cannot work with 0
+    // TODO not defined variable become start value
+    if(!__is_def_int__(__cur_rand_generator_state__))
+        __cur_rand_generator_state__ = 13;
+
     if(__cur_rand_generator_state__ == 0)
         __cur_rand_generator_state__ += 97;
 

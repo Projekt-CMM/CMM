@@ -568,7 +568,15 @@ public final class Interpreter {
 				return Condition(p.left) && Condition(p.right); // AND &&
 			case Node.NOT:
 				return !Condition(p.left); // NOT
+			case Node.CALL:								//Opens new Integer c-- Function
+				Call(p);
+				//getting return Value	
+				if(Memory.getIntReturnValue() == 0)
+					return false;
+				else
+					return true;	
 			default:
+				System.out.println("kind: " + p.kind);
 				throw new RunTimeException("Not supportet struct node kind", p, currentLine);
 			}
 		case Struct.FLOAT:
@@ -592,6 +600,7 @@ public final class Interpreter {
 			case Node.AND:
 				return Condition(p.left) && Condition(p.right); // AND &&
 			case Node.NOT:
+				// TODO required?
 				return !Condition(p.left); // NOT
 			default:
 				throw new RunTimeException("Not supportet float node kind", p, currentLine);
@@ -617,6 +626,7 @@ public final class Interpreter {
 			case Node.AND:
 				return Condition(p.left) && Condition(p.right); // AND &&
 			case Node.NOT:
+				// TODO required?
 				return !Condition(p.left); // NOT
 			default:
 				throw new RunTimeException("Not supportet char node kind", p, currentLine);
@@ -635,6 +645,9 @@ public final class Interpreter {
 				return Condition(p.left) && Condition(p.right); // AND &&
 			case Node.NOT:
 				return !Condition(p.left); // NOT
+			case Node.CALL:								//Opens new Integer c-- Function
+				Call(p);
+				return Memory.getBoolReturnValue();
 			default:
 				throw new RunTimeException("Not supportet char node kind", p, currentLine);
 			}
