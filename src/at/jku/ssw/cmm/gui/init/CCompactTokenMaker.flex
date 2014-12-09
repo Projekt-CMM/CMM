@@ -167,37 +167,62 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %}   
 
-Letter                     = [A-Za-z]   
-Digit                     = ([0-9])   
-AnyCharacterButApostropheOrBackSlash   = ([^\\'])   
-AnyCharacterButDoubleQuoteOrBackSlash   = ([^\\\"\n])   
-NonSeparator                  = ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#"|"\\")   
-IdentifierStart               = ({Letter}|"_")   
-IdentifierPart                  = ({IdentifierStart}|{Digit})   
-WhiteSpace            = ([ \t\f]+)   
+Letter              = [A-Za-z]
+LetterOrUnderscore  = ({Letter}|[_])
+Digit               = [0-9]
+HexDigit            = {Digit}|[A-Fa-f]
+OctalDigit          = [0-7]
+Exponent            = [eE][+-]?{Digit}+
 
-PreprocessorWord = include|wait|pause
+PreprocessorWord    = /*define|undef|elif|else|endif|if|ifdef|ifndef|*/include|pause|wait
 
-CharLiteral               = ([\']({AnyCharacterButApostropheOrBackSlash})[\'])   
-UnclosedCharLiteral         = ([\'][^\'\n]*)   
-ErrorCharLiteral         = ({UnclosedCharLiteral}[\'])   
-StringLiteral            = ([\"]({AnyCharacterButDoubleQuoteOrBackSlash})*[\"])   
-UnclosedStringLiteral      = ([\"]([\\].|[^\\\"])*[^\"]?)   
-ErrorStringLiteral         = ({UnclosedStringLiteral}[\"])   
+Trigraph            = ("??="|"??("|"??)"|"??/"|"??'"|"??<"|"??>"|"??!"|"??-")
 
-MLCBegin               = "/*"   
-MLCEnd               = "*/"   
-LineCommentBegin         = "//"   
+OctEscape1          = ([\\]{OctalDigit})
+OctEscape2          = ([\\]{OctalDigit}{OctalDigit})
+OctEscape3          = ([\\][0-3]{OctalDigit}{OctalDigit})
+OctEscape           = ({OctEscape1}|{OctEscape2}|{OctEscape3})
+HexEscape           = ([\\][xX]{HexDigit}{HexDigit})
 
-IntegerLiteral         = ({Digit}+)   
-ErrorNumberFormat         = (({IntegerLiteral}){NonSeparator}+)   
+AnyChrChr           = ([^\'\n\\])
+Escape              = ([\\]([abfnrtv\'\"\?\\0]))
+UnclosedCharLiteral = ([\']({Escape}|{OctEscape}|{HexEscape}|{Trigraph}|{AnyChrChr}))
+CharLiteral         = ({UnclosedCharLiteral}[\'])
+ErrorUnclosedCharLiteral    = ([\'][^\'\n]*)
+ErrorCharLiteral    = (([\'][\'])|{ErrorUnclosedCharLiteral}[\'])
+AnyStrChr           = ([^\"\n\\])
+FalseTrigraph       = (("?"(("?")*)[^\=\(\)\/\'\<\>\!\-\\\?\"\n])|("?"[\=\(\)\/\'\<\>\!\-]))
+StringLiteral       = ([\"]((((("?")*)({Escape}|{OctEscape}|{HexEscape}|{Trigraph}))|{FalseTrigraph}|{AnyStrChr})*)(("?")*)[\"])
+UnclosedStringLiteral   = ([\"]([\\].|[^\\\"])*[^\"]?)
+ErrorStringLiteral  = ({UnclosedStringLiteral}[\"])
 
-Separator               = ([\(\)\{\}\[\]])   
-Separator2            = ([\;,.])   
+LineTerminator      = \n
+WhiteSpace          = [ \t\f]
 
-Identifier            = ({IdentifierStart}{IdentifierPart}*)   
+MLCBegin            = "/*"
+MLCEnd              = "*/"
+LineCommentBegin    = "//"
+NonFloatSuffix      = (([uU][lL]?)|([lL][uU]?))
+IntegerLiteral      = ({Digit}+{Exponent}?{NonFloatSuffix}?)
+HexLiteral          = ("0"[xX]{HexDigit}+{NonFloatSuffix}?)
+FloatLiteral        = ((({Digit}*[\.]{Digit}+)|({Digit}+[\.]{Digit}*)){Exponent}?[fFlL]?)
+ErrorNumberFormat   = (({IntegerLiteral}|{HexLiteral}|{FloatLiteral}){NonSeparator}+)
 
-%state MLC   
+NonSeparator        = ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#")
+Identifier          = ({LetterOrUnderscore}({LetterOrUnderscore}|{Digit}|[$])*)
+ErrorIdentifier     = ({NonSeparator}+)
+
+
+URLGenDelim         = ([:\/\?#\[\]@])
+URLSubDelim         = ([\!\$&'\(\)\*\+,;=])
+URLUnreserved       = ({LetterOrUnderscore}|{Digit}|[\-\.\~])
+URLCharacter        = ({URLGenDelim}|{URLSubDelim}|{URLUnreserved}|[%])
+URLCharacters       = ({URLCharacter}*)
+URLEndCharacter     = ([\/\$]|{Letter}|{Digit})
+URL                 = (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
+
+%state MLC
+%state EOL_COMMENT
 
 %%   
 
@@ -217,7 +242,7 @@ Identifier            = ({IdentifierStart}{IdentifierPart}*)
    "return" |
    "struct" |
    "switch" |
-   "while"      { addToken(Token.RESERVED_WORD); }   
+   "while"              { addToken(Token.RESERVED_WORD); }   
 
    /* Boolean literals. */
    "true" |
@@ -229,7 +254,7 @@ Identifier            = ({IdentifierStart}{IdentifierPart}*)
    "float" |
    "int" |
    "string" | 
-   "void"      { addToken(Token.DATA_TYPE); }   
+   "void"               { addToken(Token.DATA_TYPE); }   
 
    /* basic Functions */   
    "length" |
@@ -272,53 +297,108 @@ Identifier            = ({IdentifierStart}{IdentifierPart}*)
    /* stdio.h Functions*/
    "prints" |
    "putc" |
-   "scanf" { addToken(Token.FUNCTION); }   
+   "scanf"              { addToken(Token.FUNCTION); }   
 
-   {Identifier}            { addToken(Token.IDENTIFIER); }   
+    {LineTerminator}    { addNullToken(); return firstToken; }
 
-   {WhiteSpace}            { addToken(Token.WHITESPACE); }   
+    {Identifier}        { addToken(Token.IDENTIFIER); }
+    
+    {WhiteSpace}+       { addToken(Token.WHITESPACE); }
 
-   /* Preprocessor directives */
-   "#"{WhiteSpace}*{PreprocessorWord} { addToken(Token.PREPROCESSOR); }
+    /* Preprocessor directives */
+    "#"{WhiteSpace}*{PreprocessorWord} { addToken(Token.PREPROCESSOR); }
+    
+    /* String/Character Literals. */
+    {CharLiteral}               { addToken(Token.LITERAL_CHAR); }
+    {UnclosedCharLiteral}       { addToken(Token.ERROR_CHAR); /*addNullToken(); return firstToken;*/ }
+    {ErrorUnclosedCharLiteral}  { addToken(Token.ERROR_CHAR); addNullToken(); return firstToken; }
+    {ErrorCharLiteral}          { addToken(Token.ERROR_CHAR); }
+    {StringLiteral}             { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
+    {UnclosedStringLiteral}     { addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
+    {ErrorStringLiteral}        { addToken(Token.ERROR_STRING_DOUBLE); }
 
-   /* String/Character literals. */   
-   {CharLiteral}            { addToken(Token.LITERAL_CHAR); }   
-   {UnclosedCharLiteral}      { addToken(Token.ERROR_CHAR); addNullToken(); return firstToken; }   
-   {ErrorCharLiteral}         { addToken(Token.ERROR_CHAR); }   
-   {StringLiteral}            { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }   
-   {UnclosedStringLiteral}      { addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }   
-   {ErrorStringLiteral}      { addToken(Token.ERROR_STRING_DOUBLE); }   
+    /* Comment Literals. */
+    {MLCBegin}          { start = zzMarkedPos-2; yybegin(MLC); }
+    {LineCommentBegin}  { start = zzMarkedPos-2; yybegin(EOL_COMMENT); }
 
-   /* Comment literals. */   
-   {MLCBegin}               { start = zzMarkedPos-2; yybegin(MLC); }   
-   {LineCommentBegin}.*      { addToken(Token.COMMENT_EOL); addNullToken(); return firstToken; }   
+    /* Separators. */
+    "(" |
+    ")" |
+    "[" |
+    "]" |
+    "{" |
+    "}"         { addToken(Token.SEPARATOR); }
 
-   /* Separators. */   
-   {Separator}               { addToken(Token.SEPARATOR); }   
-   {Separator2}            { addToken(Token.IDENTIFIER); }   
+    /* Operators. */
+    {Trigraph} |
+    "="     |
+    "+"     |
+    "-"     |
+    "*"     |
+    "/"     |
+    "%"     |
+    "~"     |
+    "<"     |
+    ">"     |
+    "<<"    |
+    ">>"    |
+    "=="    |
+    "+="    |
+    "-="    |
+    "*="    |
+    "/="    |
+    "%="    |
+    ">>="   |
+    "<<="   |
+    "^"     |
+    "&"     |
+    "&&"    |
+    "|"     |
+    "||"    |
+/*  "?"     | */
+/*  ":"     | */
+    ","     |
+    "!"     |
+    "++"    |
+    "--"    |
+    "."     |
+    ","         { addToken(Token.OPERATOR); }
 
-   /* Operators. */   
-   "!" | "%" | "%=" | "&" | "&&" | "*" | "*=" | "+" | "++" | "+=" | "," | "-" | "--" | "-=" |   
-   "/" | "/=" | ":" | "<" | "<<" | "<<=" | "=" | "==" | ">" | ">>" | ">>=" | "^" | "|" |   
-   "||" | "~"      { addToken(Token.OPERATOR); }   
+    /* Numbers */
+    {IntegerLiteral}    { addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
+    {HexLiteral}        { addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
+    {FloatLiteral}      { addToken(Token.LITERAL_NUMBER_FLOAT); }
+    {ErrorNumberFormat} { addToken(Token.ERROR_NUMBER_FORMAT); }
 
-   /* Numbers */   
-   {IntegerLiteral}         { addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }   
-   {ErrorNumberFormat}         { addToken(Token.ERROR_NUMBER_FORMAT); }   
+    /* Some lines will end in '\' to wrap an expression. */
+    "\\"                { addToken(Token.IDENTIFIER); }
+    
+    {ErrorIdentifier}   { addToken(Token.ERROR_IDENTIFIER); }
 
-   /* Ended with a line not in a string or comment. */   
-   \n |   
-   <<EOF>>                  { addNullToken(); return firstToken; }   
+    /* Other punctuation, we'll highlight it as "identifiers." */
+    ";"                 { addToken(Token.IDENTIFIER); }
 
-   /* Catch any other (unhandled) characters. */   
-   .                     { addToken(Token.IDENTIFIER); }   
+    /* Ended with a line not in a string or comment. */
+    <<EOF>>             { addNullToken(); return firstToken; }
 
+    /* Catch any other (unhandled) characters and flag them as bad. */
+    . { addToken(Token.ERROR_IDENTIFIER); }
 }   
 
-<MLC> {   
-   [^\n*]+            {}   
-   {MLCEnd}         { yybegin(YYINITIAL); addToken(start,zzStartRead+2-1, Token.COMMENT_MULTILINE); }   
-   "*"               {}   
-   \n |   
-   <<EOF>>            { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }   
-}   
+<MLC> {
+    [^hwf\n\*]+ {}
+    {URL}       { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+    [hwf]       {}
+    \n          { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
+    {MLCEnd}    { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
+    \*          {}
+    <<EOF>>     { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
+}
+
+<EOL_COMMENT> {
+    [^hwf\n]+   {}
+    {URL}       { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+    [hwf]       {}
+    \n          { addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
+    <<EOF>>     { addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
+}
