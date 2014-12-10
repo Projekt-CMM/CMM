@@ -150,7 +150,7 @@ public class Preprocessor {
 				} else if(parseAllCode == false) {
 					// ignore other possible preprocessor commands
 				} else if(preString.matches("^\\s*define\\s.*$")) {
-					Matcher m = Pattern.compile("^\\s*define\\s*(\\w+)\\s*(\\w*)$").matcher(preString);
+					Matcher m = Pattern.compile("^\\s*define\\s*(\\w+)\\s*(\\w*)\\s*$").matcher(preString);
 					if(m.matches()) {
 						int value = 1;
 						
@@ -164,9 +164,16 @@ public class Preprocessor {
 						}
 						
 						defines.put(m.group(1), value);
+					} else {
+						// TODO incorrect rule
 					}
 				} else if(preString.matches("^\\s*undef\\s.*$")) {
-					
+					Matcher m = Pattern.compile("^\\s*undef\\s*(\\w+)\\s*$").matcher(preString);
+					if(m.matches()) {
+						defines.remove(m.group(1));
+					} else {
+						// TODO incorrect rule
+					}
 				} else if(preString.matches("^\\s*include.*$")) {
 					String path = null;
 					boolean localDirectory = true;

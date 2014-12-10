@@ -174,7 +174,7 @@ HexDigit            = {Digit}|[A-Fa-f]
 OctalDigit          = [0-7]
 Exponent            = [eE][+-]?{Digit}+
 
-PreprocessorWord    = /*define|undef|elif|else|endif|if|ifdef|ifndef|*/include|pause|wait
+PreprocessorWord    = define|undef|else|endif|ifdef|ifndef|include|pause|wait
 
 Trigraph            = ("??="|"??("|"??)"|"??/"|"??'"|"??<"|"??>"|"??!"|"??-")
 
