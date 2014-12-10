@@ -12,7 +12,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-import at.jku.ssw.cmm.gui.GUImainSettings;
+import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 
 /**
  * This is a manager class for opening a dialog window for choosing a file in order to save the source

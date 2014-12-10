@@ -92,6 +92,8 @@ public class GUIcontrolPanel {
 	 */
 	private void initRunMode( JPanel panel ) {
 		
+		panel.setToolTipText("<html><b>" + _("Control elements") + "</b><br>" + _("With the elements int this panel, you can<br>run and debug your source code") + "</html>");
+		
 		/* ---------- KEYBOARD SHORCUTS ---------- */
 		panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("F5"), "F5_run");
 		panel.getActionMap().put("F5_run", this.listener.F5_run);
@@ -122,6 +124,7 @@ public class GUIcontrolPanel {
 
 		/* ---------- SLIDER ---------- */
 		jLabelTimer = new JLabel("0.50 " + _("sec"));
+		jLabelTimer.setToolTipText("<html><b>" + _("debugger step delay") + "</b><br>" + _("change this value with<br>the slider below") + "</html>");
 		panel.add(jLabelTimer);
 
 		jSlider = new JSlider(JSlider.HORIZONTAL, 1, 9, 1);
@@ -131,7 +134,7 @@ public class GUIcontrolPanel {
 		jSlider.setValue(SLIDER_START);
 		jSlider.addChangeListener(this.listener.sliderListener);
 		jSlider.setToolTipText("<html><b>" + _("debugger step delay")
-				+ "</b><br>" + _("change delay") + "</html>");
+				+ "</b><br>" + _("change automatic debugging<br>delay with this slider") + "</html>");
 
 		panel.add(jSlider);
 		
@@ -195,12 +198,12 @@ public class GUIcontrolPanel {
 		
 		this.jButtonPlay.setText("\u25AE\u25AE");
 		
-		this.jButtonStep.setToolTipText("<html><b>" + _("pause") + " (F5)" 
+		this.jButtonPlay.setToolTipText("<html><b>" + _("pause") + " (F5)" 
 				+ "</b><br>"
 				+ _("pause automatic debugging")
 				+ "</html>");
 		
-		this.jButtonPlay.setToolTipText("<html><b>" + _("next step") + " (F6)"
+		this.jButtonStep.setToolTipText("<html><b>" + _("next step") + " (F6)"
 				+ "</b><br>" + _("proceed to next step manually")
 				+ "</html>");
 	}
@@ -220,12 +223,12 @@ public class GUIcontrolPanel {
 		
 		this.jButtonPlay.setText("\u25B6");
 		
-		this.jButtonStep.setToolTipText("<html><b>" + _("play") + " (F5)" 
+		this.jButtonPlay.setToolTipText("<html><b>" + _("play") + " (F5)" 
 				+ "</b><br>"
 				+ _("run automatic debugging")
 				+ "</html>");
 		
-		this.jButtonPlay.setToolTipText("<html><b>" + _("next step") + " (F6)" 
+		this.jButtonStep.setToolTipText("<html><b>" + _("next step") + " (F6)" 
 				+ "</b><br>" + _("proceed to next step manually")
 				+ "</html>");
 	}

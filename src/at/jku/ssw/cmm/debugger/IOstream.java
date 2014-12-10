@@ -1,8 +1,12 @@
 package at.jku.ssw.cmm.debugger;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 
+import at.jku.ssw.cmm.DebugShell;
+import at.jku.ssw.cmm.DebugShell.Area;
+import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.interpreter.exceptions.RunTimeException;
 import at.jku.ssw.cmm.debugger.StdInOut;
@@ -73,7 +77,14 @@ public class IOstream implements StdInOut {
 		
 		// Highlight the characters which have just been read in the input
 		// text area of the main GUI
-		this.main.getLeftPanel().increaseInputHighlighter();
+		try {
+			this.main.getLeftPanel().increaseInputHighlighter();
+		}
+		// This may fail as the interpreter thread is paused until the upper command is done
+		catch (InvocationTargetException|InterruptedException e) {
+			DebugShell.out(State.ERROR, Area.DEBUGGER, "Failed to delay interpreter thread for input highlighting");
+			e.printStackTrace();
+		}
 		
 		return c;
 	}

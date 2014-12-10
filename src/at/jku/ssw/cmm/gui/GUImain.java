@@ -3,6 +3,7 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.Dimension;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,6 +20,7 @@ import at.jku.ssw.cmm.gui.event.WindowEventListener;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
 import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
+import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.gui.quest.GUIquestMain;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
 import at.jku.ssw.cmm.profile.Profile;
@@ -38,15 +40,21 @@ public class GUImain {
 	 *            The shell arguments.
 	 */
 	public static void main(String[] args) {
-		GUImain app = new GUImain(new GUImainSettings(null));
+		final GUImain app = new GUImain(new GUImainSettings(null));
 
 		boolean test = false;
-
 		for (String s : args)
 			if (s.equals("-t"))
 				test = true;
-
-		app.start(test);
+		
+		final boolean t = test;
+		
+		SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+            	app.start(t);
+            }
+		});
+		
 
 	}
 
@@ -108,9 +116,32 @@ public class GUImain {
 	 * 
 	 * @param test
 	 *            TRUE if program shall exit after init (for GUI test)
+	 * @throws InterruptedException 
+	 * @throws InvocationTargetException 
 	 */
 	public void start(boolean test) {
-
+		/*try {
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		//MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
+        
+        // set SeaGlass laf if available
+        /*try {
+            UIManager.installLookAndFeel("SeaGlass", "com.seaglasslookandfeel.SeaGlassLookAndFeel");
+            UIManager.setLookAndFeel("com.seaglasslookandfeel.SeaGlassLookAndFeel");
+        } catch (Exception e) {
+            System.err.println("Seaglass LAF not available using Ocean.");
+            try {
+                UIManager.setLookAndFeel(new MetalLookAndFeel());
+            } catch (Exception e2) {
+                System.err.println("Unable to use Ocean LAF using default.");
+            }
+        }*/
+		
 		// EDT Thread analysis
 		if (SwingUtilities.isEventDispatchThread())
 			DebugShell.out(State.LOG, Area.SYSTEM, "main GUI running on EDT.");
@@ -236,6 +267,10 @@ public class GUImain {
 
 	public GUIleftPanel getLeftPanel() {
 		return this.leftPanelControl;
+	}
+	
+	public GUIrightPanel getRightPanel() {
+		return this.rightPanelControl;
 	}
 
 	/**

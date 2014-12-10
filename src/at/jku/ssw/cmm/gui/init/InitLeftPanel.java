@@ -16,7 +16,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
-import at.jku.ssw.cmm.gui.GUImainSettings;
+import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 
 /**
  * Class containing static methods to initialize the left part of the main GUI. This includes functions to
@@ -46,6 +46,8 @@ public class InitLeftPanel {
 	    textArea.setCodeFoldingEnabled(true);
 	    textArea.setAntiAliasingEnabled(true);
 	    
+	    //textArea.setFont(textArea.getFont().deriveFont((float)20.0));
+	    
 	    //textArea.setToolTipText("<html><b>Title</b><br>description<br>description2<br><i>italic text</i></html>");
 	    RTextScrollPane sp = new RTextScrollPane(textArea);
 	    sp.setFoldIndicatorEnabled(true);
@@ -73,6 +75,7 @@ public class InitLeftPanel {
         tArea.setLayout(new BorderLayout());
         tArea.setMargin(new Insets(5, 5, 5, 5));
         tArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        //tArea.setFont(tArea.getFont().deriveFont((float)20.0));
         
         JScrollPane scroll = new JScrollPane(tArea);
         
@@ -100,6 +103,7 @@ public class InitLeftPanel {
         tArea.setLayout(new BorderLayout());
         tArea.setMargin(new Insets(5, 5, 5, 5));
         tArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        //tArea.setFont(tArea.getFont().deriveFont((float)20.0));
         
         JScrollPane scroll = new JScrollPane(tArea);
         

@@ -7,7 +7,6 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
-import javax.swing.table.TableColumnModel;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.treetable.DataNode;
@@ -24,11 +23,8 @@ public class JTableButtonMouseListener implements MouseListener {
 	private final GUImain main;
 	private final TreeTable treeTable;
 
-	private void forwardEventToButton(MouseEvent e) {
+	private void forwardEventToButton(MouseEvent e, int row, int column) {
 
-		TableColumnModel columnModel = this.treeTable.getTable().getColumnModel();
-		int column = columnModel.getColumnIndexAtX(e.getX());
-		int row = e.getY() / this.treeTable.getTable().getRowHeight();
 		Object value;
 		JButton button;
 		MouseEvent buttonEvent;
@@ -36,10 +32,6 @@ public class JTableButtonMouseListener implements MouseListener {
 		if (row >= this.treeTable.getTable().getRowCount() || row < 0
 				|| column >= this.treeTable.getTable().getColumnCount() || column < 0)
 			return;
-
-		if( this.treeTable.getTable().getValueAt(row, 2) instanceof String && 
-				((String)this.treeTable.getTable().getValueAt(row, 2)).equals(_("reference")) )
-			System.out.println("Reference clicked");
 		
 		value = this.treeTable.getTable().getValueAt(row, column);
 		
@@ -57,42 +49,62 @@ public class JTableButtonMouseListener implements MouseListener {
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		forwardEventToButton(e);
+		forwardEventToButton(e,
+				this.treeTable.getTable().rowAtPoint(e.getPoint()),
+				this.treeTable.getTable().columnAtPoint(e.getPoint()));
 	}
 
 	public void mouseEntered(MouseEvent e) {
-		forwardEventToButton(e);
+		
+		forwardEventToButton(e,
+				this.treeTable.getTable().rowAtPoint(e.getPoint()),
+				this.treeTable.getTable().columnAtPoint(e.getPoint()));
 	}
 
 	public void mouseExited(MouseEvent e) {
-		forwardEventToButton(e);
+		
+		forwardEventToButton(e,
+				this.treeTable.getTable().rowAtPoint(e.getPoint()),
+				this.treeTable.getTable().columnAtPoint(e.getPoint()));
 	}
 
 	public void mousePressed(MouseEvent e) {
 		
+		int row = this.treeTable.getTable().rowAtPoint(e.getPoint());
+		int col = this.treeTable.getTable().columnAtPoint(e.getPoint());
+		
 		// Right mouse clicked
 		if (SwingUtilities.isRightMouseButton(e)) {
-
-			int row = this.treeTable.getTable().rowAtPoint(e.getPoint());
-			int col = this.treeTable.getTable().columnAtPoint(e.getPoint());
 			if (row >= 0 && col >= 0) {
 				
 				String name = (String)this.treeTable.getTable().getValueAt(row, 0);
 				
 				DataNode node = (DataNode) this.treeTable.getModelAdapter().nodeForRow(row);
 				
-				System.out.println("Clicked Data Node: " + node.print());
-				
 				if( node.getDeclarationLine() >= 0 ){
 					InitContextMenu.initContextMenu(main, name, node.getDeclarationLine(), 20).show(e.getComponent(), e.getX(), e.getY());
 				}
 			}
 
-		} else
-			forwardEventToButton(e);
+		} else {
+			System.out.println("mouse entered column");
+			
+			//Check in clicked reference TODO add reference highlighting
+			if( this.treeTable.getTable().getValueAt(row, 2) instanceof String && 
+					((String)this.treeTable.getTable().getValueAt(row, 2)).equals(_("reference")) ){
+				
+				DataNode node = (DataNode) this.treeTable.getModelAdapter().nodeForRow(row);
+				
+				System.out.println("mouse entered reference: " + node.getName() + " on " + node.getAddress());
+			}
+		}
+		
+		forwardEventToButton(e,	row, col);
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		forwardEventToButton(e);
+		forwardEventToButton(e,
+				this.treeTable.getTable().rowAtPoint(e.getPoint()),
+				this.treeTable.getTable().columnAtPoint(e.getPoint()));
 	}
 }

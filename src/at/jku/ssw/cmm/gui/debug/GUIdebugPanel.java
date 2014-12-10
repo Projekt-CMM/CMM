@@ -159,6 +159,10 @@ public class GUIdebugPanel {
 	public void updateVariableTables(boolean completeUpDate) {
 		this.varView.update(compileManager, this.main.getSettings().setCMMFile(), completeUpDate);
 	}
+	
+	public void updateFontSize(){
+		this.varView.updateFontSize();
+	}
 
 	public void setReadyMode() {
 		this.ctrlPanel.setReadyMode();

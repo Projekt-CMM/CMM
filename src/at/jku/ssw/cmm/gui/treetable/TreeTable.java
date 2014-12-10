@@ -35,6 +35,9 @@ public class TreeTable extends JTable {
     public TreeTable( GUImain main, TreeTableDataModel treeTableModel ){
         super();
         
+        super.getTableHeader().setToolTipText("<html><b>" + _("Variable table columns") + "</b><br>" +
+        		_("You can change the width a column by<br>dragging and sliding its border.") + "</html>");
+        
         this.main = main;
         
         //Initialize button renderer
@@ -51,6 +54,9 @@ public class TreeTable extends JTable {
         
         //No column swapping / reordering
         super.getTableHeader().setReorderingAllowed(false);
+        
+        //Update font size
+        this.updateFontSize();
     }
     
     public void setTreeModel( TreeTableDataModel treeTableModel ){
@@ -69,8 +75,8 @@ public class TreeTable extends JTable {
     	this.dataModel = treeTableModel;
     	
     	//Create JTree
-        tree = new TreeTableCellRenderer(this, treeTableModel);
-        
+        tree = new TreeTableCellRenderer(this, treeTableModel, this.main);
+        tree.setFont(tree.getFont().deriveFont((float)this.main.getSettings().getVarSize()));
         
         this.modelAdapter = new TreeTableModelAdapter(treeTableModel, tree);
         super.setModel(this.modelAdapter);
@@ -89,7 +95,7 @@ public class TreeTable extends JTable {
  
         tree.setRootVisible(true); 
         
-        //Renderer for the tree
+        //Renderer for the the table
         setDefaultRenderer(TreeTableModel.class, tree);
         
         //Editor for the tree table
@@ -120,6 +126,8 @@ public class TreeTable extends JTable {
     	this.modelAdapter = new TreeTableModelAdapter(this.dataModel, tree);
         super.setModel(this.modelAdapter);
         
+        tree.setFont(tree.getFont().deriveFont((float)this.main.getSettings().getVarSize()));
+        
         //Re-initialize listeners
     	super.getColumn(_("Value")).setCellRenderer(this.buttonRenderer);
     	super.getColumn(_("Type")).setCellRenderer(this.buttonRenderer);
@@ -149,6 +157,12 @@ public class TreeTable extends JTable {
     
     public TreeTableModelAdapter getModelAdapter(){
     	return this.modelAdapter;
+    }
+    
+    public void updateFontSize(){
+    	//super.setRowHeight(32);
+    	super.setFont(super.getFont().deriveFont((float)this.main.getSettings().getVarSize()));
+    	this.updateTreeModel();
     }
 
 }

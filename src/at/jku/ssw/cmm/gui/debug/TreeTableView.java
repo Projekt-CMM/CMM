@@ -113,6 +113,8 @@ public class TreeTableView{
 		varTreeTable.repaint();
 	}
 	
-	
-
+	public void updateFontSize(){
+		varTreeTable.setFont(varTreeTable.getFont().deriveFont((float)this.main.getSettings().getVarSize()));
+		varTreeTable.repaint();
+	}
 }
