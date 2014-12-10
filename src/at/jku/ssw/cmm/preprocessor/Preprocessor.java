@@ -28,7 +28,7 @@ public class Preprocessor {
 		
 		// Reset breakpoints list
 		breakpoints.clear();
-		
+
 		Map<String, Integer> defines = new HashMap<>();
 		
 		newSourceCode = parseFile(sourceCode, workingDirectory, codeRegister, breakpoints, defines, 0, "main");
@@ -54,7 +54,7 @@ public class Preprocessor {
 		// TODO check if code inside string
 		//boolean insideString = false;
 		
-		List<Boolean> ifConditions = new ArrayList();
+		List<Boolean> ifConditions = new ArrayList<>();
 		
 		int lastCodeRegisterInsert = offset;
 		

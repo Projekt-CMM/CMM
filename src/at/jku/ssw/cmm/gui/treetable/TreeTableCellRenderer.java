@@ -9,6 +9,8 @@ import javax.swing.JTree;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreeModel;
 
+import at.jku.ssw.cmm.gui.GUImain;
+
 /**
  * This class basically controls the rendering of the tree table, its functionalities include:
  * <ul>
@@ -36,13 +38,16 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
     protected int visibleRow;
      
     private TreeTable treeTable;
+    
+    private final GUImain main;
      
-    public TreeTableCellRenderer(TreeTable treeTable, TreeModel model) {
+    public TreeTableCellRenderer(TreeTable treeTable, TreeModel model, GUImain main) {
         super(model);
         super.setCellRenderer(new TreeRenderer());
         this.treeTable = treeTable;
+        this.main = main;
         
-        setRowHeight(getRowHeight());
+        setRowHeight(getRowHeight()+1);
     }
  
     /**
@@ -50,9 +55,10 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
      */
     public void setRowHeight(int rowHeight) {
         if (rowHeight > 0) {
-            super.setRowHeight(rowHeight);
-            if (treeTable != null && treeTable.getRowHeight() != rowHeight) {
-                treeTable.setRowHeight(getRowHeight());
+            //TODO The line below causes NullPointerException with some L&Fs
+        	super.setRowHeight(rowHeight+this.main.getSettings().getVarOffset());
+            if (treeTable != null && treeTable.getRowHeight() != rowHeight+this.main.getSettings().getVarOffset()) {
+                treeTable.setRowHeight(getRowHeight()+this.main.getSettings().getVarOffset());
             }
         }
     }

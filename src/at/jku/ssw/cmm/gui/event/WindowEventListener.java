@@ -8,7 +8,7 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 
 import at.jku.ssw.cmm.gui.GUImain;
-import at.jku.ssw.cmm.gui.GUImainSettings;
+import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 
 /**
  * Event listener for the main GUI window. Used for triggering an event when the

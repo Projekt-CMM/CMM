@@ -17,7 +17,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import at.jku.ssw.cmm.gui.GUImain;
-import at.jku.ssw.cmm.gui.GUImainSettings;
+import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
 import at.jku.ssw.cmm.launcher.ProfileCreateException;

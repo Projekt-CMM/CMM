@@ -5,6 +5,7 @@ import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,6 +140,9 @@ public class GUIleftPanel {
 		// Text area for output
 		this.jOutputPane = InitLeftPanel.initOutputPane(panel2);
 		
+		// Update text panel font sizes
+		this.updateFontSize();
+		
 		panel2.setMinimumSize(new Dimension(200, 150));
 		panel2.setPreferredSize(new Dimension(200, 200));
 		panel2.setMaximumSize(new Dimension(2000, 2000));
@@ -166,6 +170,13 @@ public class GUIleftPanel {
 		// this.jInputPane.getDocument().addDocumentListener(this.codeListener);
 
 		return jPanelLeft;
+	}
+	
+	public void updateFontSize(){
+		this.jInputPane.setFont(this.jInputPane.getFont().deriveFont((float)this.main.getSettings().getTextSize()));
+		this.jOutputPane.setFont(this.jOutputPane.getFont().deriveFont((float)this.main.getSettings().getTextSize()));
+		
+		this.jSourcePane.setFont(this.jSourcePane.getFont().deriveFont((float)this.main.getSettings().getCodeSize()));
 	}
 
 	/**
@@ -270,12 +281,14 @@ public class GUIleftPanel {
 	/**
 	 * Increments the input highlighter (input text area), which marks the
 	 * already read characters, by one.
+	 * @throws InterruptedException 
+	 * @throws InvocationTargetException 
 	 */
-	public void increaseInputHighlighter() {
+	public void increaseInputHighlighter() throws InvocationTargetException, InterruptedException {
 
 		this.inputHighlightOffset++;
 
-		java.awt.EventQueue.invokeLater(new Runnable() {
+		java.awt.EventQueue.invokeAndWait(new Runnable() {
 			public void run() {
 				highlightInputPane();
 			}

@@ -213,9 +213,9 @@ public class InitTreeTableData {
 				//Normal array
 				if( obj.type.elements > 0 )
 					node.add(init, readArray(init, obj, node.getChild(obj.name, nPars > 0 ? "<html><b>array</b></html>" : "array", "", -1, obj.line), address + obj.adr, main));
-				//Reference array
+				//Reference array TODO
 				else
-					node.add(init, node.getChild(obj.name, nPars > 0 ? "<html><b>array</b></html>" : "array", _("reference"), -1, obj.line));
+					node.add(init, node.getChild(obj.name, nPars > 0 ? "<html><b>array</b></html>" : "array", _("reference"), address + obj.adr, obj.line));
 			}
 			//Reading a STRUCTURE
 			else if( obj.type.kind == Struct.STRUCT && obj.kind != Obj.PROC && obj.kind != Obj.TYPE && !obj.library ){
