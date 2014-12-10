@@ -40,7 +40,7 @@ public class QuestRun implements StdInOut, Debugger {
 		System.out.println("running");
 
 		// Run main function
-		interpreter.run(main.ast);
+		interpreter.run(main);
 		
 		try {
 			Memory.closeStackFrame();
@@ -70,7 +70,7 @@ public class QuestRun implements StdInOut, Debugger {
 		} catch (Exception e) {
 			
 			// Throw interpreter runtime error if no more input data available
-			throw new RunTimeException("no input data", null);
+			throw new RunTimeException("no input data", null, -1);
 		}
 		
 		return c;
