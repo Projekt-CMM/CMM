@@ -544,13 +544,21 @@ Statement<out Node st>              (.  Node e = null, con, curStat, newStat; .)
                                         continueLevel --; .)
   "while" "(" Condition<out con> 
   ")" ";"                           (.  st = new Node(Node.DOWHILE,con,st,line); .)
-| "for"                             (.  Node commands, relopCommand, relSt; .)
-  "(" Command<out commands>               
-  ";" Condition<out con>            
-  ";" Command<out relopCommand>
-  ")" Statement<out relSt>          (.  relopCommand.next = relSt;
-                                        commands.next = relopCommand;
-                                        st = new Node(Node.FOR,con,commands,line); .)
+| "for"                             (.  Node command = null, relopCommand = null, relSt; 
+                                        breakLevel ++; 
+                                        continueLevel ++; .)
+  "(" ( Command<out command>
+      | )                           (.  if(command == null)
+                                            command = new Node(Node.NOP,null,null,line); .)
+  ";" Condition<out con>
+  ";" (Command<out relopCommand>    
+      | )                           (.  if(relopCommand == null)
+                                            relopCommand = new Node(Node.NOP,null,null,line); .)
+  ")" Statement<out relSt>          (.  breakLevel --; 
+                                        continueLevel --;
+                                        relopCommand.next = relSt;
+                                        command.next = relopCommand;
+                                        st = new Node(Node.FOR,con,command,line); .)
 | "switch" "(" BinExpr<out e> ")"   (.  st = new Node(Node.SWITCH,e,null,line);
                                         curStat = null;
                                         breakLevel ++; 

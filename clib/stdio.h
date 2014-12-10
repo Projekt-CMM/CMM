@@ -4,6 +4,10 @@
  * http://www.cplusplus.com/reference/cstdio/
  */
 
+#ifndef __CLIB_STDIO__
+
+#define __CLIB_STDIO__
+
 //------------------- Forward declarations
 
 void library putc(char ch);
@@ -54,3 +58,5 @@ string library scanf() {
         }
     }
 }
+
+#endif /* __CLIB_STDIO__ */

@@ -1,0 +1,53 @@
+%!TEX root=../Vorlage_DA.tex
+%	########################################################
+% 				Realisierte Lösungen
+%	########################################################
+
+\subsection{Basisfunktionen}
+
+Um die kommunikation zwischen Programm und Interpreter herzustellen besitzt C-Compact eine kleine Anzahl von Basisfunktionen, mit denen ein C-Compact Programm nach außen kommunizieren kann.
+
+\subsubsection{read}
+
+Diese Funktion ließt jeweils 1. Zeichen vom Eingabestrom
+
+\begin{lstlisting}[language=CMM]
+char c = read();
+\end{lstlisting}
+
+\subsubsection{print}
+
+Diese Funktion schreibt jeweils 1. Zeichen auf den Ausgabestrom
+
+\begin{lstlisting}[language=CMM]
+print('a'); // test
+\end{lstlisting}
+
+\subsubsection{printf}
+
+Diese Funktion implementiert eine einfache printf Funktion, wie sie auch in C vorhanden  ist. Da diese Funktion eine nicht festgelegte Anzahl von \"ubergabeparamter besitzt, was C-Compact eigentlich nicht unterst\"utzt, ist diese zu den Basisfunktionen hinzugef\"ugt worden.
+
+\begin{lstlisting}[language=CMM]
+printf("int: %d\n", 10);
+\end{lstlisting}
+
+\subsubsection{length}
+
+Ermittelt die L\"ange eines Strings
+
+\begin{lstlisting}[language=CMM]
+string s = "Hello World!";
+int l = length(s);
+\end{lstlisting}
+
+\subsubsection{time}
+
+Gibt den aktuellen Timestamp des Computers zur\"uck. Wird unter anderem f\"ur den Zufallszahlengenerator ben\"otigt.
+
+\begin{lstlisting}[language=CMM]
+int t = time();
+\end{lstlisting}
+
+%\subsubsection{__is_def_type__}
+
+%\subsubsection{__assert__}

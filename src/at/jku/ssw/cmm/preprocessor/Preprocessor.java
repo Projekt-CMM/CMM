@@ -2,7 +2,9 @@ package at.jku.ssw.cmm.preprocessor;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,7 +29,7 @@ public class Preprocessor {
 		// Reset breakpoints list
 		breakpoints.clear();
 		
-		List<Object[]> defines = new ArrayList();
+		Map<String, Integer> defines = new HashMap<>();
 		
 		newSourceCode = parseFile(sourceCode, workingDirectory, codeRegister, breakpoints, defines, 0, "main");
 
@@ -39,7 +41,7 @@ public class Preprocessor {
 		return newSourceCode;
 	}
 	
-	public static String parseFile( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints, List<Object[]> defines, int offset, String file) throws IncludeNotFoundException{
+	public static String parseFile( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints, Map<String, Integer> defines, int offset, String file) throws IncludeNotFoundException{
 		// Debug message
 		DebugShell.out(State.LOG, Area.COMPILER, "parse File");
 		
@@ -62,6 +64,14 @@ public class Preprocessor {
 			line ++;
 			String commentString = null;
 			
+			boolean parseAllCode = true;
+			
+			// if one of the preprocessor if is not true, parsing of all code is not possible
+			for(int i=0; i< ifConditions.size(); i++) {
+				if(ifConditions.get(i) == false)
+					parseAllCode = false;
+			}
+			
 			if(s.contains("//")) {
 				commentString = s.substring(s.indexOf("//"));
 				s = s.substring(0, s.indexOf("//"));
@@ -75,7 +85,10 @@ public class Preprocessor {
 					s += s.substring(0, s.indexOf("*/"));
 					s = s.substring(0, s.indexOf("*/")+2);
 				} else {
-					newSourceCode += addString(s,commentString);
+					if(parseAllCode == false)
+						newSourceCode += addString("// ign " + s,commentString);
+					else
+						newSourceCode += addString(s,commentString);
 					continue;
 				}
 			}
@@ -99,10 +112,68 @@ public class Preprocessor {
 			if(s.matches("^\\s*#.*$")) {
 				String preString = s.substring(s.indexOf("#")+1);
 				s = "//## pre-command: " + s;
-
+				
 				if(preString.isEmpty()) {
 					// TODO 
 					// not known preprocessor command
+				} else if(preString.matches("^\\s*(ifdef|ifndef)\\s.*$")) {
+					Matcher m = Pattern.compile("^\\s*ifdef\\s*(\\w+)\\s*$").matcher(preString);
+					if(m.matches()) {
+						if(defines.containsKey(m.group(1)) && defines.get(m.group(1)) != 0)
+							ifConditions.add(true);
+						else
+							ifConditions.add(false);
+					} else {	
+						m = Pattern.compile("^\\s*ifndef\\s*(\\w+)\\s*$").matcher(preString);
+						if(m.matches()) {
+							if(defines.containsKey(m.group(1)) && defines.get(m.group(1)) != 0 )
+								ifConditions.add(false);
+							else
+								ifConditions.add(true);
+						} else {
+							// TODO incorrect rule
+						}
+					}
+				} else if(preString.matches("^\\s*else\\s*$")) {
+					if(ifConditions.size() != 0) {
+						// toggle state of condition
+						// TODO detect multible else statements
+						ifConditions.set(ifConditions.size()-1, !ifConditions.get(ifConditions.size()-1).booleanValue());
+					}
+				} else if(preString.matches("^\\s*endif\\s*$")) {
+					// remove last element
+					if(ifConditions.size() != 0) {
+						ifConditions.remove(ifConditions.size()-1);
+					} else {
+						// TODO to much endif
+					}
+				} else if(parseAllCode == false) {
+					// ignore other possible preprocessor commands
+				} else if(preString.matches("^\\s*define\\s.*$")) {
+					Matcher m = Pattern.compile("^\\s*define\\s*(\\w+)\\s*(\\w*)\\s*$").matcher(preString);
+					if(m.matches()) {
+						int value = 1;
+						
+						try {
+						// parse value
+						if(m.group(2) != "")
+							value = Integer.parseInt(m.group(2));
+						}
+						catch ( java.lang.NumberFormatException e) {
+							// TODO cannot parse value
+						}
+						
+						defines.put(m.group(1), value);
+					} else {
+						// TODO incorrect rule
+					}
+				} else if(preString.matches("^\\s*undef\\s.*$")) {
+					Matcher m = Pattern.compile("^\\s*undef\\s*(\\w+)\\s*$").matcher(preString);
+					if(m.matches()) {
+						defines.remove(m.group(1));
+					} else {
+						// TODO incorrect rule
+					}
 				} else if(preString.matches("^\\s*include.*$")) {
 					String path = null;
 					boolean localDirectory = true;
@@ -164,26 +235,13 @@ public class Preprocessor {
 					// TODO 
 					// add breakpoint
 					breakpoints.add(line);
-				} else if(preString.matches("^\\s*define\\s.*$")) {
-					
-				} else if(preString.matches("^\\s*undef\\s.*$")) {
-					
-				} else if(preString.matches("^\\s*(ifdef|ifndef)\\s.*$")) {
-				} else if(preString.matches("^\\s*else\\s*$")) {
-					if(ifConditions.size() != 0) {
-						// toggle state of condition
-						// TODO detect multible else statements
-						ifConditions.set(ifConditions.size()-1, !ifConditions.get(ifConditions.size()-1).booleanValue());
-					}
-				} else if(preString.matches("^\\s*endif\\s*$")) {
-					
 				} else {
 					// TODO 
 					// not known preprocessor command
 				}
 			}
 			
-			if(ifConditions.size() != 0 && ifConditions.get(ifConditions.size()-1) == false) {
+			if(parseAllCode == false) {
 				newSourceCode += addString("// ign " + s,commentString);
 				continue;
 			}
@@ -192,8 +250,7 @@ public class Preprocessor {
 		}
 
 		if(!ifConditions.isEmpty()) {
-			// TODO 
-			// preprocessor if-conditions not endet
+			// TODO not all preprocessor if-conditions have ended
 		}
 		
 		Object[] newCodeInsert = {lastCodeRegisterInsert+1, line, file};

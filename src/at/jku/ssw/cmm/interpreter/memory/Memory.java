@@ -28,7 +28,7 @@ public final class Memory {
 		}
 	}
 	
-	private static Map<Integer,MemoryInformation> memoryInformations = new HashMap<Integer, MemoryInformation>();
+	private static Map<Integer,MemoryInformation> memoryInformations = new HashMap<>();
 	
 	private static int framePointer;
 	private static int stackPointer;

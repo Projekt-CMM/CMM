@@ -5,6 +5,8 @@ package at.jku.ssw.cmm.interpreter;
  * TODO: JUnit
  */
 import java.nio.BufferOverflowException;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Struct;
@@ -140,7 +142,9 @@ public final class Interpreter {
 			try {
 				while (Condition(p.left)) {
 					try {
-						Statement(p.right);
+						if(p.right != null)
+							Statement(p.right);
+						// TODO infinite loop in the current state
 					} catch(ContinueException e) {
 					} finally {
 						selectCurrentLine(p);
@@ -153,7 +157,9 @@ public final class Interpreter {
 			try {
 				do
 					try {
-						Statement(p.right);
+						if(p.right != null)
+							Statement(p.right);
+						// TODO infinite loop in the current state
 					} catch(ContinueException e) {
 					} finally {
 						selectCurrentLine(p);
@@ -562,7 +568,15 @@ public final class Interpreter {
 				return Condition(p.left) && Condition(p.right); // AND &&
 			case Node.NOT:
 				return !Condition(p.left); // NOT
+			case Node.CALL:								//Opens new Integer c-- Function
+				Call(p);
+				//getting return Value	
+				if(Memory.getIntReturnValue() == 0)
+					return false;
+				else
+					return true;	
 			default:
+				System.out.println("kind: " + p.kind);
 				throw new RunTimeException("Not supportet struct node kind", p, currentLine);
 			}
 		case Struct.FLOAT:
@@ -586,6 +600,7 @@ public final class Interpreter {
 			case Node.AND:
 				return Condition(p.left) && Condition(p.right); // AND &&
 			case Node.NOT:
+				// TODO required?
 				return !Condition(p.left); // NOT
 			default:
 				throw new RunTimeException("Not supportet float node kind", p, currentLine);
@@ -611,6 +626,7 @@ public final class Interpreter {
 			case Node.AND:
 				return Condition(p.left) && Condition(p.right); // AND &&
 			case Node.NOT:
+				// TODO required?
 				return !Condition(p.left); // NOT
 			default:
 				throw new RunTimeException("Not supportet char node kind", p, currentLine);
@@ -629,6 +645,9 @@ public final class Interpreter {
 				return Condition(p.left) && Condition(p.right); // AND &&
 			case Node.NOT:
 				return !Condition(p.left); // NOT
+			case Node.CALL:								//Opens new Integer c-- Function
+				Call(p);
+				return Memory.getBoolReturnValue();
 			default:
 				throw new RunTimeException("Not supportet char node kind", p, currentLine);
 			}
@@ -663,6 +682,25 @@ public final class Interpreter {
 				break; 
 			default:
 				throw new RunTimeException("Not supportet length node kind", p, currentLine);
+			}
+			break;
+		case "time":	//Read, can read in Characters
+			Date date= new Date();
+			// get Timestamp: Startdate: 1 Jan. 1970
+			// TODO overflow-time: Tue, 19 Jan 2038 03:14:07 GMT
+			Memory.setIntReturnValue((int)(date.getTime()/1000));
+			break;
+		case "__is_def_bool__":
+		case "__is_def_int__":
+		case "__is_def_float__":
+		case "__is_def_char__":
+		case "__is_def_string__":
+			Memory.setBoolReturnValue(Memory.getMemoryInformation(IdentAdr(p.left.obj)).isInitialized);
+			break;
+		case "__assert__":
+			if(!BoolExpr(p.left)) {
+				String s = Strings.get(StringExpr(p.left.next));
+				throw new RunTimeException(s, p, currentLine);
 			}
 			break;
 		case "printf":

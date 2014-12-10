@@ -174,7 +174,7 @@ HexDigit            = {Digit}|[A-Fa-f]
 OctalDigit          = [0-7]
 Exponent            = [eE][+-]?{Digit}+
 
-PreprocessorWord    = /*define|undef|elif|else|endif|if|ifdef|ifndef|*/include|pause|wait
+PreprocessorWord    = define|undef|else|endif|ifdef|ifndef|include|pause|wait
 
 Trigraph            = ("??="|"??("|"??)"|"??/"|"??'"|"??<"|"??>"|"??!"|"??-")
 
@@ -262,6 +262,7 @@ URL                 = (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCh
    "printf" |
    "read"   |
    "write"  |
+   "time"   |
    
    /* math.h Functions*/
    "acos"   |
@@ -293,6 +294,8 @@ URL                 = (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCh
 /* "atof"   | */
    "ftoa"   |
    "itoa"   |
+   "rand"   |
+   "srand"  |
    
    /* stdio.h Functions*/
    "prints" |
