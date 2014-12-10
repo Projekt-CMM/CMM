@@ -1,0 +1,35 @@
+%!TEX root=../Vorlage_DA.tex
+%	########################################################
+% 				Lexikalische Struktur
+%	########################################################
+
+\subsection{Standardbibliotek}
+
+Der C-Compact Standard besitzt zur Kommunikation zwischen Programm und Oberfläche nur wenige Funktionen. Funktionalitäten wie Ein/Ausgabe von Strings, das Umwandeln von int nach string,... müssen daher direkt in C-Compact implementiert werden.
+
+In C-Compact sind die wichtigsten Funktionen, welche in der C-Standardbibliotek vorkommen nachimplementiert.
+
+\subsubsection{math.h}
+
+\subsubsection{stdio.h}
+
+\begin{itemize}
+  \item void putc(char ch);
+  \item void prints(string s);
+  \item string scanf();
+\end{itemize}
+
+\subsubsection{stdlib.h}
+
+\begin{itemize}
+  \item string itoa(int x);
+  \item string ftoa(float f);
+  \item int atoi(string s);
+%  \item float atof(string s);
+  \item int rand();
+  \item void srand (int seed);
+\end{itemize}
+
+%\subsubsection{string.h}
+
+%\subsubsection{time.h}
