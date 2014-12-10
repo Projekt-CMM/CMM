@@ -4,6 +4,10 @@
  * http://www.cplusplus.com/reference/cstdlib/
  */
 
+#ifndef __CLIB_STDLIB__
+
+#define __CLIB_STDLIB__
+
 //------------------- Forward declarations
 
 string library itoa(int x);
@@ -160,3 +164,5 @@ int library rand() {
 void library srand (int seed) {
     __cur_rand_generator_state__ = seed;
 }
+
+#endif /* __CLIB_STDLIB__ */

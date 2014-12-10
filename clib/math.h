@@ -6,6 +6,10 @@
  * http://www.cplusplus.com/reference/cmath/
  */
 
+#ifndef __CLIB_MATH__
+
+#define __CLIB_MATH__
+
 //------------------- const declarations
 
 const float library M_E     = 2.718281828;      //-- The base of natural logarithms (e).
@@ -312,3 +316,5 @@ float library tan(float x) {
 float library tanh(float x) {
     return 0.;
 }
+
+#endif /* __CLIB_MATH__ */
