@@ -10,6 +10,7 @@ import java.awt.Insets;
 import java.io.File;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -60,20 +61,25 @@ public class UpperPanel extends JPanel {
 	 * The listener for the profile settings GUI
 	 */
 	private final ProfileSettingsListener listener;
-
+	
+	/**
+	 * Profile pic Path String
+	 */
+	private String profilePicPath;
+	
 	// GridBagConstraints
 	private GridBagConstraints c;
 
 	private JTextField jTextField;
 	
-	private JLabel profilePicture;
+	private JLabel profilePicture = new JLabel();
 
 	/**
 	 * Initializes all components of this panel. <b>Should only be called once
 	 * in constructor</b>
 	 */
 	private void init() {
-
+		
 		// Init gridBagLayout
 		super.setLayout(new BorderLayout());
 		this.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -85,8 +91,7 @@ public class UpperPanel extends JPanel {
 		inside.setBorder(BorderFactory.createLoweredBevelBorder());
 		c = new GridBagConstraints();
 
-		refreshProfilePic(this.profile);
-
+		loadProfilePic(this.profile);
 		profilePicture.setToolTipText("<html><b>" + _("click to change image")
 				+ "</b><br>" + _("click here and select your<br>profile image")
 				+ "</html>");
@@ -155,30 +160,55 @@ public class UpperPanel extends JPanel {
 		return this.jTextField.getText();
 	}
 	
+	/**
+	 * The choosen Profile Pic Path, in the image selection window
+	 * @return profilePicPath
+	 */
+	public String getProfilePic(){
+		
+		return profilePicPath;
+	}
 	
 	/**
-	 * Refreshing the current profile Image
+	 * load the current profile Image
 	 */
-	public void refreshProfilePic(Profile profile){
-		
+	public void loadProfilePic(Profile profile){
 		if (profile == null || profile.getProfileimage() == null)
-			// TODO better default image
-			profilePicture = LoadStatics.loadImage("images/prodef.png", true,
-					128, 128);
+			profilePicture.setIcon(LoadStatics.loadIcon(Profile.IMAGE_DEFAULT,
+					128, 128));
 		else
 			//Loading fixed profile image
-			if(profile.getInitPath() != null)
-				profilePicture = LoadStatics.loadImage(profile.getInitPath()
-						+ File.separator + profile.getProfileimage(), true, 128, 128);
-		
-			//Loading temporary choosen Image files
-			else{
-				profilePicture = LoadStatics.loadImage(profile.getProfileimage(), true, 128, 128);
-				System.out.println("Current ProfilePic: " + profile.getProfileimage());
+			if(profile.getInitPath() != null){
+				ImageIcon icon = LoadStatics.loadIcon(profile.getInitPath()
+						+ File.separator + profile.getProfileimage(), 128, 128);
+					profilePicture.setIcon(icon);
 			}
+		
+		if(profilePicture.getIcon().getIconHeight() == -1 && profilePicture.getIcon().getIconWidth() == -1)
+			profilePicture.setText(_("Corrupted Avatar"));
+				
 
 		profilePicture.revalidate();
 		profilePicture.repaint();
+	}
+	
+	/**
+	 * Refreshes the Profile pic, TODO
+	 */
+	public void refreshProfilePic(String profilePicPath){
+		
+		System.out.println("Current ProfilePic: " + profile.getProfileimage());
+		profilePicture.setIcon(LoadStatics.loadIcon(profilePicPath,  128, 128));
+		
+		//Setting for later usage
+		if(profilePicture.getIcon().getIconHeight() == -1 && profilePicture.getIcon().getIconWidth() == -1)
+			profilePicture.setText(_("Corrupted Image"));
+		else{
+			//Only saving if the file is useable, TODO Error field
+			this.profilePicPath = profilePicPath;
+			profilePicture.setText("");
+		}
+		
 	}
 
 }

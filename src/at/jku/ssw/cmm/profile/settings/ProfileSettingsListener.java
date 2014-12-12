@@ -134,18 +134,23 @@ public class ProfileSettingsListener {
 				}
 				
 				try {
-					String profileImagePath = gui.getProfile().getProfileimage();
+					String profileImagePath = gui.getUpperPanel().getProfilePic();
 					
+					System.out.println(gui.getUpperPanel().getProfilePic());
 					//Only copying files if the File is not the Profile image
 					if(profileImagePath != null && !profileImagePath.equals(Profile.FILE_PROFILEIMAGE)){
+					
+					//Delete old avatar.<png>
+					if(gui.getProfile().getProfileimage() != null){
+						Profile p = gui.getProfile();
 						
-						//Creating the file
-						File file = new File( profileImagePath);
+						File file = new File(p.getInitPath() + p.sep + p.getProfileimage());
+						file.delete();
+					}
 						
-						if(file != null){
-							//Copying the Profile image into the Profile Folder
-							gui.setProfile(Profile.changeProfileImage(gui.getProfile(), profileImagePath));
-						}
+					//Copying the Profile image into the Profile Folder
+					gui.setProfile(Profile.changeProfileImage(gui.getProfile(), profileImagePath));
+					
 					}
 				} catch (IOException e) {
 					System.out.println("");
@@ -214,11 +219,8 @@ public class ProfileSettingsListener {
 				
 				if(gui.getProfile() == null)
 					gui.setProfile(new Profile());
-							
-				gui.getProfile().setProfileimage(file.getAbsolutePath());
-				
-				System.out.println("Profile image changed");
-				gui.getUpperPanel().refreshProfilePic(gui.getProfile());
+										
+				gui.getUpperPanel().refreshProfilePic(file.getAbsolutePath());
 				
 			} catch (ProfileCreateException e) {
 				//Nothing happens

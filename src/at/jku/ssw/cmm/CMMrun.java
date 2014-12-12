@@ -6,6 +6,7 @@ import at.jku.ssw.cmm.debugger.Debugger;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.interpreter.Interpreter;
+import at.jku.ssw.cmm.interpreter.exceptions.BufferOverflowException;
 import at.jku.ssw.cmm.interpreter.exceptions.RunTimeException;
 import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
@@ -86,10 +87,11 @@ public class CMMrun extends Thread {
 		// Thrown when runtime error occurs
 		catch (final RunTimeException e) {
 
-			System.err.println("[ERROR] Interpreter thread threw RunTimeException");
-			
+			System.err
+					.println("[ERROR] Interpreter thread threw RunTimeException");
+
 			// print detailed StackTrace
-			if(DebugShell.maxLogLevel == DebugShell.State.LOG) {
+			if (DebugShell.maxLogLevel == DebugShell.State.LOG) {
 				e.printStackTrace();
 			}
 
@@ -97,7 +99,7 @@ public class CMMrun extends Thread {
 			// error mode
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					if(e.getNode().line>0)
+					if (e.getNode().line > 0)
 						debug.setErrorMode(e.getMessage(), e.getNode().line);
 					else
 						debug.setErrorMode(e.getMessage(), e.getLine());
@@ -106,19 +108,33 @@ public class CMMrun extends Thread {
 			reply.setNotRunning();
 			return;
 		} catch (Exception e) {
-			System.err.println("unknown interpreter error occurred");
-			e.printStackTrace();
+			// print detailed StackTrace
+			if (DebugShell.maxLogLevel == DebugShell.State.LOG) {
+				e.printStackTrace();
+			}
+
+			// Clean thread data partly up; leave variable data for GUI runtime
+			// error mode
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					debug.setErrorMode("unknown interpreter exception", -1);
+				}
+			});
+			reply.setNotRunning();
+			return;
 		}
 
 		// Exit message
 		System.out.println("[thread] Interpreter thread exited");
 
-		// Set running flag to false so that the interpreter can be started again
+		// Set running flag to false so that the interpreter can be started
+		// again
 		reply.setNotRunning();
-		
+
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				// Set main GUI to ready mode (where the user can edit source code)
+				// Set main GUI to ready mode (where the user can edit source
+				// code)
 				debug.setReadyMode();
 			}
 		});

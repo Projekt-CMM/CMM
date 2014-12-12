@@ -4,6 +4,7 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Insets;
 
 import javax.swing.BorderFactory;
@@ -44,6 +45,7 @@ public class InitLeftPanel {
 		textArea.setSyntaxEditingStyle("text/ccompact");
 		
 	    textArea.setCodeFoldingEnabled(true);
+	    textArea.setFont(textArea.getFont().deriveFont((float)20.0));
 	    textArea.setAntiAliasingEnabled(true);
 	    
 	    //textArea.setToolTipText("<html><b>Title</b><br>description<br>description2<br><i>italic text</i></html>");
