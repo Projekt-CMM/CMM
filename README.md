@@ -37,5 +37,7 @@ demonstrative and understandable way.
 The program is based on three components:
 
 1) A compiler which generates an abstract syntax tree
+
 2) An interpreter which builds up a call stack and runs the AST step by step
+
 3) The GUI which enables editing the source code and running it
