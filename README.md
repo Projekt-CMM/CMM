@@ -3,6 +3,8 @@ CMM
 
 java based compiler for a minimal c-dialect
 
+**Licence:** GNU GPLv3
+
 [![Build Status](https://travis-ci.org/Projekt-CMM/CMM.svg?branch=master)](https://travis-ci.org/Projekt-CMM/CMM)
 
 ### Build project
