@@ -10,6 +10,8 @@ import java.net.URISyntaxException;
 
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 
 public class Credits {
 	
@@ -23,6 +25,25 @@ public class Credits {
 		this.jFrame.setPreferredSize(new Dimension(400, 400));
 		this.jFrame.setResizable(false);
 		
+		java.net.URL cssURL = null;
+		javax.swing.text.Document doc = null;
+		try {
+			cssURL = getClass().getResource("/at/jku/ssw/cmm/gui/credits/credits.css").toURI().toURL();
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+
+		// Import stylesheet
+		if (cssURL != null) {
+			StyleSheet s = new StyleSheet();
+			s.importStyleSheet(cssURL);
+			HTMLEditorKit kit = new HTMLEditorKit();
+			kit.setStyleSheet(s);
+			doc = kit.createDefaultDocument();
+		}
+		
 		java.net.URL htmlURL = null;
 		try {
 			htmlURL = getClass().getResource("/at/jku/ssw/cmm/gui/credits/credits.html").toURI().toURL();
@@ -34,6 +55,10 @@ public class Credits {
 		}
 		
 		JEditorPane editorPane = new JEditorPane();
+		
+		if( doc != null )
+			editorPane.setDocument(doc);
+		
 		try {
 			editorPane.setPage(htmlURL);
 		} catch (IOException e) {
