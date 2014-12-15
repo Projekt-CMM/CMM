@@ -78,6 +78,9 @@ public class Profile {
 		XML_PROFILEIMAGE = "profileimage",
 		XML_CURRENT = "current",
 		XML_MASTER = "master";
+	
+	public static final String 
+		IMAGE_DEFAULT = "images/prodef.png";
 
 	private static Profile activeProfile;
 	
@@ -256,9 +259,11 @@ public class Profile {
 				        		quest.setPackagePath(currentNode.getTextContent());
 				        	if(currentNode.getNodeName().equals(Profile.XML_DATE)) //date
 				        		quest.setStringDate(currentNode.getTextContent());
-				        	if(currentNode.getNodeName().equals(Profile.XML_TOKEN)) //token
-				        		quest.setToken(currentNode.getTextContent());
-				        }
+				        	if(currentNode.getNodeName().equals(Profile.XML_TOKEN)){ //token
+				        		//TODO make tokens variable
+				        		quest.setToken(Token.readToken(currentNode.getTextContent()));
+				        	}
+				       	}
 				    }
 				    
 				    //When the Profile Quests wasn't set
@@ -302,6 +307,8 @@ public class Profile {
         DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder icBuilder;
         
+ 
+
         String path = profile.getInitPath() + sep + Profile.FILE_PROFILE;
         
             try {
@@ -364,8 +371,9 @@ public class Profile {
         state.appendChild(writeProfileElements(doc, state, Profile.XML_QUEST, quest.getQuestPath()));
         state.appendChild(writeProfileElements(doc, state, Profile.XML_PACKAGE, quest.getPackagePath()));
         state.appendChild(writeProfileElements(doc, state, Profile.XML_DATE, quest.getStringDate()));
+        //TODO must be variable
         if(quest.getToken() != null)
-        	state.appendChild(writeProfileElements(doc, state, Profile.XML_TOKEN, quest.getToken()));
+        	state.appendChild(writeProfileElements(doc, state, Profile.XML_TOKEN, quest.getToken().getPath()));
         
         return state;
 	}
@@ -381,7 +389,11 @@ public class Profile {
         	
         
     }
-    
+    /**
+     * Sorts the List of quests, at first status, opened, and inprogress, others can be find at the bottom of the list, also sorts by date
+     * @param quests
+     * @return
+     */
 	private static List<Quest> sortQuestList(List<Quest> quests){
 		//Sorting List, up tp Status, Opened, Inprogress, others are at bottom list
 		final List<String> definedOrder =  Arrays.asList(Quest.STATE_LOCKED,Quest.STATE_FINISHED,Quest.STATE_SELECTABLE, Quest.STATE_INPROGRESS,Quest.STATE_OPEN);
@@ -487,8 +499,11 @@ public class Profile {
 				try {
 					File dir = new File(profileTokenPath);
 					dir.mkdirs();
+					//Copying the <token>.xml
+					LoadStatics.copyFileUsingStream(new File(questTokenPathFile), new File(profileTokenPath + sep + quest.getToken().getPath()));
 					
-					LoadStatics.copyFileUsingStream(new File(questTokenPathFile), new File(profileTokenPath + sep + quest.getToken()));
+					//Copying the <tokenimage.png>
+					LoadStatics.copyFileUsingStream(new File(questTokenPathFile), new File(profileTokenPath + sep + quest.getToken().getImagePath()));
 				} catch (IOException e) {
 					System.err.println("Token could not be copyed");
 				}
@@ -546,7 +561,6 @@ public class Profile {
 	 * @throws XMLWriteException 
 	 */
 	public static Profile changeProfileImage(Profile profile, String sourcePath) throws IOException, XMLWriteException{
-		
 		String extension = sourcePath.substring(sourcePath.lastIndexOf('.'), sourcePath.length());
 		
 		
@@ -559,22 +573,18 @@ public class Profile {
 				sourcePath.endsWith(".gif") ){
 			
 				String destPath = profile.getInitPath() + Profile.sep + Profile.FILE_PROFILEIMAGE + extension;
-			
-				if(destPath.equals(sourcePath))
-					return profile;
 				
 				File source  = new File(sourcePath);
 				File dest = new File(destPath);
 				
+				//Copying the File
 				LoadStatics.copyFileUsingStream(source, dest);
 				profile.setProfileimage(dest.getName());
 				
 		}else
 			throw new IOException();
-				
-				
-
 		
+		//Returning the new profile with the correct imagePath
 		return profile;
 	}
 	
