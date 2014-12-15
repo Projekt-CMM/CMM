@@ -4,7 +4,6 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -13,10 +12,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 
 public class Credits {
-
-	public Credits() {
-
-	}
 	
 	private JFrame jFrame;
 
@@ -30,14 +25,13 @@ public class Credits {
 		
 		java.net.URL htmlURL = null;
 		try {
-			//htmlURL = getClass().getResource("/at/jku/ssw/cmm/gui/credits/credits.html").toURI().toURL();
-			htmlURL = new File("src/at/jku/ssw/cmm/gui/credits/credits.html").toURI().toURL();
+			htmlURL = getClass().getResource("/at/jku/ssw/cmm/gui/credits/credits.html").toURI().toURL();
 		} catch (MalformedURLException e1) {
 			e1.printStackTrace();
 			return;
-		} /*catch (URISyntaxException e) {
+		} catch (URISyntaxException e) {
 			e.printStackTrace();
-		}*/
+		}
 		
 		JEditorPane editorPane = new JEditorPane();
 		try {
