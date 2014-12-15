@@ -178,7 +178,7 @@ public class Preprocessor {
 							if(!m.group(2).toString().isEmpty())
 								value = Integer.parseInt(m.group(2));
 						} catch ( java.lang.NumberFormatException e) {
-							throw new PreprocessorException("preprocessor value is not an integer1", file, fileLine);
+							throw new PreprocessorException("preprocessor value is not an integer", file, fileLine);
 						}
 						
 						defines.put(m.group(1), value);
