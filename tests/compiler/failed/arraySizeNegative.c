@@ -7,5 +7,5 @@
 
 void main() {
 	// Array has size of -10
-	int[-10] x;
+	int x[-10];
 }

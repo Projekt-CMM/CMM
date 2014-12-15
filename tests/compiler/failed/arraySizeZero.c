@@ -7,5 +7,5 @@
 
 void main() {
 	// Array has size of zero
-	int[0] x;
+	int x[0];
 }

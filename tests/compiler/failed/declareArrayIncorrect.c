@@ -5,7 +5,7 @@
 * @date 8 July 2014
 */
 
-int arr[8]
+int[8] arr;
 
 void main() {
 }

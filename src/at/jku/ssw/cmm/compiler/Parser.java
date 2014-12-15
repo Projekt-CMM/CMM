@@ -340,66 +340,27 @@ public class Parser {
 
 	Node  VarDecl() {
 		Node  e;
-		Struct type; 
-		Node curNode = null, newNode; 
-		Obj curObj;
+		Struct type;
 		boolean library = false; 
-		e = null;
-		// get current line
-		int line = la.line; 
+		Node eNew, eHelp;
+		e = null; 
 		type = Type();
 		if (la.kind == 37) {
 			Get();
 			library = true; 
 		}
-		Expect(1);
-		curObj = tab.insert(Obj.VAR, t.val, type, line); 
-		curObj.library = library; 
-		if (la.kind == 13) {
-			Get();
-			e = BinExpr();
-			if(type == null || (!type.isPrimitive() && type != Tab.stringType)) 
-			   SemErr("type is not a primitive or string");
-			    
-			// check if Expression is not null
-			else if(e == null) 
-			   SemErr("right operator is not defined");
-			    
-			// make implicit type conversation
-			else 
-			   e = tab.impliciteTypeCon(e, type);
-			                                    // add assignment
-			e = new Node(Node.ASSIGN,new Node(curObj),e,line);
-			                                       curNode = e; 
-		}
+		e = VarDeclPart(type, library);
+		eHelp = e; 
 		while (la.kind == 40) {
 			Get();
-			Expect(1);
-			curObj = tab.insert(Obj.VAR, t.val, type, line); 
-			if (la.kind == 13) {
-				Get();
-				newNode = BinExpr();
-				if(type == null || (!type.isPrimitive() && type != Tab.stringType)) 
-				   SemErr("type is not a primitive or string");
-				                                      // check if Expression is not null
-				else if(newNode == null) 
-				   SemErr("right operator is not defined");
-				
-				// make implicit type conversation
-				else 
-				   newNode = tab.impliciteTypeCon(newNode, type);
-				
-				// if no assignment has occour yet, do the following
-				if(curNode == null) {
-				   e = new Node(Node.ASSIGN,new Node(curObj),newNode,line);
-				   curNode = e;
-				}
-				// otherwise that
-				else {
-				   curNode.next = new Node(Node.ASSIGN,new Node(curObj),newNode,line); 
-				   curNode = curNode.next; 
-				} 
-			}
+			eNew = VarDeclPart(type, library);
+			if(eNew != null) {
+			   if(eHelp == null)
+			       eHelp = eNew;
+			   else
+			       eHelp.next = eNew;
+			   eHelp = eNew; 
+			} 
 		}
 		Expect(12);
 		return e;
@@ -535,7 +496,20 @@ public class Parser {
 		if(obj.kind != Obj.TYPE)
 		   SemErr(obj.name + " is not a type");
 		 
-		type = obj.type;
+		type = obj.type; 
+		return type;
+	}
+
+	Node  VarDeclPart(Struct type, boolean library) {
+		Node  e;
+		Struct curType; 
+		Node newNode; 
+		Obj curObj;
+		e = null;
+		// get current line
+		int line = la.line; 
+		Expect(1);
+		String varName = t.val;
 		// init array-list, which store the size of the dimensions
 		ArrayList<Integer> dimensions = new ArrayList<>(); 
 		while (la.kind == 10) {
@@ -559,10 +533,28 @@ public class Parser {
 			   SemErr("array-size must be 1 or higher"); 
 			Expect(11);
 		}
+		curType = type;
 		for(int i = dimensions.size()-1; i>=0;i--) {
-		   type = new Struct(Struct.ARR, dimensions.get(i), type);
+		   curType = new Struct(Struct.ARR, dimensions.get(i), curType);
 		} 
-		return type;
+		// create new variable
+		curObj = tab.insert(Obj.VAR, varName, curType, line); 
+		curObj.library = library; 
+		if (la.kind == 13) {
+			Get();
+			newNode = BinExpr();
+			if(curType == null || (!curType.isPrimitive() && curType != Tab.stringType)) 
+			   SemErr("type is not a primitive or string");
+			                                      // check if Expression is not null
+			else if(newNode == null) 
+			   SemErr("right operator is not defined");
+			
+			// make implicit type conversation
+			else 
+			   newNode = tab.impliciteTypeCon(newNode, curType);
+			e = new Node(Node.ASSIGN,new Node(curObj),newNode,line); 
+		}
+		return e;
 	}
 
 	Node  BinExpr() {
@@ -1512,7 +1504,7 @@ class Errors {
 			case 68: s = "invalid ConstDecl"; break;
 			case 69: s = "invalid ProcDecl"; break;
 			case 70: s = "invalid ProcDecl"; break;
-			case 71: s = "invalid Type"; break;
+			case 71: s = "invalid VarDeclPart"; break;
 			case 72: s = "invalid Statement"; break;
 			case 73: s = "invalid Statement"; break;
 			case 74: s = "invalid Statement"; break;
