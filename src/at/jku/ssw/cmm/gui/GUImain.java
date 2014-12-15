@@ -204,7 +204,7 @@ public class GUImain {
 		InitMenuBar.initFileM(this.jFrame, this, this.menuBarControl, listener);
 
 		this.menuBarControl.updateRecentFiles(this.settings.getRecentFiles(), this.settings.getCMMFilePath());
-		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane());
+		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), false);
 		
 		// Set debug panel to ready mode
 		this.rightPanelControl.getDebugPanel().setReadyMode();
@@ -310,24 +310,32 @@ public class GUImain {
 	}
 
 	public void setReadyMode() {
+		
+		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), false);
 
 		this.leftPanelControl.setReadyMode();
 		this.rightPanelControl.hideErrorPanel();
 	}
 
 	public void setErrorMode(String msg, int line) {
+		
+		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), false);
 
 		this.leftPanelControl.setErrorMode(line);
 		this.rightPanelControl.showErrorPanel(msg);
 	}
 
 	public void setRunMode() {
+		
+		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), true);
 
 		this.leftPanelControl.setRunMode();
 		this.rightPanelControl.hideErrorPanel();
 	}
 
 	public void setPauseMode() {
+		
+		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), true);
 
 		this.leftPanelControl.setPauseMode();
 		this.rightPanelControl.hideErrorPanel();

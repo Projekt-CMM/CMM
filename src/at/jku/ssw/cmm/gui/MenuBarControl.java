@@ -79,8 +79,8 @@ public class MenuBarControl {
 		this.redo = redo;
 	}
 	
-	public void updateUndoRedo( RSyntaxTextArea tArea ){
-		this.undo.setEnabled(tArea.canUndo());
-		this.redo.setEnabled(tArea.canRedo());
+	public void updateUndoRedo( RSyntaxTextArea tArea, boolean running ){
+		this.undo.setEnabled(!running & tArea.canUndo());
+		this.redo.setEnabled(!running & tArea.canRedo());
 	}
 }
