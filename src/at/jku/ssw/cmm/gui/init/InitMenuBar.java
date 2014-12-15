@@ -86,6 +86,13 @@ public class InitMenuBar {
 			menuBarControl.add(saveMI);
 			
 			fileM.addSeparator();
+			
+			// --- edit -> properties ---
+			JMenuItem propertiesMI = new JMenuItem(_("Properties"));
+			propertiesMI.addActionListener(listener.propertiesHandler);
+			fileM.add(propertiesMI);
+						
+			fileM.addSeparator();
 		
 			// --- file -> exit ---
 			JMenuItem exitMI = new JMenuItem(_("Exit"));
@@ -93,15 +100,21 @@ public class InitMenuBar {
 			exitMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, ActionEvent.ALT_MASK));
 			fileM.add(exitMI);
 			
-		/* --- MENU: "edit" --- */
-		JMenu editM = new JMenu(_("Edit"));
-		menubar.add(editM);
-				
-			// --- edit -> properties ---
-			JMenuItem propertiesMI = new JMenuItem(_("Properties"));
-			propertiesMI.addActionListener(listener.propertiesHandler);
-			propertiesMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
-			editM.add(propertiesMI);
+		/* --- MENU: "source code" --- */
+		JMenu codeMI = new JMenu(_("Source code"));
+		menubar.add(codeMI);
+		
+			// --- edit -> undo ---
+			JMenuItem undoMI = new JMenuItem(_("Undo"));
+			undoMI.addActionListener(listener.undoHandler);
+			undoMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
+			codeMI.add(undoMI);
+					
+			// --- edit -> redo ---
+			JMenuItem redoMI = new JMenuItem(_("Redo"));
+			redoMI.addActionListener(listener.redoHandler);
+			redoMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
+			codeMI.add(redoMI);
 		
 		/* --- MENU: "progress" --- */
 		if( main.hasAdvancedGUI() ){

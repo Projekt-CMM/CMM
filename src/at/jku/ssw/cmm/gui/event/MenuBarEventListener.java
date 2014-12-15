@@ -266,6 +266,24 @@ public class MenuBarEventListener {
 		}
 	};
 	
+	public ActionListener undoHandler = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			jSourcePane.undoLastAction();
+		}
+	};
+	
+	public ActionListener redoHandler = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			jSourcePane.redoLastAction();
+		}
+	};
+	
 	public ActionListener propertiesHandler = new ActionListener() {
 
 		@Override
