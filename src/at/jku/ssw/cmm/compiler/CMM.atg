@@ -1,3 +1,24 @@
+/*
+ *  This file is part of C-Compact.
+ *
+ *  C-Compact is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  C-Compact is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with C-Compact. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright (c) 2014-2015 Fabian Hummer
+ *  Copyright (c) 2014-2015 Thomas Pointhuber
+ *  Copyright (c) 2014-2015 Peter Wassermair
+ */
+
 $package=at.jku.ssw.cmm.compiler
 
 import java.util.ArrayList;
@@ -239,44 +260,62 @@ ident                               (.  // create new constant variable
 ";"    
 .
 //-------------------------------------------------------------------------
-VarDecl<out Node e>                 (.  Struct type; 
-                                        Node curNode = null, newNode; 
+VarDecl<out Node e>                 (.  Struct type;
+                                        boolean library = false; 
+                                        Node eNew, eHelp;
+                                        e = null; .)
+=
+Type<out type>
+[ "library"                         (. library = true; .)
+]
+VarDeclPart<out e, type, library>       (.  // if no assignment has occour yet, do the following
+                                            eHelp = e; .)
+{ "," 
+  VarDeclPart<out eNew, type, library>  (.  if(eNew != null) {
+                                                if(eHelp == null)
+                                                    eHelp = eNew;
+                                                else
+                                                    eHelp.next = eNew;
+                                                eHelp = eNew; 
+                                            } .)
+} ";"        
+.
+//-------------------------------------------------------------------------
+VarDeclPart<out Node e, Struct type, boolean library>   
+=                                   (.  Struct curType; 
+                                        Node newNode; 
                                         Obj curObj;
-                                        boolean library = false; .)
-=                                   (.  e = null;
+                                        e = null;
                                         // get current line
                                         int line = la.line; .)
-Type<out type>
-[ "library"                         (.  library = true; .)
-]
-ident                               (.  // create new variable
-                                        curObj = tab.insert(Obj.VAR, t.val, type, line); 
+ident                               (.  String varName = t.val;
+                                        // init array-list, which store the size of the dimensions
+                                        ArrayList<Integer> dimensions = new ArrayList<>(); .)
+  { "["                             (.  int arraySize = 1; .)
+  ( intCon                          (.  // get array size of this dimensions
+                                        arraySize = tab.intVal(t.val); .)
+  | ident                           (.  Obj helpObj = tab.find(t.val); 
+                                        if(helpObj.kind != Obj.CON)
+                                            SemErr(helpObj.name + " is not a constant");
+                                        if(helpObj.type != Tab.intType)
+                                            SemErr(helpObj.name + " is not an int constant");
+                                        arraySize = helpObj.val; .)
+  )                                 (.  // add this dimension
+                                        dimensions.add(arraySize);
+                                        // check if size of dimension is at least 1 
+                                        if(arraySize <= 0)
+                                            SemErr("array-size must be 1 or higher"); .)
+  "]" }                             (.  // generate array (if multi dimension, array in array in...)
+                                        curType = type;
+                                        for(int i = dimensions.size()-1; i>=0;i--) {
+                                            curType = new Struct(Struct.ARR, dimensions.get(i), curType);
+                                        } 
+                                        // create new variable
+                                        curObj = tab.insert(Obj.VAR, varName, curType, line); 
                                         curObj.library = library; .)
-  [ "="
-    BinExpr<out e>                  (.  // check if type of variable declaration is correct 
-                                        // TODO probably direct after declaration?
-                                        if(type == null || (!type.isPrimitive() && type != Tab.stringType)) 
-                                            SemErr("type is not a primitive or string");
-                                             
-                                        // check if Expression is not null
-                                        else if(e == null) 
-                                            SemErr("right operator is not defined");
-                                             
-                                        // make implicit type conversation
-                                        else 
-                                            e = tab.impliciteTypeCon(e, type);
-                                    
-                                        // add assignment
-                                        e = new Node(Node.ASSIGN,new Node(curObj),e,line);
-                                       
-                                        curNode = e; .)
-  ]
-{ "," 
-  ident                             (.  // create new variable
-                                        curObj = tab.insert(Obj.VAR, t.val, type, line); .)
   [ "="                                
     BinExpr<out newNode>            (.  // check if type of variable declaration is correct 
-                                        if(type == null || (!type.isPrimitive() && type != Tab.stringType)) 
+                                        if(curType == null || (!curType.isPrimitive() && curType != Tab.stringType)) 
                                             SemErr("type is not a primitive or string");
                                       
                                         // check if Expression is not null
@@ -285,20 +324,10 @@ ident                               (.  // create new variable
                                          
                                         // make implicit type conversation
                                         else 
-                                            newNode = tab.impliciteTypeCon(newNode, type);
-                                         
-                                        // if no assignment has occour yet, do the following
-                                        if(curNode == null) {
-                                            e = new Node(Node.ASSIGN,new Node(curObj),newNode,line);
-                                            curNode = e;
-                                        }
-                                        // otherwise that
-                                        else {
-                                            curNode.next = new Node(Node.ASSIGN,new Node(curObj),newNode,line); 
-                                            curNode = curNode.next; 
-                                        } .)
+                                            newNode = tab.impliciteTypeCon(newNode, curType);
+
+                                        e = new Node(Node.ASSIGN,new Node(curObj),newNode,line); .)
   ]
-} ";"        
 .
 //-------------------------------------------------------------------------
 StructDecl                          (.  Node e; 
@@ -498,28 +527,7 @@ ident                               (.  // check if a type with the given name e
                                         if(obj.kind != Obj.TYPE)
                                             SemErr(obj.name + " is not a type");
                                           
-                                        type = obj.type;
-                                        // init array-list, which store the size of the dimensions
-                                        ArrayList<Integer> dimensions = new ArrayList<>(); .)
-{ "["                               (.  int arraySize = 1; .)
-  ( intCon                          (.  // get array size of this dimensions
-                                        arraySize = tab.intVal(t.val); .)
-  | ident                           (.  Obj helpObj = tab.find(t.val); 
-                                        if(helpObj.kind != Obj.CON)
-                                            SemErr(helpObj.name + " is not a constant");
-                                        if(helpObj.type != Tab.intType)
-                                            SemErr(helpObj.name + " is not an int constant");
-                                        arraySize = helpObj.val; .)
-  )                                 (.  // add this dimension
-                                        dimensions.add(arraySize);
-                                        // check if size of dimension is at least 1 
-                                        if(arraySize <= 0)
-                                            SemErr("array-size must be 1 or higher"); .)
-  "]" }
-                                    (.  // generate array (if multi dimension, array in array in...)
-                                        for(int i = dimensions.size()-1; i>=0;i--) {
-                                            type = new Struct(Struct.ARR, dimensions.get(i), type);
-                                        } .)
+                                        type = obj.type; .)
 .
 //-------------------------------------------------------------------------
 Statement<out Node st>              (.  Node e = null, con, curStat, newStat; .)
