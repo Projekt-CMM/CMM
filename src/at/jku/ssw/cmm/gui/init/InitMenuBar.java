@@ -109,12 +109,14 @@ public class InitMenuBar {
 			undoMI.addActionListener(listener.undoHandler);
 			undoMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
 			codeMI.add(undoMI);
+			menuBarControl.setUndo(undoMI);
 					
 			// --- edit -> redo ---
 			JMenuItem redoMI = new JMenuItem(_("Redo"));
 			redoMI.addActionListener(listener.redoHandler);
 			redoMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
 			codeMI.add(redoMI);
+			menuBarControl.setRedo(redoMI);
 		
 		/* --- MENU: "progress" --- */
 		if( main.hasAdvancedGUI() ){

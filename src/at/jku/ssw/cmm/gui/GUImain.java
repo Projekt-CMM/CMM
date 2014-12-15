@@ -204,7 +204,8 @@ public class GUImain {
 		InitMenuBar.initFileM(this.jFrame, this, this.menuBarControl, listener);
 
 		this.menuBarControl.updateRecentFiles(this.settings.getRecentFiles(), this.settings.getCMMFilePath());
-
+		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane());
+		
 		// Set debug panel to ready mode
 		this.rightPanelControl.getDebugPanel().setReadyMode();
 

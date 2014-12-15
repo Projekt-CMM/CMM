@@ -156,6 +156,7 @@ public class GUIleftPanel {
 		if (this.main.getSettings().hasCMMFilePath()) {
 			this.jSourcePane.setText(FileManagerCode.readSourceCode(new File(
 					this.main.getSettings().getCMMFilePath())));
+			//TODO prevent source code panel from undoing setText
 			this.jInputPane.setText(FileManagerCode.readInputData(new File(
 					this.main.getSettings().getCMMFilePath())));
 		}

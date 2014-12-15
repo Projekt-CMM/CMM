@@ -127,8 +127,11 @@ public class GUImainSettings {
 	 *            not yet been saved.
 	 */
 	public void setCMMFilePath(String p) {
-		if (p == null)
+		if (p == null){
 			this.currentFile = null;
+			this.lastFiles.add(0, _("Unnamed"));
+			this.currentFile = _("Unnamed");
+		}
 		else {
 			if (this.profile == null) {
 				if (this.lastFiles.contains(p))
@@ -395,7 +398,8 @@ public class GUImainSettings {
 
 				// Only add a certain number of recent files
 				for (int i = 0; i < this.lastFiles.size() && i < MAX_LASTFILES; i++) {
-					mainRootElement.appendChild(writeNode(doc,
+					if( !this.lastFiles.get(i).equals(_("Unnamed")))
+						mainRootElement.appendChild(writeNode(doc,
 							profile == null ? XML_LASTFILE : XML_PROFILE,
 							this.lastFiles.get(i)));
 				}
