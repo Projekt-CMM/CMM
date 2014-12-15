@@ -15,6 +15,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import at.jku.ssw.cmm.gui.GUImain;
+import at.jku.ssw.cmm.gui.credits.Credits;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
@@ -249,6 +250,15 @@ public class MenuBarEventListener {
 			main.updateWinFileName();
 			debug.updateFileName();
 
+		}
+	};
+	
+	public ActionListener creditsHandler = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			new Credits().start();
 		}
 	};
 

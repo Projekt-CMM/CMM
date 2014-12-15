@@ -91,6 +91,11 @@ public class InitMenuBar {
 			JMenuItem propertiesMI = new JMenuItem(_("Properties"));
 			propertiesMI.addActionListener(listener.propertiesHandler);
 			fileM.add(propertiesMI);
+			
+			// --- file -> credits ---
+			JMenuItem creditsMI = new JMenuItem(_("About C Compact"));
+			creditsMI.addActionListener(listener.creditsHandler);
+			fileM.add(creditsMI);
 						
 			fileM.addSeparator();
 		
