@@ -32,13 +32,12 @@ import java.util.regex.Pattern;
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
-import at.jku.ssw.cmm.gui.exception.IncludeNotFoundException;
+import at.jku.ssw.cmm.preprocessor.exception.PreprocessorException;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 
 public class Preprocessor {
 
-	public static String expand( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints ) throws IncludeNotFoundException{
-		// Debug message
+	public static String expand( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints ) throws PreprocessorException{ // Debug message
 		DebugShell.out(State.LOG, Area.COMPILER, "Starting preprocessor");
 	
 		// Init new SourceCode storage
@@ -53,16 +52,11 @@ public class Preprocessor {
 		Map<String, Integer> defines = new HashMap<>();
 		
 		newSourceCode = parseFile(sourceCode, workingDirectory, codeRegister, breakpoints, defines, 0, "main");
-
-		/*for(Object[] codePart : codeRegister) {
-			System.out.println(codePart[0] + "|" + codePart[1] + "|" + codePart[2]);
-			
-		}*/
 		
 		return newSourceCode;
 	}
 	
-	public static String parseFile( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints, Map<String, Integer> defines, int offset, String file) throws IncludeNotFoundException{
+	public static String parseFile( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints, Map<String, Integer> defines, int offset, String file) throws PreprocessorException{
 		// Debug message
 		DebugShell.out(State.LOG, Area.COMPILER, "parse File");
 		
@@ -81,8 +75,11 @@ public class Preprocessor {
 		
 		// parse code
 		int line = offset;		
+		int fileLine = 0;
 		for( String s : sourceCode.split("\n") ){
 			line ++;
+			fileLine ++;
+
 			String commentString = null;
 			
 			boolean parseAllCode = true;
@@ -135,9 +132,8 @@ public class Preprocessor {
 				s = "//## pre-command: " + s;
 				
 				if(preString.isEmpty()) {
-					// TODO 
-					// not known preprocessor command
-				} else if(preString.matches("^\\s*(ifdef|ifndef)\\s.*$")) {
+					throw new PreprocessorException("unknow preprocessor command", file, fileLine);
+				} else if(preString.matches("^\\s*(ifdef|ifndef)(\\s.*|)$")) {
 					Matcher m = Pattern.compile("^\\s*ifdef\\s*(\\w+)\\s*$").matcher(preString);
 					if(m.matches()) {
 						if(defines.containsKey(m.group(1)) && defines.get(m.group(1)) != 0)
@@ -152,7 +148,7 @@ public class Preprocessor {
 							else
 								ifConditions.add(true);
 						} else {
-							// TODO incorrect rule
+							throw new PreprocessorException("identifier required", file, fileLine);
 						}
 					}
 				} else if(preString.matches("^\\s*else\\s*$")) {
@@ -160,40 +156,41 @@ public class Preprocessor {
 						// toggle state of condition
 						// TODO detect multible else statements
 						ifConditions.set(ifConditions.size()-1, !ifConditions.get(ifConditions.size()-1).booleanValue());
+					} else {
+						throw new PreprocessorException("there is no condition, where this #else can be used", file, fileLine);
 					}
 				} else if(preString.matches("^\\s*endif\\s*$")) {
 					// remove last element
 					if(ifConditions.size() != 0) {
 						ifConditions.remove(ifConditions.size()-1);
 					} else {
-						// TODO to much endif
+						throw new PreprocessorException("there is no condition, where this #endif can be used", file, fileLine);
 					}
 				} else if(parseAllCode == false) {
 					// ignore other possible preprocessor commands
-				} else if(preString.matches("^\\s*define\\s.*$")) {
+				} else if(preString.matches("^\\s*define(\\s.*|)$")) {
 					Matcher m = Pattern.compile("^\\s*define\\s*(\\w+)\\s*(\\w*)\\s*$").matcher(preString);
 					if(m.matches()) {
 						int value = 1;
 						
 						try {
-						// parse value
-						if(m.group(2) != "")
-							value = Integer.parseInt(m.group(2));
-						}
-						catch ( java.lang.NumberFormatException e) {
-							// TODO cannot parse value
+							// parse value
+							if(!m.group(2).toString().isEmpty())
+								value = Integer.parseInt(m.group(2));
+						} catch ( java.lang.NumberFormatException e) {
+							throw new PreprocessorException("preprocessor value is not an integer1", file, fileLine);
 						}
 						
 						defines.put(m.group(1), value);
 					} else {
-						// TODO incorrect rule
+						throw new PreprocessorException("identifier required", file, fileLine);
 					}
-				} else if(preString.matches("^\\s*undef\\s.*$")) {
+				} else if(preString.matches("^\\s*undef(\\s.*|)$")) {
 					Matcher m = Pattern.compile("^\\s*undef\\s*(\\w+)\\s*$").matcher(preString);
 					if(m.matches()) {
 						defines.remove(m.group(1));
 					} else {
-						// TODO incorrect rule
+						throw new PreprocessorException("identifier required", file, fileLine);
 					}
 				} else if(preString.matches("^\\s*include.*$")) {
 					String path = null;
@@ -203,7 +200,6 @@ public class Preprocessor {
 						Matcher m = Pattern.compile("^\\s*include\\s*<(.*)>\\s*$").matcher(preString);
 						if(m.matches()) {
 							path = m.group(1);
-							//System.out.println("clib include: " + path);
 						}
 					} else if(preString.matches("^\\s*include\\s*\".*\"\\s*$")) {
 						localDirectory = false;
@@ -211,7 +207,6 @@ public class Preprocessor {
 						Matcher m = Pattern.compile("^\\s*include\\s*\"(.*)\"\\s*$").matcher(preString);
 						if(m.matches()) {
 							path = m.group(1);
-							//System.out.println("normal include: " + path);
 						}
 					}
 					
@@ -243,22 +238,19 @@ public class Preprocessor {
 					    	lastCodeRegisterInsert = line;
 						}
 					    else{
-					    	// TODO, better exception
 					    	DebugShell.out(State.WARNING, Area.COMPILER, "File not found: " + path);
-					    	throw new IncludeNotFoundException(path, line);
+					    	throw new PreprocessorException("include not found: " + path , file, fileLine);
 					    }
 						continue;
 					} else {
-						// TODO 
-						// incorrect include
+						throw new PreprocessorException("no include path specified", file, fileLine);
 					}
 				} else if(preString.matches("^\\s*(pause|wait)\\s*$")) {
 					// TODO 
 					// add breakpoint
 					breakpoints.add(line);
 				} else {
-					// TODO 
-					// not known preprocessor command
+					throw new PreprocessorException("unknow preprocessor command", file, fileLine);
 				}
 			}
 			
@@ -271,7 +263,7 @@ public class Preprocessor {
 		}
 
 		if(!ifConditions.isEmpty()) {
-			// TODO not all preprocessor if-conditions have ended
+			throw new PreprocessorException("not all preprocessor conditions have ended", file, fileLine);
 		}
 		
 		Object[] newCodeInsert = {lastCodeRegisterInsert+1, line, file};
