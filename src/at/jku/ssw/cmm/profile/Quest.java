@@ -36,9 +36,9 @@ public class Quest {
 	private String title;					
 
 	/**
-	 * TODO Tokens String
+	 * TODO Token of the Quest
 	 */
-	private String token;					
+	private Token token;					
 
 	/**
 	 * List for next Quests, there are opened when the current quest is finished
@@ -236,7 +236,11 @@ public class Quest {
 				}
 				
 				try{
-					quest.setToken(eElement.getElementsByTagName(Quest.XML_TOKEN).item(0).getTextContent());
+					String tokenPath = quest.getInitPath() + sep + quest.packagePath + sep + Quest.FOLDER_TOKENS + sep + eElement.getElementsByTagName(Quest.XML_TOKEN).item(0).getTextContent();
+					
+					//Reading the spezific <token>.xml file
+					quest.setToken(Token.readToken(tokenPath));
+					
 				}catch(NullPointerException e){
 					//No Token found
 					quest.setToken(null);
@@ -362,14 +366,14 @@ public class Quest {
 	 * A token can be null
 	 * @return the token
 	 */
-	public String getToken() {
+	public Token getToken() {
 		return token;
 	}
 
 	/**
 	 * @param token the token to set
 	 */
-	public void setToken(String token) {
+	public void setToken(Token token) {
 		this.token = token;
 	}
 

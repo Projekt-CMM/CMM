@@ -73,7 +73,7 @@ public class GUIquestPanel {
 	//private JButton jProfileSelectButton;
 	
 	//Profile picture
-	private JLabel jProfilePicture;
+	private JLabel jProfilePicture = new JLabel();
 	
 	//Profile name
 	private JLabel jProfileName;
@@ -147,7 +147,7 @@ public class GUIquestPanel {
 			String path = profile.getInitPath() + Profile.sep + profile.getProfileimage();
 			System.out.println(path);
 			
-			this.jProfilePicture = LoadStatics.loadImage(path, false, 120, 120);
+			this.jProfilePicture.setIcon(LoadStatics.loadIcon(path, 120, 120));
 		}
 		else 
 			this.jProfilePicture = new JLabel();

@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,12 +18,15 @@ import java.net.MalformedURLException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
+
+import sun.swing.ImageIconUIResource;
 
 public final class LoadStatics {
 
@@ -35,6 +39,13 @@ public final class LoadStatics {
 		return loadImage(path, true, -1, -1);
 	}
 
+	public static final ImageIcon loadIcon(String path, int width, int height){
+		ImageIcon imageIcon = new ImageIcon(path); // load the image to a imageIcon
+		Image image = imageIcon.getImage(); // transform it 
+		Image newimg = image.getScaledInstance(width, height,  java.awt.Image.SCALE_SMOOTH); //Scale it smoothly
+		return new ImageIcon(newimg); //return the new image
+	}
+	
 	public static final JLabel loadImage(String path, boolean createBorder,
 			int width, int height) {
 		
@@ -53,7 +64,8 @@ public final class LoadStatics {
 			if (createBorder)
 	
 				picture.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-	
+		
+			
 			return picture;
 	}
 
@@ -135,6 +147,11 @@ public final class LoadStatics {
 	 * @throws IOException
 	 */
 	public static void copyFileUsingStream(File source, File dest) throws IOException {
+		
+		//To cancel useless operations
+		if(source.equals(dest))
+			return;
+		
 		System.out.println("Copying files from:" + source + " to " + dest); 
 	    InputStream is = null;
 	    OutputStream os = null;
