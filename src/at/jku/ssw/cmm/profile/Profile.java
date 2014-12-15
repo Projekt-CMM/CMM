@@ -53,22 +53,50 @@ import at.jku.ssw.cmm.gui.utils.LoadStatics;
 
 public class Profile {
 	
-	//File Seperator
+	/**
+	 * System specific file separator
+	 */
 	public static String sep = System.getProperty("file.separator");
-		
+
+	/**
+	 * The Name of the Profile
+	 */
+	private String name;			
+
+	/**
+	 * The xp of the User --> level
+	 */
+	private int xp;					
+
+	/**
+	 * relative Path to the profile image
+	 */
+	private String profileimage;	
+
+	/**
+	 * Current Quest, or current file
+	 */
+	private String current;			
+
+	/**
+	 * is this Profile a master or not, not used that time
+	 */
+	private boolean master;	
 	
-	//General Profile Fields
-	private String name;			//OrdnerName = ProfilName
-	private int xp;					//Anzahl der XP des Benutzers
-	private String profileimage;	//Profile Image
-	private String current;			//Current Quest, bzw. current File
-	private boolean master;			//Master
 	
-	//Folder Names
-	private String profilePath;		//inizialer Profile Pfad
-	private String packagesPath;	//Pfad der Quest Packages
+	/**
+	 * initial Profile path
+	 */
+	private String profilePath;
 	
-	//Temporary variables
+	/**
+	 * name of the packages Folder
+	 */
+	private String packagesPath;
+	
+	/**
+	 * list of profile Quests
+	 */
 	private List<Quest> profileQuests;
 	
 	//Static final Strings
@@ -167,6 +195,25 @@ public class Profile {
 		package1.setQuestList(sortQuestList(packageQuests));
 		return package1;
 		
+	}
+
+	/**
+	 * Reads all finished Quests and returns a List of all Tokens
+	 * @param profile
+	 * @return List<Token>
+	 */
+	public static List readProfileTokens(Profile profile){
+		List<Token> allTokens = new ArrayList<Token>();
+		
+		//Reads all Tokens
+		for(Quest q : profile.getProfileQuests()){
+			if(q.getState().equals(Quest.STATE_FINISHED) && q.getToken() != null){
+				allTokens.add(q.getToken());
+				System.out.println(q.getToken().getTitle());
+			}
+		}
+			
+		return allTokens;
 	}
 	
 	/**
@@ -277,8 +324,12 @@ public class Profile {
 				        	if(currentNode.getNodeName().equals(Profile.XML_DATE)) //date
 				        		quest.setStringDate(currentNode.getTextContent());
 				        	if(currentNode.getNodeName().equals(Profile.XML_TOKEN)){ //token
-				        		//TODO make tokens variable
-				        		quest.setToken(Token.readToken(currentNode.getTextContent()));
+				        		
+				        		//getting the relative and absolute Path of the Token
+				        		String relPath = currentNode.getTextContent();
+				        		String absoluteInitPath = profile.getInitPath() + sep + profile.getPackagesPath() + sep + quest.getPackagePath() + sep + Quest.FOLDER_TOKENS;				        		
+				        		
+				        		quest.setToken(Token.readToken(absoluteInitPath, relPath ));
 				        	}
 				       	}
 				    }
@@ -390,7 +441,7 @@ public class Profile {
         state.appendChild(writeProfileElements(doc, state, Profile.XML_DATE, quest.getStringDate()));
         //TODO must be variable
         if(quest.getToken() != null)
-        	state.appendChild(writeProfileElements(doc, state, Profile.XML_TOKEN, quest.getToken().getPath()));
+        	state.appendChild(writeProfileElements(doc, state, Profile.XML_TOKEN, quest.getToken().getRelPath()));
         
         return state;
 	}
@@ -507,20 +558,20 @@ public class Profile {
 		if(quest == null)
 			return profile;
 		
-		//TODO Copy Tokens into the right Profile
+		//TODO Tokens
 		if(state.equals(Quest.STATE_FINISHED)){
 			if(quest.getToken() != null){
-				String questTokenPathFile = quest.getInitPath()+ sep + quest.getPackagePath() + sep + Quest.FOLDER_TOKENS + sep + quest.getToken();
+				String questTokenPathFile = quest.getInitPath()+ sep + quest.getPackagePath() + sep + Quest.FOLDER_TOKENS;
 				String profileTokenPath = profile.getInitPath() + sep + Profile.FILE_PACKAGESPATH + sep +  quest.getPackagePath() + sep + Quest.FOLDER_TOKENS ;
 			
 				try {
-					File dir = new File(profileTokenPath);
-					dir.mkdirs();
-					//Copying the <token>.xml
-					LoadStatics.copyFileUsingStream(new File(questTokenPathFile), new File(profileTokenPath + sep + quest.getToken().getPath()));
+				
+					//Copying the image of the token <image.png>
+					if(quest.getToken().getImagePath() != null)
+						LoadStatics.copyFileUsingStream(new File(questTokenPathFile + sep + quest.getToken().getImagePath()), new File(profileTokenPath + sep + quest.getToken().getImagePath()));
 					
-					//Copying the <tokenimage.png>
-					LoadStatics.copyFileUsingStream(new File(questTokenPathFile), new File(profileTokenPath + sep + quest.getToken().getImagePath()));
+					//Copying the <token>.xml
+					LoadStatics.copyFileUsingStream(new File(questTokenPathFile + sep + quest.getToken().getRelPath()), new File(profileTokenPath + sep + quest.getToken().getRelPath()));
 				} catch (IOException e) {
 					System.err.println("Token could not be copyed");
 				}

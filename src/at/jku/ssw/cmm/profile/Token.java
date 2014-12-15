@@ -48,9 +48,14 @@ public class Token {
 	private String title;
 	
 	/**
-	 * Path of the Token
+	 * FileName of the Token
 	 */
-	private String path;
+	private String relPath;
+	
+	/**
+	 * Initial Path of the Token
+	 */
+	private String initPath;
 	
 	/**
 	 * The Description of the Token
@@ -81,13 +86,22 @@ public class Token {
 	 * @param path: the path of the <token>.xml
 	 * Reads a Token and looks if the given Files are correct
 	 */
-	public static Token readToken(String path){
+	public static Token readToken(String initPath, String relPath){
 		
 		Token token = new Token();
 		
+		//Setting the Relative Path
+		token.setRelPath(relPath);
+		token.setInitPath(initPath);
+		
+		//Full Path
+		String path = initPath + Quest.sep + relPath;
+		
 		try {
 			//Reads the Token fully
-			readTokenXML(path, token);
+			File file = new File(path);
+			
+			readTokenXML(file, token);
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			//Do something
 			return null;
@@ -103,9 +117,8 @@ public class Token {
 	 * @param token: the token
 	 * Reads the "<token>.xml" file
 	 */
-	private static Token readTokenXML(String path, Token token) throws ParserConfigurationException, SAXException, IOException{
+	private static Token readTokenXML(File file, Token token) throws ParserConfigurationException, SAXException, IOException{
 
-		File file = new File(path);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = null;
@@ -186,12 +199,20 @@ public class Token {
 		this.title = title;
 	}
 
-	public String getPath() {
-		return path;
+	public String getRelPath() {
+		return relPath;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public void setRelPath(String relPath) {
+		this.relPath = relPath;
+	}
+
+	public String getInitPath() {
+		return initPath;
+	}
+
+	public void setInitPath(String initPath) {
+		this.initPath = initPath;
 	}
 	
 	
