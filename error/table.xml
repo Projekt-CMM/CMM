@@ -9,7 +9,32 @@
 
     <!--#### Preprocessor Errors ####-->
 
-	<error id="include not found">
+    <error id="unknow preprocessor command">
+		<file>preprocessor/unknow_command.html</file>
+	</error>
+	<error id="identifier required">
+		<file>preprocessor/identifier_required.html</file>
+	</error>
+	<error id="preprocessor value is not an integer">
+		<file>preprocessor/not_int.html</file>
+	</error>
+
+    <!-- condition errors -->
+	<error id="not all preprocessor conditions have ended">
+		<file>preprocessor/condition_not_ended.html</file>
+	</error>
+	<error id="there is no condition, where this #else can be used">
+		<file>preprocessor/outside_condition.html</file>
+	</error>
+	<error id="there is no condition, where this #endif can be used">
+		<file>preprocessor/outside_condition.html</file>
+	</error>
+	
+	<!-- include errors -->
+	<error id="include not found: ([\w./\s]+)">
+		<file>preprocessor/include.html</file>
+	</error>
+	<error id="no include path specified">
 		<file>preprocessor/include.html</file>
 	</error>
 	

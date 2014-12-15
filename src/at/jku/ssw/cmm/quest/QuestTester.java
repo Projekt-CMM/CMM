@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Obj;
-import at.jku.ssw.cmm.gui.exception.IncludeNotFoundException;
+import at.jku.ssw.cmm.preprocessor.exception.PreprocessorException;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.interpreter.exceptions.RunTimeException;
 import at.jku.ssw.cmm.preprocessor.Preprocessor;
@@ -80,8 +80,8 @@ public class QuestTester {
 			return new QuestMatchError("Input data file not found", e);
 		} catch (CompilerErrorException e) {
 			return new QuestMatchError( "Error when compiling input data generator", e);
-		} catch (IncludeNotFoundException e) {
-			return new QuestMatchError( "Include not found in generator source code", e);
+		} catch (PreprocessorException e) {
+			return new QuestMatchError( "Preprocessor error in generator source code", e);
 		}
 
 		// Double-check if everything worked
@@ -100,8 +100,8 @@ public class QuestTester {
 			return new QuestMatchError( "Error when compiling reference output data generator", e);
 		} catch (FileNotFoundException e) {
 			return new QuestMatchError( "Reference output generator file could not be found", e);
-		} catch (IncludeNotFoundException e) {
-			return new QuestMatchError( "Include not found in reference source code", e);
+		} catch (PreprocessorException e) {
+			return new QuestMatchError( "Preprocessor error in reference source code", e);
 		}
 
 		// ----- COMPILE REFERENCE PROGRAM (which is 100% right) -----
@@ -119,8 +119,8 @@ public class QuestTester {
 		catch (FileNotFoundException e) {
 			return new QuestMatchError(
 					"User's source code could not be found", e);
-		} catch (IncludeNotFoundException e) {
-			return new QuestMatchError( "Include not found in user's source code", e);
+		} catch (PreprocessorException e) {
+			return new QuestMatchError( "Preprocessor error in user's source code", e);
 		}
 		
 		System.out.println("Out1: " + referenceOutput);
@@ -138,7 +138,7 @@ public class QuestTester {
 	}
 
 	private String getInputData() throws FileNotFoundException,
-			CompilerErrorException, RunTimeException, IncludeNotFoundException {
+			CompilerErrorException, RunTimeException, PreprocessorException {
 
 		// Input generator is .cmm file
 		if (this.generator.endsWith(".cmm")) {
@@ -162,7 +162,7 @@ public class QuestTester {
 			throw new FileNotFoundException("Invalid input file ending");
 	}
 
-	private static Obj compile(String path) throws FileNotFoundException, CompilerErrorException, IncludeNotFoundException {
+	private static Obj compile(String path) throws FileNotFoundException, CompilerErrorException, PreprocessorException {
 		File inputFile = new File(path);
 
 		if (!inputFile.exists())

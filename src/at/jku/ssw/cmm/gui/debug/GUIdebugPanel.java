@@ -36,7 +36,7 @@ import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.debugger.IOstream;
 import at.jku.ssw.cmm.gui.GUImain;
-import at.jku.ssw.cmm.gui.exception.IncludeNotFoundException;
+import at.jku.ssw.cmm.preprocessor.exception.PreprocessorException;
 import at.jku.ssw.cmm.preprocessor.Preprocessor;
 
 /**
@@ -216,6 +216,23 @@ public class GUIdebugPanel {
 		//Input lock
 		this.main.unlockInput();
 	}
+	
+	public void setErrorModeDirect(String html, String file, int line) {
+		
+		System.out.println("setting error");
+
+		this.ctrlPanel.setReadyMode();
+		this.ctrlPanel.getListener().setReadyMode();
+		
+		this.main.setErrorMode(html, line);
+		
+		// Mode-specific
+		this.main.getLeftPanel().resetInputHighlighter();
+		this.varView.standby(this.main.getSettings().setCMMFile());
+		
+		//Input lock
+		this.main.unlockInput();
+	}
 
 	public void setRunMode() {
 		this.ctrlPanel.setRunMode();
@@ -274,15 +291,15 @@ public class GUIdebugPanel {
 			sourceCode = Preprocessor.expand(sourceCode,
 					this.main.getSettings().getWorkingDirectory(),
 					this.main.getLeftPanel().getSourceCodeRegister(), this.breakpoints);
-		} catch (final IncludeNotFoundException e1) {
-
+		} catch (PreprocessorException e1) {
+			
 			Object[] e = { 1, 0, null };
 			this.main.getLeftPanel().getSourceCodeRegister().clear();
 			this.main.getLeftPanel().getSourceCodeRegister().add(e);
-
-			// An include file could not be found
-			this.setErrorMode("include not found", -1);
 			
+			// Preprocessor error
+			this.setErrorModeDirect(e1.getMessage(), e1.getFile(), e1.getLine());
+						
 			return false;
 		}
 
