@@ -378,7 +378,7 @@ public class GUIleftPanel {
 		
 		this.lockInput();
 
-		this.jStatePanel.setBackground(Color.GREEN);
+		this.jStatePanel.setBackground(new Color(0x92FC9B));//Color.GREEN);
 		this.jStateLabel.setText(">>> " + _("automatic debug mode") + " >>>");
 	}
 
@@ -386,7 +386,7 @@ public class GUIleftPanel {
 		
 		this.lockInput();
 		
-		this.jStatePanel.setBackground(Color.YELLOW);
+		this.jStatePanel.setBackground(new Color(0xEFDD1E));//Color.YELLOW);
 		this.jStateLabel.setText("||| " + _("pause or step by step mode") + " |||");
 	}
 
