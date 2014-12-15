@@ -31,9 +31,39 @@ import at.jku.ssw.cmm.preprocessor.exception.PreprocessorException;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.interpreter.exceptions.RunTimeException;
 import at.jku.ssw.cmm.preprocessor.Preprocessor;
+import at.jku.ssw.cmm.profile.Profile;
+import at.jku.ssw.cmm.profile.Quest;
+import at.jku.ssw.cmm.profile.XMLWriteException;
 import at.jku.ssw.cmm.quest.exception.CompilerErrorException;
 
 public class QuestTester {
+	
+	/**
+	 * Starting the Quest Tester and finishes the Quest if all things are ok!
+	 * @param profile
+	 * @param quest
+	 */
+	public static void start(Profile profile, Quest quest){
+		String[] ignore = {"\n", ",", ";"};
+		QuestTester qt = new QuestTester("qt/input.cmm", "qt/ref.cmm", "qt/user.cmm", ignore);
+		
+		QuestMatchError e = qt.test();
+		
+		if( e == null ){
+			System.out.println("Successful!");
+			try {
+				Profile.changeQuestStateToFinished(profile, quest);
+			} catch (XMLWriteException e1) {
+				System.err.println("Profil konnte nicht geschrieben werden!");
+				e1.printStackTrace();
+			}
+			
+			//TODO open GUI with finish text
+			return;
+		}
+		
+		e.print();
+	}
 	
 	public static void main(String[] args){
 		String[] ignore = {"\n", ",", ";"};//TODO user regex
