@@ -6,29 +6,32 @@ import java.awt.event.MouseListener;
 import javax.swing.JFrame;
 
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
+import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.settings.GUIprofileSettings;
 
-public class AddProfileListener implements MouseListener {
+public class EditProfileListener implements MouseListener {
 
 	private final JFrame jFrame;
 	private final GUImainSettings settings;
+	private final Profile profile;
 	
-	public AddProfileListener( JFrame jFrame, GUImainSettings settings ) {
+	public EditProfileListener( JFrame jFrame, GUImainSettings settings, Profile profile ) {
 		this.jFrame = jFrame;
 		this.settings = settings;
+		this.profile = profile;
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		
 		//Setting the profile to null, for creating a new one
-		settings.setProfile(null);
+		settings.setProfile(profile);
 		
 		//Disposing the Launcher
 		jFrame.dispose();
 		
 		
-		GUIprofileSettings.init(settings, false);
+		GUIprofileSettings.init(settings, true);
 
 		
 	}

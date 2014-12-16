@@ -7,7 +7,6 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -168,8 +167,7 @@ public class UpperPanel extends JPanel {
 		else
 			//Loading fixed profile image
 			if(profile.getInitPath() != null)
-				profilePicture = LoadStatics.loadImage(profile.getInitPath()
-						+ File.separator + profile.getProfileimage(), true, 128, 128);
+				profilePicture = LoadStatics.loadImage(profile.getProfileimage(), true, 128, 128);
 		
 			//Loading temporary choosen Image files
 			else{

@@ -26,6 +26,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
+import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.GUIquestPanel;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
 import at.jku.ssw.cmm.profile.Profile;
@@ -47,9 +48,11 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 	private JSplitPane sp;
 	
 	private final GUIquestPanel questPanel;
+	private final GUImain main;
 	
-	public GUIquestMain(GUIquestPanel questPanel){
+	public GUIquestMain(GUIquestPanel questPanel, GUImain main){
 		this.questPanel = questPanel;
+		this.main = main;
 	}
 	
 	public void start(){
@@ -83,7 +86,7 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
         rootNode = new DefaultMutableTreeNode("Root");
 
         //Getting the active Profile
-	    Profile p = Profile.getActiveProfile();
+	    Profile p = this.main.getSettings().getProfile();
 	    
 	    //Counting Quests..
 	    int finishedquests = 0;

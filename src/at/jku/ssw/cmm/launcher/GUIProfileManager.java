@@ -12,7 +12,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
-import at.jku.ssw.cmm.gui.GUIquestPanel;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
 import at.jku.ssw.cmm.profile.XMLReadingException;
@@ -129,7 +128,7 @@ public class GUIProfileManager {
 						profile =Profile.ReadProfile(path);
 					}
 					
-					Profile.setActiveProfile(profile);
+					//Profile.setActiveProfile(profile);
 					return profile;
 					//GUIquestPanel questPanel = this.rightPanelControl.getQuestPanel();
 					

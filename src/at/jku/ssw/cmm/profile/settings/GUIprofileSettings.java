@@ -7,7 +7,6 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
@@ -23,7 +22,7 @@ public class GUIprofileSettings {
 	 * @param args
 	 *            The shell arguments.
 	 */
-	public static Profile init(Profile profile) {
+	public static void init(GUImainSettings settings, boolean returnToLauncher) {
 		
 		GUIprofileSettings app = new GUIprofileSettings();
 		
@@ -34,12 +33,10 @@ public class GUIprofileSettings {
 			e.printStackTrace();
 		}*/
 		
-		if(profile == null)
-			app.start(_("Create new profile"), profile );
+		if(settings.getProfile() == null)
+			app.start(_("Create new profile"), settings, returnToLauncher );
 		else
-			app.start(_("Edit Profile"), profile);
-		
-		return profile;
+			app.start(_("Edit Profile"), settings, returnToLauncher );
 	}
 	
 	//The main window frame
@@ -51,11 +48,14 @@ public class GUIprofileSettings {
 	private CentralPanel centralPanel;
 	private LowerPanel lowerPanel;
 	
-	private Profile profile;
+	private GUImainSettings settings;
+	
+	private boolean returnToLauncher;
 
-	public void start( String title, Profile profile ) {
+	public void start( String title, GUImainSettings settings, boolean returnToLauncher ) {
 		
-		this.profile = profile;
+		this.settings = settings;
+		this.returnToLauncher = returnToLauncher;
 		
 		//Thread analysis
 		if (SwingUtilities.isEventDispatchThread())
@@ -70,10 +70,10 @@ public class GUIprofileSettings {
 		this.jFrame.setResizable(false);
 		
 		//Exit ProfileSettings and starting the right jFrame on Close
-		this.jFrame.addWindowListener(new ProfileWindowEventListener(profile, jFrame));
+		this.jFrame.addWindowListener(new ProfileWindowEventListener(this, jFrame));
 		
 		//Change Sizes of the window specific
-		if(profile != null){
+		if(settings.getProfile() != null){
 			this.jFrame.setMinimumSize(new Dimension(500, 400));
 		}else{
 			this.jFrame.setMinimumSize(new Dimension(500, 200));
@@ -83,17 +83,17 @@ public class GUIprofileSettings {
 		this.listener = new ProfileSettingsListener(jFrame, this);
 		
 		//Load upper panel
-		this.upperPanel = new UpperPanel(profile, listener);
+		this.upperPanel = new UpperPanel(settings.getProfile(), listener);
 		this.jFrame.add(this.upperPanel, BorderLayout.PAGE_START);
 		
 		//Load only if it is an existing Profile
-		if(profile != null){
+		if(settings.getProfile() != null){
 			//Load central panel
-			this.centralPanel = new CentralPanel(profile, listener);
+			this.centralPanel = new CentralPanel(settings.getProfile(), listener);
 			this.jFrame.add(this.centralPanel, BorderLayout.CENTER);
 		}	
 			//Load lower panel
-			this.lowerPanel = new LowerPanel(profile, listener);
+			this.lowerPanel = new LowerPanel(settings.getProfile(), listener);
 			this.jFrame.add(this.lowerPanel, BorderLayout.PAGE_END);
 		
 
@@ -116,19 +116,23 @@ public class GUIprofileSettings {
 	}
 	
 	public Profile getProfile(){
-		return this.profile;
+		return this.settings.getProfile();
 	}
 	
 	public void setProfile(Profile profile){
-		this.profile = profile;
+		this.settings.setProfile(profile);
 	}
 	
-	public static void dispose(Profile profile, JFrame jFrame){
+	public GUImainSettings getSettings(){
+		return this.settings;
+	}
+	
+	public void dispose(JFrame jFrame){
 		
-		if(profile == null || profile.getInitPath() == null)
-			GUILauncherMain.init();
+		if(this.settings.getProfile() == null || this.settings.getProfile().getInitPath() == null || returnToLauncher)
+			new GUILauncherMain(settings);
 		else{
-			GUImain app = new GUImain(new GUImainSettings(profile));
+			GUImain app = new GUImain(settings);
 			app.start(false);
 		}
 			

@@ -81,14 +81,14 @@ public class GUImainSettings {
 
 	/**
 	 * Contains configuration data for the main GUI
-	 * 
-	 * @param advancedGUI
-	 *            TRUE if profile options shall be shown in the GUI, FALSE if C
-	 *            Compact shall launch the IDE only
 	 */
-	public GUImainSettings(Profile profile) {
-		this.profile = profile;
+	public GUImainSettings() {
 		this.readConfigXML();
+	}
+	
+	public GUImainSettings(Profile p) {
+		this.readConfigXML();
+		this.currentProfile = p;
 	}
 
 	/**
@@ -103,16 +103,13 @@ public class GUImainSettings {
 	 */
 	private String currentFile;
 
+	private List<String> lastProfiles;
+	private Profile currentProfile;
+
 	/**
 	 * The language currently chosen
 	 */
 	private String lastLanguage;
-
-	/**
-	 * If true, GUI options for quest and profile functions are shown. <br>
-	 * If false, quest/profile GUI is hidden.
-	 */
-	private final Profile profile;
 
 	private int codeSize;
 	private int textSize;
@@ -127,13 +124,12 @@ public class GUImainSettings {
 	 *            not yet been saved.
 	 */
 	public void setCMMFilePath(String p) {
-		if (p == null){
+		if (p == null) {
 			this.currentFile = null;
 			this.lastFiles.add(0, _("Unnamed"));
 			this.currentFile = _("Unnamed");
-		}
-		else {
-			if (this.profile == null) {
+		} else {
+			if (this.currentProfile == null) {
 				if (this.lastFiles.contains(p))
 					this.lastFiles.remove(p);
 				this.lastFiles.add(0, p);
@@ -253,11 +249,27 @@ public class GUImainSettings {
 	 *         Compact shall launch the IDE only
 	 */
 	public boolean hasProfile() {
-		return this.profile != null;
+		return this.currentProfile != null;
 	}
 
 	public Profile getProfile() {
-		return this.profile;
+		return this.currentProfile;
+	}
+	
+	public void setProfile( Profile p ) {
+		this.currentProfile = p;
+		if( p != null ){
+			if(this.lastProfiles.contains(p.getInitPath()))
+				this.lastProfiles.remove(p.getInitPath());
+			this.lastProfiles.add(0, p.getInitPath());
+			System.out.println("ADDED PROFILE");
+		}
+		else
+			System.err.println("WARNING: Profile is null");
+	}
+	
+	public List<String> getRecentProfiles() {
+		return lastProfiles;
 	}
 
 	/**
@@ -267,6 +279,7 @@ public class GUImainSettings {
 	public void readConfigXML() {
 
 		this.lastFiles = new ArrayList<>();
+		this.lastProfiles = new ArrayList<>();
 		this.codeSize = 16;
 		this.textSize = 16;
 		this.varOffset = 0;
@@ -319,12 +332,11 @@ public class GUImainSettings {
 	private void findXMLsettings(Node node) {
 
 		// Contains information about recent files?
-		if (node.getNodeName().equals(XML_LASTFILE) && this.profile == null)
+		if (node.getNodeName().equals(XML_LASTFILE))
 			lastFiles.add(node.getTextContent());
-
 		// Contains information about recent profiles?
-		else if (node.getNodeName().equals(XML_PROFILE) && this.profile != null)
-			lastFiles.add(node.getTextContent());
+		else if (node.getNodeName().equals(XML_PROFILE))
+			lastProfiles.add(node.getTextContent());
 		// Contains language information?
 		else if (node.getNodeName().equals(XML_LANGUAGE))
 			this.lastLanguage = node.getTextContent();
@@ -393,15 +405,23 @@ public class GUImainSettings {
 			// Add properties to main root element
 			mainRootElement.appendChild(properties);
 
-			// Add infromation about recent files / profiles
+			// Add infromation about recent files
 			if (this.lastFiles != null && !this.lastFiles.isEmpty()) {
 
 				// Only add a certain number of recent files
 				for (int i = 0; i < this.lastFiles.size() && i < MAX_LASTFILES; i++) {
-					if( !this.lastFiles.get(i).equals(_("Unnamed")))
-						mainRootElement.appendChild(writeNode(doc,
-							profile == null ? XML_LASTFILE : XML_PROFILE,
-							this.lastFiles.get(i)));
+					if (!this.lastFiles.get(i).equals(_("Unnamed")))
+						mainRootElement.appendChild(writeNode(doc, XML_LASTFILE, this.lastFiles.get(i)));
+				}
+			}
+
+			// Add infromation about recent profiles
+			if (this.lastProfiles != null && !this.lastProfiles.isEmpty()) {
+
+				// Only add a certain number of recent profiles
+				for (int i = 0; i < this.lastProfiles.size() && i < MAX_LASTFILES; i++) {
+					mainRootElement.appendChild(writeNode(doc, XML_PROFILE, this.lastProfiles.get(i)));
+					System.out.println("Added: " + this.lastProfiles.get(i));
 				}
 			}
 
