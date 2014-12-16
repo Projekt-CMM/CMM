@@ -30,8 +30,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
@@ -62,7 +60,13 @@ public class GUImain {
 	 *            The shell arguments.
 	 */
 	public static void main(String[] args) {
-		final GUImain app = new GUImain(new GUImainSettings(null));
+		
+		GUImainSettings settings = new GUImainSettings(null);
+		
+		final GUImain app = new GUImain(settings);
+		
+		// Load translations
+		Language.loadLanguage(settings.getLanguage() + ".po");
 
 		boolean test = false;
 		for (String s : args)
@@ -179,9 +183,6 @@ public class GUImain {
 		// EDT Thread analysis
 		if (SwingUtilities.isEventDispatchThread())
 			DebugShell.out(State.LOG, Area.SYSTEM, "main GUI running on EDT.");
-
-		// Load translations
-		Language.loadLanguage(this.settings.getLanguage() + ".po");
 
 		// Initialize the window
 		this.jFrame = new JFrame(VERSION);

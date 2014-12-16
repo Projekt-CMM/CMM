@@ -56,6 +56,13 @@ public class WindowEventListener implements WindowListener {
 	public WindowEventListener(JFrame jFrame, GUImain main) {
 		this.jFrame = jFrame;
 		this.main = main;
+		this.settings = main.getSettings();
+	}
+	
+	public WindowEventListener(JFrame jFrame, GUImainSettings settings) {
+		this.jFrame = jFrame;
+		this.main = null;
+		this.settings = settings;
 	}
 
 	/**
@@ -67,6 +74,8 @@ public class WindowEventListener implements WindowListener {
 	 * A reference to the main GUI
 	 */
 	private final GUImain main;
+	
+	private final GUImainSettings settings;
 
 	@Override
 	public void windowOpened(WindowEvent e) {
@@ -76,8 +85,8 @@ public class WindowEventListener implements WindowListener {
 	@Override
 	public void windowClosing(WindowEvent e) {
 
-		if (main.getSaveManager().safeCheck(_("Closing C Compact")))
-			updateAndExit(jFrame, main.getSettings());
+		if (main == null || main.getSaveManager().safeCheck(_("Closing C Compact")))
+			updateAndExit(jFrame, settings);
 	}
 
 	@Override
