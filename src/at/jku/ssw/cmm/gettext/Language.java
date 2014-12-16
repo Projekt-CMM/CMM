@@ -81,4 +81,8 @@ public class Language {
 			}
 		}
 	}
+	
+	public static boolean languageLoaded(){
+		return langMap != null;
+	}
 }

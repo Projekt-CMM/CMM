@@ -27,6 +27,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.BorderFactory;
@@ -40,13 +42,15 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
+import at.jku.ssw.cmm.gettext.Language;
+import at.jku.ssw.cmm.gui.event.WindowEventListener;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.XMLReadingException;
 
 
-public class GUILauncherMain extends JFrame {
+public class GUILauncherMain extends JFrame implements ActionListener{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -61,9 +65,13 @@ public class GUILauncherMain extends JFrame {
 	
 	public GUILauncherMain(GUImainSettings settings){
 		super("C Compact Launcher");
-		super.setMinimumSize(new Dimension(700,550));
+		super.setMinimumSize(new Dimension(700,520));
 		
 		this.settings = settings;
+		
+		// Load translations
+		if( !Language.languageLoaded() )
+			Language.loadLanguage(settings.getLanguage() + ".po");
 		
 		jGlobalPanel = new JPanel();
 		jGlobalPanel.setLayout(new BorderLayout());
@@ -76,8 +84,10 @@ public class GUILauncherMain extends JFrame {
 		this.addProfilePanel();
 		this.addBottomPanel();	
 		
+		super.setResizable(false);
 		super.add(jGlobalPanel);
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		super.addWindowListener(new WindowEventListener((JFrame)this, settings));
 		super.setVisible(true);
 	}
 	
@@ -118,22 +128,29 @@ public class GUILauncherMain extends JFrame {
 		JPanel jSelectProfilePanel = new JPanel(new BorderLayout());
 		
 		//Profile selection Bar
-			JLabel jSelectProfileLabel = new JLabel(_("Select Profile:"));
+			JLabel jSelectProfileLabel = new JLabel(_("Select Profile") + ":");
 			jSelectProfilePanel.add(jSelectProfileLabel, BorderLayout.LINE_START);
 			
 			JPanel jRightButtons = new JPanel(new FlowLayout());
 			jRightButtons.setBackground(Color.WHITE);
 			
-				//creating the find button
+				//creating the "find" button
 				JButton jFindProfile = new JButton(_("Find"));
 				jFindProfile.addMouseListener(new FindProfileListener((JFrame)this, settings));
+				jFindProfile.setToolTipText("<html><b>" + _("Open existing profile") + "</b><br>" +_("Open an existing profile which is not<br>listed below by selecting its directory.") + "</html>");
 				jRightButtons.add(jFindProfile);
 				
-				
-				//creating new button
-				JButton jCreateProfile = new JButton("New");
+				//creating "new" button
+				JButton jCreateProfile = new JButton(_("New"));
 				jCreateProfile.addMouseListener(new AddProfileListener((JFrame)this, settings));
+				jCreateProfile.setToolTipText("<html><b>" + _("Create new profile") + "</b><br>" + _("Create a new profile and save it<br>anywhere on your computer.") + "</html>");
 				jRightButtons.add(jCreateProfile);
+				
+				//creating "launch without profile" button
+				JButton jBlankLaunch = new JButton(_("Launch without profile"));
+				jBlankLaunch.addMouseListener(new BlankLaunchListener((JFrame)this, settings));
+				jBlankLaunch.setToolTipText("<html><b>" + _("Launch C Compact without profile") + "</b><br>" + _("In this mode, you will not be able to do quests,<br>however you can still use all other features of C Compact.") + "</html>");
+				jRightButtons.add(jBlankLaunch);
 			
 			//adding the buttons to the selection Panel
 			jSelectProfilePanel.add(jRightButtons,BorderLayout.LINE_END);
@@ -160,6 +177,16 @@ public class GUILauncherMain extends JFrame {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+				
+				//No recent profiles
+				if( this.settings.getRecentProfiles().size() == 0 ){
+					//setting the welcome label
+					JLabel noProfilesMessage = new JLabel(_("No recent profiles"));
+					jPreviewProfile.add(noProfilesMessage);
+					
+					//setting the size of the welcome message
+					noProfilesMessage.setFont(noProfilesMessage.getFont().deriveFont (32.0f));
+				}
 				
 			JScrollPane scrollPane = new JScrollPane(jPreviewProfile);
 			
@@ -221,14 +248,14 @@ public class GUILauncherMain extends JFrame {
 			profilePicPanel.add(LoadStatics.loadImage(profile.getInitPath() + File.separator + profile.getProfileimage(), false, 200, 200));
 		
 		profilePicPanel.addMouseListener(new EditProfileListener((JFrame)this,settings, profile));
+		profilePicPanel.setToolTipText("<html><b>" + _("Edit profile") + "</b><br>" + _("Click image to change profile properties") + "</html>");
 			
 		jProfile.add(profilePicPanel, BorderLayout.CENTER);
 		
-		if(!profile.isMaster()){
-			JButton openProfile = new JButton("OPEN");
+			JButton openProfile = new JButton(_("Open"));
+			openProfile.setToolTipText("<html><b>" + _("Launch C Compact") + "</b><br>" + _("using this profile") + "</html>");
 			openProfile.addMouseListener(new LauncherListener(settings,(JFrame)this, profile));
 		jProfile.add(openProfile,BorderLayout.PAGE_END);
-		}
 			
 		jMarginPanel.add(jProfile,BorderLayout.CENTER);
 		
@@ -240,14 +267,19 @@ public class GUILauncherMain extends JFrame {
 	private void addBottomPanel(){
 		JPanel jFinishPanel = new JPanel(new BorderLayout());
 		
-		String[] languages = { "Englisch", "Deutsch"};
+		String[] languages = {"English", "Deutsch"};
 		JComboBox<String> jLanguageChooser = new JComboBox<>(languages);
 		jLanguageChooser.setSelectedIndex(1);
 		jLanguageChooser.setMinimumSize(new Dimension(100,30));
 		jLanguageChooser.setPreferredSize(new Dimension(100,30));
-		//jLanguateChooser.addActionListener(this);
+		jLanguageChooser.addActionListener(this);
 		
 		jFinishPanel.add(jLanguageChooser,BorderLayout.LINE_START);
+		
+		switch( this.settings.getLanguage() ){
+		case "en": jLanguageChooser.setSelectedIndex(0); break;
+		case "de": jLanguageChooser.setSelectedIndex(1); break;
+		}
 	
 	
 	//JButton jStartButton = new JButton("Start");
@@ -259,6 +291,29 @@ public class GUILauncherMain extends JFrame {
 
 	jGlobalPanel.add(jFinishPanel,BorderLayout.PAGE_END);
 	//Page end Finished
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		
+		@SuppressWarnings("unchecked")
+		JComboBox<String> combo = (JComboBox<String>)arg0.getSource();
+		
+		switch( (String)combo.getSelectedItem() ){
+		case "English":
+			this.settings.setLanguage("en");
+			System.out.println("en");
+			break;
+		case "Deutsch":
+			this.settings.setLanguage("de");
+			System.out.println("ger");
+			break;
+		}
+		
+		// Load translations
+		Language.loadLanguage(settings.getLanguage() + ".po");
+		
+		this.jGlobalPanel.repaint();
 	}
 
 }

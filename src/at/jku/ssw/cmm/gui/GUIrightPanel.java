@@ -90,7 +90,7 @@ public class GUIrightPanel {
 	/**
 	 * A reference to the quest/profile info panel.
 	 */
-	private GUIquestPanel questPanel;
+	private GUIProfilePanel questPanel;
 
 	private JPanel errorPanel;
 	private JEditorPane errorDesc;
@@ -166,7 +166,7 @@ public class GUIrightPanel {
 		if (main.hasAdvancedGUI()) {
 			jQuestPanel.setLayout(new BorderLayout());
 			tabbedPane.add(jQuestPanel, _("Quest"));
-			questPanel = new GUIquestPanel(jQuestPanel, main);
+			questPanel = new GUIProfilePanel(jQuestPanel, main);
 		}
 		
 		tabbedPane.setMinimumSize(new Dimension(250, 400));
@@ -187,7 +187,7 @@ public class GUIrightPanel {
 	/**
 	 * @return A reference to the quest/profile info panel manager
 	 */
-	public GUIquestPanel getQuestPanel() {
+	public GUIProfilePanel getQuestPanel() {
 		return this.questPanel;
 	}
 
