@@ -61,7 +61,7 @@ public class GUILauncherMain extends JFrame {
 	
 	public GUILauncherMain(GUImainSettings settings){
 		super("C Compact Launcher");
-		super.setMinimumSize(new Dimension(700,550));
+		super.setMinimumSize(new Dimension(700,500));
 		
 		this.settings = settings;
 		
@@ -76,6 +76,7 @@ public class GUILauncherMain extends JFrame {
 		this.addProfilePanel();
 		this.addBottomPanel();	
 		
+		super.setResizable(false);
 		super.add(jGlobalPanel);
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		super.setVisible(true);
@@ -118,7 +119,7 @@ public class GUILauncherMain extends JFrame {
 		JPanel jSelectProfilePanel = new JPanel(new BorderLayout());
 		
 		//Profile selection Bar
-			JLabel jSelectProfileLabel = new JLabel(_("Select Profile:"));
+			JLabel jSelectProfileLabel = new JLabel(_("Select Profile") + ":");
 			jSelectProfilePanel.add(jSelectProfileLabel, BorderLayout.LINE_START);
 			
 			JPanel jRightButtons = new JPanel(new FlowLayout());
@@ -160,6 +161,16 @@ public class GUILauncherMain extends JFrame {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+				
+				//No recent profiles
+				if( this.settings.getRecentProfiles().size() == 0 ){
+					//setting the welcome label
+					JLabel noProfilesMessage = new JLabel(_("No recent profiles"));
+					jPreviewProfile.add(noProfilesMessage);
+					
+					//setting the size of the welcome message
+					noProfilesMessage.setFont(noProfilesMessage.getFont().deriveFont (32.0f));
+				}
 				
 			JScrollPane scrollPane = new JScrollPane(jPreviewProfile);
 			

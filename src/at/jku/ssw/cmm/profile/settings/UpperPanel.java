@@ -30,7 +30,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -199,7 +198,7 @@ public class UpperPanel extends JPanel {
 		else
 			//Loading fixed profile image
 			if(profile.getInitPath() != null)
-				profilePicture = LoadStatics.loadImage(profile.getProfileimage(), true, 128, 128);
+				profilePicture = LoadStatics.loadImage(profile.getInitPath() + Profile.sep + profile.getProfileimage(), true, 128, 128);
 		
 			//Loading temporary choosen Image files
 			else{
@@ -207,7 +206,7 @@ public class UpperPanel extends JPanel {
 				System.out.println("Current ProfilePic: " + profile.getProfileimage());
 			}
 		
-		if(profilePicture.getIcon().getIconHeight() == -1 && profilePicture.getIcon().getIconWidth() == -1)
+		if(profilePicture.getIcon() == null || profilePicture.getIcon().getIconHeight() == -1 && profilePicture.getIcon().getIconWidth() == -1)
 			profilePicture.setText(_("Corrupted Avatar"));
 				
 

@@ -160,7 +160,7 @@ public class ProfileSettingsListener {
 					if(gui.getProfile().getProfileimage() != null){
 						Profile p = gui.getProfile();
 						
-						File file = new File(p.getInitPath() + p.sep + p.getProfileimage());
+						File file = new File(p.getInitPath() + Profile.sep + p.getProfileimage());
 						file.delete();
 					}
 						
