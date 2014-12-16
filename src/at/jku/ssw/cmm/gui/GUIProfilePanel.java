@@ -48,7 +48,7 @@ import at.jku.ssw.cmm.profile.Profile;
  * @author fabian
  *
  */
-public class GUIquestPanel {
+public class GUIProfilePanel {
 	
 	//GridBagConstraints
 	private GridBagConstraints c;
@@ -65,7 +65,7 @@ public class GUIquestPanel {
 	 * @param mod
 	 *            Interface for main GUI manipulations
 	 */
-	public GUIquestPanel(JPanel cp, GUImain main) {
+	public GUIProfilePanel(JPanel cp, GUImain main) {
 
 		this.cp = cp;
 		this.main = main;
