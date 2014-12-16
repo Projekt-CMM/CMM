@@ -45,11 +45,11 @@ Expr = Term { ( "+" | "-" ) Term }.
 Term = intCon { ( "*" | "/" ) intCon }.
 \end{lstlisting}
 
-Nichtterminalsymbole werden normalerweise gro\ss{} geschrieben. In diesem Beispiel stellen daher ''Expr'' und ''Term'' Nichtterminalsymbole dar, welche wiederum von anderen Nichtterminalsymbolen verwendet werden k\"onnen.
+Nichtterminalsymbole werden normalerweise gro\ss{} geschrieben. In diesem Beispiel stellen ''Expr'' und ''Term'' Nichtterminalsymbole dar, welche wiederum von anderen Nichtterminalsymbolen verwendet werden k\"onnen.
 
 \subsubsection{Produktionsregel}
 
-Die Produktionsregel \footnote{\url{https://de.wikipedia.org/wiki/Produktionsregel}} ist eine Regel, welche angibt wie aus W\"ortern neue W\"orter produziert werden.
+Die Produktionsregel\footnote{\url{https://de.wikipedia.org/wiki/Produktionsregel}} ist eine Regel, welche angibt wie aus W\"ortern neue W\"orter produziert werden.
 
 \begin{lstlisting}[language=EBNF]
 Expr = Term { ( "+" | "-" ) Term }.
@@ -101,7 +101,7 @@ Der Ausdruck $1-2+5$ kann mit dieser EBNF Regel nur mehr auf eine Art gelöst we
 Expr = Term { ( "+" | "-" ) Term }.
 \end{lstlisting}
 
-Eine Expression besteht dabei aus einem Term, und dann optional wiederum aus einem ''+'' oder ''-'' gefolgt von einem weiterem Term.
+Eine Expression\footnote{\url{https://de.wikipedia.org/wiki/Ausdruck_(Programmierung)}} besteht dabei aus einem Term, und dann optional wiederum aus einem ''+'' oder ''-'' gefolgt von einem weiterem Term.
 
 \includegraphics[scale=0.5]{./media/images/compiler/ebnf_term.png}
 \begin{lstlisting}[language=EBNF]
@@ -110,7 +110,7 @@ Term = Factor { ( "*" | "/" ) Factor }.
 
 Das Nichtterminalsymbol Term stellt wiederum eine Produktionsregel dar, welche aus einem Faktor, und dann optional wiederum aus einem ''*'' oder ''/'' gefolgt von einem weiterem Faktor besteht.
 
-Durch solch einfache Regeln können z.B.: Mathematische Regeln wie Punkt vor Strich eindeutig und korrekt in einen Syntaxbaum übersetzt werden.
+Durch solche einfachen Regeln können z.B.: Mathematische Regeln wie Punkt vor Strich eindeutig und korrekt in einen Syntaxbaum übersetzt werden.
 
 \includegraphics[scale=0.5]{./media/images/compiler/ebnf_designator.png}
 \begin{lstlisting}[language=EBNF]
@@ -124,15 +124,35 @@ Designator = ident { "." ident | "[" BinExpr "]" }.
 
 \subsection{Lexikalische Analyse - Scanner}
 
-Bei der Lexikalischen Analyse zerlegt der sogenannt Scanner den Zeichenstrom in einen sogenannten Tokenstrom. Ein sogenannter Token\footnote{\url{https://de.wikipedia.org/wiki/Token_(\%C3\%9Cbersetzerbau)}} stellt dabei eine logische Einheit dar (z.B.: eine variable, oder ein operatorzeichen), und wird nicht mehr weiter zerlegt (Terminalsymbol).
+Bei der Lexikalischen Analyse zerlegt der sogenannt Scanner\footnote{\url{https://de.wikipedia.org/wiki/Tokenizer}} den Zeichenstrom in einen sogenannten Tokenstrom. Ein sogenannter Token\footnote{\url{https://de.wikipedia.org/wiki/Token_(\%C3\%9Cbersetzerbau)}} stellt dabei eine logische Einheit dar (z.B.: eine variable, oder ein Operatorzeichen), und wird nicht mehr weiter zerlegt (Terminalsymbol).
+
+\htlParagraph{Zeichenstrom}
+
+Der Scanner bekommt einen Zeichenstrom, welcher aus einzelnen Zeichen besteht. Ein Zeichen ist z.B. ein Buchstabe, eine Zahl oder Sonderzeichen wie ''='', oder ''+''.
+
+\includegraphics[width=0.6\textwidth]{./media/images/compiler/input_characterstream.png}
+
+\htlParagraph{Resultierender Tokenstrom}
+
+Aus diesem Zeichenstrom werden dann die Tokens extrahiert, welche dann die sogenannten Terminalsymbole in der EBNF bzw. BNF darstellen. Tokens k\"onnen dabei aus 1. oder mehreren Zeichen bestehen.
+
+Manche Tokens wie z.B. Variablen oder Konstanten besitzen au\ss{}er der Tokennummer desweiteren noch einen Tokenwert, mit dem sp\"ater z.B. der Variablenname, oder der Wert einer Variable ausgelesen werden kann.
+
+\includegraphics[width=\textwidth]{./media/images/compiler/scanner_tokenstream.png}
 
 \subsection{Syntaxanalyse - Parser}
 
-Der Parser wandelt den Tokenstrom in einen Syntaxbaum um, welcher das Programm repräsentiert.
+Der Parser\footnote{\url{https://de.wikipedia.org/wiki/Parser}} wandelt danach den Tokenstrom in einen Syntaxbaum um, welcher das Programm repräsentiert.
 
-\subsection{Attributierte Gramatik}
+\newpage
+
+\htlParagraph{Syntaxbaum}
+
+\includegraphics[width=0.6\textwidth]{./media/images/compiler/parser_syntaxtree.png}
 
 \subsection{Abstrakter Syntaxbaum}
+
+\subsection{Attributierte Gramatik}
 
 \subsection{Symboltabelle}
 
