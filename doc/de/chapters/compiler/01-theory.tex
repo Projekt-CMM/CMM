@@ -11,27 +11,52 @@
 
 \subsection{Erweiterte Backus-Naur-Form (EBNF)}
 
-Die sogenannte Erweiterte Backus-Naur-Form (EBNF)\footnote{\url{https://de.wikipedia.org/wiki/Erweiterte_Backus-Naur-Form}} ist eine weiterentwicklung der Backus-Naur-Form (BNF)\footnote{\url{https://de.wikipedia.org/wiki/Backus-Naur-Form}}.
+Die sogenannte Erweiterte Backus-Naur-Form (EBNF)\footnote{\url{https://de.wikipedia.org/wiki/Erweiterte_Backus-Naur-Form}} ist eine weiterentwicklung der Backus-Naur-Form (BNF)\footnote{\url{https://de.wikipedia.org/wiki/Backus-Naur-Form}}. Das Anwendungsgebiet der BNF und EBNF ist das definieren von  kontextfreie Grammatiken\footnote{\url{https://de.wikipedia.org/wiki/Kontextfreie_Grammatik}}, welche untere anderem f\"ur Programmiersprachen benutzt werden.
 
-Vorteile der EBNF sind unter anderem:
+Bei kontextfreier Gramatik wird jeweils Ein Nichtterminalsymbol auf eine beliebige Folge von Terminal- bzw. Nichtterminalsymbolen abgeleitet ($V \rightarrow w$). Wenn das Nichtterminalsymbol $V$ in einem anderem Nichtterminalsymbol verwendet wird, wird nicht auf den Kontext geachtet, in welcher das Nichtterminalsymbol $V$ eingebettet ist. Die Regel ist daher kontextfrei.
+
+Vorteile der EBNF gegen\"uber der BNF sind unter anderem:
 
 \begin{itemize}
-  \item einfacheres erstellen von Rekursionen
+  \item einfacheres erstellen von Rekursionen und optionalen Ausdr\"ucken
   \item bessere Lesbarkeit
-  \item ...
+  \item einfaches und eindeutiges definieren von Terminalsymbolen
 \end{itemize}
+
+\newpage
 
 \subsubsection{Terminalsymbol}
 
-Ein sogenanntes Terminalsymbol\footnote{\url{https://de.wikipedia.org/wiki/Terminalsymbol}} wird nicht weiter zerlegt. Es stellt z.B. eine Zahl, eine Variable oder ein Schlüsselwort (if, while, ...) dar.
+Ein sogenanntes Terminalsymbol\footnote{\url{https://de.wikipedia.org/wiki/Terminalsymbol}} wird nicht weiter zerlegt. Es stellt z.B. eine Zahl, eine Variable oder ein Schlüsselwort (''if'', ''while'', ...) dar.
+
+\begin{lstlisting}[language=EBNF]
+Expr = Term { ( "+" | "-" ) Term }.
+Term = intCon { ( "*" | "/" ) intCon }.
+\end{lstlisting}
+
+Terminalsymbole werden normalerweise entweder klein geschrieben (z.B. intCon), oder direkt in der Gramatik definiert (z.B. ''+'').
 
 \subsubsection{Nichtterminalsymbol}
 
-Ein Nichtterminalsymbol\footnote{\url{https://de.wikipedia.org/wiki/Nichtterminalsymbol}}
+Ein Nichtterminalsymbol\footnote{\url{https://de.wikipedia.org/wiki/Nichtterminalsymbol}} besteht aus einen oder mehreren Terminalsymbolen bzw. Nichtterminalsymbolen.
+
+\begin{lstlisting}[language=EBNF]
+Expr = Term { ( "+" | "-" ) Term }.
+Term = intCon { ( "*" | "/" ) intCon }.
+\end{lstlisting}
+
+Nichtterminalsymbole werden normalerweise gro\ss{} geschrieben. In diesem Beispiel stellen daher ''Expr'' und ''Term'' Nichtterminalsymbole dar, welche wiederum von anderen Nichtterminalsymbolen verwendet werden k\"onnen.
 
 \subsubsection{Produktionsregel}
 
-\footnote{\url{https://de.wikipedia.org/wiki/Produktionsregel}}
+Die Produktionsregel \footnote{\url{https://de.wikipedia.org/wiki/Produktionsregel}} ist eine Regel, welche angibt wie aus W\"ortern neue W\"orter produziert werden.
+
+\begin{lstlisting}[language=EBNF]
+Expr = Term { ( "+" | "-" ) Term }.
+Term = intCon { ( "*" | "/" ) intCon }.
+\end{lstlisting}
+
+Die Produktionsregel gibt an wie z.B. das Nichtterminalsymbol ''Expr'' aufgebaut ist. Eine Produktionsregel besteht jeweils aus einem Nichtterminalsymbol auf der linken Seite, und der jeweiligen Regel auf der rechten Seite welches aus Terminal- und Nichtterminalsymbolen aufgebaut ist.
 
 \newpage
 
@@ -42,7 +67,6 @@ Die Gramatik muss so aufgebaut sein, dass es für einen Tokenstrom nur eine eind
 \htlParagraph{Beispiel}
 
 Es soll eine EBNF-Regel erstellt werden welche einen Mathematischen Ausdruck, aufgebaut aus Additionen und Subtraktionen korrekt parsen.
-
 \subhtlParagraph{Mehrdeutige EBNF Regel}
 
 \includegraphics[scale=0.5]{./media/images/compiler/ambiguity_wrong.png}
@@ -59,7 +83,6 @@ Der Ausdruck $1-2+5$ kann mit dieser EBNF Regel auf mehreren Arten gelöst werde
   \includegraphics[scale=0.5]{./media/images/compiler/ambiguity_tree_correct.png} & 
   \includegraphics[scale=0.5]{./media/images/compiler/ambiguity_tree_wrong.png} \\
 \end{tabular}
-
 \subhtlParagraph{Eindeutige EBNF Regel}
 
 \includegraphics[scale=0.5]{./media/images/compiler/ambiguity_correct.png}
@@ -70,7 +93,7 @@ Expr = intCon [ ( "+" | "-" ) Expr ].
 
 Der Ausdruck $1-2+5$ kann mit dieser EBNF Regel nur mehr auf eine Art gelöst werden. Dabei werden die Operatoren links-assoziativ behandelt. Der Ausdruck $1-2+5$ wird als $(1-2)+5$ ausgewertet, was Mathematisch den korrekte Weg darstellt.
 
-\subsubsection{Beispiele}
+\subsubsection{EBNF-Beispiele}
 
 \includegraphics[scale=0.5]{./media/images/compiler/ebnf_expr.png}
 
@@ -96,6 +119,8 @@ Designator = ident { "." ident | "[" BinExpr "]" }.
 
 
 %\includegraphics[scale=0.5]{./media/images/compiler/ebnf_factor.png}
+
+\newpage
 
 \subsection{Lexikalische Analyse - Scanner}
 
