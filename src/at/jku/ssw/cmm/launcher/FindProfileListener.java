@@ -28,30 +28,28 @@ import javax.swing.JFrame;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
-import at.jku.ssw.cmm.profile.Profile;
 
 public class FindProfileListener implements MouseListener{
 
-private JFrame jFrame;
+	private final JFrame jFrame;
+	private final GUImainSettings settings;
 	
 
-	public FindProfileListener( JFrame jFrame) {
+	public FindProfileListener( JFrame jFrame, GUImainSettings settings ) {
 		this.jFrame = jFrame;
+		this.settings = settings;
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		
 		try {
-
 			
-			Profile profile;
-			
-			profile = GUIProfileManager.selectProfile();	
+			settings.setProfile(GUIProfileManager.selectProfile());	
 			
 			jFrame.dispose();
 			
-			GUImain app = new GUImain(new GUImainSettings(profile));
+			GUImain app = new GUImain(settings);
 			app.start(false);
 			
 		} catch (ProfileSelectionException e) {

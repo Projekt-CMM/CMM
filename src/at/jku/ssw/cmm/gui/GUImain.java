@@ -46,7 +46,6 @@ import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.gui.quest.GUIquestMain;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
-import at.jku.ssw.cmm.profile.Profile;
 
 /**
  * Contains the main function which also initializes and controls the main GUI.
@@ -232,14 +231,15 @@ public class GUImain {
 		MenuBarEventListener listener = new MenuBarEventListener(this.jFrame,
 				this.leftPanelControl.getSourcePane(),
 				this.leftPanelControl.getInputPane(), this, this.getSettings(),
-				this.rightPanelControl.getDebugPanel(), this.saveDialog, this.settings.getProfile());
+				this.rightPanelControl.getDebugPanel(), this.saveDialog);
 
 		this.menuBarControl = new MenuBarControl(listener);
 
 		InitMenuBar.initFileM(this.jFrame, this, this.menuBarControl, listener);
 
 		this.menuBarControl.updateRecentFiles(this.settings.getRecentFiles(), this.settings.getCMMFilePath());
-
+		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), false);
+		
 		// Set debug panel to ready mode
 		this.rightPanelControl.getDebugPanel().setReadyMode();
 
@@ -317,15 +317,15 @@ public class GUImain {
 		// open profile selector on empty profile
 
 		// Select Profile if there is no active Profile
-		if (Profile.getActiveProfile() == null) {
+		if (this.getSettings().getProfile() == null) {
 			this.dispose();
-			GUILauncherMain.init();
+			new GUILauncherMain();
 			// selectProfile();
 		}
 
 		// Ignoring Quest GUI if there is no active Profile
-		if (Profile.getActiveProfile() != null)
-			new GUIquestMain(this.rightPanelControl.getQuestPanel()).start();
+		if (this.getSettings().getProfile() != null)
+			new GUIquestMain(this.rightPanelControl.getQuestPanel(), this).start();
 	}
 
 	public JPanel getGlassPane() {
@@ -344,24 +344,32 @@ public class GUImain {
 	}
 
 	public void setReadyMode() {
+		
+		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), false);
 
 		this.leftPanelControl.setReadyMode();
 		this.rightPanelControl.hideErrorPanel();
 	}
 
 	public void setErrorMode(String msg, int line) {
+		
+		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), false);
 
 		this.leftPanelControl.setErrorMode(line);
 		this.rightPanelControl.showErrorPanel(msg);
 	}
 
 	public void setRunMode() {
+		
+		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), true);
 
 		this.leftPanelControl.setRunMode();
 		this.rightPanelControl.hideErrorPanel();
 	}
 
 	public void setPauseMode() {
+		
+		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), true);
 
 		this.leftPanelControl.setPauseMode();
 		this.rightPanelControl.hideErrorPanel();

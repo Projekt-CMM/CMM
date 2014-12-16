@@ -24,11 +24,14 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -95,8 +98,34 @@ public class GUIrightPanel {
 	private JTextField errorMsg;
 	
 	private final GUImain main;
+	
+	private JPanel jStatePanel;
+	private JLabel jStateLabel;
 
-	public JTabbedPane init() {
+	public JPanel init() {
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
+		
+		// Profile state panel
+		if( main.hasAdvancedGUI() ){
+			this.jStatePanel = new JPanel();
+			this.jStatePanel.setBorder(BorderFactory.createLoweredBevelBorder());
+			
+			this.jStatePanel.setMinimumSize(new Dimension(20, 30));
+			this.jStatePanel.setPreferredSize(new Dimension(30, 30));
+			this.jStatePanel.setMaximumSize(new Dimension(8000, 30));
+			this.jStateLabel = new JLabel();
+			this.jStatePanel.add(this.jStateLabel);
+			this.setSuccessMode();
+			
+			JPanel wrapper = new JPanel();
+			wrapper.setBorder(new EmptyBorder(5, 5, 0, 5));
+			wrapper.setLayout(new BorderLayout());
+			wrapper.add(this.jStatePanel, BorderLayout.CENTER);
+			
+			panel.add(wrapper, BorderLayout.PAGE_START);
+		}
 		
 		// Tabbed Pane
 		tabbedPane = new JTabbedPane();
@@ -142,8 +171,10 @@ public class GUIrightPanel {
 		
 		tabbedPane.setMinimumSize(new Dimension(250, 400));
 		tabbedPane.setPreferredSize(new Dimension(260, 420));
+		
+		panel.add(tabbedPane, BorderLayout.CENTER);
 
-		return tabbedPane;
+		return panel;
 	}
 	
 	/**
@@ -186,5 +217,40 @@ public class GUIrightPanel {
 	public void hideErrorPanel() {
 		if (this.tabbedPane.getTabCount() == (main.hasAdvancedGUI() ? 3 : 2))
 			tabbedPane.remove(1);
+	}
+	
+	public void setSuccessMode() {
+		if(main.hasAdvancedGUI()) {
+			this.jStatePanel.setBackground(new Color(0x92FC9B));
+			this.jStateLabel.setText(_("test successful"));
+		}
+	}
+	
+	public void setFailedMode() {
+		if(main.hasAdvancedGUI()) {
+			this.jStatePanel.setBackground(new Color(255, 131, 131));
+			this.jStateLabel.setText(_("test failed"));
+		}
+	}
+	
+	public void setTestMode() {
+		if(main.hasAdvancedGUI()) {
+			this.jStatePanel.setBackground(new Color(0xEFDD1E));
+			this.jStateLabel.setText(_("testing current quest"));
+		}
+	}
+	
+	public void setIdleMode() {
+		if(main.hasAdvancedGUI()) {
+			this.jStatePanel.setBackground(Color.LIGHT_GRAY);
+			this.jStateLabel.setText(_("no quest selected"));
+		}
+	}
+	
+	public void setQuestMode(String title) {
+		if(main.hasAdvancedGUI()) {
+			this.jStatePanel.setBackground(new Color(0x2BC6C6));
+			this.jStateLabel.setText(_("current quest") + ": " + title);
+		}
 	}
 }

@@ -56,7 +56,7 @@ public class GUIProperties{
 		
 		// Thread analysis
 		if( SwingUtilities.isEventDispatchThread() )
-			System.out.println("[EDT Analyse] Quest GUI runnung on EDT.");
+			System.out.println("[EDT Analyse] Properties GUI runnung on EDT.");
 		
 		// Initialize window
 		this.jFrame = new JFrame(_("Properties"));

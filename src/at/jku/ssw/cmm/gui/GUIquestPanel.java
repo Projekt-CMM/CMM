@@ -23,7 +23,6 @@ package at.jku.ssw.cmm.gui;
 
 import static at.jku.ssw.cmm.gettext.Language._;
 
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -40,7 +39,6 @@ import javax.swing.border.EmptyBorder;
 import at.jku.ssw.cmm.gui.event.quest.QuestPanelListener;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
 import at.jku.ssw.cmm.profile.Profile;
-import at.jku.ssw.cmm.profile.Quest;
 
 /**
  * This class contains all initialization and management methods for the second pane of the
@@ -67,11 +65,12 @@ public class GUIquestPanel {
 	 * @param mod
 	 *            Interface for main GUI manipulations
 	 */
-	public GUIquestPanel(JPanel cp, GUImain mod) {
+	public GUIquestPanel(JPanel cp, GUImain main) {
 
 		this.cp = cp;
+		this.main = main;
 		
-		this.listener = new QuestPanelListener(mod);
+		this.listener = new QuestPanelListener(main);
 
 		cp.setLayout(new GridBagLayout());
 	    c = new GridBagConstraints();
@@ -84,6 +83,7 @@ public class GUIquestPanel {
 	
 	//Basic Panel
 	private final JPanel cp;
+	private final GUImain main;
 	
 	private final QuestPanelListener listener;
 	
@@ -122,11 +122,11 @@ public class GUIquestPanel {
 	 */
 	private void initObejcts(){
 	
-		if(Profile.getActiveProfile() != null){
+		if(this.main.getSettings().getProfile() != null){
 		//Labels
 			this.jProfileTitle = new JLabel(_("Profile Information"));
-			this.jProfileName = new JLabel(_("Name") + ": " + Profile.getActiveProfile().getName());
-			this.jProfileLevel = new JLabel(_("Level") + ": " + Profile.getActiveProfile().getLevel());
+			this.jProfileName = new JLabel(_("Name") + ": " + this.main.getSettings().getProfile().getName());
+			this.jProfileLevel = new JLabel(_("Level") + ": " + this.main.getSettings().getProfile().getLevel());
 		}else{
 			this.jProfileTitle = new JLabel(_("No Profile choosen"));
 			this.jProfileName = new JLabel();
@@ -142,8 +142,8 @@ public class GUIquestPanel {
 		this.jQuestSelectButton.addMouseListener(listener.questHandler);
 		
 		//Level progress scroll bar
-		if(Profile.getActiveProfile() != null)
-			this.jProfileLevel = new JLabel(_("Level") + ": " + Profile.getActiveProfile().getLevel());
+		if(this.main.getSettings().getProfile() != null)
+			this.jProfileLevel = new JLabel(_("Level") + ": " + this.main.getSettings().getProfile().getLevel());
 		else
 			this.jProfileLevel = new JLabel();
 
@@ -161,10 +161,10 @@ public class GUIquestPanel {
 	 * Loads the profile image and the player's reward tokens
 	 */
 	private void loadImages(){
-		Profile profile = Profile.getActiveProfile();
+		Profile profile = this.main.getSettings().getProfile();
 		
 		//Load Profile Image
-		if(Profile.getActiveProfile() != null && Profile.getActiveProfile().getProfileimage() != null){
+		if(this.main.getSettings().getProfile() != null && this.main.getSettings().getProfile().getProfileimage() != null){
 			String path = profile.getInitPath() + Profile.sep + profile.getProfileimage();
 			System.out.println(path);
 			

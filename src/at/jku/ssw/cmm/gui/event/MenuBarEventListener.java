@@ -36,13 +36,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import at.jku.ssw.cmm.gui.GUImain;
+import at.jku.ssw.cmm.gui.credits.Credits;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
 import at.jku.ssw.cmm.gui.properties.GUIProperties;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
-import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.settings.GUIprofileSettings;
 
 /**
@@ -81,13 +81,6 @@ public class MenuBarEventListener {
 		this.debug = debug;
 		this.saveDialog = saveDialog;
 	}
-	
-	public MenuBarEventListener(JFrame jFrame, RSyntaxTextArea jSourcePane,
-			JTextPane jInputPane, GUImain main, GUImainSettings settings,
-			GUIdebugPanel debug, SaveDialog saveDialog, Profile profile) {
-		this(jFrame, jSourcePane, jInputPane, main, settings, debug, saveDialog);
-		this.profile = profile;
-	}
 
 	/**
 	 * The main window frame
@@ -124,11 +117,6 @@ public class MenuBarEventListener {
 	 * A reference to the save dialog manager class
 	 */
 	private final SaveDialog saveDialog;
-	
-	/**
-	 * A profile reference
-	 */
-	private Profile profile;
 
 	/**
 	 * Event listener for the "new file" entry in the "file" drop-down menu
@@ -272,6 +260,15 @@ public class MenuBarEventListener {
 
 		}
 	};
+	
+	public ActionListener creditsHandler = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			new Credits().start();
+		}
+	};
 
 	/**
 	 * Event listener for the "exit" entry in the "file" drop-down menu - closes
@@ -284,6 +281,24 @@ public class MenuBarEventListener {
 
 			if(main.getSaveManager().safeCheck(_("Closing C Compact")))
 				WindowEventListener.updateAndExit(jFrame, settings);
+		}
+	};
+	
+	public ActionListener undoHandler = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			jSourcePane.undoLastAction();
+		}
+	};
+	
+	public ActionListener redoHandler = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			jSourcePane.redoLastAction();
 		}
 	};
 	
@@ -306,7 +321,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			main.dispose();
-			GUILauncherMain.init();
+			new GUILauncherMain();
 		}
 	};
 
@@ -332,7 +347,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			main.dispose();
-			GUIprofileSettings.init(profile);
+			GUIprofileSettings.init(settings, false);
 		}
 	};
 	

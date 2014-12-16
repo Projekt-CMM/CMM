@@ -22,21 +22,14 @@
 package at.jku.ssw.cmm.launcher;
 
 import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Image;
-import java.awt.ScrollPane;
-import java.awt.Toolkit;
 import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -44,54 +37,54 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
+import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.XMLReadingException;
 
 
-public class GUILauncherMain {
-
-	private static JFrame jFrame;
-	private static JPanel jGlobalPanel;
+public class GUILauncherMain extends JFrame {
+	
+	private static final long serialVersionUID = 1L;
+	
+	private final JPanel jGlobalPanel;
+	
+	private final GUImainSettings settings;
 	
 	
 	public static void main(String[] args) {
-		init();
-
+		new GUILauncherMain();
 	}
 	
-	public static void init(){
+	public GUILauncherMain(GUImainSettings settings){
+		super("C Compact Launcher");
+		super.setMinimumSize(new Dimension(700,550));
 		
-		GUILauncherMain launcher = new GUILauncherMain();
-		
-		jFrame = new JFrame("C Compact Launcher");
-		
-		jFrame.setMinimumSize(new Dimension(700,550));
-		
+		this.settings = settings;
 		
 		jGlobalPanel = new JPanel();
 		jGlobalPanel.setLayout(new BorderLayout());
 		jGlobalPanel.setBorder(new EmptyBorder(10, 10, 10, 10) );
 		
 		//Block contains Welcome Block and CMM Logo
-		launcher.addWelcomeBlock();
+		this.addWelcomeBlock();
 		
 		//Block contains 
-		launcher.addProfilePanel();
-		launcher.addBottomPanel();	
+		this.addProfilePanel();
+		this.addBottomPanel();	
 		
-		jFrame.add(jGlobalPanel);
-		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jFrame.setVisible(true);
-		
-		System.out.println("finished");
+		super.add(jGlobalPanel);
+		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		super.setVisible(true);
 	}
 	
+	public GUILauncherMain(){
+		this(new GUImainSettings());
+	}
+
 	/**
 	 * Adding a Panel whitch contains:
 	 * Welcome Message and logo
@@ -133,13 +126,13 @@ public class GUILauncherMain {
 			
 				//creating the find button
 				JButton jFindProfile = new JButton(_("Find"));
-				jFindProfile.addMouseListener(new FindProfileListener(jFrame));
+				jFindProfile.addMouseListener(new FindProfileListener((JFrame)this, settings));
 				jRightButtons.add(jFindProfile);
 				
 				
 				//creating new button
 				JButton jCreateProfile = new JButton("New");
-				jCreateProfile.addMouseListener(new AddProfileListener(jFrame));
+				jCreateProfile.addMouseListener(new AddProfileListener((JFrame)this, settings));
 				jRightButtons.add(jCreateProfile);
 			
 			//adding the buttons to the selection Panel
@@ -159,11 +152,14 @@ public class GUILauncherMain {
 			
 				JPanel jPreviewProfile = new JPanel();
 				
-				//TODO implement real Profile settings.xml
-				for(int i = 0; i< 5; i++)
-					jPreviewProfile.add(addProfilePreview(new Profile()));
-
-				jPreviewProfile.add(addProfilePreview(new Profile()));
+				//Show recent profiles
+				for(String path : this.settings.getRecentProfiles())
+					try {
+						jPreviewProfile.add(addProfilePreview(Profile.ReadProfile(path)));
+					} catch (XMLReadingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				
 			JScrollPane scrollPane = new JScrollPane(jPreviewProfile);
 			
@@ -177,7 +173,7 @@ public class GUILauncherMain {
 		jGlobalPanel.add(jProfilePanel,BorderLayout.CENTER);
 	}
 	
-	public JPanel addProfilePreview(Profile profile){
+	private JPanel addProfilePreview(Profile profile){
 		JPanel jMarginPanel = new JPanel(new BorderLayout());
 
 		
@@ -196,8 +192,8 @@ public class GUILauncherMain {
 			
 			if(!profile.isMaster()){	
 				
-				JLabel name = new JLabel("Name: Nick");
-				JLabel level = new JLabel("Level: 14");
+				JLabel name = new JLabel(_("Name") + ": " + profile.getName());
+				JLabel level = new JLabel(_("Level") + ": " + profile.getLevel());
 			
 			
 				jProfileTop.add(name,BorderLayout.PAGE_START);
@@ -218,19 +214,19 @@ public class GUILauncherMain {
 		profilePicPanel.setPreferredSize(new Dimension(200,200));
 		profilePicPanel.setMinimumSize(new Dimension(200,200));
 		
-		if(!profile.isMaster()){
-			profilePicPanel.add(LoadStatics.loadImage("profileTest/icon.png", false, 200, 200));
-		}
-		else{
-			profilePicPanel.add(LoadStatics.loadImage("addProfile.png", false, 200, 200));
-			profilePicPanel.addMouseListener(new AddProfileListener(jFrame));
-		}
+		//TODO save images in labels
+		if( profile.getProfileimage() == null )
+			profilePicPanel.add(LoadStatics.loadImage(Profile.FILE_DEFAULTIMAGE, false, 200, 200));
+		else
+			profilePicPanel.add(LoadStatics.loadImage(profile.getInitPath() + File.separator + profile.getProfileimage(), false, 200, 200));
+		
+		profilePicPanel.addMouseListener(new EditProfileListener((JFrame)this,settings, profile));
 			
 		jProfile.add(profilePicPanel, BorderLayout.CENTER);
 		
 		if(!profile.isMaster()){
 			JButton openProfile = new JButton("OPEN");
-			openProfile.addMouseListener(new LauncherListener(profile,jFrame));
+			openProfile.addMouseListener(new LauncherListener(settings,(JFrame)this, profile));
 		jProfile.add(openProfile,BorderLayout.PAGE_END);
 		}
 			
@@ -245,13 +241,13 @@ public class GUILauncherMain {
 		JPanel jFinishPanel = new JPanel(new BorderLayout());
 		
 		String[] languages = { "Englisch", "Deutsch"};
-		JComboBox jLanguateChooser = new JComboBox(languages);
-		jLanguateChooser.setSelectedIndex(1);
-		jLanguateChooser.setMinimumSize(new Dimension(100,30));
-		jLanguateChooser.setPreferredSize(new Dimension(100,30));
+		JComboBox<String> jLanguageChooser = new JComboBox<>(languages);
+		jLanguageChooser.setSelectedIndex(1);
+		jLanguageChooser.setMinimumSize(new Dimension(100,30));
+		jLanguageChooser.setPreferredSize(new Dimension(100,30));
 		//jLanguateChooser.addActionListener(this);
 		
-		jFinishPanel.add(jLanguateChooser,BorderLayout.LINE_START);
+		jFinishPanel.add(jLanguageChooser,BorderLayout.LINE_START);
 	
 	
 	//JButton jStartButton = new JButton("Start");

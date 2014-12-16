@@ -27,6 +27,8 @@ import java.util.List;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import at.jku.ssw.cmm.gui.event.MenuBarEventListener;
 
 public class MenuBarControl {
@@ -41,6 +43,9 @@ public class MenuBarControl {
 	private final MenuBarEventListener listener;
 	
 	private JMenu recentMI;
+	
+	private JMenuItem undo;
+	private JMenuItem redo;
 	
 	public void add(JMenuItem mi){
 		this.list.add(mi);
@@ -85,5 +90,18 @@ public class MenuBarControl {
 			
 			this.recentMI.add(mi);
 		}
+	}
+	
+	public void setUndo(JMenuItem undo){
+		this.undo = undo;
+	}
+	
+	public void setRedo(JMenuItem redo){
+		this.redo = redo;
+	}
+	
+	public void updateUndoRedo( RSyntaxTextArea tArea, boolean running ){
+		this.undo.setEnabled(!running & tArea.canUndo());
+		this.redo.setEnabled(!running & tArea.canRedo());
 	}
 }

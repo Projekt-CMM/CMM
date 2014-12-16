@@ -25,12 +25,10 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.ImageFilter;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.sound.midi.SysexMessage;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -38,9 +36,6 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import at.jku.ssw.cmm.gui.GUImain;
-import at.jku.ssw.cmm.gui.properties.GUImainSettings;
-import at.jku.ssw.cmm.gui.utils.LoadStatics;
-import at.jku.ssw.cmm.launcher.GUILauncherMain;
 import at.jku.ssw.cmm.launcher.ProfileCreateException;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
@@ -97,7 +92,7 @@ public class ProfileSettingsListener {
 		@Override
 		public void mousePressed(MouseEvent arg0) {
 			
-			GUIprofileSettings.dispose(gui.getProfile(), jFrame);
+			gui.dispose(jFrame);
 		}
 		
 		@Override
@@ -171,7 +166,7 @@ public class ProfileSettingsListener {
 						
 					//Copying the Profile image into the Profile Folder
 					gui.setProfile(Profile.changeProfileImage(gui.getProfile(), profileImagePath));
-					
+
 					}
 				} catch (IOException e) {
 					System.out.println("");
@@ -181,11 +176,11 @@ public class ProfileSettingsListener {
 				Profile.writeProfile(gui.getProfile());
 				
 				//Setting as active Profile
-				Profile.setActiveProfile(gui.getProfile());
+				//TODO ??? Profile.setActiveProfile(gui.getProfile());
 		        
 				jFrame.dispose();
 				
-				GUImain app = new GUImain(new GUImainSettings(gui.getProfile()));
+				GUImain app = new GUImain(gui.getSettings());
 				app.start(false);
 		        
 				

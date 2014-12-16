@@ -23,17 +23,12 @@ package at.jku.ssw.cmm.profile;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -81,7 +76,8 @@ public class Profile {
 		FILE_PROFILE = "profile.cp",
 		FILE_PACKAGESPATH = "packages",
 		FILE_PROFILEIMAGE = "avatar",
-		FILE_BEFORE_PROFILE = "profile_";
+		FILE_BEFORE_PROFILE = "profile_",
+		FILE_DEFAULTIMAGE = "images/prodef.png";
 	
 	public static final String
 		FILE_EXTENDSION = "cp";
@@ -711,20 +707,6 @@ public class Profile {
 	 */
 	public void setProfileQuests(List<Quest> profileQuests) {
 		this.profileQuests = profileQuests;
-	}
-
-	/**
-	 * @return the activeProfile
-	 */
-	public static Profile getActiveProfile() {
-		return activeProfile;
-	}
-
-	/**
-	 * @param activeProfile the activeProfile to set
-	 */
-	public static void setActiveProfile(Profile activeProfile) {
-		Profile.activeProfile = activeProfile;
 	}
 
 	/**

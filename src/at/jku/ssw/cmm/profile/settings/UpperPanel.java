@@ -28,7 +28,6 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -199,10 +198,13 @@ public class UpperPanel extends JPanel {
 					128, 128));
 		else
 			//Loading fixed profile image
-			if(profile.getInitPath() != null){
-				ImageIcon icon = LoadStatics.loadIcon(profile.getInitPath()
-						+ File.separator + profile.getProfileimage(), 128, 128);
-					profilePicture.setIcon(icon);
+			if(profile.getInitPath() != null)
+				profilePicture = LoadStatics.loadImage(profile.getProfileimage(), true, 128, 128);
+		
+			//Loading temporary choosen Image files
+			else{
+				profilePicture = LoadStatics.loadImage(profile.getProfileimage(), true, 128, 128);
+				System.out.println("Current ProfilePic: " + profile.getProfileimage());
 			}
 		
 		if(profilePicture.getIcon().getIconHeight() == -1 && profilePicture.getIcon().getIconWidth() == -1)

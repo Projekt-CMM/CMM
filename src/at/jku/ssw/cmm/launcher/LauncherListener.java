@@ -20,6 +20,7 @@
  */
  
 package at.jku.ssw.cmm.launcher;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -32,27 +33,25 @@ import at.jku.ssw.cmm.profile.Profile;
 
 public class LauncherListener implements MouseListener{
 	
-	private Profile profile;
-	private JFrame jFrame;
+	private final GUImainSettings settings;
+	private final JFrame jFrame;
+	private final Profile profile;
 	
-	public LauncherListener(Profile profile, JFrame jFrame) {
-		this.profile = profile;
+	public LauncherListener(GUImainSettings settings, JFrame jFrame, Profile p) {
+		this.settings = settings;
 		this.jFrame = jFrame;
+		this.profile = p;
 	}
 	
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		if(profile != null){
-			Profile.setActiveProfile(profile);
+
+		jFrame.dispose();
+		System.out.println("Profile set");
+		settings.setProfile(profile);
 			
-			
-			jFrame.dispose();
-			System.out.println("Profile set");
-			
-			GUImain app = new GUImain(new GUImainSettings(profile));
-			app.start(false);
-		}
-		
+		GUImain app = new GUImain(settings);
+		app.start(false);
 	}
 
 	@Override
