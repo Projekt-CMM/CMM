@@ -68,6 +68,8 @@ public class Profile {
 	private String profilePath;		//inizialer Profile Pfad
 	private String packagesPath;	//Pfad der Quest Packages
 	
+	private Quest quest;
+	
 	//Temporary variables
 	private List<Quest> profileQuests;
 	
@@ -98,8 +100,6 @@ public class Profile {
 	
 	public static final String 
 		IMAGE_DEFAULT = "images/prodef.png";
-
-	private static Profile activeProfile;
 	
 	public Profile(){}
 	
@@ -175,8 +175,9 @@ public class Profile {
 	 * @param packagesPath
 	 * @return profile
 	 * @throws XMLReadingException 
+	 * @throws ProfileNotFoundException 
 	 */
-	public static Profile ReadProfile(String profilePath) throws XMLReadingException {
+	public static Profile ReadProfile(String profilePath) throws XMLReadingException, ProfileNotFoundException {
 		 return ReadProfile( profilePath, Profile.FILE_PACKAGESPATH);
 	}
 	
@@ -186,10 +187,14 @@ public class Profile {
 	 * @param packagesPath
 	 * @return profile
 	 * @throws XMLReadingException 
+	 * @throws ProfileNotFoundException 
 	 */
-	public static Profile ReadProfile(String profilePath, String packagesPath) throws XMLReadingException {
+	public static Profile ReadProfile(String profilePath, String packagesPath) throws XMLReadingException, ProfileNotFoundException {
 		
 		List<String> fileNames = Quest.ReadFileNames(profilePath);
+		
+		if( fileNames == null || fileNames.isEmpty() )
+			throw new ProfileNotFoundException();
 		
 		if(!fileNames.contains(Profile.FILE_PROFILE))
 			throw new XMLReadingException();
@@ -751,7 +756,11 @@ public class Profile {
 		this.master = master;
 	}
 
+	public void setCurrentQuest( Quest quest ){
+		this.quest = quest;
+	}
 	
-	
-	
+	public Quest getCurrentQuest(){
+		return this.quest;
+	}
 }

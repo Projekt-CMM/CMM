@@ -25,7 +25,6 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Insets;
 
 import javax.swing.BorderFactory;

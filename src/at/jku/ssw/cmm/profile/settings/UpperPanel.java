@@ -219,7 +219,8 @@ public class UpperPanel extends JPanel {
 	 */
 	public void refreshProfilePic(String profilePicPath){
 		
-		System.out.println("Current ProfilePic: " + profile.getProfileimage());
+		if( profile != null )
+			System.out.println("Current ProfilePic: " + profile.getProfileimage());
 		profilePicture.setIcon(LoadStatics.loadIcon(profilePicPath,  128, 128));
 		
 		//Setting for later usage

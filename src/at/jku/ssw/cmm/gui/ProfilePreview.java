@@ -28,6 +28,7 @@ import javax.swing.border.Border;
 
 import at.jku.ssw.cmm.profile.Package;
 import at.jku.ssw.cmm.profile.Profile;
+import at.jku.ssw.cmm.profile.ProfileNotFoundException;
 import at.jku.ssw.cmm.profile.Quest;
 import at.jku.ssw.cmm.profile.XMLReadingException;
 
@@ -110,6 +111,9 @@ public class ProfilePreview extends JPanel implements PropertyChangeListener {
 				this.setMinimumSize(new Dimension (10,10));
 				this.setPreferredSize(new Dimension (10,10));
 				this.repaint();
+			} catch (ProfileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		
