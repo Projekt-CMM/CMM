@@ -44,6 +44,7 @@ import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gui.debug.ErrorTable;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
+import at.jku.ssw.cmm.quest.TestPanel;
 
 /**
  * This class is responsible for the right panel of the main GUI. The right
@@ -91,6 +92,8 @@ public class GUIrightPanel {
 	 * A reference to the quest/profile info panel.
 	 */
 	private GUIProfilePanel questPanel;
+	
+	private TestPanel testPanel;
 
 	private JPanel errorPanel;
 	private JEditorPane errorDesc;
@@ -145,8 +148,6 @@ public class GUIrightPanel {
 		this.errorDesc = new JEditorPane();
 		this.errorDesc.setEditable(false);
 		this.errorDesc.setContentType("text/html");
-		this.errorDesc.setDocument(LoadStatics.readStyleSheet("error"
-				+ File.separator + "style.css"));
 
 		JScrollPane editorScrollPane = new JScrollPane(this.errorDesc);
 		editorScrollPane
@@ -164,8 +165,14 @@ public class GUIrightPanel {
 		// Initialize Quest Panel
 		JPanel jQuestPanel = new JPanel();
 		if (main.hasAdvancedGUI()) {
+			this.testPanel = new TestPanel(main);
+			JPanel jTestPanel = new JPanel();
+			this.testPanel.init(jTestPanel);
+			tabbedPane.add(jTestPanel, _("Quest"));
+			
+			
 			jQuestPanel.setLayout(new BorderLayout());
-			tabbedPane.add(jQuestPanel, _("Quest"));
+			//tabbedPane.add(jQuestPanel, _("Profile"));
 			questPanel = new GUIProfilePanel(jQuestPanel, main);
 		}
 		
@@ -187,8 +194,12 @@ public class GUIrightPanel {
 	/**
 	 * @return A reference to the quest/profile info panel manager
 	 */
-	public GUIProfilePanel getQuestPanel() {
+	public GUIProfilePanel getProfilePanel() {
 		return this.questPanel;
+	}
+	
+	public TestPanel getTestPanel(){
+		return this.testPanel;
 	}
 
 	public void showErrorPanel(String html) {

@@ -35,7 +35,6 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.launcher.ProfileCreateException;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
@@ -69,15 +68,9 @@ public class ProfileSettingsListener {
 	 * @param jFrame The main frame of the current window
 	 * @param gui A reference to the profile settings GUI manager
 	 */
-	public ProfileSettingsListener( JFrame jFrame, GUIprofileSettings gui ){
-		this.jFrame = jFrame;
+	public ProfileSettingsListener( GUIprofileSettings gui ){
 		this.gui = gui;
 	}
-	
-	/**
-	 * The main frame of the current window
-	 */
-	private final JFrame jFrame;
 	
 	/**
 	 * A reference to the profile settings GUI manager
@@ -92,7 +85,7 @@ public class ProfileSettingsListener {
 		@Override
 		public void mousePressed(MouseEvent arg0) {
 			
-			gui.dispose(jFrame);
+			gui.dispose();
 		}
 		
 		@Override
@@ -113,8 +106,7 @@ public class ProfileSettingsListener {
 		@Override
 		public void mousePressed(MouseEvent arg0) {
 			try {		
-				if(gui.getProfile() == null)
-					gui.setProfile(new Profile());					
+				//TODO ...
 				
 				if(gui.getUpperPanel().getProfileName() == null || gui.getUpperPanel().getProfileName().equals("")){
 	        		JOptionPane.showMessageDialog(new JFrame(),_("Please choose a Profile Name!"),_("Warnung") + ":",
@@ -177,11 +169,8 @@ public class ProfileSettingsListener {
 				
 				//Setting as active Profile
 				//TODO ??? Profile.setActiveProfile(gui.getProfile());
-		        
-				jFrame.dispose();
 				
-				GUImain app = new GUImain(gui.getSettings());
-				app.start(false);
+				gui.dispose();
 		        
 				
 			} catch (XMLWriteException | ProfileCreateException e) {
@@ -233,8 +222,7 @@ public class ProfileSettingsListener {
 				
 				System.out.println(file.getAbsolutePath());
 				
-				if(gui.getProfile() == null)
-					gui.setProfile(new Profile());
+				//TODO ...
 										
 				gui.getUpperPanel().refreshProfilePic(file.getAbsolutePath());
 				

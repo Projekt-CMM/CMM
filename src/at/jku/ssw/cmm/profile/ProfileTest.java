@@ -26,8 +26,6 @@ import java.util.List;
 public class ProfileTest {
 
 	public static void main(String[] args) {
-		//Profile profile = new Profile();
-		Quest quest = new Quest();
 	
 		System.out.println(Quest.ReadFileNames("profileTest"));
 		System.out.println(Quest.ReadFolderNames("packages"));
@@ -36,7 +34,7 @@ public class ProfileTest {
 		Profile profile = new Profile();
 		try {
 			profile = Profile.ReadProfile("profileTest", "packages");
-		} catch (XMLReadingException e) {
+		} catch (XMLReadingException | ProfileNotFoundException e) {
 			e.printStackTrace();
 		}
 		List<Quest> qlist = Profile.ReadPackageQuests(profile, "packages", "1 Erste Schritte").getQuestList();

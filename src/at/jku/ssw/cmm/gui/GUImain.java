@@ -326,7 +326,7 @@ public class GUImain {
 
 		// Ignoring Quest GUI if there is no active Profile
 		if (this.getSettings().getProfile() != null)
-			new GUIquestMain(this.rightPanelControl.getQuestPanel(), this).start();
+			new GUIquestMain(this.rightPanelControl.getProfilePanel(), this).start();
 	}
 
 	public JPanel getGlassPane() {

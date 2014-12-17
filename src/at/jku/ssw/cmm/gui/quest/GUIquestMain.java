@@ -21,8 +21,6 @@
  
 package at.jku.ssw.cmm.gui.quest;
 
-import static at.jku.ssw.cmm.gettext.Language._;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -323,7 +321,10 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
         if(ae.getSource() == this.openButton){
         	
         	if(lastClickedQuest != null && !lastClickedQuest.getState().equals(Quest.STATE_LOCKED)){
-        		Quest.currentQuest = lastClickedQuest;
+        		this.main.getSettings().getProfile().setCurrentQuest(lastClickedQuest);
+        		this.main.getRightPanel().getTestPanel().updateQuestInfo();
+        		
+        		System.err.println("Quest selected");
         		
 	        	jFrame.dispose();
 	        	        		
@@ -331,12 +332,12 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 
 	        	if(lastClickedQuest.isDescription() && lastClickedQuest.isStyle()){
         			this.questPanel.setDescDoc(path + Quest.sep + Quest.FILE_DESCRIPTION, path + Quest.sep + Quest.FILE_STYLE);
-		        	this.questPanel.setjQuestTitle(Quest.currentQuest.getTitle());
+		        	this.questPanel.setjQuestTitle(this.main.getSettings().getProfile().getCurrentQuest().getTitle());
 		      
         		//When the Quest only has a description
 		        }else if(lastClickedQuest.isDescription()){
 		        	this.questPanel.setDescDoc(path + Quest.sep + Quest.FILE_DESCRIPTION,"packages/default/style.css");
-		        	this.questPanel.setjQuestTitle(Quest.currentQuest.getTitle());		        }
+		        	this.questPanel.setjQuestTitle(this.main.getSettings().getProfile().getCurrentQuest().getTitle());		        }
         		//TODO
 	        	//this.questPanel.setjQuestInfo(LoadStatics.loadHTMLdoc(file, style));
         		}

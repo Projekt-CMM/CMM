@@ -27,10 +27,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -114,12 +112,7 @@ public class Quest {
 	/**
 	 * FolderName of the Quest
 	 */
-	private String questPath;				
-	
-	/**
-	 * Only one quest can be done at once
-	 */
-	public static Quest currentQuest;
+	private String questPath;
 	
 	
 	/**

@@ -283,7 +283,7 @@ public class GUImainSettings {
 			if(this.lastProfiles.contains(p.getInitPath()))
 				this.lastProfiles.remove(p.getInitPath());
 			this.lastProfiles.add(0, p.getInitPath());
-			System.out.println("ADDED PROFILE");
+			System.out.println("ADDED PROFILE: " + p.getInitPath());
 		}
 		else
 			System.err.println("WARNING: Profile is null");
@@ -441,8 +441,8 @@ public class GUImainSettings {
 
 				// Only add a certain number of recent profiles
 				for (int i = 0; i < this.lastProfiles.size() && i < MAX_LASTFILES; i++) {
+					System.out.println("Adding: " + this.lastProfiles.get(i));
 					mainRootElement.appendChild(writeNode(doc, XML_PROFILE, this.lastProfiles.get(i)));
-					System.out.println("Added: " + this.lastProfiles.get(i));
 				}
 			}
 
@@ -474,6 +474,9 @@ public class GUImainSettings {
 							+ e.getMessage(),
 					_("Unable to save your settings"),
 					JOptionPane.ERROR_MESSAGE);
+			
+			System.err.println("ERROR: " + e);
+			e.printStackTrace();
 		}
 	}
 

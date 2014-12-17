@@ -47,6 +47,7 @@ import at.jku.ssw.cmm.gui.event.WindowEventListener;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
 import at.jku.ssw.cmm.profile.Profile;
+import at.jku.ssw.cmm.profile.ProfileNotFoundException;
 import at.jku.ssw.cmm.profile.XMLReadingException;
 
 
@@ -170,13 +171,14 @@ public class GUILauncherMain extends JFrame implements ActionListener{
 				JPanel jPreviewProfile = new JPanel();
 				
 				//Show recent profiles
-				for(String path : this.settings.getRecentProfiles())
+				for(int i = 0; i < this.settings.getRecentProfiles().size(); i++) {
 					try {
-						jPreviewProfile.add(addProfilePreview(Profile.ReadProfile(path)));
-					} catch (XMLReadingException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						jPreviewProfile.add(addProfilePreview(Profile.ReadProfile(this.settings.getRecentProfiles().get(i))));
+					} catch (XMLReadingException | ProfileNotFoundException e) {
+						this.settings.getRecentProfiles().remove(i);
+						i--;
 					}
+				}
 				
 				//No recent profiles
 				if( this.settings.getRecentProfiles().size() == 0 ){

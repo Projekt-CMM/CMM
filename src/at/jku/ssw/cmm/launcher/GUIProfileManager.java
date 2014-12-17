@@ -34,6 +34,7 @@ import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.profile.Profile;
+import at.jku.ssw.cmm.profile.ProfileNotFoundException;
 import at.jku.ssw.cmm.profile.Quest;
 import at.jku.ssw.cmm.profile.XMLReadingException;
 import at.jku.ssw.cmm.profile.XMLWriteException;
@@ -155,7 +156,7 @@ public class GUIProfileManager {
 					
 					//questPanel.RefreshProfile(Profile.getActiveProfile());}
 					
-				} catch (XMLReadingException | IndexOutOfBoundsException e) {
+				} catch (XMLReadingException | IndexOutOfBoundsException | ProfileNotFoundException e) {
 					e.printStackTrace();
 					System.err.println(path + " Wrong Profile Choosen - no Profile found");
 	        		

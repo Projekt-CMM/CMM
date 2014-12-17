@@ -24,8 +24,6 @@ package at.jku.ssw.cmm.profile.settings;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import javax.swing.JFrame;
-
 /**
  * Event Listener for the ProfileSettingsList. Used for triggering an event when the
  * user closes the window. The save dialog call and exit manager itself is
@@ -43,19 +41,12 @@ public class ProfileWindowEventListener implements WindowListener {
 	 */
 	private final GUIprofileSettings gui;
 	
-	
-	/**
-	 * A reference to the jFrame
-	 */
-	private final JFrame jFrame; 
-	
 	/**
 	 * Constructor
 	 * @param gui
 	 */
-	public ProfileWindowEventListener(GUIprofileSettings gui, JFrame jFrame){
+	public ProfileWindowEventListener(GUIprofileSettings gui){
 		this.gui = gui;
-		this.jFrame = jFrame;
 	}
 	
 	@Override
@@ -69,7 +60,7 @@ public class ProfileWindowEventListener implements WindowListener {
 	 */
 	@Override
 	public void windowClosing(WindowEvent e) {
-		gui.dispose(jFrame);		
+		gui.dispose();		
 	}
 
 	@Override
