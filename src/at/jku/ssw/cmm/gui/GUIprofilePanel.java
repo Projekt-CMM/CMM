@@ -105,8 +105,8 @@ public class GUIprofilePanel {
 		
 		if(profile != null){
 			this.jProfileTitle = new JLabel(_("Profile"));
-			this.jProfileName = new JLabel(_("Name") + ": \n" + Profile.getActiveProfile().getName());
-			this.jProfileLevel = new JLabel(_("Level") + ": " + Profile.getActiveProfile().getLevel());
+			this.jProfileName = new JLabel(_("Name") + ": \n" + profile.getName());
+			this.jProfileLevel = new JLabel(_("Level") + ": " + profile.getLevel());
 		}else{
 			this.jProfileTitle = new JLabel(_("No Profile choosen"));
 			this.jProfileName = new JLabel();

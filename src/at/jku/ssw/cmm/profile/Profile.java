@@ -205,6 +205,9 @@ public class Profile {
 	public static List readProfileTokens(Profile profile){
 		List<Token> allTokens = new ArrayList<Token>();
 		
+		if(profile.getProfileQuests() == null)
+			return null;
+		
 		//Reads all Tokens
 		for(Quest q : profile.getProfileQuests()){
 			if(q.getState().equals(Quest.STATE_FINISHED) && q.getToken() != null){

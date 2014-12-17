@@ -133,7 +133,7 @@ public class CentralPanel extends JPanel {
 		
 		List<Token> allTokens = Profile.readProfileTokens(profile);
 		
-		
+		if(allTokens != null)
 		for(Token t : allTokens){
 			panel = new JPanel();
 			panel.setLayout(new FlowLayout(FlowLayout.LEFT));
