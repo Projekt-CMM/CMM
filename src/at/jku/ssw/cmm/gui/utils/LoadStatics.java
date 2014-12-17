@@ -169,9 +169,22 @@ public final class LoadStatics {
 	 */
 	public static void copyFileUsingStream(File source, File dest) throws IOException {
 		
+		//Closes the operation if source or destination is null
+		if(source == null || dest == null)
+			return;
+		
+		//is the file existing
+		if(!source.exists())
+			throw new IOException();
+		
 		//To cancel useless operations
 		if(source.equals(dest))
 			return;
+		
+		//TODO
+		//Creating direktories,:
+		String absolutePath = dest.getAbsolutePath();
+		new File(absolutePath.substring(0, absolutePath.indexOf(dest.getName()))).mkdirs();
 		
 		System.out.println("Copying files from:" + source + " to " + dest); 
 	    InputStream is = null;

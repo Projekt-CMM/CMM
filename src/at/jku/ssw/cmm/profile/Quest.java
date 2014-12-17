@@ -75,7 +75,8 @@ public class Quest {
 	private int minLevel;					
 
 	/**
-	 * true if the quest has a description.html
+	 * All languages are collected in an List<String>
+	 * etc.
 	 */
 	private boolean description;			
 
@@ -92,7 +93,7 @@ public class Quest {
 	/**
 	 * Reward which is shown on Quest finish
 	 */
-	private String reward;					
+	private String rewardPath;					
 
 	/**
 	 * Last edited Date
@@ -250,10 +251,11 @@ public class Quest {
 				}
 				
 				try{
-					String tokenPath = quest.getInitPath() + sep + quest.packagePath + sep + Quest.FOLDER_TOKENS + sep + eElement.getElementsByTagName(Quest.XML_TOKEN).item(0).getTextContent();
+					String relPath = eElement.getElementsByTagName(Quest.XML_TOKEN).item(0).getTextContent();
+					String tokeninitPath = quest.getInitPath() + sep + quest.packagePath + sep + Quest.FOLDER_TOKENS;
 					
-					//Reading the spezific <token>.xml file
-					quest.setToken(Token.readToken(tokenPath));
+					//Reading the spezific <token>.xml file, on error setting to null
+					quest.setToken(Token.readToken(tokeninitPath, relPath));
 					
 				}catch(NullPointerException e){
 					//No Token found
@@ -261,10 +263,10 @@ public class Quest {
 				}
 				
 				try{
-					quest.setReward(eElement.getElementsByTagName(Quest.XML_REWARD).item(0).getTextContent());
+					quest.setRewardPath(eElement.getElementsByTagName(Quest.XML_REWARD).item(0).getTextContent());
 				}catch(NullPointerException e){
 					//No Token found
-					quest.setReward(null);
+					quest.setRewardPath(null);
 				}
 
 				try{
@@ -308,7 +310,8 @@ public class Quest {
 		
 		for (int i = 0; i < listOfFiles.length; i++) {	
 		//Excludes Profile Folder and execludes FileNames
-		  if(listOfFiles[i].isDirectory() && !listOfFiles[i].getName().equals(Quest.FOLDER_TOKENS)){
+		  if(listOfFiles[i].isDirectory() && 
+				  !listOfFiles[i].getName().equals(Quest.FOLDER_TOKENS)){
 			  folderNames.add(listOfFiles[i].getName());  
 		  }
 		 }
@@ -536,15 +539,15 @@ public class Quest {
 	 * Can be null
 	 * @return the reward
 	 */
-	public String getReward() {
-		return reward;
+	public String getRewardPath() {
+		return rewardPath;
 	}
 
 	/**
 	 * @param reward the reward to set
 	 */
-	public void setReward(String reward) {
-		this.reward = reward;
+	public void setRewardPath(String rewardPath) {
+		this.rewardPath = rewardPath;
 	}
 
 	/**
