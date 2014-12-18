@@ -23,7 +23,7 @@ Die Idee der Variablendarstellung während der Laufzeit gleicht einem Debugger. 
 
 Zur Darstellung wurden zwei Konzepte verfolgt:
 \begin{enumerate}
-\item Die Darstellung des Call Stacks als Liste mit separaten Tabellen für die lobalen und lokalen Variablen
+\item Die Darstellung des Call Stacks als Liste mit separaten Tabellen für die globalen und lokalen Variablen
 \item Die Darstellung aller Variablen als Baum, wobei lokale Variablen Funktionen untergeordnet sind und sich globale Variablen auf derselben Ebene wie Funktionen befinden
 \end{enumerate}
 
@@ -57,6 +57,30 @@ Diese Form der Variablendarstellung wurde erstmals im Dokument Ausführungsumgeb
 %	--------------------------------------------------------
 \section{Darstellung der Variablen als Baum}
 
-Die Darstellung der Variablen in Form einer Baumstruktur hat den Vorteil, dass alle Variablen in einem Feld untergrbracht sind und der heriarchische Zusammenhang sofort ersichtlich ist.
+\subsection{Darstellungsschema}
 
-Dieser Darstellungsmodus ist als TreeTable, eine Kombination aus JTree und JTable, implementiert.
+Die Darstellung der Variablen in Form einer Baumstruktur hat den Vorteil, dass alle Variablen in einem Feld untergrbracht sind und die Gültigkeitsbereiche der Variablen sofort ersichtlich sind.
+\newline
+Alle Elemente befinden sich in einem Ordner, der den Namen der Datei trägt. Dadurch wird symbolisiert, dass die Variablen ein Teil des Programme sind. Dem Programm selbst untergeordnet sind globale Variablen und Funktionen. Lokale Variablen sind Funktionen untergeordnet, Varibalen in Strukturen sind der Struktur untergeordnet.
+\newline
+Zusätzlich werden folgene Elemente in der Tabelle farbig markiert:
+\begin{itemize}
+\item Funktionen sind hellblau hinterlegt. Dadurch soll hervorgehoben werden, dass es sich hierbei nicht um einfache Datenstrukturen handelt.
+\item Die Variablen, die zuletzt geändert wurden, sind gelb hinterlegt. Grundsätzlich kann pro Schritt des Debuggers nur eine Variable geändert werden. Werden aber einige Schritte übersprungen, zum Beispiel mit dem Schlüsselwort ''library'', so werden mehrere Variablen in einem Debuggerschritt geändert.
+% TODO refer to library
+\item Variablen, die noch nicht initialisiert wurden, sind grau hinterlegt.
+% TODO refer to undef variables
+\end{itemize}
+
+Bei Rechtsklick auf eine Variable im Baum wird ein Kontextmenü geöffnet. Mit der Option ''Jump to declaration'' kann der Benutzer zur Deklaration der Variable im Sourcecode springen. Die entsprechende Zeile wird markiert.
+% TODO jump to call???
+
+\subsection{Implementierung}
+
+Die variablen werden in einer Tabelle mit Baumstruktur, in Kommentaren im Sourcecode deshalb oft ''TreeTable'' genannt, angezeigt. Die ''TreeTable'' ist eine Kombination aus einem JTree und einer JTable. Die grundlegende Implementierung erfolgte anhand eines Tutorials\footnote{http://www.hameister.org/JavaSwingTreeTable.html}, mittlerweile wurde der Code allerdings stark an die Anforderungen der Benutzeroberfläche angepasst und erweitert.
+\newline
+Im Folgenden werden die einzelnen Komponenten der TreeTable beschrieben und der Aufbau erläutert:
+
+\subsubsection{JTree - Baum}
+Ein JTree ist Swing-Element, das Daten hierarchisch untereinander darstellet. Die Daten sind allerdings nicht inm JTree selbst gespeichert, sondern in einem Datenmodell. Dieses Datenmodell besteht aus Knoten, die zu einem Baum verbunden werden. Für einfache Implementierungen können Standardklassen, wie etwa DefaultMutableTreeNode\footnote{https://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultMutableTreeNode.html} verwendet werden. Im Variablenbaum von C Compact wird eine eigene Klasse, DataNode, verwendet.
+%TODO refer to DataNode.java
