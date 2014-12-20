@@ -71,7 +71,7 @@ msgstr "In diesem Modus kannst du keine Aufgaben ausführen,<br>alle weiteren Fu
 #: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:180
 #, fuzzy
 msgid "No recent profiles"
-msgstr "Profil wählen"
+msgstr "Bitte ein neues Profil erstellen"
 
 #: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:218
 #: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:128
@@ -93,7 +93,7 @@ msgstr "Level"
 #: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:247
 #, fuzzy
 msgid "Edit profile"
-msgstr "Profil wählen"
+msgstr "Profil bearbeiten"
 
 #: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:247
 msgid "Click image to change profile properties"
@@ -112,7 +112,8 @@ msgstr "C Compact wird geschlossen"
 #: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:252
 #, fuzzy
 msgid "using this profile"
-msgstr "Profil wählen"
+msgstr "aktuelles Profil"
+#TODO incorrect translation
 
 #: src/at/jku/ssw/cmm/profile/settings/LowerPanel.java:114
 msgid "Cancel"
@@ -127,7 +128,7 @@ msgstr "Speichern"
 #: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:159
 #, fuzzy
 msgid "Edit Profile"
-msgstr "Profil wählen"
+msgstr "Profil bearbeiten"
 
 #: src/at/jku/ssw/cmm/profile/settings/CentralPanel.java:96
 msgid "Achievements"
@@ -305,7 +306,7 @@ msgstr "Test fehlgeschlagen"
 #: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:239
 #, fuzzy
 msgid "testing current quest"
-msgstr "Aktuelle Quest"
+msgstr "Wird getestet..."
 
 #: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:246
 msgid "no quest selected"
