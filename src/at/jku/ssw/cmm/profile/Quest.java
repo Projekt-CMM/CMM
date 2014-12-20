@@ -115,6 +115,9 @@ public class Quest {
 	 */
 	private String questPath;
 	
+	private String input;
+	private String ref;
+	
 	
 	/**
 	 * Files and folderNames
@@ -135,7 +138,9 @@ public class Quest {
 		XML_TOKEN = "token",
 		XML_NEXTQUEST = "nextquest",
 		XML_STATE = "state",
-		XML_REWARD = "reward";
+		XML_REWARD = "reward",
+		XML_INPUT = "input",
+		XML_REF = "ref";
 
 	/**
 	 * Strings for the correct State
@@ -282,6 +287,19 @@ public class Quest {
 					//System.out.println("No / Wrong State set!");
 					quest.setState(Quest.STATE_LOCKED);
 				}
+				
+				try{
+					quest.setInput(eElement.getElementsByTagName(Quest.XML_INPUT).item(0).getTextContent());
+				}catch(NullPointerException e){
+					quest.setInput(null);
+				}
+				
+				try{
+					quest.setRef(eElement.getElementsByTagName(Quest.XML_REF).item(0).getTextContent());
+				}catch(NullPointerException e){
+					quest.setRef(null);
+				}
+				
 				for(int x = 0; x < eElement.getElementsByTagName(Quest.XML_NEXTQUEST).getLength(); x++){
 					nextQuest.add(eElement.getElementsByTagName(Quest.XML_NEXTQUEST).item(x).getTextContent());
 				}
@@ -562,6 +580,22 @@ public class Quest {
 	 */
 	public void setMinLevel(int minLevel) {
 		this.minLevel = minLevel;
+	}
+
+	public String getInput() {
+		return input;
+	}
+
+	public void setInput(String input) {
+		this.input = input;
+	}
+
+	public String getRef() {
+		return ref;
+	}
+
+	public void setRef(String ref) {
+		this.ref = ref;
 	}	
 	
 	

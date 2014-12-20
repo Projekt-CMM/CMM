@@ -31,57 +31,16 @@ import at.jku.ssw.cmm.preprocessor.exception.PreprocessorException;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.interpreter.exceptions.RunTimeException;
 import at.jku.ssw.cmm.preprocessor.Preprocessor;
-import at.jku.ssw.cmm.profile.Profile;
-import at.jku.ssw.cmm.profile.Quest;
-import at.jku.ssw.cmm.profile.XMLWriteException;
 import at.jku.ssw.cmm.quest.exception.CompilerErrorException;
 
-public class QuestTester {
-	
-	/**
-	 * Starting the Quest Tester and finishes the Quest if all things are ok!
-	 * @param profile
-	 * @param quest
-	 */
-	public static void start(Profile profile, Quest quest){
-		String[] ignore = {"\n", ",", ";"};
-		QuestTester qt = new QuestTester("qt/input.cmm", "qt/ref.cmm", "qt/user.cmm", ignore);
-		
-		QuestMatchError e = qt.test();
-		
-		if( e == null ){
-			System.out.println("Successful!");
-			try {
-				Profile.changeQuestStateToFinished(profile, quest);
-			} catch (XMLWriteException e1) {
-				System.err.println("Profil konnte nicht geschrieben werden!");
-				e1.printStackTrace();
-			}
-			
-			//TODO open GUI with finish text
-			return;
-		}
-		
-		e.print();
-	}
-	
-	public static void main(String[] args){
-		String[] ignore = {"\n", ",", ";"};//TODO user regex
-		QuestTester qt = new QuestTester("qt/input.cmm", "qt/ref.cmm", "qt/user.cmm", ignore);
-		
-		QuestMatchError e = qt.test();
-		
-		if( e == null ){
-			System.out.println("Successful!");
-			return;
-		}
-		
-		e.print();
-	}
+public class QuestTester extends Thread {
 
 	public static final int STEPS = 5;
 
-	public QuestTester(String generator, String verifier, String usercode, String[] ignore) {
+	public QuestTester(TestReply testReply, String generator, String verifier, String usercode, String[] ignore) {
+		
+		this.testReply = testReply;
+		
 		this.generator = generator;
 		this.verifier = verifier;
 		this.usercode = usercode;
@@ -89,82 +48,110 @@ public class QuestTester {
 
 		this.questRun = new QuestRun();
 	}
+	
+	private final TestReply testReply;
 
 	private final String generator;
 	private final String verifier;
 	private final String usercode;
-	private final String[] ignore;
+	private final String[] ignore;	//TODO user regex
 
 	private final QuestRun questRun;
 
-	public QuestMatchError test() {
+	public void run() {
 
 		// ----- READ INPUT DATA -----
 		String inputData = null;
+		testReply.output("[info] generating input data");
+		testReply.output("[path] " + this.generator);
 		try {
 			// Read or generate input data
 			inputData = getInputData();
 		} catch (RunTimeException e) {
-			return new QuestMatchError( "Runtime error when generating input data", e);
+			testReply.finished(new QuestMatchError( "Runtime error when generating input data", e));
+			return;
 		} catch (FileNotFoundException e) {
-			return new QuestMatchError("Input data file not found", e);
+			testReply.finished(new QuestMatchError("Input data file not found", e));
+			return;
 		} catch (CompilerErrorException e) {
-			return new QuestMatchError( "Error when compiling input data generator", e);
+			testReply.finished(new QuestMatchError( "Error when compiling input data generator", e));
+			return;
 		} catch (PreprocessorException e) {
-			return new QuestMatchError( "Preprocessor error in generator source code", e);
+			testReply.finished(new QuestMatchError( "Preprocessor error in generator source code", e));
+			return;
 		}
 
 		// Double-check if everything worked
-		if (inputData == null)
-			return new QuestMatchError("Unknown error after reading input data", null);
+		if (inputData == null){
+			testReply.finished(new QuestMatchError("Unknown error after reading input data", null));
+			return;
+		}
+		
+		testReply.output("[info] input: " + inputData + "\n");
 
 		// ----- COMPILE REFERENCE PROGRAM (which is 100% right) -----
+		testReply.output("[info] generating reference output data");
+		testReply.output("[path] " + this.verifier);
 		String referenceOutput = null;
 		Obj main;
 		try {
 			main = compile(this.verifier);
 			referenceOutput = this.questRun.run(main, inputData);
 		} catch (RunTimeException e) {
-			return new QuestMatchError( "Runtime error when generating reference output data", e);
+			testReply.finished(new QuestMatchError( "Runtime error when generating reference output data", e));
+			return;
 		} catch (CompilerErrorException e) {
-			return new QuestMatchError( "Error when compiling reference output data generator", e);
+			testReply.finished(new QuestMatchError( "Error when compiling reference output data generator", e));
+			return;
 		} catch (FileNotFoundException e) {
-			return new QuestMatchError( "Reference output generator file could not be found", e);
+			testReply.finished(new QuestMatchError( "Reference output generator file could not be found", e));
+			return;
 		} catch (PreprocessorException e) {
-			return new QuestMatchError( "Preprocessor error in reference source code", e);
+			testReply.finished(new QuestMatchError( "Preprocessor error in reference source code", e));
+			return;
 		}
+		
+		testReply.output("[info] reference: " + referenceOutput + "\n");
 
 		// ----- COMPILE REFERENCE PROGRAM (which is 100% right) -----
+		testReply.output("[info] generating user output data");
+		testReply.output("[path] " + this.usercode);
 		String userOutput = null;
 		try {
 			main = compile(this.usercode);
 			userOutput = this.questRun.run(main, inputData);
 		} catch (RunTimeException e) {
-			return new QuestMatchError(
-					"Runtime error when generating reference output data", e);
+			testReply.finished(new QuestMatchError("Runtime error when generating reference output data", e));
+			return;
 		} catch (CompilerErrorException e) {
-			return new QuestMatchError(
-					"Error when compiling reference output data generator", e);
-		}
-		catch (FileNotFoundException e) {
-			return new QuestMatchError(
-					"User's source code could not be found", e);
+			testReply.finished(new QuestMatchError("Error when compiling reference output data generator", e));
+			return;
+		} catch (FileNotFoundException e) {
+			testReply.finished(new QuestMatchError("User's source code could not be found", e));
+			return;
 		} catch (PreprocessorException e) {
-			return new QuestMatchError( "Preprocessor error in user's source code", e);
+			testReply.finished(new QuestMatchError("Preprocessor error in user's source code", e));
+			return;
 		}
+		
+		testReply.output("[info] user: " + userOutput + "\n");
 		
 		System.out.println("Out1: " + referenceOutput);
 		System.out.println("Out2: " + userOutput);
 		
 		// Double-check if output data is available
-		if( referenceOutput == null || userOutput == null )
-			return new QuestMatchError("Missing output data after generating", null);
+		if( referenceOutput == null || userOutput == null ){
+			testReply.finished(new QuestMatchError("Missing output data after generating", null));
+			return;
+		}
 		
 		if( equalOutput(referenceOutput, userOutput) )
 			// Returning null means "no error"
-			return null;
+			testReply.finished(null);
 		else
-			return new QuestMatchError("Output does not match", null);
+			testReply.finished(new QuestMatchError("Output does not match", null));
+		
+		return;
 	}
 
 	private String getInputData() throws FileNotFoundException,

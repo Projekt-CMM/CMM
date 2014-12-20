@@ -50,7 +50,7 @@ import at.jku.ssw.cmm.gui.utils.LoadStatics;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
 import at.jku.ssw.cmm.profile.Package;
-import at.jku.ssw.cmm.quest.TestPanel;
+import at.jku.ssw.cmm.quest.GUITestPanel;
 
 public class GUIquestMain implements TreeSelectionListener, ActionListener {
 	
@@ -66,10 +66,10 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 	//Split Pane
 	private JSplitPane sp;
 	
-	private final TestPanel questPanel;
+	private final GUITestPanel questPanel;
 	private final GUImain main;
 	
-	public GUIquestMain(TestPanel questPanel, GUImain main){
+	public GUIquestMain(GUITestPanel questPanel, GUImain main){
 		this.questPanel = questPanel;
 		this.main = main;
 	}
