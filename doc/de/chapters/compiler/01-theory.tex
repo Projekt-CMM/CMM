@@ -20,7 +20,7 @@ Vorteile der EBNF gegen\"uber der BNF sind unter anderem:
 \begin{itemize}
   \item einfacheres erstellen von Rekursionen und optionalen Ausdr\"ucken
   \item bessere Lesbarkeit
-  \item einfaches und eindeutiges definieren von Terminalsymbolen
+  \item einfaches und eindeutiges Definieren von Terminalsymbolen
 \end{itemize}
 
 \newpage
@@ -69,7 +69,7 @@ Die Gramatik muss so aufgebaut sein, dass es für einen Tokenstrom nur eine eind
 Es soll eine EBNF-Regel erstellt werden welche einen Mathematischen Ausdruck, aufgebaut aus Additionen und Subtraktionen korrekt parsen.
 \subhtlParagraph{Mehrdeutige EBNF Regel}
 
-\includegraphics[scale=0.5]{./media/images/compiler/ambiguity_wrong.png}
+\includegraphics[width=0.6\textwidth]{./media/images/compiler/ambiguity_wrong.png}
 
 \begin{lstlisting}[language=EBNF]
 Expr = intCon | Expr ( "+" | "-" ) Expr.
@@ -80,12 +80,12 @@ Der Ausdruck $1-2+5$ kann mit dieser EBNF Regel auf mehreren Arten gelöst werde
 \begin{tabular}{ c | c }
   $(1-2)+5=4$ & 
   $1-(2+5)=-6$ \\
-  \includegraphics[scale=0.5]{./media/images/compiler/ambiguity_tree_correct.png} & 
-  \includegraphics[scale=0.5]{./media/images/compiler/ambiguity_tree_wrong.png} \\
+  \includegraphics[width=0.2\textwidth]{./media/images/compiler/ambiguity_tree_correct.png} & 
+  \includegraphics[width=0.2\textwidth]{./media/images/compiler/ambiguity_tree_wrong.png} \\
 \end{tabular}
 \subhtlParagraph{Eindeutige EBNF Regel}
 
-\includegraphics[scale=0.5]{./media/images/compiler/ambiguity_correct.png}
+\includegraphics[width=0.6\textwidth]{./media/images/compiler/ambiguity_correct.png}
 
 \begin{lstlisting}[language=EBNF]
 Expr = intCon [ ( "+" | "-" ) Expr ].
@@ -95,7 +95,7 @@ Der Ausdruck $1-2+5$ kann mit dieser EBNF Regel nur mehr auf eine Art gelöst we
 
 \subsubsection{EBNF-Beispiele}
 
-\includegraphics[scale=0.5]{./media/images/compiler/ebnf_expr.png}
+\includegraphics[width=0.5\textwidth]{./media/images/compiler/ebnf_expr.png}
 
 \begin{lstlisting}[language=EBNF]
 Expr = Term { ( "+" | "-" ) Term }.
@@ -103,7 +103,7 @@ Expr = Term { ( "+" | "-" ) Term }.
 
 Eine Expression\footnote{\url{https://de.wikipedia.org/wiki/Ausdruck_(Programmierung)}} besteht dabei aus einem Term, und dann optional wiederum aus einem ''+'' oder ''-'' gefolgt von einem weiterem Term.
 
-\includegraphics[scale=0.5]{./media/images/compiler/ebnf_term.png}
+\includegraphics[width=0.5\textwidth]{./media/images/compiler/ebnf_term.png}
 \begin{lstlisting}[language=EBNF]
 Term = Factor { ( "*" | "/" ) Factor }.
 \end{lstlisting}
@@ -112,13 +112,12 @@ Das Nichtterminalsymbol Term stellt wiederum eine Produktionsregel dar, welche a
 
 Durch solche einfachen Regeln können z.B.: Mathematische Regeln wie Punkt vor Strich eindeutig und korrekt in einen Syntaxbaum übersetzt werden.
 
-\includegraphics[scale=0.5]{./media/images/compiler/ebnf_designator.png}
+\includegraphics[width=\textwidth]{./media/images/compiler/ebnf_designator.png}
 \begin{lstlisting}[language=EBNF]
 Designator = ident { "." ident | "[" BinExpr "]" }.
 \end{lstlisting}
 
-
-%\includegraphics[scale=0.5]{./media/images/compiler/ebnf_factor.png}
+%\includegraphics[width=0.6\textwidth]{./media/images/compiler/ebnf_factor.png}
 
 \newpage
 
@@ -144,16 +143,63 @@ Manche Tokens wie z.B. Variablen oder Konstanten besitzen au\ss{}er der Tokennum
 
 Der Parser\footnote{\url{https://de.wikipedia.org/wiki/Parser}} wandelt danach den Tokenstrom in einen Syntaxbaum um, welcher das Programm repräsentiert.
 
+Es gibt verschiedene Verfahren um dies zu bewerkstelligen. Wir verwenden f\"ur unser Projekt Coco/R\footnote{\url{https://de.wikipedia.org/wiki/Coco/R}}, welcher einen LL(k)\footnote{\url{https://de.wikipedia.org/wiki/LL(k)-Grammatik}} Parser implementiert, wobei im Normalfall $k = 1$ ist. Falls $k > 1$ ist, muss f\"ur diesen Fall eine eigene Funktion implementiert werden, welche entscheidet wie der Parser weiterarbeiten soll.
+
+Ein LL(1) Parser arbeitet dabei so, dass er jeweils um 1. Token nach vorne schaut, und mithilfe dieser Information den weiteren Parservorgang steuert.
+
+% http://amor.cms.hu-berlin.de/~kunert/papers/lr-analyse/
+
 \newpage
 
 \htlParagraph{Syntaxbaum}
+
+Der Parser \"ubersetzt den Tokenstrom in einen sogenannten Syntaxbaum\footnote{\url{https://de.wikipedia.org/wiki/Syntaxbaum}}, welcher die Struktur des Programmes repr\"asentiert.
 
 \includegraphics[width=0.6\textwidth]{./media/images/compiler/parser_syntaxtree.png}
 
 \subsection{Abstrakter Syntaxbaum}
 
+Der ''allgemeine'' Syntaxbaum enth\"alt viele unn\"otigen Daten, welche beim Abstraken Syntaxbaum\footnote{\url{https://de.wikipedia.org/wiki/Abstrakter_Syntaxbaum}} nicht mehr vorhanden sind. Der Abstrakte Syntaxbaum stellt somit eine Baumrepr\"asentation der wesentlichen Syntax eines Programmes dar.
+
+\includegraphics[width=0.6\textwidth]{./media/images/compiler/abstract_syntaxtree.png}
+
+\subsubsection{homogene und heterogene Syntaxbäume}
+
+Der Abstrakte Syntaxbaum kann entweder aus einheitlichen Knoten (homogen) oder aus verschiedenen Knoten (heterogen) aufgebaut sein.\footnote{\url{https://wiki.fernuni-hagen.de/eclipse/index.php/Abstract_Syntax_Tree_(AST)\#Konzept_des_Syntaxbaums}}
+
 \subsection{Attributierte Gramatik}
 
+%\footnote{\url{https://de.wikipedia.org/wiki/Attributgrammatik}}
+Bei der Attributierten Gramatik\footnote{\url{http://steffenpingel.de/files/papers/ast.pdf}} werden Berechnungsvorschriften direkt in die Gramatik eingef\"ugt. Dadurch k\"onnen w\"arend des Parsens unter anderem Syntaxbedingungen wie z.B. Typpr\"ufungen durchgef\"uhrt werden.
+
+In Coco/R werden diese Berechnungsvorschriften mit ''(.'' eingeleitet und mit ''.)'' beendet. Zwischen diesen Klammern befindet sich dann der Quellcode, welcher ausgef\"uhrt wird, falls der Parser den Ausdruck durchl\"auft.
+
+\htlParagraph{Beispiel}
+
+\begin{lstlisting}[language=EBNF]
+Type<out Struct type>
+= 
+ident     (.  // check if a type with the given name exist
+              Obj obj = tab.find(t.val);
+              if(obj.kind != Obj.TYPE)
+                  SemErr(obj.name + " is not a type");
+
+              type = obj.type; .)
+. 
+\end{lstlisting}
+
+In diesem Beispiel pr\"uft die Berechnungsvorschrift ob bereits ein Identifier mit dem gew\"ahlten Namen definiert wurde (passiert in der Funktion tab.find(t.val);), und ob der gefundene Identifier ein Typ ist. 
+
+Falls eine dieser Syntaxbedingungen fehlschl\"agt, wird ein Semantischer Fehler geworfen. So werden w\"ahrend des Parsens nicht nur Syntaxfehler, sondern auch logische Fehler detektiert (z.B. fehlende Variablendeklaration).
+
+Desweiteren kann durch diese Berechnungsvorschriften ein Abstrakter Syntaxbaum aufgebaut werden. Eine EBNF-Regel stellt nicht unbedingt einen Knoten im Abstrakten Syntaxbaum dar, da z.b. Variablendeklarationen oft in sogenannte Symboltabellen gespeichert werden.
+
 \subsection{Symboltabelle}
+
+Die Symboltabelle\footnote{\url{https://de.wikipedia.org/wiki/Symboltabelle}} ist eine Datenstruktur in der Variablen und Funktionsdeklarationen gespeichert werden. Sie umfasst dabei Informationen wie z.b. Zeile, in der die Variable/Funktion deklariert wurde, die gr\"o\ss{}e des Datentypes, oder auch den Wert welchen mit welchem die Variable deklariert wurde (Konstanten).
+
+Mithilfe der Symboltabelle wird unter anderem festgestellt, ob eine Variablen deklariert wurde, oder wie viel Speicher f\"ur eine Funktion reserviert werden muss.
+
+%, und l\"ost m\"ogliche Namensprobleme auf.\footnote{\url{https://de.wikipedia.org/wiki/Namensraum}}
 
 \subsection{Scope}
