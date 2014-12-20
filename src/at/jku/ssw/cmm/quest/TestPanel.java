@@ -13,7 +13,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
@@ -105,6 +104,25 @@ public class TestPanel {
 			
 			this.jDescPane.repaint();
 		}
+	}
+
+	public void setDescDoc(String html, String css) {
+		
+		this.jDescPane.setDocument(LoadStatics.readStyleSheet(css));
+		
+		try {
+			this.jDescPane.setPage(LoadStatics.getHTMLUrl(html));
+		} catch (IOException e) {
+			DebugShell.out(State.ERROR, Area.ERROR, html + " not found");
+			e.printStackTrace();
+		}
+		
+		this.jDescPane.repaint();
+	}
+
+	public void setjQuestTitle(String title) {
+		
+		this.main.getRightPanel().setQuestMode(title);
 	}
 
 }

@@ -172,12 +172,12 @@ public class GUIrightPanel {
 			
 			
 			jQuestPanel.setLayout(new BorderLayout());
-			tabbedPane.add(jQuestPanel, _("Profile"));
 			questPanel = new GUIProfilePanel(jQuestPanel, main);
+			//tabbedPane.add(jQuestPanel, _("Profile"), 2);
 		}
 		
 		tabbedPane.setMinimumSize(new Dimension(250, 400));
-		tabbedPane.setPreferredSize(new Dimension(260, 420));
+		tabbedPane.setPreferredSize(new Dimension(300, 420));
 		
 		panel.add(tabbedPane, BorderLayout.CENTER);
 

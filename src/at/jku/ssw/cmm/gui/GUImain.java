@@ -123,7 +123,7 @@ public class GUImain {
 	/**
 	 * The current version of C Compact, used as window title.
 	 */
-	public static final String VERSION = "C Compact Alpha 1.2 (Build 4)";
+	public static final String VERSION = "C Compact Alpha 1.2 (Build 6)";
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)
@@ -332,7 +332,7 @@ public class GUImain {
 
 		// Ignoring Quest GUI if there is no active Profile
 		if (this.getSettings().getProfile() != null)
-			new GUIquestMain(this.rightPanelControl.getProfilePanel(), this).start();
+			new GUIquestMain(this.rightPanelControl.getTestPanel(), this).start();
 	}
 
 	public JPanel getGlassPane() {
