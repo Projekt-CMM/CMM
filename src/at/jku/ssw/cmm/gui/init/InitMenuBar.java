@@ -148,19 +148,19 @@ public class InitMenuBar {
 			codeM.addSeparator();
 			
 			// --- edit -> run ---
-			JMenuItem runMI = new JMenuItem(_("Compile and run"));
+			JMenuItem runMI = new JMenuItem(_("compile and run"));
 			runMI.addActionListener(ctrl.getListener().F5_run);
 			runMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
 			codeM.add(runMI);
 						
 			// --- edit -> step ---
-			JMenuItem stepMI = new JMenuItem(_("Compile and step"));
+			JMenuItem stepMI = new JMenuItem(_("compile and step"));
 			stepMI.addActionListener(ctrl.getListener().F6_step);
 			stepMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
 			codeM.add(stepMI);
 						
 			// --- edit -> stop ---
-			JMenuItem stopMI = new JMenuItem(_("Stop"));
+			JMenuItem stopMI = new JMenuItem(_("stop"));
 			stopMI.addActionListener(ctrl.getListener().F7_stop);
 			stopMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0));
 			codeM.add(stopMI);

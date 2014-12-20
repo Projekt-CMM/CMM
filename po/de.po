@@ -364,7 +364,7 @@ msgstr ""
 
 #: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:142
 msgid "stop"
-msgstr "stop"
+msgstr "Stop"
 
 #: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:143
 #, fuzzy
