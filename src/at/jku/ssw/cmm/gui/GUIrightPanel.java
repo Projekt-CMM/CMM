@@ -172,7 +172,7 @@ public class GUIrightPanel {
 			
 			
 			jQuestPanel.setLayout(new BorderLayout());
-			//tabbedPane.add(jQuestPanel, _("Profile"));
+			tabbedPane.add(jQuestPanel, _("Profile"));
 			questPanel = new GUIProfilePanel(jQuestPanel, main);
 		}
 		

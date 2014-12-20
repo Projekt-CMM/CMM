@@ -26,11 +26,10 @@ import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.Dimension;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.KeyStroke;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
@@ -75,16 +74,22 @@ public class GUIcontrolPanel {
 	 * This button starts or pauses interpreting.
 	 */
 	private JButton jButtonPlay;
+	
+	private JMenuItem jMenuItemPlay;
 
 	/**
 	 * This button resumes interpreting for one step.
 	 */
 	private JButton jButtonStep;
+	
+	private JMenuItem jMenuItemStep;
 
 	/**
 	 * Stops the interpreter. Also used to get out of an error message maine.
 	 */
 	private JButton jButtonStop;
+	
+	private JMenuItem jMenuItemStop;
 
 	/**
 	 * Slider for interpreter speed (regulates the period of each interpreter
@@ -116,14 +121,14 @@ public class GUIcontrolPanel {
 		panel.setToolTipText("<html><b>" + _("Control elements") + "</b><br>" + _("With the elements int this panel, you can<br>run and debug your source code") + "</html>");
 		
 		/* ---------- KEYBOARD SHORCUTS ---------- */
-		panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("F5"), "F5_run");
+		/*panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("F5"), "F5_run");
 		panel.getActionMap().put("F5_run", this.listener.F5_run);
 		
 		panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("F6"), "F6_step");
 		panel.getActionMap().put("F6_step", this.listener.F6_step);
 		
 		panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("F7"), "F7_stop");
-		panel.getActionMap().put("F7_stop", this.listener.F7_stop);
+		panel.getActionMap().put("F7_stop", this.listener.F7_stop);*/
 
 		/* ---------- BUTTONS ---------- */
 		//"play" button
@@ -177,6 +182,10 @@ public class GUIcontrolPanel {
 		this.jButtonStep.setEnabled(true);
 		this.jButtonStop.setEnabled(false);
 		
+		this.jMenuItemPlay.setEnabled(true);
+		this.jMenuItemStep.setEnabled(true);
+		this.jMenuItemStop.setEnabled(false);
+		
 		this.jButtonPlay.setText("\u25B6");
 		
 		this.jButtonStep.setToolTipText("<html><b>" + _("compile and step") + " (F6)" 
@@ -195,12 +204,16 @@ public class GUIcontrolPanel {
 	 * <br>
 	 * <b> DO NOT CALL THIS METHOD </b>
 	 * <br>
-	 * If you need to change the maine, call the method setReadymaine() in <i>GUIdebugPanel.java</i>
+	 * If you need to change the maine, call the method setReadyMode() in <i>GUIdebugPanel.java</i>
 	 */
 	public void setErrorMode(){
 		this.jButtonPlay.setEnabled(false);
 		this.jButtonStep.setEnabled(false);
 		this.jButtonStop.setEnabled(true);
+		
+		this.jMenuItemPlay.setEnabled(false);
+		this.jMenuItemStep.setEnabled(false);
+		this.jMenuItemStop.setEnabled(true);
 	}
 	
 	
@@ -216,6 +229,10 @@ public class GUIcontrolPanel {
 		this.jButtonPlay.setEnabled(true);
 		this.jButtonStep.setEnabled(false);
 		this.jButtonStop.setEnabled(true);
+		
+		this.jMenuItemPlay.setEnabled(true);
+		this.jMenuItemStep.setEnabled(false);
+		this.jMenuItemStop.setEnabled(true);
 		
 		this.jButtonPlay.setText("\u25AE\u25AE");
 		
@@ -241,6 +258,10 @@ public class GUIcontrolPanel {
 		this.jButtonPlay.setEnabled(true);
 		this.jButtonStep.setEnabled(true);
 		this.jButtonStop.setEnabled(true);
+		
+		this.jMenuItemPlay.setEnabled(true);
+		this.jMenuItemStep.setEnabled(true);
+		this.jMenuItemStop.setEnabled(true);
 		
 		this.jButtonPlay.setText("\u25B6");
 		
@@ -280,5 +301,11 @@ public class GUIcontrolPanel {
 	 */
 	public int getInterpreterSpeedSlider() {
 		return this.jSlider.getValue();
+	}
+	
+	public void initMenuItems( JMenuItem play, JMenuItem step, JMenuItem stop){
+		this.jMenuItemPlay = play;
+		this.jMenuItemStep = step;
+		this.jMenuItemStop = stop;
 	}
 }

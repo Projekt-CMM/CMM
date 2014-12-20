@@ -25,6 +25,7 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -32,10 +33,12 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
@@ -172,6 +175,9 @@ public class GUIleftPanel {
 		jPanelLeft.setBottomComponent(panel2);
 		jPanelLeft.setDividerLocation(0.4);
 		jPanelLeft.setResizeWeight(1.0);
+		
+		jPanelLeft.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+		  .put(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), "none");
 
 		// Read last opened files
 		if (this.main.getSettings().hasCMMFilePath()) {
