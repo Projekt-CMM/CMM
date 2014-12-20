@@ -27,11 +27,11 @@ Vorteile der EBNF gegen\"uber der BNF sind unter anderem:
 
 \subsubsection{Terminalsymbol}
 
-Ein sogenanntes Terminalsymbol\footnote{\url{https://de.wikipedia.org/wiki/Terminalsymbol}} wird nicht weiter zerlegt. Es stellt z.B. eine Zahl, eine Variable oder ein Schlüsselwort (''if'', ''while'', ...) dar.
+Ein sogenanntes Terminalsymbol\footnote{\url{https://de.wikipedia.org/wiki/Terminalsymbol}} wird nicht weiter zerlegt. Es stellt z.B. eine Zahl, eine Variable oder ein Schlüsselwort (``if'', ``while'', ...) dar.
 
-\begin{lstlisting}[language=EBNF]
-Expr = Term { ( "+" | "-" ) Term }.
-Term = intCon { ( "*" | "/" ) intCon }.
+\begin{lstlisting}[language=EBNF, escapechar=!]
+Expr = Term { ( "!\colorbox{highlight}{+}!" | "!\colorbox{highlight}{-}!" ) Term }.
+Term = !\colorbox{highlight}{intCon}! { ( "!\colorbox{highlight}{*}!" | "!\colorbox{highlight}{/}!" ) !\colorbox{highlight}{intCon}! }.
 \end{lstlisting}
 
 Terminalsymbole werden normalerweise entweder klein geschrieben (z.B. intCon), oder direkt in der Gramatik definiert (z.B. ''+'').
@@ -40,23 +40,23 @@ Terminalsymbole werden normalerweise entweder klein geschrieben (z.B. intCon), o
 
 Ein Nichtterminalsymbol\footnote{\url{https://de.wikipedia.org/wiki/Nichtterminalsymbol}} besteht aus einen oder mehreren Terminalsymbolen bzw. Nichtterminalsymbolen.
 
-\begin{lstlisting}[language=EBNF]
-Expr = Term { ( "+" | "-" ) Term }.
-Term = intCon { ( "*" | "/" ) intCon }.
+\begin{lstlisting}[language=EBNF, escapechar=!]
+!\colorbox{highlight}{Expr}! = !\colorbox{highlight}{Term}! { ( "+" | "-" ) !\colorbox{highlight}{Term}! }.
+!\colorbox{highlight}{Term}! = intCon { ( "*" | "/" ) intCon }.
 \end{lstlisting}
 
-Nichtterminalsymbole werden normalerweise gro\ss{} geschrieben. In diesem Beispiel stellen ''Expr'' und ''Term'' Nichtterminalsymbole dar, welche wiederum von anderen Nichtterminalsymbolen verwendet werden k\"onnen.
+Nichtterminalsymbole werden normalerweise gro\ss{} geschrieben. In diesem Beispiel stellen ``Expr'' und ``Term'' Nichtterminalsymbole dar, welche wiederum von anderen Nichtterminalsymbolen verwendet werden k\"onnen.
 
 \subsubsection{Produktionsregel}
 
 Die Produktionsregel\footnote{\url{https://de.wikipedia.org/wiki/Produktionsregel}} ist eine Regel, welche angibt wie aus W\"ortern neue W\"orter produziert werden.
 
-\begin{lstlisting}[language=EBNF]
+\begin{lstlisting}[language=EBNF, backgroundcolor=\color{highlight}]
 Expr = Term { ( "+" | "-" ) Term }.
 Term = intCon { ( "*" | "/" ) intCon }.
 \end{lstlisting}
 
-Die Produktionsregel gibt an wie z.B. das Nichtterminalsymbol ''Expr'' aufgebaut ist. Eine Produktionsregel besteht jeweils aus einem Nichtterminalsymbol auf der linken Seite, und der jeweiligen Regel auf der rechten Seite welches aus Terminal- und Nichtterminalsymbolen aufgebaut ist.
+Die Produktionsregel gibt an wie z.B. das Nichtterminalsymbol ``Expr'' aufgebaut ist. Eine Produktionsregel besteht jeweils aus einem Nichtterminalsymbol auf der linken Seite, und der jeweiligen Regel auf der rechten Seite welches aus Terminal- und Nichtterminalsymbolen aufgebaut ist.
 
 \newpage
 
@@ -101,14 +101,14 @@ Der Ausdruck $1-2+5$ kann mit dieser EBNF Regel nur mehr auf eine Art gelöst we
 Expr = Term { ( "+" | "-" ) Term }.
 \end{lstlisting}
 
-Eine Expression\footnote{\url{https://de.wikipedia.org/wiki/Ausdruck_(Programmierung)}} besteht dabei aus einem Term, und dann optional wiederum aus einem ''+'' oder ''-'' gefolgt von einem weiterem Term.
+Eine Expression\footnote{\url{https://de.wikipedia.org/wiki/Ausdruck_(Programmierung)}} besteht dabei aus einem Term, und dann optional wiederum aus einem ``+'' oder ``-'' gefolgt von einem weiterem Term.
 
 \includegraphics[width=0.5\textwidth]{./media/images/compiler/ebnf_term.png}
 \begin{lstlisting}[language=EBNF]
 Term = Factor { ( "*" | "/" ) Factor }.
 \end{lstlisting}
 
-Das Nichtterminalsymbol Term stellt wiederum eine Produktionsregel dar, welche aus einem Faktor, und dann optional wiederum aus einem ''*'' oder ''/'' gefolgt von einem weiterem Faktor besteht.
+Das Nichtterminalsymbol Term stellt wiederum eine Produktionsregel dar, welche aus einem Faktor, und dann optional wiederum aus einem ``*'' oder ``/'' gefolgt von einem weiterem Faktor besteht.
 
 Durch solche einfachen Regeln können z.B.: Mathematische Regeln wie Punkt vor Strich eindeutig und korrekt in einen Syntaxbaum übersetzt werden.
 
@@ -127,7 +127,7 @@ Bei der Lexikalischen Analyse zerlegt der sogenannt Scanner\footnote{\url{https:
 
 \htlParagraph{Zeichenstrom}
 
-Der Scanner bekommt einen Zeichenstrom, welcher aus einzelnen Zeichen besteht. Ein Zeichen ist z.B. ein Buchstabe, eine Zahl oder Sonderzeichen wie ''='', oder ''+''.
+Der Scanner bekommt einen Zeichenstrom, welcher aus einzelnen Zeichen besteht. Ein Zeichen ist z.B. ein Buchstabe, eine Zahl oder Sonderzeichen wie ``='', oder ``+''.
 
 \includegraphics[width=0.6\textwidth]{./media/images/compiler/input_characterstream.png}
 
@@ -159,7 +159,7 @@ Der Parser \"ubersetzt den Tokenstrom in einen sogenannten Syntaxbaum\footnote{\
 
 \subsection{Abstrakter Syntaxbaum}
 
-Der ''allgemeine'' Syntaxbaum enth\"alt viele unn\"otigen Daten, welche beim Abstraken Syntaxbaum\footnote{\url{https://de.wikipedia.org/wiki/Abstrakter_Syntaxbaum}} nicht mehr vorhanden sind. Der Abstrakte Syntaxbaum stellt somit eine Baumrepr\"asentation der wesentlichen Syntax eines Programmes dar.
+Der ``allgemeine'' Syntaxbaum enth\"alt viele unn\"otigen Daten, welche beim Abstraken Syntaxbaum\footnote{\url{https://de.wikipedia.org/wiki/Abstrakter_Syntaxbaum}} nicht mehr vorhanden sind. Der Abstrakte Syntaxbaum stellt somit eine Baumrepr\"asentation der wesentlichen Syntax eines Programmes dar.
 
 \includegraphics[width=0.6\textwidth]{./media/images/compiler/abstract_syntaxtree.png}
 
@@ -172,7 +172,7 @@ Der Abstrakte Syntaxbaum kann entweder aus einheitlichen Knoten (homogen) oder a
 %\footnote{\url{https://de.wikipedia.org/wiki/Attributgrammatik}}
 Bei der Attributierten Gramatik\footnote{\url{http://steffenpingel.de/files/papers/ast.pdf}} werden Berechnungsvorschriften direkt in die Gramatik eingef\"ugt. Dadurch k\"onnen w\"arend des Parsens unter anderem Syntaxbedingungen wie z.B. Typpr\"ufungen durchgef\"uhrt werden.
 
-In Coco/R werden diese Berechnungsvorschriften mit ''(.'' eingeleitet und mit ''.)'' beendet. Zwischen diesen Klammern befindet sich dann der Quellcode, welcher ausgef\"uhrt wird, falls der Parser den Ausdruck durchl\"auft.
+In Coco/R werden diese Berechnungsvorschriften mit ``(.'' eingeleitet und mit ``.)'' beendet. Zwischen diesen Klammern befindet sich dann der Quellcode, welcher ausgef\"uhrt wird, falls der Parser den Ausdruck durchl\"auft.
 
 \htlParagraph{Beispiel}
 
