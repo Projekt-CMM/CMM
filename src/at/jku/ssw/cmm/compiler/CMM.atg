@@ -820,7 +820,8 @@ BinExpr<out Node res>               (.  int kind;
 =
 Shift<out res>
 { Binop<out kind>
-  Shift<out n>                      (.  if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive())
+  Shift<out n>                      (.  if(res == null || res.type == null || !res.type.isPrimitive() 
+                                           || n == null || n.type == null || !n.type.isPrimitive())
                                             SemErr("type is not a primitive");
                                         else {
                                             res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
@@ -835,7 +836,8 @@ Shift<out Node res>                 (.  int kind;
 =
 Expr<out res>
 { Shiftop<out kind>
-  Expr<out n>                       (.  if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive() || n.type == Tab.boolType)
+  Expr<out n>                       (.  if(res == null || res.type == null || !res.type.isPrimitive()
+                                           || n == null || n.type == null|| !n.type.isPrimitive() || n.type == Tab.boolType)
                                             SemErr("type is not a primitive except bool");
                                         else {
                                             res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
