@@ -28,6 +28,18 @@ public class TestPanelListener implements MouseListener, TestReply {
 		if( quest == null )
 			return;
 		
+		// Save current *.cmm file
+		if (main.getSettings().getCMMFilePath() != null)
+			// Save to working directory
+			main.getSaveManager().directSave();
+		else
+			// Open "save as" dialog if there is no working directory
+			main.getSaveManager().doSaveAs();
+
+		main.setFileSaved();
+		main.updateWinFileName();
+		main.getRightPanel().getDebugPanel().updateFileName();
+		
 		//Start test -> set right panel to test mode
 		main.getRightPanel().setTestMode();
 		
