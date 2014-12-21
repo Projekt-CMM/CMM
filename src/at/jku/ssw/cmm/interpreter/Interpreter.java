@@ -26,7 +26,6 @@ package at.jku.ssw.cmm.interpreter;
  * TODO: JUnit
  */
 import java.nio.BufferOverflowException;
-import java.sql.Timestamp;
 import java.util.Date;
 
 import at.jku.ssw.cmm.compiler.Obj;

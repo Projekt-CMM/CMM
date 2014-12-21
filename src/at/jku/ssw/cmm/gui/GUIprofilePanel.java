@@ -54,14 +54,13 @@ public class GUIprofilePanel {
 	public GUIprofilePanel(JPanel cp, GUImain mod) {
 
 		this.jPanel = cp;
-
+		this.mod = mod;
 
 		cp.setLayout(new GridBagLayout());
 	    c = new GridBagConstraints();
 		
 		this.loadImages();
 		this.initObejcts();
-		this.mod = mod;
 		
 	}
 	
