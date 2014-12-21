@@ -112,6 +112,8 @@ Das Nichtterminalsymbol Term stellt wiederum eine Produktionsregel dar, welche a
 
 Durch solche einfachen Regeln können z.B.: Mathematische Regeln wie Punkt vor Strich eindeutig und korrekt in einen Syntaxbaum übersetzt werden.
 
+Diese Produktionsregeln k\"onnen dabei beliebige Komplexit\"at aufweisen, und reichen von einfachen Ausdr\"ucken \"uber den Aufbau des Variablenbezeichners bis zu umfangreichen Zuweisungsoperatoren in allen m\"oglichen Varianten.
+
 \includegraphics[width=\textwidth]{./media/images/compiler/ebnf_designator.png}
 \begin{lstlisting}[language=EBNF]
 Designator = ident { "." ident | "[" BinExpr "]" }.
@@ -153,7 +155,7 @@ Ein LL(1) Parser arbeitet dabei so, dass er jeweils um 1. Token nach vorne schau
 
 \htlParagraph{Syntaxbaum}
 
-Der Parser \"ubersetzt den Tokenstrom in einen sogenannten Syntaxbaum\footnote{\url{https://de.wikipedia.org/wiki/Syntaxbaum}}, welcher die Struktur des Programmes repr\"asentiert.
+Der Parser \"ubersetzt den Tokenstrom in einem sogenannten Syntaxbaum\footnote{\url{https://de.wikipedia.org/wiki/Syntaxbaum}}, welcher die Struktur des Programmes repr\"asentiert. Dieser umfasst alle Terminal wie auch Nichtterminalsymbole, und zeigt auf wie die EBNF-Regeln aufeinander aufgebaut sind.
 
 \includegraphics[width=0.6\textwidth]{./media/images/compiler/parser_syntaxtree.png}
 
