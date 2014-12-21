@@ -11,9 +11,9 @@
 
 \subsection{Erweiterte Backus-Naur-Form (EBNF)}
 
-Die sogenannte Erweiterte Backus-Naur-Form (EBNF)\footnote{\url{https://de.wikipedia.org/wiki/Erweiterte_Backus-Naur-Form}} ist eine weiterentwicklung der Backus-Naur-Form (BNF)\footnote{\url{https://de.wikipedia.org/wiki/Backus-Naur-Form}}. Das Anwendungsgebiet der BNF und EBNF ist das definieren von  kontextfreie Grammatiken\footnote{\url{https://de.wikipedia.org/wiki/Kontextfreie_Grammatik}}, welche untere anderem f\"ur Programmiersprachen benutzt werden.
+Die sogenannte Erweiterte Backus-Naur-Form (EBNF)\footnote{\url{https://de.wikipedia.org/wiki/Erweiterte_Backus-Naur-Form}} ist eine Weiterentwicklung der Backus-Naur-Form (BNF)\footnote{\url{https://de.wikipedia.org/wiki/Backus-Naur-Form}}. Das Anwendungsgebiet der BNF und EBNF ist das definieren von  kontextfreie Grammatiken\footnote{\url{https://de.wikipedia.org/wiki/Kontextfreie_Grammatik}}, welche untere anderem f\"ur Programmiersprachen benutzt werden.
 
-Bei kontextfreier Gramatik wird jeweils Ein Nichtterminalsymbol auf eine beliebige Folge von Terminal- bzw. Nichtterminalsymbolen abgeleitet ($V \rightarrow w$). Wenn das Nichtterminalsymbol $V$ in einem anderem Nichtterminalsymbol verwendet wird, wird nicht auf den Kontext geachtet, in welcher das Nichtterminalsymbol $V$ eingebettet ist. Die Regel ist daher kontextfrei.
+Bei kontextfreier Grammatik wird jeweils Ein Nichtterminalsymbol auf eine beliebige Folge von Terminal- bzw. Nichtterminalsymbolen abgeleitet ($V \rightarrow w$). Wenn das Nichtterminalsymbol $V$ in einem anderem Nichtterminalsymbol verwendet wird, wird nicht auf den Kontext geachtet, in welcher das Nichtterminalsymbol $V$ eingebettet ist. Die Regel ist daher kontextfrei.
 
 Vorteile der EBNF gegen\"uber der BNF sind unter anderem:
 
@@ -34,7 +34,7 @@ Expr = Term { ( "!\colorbox{highlight}{+}!" | "!\colorbox{highlight}{-}!" ) Term
 Term = !\colorbox{highlight}{intCon}! { ( "!\colorbox{highlight}{*}!" | "!\colorbox{highlight}{/}!" ) !\colorbox{highlight}{intCon}! }.
 \end{lstlisting}
 
-Terminalsymbole werden normalerweise entweder klein geschrieben (z.B. intCon), oder direkt in der Gramatik definiert (z.B. ''+'').
+Terminalsymbole werden normalerweise entweder klein geschrieben (z.B. intCon), oder direkt in der Grammatik definiert (z.B. ''+'').
 
 \subsubsection{Nichtterminalsymbol}
 
@@ -62,7 +62,7 @@ Die Produktionsregel gibt an wie z.B. das Nichtterminalsymbol ``Expr'' aufgebaut
 
 \subsubsection{Eindeutigkeit}
 
-Die Gramatik muss so aufgebaut sein, dass es für einen Tokenstrom nur eine eindeutige Möglichkeit gibt diesen zu parsen.\footnote{\url{http://www.iai.uni-bonn.de/III//lehre/vorlesungen/Informatik_I/WS05/Folien/VLWS0506-10.pdf}}
+Die Grammatik muss so aufgebaut sein, dass es für einen Tokenstrom nur eine eindeutige Möglichkeit gibt diesen zu parsen.\footnote{\url{http://www.iai.uni-bonn.de/III//lehre/vorlesungen/Informatik_I/WS05/Folien/VLWS0506-10.pdf}}
 
 \htlParagraph{Beispiel}
 
@@ -135,7 +135,7 @@ Der Scanner bekommt einen Zeichenstrom, welcher aus einzelnen Zeichen besteht. E
 
 Aus diesem Zeichenstrom werden dann die Tokens extrahiert, welche dann die sogenannten Terminalsymbole in der EBNF bzw. BNF darstellen. Tokens k\"onnen dabei aus 1. oder mehreren Zeichen bestehen.
 
-Manche Tokens wie z.B. Variablen oder Konstanten besitzen au\ss{}er der Tokennummer desweiteren noch einen Tokenwert, mit dem sp\"ater z.B. der Variablenname, oder der Wert einer Variable ausgelesen werden kann.
+Manche Tokens wie z.B. Variablen oder Konstanten besitzen au\ss{}er der Tokennummer des-weiteren noch einen Tokenwert, mit dem sp\"ater z.B. der Variablenname, oder der Wert einer Variable ausgelesen werden kann.
 
 \includegraphics[width=\textwidth]{./media/images/compiler/scanner_tokenstream.png}
 
@@ -159,7 +159,7 @@ Der Parser \"ubersetzt den Tokenstrom in einen sogenannten Syntaxbaum\footnote{\
 
 \subsection{Abstrakter Syntaxbaum}
 
-Der ``allgemeine'' Syntaxbaum enth\"alt viele unn\"otigen Daten, welche beim Abstraken Syntaxbaum\footnote{\url{https://de.wikipedia.org/wiki/Abstrakter_Syntaxbaum}} nicht mehr vorhanden sind. Der Abstrakte Syntaxbaum stellt somit eine Baumrepr\"asentation der wesentlichen Syntax eines Programmes dar.
+Der ``allgemeine'' Syntaxbaum enth\"alt viele unn\"otigen Daten, welche beim Abstrakten Syntaxbaum\footnote{\url{https://de.wikipedia.org/wiki/Abstrakter_Syntaxbaum}} nicht mehr vorhanden sind. Der Abstrakte Syntaxbaum stellt somit eine Baumrepr\"asentation der wesentlichen Syntax eines Programmes dar.
 
 \includegraphics[width=0.6\textwidth]{./media/images/compiler/abstract_syntaxtree.png}
 
@@ -170,7 +170,7 @@ Der Abstrakte Syntaxbaum kann entweder aus einheitlichen Knoten (homogen) oder a
 \subsection{Attributierte Gramatik}
 
 %\footnote{\url{https://de.wikipedia.org/wiki/Attributgrammatik}}
-Bei der Attributierten Gramatik\footnote{\url{http://steffenpingel.de/files/papers/ast.pdf}} werden Berechnungsvorschriften direkt in die Gramatik eingef\"ugt. Dadurch k\"onnen w\"arend des Parsens unter anderem Syntaxbedingungen wie z.B. Typpr\"ufungen durchgef\"uhrt werden.
+Bei der Attributierten Gramatik\footnote{\url{http://steffenpingel.de/files/papers/ast.pdf}} werden Berechnungsvorschriften direkt in die Gramatik eingef\"ugt. Dadurch k\"onnen w\"ahrend des Parsens unter anderem Syntaxbedingungen wie z.B. Typpr\"ufungen durchgef\"uhrt werden.
 
 In Coco/R werden diese Berechnungsvorschriften mit ``(.'' eingeleitet und mit ``.)'' beendet. Zwischen diesen Klammern befindet sich dann der Quellcode, welcher ausgef\"uhrt wird, falls der Parser den Ausdruck durchl\"auft.
 
