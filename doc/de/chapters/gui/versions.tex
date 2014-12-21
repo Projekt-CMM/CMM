@@ -10,14 +10,11 @@
 \chapter{Versionsgeschichte}
 Dieses Kapitel enthält eine Auflistung der Versionen von C Compact. Die Versionen werden wie folgt unterteilt:
 \begin{itemize}
-\item \textbf{Pre-Alpha:} Die Versionsnummerierung begann erst im Herbst 2014. Alle Versionen, die zuvor entstanden sind, sind nicht nummeriert. Das betrifft im wesentlichen unsere Arbeit am Institut für Systemsoftware der Johannes Kepler Universität im Juli 2014. Zu dieser Zeit war eine Unterteilung in Versionen noch nicht unbedingt nötig.
-\item \textbf{Alpha:} Versionen mit dem Namen Alpha umfassen die Entwicklungen vom Herbst 2014 bis Anfang 2015. Unter die Bezeichnung Alpha fallen alle Versionen, in denen das Questsystem noch nicht vollständig implementiert ist.
-%%TODO Referenz auf Questsystem
+\item \textbf{Pre-Alpha:} Die Versionsunterteilung begann erst im Herbst 2014. Alle Versionen, die zuvor entstanden sind, sind nicht nummeriert. Das betrifft im Wesentlichen unsere Arbeit am Institut für Systemsoftware der Johannes Kepler Universität im Juli 2014.
+\item \textbf{Alpha:} Versionen mit dem Namen Alpha umfassen die Entwicklungen vom Herbst 2014 bis Anfang 2015.
 \end{itemize}
 
-Buildnummern wurden nicht nach der tatsächlichen Anzahl der Builds vergeben, sondern nach kleinen Erweiterungen, die noch in die aktuelle Version eingegliedert wurden.
-
-Nachfolgend werden alle bisher benannten Versionen aufgelistet und beschrieben. Es sind nicht alle Builds vollständig aufgelistet, da die Änderungen teilweise minimal waren.
+Nachfolgend werden alle bisher benannten Versionen aufgelistet und beschrieben. Es ist zu beachten, dass Versuche mit Schülern immer am Beginn der aktuellen Version durchgeführt wurden. Die Entwicklung einer durch einen Versuch getestete Version wurde also durch den Versuch selbst wesentlich beeinflusst und optimiert.
 
 %	--------------------------------------------------------
 % 	Kein Versionsname
@@ -25,12 +22,14 @@ Nachfolgend werden alle bisher benannten Versionen aufgelistet und beschrieben. 
 \subsubsection*{Pre-Alpha}
 7. Juli 2014 bis 30.September 2014
 \begin{itemize}
-\item Umfasst die Arbeiten in unserer Zeit an der JKU, die grundlegende Implementierung der drei Hauptkomponenten des Projektes:
-\subitem Compiler
-\subitem Interpreter
-\subitem Benutzeroberfläche
+\item Diese Version umfasst die Arbeiten in unserer Zeit an der JKU sowie die grundlegende Implementierung der drei Hauptkomponenten des Projektes:
+\begin{itemize}
+\item Compiler
+\item Interpreter
+\item Benutzeroberfläche
+\end{itemize}
 \item Dateimanagement: Neue Datei - Öffnen - Speichern
-\item Datentyp ,,string'' (ähnlich wie in Java)
+\item Datentyp ,,string'' (ähnlich zu verwenden wie in Java)
 \item Datentyp ,,bool''
 \item Minimaler Präprozessor
 \end{itemize}
@@ -57,7 +56,7 @@ Zuweisung der Arraygrößen mit Konstanten
 % 	Alpha 1.1
 %	--------------------------------------------------------
 \subsubsection*{Alpha 1.1}
-Gültig ab: 4. November 2014,\newline
+4. November 2014 bis 23. November 2014,\newline
 Getestet: 5. November 2014 mit der 2AHELS
 %%TODO Referenz auf 1. Versuch
 \begin{itemize}
@@ -86,7 +85,7 @@ Getestet: 3. Dezember 2014 mit der 2BHELS
 \item Logarithmische Skalierung der Zeitschritte beim automatischen Debuggen
 \item Die größten Elemente der Benutzeroberfläche sind verschiebbar und damit besser anzupassen
 \item Eigener Syntax Highlighter für die Sprache von C Compact 
-\item Ein neuer Präprozessor sorgt für reibungslosen Ablauf und ermöglicht Bedingungen, wie etwa ,,#ifdef''
+\item Ein neuer Präprozessor sorgt für reibungslosen Ablauf und ermöglicht Bedingungen wie etwa ,,\#ifdef''
 \item Die Zeile von Laufzeitfehlern wird korrekt erkannt und ausgegeben
 \item Hinzufügen spezieller Elementarfunktionen wie ,,time'' und ,,\_\_assert\_\_'' für Bibliotheken und fortgeschrittene Benutzer
 \end{itemize}
@@ -98,8 +97,14 @@ Getestet: 3. Dezember 2014 mit der 2BHELS
 Ab 15. Dezember 2014
 \begin{itemize}
 \item Arrays werden jetzt wie in C deklariert
-\item Präprozessor kann Fehler werfen, die dem benutzer angezeigt werden (wenn beispielsweise eine Bibliothek nicht gefunden wurde)
-\item Das Projekt wurde offiziell unter der GNU General Public License 3 lizenziert.
-%TODO reference to GNU GLP3
+\item Präprozessor kann Fehler werfen, die dem Benutzer angezeigt werden (wenn beispielsweise eine Bibliothek nicht gefunden wurde)
+\item Das Projekt wurde offiziell unter der GNU General Public License 3 lizenziert\footnote{http://www.gnu.org/copyleft/gpl.html}
+\item Das Questsystem wurde in die Benutzeroberfläche integriert. Dazu gehören:
+\begin{itemize}
+\item Ein Launcher, um ein Benutzerprofil auszuwählen
+\item Ein neues Panel im Hauptfenster, in dem der Benutzer Informationen über die aktuelle Quest erhält und überprüfen kann, ob sein Sourcecode die Anforderungen der Quest erfüllt
+\item Ein Auswahlfenster zum Selektieren und Starten einer Quest
+\item Ein an das Questsystem angepasstes System für globale Einstellungen (um zum Beispiel für Schriftgröße oder die zuletzt verwendeten Benutzerprofile zu speichern)
+\end{itemize}
 \end{itemize}
 
