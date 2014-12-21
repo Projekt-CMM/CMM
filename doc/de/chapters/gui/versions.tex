@@ -10,7 +10,7 @@
 \chapter{Versionsgeschichte}
 Dieses Kapitel enthält eine Auflistung der Versionen von C Compact. Die Versionen werden wie folgt unterteilt:
 \begin{itemize}
-\item \textbf{Kein Versionsname:} Die Versionsnummerierung begann erst im Herbst 2014. Alle Versionen, die zuvor entstanden sind, sind nicht nummeriert. Das betrifft im wesentlichen unsere Arbeit am Institut für Systemsoftware der Johannes Kepler Universität im Juli 2014. Zu dieser Zeit war eine Unterteilung in Versionen noch nicht unbedingt nötig.
+\item \textbf{Pre-Alpha:} Die Versionsnummerierung begann erst im Herbst 2014. Alle Versionen, die zuvor entstanden sind, sind nicht nummeriert. Das betrifft im wesentlichen unsere Arbeit am Institut für Systemsoftware der Johannes Kepler Universität im Juli 2014. Zu dieser Zeit war eine Unterteilung in Versionen noch nicht unbedingt nötig.
 \item \textbf{Alpha:} Versionen mit dem Namen Alpha umfassen die Entwicklungen vom Herbst 2014 bis Anfang 2015. Unter die Bezeichnung Alpha fallen alle Versionen, in denen das Questsystem noch nicht vollständig implementiert ist.
 %%TODO Referenz auf Questsystem
 \end{itemize}
@@ -23,11 +23,15 @@ Nachfolgend werden alle bisher benannten Versionen aufgelistet und beschrieben. 
 % 	Kein Versionsname
 %	--------------------------------------------------------
 \subsubsection*{Pre-Alpha}
-Entwicklungsstart: 7. Juli 2014
+7. Juli 2014 bis 30.September 2014
 \begin{itemize}
-\item Umfasst alle grundlegenden Funktionen: eine einfache, C-ähnliche Sprache und die Grundversion der aktuellen Benutzeroberfläche
+\item Umfasst die Arbeiten in unserer Zeit an der JKU, die grundlegende Implementierung der drei Hauptkomponenten des Projektes:
+\subitem Compiler
+\subitem Interpreter
+\subitem Benutzeroberfläche
 \item Dateimanagement: Neue Datei - Öffnen - Speichern
-\item String als Datentyp (ähnlich wie in Java)
+\item Datentyp ,,string'' (ähnlich wie in Java)
+\item Datentyp ,,bool''
 \item Minimaler Präprozessor
 \end{itemize}
 
@@ -35,54 +39,67 @@ Entwicklungsstart: 7. Juli 2014
 % 	Alpha 1.0
 %	--------------------------------------------------------
 \subsubsection*{Alpha 1.0}
-Gültig ab: 1. Oktober 2014
+1. Oktober 2014 bis 3. November 2014
 \begin{itemize}
 \item Variablen können sowohl als Baumstruktur, als auch in Tabellen dargestellt werden
 \item Beim Schließen wird überprüft, ob die aktuelle Datei verändert wurde
 \item Implementierung einer Standardbibliothek
 \item Breakpoints
+\item Operatoren für Inkrementation und Dekrementation
+\item switch/case
+\item Schlüsselwort ,,nop''
+\item Verbesserte Tests mit Travis-CI
+Zuweisung der Arraygrößen mit Konstanten
+\item Elementarfunktion ,,printf''
 \end{itemize}
 
 %	--------------------------------------------------------
-% 	Alpha 1.1 (Build 3)
+% 	Alpha 1.1
 %	--------------------------------------------------------
 \subsubsection*{Alpha 1.1}
-Gültig ab: 4. November 2014,
+Gültig ab: 4. November 2014,\newline
 Getestet: 5. November 2014 mit der 2AHELS
 %%TODO Referenz auf 1. Versuch
 \begin{itemize}
 \item Variablenanzeige mit Tabellen wurde entfernt
 \item Variablenanzeige als Baumstruktur wurde wesentlich optimiert
 \item Step-over- und Step-out-buttons immer sichtbar
+\item Erkennen von Buffer Overflows und Variablenüberlauf
+\item Erkennen uninitialisierter Variablen
+\item Schlüsselwort ,,library''
+\item Übergeben von Arrays als Funktionsparameter
+\item Speichern von Laufzeitinformationen von Variablen
 \end{itemize}
 
 %	--------------------------------------------------------
-% 	Alpha 1.2 (Build 1)
+% 	Alpha 1.2 (Build 1/4)
 %	--------------------------------------------------------
-\subsubsection*{Alpha 1.2 (Build 1)}
-Gültig ab: 24. November 2014
+\subsubsection*{Alpha 1.2}
+24. November 2014 bis 14. Dezember 2014,\newline
+Getestet: 3. Dezember 2014 mit der 2BHELS
 \begin{itemize}
 %%TODO Referenz auf Ausführungsmodus
 \item Ausführungsmodus (Texteditor, Fehler, Automatisches Debuggen, Schritt-für-Schritt-Debuggen) wird sichtbar durch ein farbiges Panel über dem Textfeld gekennzeichnet.
-\item Arrays können an Funktionen als Referenz übergeben werden
-\item Entfernen der Step-over und Step-out Funktionen
-\item Schlüsselwort "library" für Funktionen, die im Debugger übersprungen werden sollen
+\item Step-over und Step-out Funktionen vorläufig entfernt
 \item HTML-Dokumente für unterschiedliche Fehler im Debugmodus (Compiler, Preprozessor, Laufzeitfehler)
 \item Tooltips für die wichtigsten Bedienelemente (Buttons, etc.)
 \item Logarithmische Skalierung der Zeitschritte beim automatischen Debuggen
 \item Die größten Elemente der Benutzeroberfläche sind verschiebbar und damit besser anzupassen
+\item Eigener Syntax Highlighter für die Sprache von C Compact 
+\item Ein neuer Präprozessor sorgt für reibungslosen Ablauf und ermöglicht Bedingungen, wie etwa ,,#ifdef''
+\item Die Zeile von Laufzeitfehlern wird korrekt erkannt und ausgegeben
+\item Hinzufügen spezieller Elementarfunktionen wie ,,time'' und ,,\_\_assert\_\_'' für Bibliotheken und fortgeschrittene Benutzer
 \end{itemize}
 
 %	--------------------------------------------------------
-% 	Alpha 1.2 (Build 4)
+% 	Alpha 1.3
 %	--------------------------------------------------------
-\subsubsection*{Alpha 1.2 (build 4)}
-Gültig ab: 2. Dezember 2014,
-Getestet: 3. Dezember 2014 mit der 2BHELS
-%%TODO Referenz auf 2. Versuch
+\subsubsection*{Alpha 1.3}
+Ab 15. Dezember 2014
 \begin{itemize}
-\item Verbessertes Design bei Fehlermeldungen
-\item Eigener Syntax Highlighter für die Sprache von C Compact
+\item Arrays werden jetzt wie in C deklariert
+\item Präprozessor kann Fehler werfen, die dem benutzer angezeigt werden (wenn beispielsweise eine Bibliothek nicht gefunden wurde)
+\item Das Projekt wurde offiziell unter der GNU General Public License 3 lizenziert.
+%TODO reference to GNU GLP3
 \end{itemize}
-
 

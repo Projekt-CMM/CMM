@@ -29,10 +29,10 @@ import javax.swing.table.TableCellRenderer;
 
 import at.jku.ssw.cmm.gui.treetable.DataNode;
 
-public class JTableButtonRenderer implements TableCellRenderer {
+public class TableButtonRenderer implements TableCellRenderer {
 	private TableCellRenderer defaultRenderer;
 
-	public JTableButtonRenderer(TableCellRenderer renderer) {
+	public TableButtonRenderer(TableCellRenderer renderer) {
 		defaultRenderer = renderer;
 	}
 	  

@@ -30,8 +30,8 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 
 import at.jku.ssw.cmm.gui.GUImain;
-import at.jku.ssw.cmm.gui.utils.JTableButtonMouseListener;
-import at.jku.ssw.cmm.gui.utils.JTableButtonRenderer;
+import at.jku.ssw.cmm.gui.utils.TableButtonMouseListener;
+import at.jku.ssw.cmm.gui.utils.TableButtonRenderer;
 
 /**
  * A jTree embedded in a table
@@ -49,7 +49,7 @@ public class TreeTable extends JTable {
 	
 	private TreeTableCellRenderer tree;
 	private TreeTableDataModel dataModel;
-	private final JTableButtonRenderer buttonRenderer;
+	private final TableButtonRenderer buttonRenderer;
 	private TreeTableModelAdapter modelAdapter;
      
      
@@ -62,7 +62,7 @@ public class TreeTable extends JTable {
         this.main = main;
         
         //Initialize button renderer
-        this.buttonRenderer = new JTableButtonRenderer(super.getDefaultRenderer(JButton.class));
+        this.buttonRenderer = new TableButtonRenderer(super.getDefaultRenderer(JButton.class));
  
         //Initialize tree
         this.setTreeModel(treeTableModel);
@@ -103,7 +103,7 @@ public class TreeTable extends JTable {
         super.setModel(this.modelAdapter);
         super.getColumn(_("Value")).setCellRenderer(this.buttonRenderer);
         super.getColumn(_("Type")).setCellRenderer(this.buttonRenderer);
-        this.addMouseListener(new JTableButtonMouseListener(this.main, this));
+        this.addMouseListener(new TableButtonMouseListener(this.main, this));
          
         //Selection of tree and table at once
         TreeTableSelectionModel selectionModel = new TreeTableSelectionModel();

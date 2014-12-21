@@ -71,8 +71,6 @@ public class GUIdebugPanel {
 
 		cp.setLayout(new BorderLayout());
 
-		this.compileManager = new CMMwrapper(this.main, this);
-
 		this.jControlPanel = new JPanel();
 		this.jControlPanel.setBorder(new TitledBorder(_("Control elements")));
 		this.ctrlPanel = new GUIcontrolPanel(this.jControlPanel, this, main);
@@ -88,6 +86,8 @@ public class GUIdebugPanel {
 		cp.add(jVarPanel, BorderLayout.CENTER);
 
 		this.breakpoints = new ArrayList<>();
+		
+		this.compileManager = new CMMwrapper(this.main, this);
 	}
 
 	/**
