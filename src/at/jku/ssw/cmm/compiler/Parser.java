@@ -231,7 +231,7 @@ public class Parser {
 		while (StartOf(1)) {
 			if (la.kind == 36) {
 				ConstDecl();
-			} else if (la.kind == 41) {
+			} else if (la.kind == 43) {
 				StructDecl();
 			} else if (isVarDecl()) {
 				e = VarDecl();
@@ -261,6 +261,7 @@ public class Parser {
 		Struct type; 
 		int line = la.line; 
 		boolean library = false; 
+		boolean isNegative = false; 
 		Expect(36);
 		type = Type();
 		if (la.kind == 37) {
@@ -283,16 +284,32 @@ public class Parser {
 				if (type != Tab.boolType) 
 				   SemErr("bool constant not allowed here"); 
 			}
-		} else if (la.kind == 2) {
-			Get();
-			curCon.val = tab.intVal(t.val); 
-			if (type != Tab.intType) 
-			   SemErr("int constant not allowed here"); 
-		} else if (la.kind == 3) {
-			Get();
-			curCon.fVal = tab.floatVal(t.val); 
-			if (type != Tab.floatType) 
-			   SemErr("float constant not allowed here"); 
+		} else if (StartOf(3)) {
+			if (la.kind == 40 || la.kind == 41) {
+				if (la.kind == 40) {
+					Get();
+				} else {
+					Get();
+					isNegative = true; 
+				}
+			}
+			if (la.kind == 2) {
+				Get();
+				if(isNegative)
+				   curCon.val = tab.intVal("-" + t.val);
+				else
+				   curCon.val = tab.intVal(t.val);
+				if (type != Tab.intType) 
+				   SemErr("int constant not allowed here"); 
+			} else if (la.kind == 3) {
+				Get();
+				if(isNegative)
+				   curCon.fVal = tab.floatVal("-" + t.val);
+				else
+				   curCon.fVal = tab.floatVal(t.val);
+				if (type != Tab.floatType) 
+				   SemErr("float constant not allowed here"); 
+			} else SynErr(68);
 		} else if (la.kind == 4) {
 			Get();
 			curCon.val = tab.charVal(t.val); 
@@ -303,14 +320,14 @@ public class Parser {
 			curCon.val = strings.put(tab.stringVal(t.val));
 			if (type != Tab.stringType) 
 			   SemErr("string constant not allowed here"); 
-		} else SynErr(68);
+		} else SynErr(69);
 		Expect(12);
 	}
 
 	void StructDecl() {
 		Node e; 
 		int line = la.line; 
-		Expect(41);
+		Expect(43);
 		Struct type = new Struct(Struct.STRUCT); 
 		Expect(1);
 		Obj struct = tab.insert(Obj.TYPE, t.val, type, line); 
@@ -351,7 +368,7 @@ public class Parser {
 		}
 		e = VarDeclPart(type, library);
 		eHelp = e; 
-		while (la.kind == 40) {
+		while (la.kind == 42) {
 			Get();
 			eNew = VarDeclPart(type, library);
 			if(eNew != null) {
@@ -372,9 +389,9 @@ public class Parser {
 		boolean library = false; 
 		if (la.kind == 1) {
 			type = Type();
-		} else if (la.kind == 42) {
+		} else if (la.kind == 44) {
 			Get();
-		} else SynErr(69);
+		} else SynErr(70);
 		if (la.kind == 37) {
 			Get();
 			library = true; 
@@ -408,7 +425,7 @@ public class Parser {
 			   curProc.isForward = false;
 			}
 			Node startNode = null, curNode = null, newNode; 
-			while (StartOf(3)) {
+			while (StartOf(4)) {
 				if (la.kind == 36) {
 					ConstDecl();
 				} else if (isVarDecl()) {
@@ -480,7 +497,7 @@ public class Parser {
 			   
 			// set forward-flag
 			curProc.isForward = true; 
-		} else SynErr(70);
+		} else SynErr(71);
 		curProc.locals = tab.curScope.locals;
 		                                        // copy variable size of lcurrent scope into procedure
 		curProc.size = tab.curScope.size;
@@ -526,7 +543,7 @@ public class Parser {
 				if(helpObj.type != Tab.intType)
 				   SemErr(helpObj.name + " is not an int constant");
 				arraySize = helpObj.val; 
-			} else SynErr(71);
+			} else SynErr(72);
 			dimensions.add(arraySize);
 			// check if size of dimension is at least 1 
 			if(arraySize <= 0)
@@ -581,7 +598,7 @@ public class Parser {
 		int  n;
 		FormPar();
 		n = 1; 
-		while (la.kind == 40) {
+		while (la.kind == 42) {
 			Get();
 			FormPar();
 			n++; 
@@ -600,7 +617,7 @@ public class Parser {
 			Expect(12);
 			break;
 		}
-		case 43: {
+		case 45: {
 			Get();
 			Expect(6);
 			Node ifYes, ifNo; 
@@ -608,14 +625,14 @@ public class Parser {
 			Expect(7);
 			ifYes = Statement();
 			st = new Node(Node.IF,con,ifYes,line); 
-			if (la.kind == 44) {
+			if (la.kind == 46) {
 				Get();
 				ifNo = Statement();
 				st = new Node(Node.IFELSE,st,ifNo,line); 
 			}
 			break;
 		}
-		case 45: {
+		case 47: {
 			Get();
 			Expect(6);
 			con = Condition();
@@ -628,14 +645,14 @@ public class Parser {
 			continueLevel --; 
 			break;
 		}
-		case 46: {
+		case 48: {
 			Get();
 			breakLevel ++; 
 			continueLevel ++; 
 			st = Statement();
 			breakLevel --; 
 			continueLevel --; 
-			Expect(45);
+			Expect(47);
 			Expect(6);
 			con = Condition();
 			Expect(7);
@@ -643,7 +660,7 @@ public class Parser {
 			st = new Node(Node.DOWHILE,con,st,line); 
 			break;
 		}
-		case 47: {
+		case 49: {
 			Get();
 			Node command = null, relopCommand = null, relSt; 
 			breakLevel ++; 
@@ -652,7 +669,7 @@ public class Parser {
 			if (la.kind == 1) {
 				command = Command();
 			} else if (la.kind == 12) {
-			} else SynErr(72);
+			} else SynErr(73);
 			if(command == null)
 			   command = new Node(Node.NOP,null,null,line); 
 			Expect(12);
@@ -661,7 +678,7 @@ public class Parser {
 			if (la.kind == 1) {
 				relopCommand = Command();
 			} else if (la.kind == 7) {
-			} else SynErr(73);
+			} else SynErr(74);
 			if(relopCommand == null)
 			   relopCommand = new Node(Node.NOP,null,null,line); 
 			Expect(7);
@@ -673,7 +690,7 @@ public class Parser {
 			st = new Node(Node.FOR,con,command,line); 
 			break;
 		}
-		case 48: {
+		case 50: {
 			Get();
 			Expect(6);
 			e = BinExpr();
@@ -685,10 +702,10 @@ public class Parser {
 			Node firstCaseStatement;
 			Node lastStatement = new Node(Node.NOP,null,null,line); 
 			Expect(8);
-			while (la.kind == 49 || la.kind == 50) {
+			while (la.kind == 51 || la.kind == 52) {
 				n = null; 
 				newStat = null; 
-				if (la.kind == 49) {
+				if (la.kind == 51) {
 					Get();
 					if (la.kind == 2) {
 						Get();
@@ -699,7 +716,7 @@ public class Parser {
 					} else if (la.kind == 4) {
 						Get();
 						n = new Node(tab.charVal(t.val)); 
-					} else SynErr(74);
+					} else SynErr(75);
 					if(n.type != e.type)
 					   SemErr("type of switch has to match type of case value");
 					newStat = new Node(Node.CASE,n,null,line); 
@@ -710,10 +727,10 @@ public class Parser {
 					   SemErr("you cannot declare the default statement twice");
 					defaultNode = newStat; 
 				}
-				Expect(51);
+				Expect(53);
 				firstCaseStatement = null;
 				lastStatement.next = firstCaseStatement; 
-				while (StartOf(4)) {
+				while (StartOf(5)) {
 					n = Statement();
 					lastStatement.next = n;
 					                                        // get reference to first case-statement in this node
@@ -748,7 +765,7 @@ public class Parser {
 		case 8: {
 			Get();
 			curStat = null; con=null; 
-			while (StartOf(4)) {
+			while (StartOf(5)) {
 				newStat = Statement();
 				if(curStat == null) {
 				   curStat = newStat;
@@ -762,9 +779,9 @@ public class Parser {
 			st = new Node(Node.STATSEQ,con,null,line); 
 			break;
 		}
-		case 52: {
+		case 54: {
 			Get();
-			if (StartOf(5)) {
+			if (StartOf(6)) {
 				e = BinExpr();
 				if(curProc.type.kind == Struct.NONE)
 				   SemErr("procedure has void as return type defined");
@@ -777,7 +794,7 @@ public class Parser {
 			st = new Node(Node.RETURN,e,null,line); 
 			break;
 		}
-		case 53: {
+		case 55: {
 			Get();
 			Expect(12);
 			if(breakLevel <= 0)
@@ -785,7 +802,7 @@ public class Parser {
 			st = new Node(Node.BREAK,null,null,line); 
 			break;
 		}
-		case 54: {
+		case 56: {
 			Get();
 			Expect(12);
 			if(continueLevel <= 0)
@@ -798,7 +815,7 @@ public class Parser {
 			st = null; 
 			break;
 		}
-		default: SynErr(75); break;
+		default: SynErr(76); break;
 		}
 		return st;
 	}
@@ -849,7 +866,7 @@ public class Parser {
 		st = null; 
 		int line = la.line; 
 		design = Designator();
-		if (StartOf(6)) {
+		if (StartOf(7)) {
 			kind = AssignOp();
 			if(design.kind == Node.BOOLCON || design.kind == Node.INTCON
 			   || design.kind == Node.FLOATCON || design.kind == Node.CHARCON
@@ -905,7 +922,7 @@ public class Parser {
 			st = new Node(Node.CALL,e,null,line);
 			st.obj = design.obj;
 			tab.checkFunctionParams(design.obj,st); 
-		} else if (la.kind == 55) {
+		} else if (la.kind == 57) {
 			Get();
 			if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
 			   SemErr("name must be an designator");
@@ -914,7 +931,7 @@ public class Parser {
 			e = tab.impliciteTypeCon(new Node(1), design.type);
 			e = new Node(Node.PLUS, design, e, design.type);
 			st = new Node(Node.ASSIGN,design,e,line); 
-		} else if (la.kind == 56) {
+		} else if (la.kind == 58) {
 			Get();
 			if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
 			   SemErr("name must be an designator");
@@ -923,7 +940,7 @@ public class Parser {
 			e = tab.impliciteTypeCon(new Node(1), design.type);
 			e = new Node(Node.MINUS, design, e, design.type);
 			st = new Node(Node.ASSIGN,design,e,line); 
-		} else SynErr(76);
+		} else SynErr(77);
 		return st;
 	}
 
@@ -1073,7 +1090,7 @@ public class Parser {
 			kind=Node.ASSIGNBITOR; 
 			break;
 		}
-		default: SynErr(77); break;
+		default: SynErr(78); break;
 		}
 		return kind;
 	}
@@ -1083,10 +1100,10 @@ public class Parser {
 		Node par, curPar = null; 
 		outPar = null; 
 		Expect(6);
-		if (StartOf(5)) {
+		if (StartOf(6)) {
 			outPar = ActPar();
 			curPar = outPar; 
-			while (la.kind == 40) {
+			while (la.kind == 42) {
 				Get();
 				par = ActPar();
 				if(curPar == null)
@@ -1126,7 +1143,7 @@ public class Parser {
 		con = null; 
 		if (isExpr()) {
 			con = BinExpr();
-			if (StartOf(7)) {
+			if (StartOf(8)) {
 				kind = Relop();
 				e = BinExpr();
 				if(con == null || e == null || con.type == null || e.type == null)
@@ -1150,13 +1167,13 @@ public class Parser {
 			} 
 		} else if (la.kind == 30) {
 			Get();
-			con = Condition();
+			con = CondFact();
 			con = new Node(Node.NOT, con, null, Tab.boolType); 
 		} else if (la.kind == 6) {
 			Get();
 			con = Condition();
 			Expect(7);
-		} else SynErr(78);
+		} else SynErr(79);
 		return con;
 	}
 
@@ -1194,7 +1211,7 @@ public class Parser {
 			kind = Node.LEQ; 
 			break;
 		}
-		default: SynErr(79); break;
+		default: SynErr(80); break;
 		}
 		return kind;
 	}
@@ -1230,7 +1247,7 @@ public class Parser {
 		} else if (la.kind == 34) {
 			Get();
 			kind=Node.BITOR; 
-		} else SynErr(80);
+		} else SynErr(81);
 		return kind;
 	}
 
@@ -1239,7 +1256,7 @@ public class Parser {
 		int kind;
 		Node n = null; 
 		res = Term();
-		while (la.kind == 57 || la.kind == 58) {
+		while (la.kind == 40 || la.kind == 41) {
 			kind = Addop();
 			n = Term();
 			if((!res.type.isPrimitive() && res.type !=Tab.stringType) || n==null || (!n.type.isPrimitive() && n.type !=Tab.stringType) || n.type == Tab.boolType)
@@ -1265,7 +1282,7 @@ public class Parser {
 		} else if (la.kind == 62) {
 			Get();
 			kind=Node.SHIFTRIGHT; 
-		} else SynErr(81);
+		} else SynErr(82);
 		return kind;
 	}
 
@@ -1291,12 +1308,12 @@ public class Parser {
 	int  Addop() {
 		int  kind;
 		kind=Node.PLUS; 
-		if (la.kind == 58) {
+		if (la.kind == 40) {
 			Get();
-		} else if (la.kind == 57) {
+		} else if (la.kind == 41) {
 			Get();
 			kind=Node.MINUS; 
-		} else SynErr(82);
+		} else SynErr(83);
 		return kind;
 	}
 
@@ -1347,14 +1364,14 @@ public class Parser {
 				Get();
 				n = new Node(false); 
 			}
-		} else if (la.kind == 57) {
+		} else if (la.kind == 41) {
 			Get();
 			n = Factor();
 			if(n == null || !n.type.isPrimitive() || n.type == Tab.boolType)
 			   SemErr("type is not a primitive except bool");
 			else
 			   n = new Node(Node.MINUS,n,null,n.type); 
-		} else if (la.kind == 58) {
+		} else if (la.kind == 40) {
 			Get();
 			n = Factor();
 			if(n == null || !n.type.isPrimitive() || n.type == Tab.boolType)
@@ -1378,7 +1395,7 @@ public class Parser {
 			Get();
 			n = BinExpr();
 			Expect(7);
-		} else SynErr(83);
+		} else SynErr(84);
 		return n;
 	}
 
@@ -1393,7 +1410,7 @@ public class Parser {
 		} else if (la.kind == 65) {
 			Get();
 			kind=Node.REM; 
-		} else SynErr(84);
+		} else SynErr(85);
 		return kind;
 	}
 
@@ -1409,12 +1426,13 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x},
-		{x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x},
-		{T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x},
-		{x,T,x,x, x,x,x,x, T,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,T, x,T,T,T, T,x,x,x, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x},
-		{x,T,x,x, x,x,x,x, T,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, x,T,T,T, T,x,x,x, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x},
-		{x,T,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,T,T, x,x,x,x, x,x,x,x},
+		{T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x},
+		{x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x},
+		{T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x},
+		{x,x,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x},
+		{x,T,x,x, x,x,x,x, T,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,T,x,T, T,T,T,x, x,x,T,T, T,x,x,x, x,x,x,x, x,x,x,x},
+		{x,T,x,x, x,x,x,x, T,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,x,T, T,T,T,x, x,x,T,T, T,x,x,x, x,x,x,x, x,x,x,x},
+		{x,T,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,x,x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,T,T,T, T,T,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x}
 
@@ -1475,25 +1493,25 @@ class Errors {
 			case 37: s = "\"library\" expected"; break;
 			case 38: s = "\"true\" expected"; break;
 			case 39: s = "\"false\" expected"; break;
-			case 40: s = "\",\" expected"; break;
-			case 41: s = "\"struct\" expected"; break;
-			case 42: s = "\"void\" expected"; break;
-			case 43: s = "\"if\" expected"; break;
-			case 44: s = "\"else\" expected"; break;
-			case 45: s = "\"while\" expected"; break;
-			case 46: s = "\"do\" expected"; break;
-			case 47: s = "\"for\" expected"; break;
-			case 48: s = "\"switch\" expected"; break;
-			case 49: s = "\"case\" expected"; break;
-			case 50: s = "\"default\" expected"; break;
-			case 51: s = "\":\" expected"; break;
-			case 52: s = "\"return\" expected"; break;
-			case 53: s = "\"break\" expected"; break;
-			case 54: s = "\"continue\" expected"; break;
-			case 55: s = "\"++\" expected"; break;
-			case 56: s = "\"--\" expected"; break;
-			case 57: s = "\"-\" expected"; break;
-			case 58: s = "\"+\" expected"; break;
+			case 40: s = "\"+\" expected"; break;
+			case 41: s = "\"-\" expected"; break;
+			case 42: s = "\",\" expected"; break;
+			case 43: s = "\"struct\" expected"; break;
+			case 44: s = "\"void\" expected"; break;
+			case 45: s = "\"if\" expected"; break;
+			case 46: s = "\"else\" expected"; break;
+			case 47: s = "\"while\" expected"; break;
+			case 48: s = "\"do\" expected"; break;
+			case 49: s = "\"for\" expected"; break;
+			case 50: s = "\"switch\" expected"; break;
+			case 51: s = "\"case\" expected"; break;
+			case 52: s = "\"default\" expected"; break;
+			case 53: s = "\":\" expected"; break;
+			case 54: s = "\"return\" expected"; break;
+			case 55: s = "\"break\" expected"; break;
+			case 56: s = "\"continue\" expected"; break;
+			case 57: s = "\"++\" expected"; break;
+			case 58: s = "\"--\" expected"; break;
 			case 59: s = "\"~\" expected"; break;
 			case 60: s = "\".\" expected"; break;
 			case 61: s = "\"<<\" expected"; break;
@@ -1504,22 +1522,23 @@ class Errors {
 			case 66: s = "??? expected"; break;
 			case 67: s = "this symbol not expected in CMM"; break;
 			case 68: s = "invalid ConstDecl"; break;
-			case 69: s = "invalid ProcDecl"; break;
+			case 69: s = "invalid ConstDecl"; break;
 			case 70: s = "invalid ProcDecl"; break;
-			case 71: s = "invalid VarDeclPart"; break;
-			case 72: s = "invalid Statement"; break;
+			case 71: s = "invalid ProcDecl"; break;
+			case 72: s = "invalid VarDeclPart"; break;
 			case 73: s = "invalid Statement"; break;
 			case 74: s = "invalid Statement"; break;
 			case 75: s = "invalid Statement"; break;
-			case 76: s = "invalid Command"; break;
-			case 77: s = "invalid AssignOp"; break;
-			case 78: s = "invalid CondFact"; break;
-			case 79: s = "invalid Relop"; break;
-			case 80: s = "invalid Binop"; break;
-			case 81: s = "invalid Shiftop"; break;
-			case 82: s = "invalid Addop"; break;
-			case 83: s = "invalid Factor"; break;
-			case 84: s = "invalid Mulop"; break;
+			case 76: s = "invalid Statement"; break;
+			case 77: s = "invalid Command"; break;
+			case 78: s = "invalid AssignOp"; break;
+			case 79: s = "invalid CondFact"; break;
+			case 80: s = "invalid Relop"; break;
+			case 81: s = "invalid Binop"; break;
+			case 82: s = "invalid Shiftop"; break;
+			case 83: s = "invalid Addop"; break;
+			case 84: s = "invalid Factor"; break;
+			case 85: s = "invalid Mulop"; break;
 			default: s = "error " + n; break;
 		}
 		storeError(line, col, s);
