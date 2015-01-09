@@ -63,7 +63,9 @@
 \definecolor{cssComment}{rgb}	{0,0.6,0 }%{0.00, 0.75, 0.00 }
 \definecolor{cssString}{rgb}	{0.6,0,0 }%{0.00, 0.75, 0.00 }
 
+\definecolor{punct}{rgb}	{0.6,0,0 }%{0.00, 0.75, 0.00 }
 
+\definecolor{highlight}{RGB}{255,255,204}
 
 %	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 	Diverse Befehle		
@@ -193,5 +195,13 @@
         comment=[l]{//},
         morecomment=[s]{/*}{*/},
         morestring=[b]',
-        morestring=[b]"
+        morestring=[b]",
+        literate={.}{{\textcolor{punct}{.}}}{1}
+				{)}{{\textcolor{punct}{)}}}{1}		% not working!
+				{(}{{\textcolor{punct}{(}}}{1}
+				{\{}{{\textcolor{punct}{\{}}}{1}
+				{\}}{{\textcolor{punct}{\}}}}{1}
+				{=}{{\textcolor{punct}{=}}}{1}
+				{<}{{\textcolor{punct}{<}}}{1}
+				{>}{{\textcolor{punct}{>}}}{1}
 }

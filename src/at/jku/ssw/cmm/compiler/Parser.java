@@ -565,7 +565,8 @@ public class Parser {
 		while (la.kind == 33 || la.kind == 34 || la.kind == 35) {
 			kind = Binop();
 			n = Shift();
-			if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive())
+			if(res == null || res.type == null || !res.type.isPrimitive() 
+			  || n == null || n.type == null || !n.type.isPrimitive())
 			   SemErr("type is not a primitive");
 			else {
 			   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
@@ -1206,7 +1207,8 @@ public class Parser {
 		while (la.kind == 61 || la.kind == 62) {
 			kind = Shiftop();
 			n = Expr();
-			if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive() || n.type == Tab.boolType)
+			if(res == null || res.type == null || !res.type.isPrimitive()
+			  || n == null || n.type == null|| !n.type.isPrimitive() || n.type == Tab.boolType)
 			   SemErr("type is not a primitive except bool");
 			else {
 			   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
