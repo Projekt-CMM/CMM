@@ -25,6 +25,7 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 
@@ -36,6 +37,7 @@ import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Strings;
 import at.jku.ssw.cmm.compiler.Struct;
 import at.jku.ssw.cmm.gui.GUImain;
+import at.jku.ssw.cmm.gui.event.debug.ArrayPopupListener;
 import at.jku.ssw.cmm.gui.event.debug.StringPopupListener;
 import at.jku.ssw.cmm.gui.treetable.DataNode;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
@@ -229,8 +231,6 @@ public class InitTreeTableData {
 			}
 			//Reading an ARRAY (any type)
 			else if( obj.type.kind == Struct.ARR && obj.kind != Obj.PROC && !obj.library ){
-				System.out.println("Reading array: " + obj.name);
-				
 				//Normal array
 				if( obj.type.elements > 0 )
 					node.add(init, readArray(init, obj, node.getChild(obj.name, nPars > 0 ? "<html><b>array</b></html>" : "array", "", -1, obj.line), address + obj.adr, main));
@@ -276,8 +276,31 @@ public class InitTreeTableData {
 	private static DataNode readArray( boolean init, Obj obj, DataNode node, int address, GUImain main ){
 		
 		DebugShell.out(State.LOG, Area.READVAR, "[initTreeTable] Reading array: " + obj.kind);
+		int dimensions = 0;
 		
-		return readArrayElements(init, obj.type, obj.name, node, address, 0, main);
+		List<Object> info = new ArrayList<>();
+		DataNode result =  readArrayElements(init, obj.type, obj.name, node, address, 0, main, info);
+		
+		if( info.get(0) instanceof List ){
+			@SuppressWarnings({ "unchecked", "rawtypes" })
+			List<Object> l = (List)(info.get(0));
+			if( l.get(0) instanceof List )
+				dimensions = 3;
+			else
+				dimensions = 2;
+		}
+		else
+			dimensions = 1;
+		
+		if( dimensions < 3 ){
+			JButton b = new JButton(_("Show contents"));
+			MouseListener l = new ArrayPopupListener(main, info);
+			b.addMouseListener(l);
+			
+			result.setValue(b);
+		}
+		
+		return result;
 		
 	}
 	
@@ -295,7 +318,7 @@ public class InitTreeTableData {
 	 * @param main A reference to the main interface which is necessary to invoke mains
 	 * @return The updated data node (see papam "node")
 	 */
-	public static DataNode readArrayElements( boolean init, Struct obj, String name, DataNode node, int address, int offset, GUImain main ){
+	public static DataNode readArrayElements( boolean init, Struct obj, String name, DataNode node, int address, int offset, GUImain main, List<Object> info ){
 		
 		int length = obj.elements;
 		int size = obj.size / obj.elements;
@@ -308,7 +331,10 @@ public class InitTreeTableData {
 			String typeName = "";
 			
 			if( obj.elemType.elements > 0 ){
-				node.add(init,readArrayElements(init, obj.elemType, name, node.getChild("["+i+"]", "array", "", -1, -1), address, offset + size * i, main));
+				System.out.println(" -> added dim: " + length);
+				List<Object> newinfo = new ArrayList<>();
+				node.add(init,readArrayElements(init, obj.elemType, name, node.getChild("["+i+"]", "array", "", -1, -1), address, offset + size * i, main, newinfo));
+				info.add(newinfo);
 			}
 			else{
 				if( obj.elemType.kind == Struct.CHAR ){
@@ -326,7 +352,6 @@ public class InitTreeTableData {
 						node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
 					else
 						node.add(init, new DataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
-					//node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
 				}
 				else if( obj.elemType.kind == Struct.BOOL ){
 					typeName = "bool";
@@ -335,16 +360,18 @@ public class InitTreeTableData {
 						node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
 					else
 						node.add(init, new DataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
-					//node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
 				}
 				else if( obj.elemType.kind == Struct.INT ){
 					typeName = "int";
 					value = Memory.loadInt(address + offset + size * i);
-					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized)
+					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized){
 						node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
-					else
+						info.add(value);
+					}
+					else {
 						node.add(init, new DataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
-					//node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
+						info.add("?");
+					}
 				}
 				else if( obj.elemType.kind == Struct.STRUCT ){
 					DataNode n = readVariables( init, obj.fields, new DataNode(name, "struct", "", new ArrayList<DataNode>(), -1, -1), address + offset + size * i, main, 0 );
