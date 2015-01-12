@@ -26,7 +26,9 @@ package at.jku.ssw.cmm.interpreter;
  * TODO: JUnit
  */
 import java.nio.BufferOverflowException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Struct;
@@ -71,6 +73,19 @@ public final class Interpreter {
 			// add variable names into MemoryInformation Array
 			for(Obj form = main.locals;form != null;form = form.next) {
 				Memory.getMemoryInformation(Memory.getFramePointer() + form.adr).varName = form.name;
+				
+				// safe number of elements of an array
+				if(form.isRef == false && form.type.kind == Struct.ARR) {
+					List<Integer> arrayElements = new ArrayList<>();
+					
+					// detect number of elements per dimension
+					for(Struct curElement = form.type;curElement.kind == Struct.ARR; curElement = curElement.elemType)
+						arrayElements.add(curElement.elements);
+					
+					System.out.println(arrayElements);
+					
+					Memory.getMemoryInformation(Memory.getFramePointer() + form.adr).arrayElements = arrayElements;
+				}
 			}
 		} catch (StackOverflowException e1) {
 			throw new IllegalStateException(e1);
@@ -873,6 +888,19 @@ public final class Interpreter {
 			// add variable names into MemoryInformation Array
 			for(form = p.obj.locals;form != null;form = form.next) {
 				Memory.getMemoryInformation(Memory.getFramePointer() + form.adr).varName = form.name;
+				
+				// safe number of elements of an array
+				if(form.isRef == false && form.type.kind == Struct.ARR) {
+					List<Integer> arrayElements = new ArrayList<>();
+					
+					// detect number of elements per dimension
+					for(Struct curElement = form.type;curElement.kind == Struct.ARR; curElement = curElement.elemType)
+						arrayElements.add(curElement.elements);
+					
+					System.out.println(arrayElements);
+					
+					Memory.getMemoryInformation(Memory.getFramePointer() + form.adr).arrayElements = arrayElements;
+				}
 			}
 			
 			// Saving the Object into the new C-- Function Memory Frame.
@@ -935,7 +963,15 @@ public final class Interpreter {
 	 * Designators: Address reserving Identifier, Dot, Index, Structs
 	 * @throws RunTimeException 
 	 */
-	int Adr(Node p) throws ReturnException, AbortException, RunTimeException { // TODO
+	int Adr(Node p) throws ReturnException, AbortException, RunTimeException {
+		return Adr(p, null);
+	}
+	
+	/**
+	 * Designators: Address reserving Identifier, Dot, Index, Structs
+	 * @throws RunTimeException 
+	 */
+	int Adr(Node p, List<Object[]> arrayElements) throws ReturnException, AbortException, RunTimeException { // TODO
 		//selectCurrentLine(p);
 		
 		switch (p.kind) {
@@ -943,13 +979,45 @@ public final class Interpreter {
 			return IdentAdr(p.obj);
 		case Node.DOT:						//for structs very familiar with index
 			return Adr(p.left) + p.right.val;
-		case Node.INDEX:					//right value + Integer * sizeof(Integer)
+		case Node.INDEX:					//left value + Integer * sizeof(Integer)
 			int index = IntExpr(p.right);
 			if(index < 0) {
 		        throw new RunTimeException("negative index choosen", p, currentLine);
 			}
 			if(p.left.type.elements == -1) {
-				// TODO buffer overflow detection
+				// get number of arrayElements, if first dimenstion of ref-Array is called
+				if(arrayElements == null) {
+					Node pHelp;
+					// get last left node
+					for(pHelp = p.left;pHelp == null || pHelp.kind == Node.IDENT; pHelp = pHelp.left);
+					// read number of array Elements
+					List<Integer> singleArrayElements = new ArrayList<>(Memory.getMemoryInformation(IdentAdr(pHelp.left.obj)).arrayElements);
+					arrayElements = new ArrayList<>();
+					
+					int arrayElementSize = p.left.type.elemType.size;
+					
+					// create Object which store how much elements the Array store and how big one element is
+					for(int i = singleArrayElements.size()-1; i >= 0 ; i--) {
+						Object[] arrayObj = {singleArrayElements.get(i), arrayElementSize};
+						arrayElementSize *=singleArrayElements.get(i);
+						arrayElements.add(arrayObj);
+					}
+				}
+				
+				if(arrayElements == null || arrayElements.isEmpty()) {
+					throw new RunTimeException("There is no informations about the array size available", p, currentLine);
+				} else {
+					int arrayElementNumber = (int) arrayElements.get(0)[0];
+					int elementSize = (int) arrayElements.get(0)[1];
+
+					// buffer overflow detection
+					if(index >= arrayElementNumber)
+						throw new RunTimeException("too high index choosen", p, currentLine);
+					
+					arrayElements.remove(0);
+
+					return Adr(p.left, arrayElements) + elementSize * index;
+				}
 			}
 			else if(index >= p.left.type.elements) {
 				throw new RunTimeException("too high index choosen", p, currentLine);
