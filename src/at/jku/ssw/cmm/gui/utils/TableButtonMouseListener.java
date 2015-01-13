@@ -30,19 +30,19 @@ import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
 import at.jku.ssw.cmm.gui.GUImain;
-import at.jku.ssw.cmm.gui.treetable.DataNode;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.context.InitContextMenu;
+import at.jku.ssw.cmm.gui.treetable.var.VarDataNode;
 
 public class TableButtonMouseListener implements MouseListener {
 	
-	public TableButtonMouseListener(GUImain main, TreeTable t) {
+	public TableButtonMouseListener(GUImain main, TreeTable<?> t) {
 		this.main = main;
 		this.treeTable = t;
 	}
 	
 	private final GUImain main;
-	private final TreeTable treeTable;
+	private final TreeTable<?> treeTable;
 
 	private void forwardEventToButton(MouseEvent e, int row, int column) {
 
@@ -100,7 +100,7 @@ public class TableButtonMouseListener implements MouseListener {
 				
 				String name = (String)this.treeTable.getTable().getValueAt(row, 0);
 				
-				DataNode node = (DataNode) this.treeTable.getModelAdapter().nodeForRow(row);
+				VarDataNode node = (VarDataNode) this.treeTable.getModelAdapter().nodeForRow(row);
 				
 				if( node.getDeclarationLine() >= 0 ){
 					InitContextMenu.initContextMenu(main, name, node.getDeclarationLine(), 20).show(e.getComponent(), e.getX(), e.getY());
@@ -114,7 +114,7 @@ public class TableButtonMouseListener implements MouseListener {
 			if( this.treeTable.getTable().getValueAt(row, 2) instanceof String && 
 					((String)this.treeTable.getTable().getValueAt(row, 2)).equals(_("reference")) ){
 				
-				DataNode node = (DataNode) this.treeTable.getModelAdapter().nodeForRow(row);
+				VarDataNode node = (VarDataNode) this.treeTable.getModelAdapter().nodeForRow(row);
 				
 				System.out.println("mouse entered reference: " + node.getName() + " on " + node.getAddress());
 			}

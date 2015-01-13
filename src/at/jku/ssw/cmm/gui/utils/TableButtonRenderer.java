@@ -27,7 +27,7 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import at.jku.ssw.cmm.gui.treetable.DataNode;
+import at.jku.ssw.cmm.gui.treetable.var.VarDataNode;
 
 public class TableButtonRenderer implements TableCellRenderer {
 	private TableCellRenderer defaultRenderer;
@@ -47,10 +47,10 @@ public class TableButtonRenderer implements TableCellRenderer {
 			if( table.getValueAt(row, 0).toString().endsWith(")") )
 				c.setBackground(new Color(0, 159, 153));
 			
-			else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.CHANGE_TAG) )
+			else if( table.getValueAt(row, 1).toString().endsWith(""+VarDataNode.CHANGE_TAG) )
 				c.setBackground(new Color(215, 200, 0));
 			
-			else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.READ_TAG) )
+			else if( table.getValueAt(row, 1).toString().endsWith(""+VarDataNode.READ_TAG) )
 				c.setBackground(new Color(30, 180, 0));
 			
 			else if ( table.getValueAt(row, 2).toString().equals("undef") )
@@ -63,10 +63,10 @@ public class TableButtonRenderer implements TableCellRenderer {
 			if( table.getValueAt(row, 0).toString().endsWith(")") )
 				c.setBackground(Color.CYAN);
 			
-			else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.CHANGE_TAG) )
+			else if( table.getValueAt(row, 1).toString().endsWith(""+VarDataNode.CHANGE_TAG) )
 				c.setBackground(Color.YELLOW);
 			
-			else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.READ_TAG) )
+			else if( table.getValueAt(row, 1).toString().endsWith(""+VarDataNode.READ_TAG) )
 				c.setBackground(Color.GREEN);
 			
 			else if ( table.getValueAt(row, 2).toString().equals("undef") )

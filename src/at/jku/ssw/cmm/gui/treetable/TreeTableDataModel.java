@@ -21,8 +21,6 @@
  
 package at.jku.ssw.cmm.gui.treetable;
 
-import static at.jku.ssw.cmm.gettext.Language._;
-
 import javax.swing.JButton;
 
 /**
@@ -33,29 +31,32 @@ import javax.swing.JButton;
  * @author fabian
  *
  */
-public class TreeTableDataModel extends AbstractTreeTableModel {
+public class TreeTableDataModel<TreeNode extends DataNode> extends AbstractTreeTableModel<TreeNode> {
     // Column names
-    static protected String[] columnNames = { _("Name"), _("Type"), _("Value") };
+    protected final String[] columnNames;// = { _("Name"), _("Type"), _("Value") };
  
     // Column types
-    static protected Class<?>[] columnTypes = { TreeTableModel.class, String.class, Object.class };
+    protected final Class<?>[] columnTypes;// = { TreeTableModel.class, String.class, Object.class };
  
-    public TreeTableDataModel(DataNode rootNode) {
+    public TreeTableDataModel(TreeNode rootNode, String[] columnNames, Class<?>[] columnTypes) {
         super(rootNode);
         root = rootNode;
+        this.columnNames = columnNames;
+        this.columnTypes = columnTypes;
     }
     
-    public DataNode getRoot(){
+    public TreeNode getRoot(){
     	return root;
     }
 
+	@SuppressWarnings("unchecked")
 	public Object getChild(Object parent, int index) {
-        return ((DataNode) parent).getChildren().get(index);
+        return ((TreeNode)parent).getChildren().get(index);
     }
- 
- 
-    public int getChildCount(Object parent) {
-        return ((DataNode) parent).getChildren().size();
+
+    @SuppressWarnings("unchecked")
+	public int getChildCount(Object parent) {
+        return ((TreeNode)parent).getChildren().size();
     }
  
  
@@ -73,18 +74,9 @@ public class TreeTableDataModel extends AbstractTreeTableModel {
         return columnTypes[column];
     }
  
-    public Object getValueAt(Object node, int column) {
-        switch (column) {
-        case 0:
-            return ((DataNode) node).getName();
-        case 1:
-            return ((DataNode) node).getType();
-        case 2:
-            return ((DataNode) node).getValue();
-        default:
-            break;
-        }
-        return null;
+    @SuppressWarnings("unchecked")
+	public Object getValueAt(Object node, int column) {
+        return ((TreeNode)node).getValueByColumn(column);
     }
  
     public boolean isCellEditable(Object node, int column) {

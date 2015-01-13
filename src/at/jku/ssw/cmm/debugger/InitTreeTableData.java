@@ -41,6 +41,7 @@ import at.jku.ssw.cmm.gui.event.debug.ArrayPopupListener;
 import at.jku.ssw.cmm.gui.event.debug.StringPopupListener;
 import at.jku.ssw.cmm.gui.treetable.DataNode;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
+import at.jku.ssw.cmm.gui.treetable.var.VarDataNode;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
 import at.jku.ssw.cmm.interpreter.memory.MethodContainer;
 
@@ -61,10 +62,10 @@ public class InitTreeTableData {
 	 * @param fileName The name of the current *.cmm file
 	 * @return The data model for the tree table
 	 */
-	public static TreeTableDataModel readSymbolTable( CMMwrapper compiler, GUImain main, String fileName ){
+	public static TreeTableDataModel<VarDataNode> readSymbolTable( CMMwrapper compiler, GUImain main, String fileName, String[] columnNames, Class<?>[] columnTypes ){
 		
 		//Create root node
-		DataNode node = new DataNode(fileName, "", "", new ArrayList<DataNode>(), -1, -1);
+		VarDataNode node = new VarDataNode(fileName, "", "", new ArrayList<DataNode>(), -1, -1);
 		
 		//Add global variables
 		node = readVariables( true, compiler.getSymbolTable().curScope.locals, node, Memory.getGlobalPointer(), main, 0 );
@@ -73,7 +74,7 @@ public class InitTreeTableData {
 		getNextAddress( true, compiler, Memory.getFramePointer(), node, main );
 		
 		//Create tree table model
-		TreeTableDataModel model = new TreeTableDataModel( node );
+		TreeTableDataModel<VarDataNode> model = new TreeTableDataModel<>( node, columnNames, columnTypes );
 		
 		return model;
 	}
@@ -89,7 +90,7 @@ public class InitTreeTableData {
 	 * @param main A reference to the main interface which is necessary to invoke mains
 	 * @param fileName The name of the current *.cmm file
 	 */
-	public static void updateTreeTable( TreeTableDataModel model, DataNode node, CMMwrapper compiler, GUImain main, String fileName ){
+	public static void updateTreeTable( TreeTableDataModel<VarDataNode> model, VarDataNode node, CMMwrapper compiler, GUImain main, String fileName ){
 		
 		//Read global variables
 		readVariables( false, compiler.getSymbolTable().curScope.locals, node, Memory.getGlobalPointer(), main, 0 );
@@ -109,14 +110,14 @@ public class InitTreeTableData {
 	 * @param node The data node which has to be updated (the data node of this function)
 	 * @param main A reference to the main interface which is necessary to invoke mains
 	 */
-	private static void getNextAddress( boolean init, CMMwrapper compiler, int address, DataNode node, GUImain main ){
+	private static void getNextAddress( boolean init, CMMwrapper compiler, int address, VarDataNode node, GUImain main ){
 		
 		//Name of the function
 		String name;
 		name = MethodContainer.getMethodName(Memory.loadInt(address-8));
 
 		//Tree table data node of this function
-		DataNode funcNode;
+		VarDataNode funcNode;
 		
 		System.out.println("Reading function: " + name);
 		
@@ -124,7 +125,7 @@ public class InitTreeTableData {
 		
 		if( init )
 			//Initialize data node if re-creating the data model TODO address
-			funcNode = new DataNode( name + "()", "", "", new ArrayList<DataNode>(), -1, obj.line );
+			funcNode = new VarDataNode( name + "()", "", "", new ArrayList<DataNode>(), -1, obj.line );
 		else
 			//Update the data node
 			funcNode = node.getChild( name + "()", "", "", -1, obj.line );
@@ -153,7 +154,7 @@ public class InitTreeTableData {
 	 * @param main A reference to the main interface which is necessary to invoke mains
 	 * @return The updated data node (see papam "node")
 	 */
-	private static DataNode readVariables( boolean init, Obj obj, DataNode node, int address, GUImain main, int nPars ){
+	private static VarDataNode readVariables( boolean init, Obj obj, VarDataNode node, int address, GUImain main, int nPars ){
 		
 		//Iterate through symbol table
 		while( obj != null ){
@@ -161,72 +162,72 @@ public class InitTreeTableData {
 			if( obj.type.kind == Struct.INT && obj.kind != Obj.PROC && !obj.library ){
 				if( obj.kind == Obj.VAR && !obj.isRef ){
 					if(!Memory.getMemoryInformation(address + obj.adr).isInitialized)
-						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>int</b></html>" : "int", "undef", null, address + obj.adr, obj.line));
+						node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>int</b></html>" : "int", "undef", null, address + obj.adr, obj.line));
 					else
-						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>int</b></html>" : "int", Memory.loadInt(address + obj.adr), null, address + obj.adr, obj.line));
+						node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>int</b></html>" : "int", Memory.loadInt(address + obj.adr), null, address + obj.adr, obj.line));
 				}
 				else if( obj.kind == Obj.VAR && obj.isRef && obj.kind != Obj.PROC ){
 					if(!Memory.getMemoryInformation(Memory.loadInt(address + obj.adr)).isInitialized)
-						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>int</b></html>" : "int", "undef", null, address + obj.adr, obj.line));
+						node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>int</b></html>" : "int", "undef", null, address + obj.adr, obj.line));
 					else
-						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>int</b></html>" : "int", Memory.loadInt(Memory.loadInt(address + obj.adr)), null, address + obj.adr, obj.line));
+						node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>int</b></html>" : "int", Memory.loadInt(Memory.loadInt(address + obj.adr)), null, address + obj.adr, obj.line));
 				}
 				else{
-					node.add(init, new DataNode(obj.name, "int", obj.val, null, -1, obj.line));
+					node.add(init, new VarDataNode(obj.name, "int", obj.val, null, -1, obj.line));
 				}
 			}
 			//Reading a CHARACTER
 			else if( obj.type.kind == Struct.CHAR && obj.kind != Obj.PROC && !obj.library ){
 				if( obj.kind == Obj.VAR && !obj.isRef ){
 					if(!Memory.getMemoryInformation(address + obj.adr).isInitialized)
-						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>char</b></html>" : "char", "undef", null, address + obj.adr, obj.line));
+						node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>char</b></html>" : "char", "undef", null, address + obj.adr, obj.line));
 					else
-						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>char</b></html>" : "char", Memory.loadChar(address + obj.adr), null, address + obj.adr, obj.line));
+						node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>char</b></html>" : "char", Memory.loadChar(address + obj.adr), null, address + obj.adr, obj.line));
 				}
 				else if( obj.kind == Obj.VAR && obj.isRef ){
 					if(!Memory.getMemoryInformation(Memory.loadInt(address + obj.adr)).isInitialized)
-						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>char</b></html>" : "char", "undef", null, address + obj.adr, obj.line));
+						node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>char</b></html>" : "char", "undef", null, address + obj.adr, obj.line));
 					else
-						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>char</b></html>" : "char", Memory.loadChar(Memory.loadInt(address + obj.adr)), null, address + obj.adr, obj.line));
+						node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>char</b></html>" : "char", Memory.loadChar(Memory.loadInt(address + obj.adr)), null, address + obj.adr, obj.line));
 				}
 				else{
-					node.add(init, new DataNode(obj.name, "char", obj.val, null, -1, obj.line));
+					node.add(init, new VarDataNode(obj.name, "char", obj.val, null, -1, obj.line));
 				}
 			}
 			//Reading a FLOAT
 			else if( obj.type.kind == Struct.FLOAT && obj.kind != Obj.PROC && !obj.library ){
 				if( obj.kind == Obj.VAR && !obj.isRef ){
 					if(!Memory.getMemoryInformation(address + obj.adr).isInitialized)
-						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>float</b></html>" : "float", "undef", null, address + obj.adr, obj.line));
+						node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>float</b></html>" : "float", "undef", null, address + obj.adr, obj.line));
 					else
-						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>float</b></html>" : "float", Memory.loadFloat(address + obj.adr), null, address + obj.adr, obj.line));
+						node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>float</b></html>" : "float", Memory.loadFloat(address + obj.adr), null, address + obj.adr, obj.line));
 				}
 				else if( obj.kind == Obj.VAR && obj.isRef ){
 					if(!Memory.getMemoryInformation(Memory.loadInt(address + obj.adr)).isInitialized)
-						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>float</b></html>" : "float", "undef", null, address + obj.adr, obj.line));
+						node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>float</b></html>" : "float", "undef", null, address + obj.adr, obj.line));
 					else
-						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>float</b></html>" : "float", Memory.loadFloat(Memory.loadInt(address + obj.adr)), null, address + obj.adr, obj.line));
+						node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>float</b></html>" : "float", Memory.loadFloat(Memory.loadInt(address + obj.adr)), null, address + obj.adr, obj.line));
 				}
 				else{
-					node.add(init, new DataNode(obj.name, "float", obj.fVal, null, -1, obj.line));
+					node.add(init, new VarDataNode(obj.name, "float", obj.fVal, null, -1, obj.line));
 				}
 			}
 			//Reading a BOOLEAN
 			else if( obj.type.kind == Struct.BOOL && obj.kind != Obj.PROC && !obj.library ){
 				if( obj.kind == Obj.VAR && !obj.isRef ){
 					if(!Memory.getMemoryInformation(address + obj.adr).isInitialized)
-						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>bool</b></html>" : "bool", "undef", null, address + obj.adr, obj.line));
+						node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>bool</b></html>" : "bool", "undef", null, address + obj.adr, obj.line));
 					else
-						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>bool</b></html>" : "bool", Memory.loadBool(address + obj.adr), null, address + obj.adr, obj.line));
+						node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>bool</b></html>" : "bool", Memory.loadBool(address + obj.adr), null, address + obj.adr, obj.line));
 				}
 				else if( obj.kind == Obj.VAR && obj.isRef ){
 					if(!Memory.getMemoryInformation(Memory.loadInt(address + obj.adr)).isInitialized)
-						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>bool</b></html>" : "bool", "undef", null, address + obj.adr, obj.line));
+						node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>bool</b></html>" : "bool", "undef", null, address + obj.adr, obj.line));
 					else
-						node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>bool</b></html>" : "bool", Memory.loadBool(Memory.loadInt(address + obj.adr)), null, address + obj.adr, obj.line));
+						node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>bool</b></html>" : "bool", Memory.loadBool(Memory.loadInt(address + obj.adr)), null, address + obj.adr, obj.line));
 				}
 				else{
-					node.add(init, new DataNode(obj.name, "bool", obj.val==0 ? "false" : "true", null, -1, obj.line));
+					node.add(init, new VarDataNode(obj.name, "bool", obj.val==0 ? "false" : "true", null, -1, obj.line));
 				}
 			}
 			//Reading an ARRAY (any type)
@@ -240,7 +241,7 @@ public class InitTreeTableData {
 			}
 			//Reading a STRUCTURE
 			else if( obj.type.kind == Struct.STRUCT && obj.kind != Obj.PROC && obj.kind != Obj.TYPE && !obj.library ){
-				DataNode n = readVariables( init, obj.type.fields, node.getChild(obj.name, nPars > 0 ? "<html><b>struct</b></html>" : "struct", "", -1, obj.line), address + obj.adr, main, 0 );
+				VarDataNode n = readVariables( init, obj.type.fields, node.getChild(obj.name, nPars > 0 ? "<html><b>struct</b></html>" : "struct", "", -1, obj.line), address + obj.adr, main, 0 );
 				node.add(init, n);
 			}
 			//READING A STRING
@@ -249,7 +250,7 @@ public class InitTreeTableData {
 				MouseListener l = new StringPopupListener(main, Strings.get(Memory.loadStringAddress(address + obj.adr)));
 				b.addMouseListener(l);
 					
-				node.add(init, new DataNode(obj.name, nPars > 0 ? "<html><b>string</b></html>" : "string", b, null, address + obj.adr, obj.line));
+				node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>string</b></html>" : "string", b, null, address + obj.adr, obj.line));
 			}
 			
 			//Next symbol table node
@@ -273,13 +274,13 @@ public class InitTreeTableData {
 	 * @param main A reference to the main interface which is necessary to invoke mains
 	 * @return The updated data node (see papam "node")
 	 */
-	private static DataNode readArray( boolean init, Obj obj, DataNode node, int address, GUImain main ){
+	private static VarDataNode readArray( boolean init, Obj obj, VarDataNode node, int address, GUImain main ){
 		
 		DebugShell.out(State.LOG, Area.READVAR, "[initTreeTable] Reading array: " + obj.kind);
 		int dimensions = 0;
 		
 		List<Object> info = new ArrayList<>();
-		DataNode result =  readArrayElements(init, obj.type, obj.name, node, address, 0, main, info);
+		VarDataNode result =  readArrayElements(init, obj.type, obj.name, node, address, 0, main, info);
 		
 		if( info.get(0) instanceof List ){
 			@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -318,7 +319,7 @@ public class InitTreeTableData {
 	 * @param main A reference to the main interface which is necessary to invoke mains
 	 * @return The updated data node (see papam "node")
 	 */
-	public static DataNode readArrayElements( boolean init, Struct obj, String name, DataNode node, int address, int offset, GUImain main, List<Object> info ){
+	public static VarDataNode readArrayElements( boolean init, Struct obj, String name, VarDataNode node, int address, int offset, GUImain main, List<Object> info ){
 		
 		int length = obj.elements;
 		int size = obj.size / obj.elements;
@@ -341,40 +342,40 @@ public class InitTreeTableData {
 					typeName = "char";
 					value = Memory.loadChar(address + offset + size * i);
 					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized)
-						node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
+						node.add(init, new VarDataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
 					else
-						node.add(init, new DataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
+						node.add(init, new VarDataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
 				}
 				else if( obj.elemType.kind == Struct.FLOAT ){
 					typeName = "float";
 					value = Memory.loadFloat(address + offset + size * i);
 					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized)
-						node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
+						node.add(init, new VarDataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
 					else
-						node.add(init, new DataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
+						node.add(init, new VarDataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
 				}
 				else if( obj.elemType.kind == Struct.BOOL ){
 					typeName = "bool";
 					value = Memory.loadBool(address + offset + size * i);
 					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized)
-						node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
+						node.add(init, new VarDataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
 					else
-						node.add(init, new DataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
+						node.add(init, new VarDataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
 				}
 				else if( obj.elemType.kind == Struct.INT ){
 					typeName = "int";
 					value = Memory.loadInt(address + offset + size * i);
 					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized){
-						node.add(init, new DataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
+						node.add(init, new VarDataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
 						info.add(value);
 					}
 					else {
-						node.add(init, new DataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
+						node.add(init, new VarDataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
 						info.add("?");
 					}
 				}
 				else if( obj.elemType.kind == Struct.STRUCT ){
-					DataNode n = readVariables( init, obj.fields, new DataNode(name, "struct", "", new ArrayList<DataNode>(), -1, -1), address + offset + size * i, main, 0 );
+					VarDataNode n = readVariables( init, obj.fields, new VarDataNode(name, "struct", "", new ArrayList<DataNode>(), -1, -1), address + offset + size * i, main, 0 );
 					node.add(init, n);
 				}
 				else if( obj.elemType.kind == Struct.STRING ){
@@ -383,9 +384,9 @@ public class InitTreeTableData {
 					b.addMouseListener(l);
 					
 					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized)
-						node.add(init, new DataNode("[" + i + "]", "string", b, null, address + offset + size * i, -1));
+						node.add(init, new VarDataNode("[" + i + "]", "string", b, null, address + offset + size * i, -1));
 					else
-						node.add(init, new DataNode("[" + i + "]", "string", "undef", null, address + offset + size * i, -1));
+						node.add(init, new VarDataNode("[" + i + "]", "string", "undef", null, address + offset + size * i, -1));
 				}
 			}
 		}
@@ -401,8 +402,8 @@ public class InitTreeTableData {
 	 * @param fileName The name of the current file
 	 * @return The data structure containing a root node with the file name
 	 */
-	public static DataNode createDataStructure( String fileName ) {
-        DataNode root = new DataNode(fileName, "", "", null, -1, -1);
+	public static VarDataNode createDataStructure( String fileName ) {
+        VarDataNode root = new VarDataNode(fileName, "", "", null, -1, -1);
         return root;
     }
 	

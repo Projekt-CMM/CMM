@@ -19,11 +19,15 @@
  *  Copyright (c) 2014-2015 Peter Wassermair
  */
  
-package at.jku.ssw.cmm.gui.treetable;
+package at.jku.ssw.cmm.gui.treetable.var;
 
 import java.util.Stack;
 
 import javax.swing.tree.TreePath;
+
+import at.jku.ssw.cmm.gui.treetable.DataNode;
+import at.jku.ssw.cmm.gui.treetable.TreeTable;
+import at.jku.ssw.cmm.gui.treetable.TreeTableCellRenderer;
 
 public class TreeUtils {
 
@@ -33,11 +37,11 @@ public class TreeUtils {
 	 * @param tree
 	 * @param expand
 	 */
-	public static void expandAll(TreeTable tree, boolean expand) {
+	public static void expandAll(TreeTable<VarDataNode> tree, boolean expand) {
 		
-		Stack<DataNode> path = new Stack<>();
+		Stack<VarDataNode> path = new Stack<>();
 		
-		expandAll(tree.getCellRenderer(), (DataNode)tree.getCellRenderer().getModel().getRoot(), path, expand);
+		expandAll(tree.getCellRenderer(), (VarDataNode)tree.getCellRenderer().getModel().getRoot(), path, expand);
 	}
 	
 	/**
@@ -50,9 +54,9 @@ public class TreeUtils {
 	* @param expand
 	*         expand or collapse
 	*/
-	private static void expandAll(TreeTableCellRenderer tree, DataNode parent, Stack<DataNode> path, boolean expand) {
+	private static void expandAll(TreeTableCellRenderer tree, VarDataNode parent, Stack<VarDataNode> path, boolean expand) {
 		
-		DataNode node = parent;
+		VarDataNode node = parent;
 		
 		//System.out.println("[TreeTable][Expand] Starting expanding: " + node.getName());
 		
@@ -63,7 +67,7 @@ public class TreeUtils {
 		if (node.getChildCount() >= 0) {
 			for (DataNode e : node.getChildren()) {
 				
-				expandAll(tree, e, path, expand);
+				expandAll(tree, (VarDataNode)e, path, expand);
 			}
 		}
 	
@@ -79,22 +83,22 @@ public class TreeUtils {
 		}
 	}
 	
-	public static DataNode expandPath(TreeTable tree, Stack<String> stack){
+	public static VarDataNode expandPath(TreeTable<VarDataNode> tree, Stack<String> stack){
 		
-		DataNode root = (DataNode)tree.getCellRenderer().getModel().getRoot();
-		Stack<DataNode> path = new Stack<>();
+		VarDataNode root = (VarDataNode)tree.getCellRenderer().getModel().getRoot();
+		Stack<VarDataNode> path = new Stack<>();
 		path.push(root);
 		if( stack.peek().endsWith(".cmm") )
 			stack.pop();
-		return expandPath( tree.getCellRenderer(), root, stack, path );
+		return expandPath( tree.getCellRenderer(), (VarDataNode)root, stack, path );
 	}
 	
-	private static DataNode expandPath(TreeTableCellRenderer tree, DataNode node, Stack<String> stack, Stack<DataNode> path){
+	private static VarDataNode expandPath(TreeTableCellRenderer tree, VarDataNode node, Stack<String> stack, Stack<VarDataNode> path){
 		
 		if( stack.size() <= 0 )
 			return node;
 		
-		DataNode lowest = null;
+		VarDataNode lowest = null;
 		
 		String name = stack.pop();
 		
@@ -102,10 +106,10 @@ public class TreeUtils {
 		
 		if (node.getChildCount() >= 0) {
 			for (DataNode e : node.getChildren()) {
-				if( e.getName().equals(name) ){
+				if( ((VarDataNode)e).getName().equals(name) ){
 					//System.out.println("[TreeTable][Expand] entering new level: " + e.print());
-					path.push(e);
-					lowest = expandPath(tree, e, stack, path);
+					path.push((VarDataNode)e);
+					lowest = expandPath(tree, (VarDataNode)e, stack, path);
 				}
 			}
 		}
@@ -118,17 +122,17 @@ public class TreeUtils {
 		return lowest;
 	}
 	
-	public static void expandByAddress(TreeTable tree, int address, boolean changed){
+	public static void expandByAddress(TreeTable<VarDataNode> tree, int address, boolean changed){
 		//System.err.println("Starting search: " + address);
-		DataNode root = (DataNode)tree.getCellRenderer().getModel().getRoot();
+		VarDataNode root = (VarDataNode)tree.getCellRenderer().getModel().getRoot();
 		
-		Stack<DataNode> path = new Stack<>();
+		Stack<VarDataNode> path = new Stack<>();
 		path.push(root);
 		
 		expandByAddress(tree.getCellRenderer(), root, address, path, changed);
 	}
 	
-	private static boolean expandByAddress(TreeTableCellRenderer tree, DataNode node, int address, Stack<DataNode> path, boolean changed){
+	private static boolean expandByAddress(TreeTableCellRenderer tree, VarDataNode node, int address, Stack<VarDataNode> path, boolean changed){
 		
 		//System.out.println("Checking search: " + node.print());
 		
@@ -144,8 +148,8 @@ public class TreeUtils {
 		if (node.getChildCount() >= 0) {
 			for (DataNode e : node.getChildren()) {
 				
-				path.push(e);
-				if(expandByAddress(tree, e, address, path, changed)){
+				path.push((VarDataNode)e);
+				if(expandByAddress(tree, (VarDataNode)e, address, path, changed)){
 					//System.out.println("Expanding: " + path.toArray());
 					
 					tree.expandPath(new TreePath(path.toArray()));
