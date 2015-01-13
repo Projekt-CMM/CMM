@@ -25,6 +25,7 @@ import java.util.List;
 
 import at.jku.ssw.cmm.compiler.Node;
 import at.jku.ssw.cmm.compiler.Obj;
+import at.jku.ssw.cmm.compiler.Tab;
 import at.jku.ssw.cmm.debugger.Debugger;
 import at.jku.ssw.cmm.debugger.StdInOut;
 import at.jku.ssw.cmm.interpreter.Interpreter;
@@ -39,21 +40,13 @@ public class QuestRun implements StdInOut, Debugger {
 	private String inputStream;
 	private String outputStream;
 
-	public String run(Obj main, String inputStream) throws RunTimeException {
+	public String run(Tab symbolTab, String inputStream) throws RunTimeException {
 		
 		this.inputStream = inputStream;
 		this.outputStream = "";
 
 		// Allocating memory for interpreter
 		Memory.initialize();
-
-		// Try to open main function
-		try {
-			Memory.openStackFrame(main.ast.line,
-					MethodContainer.getMethodId("main"), main.size);
-		} catch (StackOverflowException e1) {
-			throw new IllegalStateException(e1);
-		}
 		
 		// Initialize Interpreter
 		Interpreter interpreter = new Interpreter(this, this);
@@ -61,7 +54,7 @@ public class QuestRun implements StdInOut, Debugger {
 		System.out.println("running");
 
 		// Run main function
-		interpreter.run(main);
+		interpreter.run(symbolTab);
 		
 		try {
 			Memory.closeStackFrame();

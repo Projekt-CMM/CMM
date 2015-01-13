@@ -33,6 +33,7 @@ import java.util.List;
 import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Struct;
 import at.jku.ssw.cmm.compiler.Strings;
+import at.jku.ssw.cmm.compiler.Tab;
 import at.jku.ssw.cmm.debugger.Debugger;
 import at.jku.ssw.cmm.debugger.StdInOut;
 import at.jku.ssw.cmm.interpreter.exceptions.AbortException;
@@ -67,10 +68,34 @@ public final class Interpreter {
 	 * Start Function
 	 * @throws RunTimeException 
 	 */
-	public void run(Obj main) throws RunTimeException {
+	public void run(Tab symbolTab) throws RunTimeException {
+		// get main-function
+		Obj main = symbolTab.find("main");
+		
+		// fill MemoryInformation with informations about global-vars and main-functino
 		try {
+			
+			// add variable names of global variables into MemoryInformation Array
+			for(Obj globSymb = symbolTab.curScope.locals; globSymb != null; globSymb = globSymb.next) {
+				if(globSymb.kind == Obj.VAR || globSymb.kind == Obj.CON) {
+					Memory.getMemoryInformation(Memory.getGlobalPointer() + globSymb.adr).varName = globSymb.name;
+					
+					// safe number of elements of an array
+					if(globSymb.isRef == false && globSymb.type.kind == Struct.ARR) {
+						List<Integer> arrayElements = new ArrayList<>();
+						
+						// detect number of elements per dimension
+						for(Struct curElement = globSymb.type;curElement.kind == Struct.ARR; curElement = curElement.elemType)
+							arrayElements.add(curElement.elements);
+						
+						Memory.getMemoryInformation(Memory.getGlobalPointer() + globSymb.adr).arrayElements = arrayElements;
+					}
+				}
+			}
+			
+			// add variable names of main-function into MemoryInformation Array
 			Memory.openStackFrame(main.ast.line, MethodContainer.getMethodId("main"), main.size);
-			// add variable names into MemoryInformation Array
+
 			for(Obj form = main.locals;form != null;form = form.next) {
 				Memory.getMemoryInformation(Memory.getFramePointer() + form.adr).varName = form.name;
 				
@@ -81,8 +106,6 @@ public final class Interpreter {
 					// detect number of elements per dimension
 					for(Struct curElement = form.type;curElement.kind == Struct.ARR; curElement = curElement.elemType)
 						arrayElements.add(curElement.elements);
-					
-					System.out.println(arrayElements);
 					
 					Memory.getMemoryInformation(Memory.getFramePointer() + form.adr).arrayElements = arrayElements;
 				}
@@ -897,8 +920,6 @@ public final class Interpreter {
 					for(Struct curElement = form.type;curElement.kind == Struct.ARR; curElement = curElement.elemType)
 						arrayElements.add(curElement.elements);
 					
-					System.out.println(arrayElements);
-					
 					Memory.getMemoryInformation(Memory.getFramePointer() + form.adr).arrayElements = arrayElements;
 				}
 			}
@@ -991,7 +1012,8 @@ public final class Interpreter {
 					// get last left node
 					for(pHelp = p.left;pHelp == null || pHelp.kind == Node.IDENT; pHelp = pHelp.left);
 					// read number of array Elements
-					List<Integer> singleArrayElements = new ArrayList<>(Memory.getMemoryInformation(IdentAdr(pHelp.left.obj)).arrayElements);
+					List<Integer> singleArrayElements = Memory.getMemoryInformation(IdentAdr(pHelp.left.obj)).arrayElements;					
+					
 					arrayElements = new ArrayList<>();
 					
 					int arrayElementSize = p.left.type.elemType.size;

@@ -86,8 +86,8 @@ public class CMM {
 			Memory.initialize();
 
 			Interpreter interpreter = new Interpreter(new DebuggerMock(), new StdInoutMock() );
-			Obj main = compiler.getSymbolTable().find("main");
-			interpreter.run(main);
+			
+			interpreter.run(compiler.getSymbolTable());
 		} catch (IOException e) {
 			System.out.println("could not open file " + args[0]);
 		} finally {
