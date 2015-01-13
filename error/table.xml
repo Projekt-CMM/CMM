@@ -197,13 +197,13 @@
 	<error id="name must be an designator">
 		<file>compiler/type_error/must_be_designator.html</file>
 	</error>
-	<error id="([\w./]+) is not an integer">
-		<file>default.html</file>
+	<error id=".* is not an integer"> <!-- TODO special error-template -->
+		<file>interpreter/operator/int_overflow.html</file>
 	</error>
-	<error id="([\w./]+) is not an float">
-		<file>default.html</file>
+	<error id=".* is not an float"> <!-- TODO special error-template -->
+		<file>interpreter/operator/float_overflow.html</file>
 	</error>
-	<error id="([\w./]+) is not an array">
+	<error id=".* is not an array">
 		<file>compiler/type_error/is_not_array.html</file>
 	</error>
 	
