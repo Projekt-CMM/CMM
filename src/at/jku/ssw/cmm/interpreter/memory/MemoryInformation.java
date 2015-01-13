@@ -21,10 +21,13 @@
  
 package at.jku.ssw.cmm.interpreter.memory;
 
+import java.util.List;
+
 public class MemoryInformation {
 	public boolean isInitialized;
 	public String varName;
-	//public int size;
+	
+	public List<Integer> arrayElements;
 	
 	public MemoryInformation() {
 		this.initialize();
@@ -33,6 +36,6 @@ public class MemoryInformation {
 	public void initialize() {
 		isInitialized = false;
 		varName = null;
-		//size = 0;
+		arrayElements = null;
 	}
 }

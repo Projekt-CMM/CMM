@@ -227,7 +227,8 @@ CMM
 //-------------------------------------------------------------------------
 ConstDecl                           (.  Struct type; 
                                         int line = la.line; 
-                                        boolean library = false; .)
+                                        boolean library = false; 
+                                        boolean isNegative = false; .)
 =
 "const"
 Type<out type>
@@ -244,12 +245,22 @@ ident                               (.  // create new constant variable
                                         if (type != Tab.boolType) 
                                             SemErr("bool constant not allowed here"); .)             
   )
-| intCon                            (.  curCon.val = tab.intVal(t.val); 
+| [ '+'
+  | '-'                             (.  isNegative = true; .)
+  ] ( intCon                        (.  if(isNegative)
+                                            curCon.val = tab.intVal("-" + t.val);
+                                        else
+                                            curCon.val = tab.intVal(t.val);
+
                                         if (type != Tab.intType) 
                                             SemErr("int constant not allowed here"); .)
-| floatCon                          (.  curCon.fVal = tab.floatVal(t.val); 
+    | floatCon                      (.  if(isNegative)
+                                            curCon.fVal = tab.floatVal("-" + t.val);
+                                        else
+                                            curCon.fVal = tab.floatVal(t.val);
                                         if (type != Tab.floatType) 
                                             SemErr("float constant not allowed here"); .)
+    )
 | charCon                           (.  curCon.val = tab.charVal(t.val); 
                                         if (type != Tab.charType) 
                                             SemErr("char constant not allowed here"); .)
@@ -800,7 +811,7 @@ CondFact<out Node con>              (.  Node e = null; int kind; .)
                                             con = tab.impliciteTypeCon(con, Tab.boolType);
                                         } .)
 | "!" 
-  Condition<out con>                (.  con = new Node(Node.NOT, con, null, Tab.boolType); .)
+  CondFact<out con>                (.  con = new Node(Node.NOT, con, null, Tab.boolType); .)
   
 | "(" Condition<out con> ")"
 ).

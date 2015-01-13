@@ -40,6 +40,11 @@ class CMM {
 public static void main(String[] args) {
 	FileInputStream in = null;
 	int state = 0;
+	
+	int x = Integer.decode("-2147483648");
+	
+	System.out.println("x: " + x);
+	
 	try {
 		if(args.length < 1) {
 			System.out.println("no file specified");

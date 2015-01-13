@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Obj;
+import at.jku.ssw.cmm.compiler.Tab;
 import at.jku.ssw.cmm.preprocessor.exception.PreprocessorException;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.interpreter.exceptions.RunTimeException;
@@ -120,10 +121,11 @@ public class QuestTester {
 
 		// ----- COMPILE REFERENCE PROGRAM (which is 100% right) -----
 		String referenceOutput = null;
-		Obj main;
+		Tab symbTab;
 		try {
-			main = compile(this.verifier);
-			referenceOutput = this.questRun.run(main, inputData);
+			symbTab = compile(this.verifier);
+			
+			referenceOutput = this.questRun.run(symbTab, inputData);
 		} catch (RunTimeException e) {
 			return new QuestMatchError( "Runtime error when generating reference output data", e);
 		} catch (CompilerErrorException e) {
@@ -137,8 +139,8 @@ public class QuestTester {
 		// ----- COMPILE REFERENCE PROGRAM (which is 100% right) -----
 		String userOutput = null;
 		try {
-			main = compile(this.usercode);
-			userOutput = this.questRun.run(main, inputData);
+			symbTab = compile(this.usercode);
+			userOutput = this.questRun.run(symbTab, inputData);
 		} catch (RunTimeException e) {
 			return new QuestMatchError(
 					"Runtime error when generating reference output data", e);
@@ -172,8 +174,8 @@ public class QuestTester {
 
 		// Input generator is .cmm file
 		if (this.generator.endsWith(".cmm")) {
-			Obj main = compile(this.generator);
-			return this.questRun.run(main, null);
+			Tab symbTab = compile(this.generator);
+			return this.questRun.run(symbTab, null);
 		}
 		// Input data is in .txt file
 		else if (this.generator.endsWith(".txt")) {
@@ -192,7 +194,7 @@ public class QuestTester {
 			throw new FileNotFoundException("Invalid input file ending");
 	}
 
-	private static Obj compile(String path) throws FileNotFoundException, CompilerErrorException, PreprocessorException {
+	private static Tab compile(String path) throws FileNotFoundException, CompilerErrorException, PreprocessorException {
 		File inputFile = new File(path);
 
 		if (!inputFile.exists())
@@ -222,7 +224,7 @@ public class QuestTester {
 			throw new CompilerErrorException(path, e);
 		}
 
-		return compiler.getSymbolTable().find("main");
+		return compiler.getSymbolTable();
 	}
 	
 	private boolean equalOutput(String s1, String s2){

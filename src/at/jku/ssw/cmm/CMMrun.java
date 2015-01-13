@@ -96,14 +96,11 @@ public class CMMrun extends Thread {
 		// Allocating memory for interpreter
 		Memory.initialize();
 
-		// Get main function from symbol table
-		Obj main = compiler.getSymbolTable().find("main");
-
 		System.out.println("[thread] interpreter thread started");
 
 		// Run main function
 		try {
-			interpreter.run(main);
+			interpreter.run(compiler.getSymbolTable());
 		}
 		// Thrown when runtime error occurs
 		catch (final RunTimeException e) {
