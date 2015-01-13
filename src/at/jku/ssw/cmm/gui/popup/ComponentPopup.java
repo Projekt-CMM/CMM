@@ -38,8 +38,8 @@ public class ComponentPopup {
 		
 		//JTextArea ta = new JTextArea( text );
 		JScrollPane scrollPane = new JScrollPane(component);
-		scrollPane.setBounds(10, 10, 240, 117);
-		scrollPane.setPreferredSize(new Dimension(240, 117));
+		scrollPane.setBounds(10, 10, 248, 117);
+		scrollPane.setPreferredSize(new Dimension(248, 117));
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		popup.add(scrollPane);
 		

@@ -306,6 +306,10 @@ public class GUImain {
 					this.jFrame.getTitle().length() - 1));
 		}
 	}
+	
+	public boolean isFileChanged() {
+		return this.jFrame.getTitle().endsWith("*");
+	}
 
 	public GUIleftPanel getLeftPanel() {
 		return this.leftPanelControl;
