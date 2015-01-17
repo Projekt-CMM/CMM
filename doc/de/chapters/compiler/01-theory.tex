@@ -13,7 +13,7 @@
 
 Die sogenannte Erweiterte Backus-Naur-Form (EBNF)\footnote{\url{https://de.wikipedia.org/wiki/Erweiterte_Backus-Naur-Form}} ist eine Weiterentwicklung der Backus-Naur-Form (BNF)\footnote{\url{https://de.wikipedia.org/wiki/Backus-Naur-Form}}. Das Anwendungsgebiet der BNF und EBNF ist das definieren von  kontextfreie Grammatiken\footnote{\url{https://de.wikipedia.org/wiki/Kontextfreie_Grammatik}}, welche untere anderem f\"ur Programmiersprachen benutzt werden.
 
-Bei kontextfreier Grammatik wird jeweils Ein Nichtterminalsymbol auf eine beliebige Folge von Terminal- bzw. Nichtterminalsymbolen abgeleitet ($V \rightarrow w$). Wenn das Nichtterminalsymbol $V$ in einem anderem Nichtterminalsymbol verwendet wird, wird nicht auf den Kontext geachtet, in welcher das Nichtterminalsymbol $V$ eingebettet ist. Die Regel ist daher kontextfrei.
+Bei kontextfreier Grammatik wird jeweils ein Nichtterminalsymbol auf eine beliebige Folge von Terminal- bzw. Nichtterminalsymbolen abgeleitet ($V \rightarrow w$). Wenn das Nichtterminalsymbol $V$ in einem anderem Nichtterminalsymbol verwendet wird, wird nicht auf den Kontext geachtet, in welcher das Nichtterminalsymbol $V$ eingebettet ist. Die Regel ist daher kontextfrei.
 
 Vorteile der EBNF gegen\"uber der BNF sind unter anderem:
 
@@ -38,7 +38,7 @@ Terminalsymbole werden normalerweise entweder klein geschrieben (z.B. intCon), o
 
 \subsubsection{Nichtterminalsymbol}
 
-Ein Nichtterminalsymbol\footnote{\url{https://de.wikipedia.org/wiki/Nichtterminalsymbol}} besteht aus einen oder mehreren Terminalsymbolen bzw. Nichtterminalsymbolen.
+Ein Nichtterminalsymbol\footnote{\url{https://de.wikipedia.org/wiki/Nichtterminalsymbol}} besteht aus einem oder mehreren Terminalsymbolen bzw. Nichtterminalsymbolen.
 
 \begin{lstlisting}[language=EBNF, escapechar=!]
 !\colorbox{highlight}{Expr}! = !\colorbox{highlight}{Term}! { ( "+" | "-" ) !\colorbox{highlight}{Term}! }.
@@ -91,7 +91,7 @@ Der Ausdruck $1-2+5$ kann mit dieser EBNF Regel auf mehreren Arten gelöst werde
 Expr = intCon [ ( "+" | "-" ) Expr ].
 \end{lstlisting}
 
-Der Ausdruck $1-2+5$ kann mit dieser EBNF Regel nur mehr auf eine Art gelöst werden. Dabei werden die Operatoren links-assoziativ behandelt. Der Ausdruck $1-2+5$ wird als $(1-2)+5$ ausgewertet, was Mathematisch den korrekte Weg darstellt.
+Der Ausdruck $1-2+5$ kann mit dieser EBNF Regel nur mehr auf eine Art gelöst werden. Dabei werden die Operatoren links-assoziativ behandelt. Der Ausdruck $1-2+5$ wird als $(1-2)+5$ ausgewertet, was mathematisch den korrekten Weg darstellt.
 
 \subsubsection{EBNF-Beispiele}
 
@@ -108,9 +108,9 @@ Eine Expression\footnote{\url{https://de.wikipedia.org/wiki/Ausdruck_(Programmie
 Term = Factor { ( "*" | "/" ) Factor }.
 \end{lstlisting}
 
-Das Nichtterminalsymbol Term stellt wiederum eine Produktionsregel dar, welche aus einem Faktor, und dann optional wiederum aus einem ``*'' oder ``/'' gefolgt von einem weiterem Faktor besteht.
+Das Nichtterminalsymbol Term stellt wiederum eine Produktionsregel dar, welche aus einem Faktor, und dann optional wiederum aus einem ``*'' oder ``/'' gefolgt von einem weiteren Faktor besteht.
 
-Durch solche einfachen Regeln können z.B.: Mathematische Regeln wie Punkt vor Strich eindeutig und korrekt in einen Syntaxbaum übersetzt werden.
+Durch solche einfachen Regeln können z.B.: mathematische Regeln wie Punkt vor Strich eindeutig und korrekt in einen Syntaxbaum übersetzt werden.
 
 Diese Produktionsregeln k\"onnen dabei beliebige Komplexit\"at aufweisen, und reichen von einfachen Ausdr\"ucken \"uber den Aufbau des Variablenbezeichners bis zu umfangreichen Zuweisungsoperatoren in allen m\"oglichen Varianten.
 
@@ -125,7 +125,7 @@ Designator = ident { "." ident | "[" BinExpr "]" }.
 
 \subsection{Lexikalische Analyse - Scanner}
 
-Bei der Lexikalischen Analyse zerlegt der sogenannt Scanner\footnote{\url{https://de.wikipedia.org/wiki/Tokenizer}} den Zeichenstrom in einen sogenannten Tokenstrom. Ein sogenannter Token\footnote{\url{https://de.wikipedia.org/wiki/Token_(\%C3\%9Cbersetzerbau)}} stellt dabei eine logische Einheit dar (z.B.: eine variable, oder ein Operatorzeichen), und wird nicht mehr weiter zerlegt (Terminalsymbol).
+Bei der lexikalischen Analyse zerlegt der sogenannt Scanner\footnote{\url{https://de.wikipedia.org/wiki/Tokenizer}} den Zeichenstrom in einen sogenannten Tokenstrom. Ein Token\footnote{\url{https://de.wikipedia.org/wiki/Token_(\%C3\%9Cbersetzerbau)}} stellt dabei eine logische Einheit dar (z.B.: eine Variable, oder ein Operatorzeichen), und wird nicht mehr weiter zerlegt (Terminalsymbol).
 
 \htlParagraph{Zeichenstrom}
 
@@ -161,7 +161,7 @@ Der Parser \"ubersetzt den Tokenstrom in einem sogenannten Syntaxbaum\footnote{\
 
 \subsection{Abstrakter Syntaxbaum}
 
-Der ``allgemeine'' Syntaxbaum enth\"alt viele unn\"otigen Daten, welche beim Abstrakten Syntaxbaum\footnote{\url{https://de.wikipedia.org/wiki/Abstrakter_Syntaxbaum}} nicht mehr vorhanden sind. Der Abstrakte Syntaxbaum stellt somit eine Baumrepr\"asentation der wesentlichen Syntax eines Programmes dar.
+Der ``allgemeine'' Syntaxbaum enth\"alt viele unn\"otigen Daten, welche beim abstrakten Syntaxbaum\footnote{\url{https://de.wikipedia.org/wiki/Abstrakter_Syntaxbaum}} nicht mehr vorhanden sind. Der Abstrakte Syntaxbaum stellt somit eine Baumrepr\"asentation der wesentlichen Syntax eines Programmes dar.
 
 \includegraphics[width=0.6\textwidth]{./media/images/compiler/abstract_syntaxtree.png}
 
@@ -172,7 +172,7 @@ Der Abstrakte Syntaxbaum kann entweder aus einheitlichen Knoten (homogen) oder a
 \subsection{Attributierte Gramatik}
 
 %\footnote{\url{https://de.wikipedia.org/wiki/Attributgrammatik}}
-Bei der Attributierten Gramatik\footnote{\url{http://steffenpingel.de/files/papers/ast.pdf}} werden Berechnungsvorschriften direkt in die Gramatik eingef\"ugt. Dadurch k\"onnen w\"ahrend des Parsens unter anderem Syntaxbedingungen wie z.B. Typpr\"ufungen durchgef\"uhrt werden.
+Bei der attributierten Gramatik\footnote{\url{http://steffenpingel.de/files/papers/ast.pdf}} werden Berechnungsvorschriften direkt in die Gramatik eingef\"ugt. Dadurch k\"onnen w\"ahrend des Parsens unter anderem Syntaxbedingungen wie z.B. Typpr\"ufungen durchgef\"uhrt werden.
 
 In Coco/R werden diese Berechnungsvorschriften mit ``(.'' eingeleitet und mit ``.)'' beendet. Zwischen diesen Klammern befindet sich dann der Quellcode, welcher ausgef\"uhrt wird, falls der Parser den Ausdruck durchl\"auft.
 
@@ -192,13 +192,13 @@ ident     (.  // check if a type with the given name exist
 
 In diesem Beispiel pr\"uft die Berechnungsvorschrift ob bereits ein Identifier mit dem gew\"ahlten Namen definiert wurde (passiert in der Funktion tab.find(t.val);), und ob der gefundene Identifier ein Typ ist. 
 
-Falls eine dieser Syntaxbedingungen fehlschl\"agt, wird ein Semantischer Fehler geworfen. So werden w\"ahrend des Parsens nicht nur Syntaxfehler, sondern auch logische Fehler detektiert (z.B. fehlende Variablendeklaration).
+Falls eine dieser Syntaxbedingungen fehlschl\"agt, wird ein semantischer Fehler geworfen. So werden w\"ahrend des Parsens nicht nur Syntaxfehler, sondern auch logische Fehler detektiert (z.B. fehlende Variablendeklaration).
 
-Desweiteren kann durch diese Berechnungsvorschriften ein Abstrakter Syntaxbaum aufgebaut werden. Eine EBNF-Regel stellt nicht unbedingt einen Knoten im Abstrakten Syntaxbaum dar, da z.b. Variablendeklarationen oft in sogenannte Symboltabellen gespeichert werden.
+Desweiteren kann durch diese Berechnungsvorschriften ein Abstraker Syntaxbaum aufgebaut werden. Eine EBNF-Regel stellt nicht unbedingt einen Knoten im Abstrakten Syntaxbaum dar, da z.b. Variablendeklarationen oft in sogenannte Symboltabellen gespeichert werden.
 
 \subsection{Symboltabelle}
 
-Die Symboltabelle\footnote{\url{https://de.wikipedia.org/wiki/Symboltabelle}} ist eine Datenstruktur in der Variablen und Funktionsdeklarationen gespeichert werden. Sie umfasst dabei Informationen wie z.b. Zeile, in der die Variable/Funktion deklariert wurde, die gr\"o\ss{}e des Datentypes, oder auch den Wert welchen mit welchem die Variable deklariert wurde (Konstanten).
+Die Symboltabelle\footnote{\url{https://de.wikipedia.org/wiki/Symboltabelle}} ist eine Datenstruktur in der Variablen und Funktionsdeklarationen gespeichert werden. Sie umfasst dabei Informationen wie z.b. die Zeilennummer, in der die Variable/Funktion deklariert wurde, die gr\"o\ss{}e des Datentypes, oder auch den Wert mit welchem die Variable deklariert wurde (Konstanten).
 
 Mithilfe der Symboltabelle wird unter anderem festgestellt, ob eine Variablen deklariert wurde, oder wie viel Speicher f\"ur eine Funktion reserviert werden muss.
 
