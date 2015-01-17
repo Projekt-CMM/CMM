@@ -62,7 +62,7 @@ Die Produktionsregel gibt an wie z.B. das Nichtterminalsymbol ``Expr'' aufgebaut
 
 \subsubsection{Eindeutigkeit}
 
-Die Grammatik muss so aufgebaut sein, dass es für einen Tokenstrom nur eine eindeutige Möglichkeit gibt diesen zu parsen.\footnote{\url{http://www.iai.uni-bonn.de/III//lehre/vorlesungen/Informatik_I/WS05/Folien/VLWS0506-10.pdf}}
+Die Grammatik muss so aufgebaut sein, dass es für einen Tokenstrom nur eine eindeutige Möglichkeit gibt diesen zu parsen.\footnote{\url{http://www.iai.uni-bonn.de/III//lehre/vorlesungen/Informatik_I/WS05/Folien/VLWS0506-10.pdf}} Beim Parsen wird ein Tokenstrom in eine andere Darstellung \"uberf\"uhrt, welcher die weitere Verarbeitung erm\"oglicht. Dies kann aber nur dann reproduzierbar funktionieren, wenn der Parser einen bestimmten Tokenstrom nur in einem eindeutigen Weg durchlaufen darf.
 
 \htlParagraph{Beispiel}
 
@@ -137,7 +137,7 @@ Der Scanner bekommt einen Zeichenstrom, welcher aus einzelnen Zeichen besteht. E
 
 Aus diesem Zeichenstrom werden dann die Tokens extrahiert, welche dann die sogenannten Terminalsymbole in der EBNF bzw. BNF darstellen. Tokens k\"onnen dabei aus 1. oder mehreren Zeichen bestehen.
 
-Manche Tokens wie z.B. Variablen oder Konstanten besitzen au\ss{}er der Tokennummer des-weiteren noch einen Tokenwert, mit dem sp\"ater z.B. der Variablenname, oder der Wert einer Variable ausgelesen werden kann.
+Manche Tokens wie z.B. Variablen oder Konstanten besitzen au\ss{}er der Tokennummer(welche definiert, um welchen Token es sich handelt) des-weiteren noch einen Tokenwert, mit dem sp\"ater z.B. der Variablenname, oder der Wert einer Variable ausgelesen werden kann.
 
 \includegraphics[width=\textwidth]{./media/images/compiler/scanner_tokenstream.png}
 
@@ -198,7 +198,7 @@ Desweiteren kann durch diese Berechnungsvorschriften ein Abstraker Syntaxbaum au
 
 \subsection{Symboltabelle}
 
-Die Symboltabelle\footnote{\url{https://de.wikipedia.org/wiki/Symboltabelle}} ist eine Datenstruktur in der Variablen und Funktionsdeklarationen gespeichert werden. Sie umfasst dabei Informationen wie z.b. die Zeilennummer, in der die Variable/Funktion deklariert wurde, die gr\"o\ss{}e des Datentypes, oder auch den Wert mit welchem die Variable deklariert wurde (Konstanten).
+Die Symboltabelle\footnote{\url{https://de.wikipedia.org/wiki/Symboltabelle}} ist eine Datenstruktur in der Variablen und Funktionsdeklarationen gespeichert werden. Sie umfasst dabei Informationen wie z.b. die Zeilennummer, in der die Variable/Funktion deklariert wurde, die Gr\"o\ss{}e des Datentypes, oder auch den Wert mit welchem die Variable deklariert wurde (Konstanten).
 
 Mithilfe der Symboltabelle wird unter anderem festgestellt, ob eine Variablen deklariert wurde, oder wie viel Speicher f\"ur eine Funktion reserviert werden muss.
 
