@@ -19,7 +19,7 @@
  *  Copyright (c) 2014-2015 Peter Wassermair
  */
  
-package at.jku.ssw.cmm.gui.debug;
+package at.jku.ssw.cmm.gui.treetable.var;
 
 import static at.jku.ssw.cmm.gettext.Language._;
 
@@ -38,8 +38,6 @@ import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
 import at.jku.ssw.cmm.gui.treetable.TreeTableModel;
-import at.jku.ssw.cmm.gui.treetable.var.TreeUtils;
-import at.jku.ssw.cmm.gui.treetable.var.VarDataNode;
 import at.jku.ssw.cmm.gui.utils.TableButtonMouseListener;
 import at.jku.ssw.cmm.gui.utils.TableButtonRenderer;
 
@@ -75,16 +73,13 @@ public class TreeTableView{
 	 */
 	public void init( String fileName ) {
 		
-		/* ---------- TREE TABLE for CALL STACK and LOCALS (optional) ---------- */
+		/* ---------- TREE TABLE for CALL STACK and LOCALS ---------- */
 		this.varTreeTableModel = new TreeTableDataModel<VarDataNode>(InitTreeTableData.createDataStructure(fileName), columnNames, columnTypes);
 		
-		this.varTreeTable = new TreeTable<>(this.varTreeTableModel, columnNames, columnTypes);
+		this.varTreeTable = new TreeTable<>(this.varTreeTableModel);
 		
 		this.varTreeTable.getTableHeader().setToolTipText("<html><b>" + _("Variable table columns") + "</b><br>" +
         		_("You can change the width a column by<br>dragging and sliding its border.") + "</html>");
-		
-		//No column swapping / reordering
-        this.varTreeTable.getTableHeader().setReorderingAllowed(false);
         
         TableButtonRenderer buttonRenderer = new TableButtonRenderer(this.varTreeTable.getDefaultRenderer(JButton.class));
         this.varTreeTable.getColumnModel().getColumn(1).setCellRenderer(buttonRenderer);
@@ -92,7 +87,6 @@ public class TreeTableView{
 		
 		JScrollPane p = new JScrollPane(this.varTreeTable);
 		this.panel.add(p, BorderLayout.CENTER);
-		// Sub-panel end
 	}
 
 	/**
@@ -101,8 +95,6 @@ public class TreeTableView{
 	 * @param compiler
 	 */
 	public void update(final CMMwrapper compiler, final String fileName, boolean completeUpDate ) {
-		
-		System.out.println("updating #1234");
 		
 		if( completeUpDate || this.forceUpdate ){
 			DebugShell.out(State.LOG, Area.READVAR, "complete variable structure update");

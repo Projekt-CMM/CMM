@@ -178,6 +178,7 @@ public class VarDataNode extends DataNode {
     /**
      * @return The name of this node to be displayed in the tree table
      */
+    @Override
     public String toString() {
         return name;
     }
@@ -185,4 +186,10 @@ public class VarDataNode extends DataNode {
     public String print() {
     	return "{ Name: " + this.name + ", Type: " + this.type + ", Value: " + this.value + ", Children: " + this.children + " }";
     }
+
+	@Override
+	public void addChild(DataNode n) {
+		// TODO Auto-generated method stub
+		
+	}
 }

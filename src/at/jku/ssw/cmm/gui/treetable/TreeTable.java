@@ -43,8 +43,11 @@ public class TreeTable<TreeNode extends DataNode> extends JTable {
 	private TreeTableModelAdapter<TreeNode> modelAdapter;
      
      
-    public TreeTable( TreeTableDataModel<TreeNode> treeTableModel, String[] columnNames, Class<?>[] columnTypes ){
+    public TreeTable( TreeTableDataModel<TreeNode> treeTableModel ){
         super();
+        
+        //Do not allow column reordering
+        getTableHeader().setReorderingAllowed(false);
         
         //Do not show the table grid
         setShowGrid(false);

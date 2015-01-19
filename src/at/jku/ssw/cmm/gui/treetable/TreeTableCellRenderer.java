@@ -122,7 +122,6 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
 				setBackground(table.getSelectionBackground());
 		}
 		else{
-			System.out.println("table: " + table.getValueAt(row, 0));
 			if( table.getValueAt(row, 0).toString().endsWith(")") )
 				setBackground(Color.CYAN);
 			

@@ -58,13 +58,11 @@ public class TreeTableDataModel<TreeNode extends DataNode> extends AbstractTreeT
 	public int getChildCount(Object parent) {
         return ((TreeNode)parent).getChildren().size();
     }
- 
- 
+
     public int getColumnCount() {
         return columnNames.length;
     }
- 
- 
+
     public String getColumnName(int column) {
         return columnNames[column];
     }
@@ -80,10 +78,11 @@ public class TreeTableDataModel<TreeNode extends DataNode> extends AbstractTreeT
     }
  
     public boolean isCellEditable(Object node, int column) {
-        //First column must be editable, so that the user can open a jTree node
-    	if( column == 0 || (column == 2 && node instanceof JButton) )
+        // First column must be editable, so that the user can open a jTree node
+    	// Cell with button must be editable too so that a click event is passed to the button
+    	if( column == 0 || /*(column == 2 && */node instanceof JButton ) //)
         	return true;
-    	//Other cells are not editable
+    	// Other cells are not editable
         else
         	return false;
     }
