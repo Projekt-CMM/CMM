@@ -126,7 +126,7 @@ public class GUIProfilePanel {
 		//Labels
 			this.jProfileTitle = new JLabel(_("Profile Information"));
 			this.jProfileName = new JLabel(_("Name") + ": " + this.main.getSettings().getProfile().getName());
-			this.jProfileLevel = new JLabel(_("Level") + ": " + this.main.getSettings().getProfile().getLevel());
+			this.jProfileLevel = new JLabel(_("Level") + ": " +1);
 		}else{
 			this.jProfileTitle = new JLabel(_("No Profile choosen"));
 			this.jProfileName = new JLabel();
@@ -143,7 +143,7 @@ public class GUIProfilePanel {
 		
 		//Level progress scroll bar
 		if(this.main.getSettings().getProfile() != null)
-			this.jProfileLevel = new JLabel(_("Level") + ": " + this.main.getSettings().getProfile().getLevel());
+			this.jProfileLevel = new JLabel(_("Level") + ": " +1);
 		else
 			this.jProfileLevel = new JLabel();
 
@@ -270,7 +270,6 @@ public class GUIProfilePanel {
 		//TODO
 		
 		this.setjProfileName(profile.getName());
-		this.setjProfileLevel(profile.getLevel());
 	}
 
 	/**

@@ -88,7 +88,7 @@ public class ProfilePreview extends JPanel implements PropertyChangeListener {
 				Profile profile = Profile.ReadProfile(value.toString());
 				
 				if(profile != null){
-					System.err.println("Name: " + profile.getName() + " Level:" + profile.getLevel());	
+					System.err.println("Name: " + profile.getName() + " Level:" + 1);	
 					
 					
 					drawProfile(profile);
@@ -126,7 +126,7 @@ public class ProfilePreview extends JPanel implements PropertyChangeListener {
 		jInfoPanel.setLayout(new BoxLayout(jInfoPanel, BoxLayout.LINE_AXIS));
 		
 		jInfoPanel.add(new JLabel(profile.getName()));
-		jInfoPanel.add(new JLabel(_("Level:") + " " + profile.getLevel()));
+		jInfoPanel.add(new JLabel(_("Level:") + " " + 1));
 		
 		jStartPanel.add(jInfoPanel,BorderLayout.PAGE_START);
 		
