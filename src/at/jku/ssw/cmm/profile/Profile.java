@@ -61,12 +61,7 @@ public class Profile {
 	/**
 	 * The Name of the Profile
 	 */
-	private String name;			
-
-	/**
-	 * The xp of the User --> level
-	 */
-	private int xp;					
+	private String name;						
 
 	/**
 	 * relative Path to the profile image
@@ -115,7 +110,7 @@ public class Profile {
 	
 	public static final String
 		XML_NAME = "name",
-		XML_XP = "xp",
+		XML_LEVEL = "level",
 		XML_PROFILE = "profile",
 		XML_STATE = "state",
 		XML_QUEST = "quest",
@@ -192,6 +187,8 @@ public class Profile {
 				}
 			}
 		}
+		
+		
 		//Sorts the Quests and Returns it
 		package1.setQuestList(sortQuestList(packageQuests));
 		return package1;
@@ -301,9 +298,6 @@ public class Profile {
 		Quest quest = new Quest();
 			if(node.getNodeName().equals(Profile.XML_NAME))
 				 profile.setName(node.getTextContent());
-		
-			if(node.getNodeName().equals(Profile.XML_XP))
-				 profile.setXp(Integer.parseInt(node.getTextContent()));
 			
 			if(node.getNodeName().equals(Profile.XML_MASTER))
 				if(node.getTextContent().equals("true"))
@@ -396,12 +390,6 @@ public class Profile {
             
            if(profile.getName() != null) 
         	   mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_NAME, profile.getName()));
-          
-           
-           if(profile.getXp() != 0) 
-        	   mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_XP, profile.getXp() + ""));
-           else
-               mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_XP, 0 + ""));
            
            //TODO Check
            if(profile.isMaster())
@@ -448,7 +436,7 @@ public class Profile {
         state.appendChild(writeProfileElements(doc, state, Profile.XML_QUEST, quest.getQuestPath()));
         state.appendChild(writeProfileElements(doc, state, Profile.XML_PACKAGE, quest.getPackagePath()));
         state.appendChild(writeProfileElements(doc, state, Profile.XML_DATE, quest.getStringDate()));
-        //TODO must be variable
+        //TODO check this in a real programm
         if(quest.getToken() != null)
         	state.appendChild(writeProfileElements(doc, state, Profile.XML_TOKEN, quest.getToken().getRelPath()));
         
@@ -710,49 +698,6 @@ public class Profile {
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-	
-	/**
-	 * For adding XP
-	 * @param xp
-	 */
-	public void addXp(int xp){
-		this.xp = this.xp + xp;
-	}
-	
-	/**
-	 * For subtracting xp
-	 * @param sub
-	 */
-	public void subXp(int xp){
-		this.xp = this.xp - xp;
-		
-		if(this.xp <= 0)
-			this.xp = 0;
-	}
-	
-	/**
-	 * @return the xp
-	 */
-	public int getXp() {
-		return xp;
-	}
-	
-	/**
-	 * @param xp the xp to set
-	 */
-	public void setXp(int xp) {
-		this.xp = xp;
-	}
-	
-	
-	/**
-	 * <b>Calculating and returns the Level</b>
-	 * TODO better Level Calculation
-	 * @return the Level
-	 */
-	public int getLevel(){
-		return (int) Math.sqrt(xp); //square of 2	
 	}
 
 	/**

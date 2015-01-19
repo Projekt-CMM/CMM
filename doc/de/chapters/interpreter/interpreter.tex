@@ -25,33 +25,33 @@ Jedoch muss zum Ausführen des Programmes, welches in die Zwischensprache übers
 Dadurch, dass während der Ausführung des Programmes compiliert werden muss, sinkt die Geschwindigkeit gegenüber
 nativ compilierten Programmen.
 
-Durch die Verwendung des Just-in-time-compilation Verfahrens kann die Geschwindigkeit wieder verbessert werden.
+%Durch die Verwendung des Just-in-time-compilation Verfahrens kann die Geschwindigkeit wieder verbessert werden.
 
 \subsubsection{Abstrakter Syntaxbaum Interpreter}
-Bei diesem Ansatz wird der Quellcode in einen optimierten Abstrakten Syntaxbaum übersetzt. Dieser Baum wird während der Laufzeit
-abgearbeitet. Jeder Knoten muss nur einmal geparsed werden. Gegenüber einem Bytecode wird beim Abstrakten Syntaxbaum die Struktur
+Bei dem von uns gewählten Ansatz wird der Quellcode in einen optimierten abstrakten Syntaxbaum übersetzt. Dieser Baum wird während der Laufzeit
+abgearbeitet. Jeder Knoten muss nur einmal durchsucht werden. Im Vergleich zu einem Bytecode wird beim Abstrakten Syntaxbaum die Struktur
 des Programmes beibehalten. Dadurch kann man Fehler im Programm leichter analysieren.
 
-\subsubsection{Just-in-time compilation}
-Um Plattformunabhängigkeit gewährleisten zu können, ist es notwendig, gewisse Teile während der Laufzeit zu kompilieren. 
-Darunter leidet aber die Ausführungsgeschwindigkeit. Deshalb wurde ein Verfahren entwickelt, welches versucht,
-diesen Nachteil zu lindern.
+%\subsubsection{Just-in-time compilation}
+%Um Plattformunabhängigkeit gewährleisten zu können, ist es notwendig, gewisse Teile während der Laufzeit zu kompilieren. 
+%Darunter leidet aber die Ausführungsgeschwindigkeit. Deshalb wurde ein Verfahren entwickelt, welches versucht,
+%diesen Nachteil zu lindern.
 
-Während der Anwendung des Programmes wird ein lauffähiger Maschinencode erzeugt. Es werden hierbei oft verwendete Programmteile
-während der Laufzeit kompiliert und für einen späteren Gebrauch zwischengespeichert. Hierbei ist es wichtig, dass die Compilation nicht
-zu aufwendig ist, da sonst die Geschwindigkeit des Programmes darunter leiden könnte.
+%Während der Anwendung des Programmes wird ein lauffähiger Maschinencode erzeugt. Es werden hierbei oft verwendete Programmteile
+%während der Laufzeit kompiliert und für einen späteren Gebrauch zwischengespeichert. Hierbei ist es wichtig, dass die Compilation nicht
+%zu aufwendig ist, da sonst die Geschwindigkeit des Programmes darunter leiden könnte.
 
 \subsection{Call Stack}
 Der sogenannte Call Stack, auch Aufrufstapel genannt, enthält während der Laufzeit Informationen über die gerade ablaufenden 
 Unterprogramme. 
 
-Der Call Stack wird mit einem Befehlssatz zum Befüllen, Abbauen und zum Wiedereintritt in ein anderes Unterprogramm bearbeitet.
+%Der Call Stack wird mit einem Befehlssatz zum Befüllen, Abbauen und zum Wiedereintritt in ein anderes Unterprogramm bearbeitet.
 
 Sobald mehrere Threads oder Prozesse ausgeführt werden sollen, muss für jeden gewünschten Prozess ein eigener Call Stack eingerichtet
 werden, damit sich die Variablen und Rücksprungadressen nicht überschreiben.
 
 \subsubsection{Lokale Variablen}
-Wenn lokale Variablen verwendet werden, wird im Call Stack der nötige Variablenspeicher reserviert. Da jeder Aufruf seine
+Wenn lokale Variablen verwendet werden, wird am Call Stack der nötige Variablenspeicher reserviert. Da jeder Aufruf seine
 eigenen Variablen hat, sind rekursive Unterprogrammaufrufe möglich. Um vom aktuellen Aufruf auf den letzten zurückzukommen, ist
 es notwendig, eine Referenzadresse auf den letzten Aufruf zu speichern.
 
@@ -59,7 +59,7 @@ es notwendig, eine Referenzadresse auf den letzten Aufruf zu speichern.
 %	--------------------------------------------------------
 % 	Lösungsansätze
 %	--------------------------------------------------------
-\section{Lösungsansätze}
+%\section{Lösungsansätze}
 %	--------------------------------------------------------
 % 	Realisierte Lösungen
 %	--------------------------------------------------------
@@ -67,13 +67,11 @@ es notwendig, eine Referenzadresse auf den letzten Aufruf zu speichern.
 Hier wird der Aufbau des Interpreters näher erläutert und die einzelnen Funktionen werden näher vorgestellt.
 
 Der Interpreter wurde genauso wie die anderen Komponenten in Java implementiert.
-Am meisten wurde beim Aufbau des Interpreters auf die Schnittstelle zum GUI geachtet, da dieser für eine einfachere
-Programmdarstellung verwendet werden sollte.
+Am meisten wurde beim Aufbau des Interpreters auf die Schnittstelle zum GUI geachtet, da der Interpreter für eine einfachere
+Programmdarstellung optimiert werden sollte.
 
 Der Aufbau des Abstrakten Syntaxbaumes ist im Kapitel Compiler zu finden. Dort werden die einzeln verwendeten 
 Knoten näher erläutert.
-
-Im nächsten Kapitel wird das verwendete Speichermodell beschrieben.
 
 \subsection{Memory}
 Hier wird das Speichermodell und deren Anforderungen an den Interpreter näher erläutert.
@@ -83,7 +81,7 @@ Ein wichtiger Teil des Speichermodells ist die Aufbewahrung von einzelnen Variab
 \begin{figure}[Stack Frame]
 \begin{center}
 \includegraphics[width=0.9\textwidth]{./media/images/interpreter/memory/stackframe.png}
-\label{fig:stackframe1} 
+\label{stackframe1} 
 \caption{Aufbau des von uns verwendeten Stack Frames}
 \end{center}
 \end{figure}
@@ -91,30 +89,33 @@ Ein wichtiger Teil des Speichermodells ist die Aufbewahrung von einzelnen Variab
 
 \subsection{Aufbau des Memorys}
 Da wir für unser Projekt nicht sehr viel Arbeitsspeicher benötigen, wurden 8 MB Arbeitsspeicher für den Memory reserviert.
-Wie man in \ref{fig:stackframe1} erkennen kann, wurde dieser in 2 Hälften geteilt, wovon der untere Teil\ref{fig:stackframe1} für globale Variablen
+Wie man in \ref{stackframe1} erkennen kann, wurde dieser in 2 Hälften geteilt, wovon der untere Teil für globale Variablen
 und der obere Teil für Methoden verwendet wird.
 
 
-\subsubsection{Anlegen einer neuen Methode}
+\subsubsection{Aufruf einer neuen Methode}
 \begin{enumerate}
  \item Die Zeilennummer wird in den Speicher geschrieben (Größe von 4 Byte)
  \item Der Methodenname wird im Speicher vermerkt (Größe von 4 Byte)
- \item Eine Referenz zur letzten Methode notiert man in den Speicher (Größe von 4 Byte)
+ \item Eine Referenz des Framepointers, mit welcher man zum letzten Methodenaufruf zurückgelangen kann, wird im Speicer notiert (Größe von 4 Byte)
  \item Nun wird der Framepointer auf\footnote{Untere Referenzadresse im Memory} denselben Wert wie der Stackpointer{Obere Referenzadresse im Memory} gesetzt.
- \item Zum StackPointer werden nun die Variablengrößen hinzugefügt.
+ \item Um genügend Speicher für Variablen gewährleisten zu können, muss nun zum StackPointer die vom Compiler vorgegebene Variablengröße
+ hinzugefügt werden. Dort werden dann alle lokalen Variablen zwischengespeichert.
 \end{enumerate}
  
 \subsubsection{Schließen einer Methode}
 \begin{enumerate}
  \item Der Stackpointer wird auf Framepointer gesetzt (Variablen werden entfernt).
- \item 4 Bytes werden vom Stackpointer abgezogen, um nun zur Referenz zu gelangen.
- \item Nun können wir den Framepointer aus dem ``Dynamic-Link'' auslesen und setzen.
- \item Den Stackpointer verringern wir nun um den vorherigen Methodennamen und um die vorher verwendete Zeilennummer.
+ \item Um an den Startwert der Referenz zu gelangen müssen nun vom Stackpointer 4 Bytes abgezogen werden.
+ \item Die Referenz verweißt auf den im letzten Methodenaufruf verwendeten Framepointer. Somit wird der Framepointer nun mit dem Wert
+ der Referenz versehen.
+ \item Um den richtigen Stackpointer zu bekommen, ist es nun notwendig den Stackpointer um den vorherigen Methodennamen und um die vorher verwendete Zeilennummer zu veringern.
+ Somit muss der Stackpointer um 8 Byte veringert werden.
 \end{enumerate}
 
+\subsubsection{Speicherverwaltung}
 Da bei der Speicherverwaltung viele Fehler auftreten könnten, ist es wichtig, dass diese mit verschiedensten Exceptions abgefangen werden.
 
-\subsubsection{Speicherverwaltung}
 Die statische Klasse Memory beinhaltet alle Funktionen, welche für den Interpreter notwenig sind.
 
 Es werden verschiedene Datentypen unterstützt:
@@ -133,8 +134,9 @@ mit der nötigen Adresse und der zum Variablennamen passenden Funktion abgefragt
 Weil wir eine einfache Darstellung der aktuellen Variablen bezweckten und den Ablauf des Programmes nicht verändern wollten, kam für 
 uns nur der Abstrakte Syntaxbaum-Interpreter in Frage.
 
-Es wurden einige Vorgaben gemacht, um ein Zusammenarbeiten zwischen Compiler und Interpreter möglich zu machen. Somit konnten Nodes
-nur in einer gewissen Reihenfolge auftreten.
+Es wurden einige Vorgaben gemacht, um ein Zusammenarbeiten zwischen Compiler und Interpreter möglich zu machen. Somit wurde eine gewisse
+Baumstruktur vorgegeben. In diesem konnten die Knoten nur in einer bestimmten Reihenfolge auftreten.
+
 \subsection{Statements}
 \subsubsection{assign}
 Bei einem Assign wird eine bestimmte Variable in den Memory geschrieben. Bevor dies jedoch geschehen kann, ist es notwendig,
@@ -163,14 +165,17 @@ false ergibt, die andere if-Funktion abgearbeitet wird.
 \includegraphics[width=0.4\textwidth]{./media/images/interpreter/syntaxbaum/statements/ifelse.png}
 
 \subsubsection{while}
-Sie funktioniert ähnlich wie ein If, das Statement jedoch wird so lange abgearbeitet, bis die Condition false ergibt.
+Sie funktioniert ähnlich wie ein If, das Statement jedoch wird so oft wiederholt, bis die Condition false ergibt.
 
 \includegraphics[width=0.4\textwidth]{./media/images/interpreter/syntaxbaum/statements/while.png}
 
 \subsection{call}
-\includegraphics[width=0.4\textwidth]{./media/images/interpreter/syntaxbaum/statements/call.png}
+\includegraphics[width=0.6\textwidth]{./media/images/interpreter/syntaxbaum/statements/call.png}
 
-Sobald ein Call aufgerufen wird, wird zuerst anhand des Namens überprüft, um welchen Typen von Call es sich handelt.
+Ein Call Knoten hat mehrere Funktionen. Die Richtige wird anhand des Namens herausgefunden. Dies sind schon vordefinierte
+Funktionsnamen, welche in einem Programm nicht erneut verwendet werden können.
+
+Hier eine Auflistung dieser Funktionen:
 
 \subsubsection{print}
 Hiermit wird ein Char-Zeichen dem StdInOut Interface übergeben. Somit kann dieses danach vom GUI ausgeben werden.

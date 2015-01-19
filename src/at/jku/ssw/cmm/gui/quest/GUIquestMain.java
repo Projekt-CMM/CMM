@@ -118,22 +118,32 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 	       if(s == null)
 	    	   return ;
 	       
+	       		
 	        	for(int i = 0; i < s.size(); i++){
-	        		Package package1 = Profile.ReadPackageQuests(p, s.get(i));
 	        		
-	        		if(package1 != null){
+	        		//Trying to read the Packages in the Folder
+	        		Package package1 = Profile.ReadPackageQuests(p, s.get(i));
+	        		List<Quest> questList = null;
+	        		
+	        		if(package1 != null)
+	        			questList = package1.getQuestList();
+	        		
+	        		if(package1 != null && questList != null){
 	        			//Main Nodes:
 	        			packageNode = new DefaultMutableTreeNode(package1);
 		        		
 		        		//Only adding Packages which are used..
 		        				rootNode.add(packageNode);
 		        		
-		        		for(Quest q: package1.getQuestList()){
-		        			packageNode.add(new DefaultMutableTreeNode(q));
+		        		for(Quest q: questList){
+			        			packageNode.add(new DefaultMutableTreeNode(q));
+			        			
+			        			allQuests++;
+			        			
+			        			if(q.getState().equals(Quest.STATE_FINISHED)){
+			        				finishedquests++;
+			        			}
 		        			
-		        			allQuests++;
-		        			if(q.getState().equals(Quest.STATE_FINISHED))
-		        				finishedquests++;
 		        		}
 	        			
 	        		}

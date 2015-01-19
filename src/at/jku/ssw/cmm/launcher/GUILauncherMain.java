@@ -222,7 +222,7 @@ public class GUILauncherMain extends JFrame implements ActionListener{
 			if(!profile.isMaster()){	
 				
 				JLabel name = new JLabel(_("Name") + ": " + profile.getName());
-				JLabel level = new JLabel(_("Level") + ": " + profile.getLevel());
+				JLabel level = new JLabel(_("Level") + ": " + 1);
 			
 			
 				jProfileTop.add(name,BorderLayout.PAGE_START);

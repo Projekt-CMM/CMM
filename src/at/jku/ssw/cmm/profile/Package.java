@@ -170,17 +170,15 @@ public class Package {
 			Quest quest;
 					quest = Quest.ReadQuest(allPackagesPath, packagePath, questFolderNames.get(i));
 					
-					
 					if(quest!= null && quest.isDescription()){
 						//min Package level is exported on the quest
-						quest.setMinLevel(package1.getMinLevel());
 						packageQuests.add(quest);			
 					}
 
 					
 			}
 			
-		if(packageQuests.size() != 0)
+		if(packageQuests.size() > 0)
 			return packageQuests;
 		else
 			return null;
@@ -207,6 +205,7 @@ public class Package {
 				}
 			}
 			
+			if(allQuests.size() > 0)
 			return allQuests;
 		}
 		return null;

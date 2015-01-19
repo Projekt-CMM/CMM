@@ -47,7 +47,6 @@ public class ProfileTest {
 		//Profile.ReadPackageQuests(profile, allPackagesPath, packagePath)
 		
 		profile.setName("testname");
-		profile.setXp(200);
 		profile.setInitPath("profileTest");
 		
 		System.out.println("Quest: " + qlist.get(0).getTitle());
