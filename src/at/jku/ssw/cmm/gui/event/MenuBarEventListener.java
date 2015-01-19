@@ -127,7 +127,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			if (settings.getCMMFilePath() == null) {
+			if (settings.getCMMFilePath() != null && main.isFileChanged()) {
 				// Custom button text
 				Object[] options = { _("Save now"), _("Proceed without saving") };
 

@@ -87,6 +87,8 @@ public class SaveDialog {
 	 */
 	public boolean doSaveAs(){
 		
+		System.out.println("save as ... ");
+		
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(new FileNameExtensionFilter(
 				"CMM " + _("file"), "cmm"));
@@ -98,8 +100,6 @@ public class SaveDialog {
 			String path = chooser.getSelectedFile().getPath();
 			settings.setCMMFilePath(path.endsWith(".cmm") ? path : path + ".cmm");
 		}
-		else if(option == JFileChooser.CANCEL_OPTION)
-			return true;
 		
 		return false;
 	}
@@ -118,8 +118,9 @@ public class SaveDialog {
 	}
 	
 	public boolean safeCheck(String title) {
+		
 		// Warning if current file is not saved -> opens a warning dialog
-		if (settings.getCMMFilePath() == null) {
+		if (settings.getCMMFilePath().equals(_("Unnamed"))) {
 
 			// Custom button text
 			Object[] options = { _("Yes"), _("No") };
@@ -137,6 +138,8 @@ public class SaveDialog {
 				// Open a save dialog to save current source code
 				if (doSaveAs())
 					return true;
+				else
+					return false;
 			} else if (n == JOptionPane.NO_OPTION)
 				return true;
 			else

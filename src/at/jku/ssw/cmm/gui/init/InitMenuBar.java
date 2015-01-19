@@ -34,6 +34,7 @@ import javax.swing.KeyStroke;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.MenuBarControl;
+import at.jku.ssw.cmm.gui.debug.GUIcontrolPanel;
 import at.jku.ssw.cmm.gui.event.MenuBarEventListener;
 
 /**
@@ -56,7 +57,7 @@ public class InitMenuBar {
 	 * @param saveDialog A reference to the save dialog manager initialized with the main GUI
 	 * @param profile A reference to the profile
 	 */
-	public static void initFileM( JFrame jFrame, GUImain main, MenuBarControl menuBarControl, MenuBarEventListener listener){
+	public static void initFileM( JFrame jFrame, GUImain main, MenuBarControl menuBarControl, MenuBarEventListener listener, GUIcontrolPanel ctrl){
 		
 		
 		
@@ -127,22 +128,44 @@ public class InitMenuBar {
 			fileM.add(exitMI);
 			
 		/* --- MENU: "source code" --- */
-		JMenu codeMI = new JMenu(_("Source code"));
-		menubar.add(codeMI);
+		JMenu codeM = new JMenu(_("Source code"));
+		menubar.add(codeM);
 		
 			// --- edit -> undo ---
 			JMenuItem undoMI = new JMenuItem(_("Undo"));
 			undoMI.addActionListener(listener.undoHandler);
 			undoMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
-			codeMI.add(undoMI);
+			codeM.add(undoMI);
 			menuBarControl.setUndo(undoMI);
 					
 			// --- edit -> redo ---
 			JMenuItem redoMI = new JMenuItem(_("Redo"));
 			redoMI.addActionListener(listener.redoHandler);
 			redoMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
-			codeMI.add(redoMI);
+			codeM.add(redoMI);
 			menuBarControl.setRedo(redoMI);
+			
+			codeM.addSeparator();
+			
+			// --- edit -> run ---
+			JMenuItem runMI = new JMenuItem(_("compile and run"));
+			runMI.addActionListener(ctrl.getListener().F5_run);
+			runMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+			codeM.add(runMI);
+						
+			// --- edit -> step ---
+			JMenuItem stepMI = new JMenuItem(_("compile and step"));
+			stepMI.addActionListener(ctrl.getListener().F6_step);
+			stepMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
+			codeM.add(stepMI);
+						
+			// --- edit -> stop ---
+			JMenuItem stopMI = new JMenuItem(_("stop"));
+			stopMI.addActionListener(ctrl.getListener().F7_stop);
+			stopMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0));
+			codeM.add(stopMI);
+			
+			ctrl.initMenuItems(runMI, stepMI, stopMI);
 		
 		/* --- MENU: "progress" --- */
 		if( main.hasAdvancedGUI() ){

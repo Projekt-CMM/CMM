@@ -10,24 +10,27 @@
 \chapter{Versionsgeschichte}
 Dieses Kapitel enthält eine Auflistung der Versionen von C Compact. Die Versionen werden wie folgt unterteilt:
 \begin{itemize}
-\item \textbf{Kein Versionsname:} Die Versionsnummerierung begann erst im Herbst 2014. Alle Versionen, die zuvor entstanden sind, sind nicht nummeriert. Das betrifft im wesentlichen unsere Arbeit am Institut für Systemsoftware der Johannes Kepler Universität im Juli 2014. Zu dieser Zeit war eine Unterteilung in Versionen noch nicht unbedingt nötig.
-\item \textbf{Alpha:} Versionen mit dem Namen Alpha umfassen die Entwicklungen vom Herbst 2014 bis Anfang 2015. Unter die Bezeichnung Alpha fallen alle Versionen, in denen das Questsystem noch nicht vollständig implementiert ist.
-%%TODO Referenz auf Questsystem
+\item \textbf{Pre-Alpha:} Die Versionsunterteilung begann erst im Herbst 2014. Alle Versionen, die zuvor entstanden sind, sind nicht nummeriert. Das betrifft im Wesentlichen unsere Arbeit am Institut für Systemsoftware der Johannes Kepler Universität im Juli 2014.
+\item \textbf{Alpha:} Versionen mit dem Namen Alpha umfassen die Entwicklungen vom Herbst 2014 bis Anfang 2015.
 \end{itemize}
 
-Buildnummern wurden nicht nach der tatsächlichen Anzahl der Builds vergeben, sondern nach kleinen Erweiterungen, die noch in die aktuelle Version eingegliedert wurden.
-
-Nachfolgend werden alle bisher benannten Versionen aufgelistet und beschrieben. Es sind nicht alle Builds vollständig aufgelistet, da die Änderungen teilweise minimal waren.
+Nachfolgend werden alle bisher benannten Versionen aufgelistet und beschrieben. Es ist zu beachten, dass Versuche mit Schülern immer am Beginn der aktuellen Version durchgeführt wurden. Die Entwicklung einer durch einen Versuch getestete Version wurde also durch den Versuch selbst wesentlich beeinflusst und optimiert.
 
 %	--------------------------------------------------------
 % 	Kein Versionsname
 %	--------------------------------------------------------
 \subsubsection*{Pre-Alpha}
-Entwicklungsstart: 7. Juli 2014
+7. Juli 2014 bis 30.September 2014
 \begin{itemize}
-\item Umfasst alle grundlegenden Funktionen: eine einfache, C-ähnliche Sprache und die Grundversion der aktuellen Benutzeroberfläche
+\item Diese Version umfasst die Arbeiten in unserer Zeit an der JKU sowie die grundlegende Implementierung der drei Hauptkomponenten des Projektes:
+\begin{itemize}
+\item Compiler
+\item Interpreter
+\item Benutzeroberfläche
+\end{itemize}
 \item Dateimanagement: Neue Datei - Öffnen - Speichern
-\item String als Datentyp (ähnlich wie in Java)
+\item Datentyp \glqq string\grqq (ähnlich zu verwenden wie in Java)
+\item Datentyp \glqq bool\grqq
 \item Minimaler Präprozessor
 \end{itemize}
 
@@ -35,54 +38,73 @@ Entwicklungsstart: 7. Juli 2014
 % 	Alpha 1.0
 %	--------------------------------------------------------
 \subsubsection*{Alpha 1.0}
-Gültig ab: 1. Oktober 2014
+1. Oktober 2014 bis 3. November 2014
 \begin{itemize}
 \item Variablen können sowohl als Baumstruktur, als auch in Tabellen dargestellt werden
 \item Beim Schließen wird überprüft, ob die aktuelle Datei verändert wurde
 \item Implementierung einer Standardbibliothek
 \item Breakpoints
+\item Operatoren für Inkrementation und Dekrementation
+\item switch/case
+\item Schlüsselwort \glqq nop\grqq
+\item Verbesserte Tests mit Travis-CI
+Zuweisung der Arraygrößen mit Konstanten
+\item Elementarfunktion \glqq printf\grqq
 \end{itemize}
 
 %	--------------------------------------------------------
-% 	Alpha 1.1 (Build 3)
+% 	Alpha 1.1
 %	--------------------------------------------------------
 \subsubsection*{Alpha 1.1}
-Gültig ab: 4. November 2014,
+4. November 2014 bis 23. November 2014,\newline
 Getestet: 5. November 2014 mit der 2AHELS
 %%TODO Referenz auf 1. Versuch
 \begin{itemize}
 \item Variablenanzeige mit Tabellen wurde entfernt
 \item Variablenanzeige als Baumstruktur wurde wesentlich optimiert
 \item Step-over- und Step-out-buttons immer sichtbar
+\item Erkennen von Buffer Overflows und Variablenüberlauf
+\item Erkennen uninitialisierter Variablen
+\item Schlüsselwort \glqq library\grqq
+\item Übergeben von Arrays als Funktionsparameter
+\item Speichern von Laufzeitinformationen von Variablen
 \end{itemize}
 
 %	--------------------------------------------------------
-% 	Alpha 1.2 (Build 1)
+% 	Alpha 1.2 (Build 1/4)
 %	--------------------------------------------------------
-\subsubsection*{Alpha 1.2 (Build 1)}
-Gültig ab: 24. November 2014
+\subsubsection*{Alpha 1.2}
+24. November 2014 bis 14. Dezember 2014,\newline
+Getestet: 3. Dezember 2014 mit der 2BHELS
 \begin{itemize}
 %%TODO Referenz auf Ausführungsmodus
 \item Ausführungsmodus (Texteditor, Fehler, Automatisches Debuggen, Schritt-für-Schritt-Debuggen) wird sichtbar durch ein farbiges Panel über dem Textfeld gekennzeichnet.
-\item Arrays können an Funktionen als Referenz übergeben werden
-\item Entfernen der Step-over und Step-out Funktionen
-\item Schlüsselwort "library" für Funktionen, die im Debugger übersprungen werden sollen
+\item Step-over und Step-out Funktionen vorläufig entfernt
 \item HTML-Dokumente für unterschiedliche Fehler im Debugmodus (Compiler, Preprozessor, Laufzeitfehler)
 \item Tooltips für die wichtigsten Bedienelemente (Buttons, etc.)
 \item Logarithmische Skalierung der Zeitschritte beim automatischen Debuggen
 \item Die größten Elemente der Benutzeroberfläche sind verschiebbar und damit besser anzupassen
+\item Eigener Syntax Highlighter für die Sprache von C Compact 
+\item Ein neuer Präprozessor sorgt für reibungslosen Ablauf und ermöglicht Bedingungen wie etwa \glqq \#ifdef\grqq
+\item Die Zeile von Laufzeitfehlern wird korrekt erkannt und ausgegeben
+\item Hinzufügen spezieller Elementarfunktionen wie \glqq time\grqq und \glqq \_\_assert\_\_\grqq für Bibliotheken und fortgeschrittene Benutzer
 \end{itemize}
 
 %	--------------------------------------------------------
-% 	Alpha 1.2 (Build 4)
+% 	Alpha 1.3
 %	--------------------------------------------------------
-\subsubsection*{Alpha 1.2 (build 4)}
-Gültig ab: 2. Dezember 2014,
-Getestet: 3. Dezember 2014 mit der 2BHELS
-%%TODO Referenz auf 2. Versuch
+\subsubsection*{Alpha 1.3}
+Ab 15. Dezember 2014
 \begin{itemize}
-\item Verbessertes Design bei Fehlermeldungen
-\item Eigener Syntax Highlighter für die Sprache von C Compact
+\item Arrays werden jetzt wie in C deklariert
+\item Präprozessor kann Fehler werfen, die dem Benutzer angezeigt werden (wenn beispielsweise eine Bibliothek nicht gefunden wurde)
+\item Das Projekt wurde offiziell unter der GNU General Public License 3 lizenziert\footnote{http://www.gnu.org/copyleft/gpl.html}
+\item Das Questsystem wurde in die Benutzeroberfläche integriert. Dazu gehören:
+\begin{itemize}
+\item Ein Launcher, um ein Benutzerprofil auszuwählen
+\item Ein neues Panel im Hauptfenster, in dem der Benutzer Informationen über die aktuelle Quest erhält und überprüfen kann, ob sein Sourcecode die Anforderungen der Quest erfüllt
+\item Ein Auswahlfenster zum Selektieren und Starten einer Quest
+\item Ein an das Questsystem angepasstes System für globale Einstellungen (um zum Beispiel für Schriftgröße oder die zuletzt verwendeten Benutzerprofile zu speichern)
 \end{itemize}
-
+\end{itemize}
 

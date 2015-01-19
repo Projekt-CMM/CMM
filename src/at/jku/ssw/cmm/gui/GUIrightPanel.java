@@ -44,7 +44,7 @@ import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gui.debug.ErrorTable;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
-import at.jku.ssw.cmm.quest.TestPanel;
+import at.jku.ssw.cmm.quest.GUITestPanel;
 
 /**
  * This class is responsible for the right panel of the main GUI. The right
@@ -93,7 +93,7 @@ public class GUIrightPanel {
 	 */
 	private GUIProfilePanel questPanel;
 	
-	private TestPanel testPanel;
+	private GUITestPanel testPanel;
 
 	private JPanel errorPanel;
 	private JEditorPane errorDesc;
@@ -165,19 +165,19 @@ public class GUIrightPanel {
 		// Initialize Quest Panel
 		JPanel jQuestPanel = new JPanel();
 		if (main.hasAdvancedGUI()) {
-			this.testPanel = new TestPanel(main);
+			this.testPanel = new GUITestPanel(main);
 			JPanel jTestPanel = new JPanel();
 			this.testPanel.init(jTestPanel);
 			tabbedPane.add(jTestPanel, _("Quest"));
 			
 			
 			jQuestPanel.setLayout(new BorderLayout());
-			//tabbedPane.add(jQuestPanel, _("Profile"));
 			questPanel = new GUIProfilePanel(jQuestPanel, main);
+			//tabbedPane.add(jQuestPanel, _("Profile"), 2);
 		}
 		
 		tabbedPane.setMinimumSize(new Dimension(250, 400));
-		tabbedPane.setPreferredSize(new Dimension(260, 420));
+		tabbedPane.setPreferredSize(new Dimension(300, 420));
 		
 		panel.add(tabbedPane, BorderLayout.CENTER);
 
@@ -198,7 +198,7 @@ public class GUIrightPanel {
 		return this.questPanel;
 	}
 	
-	public TestPanel getTestPanel(){
+	public GUITestPanel getTestPanel(){
 		return this.testPanel;
 	}
 

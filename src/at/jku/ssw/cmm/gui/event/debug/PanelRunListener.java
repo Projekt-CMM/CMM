@@ -22,14 +22,13 @@
 package at.jku.ssw.cmm.gui.event.debug;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -322,9 +321,7 @@ public class PanelRunListener implements Debugger {
 	/**
 	 * Listener for F5 -> play/pause
 	 */
-	public Action F5_run = new AbstractAction() {
-		
-		private static final long serialVersionUID = 7572186456956931071L;
+	public ActionListener F5_run = new ActionListener() {
 
 		public void actionPerformed(ActionEvent e) {
 	        runButtonPerformed();
@@ -387,9 +384,7 @@ public class PanelRunListener implements Debugger {
 		}
 	};
 	
-	public Action F6_step = new AbstractAction() {
-
-		private static final long serialVersionUID = 1L;
+	public ActionListener F6_step = new ActionListener() {
 
 		public void actionPerformed(ActionEvent e) {
 
@@ -442,9 +437,7 @@ public class PanelRunListener implements Debugger {
 		}
 	};
 	
-	public Action F7_stop = new AbstractAction() {
-
-		private static final long serialVersionUID = 1L;
+	public ActionListener F7_stop = new ActionListener() {
 
 		public void actionPerformed(ActionEvent e) {
 	        stopButtonPerformed();

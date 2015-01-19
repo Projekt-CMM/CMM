@@ -36,6 +36,7 @@ import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.debugger.IOstream;
 import at.jku.ssw.cmm.gui.GUImain;
+import at.jku.ssw.cmm.gui.treetable.var.TreeTableView;
 import at.jku.ssw.cmm.preprocessor.exception.PreprocessorException;
 import at.jku.ssw.cmm.preprocessor.Preprocessor;
 
@@ -71,8 +72,6 @@ public class GUIdebugPanel {
 
 		cp.setLayout(new BorderLayout());
 
-		this.compileManager = new CMMwrapper(this.main, this);
-
 		this.jControlPanel = new JPanel();
 		this.jControlPanel.setBorder(new TitledBorder(_("Control elements")));
 		this.ctrlPanel = new GUIcontrolPanel(this.jControlPanel, this, main);
@@ -88,6 +87,8 @@ public class GUIdebugPanel {
 		cp.add(jVarPanel, BorderLayout.CENTER);
 
 		this.breakpoints = new ArrayList<>();
+		
+		this.compileManager = new CMMwrapper(this.main, this);
 	}
 
 	/**

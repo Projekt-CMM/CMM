@@ -30,7 +30,7 @@ import javax.swing.JTree;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreeModel;
 
-import at.jku.ssw.cmm.gui.GUImain;
+import at.jku.ssw.cmm.gui.treetable.var.VarDataNode;
 
 /**
  * This class basically controls the rendering of the tree table, its functionalities include:
@@ -58,15 +58,14 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
      */
     protected int visibleRow;
      
-    private TreeTable treeTable;
+    private TreeTable<?> treeTable;
     
-    private final GUImain main;
+    //TODO private final GUImain main;
      
-    public TreeTableCellRenderer(TreeTable treeTable, TreeModel model, GUImain main) {
+    public TreeTableCellRenderer(TreeTable<?> treeTable, TreeModel model) {
         super(model);
         super.setCellRenderer(new TreeRenderer());
         this.treeTable = treeTable;
-        this.main = main;
         
         setRowHeight(getRowHeight()+1);
     }
@@ -77,9 +76,9 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
     public void setRowHeight(int rowHeight) {
         if (rowHeight > 0) {
             //TODO The line below causes NullPointerException with some L&Fs
-        	super.setRowHeight(rowHeight+this.main.getSettings().getVarOffset());
-            if (treeTable != null && treeTable.getRowHeight() != rowHeight+this.main.getSettings().getVarOffset()) {
-                treeTable.setRowHeight(getRowHeight()+this.main.getSettings().getVarOffset());
+        	super.setRowHeight(rowHeight);//+this.main.getSettings().getVarOffset());
+            if (treeTable != null && treeTable.getRowHeight() != rowHeight){//+this.main.getSettings().getVarOffset()) {
+                treeTable.setRowHeight(getRowHeight());//+this.main.getSettings().getVarOffset());
             }
         }
     }
@@ -110,10 +109,10 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
 			if( table.getValueAt(row, 0).toString().endsWith(")") )
 				setBackground(new Color(0, 159, 153));
 			
-			else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.CHANGE_TAG) )
+			else if( table.getValueAt(row, 1).toString().endsWith(""+VarDataNode.CHANGE_TAG) )
 				setBackground(new Color(215, 200, 0));
 			
-			else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.READ_TAG) )
+			else if( table.getValueAt(row, 1).toString().endsWith(""+VarDataNode.READ_TAG) )
 				setBackground(new Color(30, 180, 0));
 			
 			else if ( table.getValueAt(row, 2).toString().equals("undef") )
@@ -126,10 +125,10 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
 			if( table.getValueAt(row, 0).toString().endsWith(")") )
 				setBackground(Color.CYAN);
 			
-			else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.CHANGE_TAG) )
+			else if( table.getValueAt(row, 1).toString().endsWith(""+VarDataNode.CHANGE_TAG) )
 				setBackground(Color.YELLOW);
 			
-			else if( table.getValueAt(row, 1).toString().endsWith(""+DataNode.READ_TAG) )
+			else if( table.getValueAt(row, 1).toString().endsWith(""+VarDataNode.READ_TAG) )
 				setBackground(Color.GREEN);
 			
 			else if ( table.getValueAt(row, 2).toString().equals("undef") )

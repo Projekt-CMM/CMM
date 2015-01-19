@@ -19,10 +19,13 @@
  *  Copyright (c) 2014-2015 Peter Wassermair
  */
  
-package at.jku.ssw.cmm.gui.debug;
+package at.jku.ssw.cmm.gui.treetable.var;
+
+import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -32,10 +35,11 @@ import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.debugger.InitTreeTableData;
 import at.jku.ssw.cmm.gui.GUImain;
-import at.jku.ssw.cmm.gui.treetable.DataNode;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
-import at.jku.ssw.cmm.gui.treetable.TreeUtils;
+import at.jku.ssw.cmm.gui.treetable.TreeTableModel;
+import at.jku.ssw.cmm.gui.utils.TableButtonMouseListener;
+import at.jku.ssw.cmm.gui.utils.TableButtonRenderer;
 
 public class TreeTableView{
 	
@@ -48,14 +52,17 @@ public class TreeTableView{
 		this.init(fileName);
 	}
 	
+	private static final String[] columnNames = { _("Name"), _("Type"), _("Value") };
+	private static final Class<?>[] columnTypes = { TreeTableModel.class, String.class, Object.class };
+	
 	private final GUImain main;
 	
 	// Main panel
 	private JPanel panel;
 	
 	// Tree table for variables
-	private TreeTable varTreeTable;
-	private TreeTableDataModel varTreeTableModel;
+	private TreeTable<VarDataNode> varTreeTable;
+	private TreeTableDataModel<VarDataNode> varTreeTableModel;
 	
 	private boolean forceUpdate;
 	
@@ -66,14 +73,20 @@ public class TreeTableView{
 	 */
 	public void init( String fileName ) {
 		
-		/* ---------- TREE TABLE for CALL STACK and LOCALS (optional) ---------- */
-		this.varTreeTableModel = new TreeTableDataModel(InitTreeTableData.createDataStructure(fileName));
+		/* ---------- TREE TABLE for CALL STACK and LOCALS ---------- */
+		this.varTreeTableModel = new TreeTableDataModel<VarDataNode>(InitTreeTableData.createDataStructure(fileName), columnNames, columnTypes);
 		
-		this.varTreeTable = new TreeTable(this.main, this.varTreeTableModel);
+		this.varTreeTable = new TreeTable<>(this.varTreeTableModel);
+		
+		this.varTreeTable.getTableHeader().setToolTipText("<html><b>" + _("Variable table columns") + "</b><br>" +
+        		_("You can change the width a column by<br>dragging and sliding its border.") + "</html>");
+        
+        TableButtonRenderer buttonRenderer = new TableButtonRenderer(this.varTreeTable.getDefaultRenderer(JButton.class));
+        this.varTreeTable.getColumnModel().getColumn(1).setCellRenderer(buttonRenderer);
+        this.varTreeTable.getColumnModel().getColumn(2).setCellRenderer(buttonRenderer);
 		
 		JScrollPane p = new JScrollPane(this.varTreeTable);
 		this.panel.add(p, BorderLayout.CENTER);
-		// Sub-panel end
 	}
 
 	/**
@@ -83,14 +96,13 @@ public class TreeTableView{
 	 */
 	public void update(final CMMwrapper compiler, final String fileName, boolean completeUpDate ) {
 		
-		System.out.println("updating #1234");
-		
 		if( completeUpDate || this.forceUpdate ){
 			DebugShell.out(State.LOG, Area.READVAR, "complete variable structure update");
 			
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					varTreeTable.setTreeModel(InitTreeTableData.readSymbolTable(compiler, main, fileName));
+					varTreeTable.setTreeModel(InitTreeTableData.readSymbolTable(compiler, main, fileName, columnNames, columnTypes));
+					varTreeTable.addMouseListener(new TableButtonMouseListener(main, varTreeTable));
 				}
 			});
 			this.forceUpdate = false;
@@ -99,7 +111,7 @@ public class TreeTableView{
 		}
 		else{
 			DebugShell.out(State.LOG, Area.READVAR, "updating variable values");
-			InitTreeTableData.updateTreeTable(this.varTreeTable.getTreeModel(), (DataNode)this.varTreeTable.getCellRenderer().getModel().getRoot(), compiler, main, fileName);
+			InitTreeTableData.updateTreeTable(this.varTreeTable.getTreeModel(), (VarDataNode)this.varTreeTable.getCellRenderer().getModel().getRoot(), compiler, main, fileName);
 			
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
@@ -116,7 +128,7 @@ public class TreeTableView{
 	 */
 	public void standby( String fileName ) {
 		
-		this.varTreeTable.setTreeModel(new TreeTableDataModel(InitTreeTableData.createDataStructure(fileName)));
+		this.varTreeTable.setTreeModel(new TreeTableDataModel<>(InitTreeTableData.createDataStructure(fileName), TreeTableView.columnNames, TreeTableView.columnTypes));
 		this.forceUpdate = true;
 		
 		DebugShell.out(State.LOG, Area.GUI, "treetable standby");
