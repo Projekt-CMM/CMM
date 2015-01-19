@@ -120,9 +120,38 @@
         <!-- delete generated files -->
         <delete dir="${build.classes}"/>
         <delete file="${name}.jar"/>
+        <delete file="xgettext.files"/>
         <delete file="${java.dir}/at/jku/ssw/cmm/gui/init/CCompactTokenMaker.java"/>
         <delete file="${java.dir}/at/jku/ssw/cmm/compiler/Scanner.java"/>
         <delete file="${java.dir}/at/jku/ssw/cmm/compiler/Parser.java"/>
+    </target>
+    
+    <!-- translations  -->
+    <target name="translations" description="update translation-files">
+    
+        <!-- find java-files -->
+        <exec executable="find" outputproperty="found">
+            <arg value="src"/>
+            <arg line="-name '*.java'"/>
+        </exec>
+        
+        <!-- safe found java-files into xgettext.files -->
+        <echo file="xgettext.files" message="${found}" />
+        
+        <!-- run xgettext-->
+        <exec executable="xgettext" failonerror="true">
+            <arg value="-k_"/>
+            <arg value="-o" />
+            <arg value="po/keys.pot"/>
+            <arg value="--files-from=xgettext.files"/>
+        </exec>
+       
+        <!-- merge changes into german translation -->
+        <exec executable="msgmerge" failonerror="true">
+            <arg value="-U"/>
+            <arg value="po/de.po" />
+            <arg value="po/keys.pot"/>
+        </exec>
     </target>
 
     <!-- test project -->

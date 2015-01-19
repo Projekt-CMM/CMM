@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-16 10:08+0100\n"
+"POT-Creation-Date: 2015-01-13 09:49+0100\n"
 "PO-Revision-Date: 2014-11-23 14:41+0100\n"
 "Last-Translator: Fabian Hummer f.hummer@traunseenet.at\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,305 +15,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:102
-msgid "Welcome"
-msgstr "Willkommen"
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:127
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:153
-msgid "Select Profile"
-msgstr "Profil wählen"
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:134
-msgid "Find"
-msgstr "Finden"
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:136
-#, fuzzy
-msgid "Open existing profile"
-msgstr "Neue Datei öffnen"
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:136
-msgid ""
-"Open an existing profile which is not<br>listed below by selecting its "
-"directory."
-msgstr ""
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:140
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:72
-msgid "New"
-msgstr "Neu"
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:142
-#: src/at/jku/ssw/cmm/profile/settings/GUIprofileSettings.java:58
-msgid "Create new profile"
-msgstr "Neues Profil erstellen"
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:142
-msgid "Create a new profile and save it<br>anywhere on your computer."
-msgstr ""
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:146
-msgid "Launch without profile"
-msgstr "Ohne Profil starten"
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:148
-msgid "Launch C Compact without profile"
-msgstr "C Compact ohne Profil starten"
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:148
-msgid ""
-"In this mode, you will not be able to do quests,<br>however you can still use all other features of C Compact."
-msgstr "In diesem Modus kannst du keine Aufgaben ausführen,<br>alle weiteren Funktionen von C Compact sind aber verfügbar."
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:180
-#, fuzzy
-msgid "No recent profiles"
-msgstr "Profil wählen"
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:218
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:128
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTableDataModel.java:38
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:91
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:127
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:142
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:157
-msgid "Name"
-msgstr "Name"
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:219
-#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:132
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:129
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:146
-msgid "Level"
-msgstr "Level"
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:247
-#, fuzzy
-msgid "Edit profile"
-msgstr "Profil wählen"
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:247
-msgid "Click image to change profile properties"
-msgstr "Auf das Bild klicken, um Profileinstellungen zu ändern"
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:251
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:79
-msgid "Open"
-msgstr "Öffnen"
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:252
-#, fuzzy
-msgid "Launch C Compact"
-msgstr "C Compact wird geschlossen"
-
-#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:252
-#, fuzzy
-msgid "using this profile"
-msgstr "Profil wählen"
-
-#: src/at/jku/ssw/cmm/profile/settings/LowerPanel.java:114
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: src/at/jku/ssw/cmm/profile/settings/LowerPanel.java:119
-#, fuzzy
-msgid "Save"
-msgstr "Speichern"
-
-#: src/at/jku/ssw/cmm/profile/settings/GUIprofileSettings.java:60
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:159
-#, fuzzy
-msgid "Edit Profile"
-msgstr "Profil wählen"
-
-#: src/at/jku/ssw/cmm/profile/settings/CentralPanel.java:96
-msgid "Achievements"
-msgstr "Auszeichnungen"
-
-#: src/at/jku/ssw/cmm/profile/settings/ProfileSettingsListener.java:120
-msgid "Please choose a Profile Name!"
-msgstr "Bitte einen Namen wählen"
-
-#: src/at/jku/ssw/cmm/profile/settings/ProfileSettingsListener.java:120
-#, fuzzy
-msgid "Warnung"
-msgstr "Warnung"
-
-#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:114
-msgid "click to change image"
-msgstr "Profilbild ändern"
-
-#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:115
-msgid "click here and select your<br>profile image"
-msgstr "Hier klicken, um das<br>Profilbild zu ändern"
-
-#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:126
-#, fuzzy
-msgid "Name:"
-msgstr "Name"
-
-#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:129
-msgid "profile name"
-msgstr "Name des Profils"
-
-#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:130
-msgid "you can edit your name here"
-msgstr "Hier kannst du deinen Namen ändern"
-
-#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:210
-msgid "Corrupted Avatar"
-msgstr "Datei beschädigt"
-
-#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:227
-msgid "Corrupted Image"
-msgstr "Bild beschädigt"
-
-#: src/at/jku/ssw/cmm/gui/credits/Credits.java:22
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:117
-#, fuzzy
-msgid "About C Compact"
-msgstr "Über C Compact"
-
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:127
-msgid "Profile Information"
-msgstr "Profilinformation"
-
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:131
-msgid "No Profile choosen"
-msgstr "Kein Profil ausgewählt"
-
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:136
-msgid "Current Quest"
-msgstr "Aktuelle Quest"
-
-#: src/at/jku/ssw/cmm/gui/GUIquestPanel.java:141
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:165
-msgid "Select Quest"
-msgstr "Quest wählen"
-
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:68
-msgid "File"
-msgstr "Datei"
-
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:87
-#, fuzzy
-msgid "Recent files"
-msgstr "Profil wählen"
-
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:96
-msgid "Save As..."
-msgstr "Speichern unter"
-
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:103
-msgid "Save..."
-msgstr "Speichern"
-
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:112
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:62
-msgid "Properties"
-msgstr "Einstellungen"
-
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:124
-msgid "Exit"
-msgstr "Beenden"
-
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:130
-msgid "Source code"
-msgstr ""
-
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:134
-msgid "Undo"
-msgstr "Rückgängig"
-
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:141
-msgid "Redo"
-msgstr "Wiederholen"
-
-#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:149
-msgid "Progress"
-msgstr "Fortschritt"
-
-#: src/at/jku/ssw/cmm/gui/init/InitLeftPanel.java:92
-msgid "Input"
-msgstr "Eingabe"
-
-#: src/at/jku/ssw/cmm/gui/init/InitLeftPanel.java:121
-msgid "Output"
-msgstr "Ausgabe"
-
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTableDataModel.java:38
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:92
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:105
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:128
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:143
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:154
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:158
-msgid "Type"
-msgstr "Datentyp"
-
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTableDataModel.java:38
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:93
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:104
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:129
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:144
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:153
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:159
-msgid "Value"
-msgstr "Wert"
-
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:59
-msgid "Variable table columns"
-msgstr "Tabellenspalten"
-
-#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:60
-msgid ""
-"You can change the width a column by<br>dragging and sliding its border."
-msgstr ""
-
-#: src/at/jku/ssw/cmm/gui/treetable/context/InitContextMenu.java:38
-msgid "Jump to Declaration"
-msgstr "Gehe zur Deklaration"
-
-#: src/at/jku/ssw/cmm/gui/ProfilePreview.java:125
-#, fuzzy
-msgid "Level:"
-msgstr "Level"
-
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:138
-msgid "Debug"
-msgstr "Debug"
-
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:168
-msgid "Quest"
-msgstr "Quest"
-
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:210
-msgid "Error"
-msgstr "Fehler"
-
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:225
-msgid "test successful"
-msgstr "Test erfolgreich"
-
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:232
-msgid "test failed"
-msgstr "Test fehlgeschlagen"
-
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:239
-#, fuzzy
-msgid "testing current quest"
-msgstr "Aktuelle Quest"
-
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:246
-msgid "no quest selected"
-msgstr ""
-
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:253
-#, fuzzy
-msgid "current quest"
-msgstr "Aktuelle Quest"
 
 #: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:92
 #: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:169
@@ -347,10 +47,232 @@ msgstr "Nicht speichern"
 msgid "The current file has not yet been saved!"
 msgstr "Die aktuelle Datei wurde noch nicht gespeichert"
 
-#: src/at/jku/ssw/cmm/gui/utils/JTableButtonMouseListener.java:115
-#: src/at/jku/ssw/cmm/debugger/InitTreeTableData.java:239
-msgid "reference"
-msgstr "reference"
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:383
+msgid "text edit mode"
+msgstr "Editormodus"
+
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:392
+msgid "error"
+msgstr "Fehler"
+
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:392
+msgid "in line"
+msgstr "in Zeile"
+
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:403
+msgid "automatic debug mode"
+msgstr "Automatischer Debugmodus"
+
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:411
+msgid "pause or step by step mode"
+msgstr "Pause oder schrittweises Debuggen"
+
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:141
+msgid "Debug"
+msgstr "Debug"
+
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:171
+msgid "Quest"
+msgstr "Quest"
+
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:221
+msgid "Error"
+msgstr "Fehler"
+
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:236
+msgid "test successful"
+msgstr "Test erfolgreich"
+
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:243
+msgid "test failed"
+msgstr "Test fehlgeschlagen"
+
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:250
+msgid "testing current quest"
+msgstr "Aktuelle Quest testen"
+
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:257
+msgid "no quest selected"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:264
+msgid "current quest"
+msgstr "Aktuelle Quest"
+
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:62
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:112
+msgid "Properties"
+msgstr "Einstellungen"
+
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:88
+msgid "Source code font size"
+msgstr "Schriftgröße des Sourcecode"
+
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:99
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:123
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:147
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:159
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:160
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:161
+msgid "pixels"
+msgstr "Pixel"
+
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:112
+msgid "Text field font size"
+msgstr "Schriftgröße der Textfelder"
+
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:136
+msgid "Variable table font size"
+msgstr "Schriftgröße der Variablentabelle"
+
+#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:150
+#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:151
+#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:169
+#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:434
+#: src/at/jku/ssw/cmm/gui/GUImain.java:283
+msgid "Unnamed"
+msgstr "Unbenannt"
+
+#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:472
+msgid "C Compact was not able to save your personal settings"
+msgstr "C Compact konnte deine persönlichen Einstellungen nicht speichern"
+
+#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:473
+msgid "The program returned"
+msgstr "Das Programm endete mit"
+
+#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:475
+msgid "Unable to save your settings"
+msgstr "Einstellungen konnten nicht gespeichert werden"
+
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:132
+msgid "Proceed without saving"
+msgstr "Fortsetzen ohne zu speichern"
+
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:137
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:164
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:210
+msgid "Opening new file"
+msgstr "Neue Datei öffnen"
+
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:215
+msgid "The following file could not be found: "
+msgstr "Die folgende Datei wurde nicht gefunden: "
+
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:216
+msgid "File does not exist"
+msgstr "Datei existiert nicht"
+
+#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:282
+#: src/at/jku/ssw/cmm/gui/event/WindowEventListener.java:88
+msgid "Closing C Compact"
+msgstr "C Compact wird geschlossen"
+
+#: src/at/jku/ssw/cmm/gui/init/InitLeftPanel.java:91
+msgid "Input"
+msgstr "Eingabe"
+
+#: src/at/jku/ssw/cmm/gui/init/InitLeftPanel.java:120
+msgid "Output"
+msgstr "Ausgabe"
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:68
+msgid "File"
+msgstr "Datei"
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:72
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:145
+msgid "New"
+msgstr "Neu"
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:79
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:257
+msgid "Open"
+msgstr "Öffnen"
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:87
+msgid "Recent files"
+msgstr "Zuletzt benutzte Dateien"
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:96
+msgid "Save As..."
+msgstr "Speichern unter"
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:103
+msgid "Save..."
+msgstr "Speichern"
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:117
+#: src/at/jku/ssw/cmm/gui/credits/Credits.java:22
+msgid "About C Compact"
+msgstr "Über C Compact"
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:124
+msgid "Exit"
+msgstr "Beenden"
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:130
+msgid "Source code"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:134
+msgid "Undo"
+msgstr "Rückgängig"
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:141
+msgid "Redo"
+msgstr "Wiederholen"
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:149
+msgid "Progress"
+msgstr "Fortschritt"
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:153
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:132
+msgid "Select Profile"
+msgstr "Profil wählen"
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:159
+#: src/at/jku/ssw/cmm/profile/settings/GUIprofileSettings.java:60
+msgid "Edit Profile"
+msgstr "Profil editieren"
+
+#: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:165
+#: src/at/jku/ssw/cmm/gui/GUIProfilePanel.java:141
+msgid "Select Quest"
+msgstr "Quest wählen"
+
+#: src/at/jku/ssw/cmm/gui/GUIProfilePanel.java:127
+msgid "Profile Information"
+msgstr "Profilinformation"
+
+#: src/at/jku/ssw/cmm/gui/GUIProfilePanel.java:128
+#: src/at/jku/ssw/cmm/gui/GUIprofilePanel.java:107
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:91
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:127
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:142
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:157
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTableDataModel.java:38
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:224
+msgid "Name"
+msgstr "Name"
+
+#: src/at/jku/ssw/cmm/gui/GUIProfilePanel.java:129
+#: src/at/jku/ssw/cmm/gui/GUIProfilePanel.java:146
+#: src/at/jku/ssw/cmm/gui/GUIprofilePanel.java:108
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:225
+#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:132
+msgid "Level"
+msgstr "Level"
+
+#: src/at/jku/ssw/cmm/gui/GUIProfilePanel.java:131
+#: src/at/jku/ssw/cmm/gui/GUIprofilePanel.java:110
+msgid "No Profile choosen"
+msgstr "Kein Profil ausgewählt"
+
+#: src/at/jku/ssw/cmm/gui/GUIProfilePanel.java:136
+msgid "Current Quest"
+msgstr "Aktuelle Quest"
 
 #: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:116
 #: src/at/jku/ssw/cmm/gui/debug/GUIdebugPanel.java:77
@@ -367,9 +289,8 @@ msgid "stop"
 msgstr "stop"
 
 #: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:143
-#, fuzzy
 msgid "return to text edit mode immediately"
-msgstr "zurück zum Editormodus"
+msgstr "sofort zurück zum Editormodus"
 
 #: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:147
 #: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:275
@@ -436,100 +357,183 @@ msgstr "Automatische Ausführung starten"
 msgid "Variables"
 msgstr "Variablen"
 
-#: src/at/jku/ssw/cmm/gui/event/WindowEventListener.java:79
-#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:282
-#, fuzzy
-msgid "Closing C Compact"
-msgstr "C Compact wird geschlossen"
+#: src/at/jku/ssw/cmm/gui/ProfilePreview.java:129
+msgid "Level:"
+msgstr "Level:"
 
-#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:132
-msgid "Proceed without saving"
-msgstr "Fortsetzen ohne zu speichern"
+#: src/at/jku/ssw/cmm/gui/GUIprofilePanel.java:106
+msgid "Profile"
+msgstr "Profile"
 
-#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:137
-#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:164
-#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:210
-msgid "Opening new file"
-msgstr "Neue Datei öffnen"
+#: src/at/jku/ssw/cmm/gui/GUIprofilePanel.java:148
+#: src/at/jku/ssw/cmm/profile/settings/CentralPanel.java:99
+msgid "Achievements"
+msgstr "Auszeichnungen"
 
-#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:215
-msgid "The following file could not be found: "
-msgstr "Die folgende Datei wurde nicht gefunden: "
+#: src/at/jku/ssw/cmm/gui/utils/JTableButtonMouseListener.java:115
+#: src/at/jku/ssw/cmm/debugger/InitTreeTableData.java:239
+msgid "reference"
+msgstr "reference"
 
-#: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:216
-msgid "File does not exist"
-msgstr "Datei existiert nicht"
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:59
+msgid "Variable table columns"
+msgstr "Tabellenspalten"
 
-#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:150
-#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:151
-#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:169
-#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:434
-#: src/at/jku/ssw/cmm/gui/GUImain.java:283
-msgid "Unnamed"
-msgstr "Unbenannt"
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:60
+msgid ""
+"You can change the width a column by<br>dragging and sliding its border."
+msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:472
-msgid "C Compact was not able to save your personal settings"
-msgstr "C Compact konnte deine persönlichen Einstellungen nicht speichern"
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:92
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:105
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:128
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:143
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:154
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:158
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTableDataModel.java:38
+msgid "Type"
+msgstr "Datentyp"
 
-#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:473
-msgid "The program returned"
-msgstr "Das Programm endete mit"
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:93
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:104
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:129
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:144
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:153
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTable.java:159
+#: src/at/jku/ssw/cmm/gui/treetable/TreeTableDataModel.java:38
+msgid "Value"
+msgstr "Wert"
 
-#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:475
-msgid "Unable to save your settings"
-msgstr "Einstellungen konnten nicht gespeichert werden"
-
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:88
-msgid "Source code font size"
-msgstr "Schriftgröße des Sourcecode"
-
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:99
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:123
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:147
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:159
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:160
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:161
-msgid "pixels"
-msgstr "Pixel"
-
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:112
-msgid "Text field font size"
-msgstr "Schriftgröße der Textfelder"
-
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:136
-msgid "Variable table font size"
-msgstr "Schriftgröße der Variablentabelle"
-
-#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:383
-msgid "text edit mode"
-msgstr "Editormodus"
-
-#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:392
-msgid "error"
-msgstr "Fehler"
-
-#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:392
-msgid "in line"
-msgstr "in Zeile"
-
-#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:403
-msgid "automatic debug mode"
-msgstr "Automatischer Debugmodus"
-
-#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:411
-msgid "pause or step by step mode"
-msgstr "Pause oder schrittweises Debuggen"
+#: src/at/jku/ssw/cmm/gui/treetable/context/InitContextMenu.java:38
+msgid "Jump to Declaration"
+msgstr "Gehe zur Deklaration"
 
 #: src/at/jku/ssw/cmm/gui/GUImain.java:415
 msgid "Disposing"
 msgstr "Wird geschlossen"
 
-#, fuzzy
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:107
+msgid "Welcome"
+msgstr "Willkommen"
+
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:139
+msgid "Find"
+msgstr "Finden"
+
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:141
+msgid "Open existing profile"
+msgstr "Existierendes Projekt öffnen"
+
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:141
+msgid ""
+"Open an existing profile which is not<br>listed below by selecting its "
+"directory."
+msgstr ""
+
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:147
+#: src/at/jku/ssw/cmm/profile/settings/GUIprofileSettings.java:58
+msgid "Create new profile"
+msgstr "Neues Profil erstellen"
+
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:147
+msgid "Create a new profile and save it<br>anywhere on your computer."
+msgstr ""
+
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:151
+msgid "Launch without profile"
+msgstr "Ohne Profil starten"
+
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:153
+msgid "Launch C Compact without profile"
+msgstr "C Compact ohne Profil starten"
+
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:153
+msgid ""
+"In this mode, you will not be able to do quests,<br>however you can still "
+"use all other features of C Compact."
+msgstr ""
+"In diesem Modus kannst du keine Aufgaben ausführen,<br>alle weiteren "
+"Funktionen von C Compact sind aber verfügbar."
+
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:186
+msgid "No recent profiles"
+msgstr "keine vergangenen Profile"
+
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:253
+msgid "Edit profile"
+msgstr "Profil ändern"
+
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:253
+msgid "Click image to change profile properties"
+msgstr "Auf das Bild klicken, um Profileinstellungen zu ändern"
+
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:258
+msgid "Launch C Compact"
+msgstr "C Compact starten"
+
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:258
+msgid "using this profile"
+msgstr "dieses Profil nutzen"
+
+#: src/at/jku/ssw/cmm/quest/TestPanel.java:57
+msgid "Quest Information"
+msgstr "Questinformation"
+
+#: src/at/jku/ssw/cmm/quest/TestPanel.java:71
+msgid "Test"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/quest/TestPanel.java:83
+msgid "Run test"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/profile/settings/LowerPanel.java:114
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: src/at/jku/ssw/cmm/profile/settings/LowerPanel.java:119
+msgid "Save"
+msgstr "Speichern"
+
+#: src/at/jku/ssw/cmm/profile/settings/ProfileSettingsListener.java:112
+msgid "Please choose a Profile Name!"
+msgstr "Bitte einen Namen wählen"
+
+#: src/at/jku/ssw/cmm/profile/settings/ProfileSettingsListener.java:112
+msgid "Warnung"
+msgstr "Warnung"
+
+#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:114
+msgid "click to change image"
+msgstr "Profilbild ändern"
+
+#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:115
+msgid "click here and select your<br>profile image"
+msgstr "Hier klicken, um das<br>Profilbild zu ändern"
+
+#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:126
+msgid "Name:"
+msgstr "Name:"
+
+#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:129
+msgid "profile name"
+msgstr "Name des Profils"
+
+#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:130
+msgid "you can edit your name here"
+msgstr "Hier kannst du deinen Namen ändern"
+
+#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:210
+msgid "Corrupted Avatar"
+msgstr "Datei beschädigt"
+
+#: src/at/jku/ssw/cmm/profile/settings/UpperPanel.java:228
+msgid "Corrupted Image"
+msgstr "Bild beschädigt"
+
 #~ msgid "Select Profile:"
 #~ msgstr "Profil wählen"
 
-#, fuzzy
 #~ msgid "The file"
 #~ msgstr "Die Datei"
 
