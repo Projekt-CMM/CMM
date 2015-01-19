@@ -163,6 +163,8 @@ Der Parser \"ubersetzt den Tokenstrom in einem sogenannten Syntaxbaum\footnote{\
 
 Der ``allgemeine'' Syntaxbaum enth\"alt viele unn\"otigen Daten, welche beim abstrakten Syntaxbaum\footnote{\url{https://de.wikipedia.org/wiki/Abstrakter_Syntaxbaum}} nicht mehr vorhanden sind. Der Abstrakte Syntaxbaum stellt somit eine Baumrepr\"asentation der wesentlichen Syntax eines Programmes dar.
 
+Der abstrakte Syntaxbaum wird explitzit w\"ahrend des Parsens gebaut; z.B. mithilfe einer attributierte Gramatik, welche den abstrakten Syntaxbaum an bestimten Stellen innerhalb der EBNF erweitert.
+
 \includegraphics[width=0.6\textwidth]{./media/images/compiler/abstract_syntaxtree.png}
 
 \subsubsection{homogene und heterogene Syntaxbäume}
@@ -204,4 +206,4 @@ Mithilfe der Symboltabelle wird unter anderem festgestellt, ob eine Variablen de
 
 %, und l\"ost m\"ogliche Namensprobleme auf.\footnote{\url{https://de.wikipedia.org/wiki/Namensraum}}
 
-\subsection{Scope}
+%\subsection{Scope}
