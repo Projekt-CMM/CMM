@@ -130,7 +130,7 @@ public class UpperPanel extends JPanel {
 				+ "</b><br>" + _("you can edit your name here") + "</html>");
 		inside.add(this.jTextField, setLayoutPosition(1, 0, 1, 1));
 		inside.add(new JLabel(_("Level") + ": "
-				+ (profile == null ? "0" : profile.getLevel())),
+				+ (profile == null ? "0" : 1)),
 				setLayoutPosition(0, 1, 2, 1));
 
 		inside.add(new JLabel("Stat 1:"), setLayoutPosition(0, 2, 1, 1));

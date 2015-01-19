@@ -57,22 +57,7 @@ public class Quest {
 	/**
 	 * TODO Token of the Quest
 	 */
-	private Token token;					
-
-	/**
-	 * List for next Quests, there are opened when the current quest is finished
-	 */
-	private List<String> nextQuest;			
-
-	/**
-	 * Level to set on quest finish
-	 */
-	private int level;						
-
-	/**
-	 * The minimun Lefel of the quest
-	 */
-	private int minLevel;					
+	private Token token;							
 
 	/**
 	 * All languages are collected in an List<String>
@@ -83,7 +68,22 @@ public class Quest {
 	/**
 	 * true if the quest has a style.css
 	 */
-	private boolean style;					
+	private boolean style;			
+	
+	/**
+	 * true if the Quest is optional
+	 */
+	private boolean optional;
+	
+	/**
+	 * true if the Quest has a ref.cmm
+	 */
+	private boolean ref;
+	
+	/**
+	 * true if the Quest has a input.txt
+	 */
+	private boolean input;
 	
 	/**
 	 * State of the Quest, this can be: locked, selectable, inprogress, open or finished
@@ -106,12 +106,13 @@ public class Quest {
 	private String initPath;				
 
 	/**
+	 * Relative Path of the Package Folder
 	 * Packages folderName of the Quest
 	 */
 	private String packagePath;				
 	
 	/**
-	 * FolderName of the Quest
+	 * Path of the Quest
 	 */
 	private String questPath;
 	
@@ -123,6 +124,9 @@ public class Quest {
 		FILE_DESCRIPTION = "description.html",
 		FILE_STYLE = "style.css",
 		FiLE_QUEST = "quest.xml",
+		FILE_REF = "ref.cmm",
+		FILE_INPUT_TXT = "input.txt",
+		FILE_INPUT_CMM = "input.cmm",
 		FOLDER_TOKENS = "tokens";
 	
 	/**
@@ -135,7 +139,8 @@ public class Quest {
 		XML_TOKEN = "token",
 		XML_NEXTQUEST = "nextquest",
 		XML_STATE = "state",
-		XML_REWARD = "reward";
+		XML_REWARD = "reward",
+		XML_OPTIONAL = "optional";
 
 	/**
 	 * Strings for the correct State
@@ -170,9 +175,13 @@ public class Quest {
 			
 			//if the files are there, setting them to true
 				if(fileNames.contains(Quest.FILE_DESCRIPTION))
-					quest.setDescription(true);
+					quest.setDescription(true);	
 				if(fileNames.contains(Quest.FILE_STYLE))
 					quest.setStyle(true);
+				if(fileNames.contains(Quest.FILE_REF))
+					quest.setRef(true);
+				if(fileNames.contains(Quest.FILE_INPUT_TXT) || fileNames.contains(Quest.FILE_INPUT_CMM))
+					quest.setInput(true);
 				
 				//Setting Quest Paths for later use:
 				quest.setInitPath(allPackagesFolder);
@@ -182,14 +191,21 @@ public class Quest {
 				try {
 					//Reading the XML File
 					quest = ReadQuestXML(path,quest);
+					System.out.println("ReadQuest" + quest.getQuestPath());
 				} catch (ParserConfigurationException | SAXException | IOException e) {
-					
+					System.out.println("ReadQuest Error:" + quest.getQuestPath());
 					//For Debugging diseases
 					e.printStackTrace();
 				}
 				
+				
 				//Returning the loaded Quest
-				return quest;
+				if(quest.isDescription() && quest.isInput() && quest.isRef())
+					return quest;
+				else
+					return null;
+				
+				
 				
 
 	}
@@ -205,8 +221,6 @@ public class Quest {
 	 * @throws IOException
 	 */
 	private static Quest ReadQuestXML(String path, Quest quest) throws ParserConfigurationException, SAXException, IOException{
-
-		List<String> nextQuest = new ArrayList<>();
 		
 		File file = new File(path + sep + Quest.FiLE_QUEST);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -216,9 +230,9 @@ public class Quest {
 		 doc = dBuilder.parse(file);
 		
 		}catch(FileNotFoundException e){
-			System.err.println(file + " not found!");
+			System.err.println(file + " not found!" + " trying to open Quest without .xml");
 			quest.setTitle(quest.getQuestPath());
-			quest.setLevel(-1);
+			quest.setState(STATE_SELECTABLE);
 			
 			return quest;
 		}	
@@ -244,13 +258,6 @@ public class Quest {
 				}
 				
 				try{
-				quest.setLevel(Integer.parseInt(eElement.getElementsByTagName(Quest.XML_LEVEL).item(0).getTextContent()));
-				}catch(NullPointerException e){
-					//No Level found
-					quest.setLevel(-1);
-				}
-				
-				try{
 					String relPath = eElement.getElementsByTagName(Quest.XML_TOKEN).item(0).getTextContent();
 					String tokeninitPath = quest.getInitPath() + sep + quest.packagePath + sep + Quest.FOLDER_TOKENS;
 					
@@ -268,6 +275,13 @@ public class Quest {
 					//No Token found
 					quest.setRewardPath(null);
 				}
+				
+				try{
+					quest.setOptional(Boolean.parseBoolean(eElement.getElementsByTagName(Quest.XML_OPTIONAL).item(0).getTextContent()));
+				}catch(NullPointerException e){
+					//No Token found
+					quest.setOptional(false);
+				}
 
 				try{
 				String s = eElement.getElementsByTagName(Quest.XML_STATE).item(0).getTextContent();
@@ -280,15 +294,12 @@ public class Quest {
 					//No state found
 					
 					//System.out.println("No / Wrong State set!");
-					quest.setState(Quest.STATE_LOCKED);
-				}
-				for(int x = 0; x < eElement.getElementsByTagName(Quest.XML_NEXTQUEST).getLength(); x++){
-					nextQuest.add(eElement.getElementsByTagName(Quest.XML_NEXTQUEST).item(x).getTextContent());
+					//quest.setState(Quest.STATE_LOCKED);
+					quest.setState(Quest.STATE_SELECTABLE);
 				}
 				
 			}
 		}
-		quest.setNextQuest(nextQuest);
 		
 		return quest;
 		
@@ -395,21 +406,6 @@ public class Quest {
 	}
 
 	/**
-	 * Level can be -1
-	 * @return the Level
-	 */
-	public int getLevel() {
-		return level;
-	}
-
-	/**
-	 * @param level the level to set
-	 */
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
-	/**
 	 * @return the questPath
 	 */
 	public String getQuestPath() {
@@ -483,21 +479,6 @@ public class Quest {
 
 	/**
 	 * Can be null
-	 * @return the nextQuest
-	 */
-	public List<String> getNextQuest() {
-		return nextQuest;
-	}
-
-	/**
-	 * @param nextQuest the nextQuest to set
-	 */
-	public void setNextQuest(List<String> nextQuest) {
-		this.nextQuest = nextQuest;
-	}
-
-	/**
-	 * Can be null
 	 * @return the time as String
 	 */
 	public Date getDate() {
@@ -550,19 +531,31 @@ public class Quest {
 		this.rewardPath = rewardPath;
 	}
 
-	/**
-	 * @return the minLevel
-	 */
-	public int getMinLevel() {
-		return minLevel;
+	public boolean isRef() {
+		return ref;
 	}
 
-	/**
-	 * @param minLevel the minLevel to set
-	 */
-	public void setMinLevel(int minLevel) {
-		this.minLevel = minLevel;
+	public void setRef(boolean ref) {
+		this.ref = ref;
+	}
+
+	public boolean isInput() {
+		return input;
+	}
+
+	public void setInput(boolean input) {
+		this.input = input;
+	}
+
+	public boolean isOptional() {
+		return optional;
+	}
+
+	public void setOptional(boolean optional) {
+		this.optional = optional;
 	}	
+	
+	
 	
 	
 	
