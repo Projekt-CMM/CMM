@@ -8,6 +8,10 @@
 	<xp>10</xp>
 	<!-- Status, nur bei der ersten Quest notwendig – String -->
 	<state>selectable</state>
-	 <!-- Weiterfuehrende Quests, keine oder mehrere Quests moeglich – String -->
+	<!-- Weiterfuehrende Quests, keine oder mehrere Quests moeglich – String -->
 	<nextquest>Int Variablen</nextquest>
+	<!-- Datei, die die eingabedaten generiert -->
+	<input>input.txt</input>
+	<!-- Referenz / Musterlösung -->
+	<ref>ref.cmm</ref>
 </quest>

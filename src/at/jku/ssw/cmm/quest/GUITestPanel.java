@@ -4,7 +4,6 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.io.File;
 import java.io.IOException;
 
 import javax.swing.BoxLayout;
@@ -13,7 +12,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
@@ -23,9 +21,9 @@ import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.utils.LoadStatics;
 
-public class TestPanel {
+public class GUITestPanel {
 	
-	public TestPanel( GUImain main ){
+	public GUITestPanel( GUImain main ){
 		this.main = main;
 	}
 	
@@ -73,7 +71,6 @@ public class TestPanel {
 		
 		this.jResultInfo = new JTextArea();
 		this.jResultInfo.setEditable(false);
-		this.jResultInfo.setText("hello world\n1234");
 		JScrollPane scrollPane = new JScrollPane(jResultInfo);
 		scrollPane.setMinimumSize(new Dimension(10, 100));
 		scrollPane.setPreferredSize(new Dimension(100, 105));
@@ -81,30 +78,33 @@ public class TestPanel {
 		this.resultPanel.add(scrollPane);//, BorderLayout.CENTER);
 		
 		this.jButtonTest = new JButton(_("Run test"));
+		this.jButtonTest.addMouseListener(new TestPanelListener(this.main, this));
 		
 		this.resultPanel.add(this.jButtonTest);//, BorderLayout.PAGE_END);
 		this.cp.add(resultPanel, BorderLayout.PAGE_END);
 	}
 	
-	public void updateQuestInfo(){
-		if( main.getSettings().getProfile().getCurrentQuest() != null ){
-			String html = main.getSettings().getProfile().getCurrentQuest().getInitPath() +  File.separator +
-					main.getSettings().getProfile().getCurrentQuest().getPackagePath() + File.separator +
-					main.getSettings().getProfile().getCurrentQuest().getQuestPath() +
-					File.separator + "description.html";
-			System.out.println("-> " + html);
-			
-			this.jDescPane.setDocument(LoadStatics.readStyleSheet("packages/default/style.css"));
-			
-			try {
-				this.jDescPane.setPage(LoadStatics.getHTMLUrl(html));
-			} catch (IOException e) {
-				DebugShell.out(State.ERROR, Area.ERROR, html + " not found");
-				e.printStackTrace();
-			}
-			
-			this.jDescPane.repaint();
+	public void output(String s){
+		this.jResultInfo.setText(this.jResultInfo.getText() + "\n" + s);
+	}
+
+	public void setDescDoc(String html, String css) {
+		
+		this.jDescPane.setDocument(LoadStatics.readStyleSheet(css));
+		
+		try {
+			this.jDescPane.setPage(LoadStatics.getHTMLUrl(html));
+		} catch (IOException e) {
+			DebugShell.out(State.ERROR, Area.ERROR, html + " not found");
+			e.printStackTrace();
 		}
+		
+		this.jDescPane.repaint();
+	}
+
+	public void setjQuestTitle(String title) {
+		
+		this.main.getRightPanel().setQuestMode(title);
 	}
 
 }

@@ -35,7 +35,7 @@ import javax.swing.tree.TreePath;
  * @author fabian
  *
  */
-public class TreeTableModelAdapter extends AbstractTableModel {
+public class TreeTableModelAdapter<TreeNode extends DataNode> extends AbstractTableModel {
     
 	/**
 	 * 
@@ -43,9 +43,9 @@ public class TreeTableModelAdapter extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	
 	JTree tree;
-	AbstractTreeTableModel treeTableModel;
+	AbstractTreeTableModel<TreeNode> treeTableModel;
 
-	public TreeTableModelAdapter(AbstractTreeTableModel treeTableModel, JTree tree) {
+	public TreeTableModelAdapter(AbstractTreeTableModel<TreeNode> treeTableModel, JTree tree) {
 		this.tree = tree;
        	this.treeTableModel = treeTableModel;
 

@@ -23,15 +23,11 @@ package at.jku.ssw.cmm;
 
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Obj;
-import at.jku.ssw.cmm.debugger.Debugger;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.interpreter.Interpreter;
-import at.jku.ssw.cmm.interpreter.exceptions.BufferOverflowException;
 import at.jku.ssw.cmm.interpreter.exceptions.RunTimeException;
-import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
-import at.jku.ssw.cmm.interpreter.memory.MethodContainer;
 
 /**
  * This class starts the separate interpreter thread. For thread synchronization
@@ -105,22 +101,18 @@ public class CMMrun extends Thread {
 		// Thrown when runtime error occurs
 		catch (final RunTimeException e) {
 
-			System.err
-					.println("[ERROR] Interpreter thread threw RunTimeException");
-
-			// print detailed StackTrace
-			if (DebugShell.maxLogLevel == DebugShell.State.LOG) {
-				e.printStackTrace();
-			}
+			System.err.println("[ERROR] Interpreter thread threw RunTimeException");
 
 			// Clean thread data partly up; leave variable data for GUI runtime
 			// error mode
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					if (e.getNode().line > 0)
+					if ( e.getNode() != null && e.getNode().line > 0)
 						debug.setErrorMode(e.getMessage(), e.getNode().line);
-					else
+					else if( e.getLine() > 0 )
 						debug.setErrorMode(e.getMessage(), e.getLine());
+					else
+						debug.setErrorMode(e.getMessage(), -1);
 				}
 			});
 			reply.setNotRunning();

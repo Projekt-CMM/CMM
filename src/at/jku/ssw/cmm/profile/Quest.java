@@ -117,6 +117,7 @@ public class Quest {
 	private String questPath;
 	
 	
+	
 	/**
 	 * Files and folderNames
 	 */
@@ -140,7 +141,9 @@ public class Quest {
 		XML_NEXTQUEST = "nextquest",
 		XML_STATE = "state",
 		XML_REWARD = "reward",
-		XML_OPTIONAL = "optional";
+		XML_OPTIONAL = "optional",
+		XML_INPUT = "input",
+		XML_REF = "ref";
 
 	/**
 	 * Strings for the correct State
@@ -294,6 +297,7 @@ public class Quest {
 					//No state found
 					
 					//System.out.println("No / Wrong State set!");
+
 					//quest.setState(Quest.STATE_LOCKED);
 					quest.setState(Quest.STATE_SELECTABLE);
 				}
@@ -553,8 +557,22 @@ public class Quest {
 
 	public void setOptional(boolean optional) {
 		this.optional = optional;
+	}
+
+
+
+	/*public String getInput() {
+		return this.input;
+	}
+
+	public String getRef() {
+		return ref;
+	}
+
+	public void setRef(String ref) {
+		this.ref = ref;
 	}	
-	
+	*/
 	
 	
 	

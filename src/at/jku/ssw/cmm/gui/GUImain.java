@@ -24,11 +24,14 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import at.jku.ssw.cmm.DebugShell;
@@ -120,7 +123,7 @@ public class GUImain {
 	/**
 	 * The current version of C Compact, used as window title.
 	 */
-	public static final String VERSION = "C Compact Alpha 1.2 (Build 4)";
+	public static final String VERSION = "C Compact Alpha 1.3";
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)
@@ -217,6 +220,9 @@ public class GUImain {
 		sp.setPreferredSize(new Dimension(800, 500));
 		sp.setDividerLocation(0.6);
 		sp.setResizeWeight(1.0);
+		
+		sp.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+		  .put(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), "none");
 
 		// Initialize the save dialog object
 		this.saveDialog = new SaveDialog(this.jFrame,
@@ -236,7 +242,7 @@ public class GUImain {
 
 		this.menuBarControl = new MenuBarControl(listener);
 
-		InitMenuBar.initFileM(this.jFrame, this, this.menuBarControl, listener);
+		InitMenuBar.initFileM(this.jFrame, this, this.menuBarControl, listener, this.rightPanelControl.getDebugPanel().getControlPanel());
 
 		this.menuBarControl.updateRecentFiles(this.settings.getRecentFiles(), this.settings.getCMMFilePath());
 		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), false);
@@ -300,6 +306,10 @@ public class GUImain {
 					this.jFrame.getTitle().length() - 1));
 		}
 	}
+	
+	public boolean isFileChanged() {
+		return this.jFrame.getTitle().endsWith("*");
+	}
 
 	public GUIleftPanel getLeftPanel() {
 		return this.leftPanelControl;
@@ -326,7 +336,7 @@ public class GUImain {
 
 		// Ignoring Quest GUI if there is no active Profile
 		if (this.getSettings().getProfile() != null)
-			new GUIquestMain(this.rightPanelControl.getProfilePanel(), this).start();
+			new GUIquestMain(this.rightPanelControl.getTestPanel(), this).start();
 	}
 
 	public JPanel getGlassPane() {

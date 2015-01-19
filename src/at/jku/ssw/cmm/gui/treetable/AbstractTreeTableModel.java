@@ -35,8 +35,8 @@ import javax.swing.tree.TreePath;
  * @author fabian
  *
  */
-public abstract class AbstractTreeTableModel implements TreeTableModel {
-    protected DataNode root;
+public abstract class AbstractTreeTableModel <TreeNode extends DataNode> implements TreeTableModel {
+    protected TreeNode root;
     protected EventListenerList listenerList = new EventListenerList();
  
     private static final int CHANGED = 0;
@@ -44,11 +44,11 @@ public abstract class AbstractTreeTableModel implements TreeTableModel {
     private static final int REMOVED = 2;
     private static final int STRUCTURE_CHANGED = 3;
  
-    public AbstractTreeTableModel(DataNode root) {
+    public AbstractTreeTableModel(TreeNode root) {
         this.root = root;
     }
  
-    public DataNode getRoot() {
+    public TreeNode getRoot() {
         return root;
     }
  
