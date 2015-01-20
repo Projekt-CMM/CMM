@@ -28,6 +28,7 @@ import java.awt.Graphics;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeModel;
 
 import at.jku.ssw.cmm.gui.treetable.var.VarDataNode;
@@ -62,9 +63,9 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
     
     //TODO private final GUImain main;
      
-    public TreeTableCellRenderer(TreeTable<?> treeTable, TreeModel model) {
+    public TreeTableCellRenderer(TreeTable<?> treeTable, TreeModel model, DefaultTreeCellRenderer renderer) {
         super(model);
-        super.setCellRenderer(new TreeRenderer());
+        super.setCellRenderer(renderer);//new TreeStructImageRenderer());//new TreeRenderer());
         this.treeTable = treeTable;
         
         setRowHeight(getRowHeight()+1);

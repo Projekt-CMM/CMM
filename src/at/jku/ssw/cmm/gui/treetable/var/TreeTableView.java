@@ -77,6 +77,7 @@ public class TreeTableView{
 		this.varTreeTableModel = new TreeTableDataModel<VarDataNode>(InitTreeTableData.createDataStructure(fileName), columnNames, columnTypes);
 		
 		this.varTreeTable = new TreeTable<>(this.varTreeTableModel);
+		this.varTreeTable.getCellRenderer().setCellRenderer(new TreeStructImageRenderer());
 		
 		this.varTreeTable.getTableHeader().setToolTipText("<html><b>" + _("Variable table columns") + "</b><br>" +
         		_("You can change the width a column by<br>dragging and sliding its border.") + "</html>");

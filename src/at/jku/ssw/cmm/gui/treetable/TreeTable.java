@@ -26,6 +26,9 @@ import java.awt.Dimension;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
+import at.jku.ssw.cmm.gui.treetable.var.TreeStructImageRenderer;
+import at.jku.ssw.cmm.gui.treetable.var.VarDataNode;
+
 /**
  * A jTree embedded in a table
  * <br>
@@ -70,7 +73,10 @@ public class TreeTable<TreeNode extends DataNode> extends JTable {
     	this.dataModel = treeTableModel;
     	
     	//Create JTree
-        tree = new TreeTableCellRenderer(this, treeTableModel);
+    	if( treeTableModel.getRoot() instanceof VarDataNode )
+    		tree = new TreeTableCellRenderer(this, treeTableModel, new TreeStructImageRenderer());
+    	else
+    		tree = new TreeTableCellRenderer(this, treeTableModel, new TreeRenderer());
         //TODO tree.setFont(tree.getFont().deriveFont((float)this.main.getSettings().getVarSize()));
         
         this.modelAdapter = new TreeTableModelAdapter<>(treeTableModel, tree);
@@ -103,10 +109,6 @@ public class TreeTable<TreeNode extends DataNode> extends JTable {
         this.repaint();
     }
     
-    public TreeTableDataModel<TreeNode> getTreeModel(){
-    	return this.dataModel;
-    }
-    
     public void updateTreeModel(){
     	
     	int[] colWidth = new int[super.getColumnCount()];
@@ -127,6 +129,10 @@ public class TreeTable<TreeNode extends DataNode> extends JTable {
     	}
         
         this.repaint();
+    }
+    
+    public TreeTableDataModel<TreeNode> getTreeModel(){
+    	return this.dataModel;
     }
     
     public TreeTableCellRenderer getCellRenderer(){
