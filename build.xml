@@ -5,6 +5,7 @@
     <property name="build.lib" value="lib"/>
     <property name="java.dir" value="src"/>
     <property name="jtests.dir" value="jtests"/>
+    <property name="jtests.log.dir" value="jtests/log"/>
     <property name="error.dir" value="error"/>
     <property name="clib.dir" value="clib"/>
     <property name="translation.dir" value="po"/>
@@ -14,14 +15,24 @@
     <property name="flex-ccompact.file" value="${java.dir}/at/jku/ssw/cmm/gui/init/CCompactTokenMaker.flex"/>
     <property name="java-flex-ccompact.file" value="${java.dir}/at/jku/ssw/cmm/gui/init/CCompactTokenMaker.java"/>
 
+    <!-- required paths to build CMM -->
     <path id="classpath.base">
         <pathelement location="${build.lib}/rsyntaxtextarea.jar"/>
     </path>
     
+    <!-- required paths to build tests -->
     <path id="classpath.test">
+        <!-- path to jtests-directory -->
+        <pathelement location="${build.classes}/${jtests.dir}"/>
+        
+        <!-- path to build-directory -->
+        <pathelement location="${build.classes}"/>
+        
+        <!-- libs which are required by junit -->
         <pathelement location="${build.lib}/junit-4.12.jar"/>
-        <pathelement location="${build.classes}" />
-        <pathelement location="${build.classes}/${jtests.dir}" /> 
+        <pathelement location="${build.lib}/hamcrest-core-1.3.jar"/>
+        
+        <!-- include all elements from base -->
         <path refid="classpath.base" />
     </path>
 
@@ -91,8 +102,6 @@
         <delete dir="${build.classes}"/>
         <mkdir dir="${build.classes}"/>
 
-        <!-- Quelltext kompilieren 
-            classpath="${build.lib}/rsyntaxtextarea.jar"-->
         <!-- build CMM -->
         <javac srcdir="${java.dir}"
             destdir="${build.classes}"
@@ -117,7 +126,6 @@
             <fileset dir="${java.dir}"/>
             <fileset dir="./">  
                 <include name="${error.dir}/**"/>
-                <!--<include name="${jtests.dir}/*.java"/>-->
                 <include name="${clib.dir}/*.h"/>
                 <include name="${translation.dir}/**"/>
             </fileset>
@@ -140,6 +148,7 @@
         <delete dir="${build.classes}"/>
         <delete file="${name}.jar"/>
         <delete file="xgettext.files"/>
+        <delete dir="${jtests.log.dir}"/>
         <delete file="${java.dir}/at/jku/ssw/cmm/gui/init/CCompactTokenMaker.java"/>
         <delete file="${java.dir}/at/jku/ssw/cmm/compiler/Scanner.java"/>
         <delete file="${java.dir}/at/jku/ssw/cmm/compiler/Parser.java"/>
@@ -174,7 +183,28 @@
     </target>
 
     <!-- test project -->
-    <target name="test" depends="build, test-compiler, test-interpreter, test-gui" description="test project"/>
+    <target name="test" depends="build, test-junit, test-compiler, test-interpreter, test-gui" description="test project"/>
+
+    <!-- run junit-tests -->
+    <target name="test-junit" depends="build" description="run junit tests">
+        <!-- create log-directory -->
+        <delete dir="${jtests.log.dir}"/>
+        <mkdir dir="${jtests.log.dir}"/>
+        
+        <!-- run junit -->
+        <junit printSummary="true" showOutput="false" haltonfailure="no" failureproperty="test.failed">
+            <formatter type="plain" />
+            <classpath refid="classpath.test" />
+            <batchtest fork="true" todir="${jtests.log.dir}" >
+                <fileset dir="${build.classes}/${jtests.dir}">
+                    <include name="**/*.class"/>
+                </fileset>
+            </batchtest>
+        </junit>
+        
+        <!-- check if junit-test was failing -->
+        <fail message="Test failure detected, check test results." if="test.failed" />
+    </target>
 
     <!-- test compiler part -->
     <target name="test-compiler" depends="build" description="test compiler part">
@@ -184,53 +214,9 @@
         <exec executable="./tests/compiler/bruteforcetest.sh" failonerror="true"/>
     </target>
 
-<!--<property name="default.target.dir" value="${basedir}/target" />
-    <property name="test.report.dir" value="${default.target.dir}/test-reports" />
-
-    <target name="basic">
-        <mkdir dir="${test.report.dir}" />
-        <junit fork="true" printSummary="true" showOutput="true">
-            <formatter type="plain" />
-            <classpath>
-                <pathelement path="${basedir}/bin "/>
-            </classpath>
-            <batchtest fork="true" todir="${test.report.dir}" >
-                <fileset dir="${basedir}/bin">
-                    <include name="**/*Test.*" />
-                </fileset>
-            </batchtest>
-        </junit>
-    </target>-->
-
-
-
     <!-- test interpreter part -->
     <target name="test-interpreter" depends="build" description="test interpreter part">
-        <!-- create log-directory -->
-        <delete dir="${jtests.dir}/log"/>
-        <mkdir dir="${jtests.dir}/log"/>
-        
-        <!-- run jtest -->
-        <junit printSummary="true" showOutput="false" haltonfailure="no" failureproperty="test.failed">
-            <classpath>
-                <pathelement location="${build.classes}/${jtests.dir}"/>
-                <pathelement location="${build.classes}"/>
-                <pathelement path="${build.classes}/${jtests.dir}"/>
-                <pathelement path="${build.classes}"/>
-                <pathelement location="${build.lib}/junit-4.12.jar"/>
-                <pathelement location="${build.lib}/hamcrest-core-1.3.jar"/>
-            </classpath>
-            <formatter type="plain" />
-            <!--<classpath refid="classpath.test" />-->
-            <batchtest fork="true" todir="${jtests.dir}/log" >
-                <fileset dir="${build.classes}/${jtests.dir}">
-                    <include name="**/*.class"/>
-                </fileset>
-            </batchtest>
-        </junit>
-        
-        <!-- check if junit-test was failing -->
-        <fail message="Test failure detected, check test results." if="test.failed" />
+
     </target>
 
     <!-- test gui part -->
