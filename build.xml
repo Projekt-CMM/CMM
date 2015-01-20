@@ -192,7 +192,8 @@
         <mkdir dir="${jtests.log.dir}"/>
         
         <!-- run junit -->
-        <junit printSummary="true" showOutput="false" haltonfailure="no" failureproperty="test.failed">
+        <junit printSummary="false" showOutput="false" outputtoformatters="yes" haltonfailure="false" failureproperty="test.failed">
+            <formatter type="brief" usefile="false" />
             <formatter type="plain" />
             <classpath refid="classpath.test" />
             <batchtest fork="true" todir="${jtests.log.dir}" >
