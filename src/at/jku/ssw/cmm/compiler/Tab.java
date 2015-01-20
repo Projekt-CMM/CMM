@@ -312,9 +312,18 @@ public class Tab {
 	 * @return return converted char
 	 */
 	public char charVal(String s) {
-		if(s.matches("^'.'$")) {
+		System.out.println("s: " +s);
+		// a correct char expression contain 1 or 2 characters inside declaration
+		if(s.matches("^'.{1,2}'$")) {
+			System.out.println("unknow character1");
+			parser.SemErr("unknow character");
+			return 	'\0';
+		}
+		
+		if(s.matches("^'.'$") && s.charAt(1) != '\\') {
+			System.out.println("char: " + s.charAt(1));
 			return  s.charAt(1);
-		} else {
+		} else if(s.charAt(1) == '\\'){
 			//--- s.charAt(1) == '\' so I parse the second character to get it usage
 			switch(s.charAt(2))
 			{
@@ -334,6 +343,9 @@ public class Tab {
 					parser.SemErr("unknow character");
 					return 	'\0';
 			}
+		} else {
+			parser.SemErr("unknow character");
+			return 	'\0';
 		}
 	}
 
