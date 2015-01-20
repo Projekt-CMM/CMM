@@ -16,20 +16,12 @@ public class TreeStructImageRenderer extends DefaultTreeCellRenderer {
 	private final Icon struct;
 	private final Icon array;
 	private final Icon cmm;
-	private final Icon _int;
-	private final Icon _char;
-	private final Icon _bool;
-	private final Icon _string;
 	
 	public TreeStructImageRenderer(){
 	    this.function = new ImageIcon("images/func.png");
 	    this.struct = new ImageIcon("images/struct.png");
 	    this.array = new ImageIcon("images/array.png");
 	    this.cmm = new ImageIcon("images/cmm.png");
-	    this._int = new ImageIcon("images/int.png");
-	    this._char = new ImageIcon("images/char.png");
-	    this._bool = new ImageIcon("images/bool.png");
-	    this._string = new ImageIcon("images/string.png");
 	}
 	
 	@Override
@@ -50,18 +42,10 @@ public class TreeStructImageRenderer extends DefaultTreeCellRenderer {
 		} else if (((String) node.getType()).startsWith("array")) {
 			setOpenIcon(array);
 			setClosedIcon(array);
-		} else if (((String) node.getType()).startsWith("int")) {
-			setLeafIcon(_int);
-		} else if (((String) node.getType()).startsWith("char")) {
-			setLeafIcon(_char);
-		} else if (((String) node.getType()).startsWith("bool")) {
-			setLeafIcon(_bool);
-		} else if (((String) node.getType()).startsWith("string")) {
-			setLeafIcon(_string);
 		} else {
-			setOpenIcon(getDefaultOpenIcon());
-			setClosedIcon(getDefaultClosedIcon());
-			setLeafIcon(getDefaultLeafIcon());
+			setOpenIcon(null);
+			setClosedIcon(null);
+			setLeafIcon(null);
 		}
 
 		super.getTreeCellRendererComponent(tree, value, sel, exp, leaf, row,
