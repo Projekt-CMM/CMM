@@ -19,7 +19,7 @@
  *  Copyright (c) 2014-2015 Peter Wassermair
  */
  
-package at.jku.ssw.cmm.gui.utils;
+package at.jku.ssw.cmm.gui.treetable;
 
 import java.awt.Color;
 import java.awt.Component;

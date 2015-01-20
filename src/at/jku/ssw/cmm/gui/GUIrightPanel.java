@@ -43,7 +43,7 @@ import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gui.debug.ErrorTable;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
-import at.jku.ssw.cmm.gui.utils.LoadStatics;
+import at.jku.ssw.cmm.gui.file.LoadStatics;
 import at.jku.ssw.cmm.quest.GUITestPanel;
 
 /**

@@ -35,7 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import at.jku.ssw.cmm.gui.utils.LoadStatics;
+import at.jku.ssw.cmm.gui.file.LoadStatics;
 import at.jku.ssw.cmm.profile.Profile;
 
 /**
