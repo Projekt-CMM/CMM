@@ -81,7 +81,7 @@ public class Quest {
 	private boolean ref;
 	
 	/**
-	 * true if the Quest has a input.txt
+	 * true if the Quest has a input.cmm
 	 */
 	private boolean input;
 	
@@ -126,7 +126,7 @@ public class Quest {
 		FILE_STYLE = "style.css",
 		FiLE_QUEST = "quest.xml",
 		FILE_REF = "ref.cmm",
-		FILE_INPUT_TXT = "input.txt",
+		//FILE_INPUT_TXT = "input.txt",
 		FILE_INPUT_CMM = "input.cmm",
 		FOLDER_TOKENS = "tokens";
 	
@@ -183,7 +183,7 @@ public class Quest {
 					quest.setStyle(true);
 				if(fileNames.contains(Quest.FILE_REF))
 					quest.setRef(true);
-				if(fileNames.contains(Quest.FILE_INPUT_TXT) || fileNames.contains(Quest.FILE_INPUT_CMM))
+				if(fileNames.contains(/*Quest.FILE_INPUT_TXT) || fileNames.contains(*/Quest.FILE_INPUT_CMM))
 					quest.setInput(true);
 				
 				//Setting Quest Paths for later use:

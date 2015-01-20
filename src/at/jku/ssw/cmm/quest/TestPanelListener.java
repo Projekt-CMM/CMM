@@ -45,7 +45,7 @@ public class TestPanelListener implements MouseListener, TestReply {
 		
 		//TODO is there a static variable for "packages" folder name???
 		System.out.println("Quest: " + "packages" + File.separator + quest.getPackagePath() + File.separator + quest.getQuestPath());
-		System.out.println("Ref: " + quest.FILE_REF + ", Input: " +  quest.FILE_INPUT_TXT);
+		System.out.println("Ref: " + quest.FILE_REF + ", Input: " +  quest.FILE_INPUT_CMM);
 		
 		//No reference -> can not test
 		if( quest.isRef()){
@@ -56,7 +56,7 @@ public class TestPanelListener implements MouseListener, TestReply {
 		
 		String[] ignore = {"\n", ",", ";"};
 		QuestTester qt = new QuestTester((TestReply)this,
-				"packages" + File.separator + quest.getPackagePath() + File.separator + quest.getQuestPath() + File.separator + quest.FILE_INPUT_TXT,
+				"packages" + File.separator + quest.getPackagePath() + File.separator + quest.getQuestPath() + File.separator + quest.FILE_INPUT_CMM,
 				"packages" + File.separator + quest.getPackagePath() + File.separator + quest.getQuestPath() + File.separator + quest.FILE_REF,
 				main.getSettings().getCMMFilePath(), ignore);
 		qt.start();
