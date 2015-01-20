@@ -118,7 +118,7 @@ public class Tests implements StdInOut {
 	/*
 	 * INT Array
 	 */
-	@Test
+	/*@Test
 	public void test3() throws Exception{
 		String[] a = { "interpretertests/file03.cmm" };
 		System.out.println("\n" + a[0] + ":");
@@ -136,7 +136,7 @@ public class Tests implements StdInOut {
 	 * Char Array
 	 */
 	
-	@Test
+	/*@Test
 	public void test4() throws Exception{
 		String[] a = { "interpretertests/file04.cmm" };
 		System.out.println("\n" + a[0] + ":");
@@ -239,7 +239,7 @@ public class Tests implements StdInOut {
  * While, Arrays, Etc
  */
 	
-	@Test
+	/*@Test
 	public void test11() throws Exception{
 		String[] a = { "interpretertests/file11.cmm" };
 		System.out.println("\n" + a[0] + ":");
@@ -272,7 +272,7 @@ public class Tests implements StdInOut {
 	 * multidimensional Arrays + while
 	 */
 	
-	@Test
+	/*@Test
 	public void test13() throws Exception{
 		String[] a = { "interpretertests/file13.cmm"};
 		System.out.println("\n" + a[0] + ":");
@@ -286,7 +286,7 @@ public class Tests implements StdInOut {
 	 * Without Global Variable
 	 * multidimensional Array + while
 	 */
-	@Test
+	/*@Test
 	public void test14() throws Exception{
 		String[] a = { "interpretertests/file14.cmm"};
 		System.out.println("\n" + a[0] + ":");
@@ -299,7 +299,7 @@ public class Tests implements StdInOut {
 	/*
 	 * 3 dimensional Array	
 	 */
-	@Test
+	/*@Test
 	public void test15() throws Exception{
 		String[] a = { "interpretertests/file15.cmm"};
 		System.out.println("\n" + a[0] + ":");
@@ -311,7 +311,7 @@ public class Tests implements StdInOut {
 	/*
 	 *  2 dimensional Array	
 	 */
-	@Test
+	/*@Test
 	public void test16() throws Exception{
 		String[] a = { "interpretertests/file16.cmm"};
 		System.out.println("\n" + a[0] + ":");
@@ -324,7 +324,7 @@ public class Tests implements StdInOut {
 	/*
 	 *  1 dimensional Array
 	 */
-	@Test
+	/*@Test
 	public void test17() throws Exception{
 		String[] a = { "interpretertests/file17.cmm"};
 		System.out.println("\n" + a[0] + ":");
