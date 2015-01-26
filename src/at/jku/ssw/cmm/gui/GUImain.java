@@ -92,6 +92,11 @@ public class GUImain {
 	 */
 	private JFrame jFrame;
 
+	/**
+	 * A reference to the left panel control class. <br>
+	 * The left panel contains text areas for the source code and
+	 * debugger I/O data.
+	 */
 	private GUIleftPanel leftPanelControl;
 
 	/**
@@ -113,6 +118,9 @@ public class GUImain {
 	 */
 	private SaveDialog saveDialog;
 
+	/**
+	 * A reference to the class which controls the menu bar
+	 */
 	private MenuBarControl menuBarControl;
 
 	/**
@@ -149,39 +157,6 @@ public class GUImain {
 	 * @throws InvocationTargetException 
 	 */
 	public void start(boolean test) {
-		/*try {
-			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException | UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		//MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
-        
-        // set SeaGlass laf if available
-        /*try {
-            UIManager.installLookAndFeel("SeaGlass", "com.seaglasslookandfeel.SeaGlassLookAndFeel");
-            UIManager.setLookAndFeel("com.seaglasslookandfeel.SeaGlassLookAndFeel");
-        } catch (Exception e) {
-            System.err.println("Seaglass LAF not available using Ocean.");
-            try {
-                UIManager.setLookAndFeel(new MetalLookAndFeel());
-            } catch (Exception e2) {
-                System.err.println("Unable to use Ocean LAF using default.");
-            }
-        }*/
-
-		/*try {
-		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-		    	System.out.println(info.getName());
-		        if ("GTK+".equals(info.getName())) {
-		            UIManager.setLookAndFeel(info.getClassName());
-		            break;
-		        }
-		    }
-		} catch (Exception e) {
-		    // If Nimbus is not available, you can set the GUI to another look and feel.
-		}*/
 		
 		// EDT Thread analysis
 		if (SwingUtilities.isEventDispatchThread())
@@ -295,11 +270,18 @@ public class GUImain {
 		}
 	}
 
+	/**
+	 * This method should be called by document listeners when the source code
+	 * or the input data has been changed by the user
+	 */
 	public void setFileChanged() {
 		if (!this.jFrame.getTitle().endsWith("*"))
 			this.jFrame.setTitle(this.jFrame.getTitle() + "*");
 	}
 
+	/**
+	 * This method should be called when the currently edited file has been saved
+	 */
 	public void setFileSaved() {
 		if (this.jFrame.getTitle().endsWith("*")) {
 			this.jFrame.setTitle(this.jFrame.getTitle().substring(0,
@@ -307,14 +289,24 @@ public class GUImain {
 		}
 	}
 	
+	/**
+	 * @return TRUE if there haven been changes on the source code or input data
+	 * 			since the last safe, otherwise FALSE
+	 */
 	public boolean isFileChanged() {
 		return this.jFrame.getTitle().endsWith("*");
 	}
 
+	/**
+	 * @return The controller class for the left panel
+	 */
 	public GUIleftPanel getLeftPanel() {
 		return this.leftPanelControl;
 	}
 	
+	/**
+	 * @return The controller class for the right panel
+	 */
 	public GUIrightPanel getRightPanel() {
 		return this.rightPanelControl;
 	}
@@ -339,11 +331,23 @@ public class GUImain {
 			new GUIquestMain(this.rightPanelControl.getTestPanel(), this).start();
 	}
 
+	/**
+	 * @return The glass pane of the main window which is used for popups
+	 */
 	public JPanel getGlassPane() {
 
 		return ((JPanel) this.jFrame.getGlassPane());
 	}
 
+	/**
+	 * Creates a popup containing the given panel
+	 * 
+	 * @param popup The content of the popup
+	 * @param x The x position of the popup
+	 * @param y The y position of the popup
+	 * @param width The width of the popup
+	 * @param height The height of the popup
+	 */
 	public void invokePopup(JPanel popup, int x, int y, int width, int height) {
 
 		((JPanel) this.jFrame.getGlassPane()).add(popup);
@@ -354,6 +358,9 @@ public class GUImain {
 		((JPanel) this.jFrame.getGlassPane()).repaint();
 	}
 
+	/**
+	 * Sets main GUI and all child components to ready mode
+	 */
 	public void setReadyMode() {
 		
 		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), false);
@@ -362,6 +369,9 @@ public class GUImain {
 		this.rightPanelControl.hideErrorPanel();
 	}
 
+	/**
+	 * Sets main GUI and all child components to error mode
+	 */
 	public void setErrorMode(String msg, int line) {
 		
 		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), false);
@@ -370,6 +380,9 @@ public class GUImain {
 		this.rightPanelControl.showErrorPanel(msg);
 	}
 
+	/**
+	 * Sets main GUI and all child components to run mode
+	 */
 	public void setRunMode() {
 		
 		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), true);
@@ -378,6 +391,9 @@ public class GUImain {
 		this.rightPanelControl.hideErrorPanel();
 	}
 
+	/**
+	 * Sets main GUI and all child components to pause mode
+	 */
 	public void setPauseMode() {
 		
 		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), true);
@@ -412,21 +428,36 @@ public class GUImain {
 		this.menuBarControl.unlockAll();
 	}
 
+	/**
+	 * @return The save manager class which controls saving files
+	 * 		and the save dialogues
+	 */
 	public SaveDialog getSaveManager() {
 		return this.saveDialog;
 	}
 
+	/**
+	 * @return The global settings object
+	 */
 	public GUImainSettings getSettings() {
 		return settings;
 	}
 
-	// TODO Save dialog
+	/**
+	 * Cleanly closes the main window and asks the user to save his/her work.
+	 * Do NEVER call <i>jFrame.dispose()</i> directly; use this method.
+	 */
 	public void dispose() {
 		saveDialog.safeCheck(_("Disposing"));
 		
 		this.jFrame.dispose();
 	}
 
+	/**
+	 * @return TRUE if the GUI is running in profile mode,
+	 * 			FALSE if C Compact has been launched without
+	 * 			selecting a user profile.
+	 */
 	public boolean hasAdvancedGUI() {
 		return this.settings.hasProfile();
 	}
