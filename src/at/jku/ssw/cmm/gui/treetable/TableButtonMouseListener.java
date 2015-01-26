@@ -19,7 +19,7 @@
  *  Copyright (c) 2014-2015 Peter Wassermair
  */
  
-package at.jku.ssw.cmm.gui.utils;
+package at.jku.ssw.cmm.gui.treetable;
 
 import static at.jku.ssw.cmm.gettext.Language._;
 
@@ -30,7 +30,6 @@ import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
 import at.jku.ssw.cmm.gui.GUImain;
-import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.context.InitContextMenu;
 import at.jku.ssw.cmm.gui.treetable.var.VarDataNode;
 
@@ -95,7 +94,8 @@ public class TableButtonMouseListener implements MouseListener {
 		int col = this.treeTable.getTable().columnAtPoint(e.getPoint());
 		
 		// Right mouse clicked
-		if (SwingUtilities.isRightMouseButton(e)) {
+		if (SwingUtilities.isRightMouseButton(e)
+				&& this.treeTable.getTreeModel().getRoot() instanceof VarDataNode) {
 			if (row >= 0 && col >= 0) {
 				
 				String name = (String)this.treeTable.getTable().getValueAt(row, 0);

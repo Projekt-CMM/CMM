@@ -20,7 +20,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 
 import at.jku.ssw.cmm.gui.event.quest.QuestPanelListener;
-import at.jku.ssw.cmm.gui.utils.LoadStatics;
+import at.jku.ssw.cmm.gui.file.LoadStatics;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
 import at.jku.ssw.cmm.profile.Token;

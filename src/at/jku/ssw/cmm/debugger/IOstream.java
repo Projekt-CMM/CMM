@@ -33,7 +33,7 @@ import at.jku.ssw.cmm.interpreter.exceptions.RunTimeException;
 import at.jku.ssw.cmm.debugger.StdInOut;
 
 /**
- * Connects the I/O functions of the Interpreter with the GUI
+ * Connects the I/O functions of the interpreter with the GUI
  * 
  * @author fabian
  *
@@ -41,7 +41,7 @@ import at.jku.ssw.cmm.debugger.StdInOut;
 public class IOstream implements StdInOut {
 
 	/**
-	 * Connects the I/O functions of the Interpreter with the GUI
+	 * Connects the I/O functions of the interpreter with the GUI
 	 * 
 	 * @param modifier
 	 *            Interface for main GUI manipulations
@@ -73,6 +73,12 @@ public class IOstream implements StdInOut {
 	 */
 	private final List<Character> inputStream;
 
+	/**
+	 * Reads the next character from the input text area and returns it to the interpreter
+	 * 
+	 * @return The next character
+	 * @throws RuntimeException if the text area has no more characters left
+	 */
 	@Override
 	public char in() throws RunTimeException {
 
@@ -110,6 +116,11 @@ public class IOstream implements StdInOut {
 		return c;
 	}
 
+	/**
+	 * Prints a character from the interpreter thread onto the output text field.
+	 * 
+	 * @param arg0 The character of the output stream
+	 */
 	@Override
 	public void out(final char arg0) {
 

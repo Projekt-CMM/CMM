@@ -19,7 +19,7 @@
  *  Copyright (c) 2014-2015 Peter Wassermair
  */
  
-package at.jku.ssw.cmm.gui.utils;
+package at.jku.ssw.cmm.gui.file;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;

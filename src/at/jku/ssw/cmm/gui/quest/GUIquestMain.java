@@ -46,7 +46,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 import at.jku.ssw.cmm.gui.GUImain;
-import at.jku.ssw.cmm.gui.utils.LoadStatics;
+import at.jku.ssw.cmm.gui.file.LoadStatics;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
 import at.jku.ssw.cmm.profile.Package;

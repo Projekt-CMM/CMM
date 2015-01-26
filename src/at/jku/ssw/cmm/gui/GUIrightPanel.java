@@ -43,7 +43,7 @@ import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gui.debug.ErrorTable;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
-import at.jku.ssw.cmm.gui.utils.LoadStatics;
+import at.jku.ssw.cmm.gui.file.LoadStatics;
 import at.jku.ssw.cmm.quest.GUITestPanel;
 
 /**
@@ -79,6 +79,14 @@ public class GUIrightPanel {
 		this.main = main;
 	}
 	
+	/**
+	 * A reference to the main GUI
+	 */
+	private final GUImain main;
+	
+	/**
+	 * The tabbed panel which contains all sub-panels of the right panel
+	 */
 	private JTabbedPane tabbedPane;
 	
 	/**
@@ -86,6 +94,10 @@ public class GUIrightPanel {
 	 */
 	private GUIdebugPanel debugPanel;
 	
+	/**
+	 * This object contains a map which links an error message to an error
+	 * description file.
+	 */
 	private ErrorTable errorMap;
 	
 	/**
@@ -93,18 +105,44 @@ public class GUIrightPanel {
 	 */
 	private GUIProfilePanel questPanel;
 	
+	/**
+	 * A reference to the panel controller for quest success tests
+	 */
 	private GUITestPanel testPanel;
 
+	/**
+	 * A reference to the error description panel
+	 */
 	private JPanel errorPanel;
+	
+	/**
+	 * The text area showing error descriptions
+	 */
 	private JEditorPane errorDesc;
 	
+	/**
+	 * An additional text field below the error description which
+	 * shwos the original error message
+	 */
 	private JTextField errorMsg;
 	
-	private final GUImain main;
-	
+	/**
+	 * This panel visualizes the current quest state.
+	 * It is only visible when C Compact is launched with a user profile.
+	 */
 	private JPanel jStatePanel;
+	
+	/**
+	 * This label prints the name of the current quest state onto the
+	 * quest state panel
+	 */
 	private JLabel jStateLabel;
 
+	/**
+	 * Initializes the right panel of the main GUI
+	 * 
+	 * @return The right panel
+	 */
 	public JPanel init() {
 		
 		JPanel panel = new JPanel();
@@ -198,38 +236,53 @@ public class GUIrightPanel {
 		return this.questPanel;
 	}
 	
+	/**
+	 * @return A reference to the quest test panel manager
+	 */
 	public GUITestPanel getTestPanel(){
 		return this.testPanel;
 	}
 
-	public void showErrorPanel(String html) {
-		
-		System.out.println("Error: " + html);
+	/**
+	 * Enables the error panel and shows the error message for the given error
+	 * code.
+	 * 
+	 * @param errorCode The error code from the compiler, preprocessor or
+	 * 			interpreter. If there is no matching error description for the
+	 * 			given code, a default message is shown.
+	 */
+	public void showErrorPanel(String errorCode) {
 
 		this.errorDesc.setDocument(LoadStatics.readStyleSheet("error"
 				+ File.separator + "style.css"));
 		
 		try {
 			this.errorDesc.setPage(LoadStatics.getHTMLUrl(this.errorMap
-					.getErrorHTML(html)));
+					.getErrorHTML(errorCode)));
 		} catch (IOException e) {
-			DebugShell.out(State.ERROR, Area.ERROR, html + " not found");
+			DebugShell.out(State.ERROR, Area.ERROR, errorCode + " not found");
 			e.printStackTrace();
 		}
 
 		if (this.tabbedPane.getTabCount() == (main.hasAdvancedGUI() ? 2 : 1))
 			this.tabbedPane.add(errorPanel, _("Error"), 1);
 		
-		this.errorMsg.setText(html);
+		this.errorMsg.setText(errorCode);
 
 		this.tabbedPane.setSelectedIndex(1);
 	}
 
+	/**
+	 * Hides the error panel
+	 */
 	public void hideErrorPanel() {
 		if (this.tabbedPane.getTabCount() == (main.hasAdvancedGUI() ? 3 : 2))
 			tabbedPane.remove(1);
 	}
 	
+	/**
+	 * Sets the quest state panel to success mode
+	 */
 	public void setSuccessMode() {
 		if(main.hasAdvancedGUI()) {
 			this.jStatePanel.setBackground(new Color(0x92FC9B));
@@ -237,6 +290,9 @@ public class GUIrightPanel {
 		}
 	}
 	
+	/**
+	 * Sets the quest state panel to fail mode
+	 */
 	public void setFailedMode() {
 		if(main.hasAdvancedGUI()) {
 			this.jStatePanel.setBackground(new Color(255, 131, 131));
@@ -244,6 +300,9 @@ public class GUIrightPanel {
 		}
 	}
 	
+	/**
+	 * Sets the quest state panel to test mode
+	 */
 	public void setTestMode() {
 		if(main.hasAdvancedGUI()) {
 			this.jStatePanel.setBackground(new Color(0xEFDD1E));
@@ -251,6 +310,9 @@ public class GUIrightPanel {
 		}
 	}
 	
+	/**
+	 * Sets the quest state panel to idle mode
+	 */
 	public void setIdleMode() {
 		if(main.hasAdvancedGUI()) {
 			this.jStatePanel.setBackground(Color.LIGHT_GRAY);
@@ -258,6 +320,11 @@ public class GUIrightPanel {
 		}
 	}
 	
+	/**
+	 * Sets the quest state panel to quest mode
+	 * 
+	 * @param title The title of the current quest
+	 */
 	public void setQuestMode(String title) {
 		if(main.hasAdvancedGUI()) {
 			this.jStatePanel.setBackground(new Color(0x2BC6C6));

@@ -54,8 +54,22 @@ import at.jku.ssw.cmm.gui.init.InitLeftPanel;
 import at.jku.ssw.cmm.gui.init.JInputDataPane;
 import at.jku.ssw.cmm.preprocessor.Preprocessor;
 
+/**
+ * This class controls initializations and interaction of the left panel
+ * of the main GUI. This panel contains the text area for the source code
+ * ant the text areas for debugging in- and output.
+ * 
+ * @author fabian
+ */
 public class GUIleftPanel {
 
+	/**
+	 * This class controls initializations and interaction of the left panel
+	 * of the main GUI. This panel contains the text area for the source code
+	 * ant the text areas for debugging in- and output.
+	 * 
+	 * @param main A reference to the main GUI class
+	 */
 	public GUIleftPanel(GUImain main) {
 		this.main = main;
 		
@@ -63,9 +77,21 @@ public class GUIleftPanel {
 		this.codeRegister = new ArrayList<>();
 	}
 
+	/**
+	 * A reference to the main GUI class
+	 */
 	private final GUImain main;
 
+	/**
+	 * The panel which visualizes the current state of the debugger,
+	 * eg. text editor, step-by-step debugging, error, ...
+	 */
 	private JPanel jStatePanel;
+	
+	/**
+	 * The label which prints the current state of the debugger onto
+	 * the state panel
+	 */
 	private JLabel jStateLabel;
 
 	/**
@@ -91,8 +117,6 @@ public class GUIleftPanel {
 	 * input string which has already been used.
 	 */
 	private int inputHighlightOffset;
-
-	private SourceCodeListener codeListener;
 
 	// TODO make codeRegister thread safe
 	/**
@@ -130,17 +154,19 @@ public class GUIleftPanel {
 	 * @return A jPanel with all components of the main GUI
 	 */
 	public JSplitPane init() {
-		// Left part of the GUI
+		// Split panel for the left part of the GUI
 		JSplitPane jPanelLeft = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		jPanelLeft.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		// Panel to display the GUI mode
+		// Panel for the source code text area
 		JPanel panel1 = new JPanel();
 		panel1.setLayout(new BoxLayout(panel1, BoxLayout.PAGE_AXIS));
 		
+		// Panel for the I/O text areas
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
 		
+		// Initialize the panel which visualizes the debugger state
 		this.jStatePanel = new JPanel();
 		this.jStatePanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		
@@ -148,10 +174,11 @@ public class GUIleftPanel {
 		this.jStatePanel.setPreferredSize(new Dimension(30, 30));
 		this.jStatePanel.setMaximumSize(new Dimension(8000, 30));
 
+		// Initialize the label which prints the debugger's state
 		this.jStateLabel = new JLabel();
-
 		this.jStatePanel.add(this.jStateLabel);
 
+		// Add debugger state panel to source code panel
 		panel1.add(this.jStatePanel);
 
 		// Text area (text pane) for source code
@@ -167,23 +194,27 @@ public class GUIleftPanel {
 		// Update text panel font sizes
 		this.updateFontSize();
 		
+		// Properties of I/O text fields' master panel
 		panel2.setMinimumSize(new Dimension(200, 150));
 		panel2.setPreferredSize(new Dimension(200, 200));
 		panel2.setMaximumSize(new Dimension(2000, 2000));
 		
+		// Properties of the splitPanel
 		jPanelLeft.setTopComponent(panel1);
 		jPanelLeft.setBottomComponent(panel2);
 		jPanelLeft.setDividerLocation(0.4);
 		jPanelLeft.setResizeWeight(1.0);
 		
+		// Disable F6 keyboard shortcut for 
 		jPanelLeft.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
 		  .put(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), "none");
 
-		// Read last opened files
+		// Open latest file and show it's contents in the source code text area
 		if (this.main.getSettings().hasCMMFilePath()) {
 			this.jSourcePane.setText(FileManagerCode.readSourceCode(new File(
 					this.main.getSettings().getCMMFilePath())));
 			//TODO prevent source code panel from undoing setText
+			//TODO clear undo list when loading new file
 			this.jInputPane.setText(FileManagerCode.readInputData(new File(
 					this.main.getSettings().getCMMFilePath())));
 		}
@@ -192,14 +223,17 @@ public class GUIleftPanel {
 		this.inputHighlightOffset = 0;
 
 		// Initialize the source panel listener
-		this.codeListener = new SourceCodeListener(this.main);
-		this.jSourcePane.getDocument().addDocumentListener(this.codeListener);
-		// TODO
+		this.jSourcePane.getDocument().addDocumentListener(new SourceCodeListener(this.main));
+		// TODO I/O text fields do not yet have document listeners
 		// this.jInputPane.getDocument().addDocumentListener(this.codeListener);
 
 		return jPanelLeft;
 	}
 	
+	/**
+	 * Updates the font size of all text areas (source code and I/O) in the left panel.
+	 * Takes font size as saved in the global settings object.
+	 */
 	public void updateFontSize(){
 		this.jInputPane.setFont(this.jInputPane.getFont().deriveFont((float)this.main.getSettings().getTextSize()));
 		this.jOutputPane.setFont(this.jOutputPane.getFont().deriveFont((float)this.main.getSettings().getTextSize()));
@@ -208,9 +242,10 @@ public class GUIleftPanel {
 	}
 
 	/**
-	 * Highlights the already used characters of the input text area. Usually
-	 * called while interpreter is working.
+	 * Highlights the already characters of the input text area which have
+	 * already been read. Usually called while interpreter is working.
 	 * 
+	 * <br>
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 */
 	private void highlightInputPane() {
@@ -381,6 +416,10 @@ public class GUIleftPanel {
 		this.jOutputPane.setBackground(Color.WHITE);
 	}
 	
+	/**
+	 * Sets left panel to read mode.
+	 * This means, the user can edit the source code and the input data.
+	 */
 	public void setReadyMode() {
 		
 		this.unlockInput();
@@ -389,31 +428,47 @@ public class GUIleftPanel {
 		this.jStateLabel.setText("--- " + _("text edit mode") + " ---");
 	}
 
+	/**
+	 * Sets the left panel to error mode.
+	 * In this mode, the state panel on the top displays the location of
+	 * the error and the user can edit the source code in order to fix
+	 * the problem.
+	 * 
+	 * @param line
+	 */
 	public void setErrorMode(int line) {
 		
 		this.unlockInput();
 		
 		this.jStatePanel.setBackground(new Color(255, 131, 131));
-		// TODO parse filename from Parser
+		// TODO parse filename from Parser (when library error)
 		this.jStateLabel.setText("! ! ! " + _("error") + " " + (line >= 0 ? _("in line") + " " + line : "") + " ! ! !");
 		
 		if( line >= 0 )
 			this.highlightSourceCodeDirectly(line);
 	}
 
+	/**
+	 * Sets the left panel to run mode. This is when the debugger steps through the
+	 * source code automatically. Input methods on text areas are locked.
+	 */
 	public void setRunMode() {
 		
 		this.lockInput();
 
-		this.jStatePanel.setBackground(new Color(0x92FC9B));//Color.GREEN);
+		this.jStatePanel.setBackground(new Color(0x92FC9B));
 		this.jStateLabel.setText(">>> " + _("automatic debug mode") + " >>>");
 	}
 
+	/**
+	 * Sets the left panel to pause mode (while step-by-step debugging).
+	 * Input methods on text areas are locked.
+	 */
 	public void setPauseMode() {
 		
 		this.lockInput();
 		
-		this.jStatePanel.setBackground(new Color(0xEFDD1E));//Color.YELLOW);
+		this.jStatePanel.setBackground(new Color(0xEFDD1E));
 		this.jStateLabel.setText("||| " + _("pause or step by step mode") + " |||");
 	}
 
@@ -466,10 +521,16 @@ public class GUIleftPanel {
 		return this.codeRegister;
 	}
 	
+	/**
+	 * @return The text area displaying the source code
+	 */
 	public RSyntaxTextArea getSourcePane(){
 		return this.jSourcePane;
 	}
 	
+	/**
+	 * @return The text area displaying the input data for the debugger
+	 */
 	public JInputDataPane getInputPane(){
 		return this.jInputPane;
 	}

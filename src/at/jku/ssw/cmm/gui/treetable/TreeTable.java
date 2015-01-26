@@ -26,6 +26,8 @@ import java.awt.Dimension;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
+import at.jku.ssw.cmm.gui.treetable.example.DataNodeExample;
+import at.jku.ssw.cmm.gui.treetable.example.TreePackageImageRenderer;
 import at.jku.ssw.cmm.gui.treetable.var.TreeStructImageRenderer;
 import at.jku.ssw.cmm.gui.treetable.var.VarDataNode;
 
@@ -75,6 +77,8 @@ public class TreeTable<TreeNode extends DataNode> extends JTable {
     	//Create JTree
     	if( treeTableModel.getRoot() instanceof VarDataNode )
     		tree = new TreeTableCellRenderer(this, treeTableModel, new TreeStructImageRenderer());
+    	else if( treeTableModel.getRoot() instanceof DataNodeExample )
+    		tree = new TreeTableCellRenderer(this, treeTableModel, new TreePackageImageRenderer());
     	else
     		tree = new TreeTableCellRenderer(this, treeTableModel, new TreeRenderer());
         //TODO tree.setFont(tree.getFont().deriveFont((float)this.main.getSettings().getVarSize()));

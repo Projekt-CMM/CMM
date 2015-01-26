@@ -35,11 +35,11 @@ import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.debugger.InitTreeTableData;
 import at.jku.ssw.cmm.gui.GUImain;
+import at.jku.ssw.cmm.gui.treetable.TableButtonMouseListener;
+import at.jku.ssw.cmm.gui.treetable.TableButtonRenderer;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
 import at.jku.ssw.cmm.gui.treetable.TreeTableModel;
-import at.jku.ssw.cmm.gui.utils.TableButtonMouseListener;
-import at.jku.ssw.cmm.gui.utils.TableButtonRenderer;
 
 public class TreeTableView{
 	
