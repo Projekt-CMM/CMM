@@ -190,8 +190,6 @@ public class Package {
 	 * @return allQuests: containing all Quests sorted TODO
 	 */
 	public static List<Quest> ReadAllQuests(String allPackagesPath){
-		List<Package> packgeList = new ArrayList<>();
-		
 		List<String> packageFolderNames = Quest.ReadFolderNames(allPackagesPath);
 		List<Quest> allQuests = new ArrayList<>();
 		

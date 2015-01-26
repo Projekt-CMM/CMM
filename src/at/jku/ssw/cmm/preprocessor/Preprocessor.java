@@ -302,7 +302,7 @@ public class Preprocessor {
 		// calculate linenumber
 		if(objName != null) {
 			for(Object[] curObj : codeRegister) {
-				if(curObj[2].toString() == objName) {
+				if(curObj[2].toString().equals(objName)) {
 					if(codeLine > Integer.parseInt(curObj[1].toString())) {
 						objLine += Integer.parseInt(curObj[1].toString()) - Integer.parseInt(curObj[0].toString()) + 1;
 					} else if(codeLine >= Integer.parseInt(curObj[0].toString()) && codeLine <= Integer.parseInt(curObj[1].toString())) {

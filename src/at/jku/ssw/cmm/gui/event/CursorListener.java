@@ -41,11 +41,12 @@ public class CursorListener implements MouseMotionListener {
 		final int x = e.getX();
         final int y = e.getY();
         // only display a hand if the cursor is over the items
-        if (sourcePane != null && sourcePane.contains(x, y)) {
-        	sourcePane.setCursor(new Cursor(Cursor.TEXT_CURSOR));
-        } else {
-        	sourcePane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        }
+        if (sourcePane != null) {
+        	if( sourcePane.contains(x, y))
+        		sourcePane.setCursor(new Cursor(Cursor.TEXT_CURSOR));
+        	else
+        		sourcePane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        }	
 	}
 
 	@Override

@@ -42,20 +42,21 @@ public class ProfileTest {
 		//System.out.println(profile.getXp() + " " +  profile.getProfileQuests().get(0).getTitle() + " " + profile.getProfileQuests().get(0).getPackagePath() + " " +profile.getProfileQuests().get(0).getStringDate());
 		
 		if(qlist != null)
-		for(Quest x : qlist)
-			System.out.println(x.getState());
+			for(Quest x : qlist)
+				System.out.println(x.getState());
 		//Profile.ReadPackageQuests(profile, allPackagesPath, packagePath)
 		
 		profile.setName("testname");
 		profile.setInitPath("profileTest");
 		
-		System.out.println("Quest: " + qlist.get(0).getTitle());
-		
-		try {
-			Profile.writeProfile(profile);
-			profile = Profile.changeQuestState(profile, qlist.get(0), Quest.STATE_FINISHED);
-		} catch (XMLWriteException e) {
-			e.printStackTrace();
+		if(qlist != null) {
+			System.out.println("Quest: " + qlist.get(0).getTitle());
+			try {
+				Profile.writeProfile(profile);
+				profile = Profile.changeQuestState(profile, qlist.get(0), Quest.STATE_FINISHED);
+			} catch (XMLWriteException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		for(Quest q: profile.getProfileQuests())
