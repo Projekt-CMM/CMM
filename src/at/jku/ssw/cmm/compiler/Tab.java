@@ -477,7 +477,7 @@ public class Tab {
 						declObjHelp = declObjHelp.elemType;
 						buildObjHelp = buildObjHelp.elemType;
 					}
-					if(declObjHelp.kind == Struct.ARR || buildObjHelp.kind == Struct.ARR)
+					if(declObjHelp == null || declObjHelp.kind == Struct.ARR || buildObjHelp == null || buildObjHelp.kind == Struct.ARR)
 						parser.SemErr("the number of dimensions in the declaration isn't the same as in the call");
 					else if(declObjHelp != buildObjHelp)
 						parser.SemErr("there is no type-conversation for arrays allowed");
