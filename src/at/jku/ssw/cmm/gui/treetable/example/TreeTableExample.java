@@ -48,7 +48,7 @@ public class TreeTableExample {
 		//Create the tree
 		DataNodeExample root = new DataNodeExample("Packages", "", "");
 		
-		root = getFolderView("packages", root, 0);
+		root = getFolderView("packages", root,0);
 		//root = addNodes(null, new File("packages"));
 		
 		//root.addChild(new DataNodeExample("l1", "a", "b"));
@@ -81,52 +81,69 @@ public class TreeTableExample {
 	
 private DataNodeExample getFolderView(String path, DataNodeExample node, int layer){
 	
-	// 1 Node
-	// 2 Node
-	// 3 Node
-	
-	//1 1.add(2) return 1
-	//2 2.add(3) return 2
-	//3 nothing add return subNode
 	
 	List<String> subFolders = Quest.ReadFolderNames(path);
+	if(subFolders == null)
+		return node; //Maybe return null?
 	
-	boolean flag = false;
-	
-	System.out.println("layer " + layer + ": " + subFolders);
+	DataNodeExample subNode = null;
 	
 	for(String subfolder : subFolders){
 		
-		//Reading all FileNames of the Folder
-				List<String> fileNames = Quest.ReadFileNames(path + File.separator + subfolder);
-				
-				//Hide Folders which are Quest Folders
-				if(fileNames != null && fileNames.contains(Quest.FILE_REF) &&
-						fileNames.contains(Quest.FILE_DESCRIPTION) &&
-						fileNames.contains(Quest.FILE_INPUT_CMM)){
-					System.out.println("Quest Folder: " + subfolder);
+		if(isPackage(path + File.separator + subfolder)){
+			//Adding the Current Node
+			subNode = new DataNodeExample(subfolder, "a", "b");
+		}else{
+			subNode = new DataNodeExample(subfolder, "", "");
+		}
+		
+		subNode = getFolderView(path + File.separator + subfolder, subNode, ++layer);
+		//subNode.setQuestFlag(flag);
+		if(subNode != null)
+		node.addChild(subNode);
 					
-					//Only adding Quest Nodes
-					flag = true;
-
-					
-				}
-			}
-					for(String subfolder : subFolders){
-						DataNodeExample subNode;
-						if(flag)
-							subNode = new DataNodeExample(subfolder, "a", "b");
-						else
-							subNode = new DataNodeExample(subfolder, "", "");
-						
-						subNode = getFolderView(path + File.separator + subfolder, subNode, ++layer);
-						subNode.setQuestFlag(flag);
-						
-						//if(!flag)
-						node.addChild(subNode);
-					}
-	
+	}
 	return node;
+}				
+
+private boolean isPackage(String path){
+	
+	System.out.println("Checking Package " + path);
+	//Reading all FolderNames
+	List<String> subFolders = Quest.ReadFolderNames(path);
+	
+	//Searching for a Quest
+	if(subFolders != null)
+		for(String sub : subFolders){
+			if(isPathQuest(path + File.separator + sub)){
+				System.out.println("Package Path" + path + File.separator + sub);
+				return true;
+			}
+		}
+	
+	
+	return false;
+}
+
+/**
+ * Checks if the Path contains a Quest
+ * @param path
+ * @return
+ */
+private boolean isPathQuest(String path){
+	
+	List<String> fileNames = Quest.ReadFileNames(path);
+	
+	//Hide Folders which are Quest Folders
+	if(fileNames != null && fileNames.contains(Quest.FILE_REF) &&
+			fileNames.contains(Quest.FILE_DESCRIPTION) &&
+			fileNames.contains(Quest.FILE_INPUT_CMM)){
+		
+		//Only adding Quest Nodes
+		return true;
+	}else
+	
+	return false;
 }
 	
 }
