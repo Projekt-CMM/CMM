@@ -590,7 +590,7 @@ Statement<out Node st>              (.  Node e = null, con, curStat, newStat; .)
       ( intCon                      (.  n = new Node(tab.intVal(t.val)); .)
       | floatCon                    (.  n = new Node(tab.floatVal(t.val)); .)
       | charCon                     (.  n = new Node(tab.charVal(t.val)); .)
-      )                             (.  if(n.type != e.type)
+      )                             (.  if(n == null || e == null || n.type != e.type)
                                             SemErr("type of switch has to match type of case value");
                                         newStat = new Node(Node.CASE,n,null,line); .)
     | "default"                     (.  newStat = new Node(Node.CASE,null,null,line);

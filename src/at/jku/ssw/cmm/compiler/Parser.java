@@ -717,7 +717,7 @@ public class Parser {
 						Get();
 						n = new Node(tab.charVal(t.val)); 
 					} else SynErr(75);
-					if(n.type != e.type)
+					if(n == null || e == null || n.type != e.type)
 					   SemErr("type of switch has to match type of case value");
 					newStat = new Node(Node.CASE,n,null,line); 
 				} else {
