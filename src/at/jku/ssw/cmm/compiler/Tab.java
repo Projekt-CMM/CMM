@@ -166,7 +166,7 @@ public class Tab {
 	 * @return return field or tab.noObj if no field is found
 	 */
 	public Obj findField(String name, Struct type) {
-		if(type.kind != Struct.STRUCT) {
+		if(type == null || type.kind != Struct.STRUCT) {
 			parser.SemErr(name + " is not in a struct");
 			return noObj;
 		}
@@ -284,6 +284,9 @@ public class Tab {
 		catch ( java.lang.NumberFormatException e) {
 			parser.SemErr(s + " is not an integer");
 			return 0;
+		} catch (NullPointerException e) {
+			parser.SemErr("'null' is not an integer");
+			return 0;
 		}
 	}
 
@@ -301,6 +304,9 @@ public class Tab {
 		catch ( java.lang.NumberFormatException e) {
 			parser.SemErr(s + " is not a float");
 			return 0;
+		} catch (NullPointerException e) {
+			parser.SemErr("'null' is not a float");
+			return 0;
 		}
 	}
 	
@@ -312,7 +318,10 @@ public class Tab {
 	 * @return return converted char
 	 */
 	public char charVal(String s) {
-		if(s.matches("^'.'$") && s.charAt(1) != '\\') {
+		if(s == null) { 
+			parser.SemErr("'null' is not a character");
+			return 	'\0';
+		} else if(s.matches("^'.'$") && s.charAt(1) != '\\') {
 			return s.charAt(1);
 		} else if(s.matches("^'\\\\.'$")) {
 			switch(s.charAt(2)) {
@@ -347,7 +356,10 @@ public class Tab {
 	 */
 	public String stringVal(String s) {
 		// check if apostrophs are correct set
-		if(s.matches("^\".*\"$")) {
+		if(s == null) { 
+			parser.SemErr("'null' is not a string");
+			return "";
+		} else if(s.matches("^\".*\"$")) {
 			s = s.substring(1, s.length()-1);
 		} else {
 			parser.SemErr(s + " string doesn't have \" at start end endpoint");
@@ -429,6 +441,9 @@ public class Tab {
 	 */
 	public void checkFunctionParams(Obj declFunction, Node buildFunction) {
 		if(declFunction == null) {
+			parser.SemErr("no function declared");
+			return;
+		} else if(buildFunction == null) {
 			parser.SemErr("no function declared");
 			return;
 		}
@@ -515,7 +530,13 @@ public class Tab {
 	 */
 	public Node impliciteTypeCon(Node element, Struct type) {
 		if(element == null) {
-			parser.SemErr("cast from null to " +  getNameOfType(type) + " not allowed");
+			parser.SemErr("cast from 'null' to " +  getNameOfType(type) + " not allowed");
+			return element;
+		} else if(type == null) {
+			if(element.type != null)
+				parser.SemErr("cast from " +  getNameOfType(element.type) + " to 'null' not allowed");
+			else
+				parser.SemErr("cast from 'null' to 'null' not allowed");
 			return element;
 		} else if(type == element.type) 
 			return element;

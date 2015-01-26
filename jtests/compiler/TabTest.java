@@ -27,6 +27,7 @@ import java.io.InputStream;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import at.jku.ssw.cmm.compiler.Node;
 import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Parser;
 import at.jku.ssw.cmm.compiler.Scanner;
@@ -142,6 +143,7 @@ public class TabTest {
 		tab.closeScope();
 		
 		assertEquals(tab.find("testProc2"), Tab.noObj);
+		assertEquals(tab.find(null), Tab.noObj);
 		// TODO: Check for error-message
 	}
 
@@ -171,7 +173,12 @@ public class TabTest {
         assertEquals(tab.findField("testVarInt", type), testVarInt);
         assertEquals(tab.findField("testVarFloat", type), testVarFloat);
         assertEquals(tab.findField("testVarBool", type), testVarBool);
+        
+        // check if funcion is working properly with incorrect types
         assertEquals(tab.findField("testVarNotDefined", type), Tab.noObj);
+        assertEquals(tab.findField(null, type), Tab.noObj);
+        assertEquals(tab.findField("testVarNotDefined", null), Tab.noObj);
+        assertEquals(tab.findField(null, null), Tab.noObj);
         // TODO: Check for error-message
 	}
 
@@ -217,6 +224,7 @@ public class TabTest {
 		assertEquals(tab.intVal("2147483648"),0);
 		assertEquals(tab.intVal("10.5"),0);
 		assertEquals(tab.intVal("'a'"),0);
+		assertEquals(tab.intVal(null),0);
 		// TODO: Check for error-message
 	}
 
@@ -241,6 +249,7 @@ public class TabTest {
 		assertEquals(tab.floatVal("test"),0, 1e-4);
 		assertEquals(tab.floatVal("a"),0, 1e-4);
 		assertEquals(tab.floatVal("E"),0, 1e-4);
+		assertEquals(tab.floatVal(null),0, 1e-4);
 		// TODO: Check for error-message
 	}
 
@@ -271,6 +280,7 @@ public class TabTest {
 		assertEquals(tab.charVal("c"),'\0');
 		assertEquals(tab.charVal("\"string\""),'\0');
 		assertEquals(tab.charVal("'\\%'"),'\0');
+		assertEquals(tab.charVal(null),'\0');
 		// TODO: Check for error-message
 	}
 
@@ -300,37 +310,115 @@ public class TabTest {
 		assertEquals(tab.stringVal("'asdf'"),"");
 		assertEquals(tab.stringVal("'b'"),"");
 		assertEquals(tab.stringVal("\"\\s\""),"");
+		assertEquals(tab.stringVal(null),"");
 		// TODO: Check for error-message
 	}
 
-	@Ignore
 	@Test
 	public void testIsCastOperator() {
-		fail("Not yet implemented");
+		Tab tab = createTabObj("");
+		
+		// test correct cast-operators
+		assertEquals(tab.isCastOperator(Node.A2S),true);
+		assertEquals(tab.isCastOperator(Node.B2I),true);
+		assertEquals(tab.isCastOperator(Node.C2I),true);
+		assertEquals(tab.isCastOperator(Node.C2S),true);
+		assertEquals(tab.isCastOperator(Node.I2F),true);
+		assertEquals(tab.isCastOperator(Node.F2I),true);
+		
+		// test incorrect cast-operators
+		assertEquals(tab.isCastOperator(Node.IDENT),false);
+		assertEquals(tab.isCastOperator(Node.INDEX),false);
+		assertEquals(tab.isCastOperator(Node.CALL),false);
 	}
 
-	@Ignore
 	@Test
 	public void testCheckFunctionParams() {
-		fail("Not yet implemented");
+		Tab tab = createTabObj("");
+
+		// TODO: better tests
+		
+		// check for Null-Ptr-Exceptions
+		tab.checkFunctionParams(tab.find("print"), null);
+		tab.checkFunctionParams(null, new Node(tab.find("print")));
+		tab.checkFunctionParams(null, null);
+		// TODO: detect SemErr
 	}
 
-	@Ignore
 	@Test
 	public void testImpliciteTypeCon() {
-		fail("Not yet implemented");
+		Tab tab = createTabObj("");
+		
+		// test impliciteTypeCon if no type-change occour
+		Node intNode = new Node(3);
+		assertEquals(tab.impliciteTypeCon(intNode, Tab.intType),intNode);
+		
+		Node charNode = new Node('c');
+		assertEquals(tab.impliciteTypeCon(charNode, Tab.charType),charNode);
+
+		// test impliciteTypeCon if type-change occour
+		assertEquals(tab.impliciteTypeCon(intNode, Tab.floatType).kind,Node.I2F);
+		assertEquals(tab.impliciteTypeCon(intNode, Tab.floatType).left,intNode);
+
+		assertEquals(tab.impliciteTypeCon(intNode, Tab.boolType).kind,Node.I2B);
+		assertEquals(tab.impliciteTypeCon(intNode, Tab.boolType).left,intNode);
+		
+		assertEquals(tab.impliciteTypeCon(charNode, Tab.intType).kind,Node.C2I);
+		assertEquals(tab.impliciteTypeCon(charNode, Tab.intType).left,charNode);
+		
+		// check for Null-Ptr-Exceptions
+		tab.impliciteTypeCon(new Node(5), null);
+		tab.impliciteTypeCon(null, Tab.intType);
+		tab.impliciteTypeCon(null, null);
+		// TODO: detect SemErr
 	}
 
-	@Ignore
 	@Test
 	public void testExpliciteTypeCon() {
-		fail("Not yet implemented");
+		Tab tab = createTabObj("");
+		
+		// test expliciteTypeCon if no type-change occour
+		Node intNode = new Node(3);
+		assertEquals(tab.expliciteTypeCon(intNode, Tab.intType),intNode);
+				
+		Node charNode = new Node('c');
+		assertEquals(tab.expliciteTypeCon(charNode, Tab.charType),charNode);
+		
+		// test expliciteTypeCon if type-change occour
+		assertEquals(tab.impliciteTypeCon(intNode, Tab.floatType).kind,Node.I2F);
+		assertEquals(tab.impliciteTypeCon(intNode, Tab.floatType).left,intNode);
+		
+		assertEquals(tab.expliciteTypeCon(intNode, Tab.charType).kind,Node.I2C);
+		assertEquals(tab.expliciteTypeCon(intNode, Tab.charType).left,intNode);
+		
+		// check for Null-Ptr-Exceptions
+		tab.expliciteTypeCon(new Node('a'), null);
+		tab.expliciteTypeCon(null, Tab.boolType);
+		tab.expliciteTypeCon(null, null);
+		// TODO: detect SemErr
 	}
 
-	@Ignore
 	@Test
 	public void testDoImplicitCastByAritmetic() {
-		fail("Not yet implemented");
+		Tab tab = createTabObj("");
+		
+		// TODO finish test
+		// test doImplicitCastByAritmetic if no type-change occour
+		/*Node intNode = new Node(3);
+		assertEquals(tab.doImplicitCastByAritmetic(intNode, Tab.intType, Tab.intType).kind,Node.C2I);
+				
+		Node charNode = new Node('c');
+		assertEquals(tab.expliciteTypeCon(charNode, Tab.charType),charNode);
+		
+		// test doImplicitCastByAritmetic if type-change occour
+		assertEquals(tab.doImplicitCastByAritmetic(charNode, Tab.charType, Tab.intType).kind,Node.C2I);*/
+
+		// check for Null-Ptr-Exceptions
+		tab.doImplicitCastByAritmetic(null, Tab.boolType, Tab.boolType);
+		tab.doImplicitCastByAritmetic(new Node(5), Tab.intType, null);
+		tab.doImplicitCastByAritmetic(new Node(5), null, Tab.intType);
+		tab.doImplicitCastByAritmetic(null, null, null);
+		// TODO: detect SemErr
 	}
 
 	@Ignore
