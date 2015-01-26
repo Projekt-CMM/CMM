@@ -74,29 +74,28 @@ public class ErrorTable {
 		File fXmlFile = new File("error/table.xml");
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = null;
+		
+		
 		try {
 			dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+			
+			doc.getDocumentElement().normalize();
+
+			NodeList nList = ((org.w3c.dom.Document) doc)
+					.getElementsByTagName("error");
+
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+				Element eElement = (Element) nList.item(temp);
+				this.errorMap.put(eElement.getAttribute("id"), eElement
+						.getElementsByTagName("file").item(0).getTextContent());
+			}
 		} catch (ParserConfigurationException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}
-		Document doc = null;
-		try {
-			doc = dBuilder.parse(fXmlFile);
 		} catch (SAXException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		doc.getDocumentElement().normalize();
-
-		NodeList nList = ((org.w3c.dom.Document) doc)
-				.getElementsByTagName("error");
-
-		for (int temp = 0; temp < nList.getLength(); temp++) {
-			Element eElement = (Element) nList.item(temp);
-			this.errorMap.put(eElement.getAttribute("id"), eElement
-					.getElementsByTagName("file").item(0).getTextContent());
 		}
 	}
 }
