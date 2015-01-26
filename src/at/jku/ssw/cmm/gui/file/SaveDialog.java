@@ -120,7 +120,7 @@ public class SaveDialog {
 	public boolean safeCheck(String title) {
 		
 		// Warning if current file is not saved -> opens a warning dialog
-		if (settings.getCMMFilePath().equals(_("Unnamed"))) {
+		if (settings.getCMMFilePath() != null && settings.getCMMFilePath().equals(_("Unnamed"))) {
 
 			// Custom button text
 			Object[] options = { _("Yes"), _("No") };
