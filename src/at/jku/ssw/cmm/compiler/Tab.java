@@ -312,12 +312,10 @@ public class Tab {
 	 * @return return converted char
 	 */
 	public char charVal(String s) {
-		if(s.matches("^'.'$")) {
-			return  s.charAt(1);
-		} else {
-			//--- s.charAt(1) == '\' so I parse the second character to get it usage
-			switch(s.charAt(2))
-			{
+		if(s.matches("^'.'$") && s.charAt(1) != '\\') {
+			return s.charAt(1);
+		} else if(s.matches("^'\\\\.'$")) {
+			switch(s.charAt(2)) {
 				case 'r':
 					return '\r';
 				case 'n':
@@ -334,6 +332,9 @@ public class Tab {
 					parser.SemErr("unknow character");
 					return 	'\0';
 			}
+		} else {
+			parser.SemErr("unknow character");
+			return 	'\0';
 		}
 	}
 
@@ -465,7 +466,7 @@ public class Tab {
 						declObjHelp = declObjHelp.elemType;
 						buildObjHelp = buildObjHelp.elemType;
 					}
-					if(declObjHelp.kind == Struct.ARR || buildObjHelp.kind == Struct.ARR)
+					if(declObjHelp == null || declObjHelp.kind == Struct.ARR || buildObjHelp == null || buildObjHelp.kind == Struct.ARR)
 						parser.SemErr("the number of dimensions in the declaration isn't the same as in the call");
 					else if(declObjHelp != buildObjHelp)
 						parser.SemErr("there is no type-conversation for arrays allowed");

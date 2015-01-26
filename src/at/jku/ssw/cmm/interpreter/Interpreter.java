@@ -1008,11 +1008,15 @@ public final class Interpreter {
 			if(p.left.type.elements == -1) {
 				// get number of arrayElements, if first dimenstion of ref-Array is called
 				if(arrayElements == null) {
-					Node pHelp;
-					// get last left node
-					for(pHelp = p.left;pHelp == null || pHelp.kind == Node.IDENT; pHelp = pHelp.left);
+					Node pHelp = null;
+					
+					for(pHelp = p;pHelp != null && pHelp.kind != Node.IDENT; pHelp = pHelp.left);
+
+					if(pHelp == null)
+						throw new RunTimeException("There is no informations about the array size available", p, currentLine);
+
 					// read number of array Elements
-					List<Integer> singleArrayElements = Memory.getMemoryInformation(IdentAdr(pHelp.left.obj)).arrayElements;					
+					List<Integer> singleArrayElements = Memory.getMemoryInformation(IdentAdr(pHelp.obj)).arrayElements;					
 					
 					arrayElements = new ArrayList<>();
 					

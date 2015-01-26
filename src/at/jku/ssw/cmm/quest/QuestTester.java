@@ -26,7 +26,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import at.jku.ssw.cmm.compiler.Compiler;
-import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Tab;
 import at.jku.ssw.cmm.preprocessor.exception.PreprocessorException;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
@@ -219,8 +218,8 @@ public class QuestTester extends Thread {
 		// Remove signs which shall be ignored
 		if( ignore != null ){
 			for( String c : ignore ){
-				s1.replace(c, "");
-				s2.replace(c, "");
+				s1 = s1.replace(c, "");
+				s2 = s2.replace(c, "");
 			}
 		}
 		

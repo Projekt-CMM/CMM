@@ -198,8 +198,11 @@ public final class LoadStatics {
 	            os.write(buffer, 0, length);
 	        }
 	    } finally {
-	        is.close();
-	        os.close();
+	    	if(is != null)
+	    		is.close();
+	        
+	    	if(is != null)
+	    		os.close();
 	    }
 	}
 	
