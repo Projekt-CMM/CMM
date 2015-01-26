@@ -22,7 +22,6 @@
 package at.jku.ssw.cmm;
 
 import at.jku.ssw.cmm.compiler.Compiler;
-import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.interpreter.Interpreter;
@@ -63,7 +62,9 @@ public class CMMrun extends Thread {
 		this.debug = debug;
 	}
 
-	// The compiler containing the syntax tree and the symbol table
+	/**
+	 * The compiler containing the syntax tree and the symbol table
+	 */
 	private final Compiler compiler;
 
 	/**

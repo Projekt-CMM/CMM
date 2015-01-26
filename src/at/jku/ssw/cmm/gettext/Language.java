@@ -27,29 +27,57 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import at.jku.ssw.cmm.DebugShell;
+import at.jku.ssw.cmm.DebugShell.Area;
+import at.jku.ssw.cmm.DebugShell.State;
+
+/**
+ * This is a provisional implementation for GNU Gettext translation files.
+ * 
+ * @author fabian
+ */
 public class Language {
 	
+	/**
+	 * A map containing all the original English languages and
+	 * their translations into the current language.
+	 */
 	private static Map<String, String> langMap = null;
 	
-	//TODO default language should be english
-	public static final String DEFAULT_LANGUAGE = "de";
+	/**
+	 * The default language. Valid language abbreviations are (so far)
+	 * <li> en - English </li>
+	 * <li> de - German </li>
+	 */
+	public static final String DEFAULT_LANGUAGE = "en";
 	
+	/**
+	 * Loads the language file for the given language (parameter) and saves
+	 * the translations to a HashMap.
+	 * 
+	 * @param langCode The code for the language which has to be loaded.<br>
+	 * 			<b> NOTE: </b> The language code has to be equal to the
+	 * 			language file's name, located in the folder named "po".<br>
+	 * 			<b> Example: </b> "po/<i>de</i>.po"
+	 */
 	public static void loadLanguage(String langCode){
 		
-		System.out.println("Loading language -> " + langCode);
-		
+		// Initialize translations map
 		langMap = new HashMap<>();
 		
-		//Reset to default language
+		// Reset to default language if given language not available
 		if( langCode == null || langCode.equals(DEFAULT_LANGUAGE) ){
 			langMap = null;
+			DebugShell.out(State.ERROR, Area.SYSTEM, "Language " + langCode + " does not exist!");
 			return;
 		}
 		
+		// Variables for reading the translations file
 		BufferedReader file;
 		String line;
 		String line2;
 		
+		// Start reading file
 		try {
 			file = new BufferedReader(new FileReader("po/" + langCode ));
 			while ((line = file.readLine()) != null) {
@@ -58,16 +86,23 @@ public class Language {
 					
 					//Save translated String
 					langMap.put(line.substring(line.indexOf("\"")+1, line.length()-1), line2.substring(line2.indexOf("\"")+1, line2.length()-1));
-					//System.out.println("Reading String: " + line.substring(line.indexOf("\"")+1, line.length()-1) + " -> " + line2.substring(line2.indexOf("\"")+1, line2.length()-1));
 				}
 			}
 			file.close();
-			
-		} catch (IOException e) {
+		}
+		// In case of error: reset to default language
+		catch (IOException e) {
 			langMap = null;
+			DebugShell.out(State.ERROR, Area.SYSTEM, "Failed to read translations file: " + e.getMessage());
 		}
 	}
 
+	/**
+	 * Translated the given string to the language loaded.
+	 * 
+	 * @param s The string which has to be translated
+	 * @return The translation
+	 */
 	public static String _(String s) {
 		if( langMap == null ){
 			return s;
@@ -82,6 +117,9 @@ public class Language {
 		}
 	}
 	
+	/**
+	 * @return TRUE if there has been a translation loaded, FALSE if not
+	 */
 	public static boolean languageLoaded(){
 		return langMap != null;
 	}
