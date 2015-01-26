@@ -264,6 +264,7 @@ public class TabTest {
 		
 		// test wrong values
 		assertEquals(tab.charVal(""),'\0');
+		assertEquals(tab.charVal("\\"),'\0');
 		assertEquals(tab.charVal("''"),'\0');
 		assertEquals(tab.charVal("'ab'"),'\0');
 		assertEquals(tab.charVal("abc"),'\0');
