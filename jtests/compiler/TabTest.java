@@ -151,7 +151,7 @@ public class TabTest {
 		
 		Struct type = new Struct(Struct.STRUCT);
 		
-		Obj struct = tab.insert(Obj.TYPE, "testStruct", type, -1);
+		tab.insert(Obj.TYPE, "testStruct", type, -1);
 		
 		tab.openScope();
 		
@@ -274,10 +274,33 @@ public class TabTest {
 		// TODO: Check for error-message
 	}
 
-	@Ignore
 	@Test
 	public void testStringVal() {
-		fail("Not yet implemented");
+		Tab tab = createTabObj("");
+		
+		// test problematic values
+		assertEquals(tab.stringVal("\"\""),"");
+		assertEquals(tab.stringVal("\" \"")," ");
+		assertEquals(tab.stringVal("\"\\r\""),"\r");
+		assertEquals(tab.stringVal("\"\\n\""),"\n");
+		assertEquals(tab.stringVal("\"\\t\""),"\t");
+		assertEquals(tab.stringVal("\"\\0\""),"\0");
+		assertEquals(tab.stringVal("\"\\\"\""),"\"");
+		assertEquals(tab.stringVal("\"\\\\\""),"\\");
+		
+		// test normal values
+		assertEquals(tab.stringVal("\"test string\""),"test string");
+		assertEquals(tab.stringVal("\"asdf\""),"asdf");
+		assertEquals(tab.stringVal("\"line \\n newline\""),"line \n newline");
+		
+		// test wrong values
+		assertEquals(tab.stringVal(""),"");
+		assertEquals(tab.stringVal("\""),"");
+		assertEquals(tab.stringVal("asdf"),"");
+		assertEquals(tab.stringVal("'asdf'"),"");
+		assertEquals(tab.stringVal("'b'"),"");
+		assertEquals(tab.stringVal("\"\\s\""),"");
+		// TODO: Check for error-message
 	}
 
 	@Ignore

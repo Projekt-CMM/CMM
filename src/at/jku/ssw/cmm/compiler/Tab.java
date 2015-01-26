@@ -346,18 +346,26 @@ public class Tab {
 	 * @return return converted string
 	 */
 	public String stringVal(String s) {
+		// check if apostrophs are correct set
 		if(s.matches("^\".*\"$")) {
 			s = s.substring(1, s.length()-1);
-		} else 
+		} else {
 			parser.SemErr(s + " string doesn't have \" at start end endpoint");
+			return "";
+		}
+
 		String returnStr = new String();
 		while(s.length() != 0) {
 			if(s.charAt(0) != '\\') {
+				if(s.charAt(0) == '"') {
+					parser.SemErr(s + " escape-sequence required for \"");
+					return "";
+				}
+
 				returnStr += s.charAt(0);
 				s = s.substring(1); // remove 1 letter
 			} else if(s.length() >= 2) {
-				switch(s.charAt(1))
-				{
+				switch(s.charAt(1)) {
 					case 'r':
 						returnStr += '\r';
 						break;
@@ -382,6 +390,7 @@ public class Tab {
 				s = s.substring(2);	// remove 2 letters
 			} else {
 				parser.SemErr(s + " no single \\ at the end of a string allowed");
+				return "";
 			}
 		}
 		return returnStr;
