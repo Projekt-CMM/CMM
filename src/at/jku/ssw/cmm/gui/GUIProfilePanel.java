@@ -37,7 +37,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import at.jku.ssw.cmm.gui.event.quest.QuestPanelListener;
-import at.jku.ssw.cmm.gui.utils.LoadStatics;
+import at.jku.ssw.cmm.gui.file.LoadStatics;
 import at.jku.ssw.cmm.profile.Profile;
 
 /**

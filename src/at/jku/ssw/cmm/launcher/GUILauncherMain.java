@@ -44,8 +44,8 @@ import javax.swing.border.EtchedBorder;
 
 import at.jku.ssw.cmm.gettext.Language;
 import at.jku.ssw.cmm.gui.event.WindowEventListener;
+import at.jku.ssw.cmm.gui.file.LoadStatics;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
-import at.jku.ssw.cmm.gui.utils.LoadStatics;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.ProfileNotFoundException;
 import at.jku.ssw.cmm.profile.XMLReadingException;
