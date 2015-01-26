@@ -7,8 +7,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
@@ -19,6 +21,7 @@ import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
 import at.jku.ssw.cmm.gui.treetable.TreeTableModel;
 import at.jku.ssw.cmm.gui.treetable.var.VarDataNode;
+import at.jku.ssw.cmm.gui.utils.TableButtonRenderer;
 import at.jku.ssw.cmm.profile.Quest;
 
 public class TreeTableExample {
@@ -33,7 +36,7 @@ public class TreeTableExample {
 	private TreeTableDataModel<DataNodeExample> treeTableModel;
 	
 	private static final String[] columnNames = { "Name", "Progress", "x" };
-	private static final Class<?>[] columnTypes = { TreeTableModel.class, String.class, String.class };
+	private static final Class<?>[] columnTypes = { TreeTableModel.class, JProgressBar.class, JButton.class };
 
 	public void init() {
 		//Initializes the window for the treeTable example
@@ -51,15 +54,26 @@ public class TreeTableExample {
 		root = getFolderView("packages", root,0);
 		//root = addNodes(null, new File("packages"));
 		
-		//root.addChild(new DataNodeExample("l1", "a", "b"));
-		//root.addChild(new DataNodeExample("l2", "c", "d"));
-		//root.addChild(new DataNodeExample("l3", "e", "f"));
-		//root.addChild(new DataNodeExample("l4", "g", "h"));
-		
 		treeTableModel = new TreeTableDataModel<>(root, columnNames, columnTypes);
 		
 		treeTable = new TreeTable<>(treeTableModel);
 		//treeTable.getTableHeader().setVisible(true);
+		
+		//Setting the Sizes of the last Columns
+		treeTable.getColumnModel().getColumn(2).setMinWidth(50);
+		treeTable.getColumnModel().getColumn(2).setMaxWidth(100);
+		
+		//Setting the size of the middle Column
+		treeTable.getColumnModel().getColumn(1).setMinWidth(100);
+	
+		
+		//Setting the Types of the Columns
+        this.treeTable.getColumnModel().getColumn(2).setCellRenderer(
+        		new TableButtonRenderer(this.treeTable.getDefaultRenderer(JButton.class))
+        );
+        this.treeTable.getColumnModel().getColumn(1).setCellRenderer(
+        		new TableButtonRenderer(this.treeTable.getDefaultRenderer(JProgressBar.class))
+        );
 		
 		//treeTable.updateTreeModel();
 		
@@ -91,8 +105,14 @@ private DataNodeExample getFolderView(String path, DataNodeExample node, int lay
 	for(String subfolder : subFolders){
 		
 		if(isPackage(path + File.separator + subfolder)){
+			
+			JProgressBar b = new JProgressBar(0, 100);
+			JButton button = new JButton("\u21E8");
+			button.addMouseListener(new TreeTableListener().mouseListener);
+			
 			//Adding the Current Node
-			subNode = new DataNodeExample(subfolder, "a", "b");
+			
+			subNode = new DataNodeExample(subfolder, b, button);
 		}else{
 			subNode = new DataNodeExample(subfolder, "", "");
 		}
