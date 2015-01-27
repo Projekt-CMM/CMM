@@ -310,6 +310,8 @@ public final class Interpreter {
 				throw new ContinueException();
 		case Node.NOP:
 				break;
+		case Node.WAIT:
+				break;
 		default:
 			throw new RunTimeException("Not supportet statement node kind", p, currentLine);
 		}

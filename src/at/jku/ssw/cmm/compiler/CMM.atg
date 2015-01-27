@@ -655,6 +655,7 @@ Statement<out Node st>              (.  Node e = null, con, curStat, newStat; .)
 | "continue" ";"                    (.  if(continueLevel <= 0)
                                             SemErr("continue is not allowed here");
                                         st = new Node(Node.CONTINUE,null,null,line); .)
+| "wait" ";"                        (.  st = new Node(Node.WAIT,null,null,line); .)
 | ";"                               (.  st = null; .)
 ).
 //-------------------------------------------------------------------------
