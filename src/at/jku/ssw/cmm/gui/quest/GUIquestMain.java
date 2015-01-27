@@ -47,6 +47,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.file.LoadStatics;
+import at.jku.ssw.cmm.gui.treetable.example.TreeTableExample;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
 import at.jku.ssw.cmm.profile.Package;
@@ -75,7 +76,10 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 	}
 	
 	public void start(){
+		GUIquestSelection mainSelection = new GUIquestSelection(main);
+		mainSelection.init();
 		
+		/*
 		this.sp =  new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		
 		if( SwingUtilities.isEventDispatchThread() )
@@ -242,7 +246,7 @@ public class GUIquestMain implements TreeSelectionListener, ActionListener {
 		// of its subcomponents.
 		this.jFrame.pack();
 		this.jFrame.setVisible(true);
-		
+		*/
 		
 	}
 
