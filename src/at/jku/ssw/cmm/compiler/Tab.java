@@ -204,7 +204,7 @@ public class Tab {
 	 */
 	public boolean lookupType(Struct checkType) {
 		for (Obj p = curScope.locals; p != null ; p = p.next) {
-			if (p.kind == Obj.TYPE && p.type == checkType)
+			if (p.kind == Obj.TYPE && p.type.equals(checkType))
 				return true;
 		}
 		return false;
@@ -480,7 +480,7 @@ public class Tab {
 			
 			// implicit type conversation
 			if(declObj.isRef == true && buildNode.kind == Node.REF) {
-				if(buildNode.left.type.kind != Struct.ARR &&  buildNode.left.type != declObj.type)
+				if(buildNode.left.type.kind != Struct.ARR &&  !buildNode.left.type.equals(declObj.type))
 					parser.SemErr("there is no type-conversation for ref-parameter(s) allowed");
 				if(declObj.type.kind == Struct.ARR) {
 					Struct declObjHelp = declObj.type;
@@ -492,7 +492,7 @@ public class Tab {
 					}
 					if(declObjHelp == null || declObjHelp.kind == Struct.ARR || buildObjHelp == null || buildObjHelp.kind == Struct.ARR)
 						parser.SemErr("the number of dimensions in the declaration isn't the same as in the call");
-					else if(declObjHelp != buildObjHelp)
+					else if(!declObjHelp.equals(buildObjHelp))
 						parser.SemErr("there is no type-conversation for arrays allowed");
 				}
 				//buildNode.left = impliciteTypeCon(buildNode.left, declObj.type);
@@ -538,23 +538,31 @@ public class Tab {
 			else
 				parser.SemErr("cast from 'null' to 'null' not allowed");
 			return element;
-		} else if(type == element.type) 
+		} else if(type.equals(element.type)) 
 			return element;
-		else if(type == Tab.intType && element.type == Tab.floatType) 
+		
+		else if(type.kind == Struct.INT && element.type.kind == Struct.FLOAT) 
 			return new Node(Node.F2I, element, null, Tab.intType);
-		else if(type == Tab.floatType && element.type == Tab.intType) 
+		
+		else if(type.kind == Struct.FLOAT && element.type.kind == Struct.INT) 
 			return new Node(Node.I2F, element, null, Tab.floatType);
-		else if(type.kind == Struct.INT && element.type == Tab.charType)
+		
+		else if(type.kind == Struct.INT && element.type.kind == Struct.CHAR)
 			return new Node(Node.C2I, element, null, Tab.intType);
-		else if(type.kind == Struct.INT && element.type == Tab.boolType)
+		
+		else if(type.kind == Struct.INT && element.type.kind == Struct.BOOL)
 			return new Node(Node.B2I, element, null, Tab.intType);
-		else if(type.kind == Struct.BOOL && element.type == Tab.intType)
+		
+		else if(type.kind == Struct.BOOL && element.type.kind == Struct.INT)
 			return new Node(Node.I2B, element, null, Tab.boolType); 
-		else if(type == Tab.floatType && element.type == Tab.charType) {
+		
+		else if(type.kind == Struct.FLOAT && element.type.kind == Struct.CHAR) {
 			element =new Node(Node.C2I, element, null, Tab.intType);
 			return new Node(Node.I2F, element, null, Tab.floatType);
-		} else if(type == Tab.stringType && element.type == Tab.charType) {
+			
+		} else if(type.kind == Struct.STRING && element.type.kind == Struct.CHAR) {
 			return new Node(Node.C2S, element, null, Tab.stringType);
+			
 		} else parser.SemErr("no known cast from " + getNameOfType(element.type) + " to " + getNameOfType(type));
 			return element;
 	}
@@ -571,13 +579,22 @@ public class Tab {
 		if(element == null) {
 			parser.SemErr("cast from null to " +  getNameOfType(type) + " not allowed");
 			return element;
-		} else if(type == Tab.charType && element.type == Tab.floatType) {
+		} else if(type == null) {
+			if(element.type != null)
+				parser.SemErr("cast from " +  getNameOfType(element.type) + " to 'null' not allowed");
+			else
+				parser.SemErr("cast from 'null' to 'null' not allowed");
+			return element;
+		} else if(type.kind == Struct.CHAR && element.type.kind == Struct.FLOAT) {
 			element = new Node(Node.F2I, element, null, Tab.intType);
 			return new Node(Node.I2C, element, null, Tab.charType);
-		} else if(type == Tab.charType && element.type == Tab.intType) 
+			
+		} else if(type.kind == Struct.CHAR && element.type.kind == Struct.INT) 
 			return new Node(Node.I2C, element, null, Tab.charType);
-		else if(type == Tab.stringType && element.type.kind == Struct.ARR && element.type.elemType == Tab.charType) 
+		
+		else if(type.kind == Struct.STRING && element.type.kind == Struct.ARR && element.type.elemType.kind == Struct.CHAR) 
 			return new Node(Node.A2S, element, null, Tab.stringType);
+		
 		else {
 			return impliciteTypeCon(element, type);
 		}

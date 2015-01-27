@@ -276,12 +276,12 @@ public class Parser {
 			if (la.kind == 38) {
 				Get();
 				curCon.val = 1; 
-				if (type != Tab.boolType) 
+				if (!type.equals(Tab.boolType)) 
 				   SemErr("bool constant not allowed here"); 
 			} else {
 				Get();
 				curCon.val = 0; 
-				if (type != Tab.boolType) 
+				if (!type.equals(Tab.boolType))
 				   SemErr("bool constant not allowed here"); 
 			}
 		} else if (StartOf(3)) {
@@ -299,7 +299,7 @@ public class Parser {
 				   curCon.val = tab.intVal("-" + t.val);
 				else
 				   curCon.val = tab.intVal(t.val);
-				if (type != Tab.intType) 
+				if (!type.equals(Tab.intType))
 				   SemErr("int constant not allowed here"); 
 			} else if (la.kind == 3) {
 				Get();
@@ -307,18 +307,18 @@ public class Parser {
 				   curCon.fVal = tab.floatVal("-" + t.val);
 				else
 				   curCon.fVal = tab.floatVal(t.val);
-				if (type != Tab.floatType) 
+				if (!type.equals(Tab.floatType))
 				   SemErr("float constant not allowed here"); 
 			} else SynErr(69);
 		} else if (la.kind == 4) {
 			Get();
 			curCon.val = tab.charVal(t.val); 
-			if (type != Tab.charType) 
+			if (!type.equals(Tab.charType))
 			   SemErr("char constant not allowed here"); 
 		} else if (la.kind == 5) {
 			Get();
 			curCon.val = strings.put(tab.stringVal(t.val));
-			if (type != Tab.stringType) 
+			if (!type.equals(Tab.stringType))
 			   SemErr("string constant not allowed here"); 
 		} else SynErr(70);
 		Expect(12);
@@ -330,6 +330,7 @@ public class Parser {
 		Expect(43);
 		Struct type = new Struct(Struct.STRUCT); 
 		Expect(1);
+		String name = t.val;
 		Obj struct = tab.insert(Obj.TYPE, t.val, type, line); 
 		Expect(8);
 		tab.openScope(); 
@@ -345,8 +346,7 @@ public class Parser {
 		Expect(9);
 		type.fields = tab.curScope.locals;
 		// copy size
-		type.size = tab.curScope.size;
-		     
+		                                        type.size = tab.curScope.size;
 		// check if no variable is declared
 		if(type.fields==null) 
 		   SemErr("struct must contain at least one variable");
@@ -401,7 +401,7 @@ public class Parser {
 		                                        if(library)
 		   curProc.library = library;
 		                                        // check if it return the correct type
-		if(type != Tab.noType && type != Tab.stringType && !type.isPrimitive()) 
+		if(!type.equals(Tab.noType) && !type.equals(Tab.stringType) && !type.isPrimitive()) 
 		   SemErr("procedure must return a primitive type, a string or is void"); 
 		Expect(6);
 		tab.openScope(); 
@@ -418,7 +418,7 @@ public class Parser {
 			   tab.checkForwardParams(curProc.locals,tab.curScope.locals);
 			   
 			   // check return type
-			   if(curProc.type != type)
+			   if(!type.equals(curProc.type))
 			       SemErr("return value of forware declaration does not match declaration");
 			      
 			   // remove forward-flag
@@ -472,7 +472,7 @@ public class Parser {
 				}
 			}
 			Expect(9);
-			if(curProc.type != Tab.noType) {
+			if(!curProc.type.equals(Tab.noType)) {
 			   // add Node.TRAP at end of procedure if possible
 			   if(startNode == null) {
 			       startNode = new Node(Node.TRAP,null,null,t.line);
@@ -540,7 +540,7 @@ public class Parser {
 				Obj helpObj = tab.find(t.val); 
 				if(helpObj.kind != Obj.CON)
 				   SemErr(helpObj.name + " is not a constant");
-				if(helpObj.type != Tab.intType)
+				if(!helpObj.type.equals(Tab.intType))
 				   SemErr(helpObj.name + " is not an int constant");
 				arraySize = helpObj.val; 
 			} else SynErr(73);
@@ -560,7 +560,7 @@ public class Parser {
 		if (la.kind == 13) {
 			Get();
 			newNode = BinExpr();
-			if(curType == null || (!curType.isPrimitive() && curType != Tab.stringType)) 
+			if(curType == null || (!curType.isPrimitive() && !curType.equals(Tab.stringType))) 
 			   SemErr("type is not a primitive or string");
 			                                      // check if Expression is not null
 			else if(newNode == null) 
@@ -717,7 +717,7 @@ public class Parser {
 						Get();
 						n = new Node(tab.charVal(t.val)); 
 					} else SynErr(76);
-					if(n == null || e == null || n.type != e.type)
+					if(n == null || e == null || !n.type.equals(e.type))
 					   SemErr("type of switch has to match type of case value");
 					newStat = new Node(Node.CASE,n,null,line); 
 				} else {
@@ -851,16 +851,25 @@ public class Parser {
 			// generate array
 			type = new Struct(Struct.ARR, -1, type); 
 		}
-		if(isRef)
-		   type.size = 4;
+		if(isRef) {
+		   try {
+		       // clone type, because we modify it
+		       type = type.clone();
+		       type.size = 4; // FIX?
+		   } catch (CloneNotSupportedException e) {
+		       SemErr("This error should never happen");
+		   }
+		}
 		// add parameter to current scope
 		Obj curPar = tab.insert(Obj.VAR, ident_val, type, line);
 		// copy reference-flag
 		curPar.isRef = isRef;
 		                                       // check if parameter is primitive or string
-		if(!isArray && !type.isPrimitive() && type != Tab.stringType) 
-		   SemErr("var must be a primitive type or string");
-		if(isArray && !mainType.isPrimitive() && mainType != Tab.stringType)
+		if(!isRef && type.kind == Struct.STRUCT)
+		   SemErr("currently, struct can only be handled as reference"); // TODO, implement normal-copy
+		if(!isArray && !type.isPrimitive() && !type.equals(Tab.stringType) && type.kind != Struct.STRUCT) 
+		   SemErr("var must be a primitive type, struct or string");
+		if(isArray && !mainType.isPrimitive() && !mainType.equals(Tab.stringType))
 		   SemErr("array reference must be a primitive type or string"); 
 	}
 
@@ -884,15 +893,15 @@ public class Parser {
 			e = BinExpr();
 			if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
 			   SemErr("name must be an designator");
-			if(design.type == null || (!design.type.isPrimitive() && design.type != Tab.stringType)) 
+			if(design.type == null || (!design.type.isPrimitive() && !design.type.equals(Tab.stringType)))
 			   SemErr("type is not a primitive or string");
-			else if(design.kind == Node.INDEX && design.left.type == Tab.stringType)
+			else if(design.kind == Node.INDEX && design.left.type.equals(Tab.stringType))
 			   SemErr("string manipulation is not allowed"); 
 			else if(e == null)
 			   SemErr("right operator is not defined"); 
-			else if(design.type == Tab.stringType && !(kind == Node.ASSIGN || kind == Node.ASSIGNPLUS)) 
+			else if(design.type.equals(Tab.stringType) && !(kind == Node.ASSIGN || kind == Node.ASSIGNPLUS)) 
 			   SemErr("only == or += is allowed for string assignements");
-			else if(design.type == Tab.boolType && !(kind == Node.ASSIGN || kind == Node.ASSIGNBITAND
+			else if(design.type.equals(Tab.boolType) && !(kind == Node.ASSIGN || kind == Node.ASSIGNBITAND
 			       || kind == Node.ASSIGNBITXOR || kind == Node.ASSIGNBITOR)) 
 			   SemErr("only ==, &=, ^= or |= is allowed for boolean assignements"); 
 			else
@@ -922,7 +931,7 @@ public class Parser {
 			st = new Node(Node.ASSIGN,design,e,line); 
 		} else if (la.kind == 6) {
 			e = ActPars();
-			if(design.type != Tab.noType)
+			if(!design.type.equals(Tab.noType))
 			   SemErr("only void is allowed");
 			                                     // create CALL node
 			st = new Node(Node.CALL,e,null,line);
@@ -932,7 +941,7 @@ public class Parser {
 			Get();
 			if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
 			   SemErr("name must be an designator");
-			if(!design.type.isPrimitive() || design.type == Tab.boolType)
+			if(!design.type.isPrimitive() || design.type.equals(Tab.boolType))
 			   SemErr("only a primitive type except boolean is allowed for increment operator");
 			e = tab.impliciteTypeCon(new Node(1), design.type);
 			e = new Node(Node.PLUS, design, e, design.type);
@@ -941,7 +950,7 @@ public class Parser {
 			Get();
 			if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
 			   SemErr("name must be an designator");
-			if(!design.type.isPrimitive() || design.type == Tab.boolType)
+			if(!design.type.isPrimitive() || design.type.equals(Tab.boolType))
 			   SemErr("only a primitive type except boolean is allowed for decrement operator");
 			e = tab.impliciteTypeCon(new Node(1), design.type);
 			e = new Node(Node.MINUS, design, e, design.type);
@@ -1155,9 +1164,10 @@ public class Parser {
 				if(con == null || e == null || con.type == null || e.type == null)
 				   SemErr("please check condition");
 				else {
-				   if((!con.type.isPrimitive() && con.type != Tab.stringType) || (!e.type.isPrimitive() && e.type != Tab.stringType))
+				   if((!con.type.isPrimitive() && !con.type.equals(Tab.stringType)) || (!e.type.isPrimitive() && !e.type.equals(Tab.stringType)))
 				       SemErr("type is not a primitive or string");
-				   else if((con.type == Tab.stringType || e.type == Tab.stringType) && ((con.type == Tab.stringType || con.type == Tab.charType) != (e.type == Tab.stringType || e.type == Tab.charType)))
+				   else if((con.type.equals(Tab.stringType) || e.type.equals(Tab.stringType)) 
+				       && ((con.type.equals(Tab.stringType) || con.type.equals(Tab.charType)) != (e.type.equals(Tab.stringType) || e.type.equals(Tab.charType))))
 				       SemErr("you cannot mix primitive and string in condition");
 				   
 				   con = tab.doImplicitCastByAritmetic(con, con.type, e.type);
@@ -1231,7 +1241,7 @@ public class Parser {
 			kind = Shiftop();
 			n = Expr();
 			if(res == null || res.type == null || !res.type.isPrimitive()
-			  || n == null || n.type == null|| !n.type.isPrimitive() || n.type == Tab.boolType)
+			  || n == null || n.type == null|| !n.type.isPrimitive() || n.type.equals(Tab.boolType))
 			   SemErr("type is not a primitive except bool");
 			else {
 			   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
@@ -1265,11 +1275,12 @@ public class Parser {
 		while (la.kind == 40 || la.kind == 41) {
 			kind = Addop();
 			n = Term();
-			if((!res.type.isPrimitive() && res.type !=Tab.stringType) || n==null || (!n.type.isPrimitive() && n.type !=Tab.stringType) || n.type == Tab.boolType)
+			if((!res.type.isPrimitive() && !res.type.equals(Tab.stringType)) || n==null || (!n.type.isPrimitive() && !n.type.equals(Tab.stringType)) || n.type.equals(Tab.boolType))
 			   SemErr("type is not a primitive or string except bool");
-			else if(res.type == Tab.stringType && n.type == Tab.stringType && kind != Node.PLUS)
+			else if(res.type.equals(Tab.stringType) && n.type.equals(Tab.stringType) && kind != Node.PLUS)
 			   SemErr("for string operations, only + is allowed");
-			else if ((res.type == Tab.stringType || n.type == Tab.stringType) && ((res.type == Tab.stringType || res.type == Tab.charType) != (n.type == Tab.stringType || n.type == Tab.charType)))
+			else if ((res.type.equals(Tab.stringType) || n.type.equals(Tab.stringType)) 
+			   && ((res.type.equals(Tab.stringType) || res.type.equals(Tab.charType)) != (n.type.equals(Tab.stringType) || n.type.equals(Tab.charType))))
 			   SemErr("you cannot mix primitive and string in expression");
 			else {
 			   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
@@ -1300,7 +1311,7 @@ public class Parser {
 		while (la.kind == 64 || la.kind == 65 || la.kind == 66) {
 			kind = Mulop();
 			n = Factor();
-			if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive() || n.type == Tab.boolType)
+			if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive() || n.type.equals(Tab.boolType))
 			   SemErr("type is not a primitive except bool");
 			else {
 			   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
@@ -1335,7 +1346,7 @@ public class Parser {
 				n = ActPars();
 				if(design.obj == null || design.obj.kind != Obj.PROC )
 				   SemErr("name is not a procedure"); 
-				else if(design.obj.type == Tab.noType)
+				else if(design.obj.type.equals(Tab.noType))
 				   SemErr("function call of a void procedure"); 
 				else {
 				   n = new Node(Node.CALL,n,null,line); 
@@ -1373,21 +1384,21 @@ public class Parser {
 		} else if (la.kind == 41) {
 			Get();
 			n = Factor();
-			if(n == null || !n.type.isPrimitive() || n.type == Tab.boolType)
+			if(n == null || !n.type.isPrimitive() || n.type.equals(Tab.boolType))
 			   SemErr("type is not a primitive except bool");
 			else
 			   n = new Node(Node.MINUS,n,null,n.type); 
 		} else if (la.kind == 40) {
 			Get();
 			n = Factor();
-			if(n == null || !n.type.isPrimitive() || n.type == Tab.boolType)
+			if(n == null || !n.type.isPrimitive() || n.type.equals(Tab.boolType))
 			   SemErr("type is not a primitive except bool");
 			else
 			   n = new Node(Node.PLUS,n,null,n.type); 
 		} else if (la.kind == 60) {
 			Get();
 			n = Factor();
-			if(n == null || !n.type.isPrimitive() || n.type == Tab.boolType)
+			if(n == null || !n.type.isPrimitive() || n.type.equals(Tab.boolType))
 			   SemErr("type is not a primitive except bool");
 			else
 			   n = new Node(Node.BITNEQ,n,null,n.type); 

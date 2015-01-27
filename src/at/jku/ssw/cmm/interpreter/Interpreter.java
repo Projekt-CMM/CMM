@@ -337,9 +337,9 @@ public final class Interpreter {
 		 * Bit Operators
 		 */
 		case Node.BITAND:
-			return BoolExpr(p.left) & BoolExpr(p.right);
+			return BoolExpr(p.left) && BoolExpr(p.right);
 		case Node.BITOR:
-			return BoolExpr(p.left) | BoolExpr(p.right);
+			return BoolExpr(p.left) || BoolExpr(p.right);
 		case Node.BITXOR:
 			return BoolExpr(p.left) ^ BoolExpr(p.right);
 			
@@ -898,6 +898,8 @@ public final class Interpreter {
 					case Struct.STRING:
 						object[a] = StringExpr(ref);
 						break;
+					default:
+						throw new RunTimeException("unknow DataType", p, currentLine);
 					}
 				}
 				a++;
@@ -1001,7 +1003,7 @@ public final class Interpreter {
 		case Node.IDENT:					// more at @IdentAdr
 			return IdentAdr(p.obj);
 		case Node.DOT:						//for structs very familiar with index
-			return Adr(p.left) + p.right.val;
+			return IdentAdr(p.left.obj) + p.right.val;
 		case Node.INDEX:					//left value + Integer * sizeof(Integer)
 			int index = IntExpr(p.right);
 			if(index < 0) {

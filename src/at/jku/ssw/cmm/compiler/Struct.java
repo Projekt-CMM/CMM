@@ -29,7 +29,7 @@ A Struct holds information about a C-- type. There are 3 primitive types
 results from compare operations, but there is no boolean type in C--.
 --------------------------------------------------------------------------------*/
 
-public class Struct {
+public class Struct implements Cloneable{
 	public static final int // structure kinds
 		NONE   = 0,
 		INT    = 1,
@@ -67,6 +67,52 @@ public class Struct {
 				size = 0;
 				break;
 		}
+	}
+	
+	public Struct clone() throws CloneNotSupportedException {
+		return (Struct)super.clone();
+    }
+	
+	public boolean equals(Struct _s2) {
+		if(_s2 == null)
+			return false;
+
+		// check if kind is equal
+		if(this.kind != _s2.kind)
+			return false;
+
+		// check if number of elements are equal
+		if(this.elements != _s2.elements)
+			return false;
+
+		// check if elemTypes are equal
+		if((this.elemType == null) != (_s2.elemType == null))
+			return false;
+		
+		if(this.elemType != null && this.elemType.equals(_s2.elemType))
+			return false;
+		
+		// check if fields are equal
+		if((this.fields == null) != (_s2.fields == null))
+			return false;
+		
+		if(this.fields != null) {
+			Obj thisObj = this.fields;
+			Obj s2Obj = _s2.fields;
+			
+			for(;thisObj != null && s2Obj != null; thisObj = thisObj.next, s2Obj = s2Obj.next) {
+				if(!thisObj.name.equals(s2Obj.name))
+					return false;
+				
+				if(!thisObj.type.equals(s2Obj.type))
+					return false;
+			}
+			
+			if(thisObj != null || s2Obj != null)
+				return false;
+		}
+
+		return true;
 	}
 
 	public Struct(int kind, int elements, Struct elemType) {

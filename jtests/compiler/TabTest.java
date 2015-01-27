@@ -207,7 +207,7 @@ public class TabTest {
 	public void testLookupType() {
 		Tab tab = createTabObj("");
 
-		Struct outerScopeTestType = tab.insert(Obj.TYPE, "outerScopeTestType", new Struct(Struct.STRUCT), -1).type;
+		Struct outerScopeTestType = tab.insert(Obj.TYPE, "outerScopeTestType", new Struct(Struct.INT), -1).type;
 		
 		// create new Scope
 		tab.openScope();
