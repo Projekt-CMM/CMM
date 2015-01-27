@@ -35,6 +35,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+import at.jku.ssw.cmm.gui.GUIleftPanel;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.credits.Credits;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
@@ -70,12 +71,11 @@ public class MenuBarEventListener {
 	 * @param saveDialog
 	 *            A reference to the save dialog manager class
 	 */
-	public MenuBarEventListener(JFrame jFrame, RSyntaxTextArea jSourcePane,
-			JTextPane jInputPane, GUImain main, GUImainSettings settings,
+	public MenuBarEventListener(JFrame jFrame, GUIleftPanel leftPanelControl, 
+			GUImain main, GUImainSettings settings,
 			GUIdebugPanel debug, SaveDialog saveDialog) {
 		this.jFrame = jFrame;
-		this.jSourcePane = jSourcePane;
-		this.jInputPane = jInputPane;
+		this.leftPanelControl = leftPanelControl;
 		this.main = main;
 		this.settings = settings;
 		this.debug = debug;
@@ -90,12 +90,7 @@ public class MenuBarEventListener {
 	/**
 	 * The text area for the source code
 	 */
-	private final RSyntaxTextArea jSourcePane;
-
-	/**
-	 * The input text pane
-	 */
-	private final JTextPane jInputPane;
+	private final GUIleftPanel leftPanelControl;
 
 	/**
 	 * Reference to the main GUI
@@ -145,7 +140,8 @@ public class MenuBarEventListener {
 					saveDialog.directSave();
 			}
 
-			jSourcePane.setText("");
+			//leftPanelControl.initSourcePane(null);
+			leftPanelControl.getSourcePane().setText("");
 			settings.setCMMFilePath(null);
 			main.updateWinFileName();
 			debug.updateFileName();
@@ -179,10 +175,11 @@ public class MenuBarEventListener {
 	
 	public void openFile( File file ){
 		// Open file and load text t source code panel
-		jSourcePane.setText(FileManagerCode.readSourceCode(file));
+		//this.leftPanelControl.initSourcePane(FileManagerCode.readSourceCode(file));
+		this.leftPanelControl.getSourcePane().setText(FileManagerCode.readSourceCode(file));
 
 		// Set input data
-		jInputPane.setText(FileManagerCode.readInputData(file));
+		this.leftPanelControl.getInputPane().setText(FileManagerCode.readInputData(file));
 
 		// Set the new C-- file directory
 		settings.setCMMFilePath(file.getPath());
@@ -289,7 +286,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			jSourcePane.undoLastAction();
+			leftPanelControl.getSourcePane().undoLastAction();
 		}
 	};
 	
@@ -298,7 +295,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			jSourcePane.redoLastAction();
+			leftPanelControl.getSourcePane().redoLastAction();
 		}
 	};
 	

@@ -23,6 +23,7 @@ package at.jku.ssw.cmm.gui;
 
 import static at.jku.ssw.cmm.gettext.Language._;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
@@ -98,6 +99,7 @@ public class GUIleftPanel {
 	 * The text panel with the source code.
 	 */
 	private RSyntaxTextArea jSourcePane;
+	private JPanel jSourceCodeContainer;
 
 	/**
 	 * The text panel with input data for the cmm program.
@@ -159,8 +161,8 @@ public class GUIleftPanel {
 		jPanelLeft.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		// Panel for the source code text area
-		JPanel panel1 = new JPanel();
-		panel1.setLayout(new BoxLayout(panel1, BoxLayout.PAGE_AXIS));
+		jSourceCodeContainer = new JPanel();
+		jSourceCodeContainer.setLayout(new BorderLayout());//new BoxLayout(jSourceCodeContainer, BoxLayout.PAGE_AXIS));
 		
 		// Panel for the I/O text areas
 		JPanel panel2 = new JPanel();
@@ -179,11 +181,10 @@ public class GUIleftPanel {
 		this.jStatePanel.add(this.jStateLabel);
 
 		// Add debugger state panel to source code panel
-		panel1.add(this.jStatePanel);
+		jSourceCodeContainer.add(this.jStatePanel, BorderLayout.PAGE_START);
 
 		// Text area (text pane) for source code
-		this.jSourcePane = InitLeftPanel.initCodePane(panel1,
-				this.main.getSettings());
+		this.jSourcePane = InitLeftPanel.initCodePane(jSourceCodeContainer);
 
 		// Text area for input
 		this.jInputPane = InitLeftPanel.initInputPane(panel2);
@@ -200,7 +201,7 @@ public class GUIleftPanel {
 		panel2.setMaximumSize(new Dimension(2000, 2000));
 		
 		// Properties of the splitPanel
-		jPanelLeft.setTopComponent(panel1);
+		jPanelLeft.setTopComponent(jSourceCodeContainer);
 		jPanelLeft.setBottomComponent(panel2);
 		jPanelLeft.setDividerLocation(0.4);
 		jPanelLeft.setResizeWeight(1.0);

@@ -225,8 +225,7 @@ public class GUImain {
 
 		// Initialize the menubar
 		MenuBarEventListener listener = new MenuBarEventListener(this.jFrame,
-				this.leftPanelControl.getSourcePane(),
-				this.leftPanelControl.getInputPane(), this, this.getSettings(),
+				this.leftPanelControl, this, this.getSettings(),
 				this.rightPanelControl.getDebugPanel(), this.saveDialog);
 
 		this.menuBarControl = new MenuBarControl(listener);
