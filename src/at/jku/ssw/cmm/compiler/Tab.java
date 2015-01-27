@@ -204,7 +204,7 @@ public class Tab {
 	 */
 	public boolean lookupType(Struct checkType) {
 		for (Obj p = curScope.locals; p != null ; p = p.next) {
-			if (p.type == checkType)
+			if (p.kind == Obj.TYPE && p.type == checkType)
 				return true;
 		}
 		return false;
@@ -626,7 +626,9 @@ public class Tab {
 	 * @return name of type
 	 */
 	public String getNameOfType(Struct type) {
-		if(type == null) return "null";
+		if(type == null) 
+			return "null";
+
 		switch(type.kind) {
 			case Struct.NONE:
 				return "void";
