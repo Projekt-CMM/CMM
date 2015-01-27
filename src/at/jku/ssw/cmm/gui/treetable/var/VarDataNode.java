@@ -43,6 +43,7 @@ public class VarDataNode extends DataNode {
     private Object value;
     
     private int declaration;
+    private int call;
     
     private int address;
 
@@ -50,18 +51,23 @@ public class VarDataNode extends DataNode {
     
     public static final char CHANGE_TAG = ' ';
     public static final char READ_TAG = '*';
- 
-    public VarDataNode(String name, Object type, Object value, List<DataNode> arrayList, int address, int decl) {
-        this.name = name;
+    
+    public VarDataNode(String name, Object type, Object value, List<DataNode> arrayList, int address, int decl, int call) {
+    	this.name = name;
         this.type = type;
         this.value = value;
         this.children = arrayList;
         this.declaration = decl;
+        this.call = call;
         this.address = address;
  
         if (this.children == null) {
             this.children = new ArrayList<>();
         }
+    }
+ 
+    public VarDataNode(String name, Object type, Object value, List<DataNode> arrayList, int address, int decl) {
+        this(name, type, value, arrayList, address, decl, -1);
     }
  
     public String getName() {
@@ -110,6 +116,10 @@ public class VarDataNode extends DataNode {
     	return this.declaration;
     }
     
+    public int getCallLine(){
+    	return this.call;
+    }
+    
     public int getAddress(){
     	return this.address;
     }
@@ -155,12 +165,16 @@ public class VarDataNode extends DataNode {
     	this.children.add(n);
     }
     
-    public VarDataNode getChild(String name, Object type, Object value, int address, int decl){
+    public VarDataNode getChild(String name, Object type, Object value, int address, int decl, int call){
     	for( DataNode d : this.children ){
     		if( ((VarDataNode)d).name.equals(name) )
     			return (VarDataNode)d;
     	}
     	return new VarDataNode( name, type, value, new ArrayList<DataNode>(), address, decl );
+    }
+    
+    public VarDataNode getChild(String name, Object type, Object value, int address, int decl){
+    	return this.getChild(name, type, value, address, decl, -1);
     }
     
     public static boolean equals( VarDataNode oldNode, VarDataNode newNode ){
