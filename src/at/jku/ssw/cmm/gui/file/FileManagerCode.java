@@ -144,8 +144,6 @@ public class FileManagerCode {
 		} catch (IOException e) {
 			return null;
 		}
-		
-		System.out.println("Read: " + input);
 
 		return input;
 	}

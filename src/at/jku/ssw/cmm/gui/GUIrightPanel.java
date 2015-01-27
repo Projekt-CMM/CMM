@@ -27,7 +27,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
@@ -38,11 +37,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import at.jku.ssw.cmm.DebugShell;
-import at.jku.ssw.cmm.DebugShell.Area;
-import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gui.debug.ErrorTable;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
+import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.file.LoadStatics;
 import at.jku.ssw.cmm.quest.GUITestPanel;
 
@@ -250,19 +247,19 @@ public class GUIrightPanel {
 	 * @param errorCode The error code from the compiler, preprocessor or
 	 * 			interpreter. If there is no matching error description for the
 	 * 			given code, a default message is shown.
+	 * @return The title of the error. If there is no title specified in the head
+	 * 			of the error document, the headline is taken
 	 */
-	public void showErrorPanel(String errorCode) {
+	public String[] showErrorPanel(String errorCode) {
 
 		this.errorDesc.setDocument(LoadStatics.readStyleSheet("error"
 				+ File.separator + "style.css"));
 		
-		try {
-			this.errorDesc.setPage(LoadStatics.getHTMLUrl(this.errorMap
-					.getErrorHTML(errorCode)));
-		} catch (IOException e) {
-			DebugShell.out(State.ERROR, Area.ERROR, errorCode + " not found");
-			e.printStackTrace();
-		}
+		String desc = FileManagerCode.readInputDataBlank(new File(this.errorMap
+				.getErrorHTML(errorCode)));
+
+		this.errorDesc.setContentType("text/html");
+		this.errorDesc.setText(desc);
 
 		if (this.tabbedPane.getTabCount() == (main.hasAdvancedGUI() ? 2 : 1))
 			this.tabbedPane.add(errorPanel, _("Error"), 1);
@@ -270,6 +267,23 @@ public class GUIrightPanel {
 		this.errorMsg.setText(errorCode);
 
 		this.tabbedPane.setSelectedIndex(1);
+		
+		String[] result = new String[2];
+		
+		if(desc.contains("<postfix>"))
+			result[1] = desc.substring(desc.indexOf("<postfix>")+9, desc.indexOf("</postfix>"));
+		
+		if(desc.contains("<prefix>"))
+			result[0] = desc.substring(desc.indexOf("<prefix>")+8, desc.indexOf("</prefix>"));
+		
+		else for( int i = 1; i <= 8; i++ ) {
+			if(desc.contains("<h" + i + ">")) {
+				result[0] = desc.substring(desc.indexOf("<h" + i + ">")+4, desc.indexOf("</h" + i + ">"));
+				break;
+			}
+		}
+		
+		return result;
 	}
 
 	/**

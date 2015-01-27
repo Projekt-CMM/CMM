@@ -388,9 +388,7 @@ public class GUImain {
 	public void setErrorMode(String msg, String file, int line) {
 		
 		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), false);
-
-		this.leftPanelControl.setErrorMode(file, line);
-		this.rightPanelControl.showErrorPanel(msg);
+		this.leftPanelControl.setErrorMode(file, this.rightPanelControl.showErrorPanel(msg), line);
 	}
 
 	/**
