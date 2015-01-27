@@ -397,7 +397,7 @@ public class InitTreeTableData {
 					
 					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized) {
 						node.add(init, new VarDataNode("[" + i + "]", "string", b, null, address + offset + size * i, -1));
-						info.add(value);
+						info.add(Strings.get(Memory.loadStringAddress(address + offset + size * i)));
 					}
 					else {
 						node.add(init, new VarDataNode("[" + i + "]", "string", "undef", null, address + offset + size * i, -1));
