@@ -3,25 +3,19 @@ package at.jku.ssw.cmm.gui.treetable.example;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
-import javax.swing.tree.DefaultMutableTreeNode;
 
-import at.jku.ssw.cmm.gui.treetable.DataNode;
+import at.jku.ssw.cmm.gui.treetable.TableButtonRenderer;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
 import at.jku.ssw.cmm.gui.treetable.TreeTableModel;
-import at.jku.ssw.cmm.gui.treetable.var.VarDataNode;
-import at.jku.ssw.cmm.gui.utils.TableButtonRenderer;
 import at.jku.ssw.cmm.profile.Quest;
 
 public class TreeTableExample {
