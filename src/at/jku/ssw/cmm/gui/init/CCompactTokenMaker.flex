@@ -242,7 +242,8 @@ URL                 = (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCh
    "return" |
    "struct" |
    "switch" |
-   "while"              { addToken(Token.RESERVED_WORD); }   
+   "while" |
+   "wait"               { addToken(Token.RESERVED_WORD); }   
 
    /* Boolean literals. */
    "true"   |
