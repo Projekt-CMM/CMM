@@ -108,8 +108,6 @@ public class TableButtonMouseListener implements MouseListener {
 			}
 
 		} else {
-			System.out.println("mouse entered column");
-			
 			//Check in clicked reference TODO add reference highlighting
 			if( this.treeTable.getTable().getValueAt(row, 2) instanceof String && 
 					((String)this.treeTable.getTable().getValueAt(row, 2)).equals(_("reference")) ){

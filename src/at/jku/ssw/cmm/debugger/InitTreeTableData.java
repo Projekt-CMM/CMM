@@ -156,6 +156,9 @@ public class InitTreeTableData {
 	 */
 	private static VarDataNode readVariables( boolean init, Obj obj, VarDataNode node, int address, GUImain main, int nPars ){
 		
+		if( obj == null )
+			System.err.println("Error reading " + node.getName());
+		
 		//Iterate through symbol table
 		while( obj != null ){
 			//Reading an INTEGER
@@ -387,7 +390,7 @@ public class InitTreeTableData {
 					}
 				}
 				else if( obj.elemType.kind == Struct.STRUCT ){
-					VarDataNode n = readVariables( init, obj.fields, new VarDataNode(name, "struct", "", new ArrayList<DataNode>(), -1, -1), address + offset + size * i, main, 0 );
+					VarDataNode n = readVariables( init, obj.elemType.fields, new VarDataNode("[" + i + "]", "struct", "", new ArrayList<DataNode>(), -1, -1), address + offset + size * i, main, 0 );
 					node.add(init, n);
 				}
 				else if( obj.elemType.kind == Struct.STRING ){
