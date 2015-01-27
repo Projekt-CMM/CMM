@@ -372,11 +372,11 @@ public class GUImain {
 	/**
 	 * Sets main GUI and all child components to error mode
 	 */
-	public void setErrorMode(String msg, int line) {
+	public void setErrorMode(String msg, String file, int line) {
 		
 		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), false);
 
-		this.leftPanelControl.setErrorMode(line);
+		this.leftPanelControl.setErrorMode(file, line);
 		this.rightPanelControl.showErrorPanel(msg);
 	}
 

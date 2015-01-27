@@ -44,7 +44,7 @@ public class DebugShell {
 	 * @param msg The message/log itself
 	 */
 	public static void out( State state, Area area, String msg ){
-		if( state == State.ERROR || state == State.WARNING )//state == State.STAT && area == Area.COMPILER )
+//		if( state == State.ERROR || state == State.WARNING )//state == State.STAT && area == Area.COMPILER )
 			System.out.println( State.getName(state) + Area.getName(area) + " " + msg );
 	}
 	

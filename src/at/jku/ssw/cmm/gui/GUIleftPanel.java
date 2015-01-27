@@ -436,13 +436,13 @@ public class GUIleftPanel {
 	 * 
 	 * @param line
 	 */
-	public void setErrorMode(int line) {
+	public void setErrorMode(String file, int line) {
 		
 		this.unlockInput();
 		
 		this.jStatePanel.setBackground(new Color(255, 131, 131));
 		// TODO parse filename from Parser (when library error)
-		this.jStateLabel.setText("! ! ! " + _("error") + " " + (line >= 0 ? _("in line") + " " + line : "") + " ! ! !");
+		this.jStateLabel.setText("! ! ! " + _("error") + (file == null ? "" : " in file " + file) + " " + (line >= 0 ? _("in line") + " " + line : "") + " ! ! !");
 		
 		if( line >= 0 )
 			this.highlightSourceCodeDirectly(line);
