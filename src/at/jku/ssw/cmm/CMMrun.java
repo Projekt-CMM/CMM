@@ -21,6 +21,7 @@
  
 package at.jku.ssw.cmm;
 
+import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
@@ -102,18 +103,18 @@ public class CMMrun extends Thread {
 		// Thrown when runtime error occurs
 		catch (final RunTimeException e) {
 
-			System.err.println("[ERROR] Interpreter thread threw RunTimeException");
+			DebugShell.out(DebugShell.State.ERROR, Area.INTERPRETER, "Interpreter thread threw RunTimeException");
 
 			// Clean thread data partly up; leave variable data for GUI runtime
 			// error mode
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					if ( e.getNode() != null && e.getNode().line > 0)
-						debug.setErrorMode(e.getMessage(), e.getNode().line);
+						debug.setErrorMode(e.getMessage(), e.getNode().line, true);
 					else if( e.getLine() > 0 )
-						debug.setErrorMode(e.getMessage(), e.getLine());
+						debug.setErrorMode(e.getMessage(), e.getLine(), true);
 					else
-						debug.setErrorMode(e.getMessage(), -1);
+						debug.setErrorMode(e.getMessage(), -1, true);
 				}
 			});
 			reply.setNotRunning();
@@ -128,7 +129,7 @@ public class CMMrun extends Thread {
 			// error mode
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					debug.setErrorMode("unknown interpreter exception", -1);
+					debug.setErrorMode("unknown interpreter exception", -1, true);
 				}
 			});
 			reply.setNotRunning();

@@ -132,6 +132,8 @@ public class TreeTableView{
 		this.varTreeTable.setTreeModel(new TreeTableDataModel<>(InitTreeTableData.createDataStructure(fileName), TreeTableView.columnNames, TreeTableView.columnTypes));
 		this.forceUpdate = true;
 		
+		
+		
 		DebugShell.out(State.LOG, Area.GUI, "treetable standby");
 	}
 	
