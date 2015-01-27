@@ -337,9 +337,9 @@ public final class Interpreter {
 		 * Bit Operators
 		 */
 		case Node.BITAND:
-			return BoolExpr(p.left) & BoolExpr(p.right);
+			return BoolExpr(p.left) && BoolExpr(p.right);
 		case Node.BITOR:
-			return BoolExpr(p.left) | BoolExpr(p.right);
+			return BoolExpr(p.left) || BoolExpr(p.right);
 		case Node.BITXOR:
 			return BoolExpr(p.left) ^ BoolExpr(p.right);
 			
