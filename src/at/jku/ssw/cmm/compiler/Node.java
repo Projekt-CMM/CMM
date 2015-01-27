@@ -102,7 +102,8 @@ public final class Node {
 		OR       	= 59,  	// ||
 		AND      	= 60,  	// &&
 		//------------ special nodes
-		NOP			= 61;	// No operation
+		NOP			= 61,	// No operation
+		WAIT		= 62;	// No operation
 
 	public int kind;        // STATSEQ, ASSIGN, ...
 	public Struct type;     // only used in expressions
@@ -181,7 +182,7 @@ public final class Node {
 		"PLUS", "MINUS", "TIMES", "DIV", "REM", "BITNEQ", "BITAND", "BITOR", "BITXOR", 
 		"SHIFTLEFT", "SHIFTRIGHT", "I2F", "F2I", "I2C", "C2I", "A2S", "C2S", "B2I", "I2B",
 		"EQL", "NEQ", "LSS", "LEQ", "GTR", "GEQ", "NOT", "OR", "AND",
-		"NOP"
+		"NOP", "WAIT"
 	};
 
 	static String[] typ = {
