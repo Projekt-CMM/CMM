@@ -304,5 +304,39 @@ public class Package {
 		this.style = style;
 	}
 	
+	/**
+	 * Returning the Count of Finished Quests
+	 * 0.... Finished Quests
+	 * 1.... Other Quests
+	 */
+	public int[] getQuestCount(){
+		int count = 0;
+		
+		int finishedQuests = 0;
+		int otherQuests = 0;
+		if(questList != null)
+		for(Quest q : questList){
+			if(q.getState().equals(Quest.STATE_FINISHED))
+				finishedQuests++;
+			else
+				otherQuests++;
+		}
+		System.out.println(otherQuests + " " + finishedQuests + " " + (finishedQuests + otherQuests));
+		return new int[] {otherQuests, finishedQuests,(finishedQuests + otherQuests)};
+	}
+	
+	/**
+	 * Returning the Count of Other Quests
+	*/
+	public int getOtherQuestCount(){
+		return getQuestCount()[0];
+	}
+	
+	/**
+	 * Returning the Count of Finished Quests
+	*/
+	public int getFinishedQuestCount(){
+		return getQuestCount()[1];
+	}
 	
 }
