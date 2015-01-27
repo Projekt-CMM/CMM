@@ -27,6 +27,7 @@ import java.io.InputStream;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import at.jku.ssw.cmm.compiler.Node;
 import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Parser;
 import at.jku.ssw.cmm.compiler.Scanner;
@@ -142,6 +143,7 @@ public class TabTest {
 		tab.closeScope();
 		
 		assertEquals(tab.find("testProc2"), Tab.noObj);
+		assertEquals(tab.find(null), Tab.noObj);
 		// TODO: Check for error-message
 	}
 
@@ -151,7 +153,7 @@ public class TabTest {
 		
 		Struct type = new Struct(Struct.STRUCT);
 		
-		Obj struct = tab.insert(Obj.TYPE, "testStruct", type, -1);
+		tab.insert(Obj.TYPE, "testStruct", type, -1);
 		
 		tab.openScope();
 		
@@ -171,20 +173,53 @@ public class TabTest {
         assertEquals(tab.findField("testVarInt", type), testVarInt);
         assertEquals(tab.findField("testVarFloat", type), testVarFloat);
         assertEquals(tab.findField("testVarBool", type), testVarBool);
+        
+        // check if funcion is working properly with incorrect types
         assertEquals(tab.findField("testVarNotDefined", type), Tab.noObj);
+        assertEquals(tab.findField(null, type), Tab.noObj);
+        assertEquals(tab.findField("testVarNotDefined", null), Tab.noObj);
+        assertEquals(tab.findField(null, null), Tab.noObj);
         // TODO: Check for error-message
 	}
 
-	@Ignore
 	@Test
 	public void testLookup() {
-		fail("Not yet implemented");
+		Tab tab = createTabObj("");
+
+		tab.insert(Obj.VAR, "outerScopeTestVar", Tab.intType, -1);
+		
+		// create new Scope
+		tab.openScope();
+		
+		Obj innnerScopeTestVar = tab.insert(Obj.VAR, "innnerScopeTestVar", Tab.floatType, -1);
+
+		assertEquals(tab.lookup("innnerScopeTestVar"), innnerScopeTestVar);
+		assertEquals(tab.lookup("outerScopeTestVar"), Tab.noObj);
+		
+		tab.closeScope();
+		
+		// check for Null-Ptr-Exceptions
+		assertEquals(tab.lookup(null), Tab.noObj);
+		// TODO: detect SemErr
 	}
 
-	@Ignore
 	@Test
 	public void testLookupType() {
-		fail("Not yet implemented");
+		Tab tab = createTabObj("");
+
+		Struct outerScopeTestType = tab.insert(Obj.TYPE, "outerScopeTestType", new Struct(Struct.STRUCT), -1).type;
+		
+		// create new Scope
+		tab.openScope();
+		
+		Struct innnerScopeTestType = tab.insert(Obj.TYPE, "innnerScopeTestType", new Struct(Struct.STRUCT), -1).type;
+		
+		assertEquals(tab.lookupType(innnerScopeTestType), true);
+		assertEquals(tab.lookupType(outerScopeTestType), false);
+		
+		// check for Null-Ptr-Exceptions
+		assertEquals(tab.lookupType(null), false);
+		// TODO: detect SemErr
 	}
 
 	@Ignore
@@ -217,6 +252,7 @@ public class TabTest {
 		assertEquals(tab.intVal("2147483648"),0);
 		assertEquals(tab.intVal("10.5"),0);
 		assertEquals(tab.intVal("'a'"),0);
+		assertEquals(tab.intVal(null),0);
 		// TODO: Check for error-message
 	}
 
@@ -241,6 +277,7 @@ public class TabTest {
 		assertEquals(tab.floatVal("test"),0, 1e-4);
 		assertEquals(tab.floatVal("a"),0, 1e-4);
 		assertEquals(tab.floatVal("E"),0, 1e-4);
+		assertEquals(tab.floatVal(null),0, 1e-4);
 		// TODO: Check for error-message
 	}
 
@@ -271,49 +308,158 @@ public class TabTest {
 		assertEquals(tab.charVal("c"),'\0');
 		assertEquals(tab.charVal("\"string\""),'\0');
 		assertEquals(tab.charVal("'\\%'"),'\0');
+		assertEquals(tab.charVal(null),'\0');
 		// TODO: Check for error-message
 	}
 
-	@Ignore
 	@Test
 	public void testStringVal() {
-		fail("Not yet implemented");
+		Tab tab = createTabObj("");
+		
+		// test problematic values
+		assertEquals(tab.stringVal("\"\""),"");
+		assertEquals(tab.stringVal("\" \"")," ");
+		assertEquals(tab.stringVal("\"\\r\""),"\r");
+		assertEquals(tab.stringVal("\"\\n\""),"\n");
+		assertEquals(tab.stringVal("\"\\t\""),"\t");
+		assertEquals(tab.stringVal("\"\\0\""),"\0");
+		assertEquals(tab.stringVal("\"\\\"\""),"\"");
+		assertEquals(tab.stringVal("\"\\\\\""),"\\");
+		
+		// test normal values
+		assertEquals(tab.stringVal("\"test string\""),"test string");
+		assertEquals(tab.stringVal("\"asdf\""),"asdf");
+		assertEquals(tab.stringVal("\"line \\n newline\""),"line \n newline");
+		
+		// test wrong values
+		assertEquals(tab.stringVal(""),"");
+		assertEquals(tab.stringVal("\""),"");
+		assertEquals(tab.stringVal("asdf"),"");
+		assertEquals(tab.stringVal("'asdf'"),"");
+		assertEquals(tab.stringVal("'b'"),"");
+		assertEquals(tab.stringVal("\"\\s\""),"");
+		assertEquals(tab.stringVal(null),"");
+		// TODO: Check for error-message
 	}
 
-	@Ignore
 	@Test
 	public void testIsCastOperator() {
-		fail("Not yet implemented");
+		Tab tab = createTabObj("");
+		
+		// test correct cast-operators
+		assertEquals(tab.isCastOperator(Node.A2S),true);
+		assertEquals(tab.isCastOperator(Node.B2I),true);
+		assertEquals(tab.isCastOperator(Node.C2I),true);
+		assertEquals(tab.isCastOperator(Node.C2S),true);
+		assertEquals(tab.isCastOperator(Node.I2F),true);
+		assertEquals(tab.isCastOperator(Node.F2I),true);
+		
+		// test incorrect cast-operators
+		assertEquals(tab.isCastOperator(Node.IDENT),false);
+		assertEquals(tab.isCastOperator(Node.INDEX),false);
+		assertEquals(tab.isCastOperator(Node.CALL),false);
 	}
 
-	@Ignore
 	@Test
 	public void testCheckFunctionParams() {
-		fail("Not yet implemented");
+		Tab tab = createTabObj("");
+
+		// TODO: better tests
+		
+		// check for Null-Ptr-Exceptions
+		tab.checkFunctionParams(tab.find("print"), null);
+		tab.checkFunctionParams(null, new Node(tab.find("print")));
+		tab.checkFunctionParams(null, null);
+		// TODO: detect SemErr
 	}
 
-	@Ignore
 	@Test
 	public void testImpliciteTypeCon() {
-		fail("Not yet implemented");
+		Tab tab = createTabObj("");
+		
+		// test impliciteTypeCon if no type-change occour
+		Node intNode = new Node(3);
+		assertEquals(tab.impliciteTypeCon(intNode, Tab.intType),intNode);
+		
+		Node charNode = new Node('c');
+		assertEquals(tab.impliciteTypeCon(charNode, Tab.charType),charNode);
+
+		// test impliciteTypeCon if type-change occour
+		assertEquals(tab.impliciteTypeCon(intNode, Tab.floatType).kind,Node.I2F);
+		assertEquals(tab.impliciteTypeCon(intNode, Tab.floatType).left,intNode);
+
+		assertEquals(tab.impliciteTypeCon(intNode, Tab.boolType).kind,Node.I2B);
+		assertEquals(tab.impliciteTypeCon(intNode, Tab.boolType).left,intNode);
+		
+		assertEquals(tab.impliciteTypeCon(charNode, Tab.intType).kind,Node.C2I);
+		assertEquals(tab.impliciteTypeCon(charNode, Tab.intType).left,charNode);
+		
+		// check for Null-Ptr-Exceptions
+		tab.impliciteTypeCon(new Node(5), null);
+		tab.impliciteTypeCon(null, Tab.intType);
+		tab.impliciteTypeCon(null, null);
+		// TODO: detect SemErr
 	}
 
-	@Ignore
 	@Test
 	public void testExpliciteTypeCon() {
-		fail("Not yet implemented");
+		Tab tab = createTabObj("");
+		
+		// test expliciteTypeCon if no type-change occour
+		Node intNode = new Node(3);
+		assertEquals(tab.expliciteTypeCon(intNode, Tab.intType),intNode);
+				
+		Node charNode = new Node('c');
+		assertEquals(tab.expliciteTypeCon(charNode, Tab.charType),charNode);
+		
+		// test expliciteTypeCon if type-change occour
+		assertEquals(tab.impliciteTypeCon(intNode, Tab.floatType).kind,Node.I2F);
+		assertEquals(tab.impliciteTypeCon(intNode, Tab.floatType).left,intNode);
+		
+		assertEquals(tab.expliciteTypeCon(intNode, Tab.charType).kind,Node.I2C);
+		assertEquals(tab.expliciteTypeCon(intNode, Tab.charType).left,intNode);
+		
+		// check for Null-Ptr-Exceptions
+		tab.expliciteTypeCon(new Node('a'), null);
+		tab.expliciteTypeCon(null, Tab.boolType);
+		tab.expliciteTypeCon(null, null);
+		// TODO: detect SemErr
 	}
 
-	@Ignore
 	@Test
 	public void testDoImplicitCastByAritmetic() {
-		fail("Not yet implemented");
+		Tab tab = createTabObj("");
+		
+		// TODO finish test
+		// test doImplicitCastByAritmetic if no type-change occour
+		Node intNode = new Node(3);
+		assertEquals(tab.doImplicitCastByAritmetic(intNode, Tab.intType, Tab.intType),intNode);
+				
+		// test doImplicitCastByAritmetic if type-change occour
+		Node charNode = new Node('c');
+		assertEquals(tab.doImplicitCastByAritmetic(charNode, Tab.charType, Tab.intType).kind,Node.C2I);
+
+		// check for Null-Ptr-Exceptions
+		tab.doImplicitCastByAritmetic(null, Tab.intType, Tab.floatType);
+		tab.doImplicitCastByAritmetic(null, Tab.boolType, Tab.intType);
+		tab.doImplicitCastByAritmetic(new Node(5), Tab.intType, null);
+		tab.doImplicitCastByAritmetic(new Node(5), null, Tab.intType);
+		tab.doImplicitCastByAritmetic(null, null, null);
+		// TODO: detect SemErr
 	}
 
-	@Ignore
 	@Test
 	public void testGetNameOfType() {
-		fail("Not yet implemented");
+		Tab tab = createTabObj("");
+		
+		// test getNameOfType with normal types
+		assertEquals(tab.getNameOfType(Tab.noType), "void");
+		assertEquals(tab.getNameOfType(Tab.intType), "int");
+		assertEquals(tab.getNameOfType(Tab.floatType), "float");
+		assertEquals(tab.getNameOfType(new Struct(Struct.STRUCT)), "struct");
+		
+		// check for Null-Ptr-Exceptions
+		assertEquals(tab.getNameOfType(null), "null");
 	}
 
 	@Ignore
@@ -334,10 +480,44 @@ public class TabTest {
 		fail("Not yet implemented");
 	}
 
-	@Ignore
 	@Test
 	public void testTab() {
-		fail("Not yet implemented");
+		Tab tab = createTabObj("");
+		
+		// check if default-procedures exist
+		assertEquals(tab.find("print"), Tab.printProc);
+		assertEquals(tab.find("read").kind, Obj.PROC);
+		assertEquals(tab.find("print").type.kind, Struct.NONE);
+		
+		assertEquals(tab.find("read"), Tab.readProc);
+		assertEquals(tab.find("read").kind, Obj.PROC);
+		assertEquals(tab.find("read").type.kind, Struct.CHAR);
+		
+		// check if default-types exist
+		assertEquals(tab.find("bool").type, Tab.boolType);
+		assertEquals(tab.find("bool").kind, Obj.TYPE);
+		assertEquals(tab.find("bool").type.kind, Struct.BOOL);
+		
+		assertEquals(tab.find("int").type, Tab.intType);
+		assertEquals(tab.find("int").kind, Obj.TYPE);
+		assertEquals(tab.find("int").type.kind, Struct.INT);
+		
+		assertEquals(tab.find("float").type, Tab.floatType);
+		assertEquals(tab.find("float").kind, Obj.TYPE);
+		assertEquals(tab.find("float").type.kind, Struct.FLOAT);
+		
+		assertEquals(tab.find("string").type, Tab.stringType);
+		assertEquals(tab.find("string").kind, Obj.TYPE);
+		assertEquals(tab.find("string").type.kind, Struct.STRING);
+		
+		// check if default-constants exist
+		assertEquals(tab.find("true").type, Tab.boolType);
+		assertEquals(tab.find("true").kind, Obj.CON);
+		assertNotEquals(tab.find("true").val, 0);
+		
+		assertEquals(tab.find("false").type, Tab.boolType);
+		assertEquals(tab.find("false").kind, Obj.CON);
+		assertEquals(tab.find("false").val, 0);
 	}
 
 }

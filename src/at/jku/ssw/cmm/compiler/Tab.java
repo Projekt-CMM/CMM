@@ -166,7 +166,7 @@ public class Tab {
 	 * @return return field or tab.noObj if no field is found
 	 */
 	public Obj findField(String name, Struct type) {
-		if(type.kind != Struct.STRUCT) {
+		if(type == null || type.kind != Struct.STRUCT) {
 			parser.SemErr(name + " is not in a struct");
 			return noObj;
 		}
@@ -204,7 +204,7 @@ public class Tab {
 	 */
 	public boolean lookupType(Struct checkType) {
 		for (Obj p = curScope.locals; p != null ; p = p.next) {
-			if (p.type == checkType)
+			if (p.kind == Obj.TYPE && p.type == checkType)
 				return true;
 		}
 		return false;
@@ -284,6 +284,9 @@ public class Tab {
 		catch ( java.lang.NumberFormatException e) {
 			parser.SemErr(s + " is not an integer");
 			return 0;
+		} catch (NullPointerException e) {
+			parser.SemErr("'null' is not an integer");
+			return 0;
 		}
 	}
 
@@ -301,6 +304,9 @@ public class Tab {
 		catch ( java.lang.NumberFormatException e) {
 			parser.SemErr(s + " is not a float");
 			return 0;
+		} catch (NullPointerException e) {
+			parser.SemErr("'null' is not a float");
+			return 0;
 		}
 	}
 	
@@ -312,7 +318,10 @@ public class Tab {
 	 * @return return converted char
 	 */
 	public char charVal(String s) {
-		if(s.matches("^'.'$") && s.charAt(1) != '\\') {
+		if(s == null) { 
+			parser.SemErr("'null' is not a character");
+			return 	'\0';
+		} else if(s.matches("^'.'$") && s.charAt(1) != '\\') {
 			return s.charAt(1);
 		} else if(s.matches("^'\\\\.'$")) {
 			switch(s.charAt(2)) {
@@ -346,18 +355,29 @@ public class Tab {
 	 * @return return converted string
 	 */
 	public String stringVal(String s) {
-		if(s.matches("^\".*\"$")) {
+		// check if apostrophs are correct set
+		if(s == null) { 
+			parser.SemErr("'null' is not a string");
+			return "";
+		} else if(s.matches("^\".*\"$")) {
 			s = s.substring(1, s.length()-1);
-		} else 
+		} else {
 			parser.SemErr(s + " string doesn't have \" at start end endpoint");
+			return "";
+		}
+
 		String returnStr = new String();
 		while(s.length() != 0) {
 			if(s.charAt(0) != '\\') {
+				if(s.charAt(0) == '"') {
+					parser.SemErr(s + " escape-sequence required for \"");
+					return "";
+				}
+
 				returnStr += s.charAt(0);
 				s = s.substring(1); // remove 1 letter
 			} else if(s.length() >= 2) {
-				switch(s.charAt(1))
-				{
+				switch(s.charAt(1)) {
 					case 'r':
 						returnStr += '\r';
 						break;
@@ -382,6 +402,7 @@ public class Tab {
 				s = s.substring(2);	// remove 2 letters
 			} else {
 				parser.SemErr(s + " no single \\ at the end of a string allowed");
+				return "";
 			}
 		}
 		return returnStr;
@@ -420,6 +441,9 @@ public class Tab {
 	 */
 	public void checkFunctionParams(Obj declFunction, Node buildFunction) {
 		if(declFunction == null) {
+			parser.SemErr("no function declared");
+			return;
+		} else if(buildFunction == null) {
 			parser.SemErr("no function declared");
 			return;
 		}
@@ -506,7 +530,13 @@ public class Tab {
 	 */
 	public Node impliciteTypeCon(Node element, Struct type) {
 		if(element == null) {
-			parser.SemErr("cast from null to " +  getNameOfType(type) + " not allowed");
+			parser.SemErr("cast from 'null' to " +  getNameOfType(type) + " not allowed");
+			return element;
+		} else if(type == null) {
+			if(element.type != null)
+				parser.SemErr("cast from " +  getNameOfType(element.type) + " to 'null' not allowed");
+			else
+				parser.SemErr("cast from 'null' to 'null' not allowed");
 			return element;
 		} else if(type == element.type) 
 			return element;
@@ -596,7 +626,9 @@ public class Tab {
 	 * @return name of type
 	 */
 	public String getNameOfType(Struct type) {
-		if(type == null) return "null";
+		if(type == null) 
+			return "null";
+
 		switch(type.kind) {
 			case Struct.NONE:
 				return "void";
