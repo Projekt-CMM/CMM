@@ -97,7 +97,6 @@ public class InitLeftPanel {
         tArea.setLayout(new BorderLayout());
         tArea.setMargin(new Insets(5, 5, 5, 5));
         tArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        //tArea.setFont(tArea.getFont().deriveFont((float)20.0));
         
         JScrollPane scroll = new JScrollPane(tArea);
         

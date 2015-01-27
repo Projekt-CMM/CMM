@@ -102,8 +102,8 @@ public class TableButtonMouseListener implements MouseListener {
 				
 				VarDataNode node = (VarDataNode) this.treeTable.getModelAdapter().nodeForRow(row);
 				
-				if( node.getDeclarationLine() >= 0 ){
-					InitContextMenu.initContextMenu(main, name, node.getDeclarationLine(), 20).show(e.getComponent(), e.getX(), e.getY());
+				if( node.getDeclarationLine() >= 0 || node.getCallLine() >= 0 ){
+					InitContextMenu.initContextMenu(main, name, node.getDeclarationLine(), node.getCallLine()).show(e.getComponent(), e.getX(), e.getY());
 				}
 			}
 

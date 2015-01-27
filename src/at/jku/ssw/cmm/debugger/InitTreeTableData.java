@@ -119,16 +119,16 @@ public class InitTreeTableData {
 		//Tree table data node of this function
 		VarDataNode funcNode;
 		
-		System.out.println("Reading function: " + name);
+		System.out.println("Reading function " + name + ", called on " + Memory.loadInt(address-12));
 		
 		Obj obj = findNodeByName(compiler.getSymbolTable().curScope.locals, name);
 		
 		if( init )
 			//Initialize data node if re-creating the data model TODO address
-			funcNode = new VarDataNode( name + "()", "", "", new ArrayList<DataNode>(), -1, obj.line );
+			funcNode = new VarDataNode( name + "()", "", "", new ArrayList<DataNode>(), -1, obj.line, Memory.loadInt(address-12) );
 		else
 			//Update the data node
-			funcNode = node.getChild( name + "()", "", "", -1, obj.line );
+			funcNode = node.getChild( name + "()", "", "", -1, obj.line, Memory.loadInt(address-12) );
 		
 		//Read local variables of the current function
 		readVariables( init, obj.locals, funcNode, address, main, obj.nPars );

@@ -23,35 +23,38 @@ package at.jku.ssw.cmm.gui.event;
 
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseListener;
 
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import javax.swing.JFrame;
+import javax.swing.text.JTextComponent;
 
-public class CursorListener implements MouseMotionListener {
+public class CursorListener implements MouseListener {
 	
-	public CursorListener( RSyntaxTextArea sourcePane ){
-		this.sourcePane = sourcePane;
+	public CursorListener( JFrame frame, JTextComponent component, Cursor cursor ){
+		this.component = component;
+		this.frame = frame;
+		this.cursor = cursor;
 	}
 	
-	private final RSyntaxTextArea sourcePane;
+	private final JFrame frame;
+	private final JTextComponent component;
+	private final Cursor cursor;
 
 	@Override
-	public void mouseDragged(MouseEvent e) {
-		
-		final int x = e.getX();
-        final int y = e.getY();
-        // only display a hand if the cursor is over the items
-        if (sourcePane != null) {
-        	if( sourcePane.contains(x, y))
-        		sourcePane.setCursor(new Cursor(Cursor.TEXT_CURSOR));
-        	else
-        		sourcePane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        }	
+	public void mouseEntered(MouseEvent e) {
+		if( this.component.isEditable() )
+			this.frame.setCursor(this.cursor);
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent arg0) {
-		
-		
+	public void mouseExited(MouseEvent e) {
+		this.frame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {}
+	@Override
+	public void mousePressed(MouseEvent e) {}
+	@Override
+	public void mouseReleased(MouseEvent e) {}
 }

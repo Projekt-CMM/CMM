@@ -187,6 +187,9 @@ public class GUIdebugPanel {
 	}
 
 	public void setReadyMode() {
+		
+		DebugShell.out(State.LOG, Area.GUI, "Setting main GUI to ready mode");
+		
 		this.ctrlPanel.setReadyMode();
 		this.ctrlPanel.getListener().setReadyMode();
 		this.main.setReadyMode();
@@ -199,20 +202,22 @@ public class GUIdebugPanel {
 		this.main.unlockInput();
 	}
 
-	public void setErrorMode(String html, int line) {
+	public void setErrorMode(String html, int line, boolean keepTable) {
 		
-		System.out.println("setting error");
+		DebugShell.out(State.LOG, Area.GUI, "Setting main GUI to error mode " +
+				(keepTable ? "keeping" : "discarding") + " table");
 
 		this.ctrlPanel.setReadyMode();
 		this.ctrlPanel.getListener().setReadyMode();
 		
-		this.main.setErrorMode(html, Integer.parseInt(
+		this.main.setErrorMode(html, null, Integer.parseInt(
 			Preprocessor.returnFileAndNumber(line, 
 					this.main.getLeftPanel().getSourceCodeRegister())[1].toString()));
 		
 		// Mode-specific
 		this.main.getLeftPanel().resetInputHighlighter();
-		this.varView.standby(this.main.getSettings().setCMMFile());
+		if( !keepTable )
+			this.varView.standby(this.main.getSettings().setCMMFile());
 		
 		//Input lock
 		this.main.unlockInput();
@@ -220,12 +225,12 @@ public class GUIdebugPanel {
 	
 	public void setErrorModeDirect(String html, String file, int line) {
 		
-		System.out.println("setting error");
+		DebugShell.out(State.LOG, Area.GUI, "Setting main GUI to preprocessor error mode, discarding table");
 
 		this.ctrlPanel.setReadyMode();
 		this.ctrlPanel.getListener().setReadyMode();
 		
-		this.main.setErrorMode(html, line);
+		this.main.setErrorMode(html, file, line);
 		
 		// Mode-specific
 		this.main.getLeftPanel().resetInputHighlighter();
@@ -338,7 +343,7 @@ public class GUIdebugPanel {
 
 		// compiler returns errors
 		if (e != null) {
-			this.setErrorMode(e.msg, e.line);
+			this.setErrorMode(e.msg, e.line, false);
 			return false;
 		}
 		
