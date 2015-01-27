@@ -199,7 +199,7 @@ public class GUIrightPanel {
 
 		// Initialize Quest Panel
 		JPanel jQuestPanel = new JPanel();
-		if (main.hasAdvancedGUI()) {
+//		if (main.hasAdvancedGUI()) {
 			this.testPanel = new GUITestPanel(main);
 			JPanel jTestPanel = new JPanel();
 			this.testPanel.init(jTestPanel);
@@ -208,11 +208,10 @@ public class GUIrightPanel {
 			
 			jQuestPanel.setLayout(new BorderLayout());
 			questPanel = new GUIProfilePanel(jQuestPanel, main);
-			//tabbedPane.add(jQuestPanel, _("Profile"), 2);
-		}
+			tabbedPane.add(jQuestPanel, _("Profile"), 2);
+//		}
 		
 		tabbedPane.setMinimumSize(new Dimension(250, 400));
-		tabbedPane.setPreferredSize(new Dimension(300, 420));
 		
 		panel.add(tabbedPane, BorderLayout.CENTER);
 
@@ -261,8 +260,9 @@ public class GUIrightPanel {
 		this.errorDesc.setContentType("text/html");
 		this.errorDesc.setText(desc);
 
-		if (this.tabbedPane.getTabCount() == (main.hasAdvancedGUI() ? 2 : 1))
+		if (this.tabbedPane.indexOfTab(_("Error")) == -1) {
 			this.tabbedPane.add(errorPanel, _("Error"), 1);
+		}
 		
 		this.errorMsg.setText(errorCode);
 
@@ -290,8 +290,8 @@ public class GUIrightPanel {
 	 * Hides the error panel
 	 */
 	public void hideErrorPanel() {
-		if (this.tabbedPane.getTabCount() == (main.hasAdvancedGUI() ? 3 : 2))
-			tabbedPane.remove(1);
+		if( tabbedPane.indexOfTab(_("Error")) != -1 )
+		tabbedPane.remove(tabbedPane.indexOfTab(_("Error")));
 	}
 	
 	/**
