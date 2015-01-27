@@ -65,7 +65,7 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
      
     public TreeTableCellRenderer(TreeTable<?> treeTable, TreeModel model, DefaultTreeCellRenderer renderer) {
         super(model);
-        super.setCellRenderer(renderer);//new TreeStructImageRenderer());//new TreeRenderer());
+        super.setCellRenderer(renderer);
         this.treeTable = treeTable;
         
         setRowHeight(getRowHeight()+1);
