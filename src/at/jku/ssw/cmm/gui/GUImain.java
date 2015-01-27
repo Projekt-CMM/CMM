@@ -23,6 +23,7 @@ package at.jku.ssw.cmm.gui;
 
 import static at.jku.ssw.cmm.gettext.Language._;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
@@ -206,8 +207,21 @@ public class GUImain {
 
 		// Initialize the window listeners
 		this.jFrame.addWindowListener(new WindowEventListener(this.jFrame, this));
-		this.jFrame.addMouseMotionListener(new CursorListener(
-				this.leftPanelControl.getSourcePane()));
+		
+		// Initialize cursor listeners
+		// These listeners change the cursors for a specific component,
+		// eg. a text field gets a text cursor
+		this.leftPanelControl.getSourcePane().addMouseListener(
+			new CursorListener(this.jFrame, this.leftPanelControl.getSourcePane(), new Cursor(Cursor.TEXT_CURSOR))
+		);
+		
+		this.leftPanelControl.getInputPane().addMouseListener(
+			new CursorListener(this.jFrame, this.leftPanelControl.getInputPane(), new Cursor(Cursor.TEXT_CURSOR))
+		);
+		
+		this.leftPanelControl.getOutputPane().addMouseListener(
+			new CursorListener(this.jFrame, this.leftPanelControl.getOutputPane(), new Cursor(Cursor.TEXT_CURSOR))
+		);
 
 		// Initialize the menubar
 		MenuBarEventListener listener = new MenuBarEventListener(this.jFrame,

@@ -534,4 +534,8 @@ public class GUIleftPanel {
 	public JInputDataPane getInputPane(){
 		return this.jInputPane;
 	}
+	
+	public JTextArea getOutputPane(){
+		return this.jOutputPane;
+	}
 }
