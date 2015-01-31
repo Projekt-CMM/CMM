@@ -231,10 +231,8 @@ public class GUImain {
 			new CursorListener(this.jFrame, this.leftPanelControl.getOutputPane(), new Cursor(Cursor.TEXT_CURSOR))
 		);
 
-		// Initialize the menubar
-		MenuBarEventListener listener = new MenuBarEventListener(this.jFrame,
-				this.leftPanelControl, this, this.getSettings(),
-				this.rightPanelControl.getDebugPanel(), this.saveDialog);
+		// Initialize the menubar event listener
+		MenuBarEventListener listener = new MenuBarEventListener(this.jFrame, this);
 
 		this.menuBarControl = new MenuBarControl(listener);
 
