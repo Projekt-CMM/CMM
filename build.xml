@@ -83,16 +83,12 @@
         </exec>
         
         <!-- remove functions which are generating errors -->
-        <exec executable="sed" failonerror="true">
-            <arg value="-i"/>
-            <arg value="s/public final void yyreset(java.io.Reader reader)/public final void yyreset_old(java.io.Reader reader)/g"/>
-            <arg value="${java-flex-ccompact.file}"/>
-        </exec>
-        <exec executable="sed" failonerror="true">
-            <arg value="-i"/>
-            <arg value="s/private boolean zzRefill() throws java.io.IOException/private boolean zzRefill_old() throws java.io.IOException/g"/>
-            <arg value="${java-flex-ccompact.file}"/>
-        </exec>
+        <replace file="${java-flex-ccompact.file}" 
+            token="public final void yyreset(java.io.Reader reader)" 
+            value="public final void yyreset_old(java.io.Reader reader)"/>
+        <replace file="${java-flex-ccompact.file}" 
+            token="private boolean zzRefill() throws java.io.IOException" 
+            value="private boolean zzRefill_old() throws java.io.IOException"/>
     </target>
 
     <!-- build project -->

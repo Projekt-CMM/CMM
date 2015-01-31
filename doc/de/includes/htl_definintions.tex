@@ -56,6 +56,7 @@
 \definecolor{gray}{rgb}{0.5,0.5,0.5} 
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
+\definecolor{maroon}{rgb}{0.5,0,0}
 
 \definecolor{cssId}{rgb}		{0,0,0.6 }%{0.75, 0.00, 0.00 }
 \definecolor{cssAttribute}{rgb}	{0.58,0,0.82 }%{0.00, 0.00, 0.75 }
@@ -204,4 +205,20 @@
 				{=}{{\textcolor{punct}{=}}}{1}
 				{<}{{\textcolor{punct}{<}}}{1}
 				{>}{{\textcolor{punct}{>}}}{1}
+}
+%	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 	XML
+\lstdefinelanguage{XML}
+{
+  basicstyle=\ttfamily\footnotesize,
+  morestring=[b]",
+  moredelim=[s][\bfseries\color{maroon}]{<}{\ },
+  moredelim=[s][\bfseries\color{maroon}]{</}{>},
+  moredelim=[l][\bfseries\color{maroon}]{/>},
+  moredelim=[l][\bfseries\color{maroon}]{>},
+  morecomment=[s]{<?}{?>},
+  morecomment=[s]{<!--}{-->},
+%  commentstyle=\color{DarkOliveGreen},
+%  stringstyle=\color{blue},
+  identifierstyle=\color{red}
 }

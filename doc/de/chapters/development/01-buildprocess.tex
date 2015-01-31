@@ -1,0 +1,33 @@
+%!TEX root=../Vorlage_DA.tex
+%	########################################################
+% 				Buildprozess
+%	########################################################
+
+
+%	--------------------------------------------------------
+% 	Allgmeine Hinweise
+%	--------------------------------------------------------
+\section{Buildprozess}
+
+Um aus Quelltext ein ausf\"uhrbaren Anwendungsprogramm zu erstellen sind meist viele Schritte nötig.\footnote{\url{https://de.wikipedia.org/wiki/Erstellungsprozess}} Diese Aufgabe wird dabei in der Regel von einem sogenannten Build-Management-Tool \"ubernommen um Arbeitszeit zu sparen und die Entwicklung zu erleichtern.
+
+\subsection{Apache Ant}
+
+Apache Ant\footnote{\url{https://de.wikipedia.org/wiki/Apache_Ant}} ist ein in Java geschriebenes Build-Management-Tool welches auf Basis von XML-Dateien funktioniert.
+
+Wir haben uns f\"ur Apache Ant entschieden da die Kompilierung von Java-Projekten darin einfach umsetzbar ist, und sich die Nutzung von XML-Dateien als Vorteil gegen\"uber die oft verwendeten Makefiles herausgestellt hat.
+
+\subsubsection{Ausf\"uhren von Ant Prozessen}
+
+Ein ausf\"uhrbarer Teil innerhalb der Build-Datei wird als target bezeichnet.
+
+\begin{lstlisting}[language=XML]
+<!-- clean project and then build it from scratch -->
+<target name="all"
+	depends="clean, build, test"
+	description="build project from scrach"/>
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash]
+ant all
+\end{lstlisting}
