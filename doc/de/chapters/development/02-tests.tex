@@ -1,0 +1,66 @@
+%!TEX root=../Vorlage_DA.tex
+%	########################################################
+% 				Tests
+%	########################################################
+
+
+%	--------------------------------------------------------
+% 	Allgmeine Hinweise
+%	--------------------------------------------------------
+\section{Tests}
+
+W\"ahrend der Softwareentwicklung ist es leicht m\"oglich, ungewollt Fehler zu produzieren welche schwer nachvollziehbar sind und unbemerkt falsche Daten liefern. Dem kann durch umfangreiche Tests\footnote{\url{https://de.wikipedia.org/wiki/Modultest}} entgegengewirkt werden, welche einzelne Teile des Programmes auf die korrekte Funktionalit\"at \"uberpr\"ufen.
+
+\subsection{Therorie}
+
+\subsubsection{Testabdeckung}
+
+\subsubsection{Testf\"alle}
+
+Bei der entwicklung von Tests ist es unm\"oglich alle Testf\"alle abzudecken. Deshalb beschr\"ankt man sich auf einen Untergruppe von Eingabedaten welche f\"ur den jeweiligen Test relevant erscheinen.
+
+Dies umfasst nicht nur durchschnittliche Eingabedaten, sondern in besonderem Umfang auch Grenzwerte und fehlerhafte Eingabedaten. Die Testf\"alle sollen daher besonders stark die Teile abdecken, bei denen die Funktion fehlerhaft reagieren kann.
+
+\subsubsection{Black-Box-Test}
+
+\subsection{JUnit}
+
+\subsection{Fuzzing}
+
+Bei Programmen, welche mit umfangreichen Eingabedaten umgehen m\"ussen, ist schwer m\"oglich alle Testf\"alle abzudecken. Fuzzing\footnote{\url{https://de.wikipedia.org/wiki/Fuzzing}} stellt eine Art Stresstest f\"ur ein Programm dar, welche das Programm mit zuf\"alligen Eingabedaten f\"uttert. Dadurch k\"onnen Probleme entdeckt werden, welche bei anderen Tests nicht bemerkt worden sind.
+
+Wir nutzen Fuzzing daf\"ur um den Compiler mit Zuf\"alligen Kombination von Zeichen zu konfrontieren, welcher diese ohne Abst\"urze Verarbeiten muss.
+
+\subsection{Statische Codeanalyse}
+
+Es gibt diverse Arten von Fehlern, welche mithilfe einer statischen Codeanalyse\footnote{\url{https://de.wikipedia.org/wiki/Statische_Code-Analyse}} gefunden werden k\"onnen. Diese kann zum Beispiel erkennen ob es m\"oglich ist dass auf ein uninitialisiertes Objekt zugegriffen wird, oder ein Programmierkonstrukt eingesetzt wird, welches im Normalfall nicht das gewollte Verhalten aufweist.
+
+\subsubsection{Beispiele}
+
+\htlParagraph{Stringvergleich}
+
+In Java gilt das Prinzip Copy by Reference. Dies stellt ein h\"aufiger Fehler f\"ur Vergleichsoperationen bei Strings dar, da der Vergleichsoperator nicht den Inhalt des Strings, sondern die Objektadressen vergleicht.
+
+\begin{lstlisting}[language=Java]
+String s1 = "Hello World";
+String s2 = "Hello World";
+if(s1 == s2)
+	System.out.println("s1 is eqal to s2");
+\end{lstlisting}
+
+Da dies ein oft gemachter Fehler in Java ist, w...
+
+\begin{lstlisting}[language=Java]
+String s1 = "Hello World";
+String s2 = "Hello World";
+if(s1.equals(s2))
+	System.out.println("s1 is eqal to s2");
+\end{lstlisting}
+
+\htlParagraph{Uninitialisiertes Objekt}
+
+...
+
+Dieser Fehler kann sehr einfach mithilfe einer Statischen Codeanalyse gefunden werden
+
+...
