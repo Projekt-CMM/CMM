@@ -69,7 +69,7 @@ public class GUIProperties{
 		
 		mainPanel.add(this.initCodeSizePanel());
 		mainPanel.add(this.initTextSizePanel());
-		mainPanel.add(this.initVarSizePanel());
+		//mainPanel.add(this.initVarSizePanel());
 		this.updateTextSize();
 		
 		// Causes this Window to be sized to fit the preferred size and layouts
@@ -127,6 +127,8 @@ public class GUIProperties{
 		return panel;
 	}
 	
+	@SuppressWarnings("unused")
+	//TODO reimplement this feature and fix treeTable bugs concerning rowHeight
 	private JPanel initVarSizePanel(){
 		
 		//Initialize panel
@@ -158,7 +160,7 @@ public class GUIProperties{
 		
 		this.jLabelCode.setText("" + this.main.getSettings().getCodeSize() + " " + _("pixels"));
 		this.jLabelText.setText("" + this.main.getSettings().getTextSize() + " " + _("pixels"));
-		this.jLabelVar.setText("" + this.main.getSettings().getVarSize() + " " + _("pixels"));
+		//this.jLabelVar.setText("" + this.main.getSettings().getVarSize() + " " + _("pixels"));
 	}
 	
 	public static int sliderPosToFont( int slider ){
