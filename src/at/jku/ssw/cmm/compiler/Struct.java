@@ -68,6 +68,18 @@ public class Struct implements Cloneable{
 				break;
 		}
 	}
+
+	public Struct(int kind, int elements, Struct elemType) {
+		this.kind = kind;
+		this.elements = elements;
+		this.elemType = elemType;
+
+		if(elemType != null)
+			size = elements * elemType.size;
+		else
+			// TODO: create ERROR
+			size = 0;
+	}
 	
 	public Struct clone() throws CloneNotSupportedException {
 		return (Struct)super.clone();
@@ -113,13 +125,6 @@ public class Struct implements Cloneable{
 		}
 
 		return true;
-	}
-
-	public Struct(int kind, int elements, Struct elemType) {
-		this.kind = kind;
-		this.elements = elements;
-		this.elemType = elemType;
-		size = elements * elemType.size;
 	}
 
 	/**
