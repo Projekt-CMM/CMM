@@ -55,12 +55,15 @@ public class MenuBarControl {
 		for( JMenuItem mi : this.list ){
 			mi.setEnabled(false);
 		}
+		this.recentMI.setEnabled(false);
 	}
 	
 	public void unlockAll(){
 		for( JMenuItem mi : this.list ){
 			mi.setEnabled(true);
 		}
+		this.recentMI.setEnabled(true);
+		System.out.println("hello");
 	}
 	
 	public void setRecentMenu( JMenu mi ){
@@ -72,12 +75,13 @@ public class MenuBarControl {
 		if( this.recentMI == null )
 			return;
 		
+		System.out.println("recent: " + recentFiles.size());
+		
 		if( recentFiles == null || recentFiles.size() <= 0 ){
 			this.recentMI.setEnabled(false);
 			return;
 		}
 		
-		this.recentMI.setEnabled(true);
 		this.recentMI.removeAll();
 		
 		for( String s : recentFiles ){

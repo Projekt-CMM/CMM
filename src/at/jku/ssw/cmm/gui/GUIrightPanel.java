@@ -199,7 +199,7 @@ public class GUIrightPanel {
 
 		// Initialize Quest Panel
 		JPanel jQuestPanel = new JPanel();
-//		if (main.hasAdvancedGUI()) {
+		if (main.hasAdvancedGUI()) {
 			this.testPanel = new GUITestPanel(main);
 			JPanel jTestPanel = new JPanel();
 			this.testPanel.init(jTestPanel);
@@ -209,7 +209,7 @@ public class GUIrightPanel {
 			jQuestPanel.setLayout(new BorderLayout());
 			questPanel = new GUIProfilePanel(jQuestPanel, main);
 			tabbedPane.add(jQuestPanel, _("Profile"), 2);
-//		}
+		}
 		
 		tabbedPane.setMinimumSize(new Dimension(250, 400));
 		

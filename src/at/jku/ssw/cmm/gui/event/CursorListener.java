@@ -30,20 +30,28 @@ import javax.swing.text.JTextComponent;
 
 public class CursorListener implements MouseListener {
 	
-	public CursorListener( JFrame frame, JTextComponent component, Cursor cursor ){
+	public CursorListener( JFrame frame, Object component, Cursor cursor ){
 		this.component = component;
 		this.frame = frame;
 		this.cursor = cursor;
 	}
 	
 	private final JFrame frame;
-	private final JTextComponent component;
+	private final Object component;
 	private final Cursor cursor;
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if( this.component.isEditable() )
-			this.frame.setCursor(this.cursor);
+		// Disable custom cursor if component is text element ...
+		if( this.component != null && this.component instanceof JTextComponent ) {
+			JTextComponent c = (JTextComponent)this.component;
+			
+			// ... and it is not editable
+			if( !c.isEditable() )
+				return;
+		}
+		// Set custom cursor
+		this.frame.setCursor(this.cursor);
 	}
 
 	@Override

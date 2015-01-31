@@ -124,7 +124,7 @@ public class InitTreeTableData {
 		Obj obj = findNodeByName(compiler.getSymbolTable().curScope.locals, name);
 		
 		if( init )
-			//Initialize data node if re-creating the data model TODO address
+			//Initialize data node if re-creating the data model
 			funcNode = new VarDataNode( name + "()", "", "", new ArrayList<DataNode>(), -1, obj.line, Memory.loadInt(address-12) );
 		else
 			//Update the data node

@@ -125,7 +125,6 @@ public class TreeUtils {
 	private static boolean expandByAddress(TreeTableCellRenderer tree, VarDataNode node, int address, Stack<VarDataNode> path, boolean changed){
 		
 		if( node.getAddress() == address ){
-			System.out.println("Located: " + node.print());
 			if( changed )
 				node.markChanged();
 			else

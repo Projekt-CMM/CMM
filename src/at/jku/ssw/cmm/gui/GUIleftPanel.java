@@ -25,6 +25,7 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -35,12 +36,15 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
@@ -49,6 +53,7 @@ import javax.swing.text.StyleContext;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+import at.jku.ssw.cmm.gui.event.CursorListener;
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.init.InitLeftPanel;
@@ -155,7 +160,7 @@ public class GUIleftPanel {
 	 * 
 	 * @return A jPanel with all components of the main GUI
 	 */
-	public JSplitPane init() {
+	public JSplitPane init(JFrame jFrame) {
 		// Split panel for the left part of the GUI
 		JSplitPane jPanelLeft = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		jPanelLeft.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -205,6 +210,13 @@ public class GUIleftPanel {
 		jPanelLeft.setBottomComponent(panel2);
 		jPanelLeft.setDividerLocation(0.4);
 		jPanelLeft.setResizeWeight(1.0);
+		
+		// Custom cursor for split pane divider
+		BasicSplitPaneUI ui = (BasicSplitPaneUI)jPanelLeft.getUI();
+		BasicSplitPaneDivider divider = ui.getDivider();
+		divider.addMouseListener(
+			new CursorListener(jFrame, divider, new Cursor(Cursor.S_RESIZE_CURSOR))
+		);
 		
 		// Disable F6 keyboard shortcut for 
 		jPanelLeft.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
