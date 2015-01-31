@@ -33,16 +33,16 @@ public class ComponentPopup {
 
 	public static void createPopUp( GUImain main, JComponent component, int x, int y ){
 		
-		ImagePopup popup = new ImagePopup("images/popup2.png");
-		popup.setBounds(main.getGlassPane().getMousePosition().x-221, main.getGlassPane().getMousePosition().y-151, 260, 151);
+		ImagePopup popup = new ImagePopup("images/popup3.png");
+		popup.setBounds(main.getGlassPane().getMousePosition().x-271, main.getGlassPane().getMousePosition().y-151, 310, 151);
 		
 		//JTextArea ta = new JTextArea( text );
 		JScrollPane scrollPane = new JScrollPane(component);
-		scrollPane.setBounds(10, 10, 248, 117);
-		scrollPane.setPreferredSize(new Dimension(248, 117));
+		scrollPane.setBounds(10, 10, 298, 117);
+		scrollPane.setPreferredSize(new Dimension(298, 117));
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		popup.add(scrollPane);
 		
-		main.invokePopup(popup, main.getGlassPane().getMousePosition().x-221, main.getGlassPane().getMousePosition().y-151, 260, 143);
+		main.invokePopup(popup, main.getGlassPane().getMousePosition().x-271, main.getGlassPane().getMousePosition().y-151, 310, 143);
 	}
 }
