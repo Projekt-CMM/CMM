@@ -69,7 +69,7 @@ public class Tests implements StdInOut {
 				errCount++;
 				e = e.next;
 			}
-			System.out.println(errCount + " errors detected");
+			//System.out.println(errCount + " errors detected");
 			Memory.initialize();
 
 			Interpreter interpreter = new Interpreter(new DebuggerMock(), this);
@@ -360,7 +360,7 @@ public class Tests implements StdInOut {
 	 */
 	@Test
 	public void test20() throws Exception{
-		String[] a = { "interpretertests/file20.cmm" , "-debug", "1", "1" };
+		String[] a = { "interpretertests/file20.cmm"};
 		run(a);
 		
 		Assert.assertEquals(1,(char) ref.get(0));
