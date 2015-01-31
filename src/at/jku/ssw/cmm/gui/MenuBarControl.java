@@ -63,7 +63,6 @@ public class MenuBarControl {
 			mi.setEnabled(true);
 		}
 		this.recentMI.setEnabled(true);
-		System.out.println("hello");
 	}
 	
 	public void setRecentMenu( JMenu mi ){
@@ -74,8 +73,6 @@ public class MenuBarControl {
 		
 		if( this.recentMI == null )
 			return;
-		
-		System.out.println("recent: " + recentFiles.size());
 		
 		if( recentFiles == null || recentFiles.size() <= 0 ){
 			this.recentMI.setEnabled(false);
