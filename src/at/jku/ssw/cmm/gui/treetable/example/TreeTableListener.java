@@ -23,8 +23,13 @@ public class TreeTableListener {
 		public void mouseClicked(MouseEvent arg0) {
 			
 			System.out.println("Mouse klicked: " + path);
-			if(mainSelection != null)
+			if(mainSelection != null){
 				mainSelection.setPath(path);
+				mainSelection.changetoQuestTable();
+				System.out.println("Selection repainted!");
+				
+			}
+			
 			//TODO close Old frame and open another one
 			
 		}

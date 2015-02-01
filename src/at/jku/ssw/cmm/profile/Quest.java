@@ -282,7 +282,6 @@ public class Quest {
 				try{
 					quest.setOptional(Boolean.parseBoolean(eElement.getElementsByTagName(Quest.XML_OPTIONAL).item(0).getTextContent()));
 				}catch(NullPointerException e){
-					//No Token found
 					quest.setOptional(false);
 				}
 
@@ -362,7 +361,8 @@ public class Quest {
 
     public String toString() {
     	//TODO
-        return "[" + state + "] " + title;
+        //return "[" + state + "] " + title;
+    	return title;
     }
     
 	/**

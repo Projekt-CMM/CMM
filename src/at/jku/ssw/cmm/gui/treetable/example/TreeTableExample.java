@@ -195,8 +195,9 @@ private DataNodeExample getFolderView(String path, DataNodeExample node, int lay
 				subNode = new DataNodeExample(subfolder, b, button);
 			}
 		}else{
-			//adding an empty subNode
-			subNode = new DataNodeExample(subfolder, "", "");
+			if(!isPathQuest(path + File.separator + subfolder))
+				//adding an empty subNode
+				subNode = new DataNodeExample(subfolder, "", "");
 		}
 		
 		if(subNode != null){
