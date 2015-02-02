@@ -108,6 +108,8 @@ public final class Node {
 	public int kind;        // STATSEQ, ASSIGN, ...
 	public Struct type;     // only used in expressions
 	public int line;        // only used in statement nodes
+	public int col;        	// only used in statement nodes
+	public int colLength;
 
 	public Node left;       // left son
 	public Node right;      // right son
@@ -130,12 +132,25 @@ public final class Node {
 		this(kind, left, right, null);
 		this.line = line;
 	}
-
+	
+	public Node(int kind, Node left, Node right, int line, int col, int colLength) {
+		this(kind, left, right, line);
+		this.col = col;
+		this.colLength = colLength;
+	}
+	
 	// for leaf nodes
 	public Node(Obj obj) {
 		this.kind = IDENT;
 		this.type = obj.type;
 		this.obj = obj;
+	}
+	
+	public Node(Obj obj, int line, int col, int colLength) {
+		this(obj);
+		this.line = line;
+		this.col = col;
+		this.colLength = colLength;
 	}
 
 	public Node(boolean val) {
@@ -153,6 +168,13 @@ public final class Node {
 		this.val = val;
 	}
 
+	public Node(int val, int line, int col, int colLength) {
+		this(val);
+		this.line = line;
+		this.col = col;
+		this.colLength = colLength;
+	}
+	
 	public Node(float fValue) {
 		this.kind = FLOATCON;
 		this.type = Tab.floatType;
