@@ -202,12 +202,12 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			if (main.getSettings().getCMMFilePath() != null && main.getSettings().equals(_("Unnamed")))
-				// Save to working directory
-				main.getSaveManager().directSave();
-			else
+			if (main.getSettings().getCMMFilePath() == null || main.getSettings().getCMMFilePath().equals(_("Unnamed")))
 				// Open "save as" dialog if there is no working directory
 				main.getSaveManager().doSaveAs();
+			else
+				// Save to working directory
+				main.getSaveManager().directSave();
 
 			main.setFileSaved();
 			main.updateWinFileName();
