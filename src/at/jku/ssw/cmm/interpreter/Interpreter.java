@@ -172,6 +172,9 @@ public final class Interpreter {
 			case Struct.STRING:
 				Memory.storeStringAdress(Adr(p.left), StringExpr(p.right));
 				break;
+			case Struct.STRUCT:
+				Memory.copyMemoryRegion(Adr(p.right), Adr(p.left), p.left.type.size);
+				break;
 			default:
 				throw new RunTimeException("Not supportet node kind", p, currentLine);
 
@@ -865,45 +868,8 @@ public final class Interpreter {
 			}
 			break;
 		default:
-
-			Node ref = p;
-			Obj form = p.obj.locals;
-
-			int a = 0;
-
-			// Amount of Items
-			for (ref = p.left; ref != null; ref = ref.next)
-				a++;
-			Object[] object = new Object[a];
-			a = 0;
-
-			// Buffering the Data in an object[]
-			for (ref = p.left; ref != null; ref = ref.next, form = form.next) {
-				if (form.isRef) {
-					object[a] = Adr(ref);
-				} else {
-					switch (form.type.kind) {
-					case Struct.BOOL:
-						object[a] = BoolExpr(ref);
-						break; 
-					case Struct.INT:
-						object[a] = IntExpr(ref);
-						break; 
-					case Struct.CHAR:
-						object[a] = CharExpr(ref);
-						break; 
-					case Struct.FLOAT:
-						object[a] = FloatExpr(ref);
-						break;
-					case Struct.STRING:
-						object[a] = StringExpr(ref);
-						break;
-					default:
-						throw new RunTimeException("unknow DataType", p, currentLine);
-					}
-				}
-				a++;
-			}
+			// safe old FramePointer
+			int oldFramePointer = Memory.getFramePointer();
 			
 			// New Memory Frame for C-- Function
 			try {
@@ -912,11 +878,18 @@ public final class Interpreter {
 				throw new RunTimeException("StackOverFlow", p, currentLine);
 			}
 
+			// safe new FramePointer to rewrite it later
+			int newFramePointer = Memory.getFramePointer();
+			// use old FramePointer, because we have to run the Expressions with the old one
+			Memory.setFramePointer(oldFramePointer);
+			
+			// writing variables into new Stack and
 			// add variable names into MemoryInformation Array
-			for(form = p.obj.locals;form != null;form = form.next) {
+			Node ref = p.left;
+			for(Obj form = p.obj.locals;form != null;form = form.next) {
 				Memory.getMemoryInformation(Memory.getFramePointer() + form.adr).varName = form.name;
-				
 				// safe number of elements of an array
+				// TODO: reqired?
 				if(form.isRef == false && form.type.kind == Struct.ARR) {
 					List<Integer> arrayElements = new ArrayList<>();
 					
@@ -926,40 +899,42 @@ public final class Interpreter {
 					
 					Memory.getMemoryInformation(Memory.getFramePointer() + form.adr).arrayElements = arrayElements;
 				}
+				
+				// write function arguments in the created stack
+				if(ref != null) {
+					if (form.isRef) {
+						Memory.storeInt(newFramePointer + form.adr, Adr(ref));
+					} else {
+						switch (form.type.kind) {
+						case Struct.BOOL:
+							Memory.storeBool(newFramePointer + form.adr, BoolExpr(ref));
+					 		break; 
+						case Struct.INT:
+							Memory.storeInt(newFramePointer + form.adr, IntExpr(ref));
+					 		break; 
+						case Struct.CHAR:
+							Memory.storeChar(newFramePointer + form.adr, CharExpr(ref));
+							break;
+						case Struct.FLOAT:
+							Memory.storeFloat(newFramePointer + form.adr, FloatExpr(ref));
+							break;
+						case Struct.STRING:
+							Memory.storeStringAdress(newFramePointer + form.adr, StringExpr(ref));
+							break;
+						case Struct.STRUCT:
+							Memory.copyMemoryRegion(Adr(ref), newFramePointer + form.adr, form.type.size);
+							break;
+						default:
+							throw new RunTimeException("Not supportet node kind", p, currentLine);
+						}
+					}
+					ref = ref.next;
+				}
 			}
 			
-			// Saving the Object into the new C-- Function Memory Frame.
-			form = p.obj.locals;
-			a = 0;
-			for (ref = p.left; ref != null; ref = ref.next, form = form.next) {
-				if (form.isRef) {
-					Memory.storeInt(Memory.getFramePointer() + form.adr,(int) object[a]);
-				} else {
-					switch (form.type.kind) {
-					case Struct.BOOL:
-						if((int)object[a] == 0)
-							Memory.storeBool(Memory.getFramePointer() + form.adr,false);
-						else
-							Memory.storeBool(Memory.getFramePointer() + form.adr,true);
-				 		break; 
-					case Struct.INT:
-						Memory.storeInt(Memory.getFramePointer() + form.adr,(int) object[a]);
-				 		break; 
-					case Struct.CHAR:
-						Memory.storeChar(Memory.getFramePointer() + form.adr,(char) object[a]);
-						break;
-					case Struct.FLOAT:
-						Memory.storeFloat(Memory.getFramePointer() + form.adr,(float) object[a]);
-						break;
-					case Struct.STRING:
-						Memory.storeStringAdress(Memory.getFramePointer()+ form.adr, (int) object[a]);
-						break;
-					default:
-						throw new RunTimeException("Not supportet node kind", p, currentLine);
-					}
-				}
-				a++;
-		}
+			// set new FramePointer
+			Memory.setFramePointer(newFramePointer);
+
 			try {
 				if(p.obj.library)
 					libraryFunctionLevel ++;

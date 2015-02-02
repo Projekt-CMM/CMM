@@ -23,7 +23,7 @@ package at.jku.ssw.cmm.interpreter.memory;
 
 import java.util.List;
 
-public class MemoryInformation {
+public class MemoryInformation implements Cloneable {
 	public boolean isInitialized;
 	public String varName;
 	
@@ -38,4 +38,8 @@ public class MemoryInformation {
 		varName = null;
 		arrayElements = null;
 	}
+	
+	public MemoryInformation clone() throws CloneNotSupportedException {
+		return (MemoryInformation)super.clone();
+    }
 }

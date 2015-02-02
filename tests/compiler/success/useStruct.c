@@ -10,8 +10,11 @@ struct Point {
 }
 
 Point p;
+Point p2;
 
 void main() {
 	p.x = 1;
 	p.y = p.x;
+	
+	p2 = p;
 }

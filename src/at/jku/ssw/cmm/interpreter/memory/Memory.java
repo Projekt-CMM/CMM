@@ -236,12 +236,10 @@ public final class Memory {
 		return floatreturnValue;
 	}
 
-	// TODO
-	/*
-	 * private static void assertAddress(int offset) {
-	 * 
-	 * return false; }
-	 */
+
+	public static void setFramePointer(int _newFramePointer) {
+		framePointer = _newFramePointer;
+	}
 
 	public static int getFramePointer() {
 		return framePointer;
@@ -267,6 +265,34 @@ public final class Memory {
 				throw new RunTimeException(getMemoryInformation(address).varName + " is not initialized", p, Interpreter.currentLine);
 			else
 				throw new RunTimeException("variable is not initialized", p, Interpreter.currentLine);
+		}
+	}
+
+	public static void copyMemoryRegion(int source, int destination, int size) throws RunTimeException {
+		// check if size-property is correct
+		if(size < 0)
+			throw new RunTimeException("negative structure size", null, Interpreter.currentLine);
+
+		for(int i = 0; i < size; i++) {
+			if(memoryInformations.containsKey(source+i)) {
+				// clone memoryInformations if possible
+				try {
+					memoryInformations.put(destination+i, memoryInformations.get(source+i).clone());
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+					throw new RunTimeException("this error should never happen", null, Interpreter.currentLine);
+				}
+			} else {
+				// remove old memory Informations if required
+				memoryInformations.remove(destination+i);
+			}
+			
+			// detect changes
+			changedVariables.add(destination+i);
+			readVariables.add(source+i);
+			
+			// clone data
+			memory.put(destination+i, memory.get(source+i));
 		}
 	}
 }
