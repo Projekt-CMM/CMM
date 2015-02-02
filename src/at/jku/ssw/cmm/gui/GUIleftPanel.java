@@ -320,8 +320,7 @@ public class GUIleftPanel {
 			return;
 
 		// Correct offset in source code (offset caused by includes)
-		line = Integer.parseInt(Preprocessor.returnFileAndNumber(line, 
-						this.main.getLeftPanel().getSourceCodeRegister())[1].toString());
+		line = (int)Preprocessor.returnFileAndNumber(line, this.main.getLeftPanel().getSourceCodeRegister())[1];
 
 		// Do highlighting
 		this.highlightSourceCodeDirectly(line);
