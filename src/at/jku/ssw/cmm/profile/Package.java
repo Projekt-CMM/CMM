@@ -64,15 +64,20 @@ public class Package {
 		XML_MINLEVEL = "minlevel";
 	
 	public static Package readPackage(String initPath, String packagePath){
-
+		System.out.println(initPath + packagePath);
+		
 		Package package1 = readPackageFile(initPath, packagePath);
 		List<String> fileNames = Quest.ReadFileNames(initPath + sep + packagePath);
 		
-		if(fileNames.contains(Package.FILE_DESCRIPTION))
-			package1.setDescription(true);
+		System.out.println(fileNames);
 		
-		if(fileNames.contains(Package.FILE_STYLE))
-			package1.setStyle(true);
+		if(fileNames != null){
+			if(fileNames.contains(Package.FILE_DESCRIPTION))
+				package1.setDescription(true);
+			
+			if(fileNames.contains(Package.FILE_STYLE))
+				package1.setStyle(true);
+		}
 		
 		package1.setQuestList(readPackageQuests(initPath,packagePath,package1));
 		
@@ -166,6 +171,7 @@ public class Package {
 		List<String> questFolderNames = Quest.ReadFolderNames(allPackagesPath + sep + packagePath);
 		List<Quest> packageQuests = new ArrayList<>();
 		
+		if(questFolderNames != null)
 		for(int i = 0;i < questFolderNames.size(); i++){
 			Quest quest;
 					quest = Quest.ReadQuest(allPackagesPath, packagePath, questFolderNames.get(i));
@@ -304,5 +310,39 @@ public class Package {
 		this.style = style;
 	}
 	
+	/**
+	 * Returning the Count of Finished Quests
+	 * 0.... Finished Quests
+	 * 1.... Other Quests
+	 */
+	public int[] getQuestCount(){
+		int count = 0;
+		
+		int finishedQuests = 0;
+		int otherQuests = 0;
+		if(questList != null)
+		for(Quest q : questList){
+			if(q.getState().equals(Quest.STATE_FINISHED))
+				finishedQuests++;
+			else
+				otherQuests++;
+		}
+		System.out.println(otherQuests + " " + finishedQuests + " " + (finishedQuests + otherQuests));
+		return new int[] {otherQuests, finishedQuests,(finishedQuests + otherQuests)};
+	}
+	
+	/**
+	 * Returning the Count of Other Quests
+	*/
+	public int getOtherQuestCount(){
+		return getQuestCount()[0];
+	}
+	
+	/**
+	 * Returning the Count of Finished Quests
+	*/
+	public int getFinishedQuestCount(){
+		return getQuestCount()[1];
+	}
 	
 }

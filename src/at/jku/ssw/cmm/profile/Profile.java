@@ -147,7 +147,10 @@ public class Profile {
 	 */
 	
 	public static Package ReadPackageQuests(Profile profile, String packagePath){
-		return ReadPackageQuests( profile,Profile.FILE_PACKAGESPATH, packagePath);
+		String first = packagePath.substring(0,packagePath.indexOf(File.separator));
+		String last = packagePath.substring(packagePath.indexOf(File.separator));
+		
+		return ReadPackageQuests( profile,first, last);
 	}	
 	
 /**
