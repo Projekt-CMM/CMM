@@ -560,9 +560,11 @@ public class Parser {
 		if (la.kind == 13) {
 			Get();
 			newNode = BinExpr();
-			if(curType == null || (!curType.isPrimitive() && !curType.equals(Tab.stringType))) 
-			   SemErr("type is not a primitive or string");
-			                                      // check if Expression is not null
+			if(curType == null || (!curType.isPrimitive() && !curType.equals(Tab.stringType) && curType.kind != Struct.STRUCT)) 
+			   SemErr("type is not a primitive, string or struct");
+			else if(curType.kind == Struct.STRUCT && !curType.equals(curType))
+			   SemErr("struct is not from same type");
+			// check if Expression is not null
 			else if(newNode == null) 
 			   SemErr("right operator is not defined");
 			
@@ -893,17 +895,21 @@ public class Parser {
 			e = BinExpr();
 			if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
 			   SemErr("name must be an designator");
-			if(design.type == null || (!design.type.isPrimitive() && !design.type.equals(Tab.stringType)))
-			   SemErr("type is not a primitive or string");
+			if(design.type == null || (!design.type.isPrimitive() && !design.type.equals(Tab.stringType) && design.type.kind != Struct.STRUCT))
+			   SemErr("type is not a primitive, string or structure");
 			else if(design.kind == Node.INDEX && design.left.type.equals(Tab.stringType))
 			   SemErr("string manipulation is not allowed"); 
 			else if(e == null)
 			   SemErr("right operator is not defined"); 
 			else if(design.type.equals(Tab.stringType) && !(kind == Node.ASSIGN || kind == Node.ASSIGNPLUS)) 
-			   SemErr("only == or += is allowed for string assignements");
+			   SemErr("only = or += is allowed for string assignements");
+			else if(design.type.kind == Struct.STRUCT && !design.type.equals(e.type))
+			   SemErr("struct is not from same type");
+			else if(design.type.kind == Struct.STRUCT && kind != Node.ASSIGN)
+			   SemErr("only = is allowed for structure assignements");
 			else if(design.type.equals(Tab.boolType) && !(kind == Node.ASSIGN || kind == Node.ASSIGNBITAND
 			       || kind == Node.ASSIGNBITXOR || kind == Node.ASSIGNBITOR)) 
-			   SemErr("only ==, &=, ^= or |= is allowed for boolean assignements"); 
+			   SemErr("only =, &=, ^= or |= is allowed for boolean assignements"); 
 			else
 			   e = tab.impliciteTypeCon(e, design.type);
 			                                     // add special node if assign has operator inside (like *=, -0,...)

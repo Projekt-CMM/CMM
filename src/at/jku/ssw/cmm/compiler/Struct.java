@@ -29,7 +29,7 @@ A Struct holds information about a C-- type. There are 3 primitive types
 results from compare operations, but there is no boolean type in C--.
 --------------------------------------------------------------------------------*/
 
-public class Struct implements Cloneable{
+public class Struct implements Cloneable {
 	public static final int // structure kinds
 		NONE   = 0,
 		INT    = 1,

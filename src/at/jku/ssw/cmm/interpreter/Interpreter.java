@@ -172,6 +172,9 @@ public final class Interpreter {
 			case Struct.STRING:
 				Memory.storeStringAdress(Adr(p.left), StringExpr(p.right));
 				break;
+			case Struct.STRUCT:
+				Memory.copyMemoryRegion(Adr(p.right), Adr(p.left), p.left.type.size);
+				break;
 			default:
 				throw new RunTimeException("Not supportet node kind", p, currentLine);
 
