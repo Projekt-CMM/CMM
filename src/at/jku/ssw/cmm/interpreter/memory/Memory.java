@@ -236,12 +236,10 @@ public final class Memory {
 		return floatreturnValue;
 	}
 
-	// TODO
-	/*
-	 * private static void assertAddress(int offset) {
-	 * 
-	 * return false; }
-	 */
+
+	public static void setFramePointer(int _newFramePointer) {
+		framePointer = _newFramePointer;
+	}
 
 	public static int getFramePointer() {
 		return framePointer;

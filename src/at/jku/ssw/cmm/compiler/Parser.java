@@ -867,8 +867,6 @@ public class Parser {
 		// copy reference-flag
 		curPar.isRef = isRef;
 		                                       // check if parameter is primitive or string
-		if(!isRef && type.kind == Struct.STRUCT)
-		   SemErr("currently, struct can only be handled as reference"); // TODO, implement normal-copy
 		if(!isArray && !type.isPrimitive() && !type.equals(Tab.stringType) && type.kind != Struct.STRUCT) 
 		   SemErr("var must be a primitive type, struct or string");
 		if(isArray && !mainType.isPrimitive() && !mainType.equals(Tab.stringType))
