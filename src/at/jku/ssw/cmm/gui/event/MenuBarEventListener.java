@@ -202,7 +202,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			if (main.getSettings().getCMMFilePath() != null)
+			if (main.getSettings().getCMMFilePath() != null && main.getSettings().equals(_("Unnamed")))
 				// Save to working directory
 				main.getSaveManager().directSave();
 			else
@@ -212,7 +212,6 @@ public class MenuBarEventListener {
 			main.setFileSaved();
 			main.updateWinFileName();
 			main.getRightPanel().getDebugPanel().updateFileName();
-
 		}
 	};
 	
