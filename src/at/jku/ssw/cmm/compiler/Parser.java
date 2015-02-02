@@ -1006,13 +1006,13 @@ public class Parser {
 		           n.val = obj.val;
 		           break;
 		       default:
-		           n = new Node(obj);
+		           n = new Node(obj, t.line, t.col, t.val.length());
 		   }
 		} else {
 		   if(obj.kind == Obj.TYPE)
 		       SemErr(name + " is not a constant, variable or function");
 		   // if Node is a normal identifier, using that Node
-		   n = new Node(obj);
+		   n = new Node(obj, t.line, t.col, t.val.length());
 		}
 		// set type of identifier
 		type = obj.type; 
@@ -1026,7 +1026,7 @@ public class Parser {
 				// update type
 				type = obj.type;
 				// add Node
-				n = new Node(Node.DOT, n, new Node(obj.adr), type); 
+				n = new Node(Node.DOT, n, new Node(obj.adr, t.line, t.col, t.val.length()), type); 
 			} else {
 				Get();
 				if(type == null)

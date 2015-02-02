@@ -989,13 +989,13 @@ ident                               (.  // get name of identifier and check if i
                                                     n.val = obj.val;
                                                     break;
                                                 default:
-                                                    n = new Node(obj);
+                                                    n = new Node(obj, t.line, t.col, t.val.length());
                                             }
                                         } else {
                                             if(obj.kind == Obj.TYPE)
                                                 SemErr(name + " is not a constant, variable or function");
                                             // if Node is a normal identifier, using that Node
-                                            n = new Node(obj);
+                                            n = new Node(obj, t.line, t.col, t.val.length());
                                         }
                                         // set type of identifier
                                         type = obj.type; .)
@@ -1007,7 +1007,7 @@ ident                               (.  // get name of identifier and check if i
                                         // update type
                                         type = obj.type;
                                         // add Node
-                                        n = new Node(Node.DOT, n, new Node(obj.adr), type); .)
+                                        n = new Node(Node.DOT, n, new Node(obj.adr, t.line, t.col, t.val.length()), type); .)
 | "["                               (.  if(type == null)
                                             SemErr("invalide array selector");
                                         else if(type.kind != Struct.ARR && type.kind != Struct.STRING) 
