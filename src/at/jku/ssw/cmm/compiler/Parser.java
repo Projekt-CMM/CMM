@@ -562,7 +562,7 @@ public class Parser {
 			newNode = BinExpr();
 			if(curType == null || (!curType.isPrimitive() && !curType.equals(Tab.stringType) && curType.kind != Struct.STRUCT)) 
 			   SemErr("type is not a primitive, string or struct");
-			else if(curType.kind == Struct.STRUCT && !curType.equals(curType))
+			else if(curType.kind == Struct.STRUCT && !curType.equals(type))
 			   SemErr("struct is not from same type");
 			// check if Expression is not null
 			else if(newNode == null) 
@@ -1279,7 +1279,7 @@ public class Parser {
 		while (la.kind == 40 || la.kind == 41) {
 			kind = Addop();
 			n = Term();
-			if((!res.type.isPrimitive() && !res.type.equals(Tab.stringType)) || n==null || (!n.type.isPrimitive() && !n.type.equals(Tab.stringType)) || n.type.equals(Tab.boolType))
+			if(res == null || (!res.type.isPrimitive() && !res.type.equals(Tab.stringType)) || n==null || (!n.type.isPrimitive() && !n.type.equals(Tab.stringType)) || n.type.equals(Tab.boolType))
 			   SemErr("type is not a primitive or string except bool");
 			else if(res.type.equals(Tab.stringType) && n.type.equals(Tab.stringType) && kind != Node.PLUS)
 			   SemErr("for string operations, only + is allowed");
