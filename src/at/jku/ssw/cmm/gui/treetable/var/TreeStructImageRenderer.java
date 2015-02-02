@@ -32,6 +32,7 @@ public class TreeStructImageRenderer extends DefaultTreeCellRenderer {
 		if (node.getName().endsWith("()")) {
 			setOpenIcon(function);
 			setClosedIcon(function);
+			setLeafIcon(function);
 		} else if (node.getName().endsWith(".cmm")) {
 			setOpenIcon(cmm);
 			setClosedIcon(cmm);
