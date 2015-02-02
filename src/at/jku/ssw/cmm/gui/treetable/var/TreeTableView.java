@@ -151,6 +151,7 @@ public class TreeTableView{
 	
 	public void updateFontSize(){
 		varTreeTable.setFont(varTreeTable.getFont().deriveFont((float)this.main.getSettings().getVarSize()));
+		varTreeTable.getCellRenderer().setFont(varTreeTable.getCellRenderer().getFont().deriveFont((float)this.main.getSettings().getVarSize()));
 		varTreeTable.repaint();
 	}
 }

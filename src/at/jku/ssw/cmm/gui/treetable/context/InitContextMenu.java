@@ -30,20 +30,20 @@ import at.jku.ssw.cmm.gui.GUImain;
 
 public class InitContextMenu {
 
-	public static JPopupMenu initContextMenu( GUImain main, String name, int decl, int call ) {
+	public static JPopupMenu initContextMenu( GUImain main, int decl, int call ) {
 		
-		JPopupMenu menu = new JPopupMenu("hello");
+		JPopupMenu menu = new JPopupMenu();
 		
 		if( decl > -1 ) {
 			JMenuItem id = new JMenuItem(_("Jump to Declaration"));
 			menu.add(id);
-			id.addActionListener(new ContextMenuListener(main, name, decl));
+			id.addActionListener(new ContextMenuListener(main, decl));
 		}
 		
 		if( call > -1 ) {
 			JMenuItem ic = new JMenuItem(_("Jump to Call"));
 			menu.add(ic);
-			ic.addActionListener(new ContextMenuListener(main, name, call));
+			ic.addActionListener(new ContextMenuListener(main, call));
 		}
 		
 		menu.repaint();

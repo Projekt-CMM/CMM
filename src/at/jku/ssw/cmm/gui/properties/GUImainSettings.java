@@ -150,11 +150,9 @@ public class GUImainSettings {
 			this.lastFiles.add(0, _("Unnamed"));
 			this.currentFile = _("Unnamed");
 		} else {
-			if (this.currentProfile == null) {
-				if (this.lastFiles.contains(p))
-					this.lastFiles.remove(p);
-				this.lastFiles.add(0, p);
-			}
+			this.lastFiles.remove(p);
+			this.lastFiles.remove(_("Unnamed"));
+			this.lastFiles.add(0, p);
 			this.currentFile = p;
 		}
 	}

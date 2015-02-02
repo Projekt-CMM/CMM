@@ -124,7 +124,7 @@ public class InitTreeTableData {
 		Obj obj = findNodeByName(compiler.getSymbolTable().curScope.locals, name);
 		
 		if( init )
-			//Initialize data node if re-creating the data model TODO address
+			//Initialize data node if re-creating the data model
 			funcNode = new VarDataNode( name + "()", "", "", new ArrayList<DataNode>(), -1, obj.line, Memory.loadInt(address-12) );
 		else
 			//Update the data node
@@ -155,6 +155,9 @@ public class InitTreeTableData {
 	 * @return The updated data node (see papam "node")
 	 */
 	private static VarDataNode readVariables( boolean init, Obj obj, VarDataNode node, int address, GUImain main, int nPars ){
+		
+		if( obj == null )
+			System.err.println("Error reading " + node.getName());
 		
 		//Iterate through symbol table
 		while( obj != null ){
@@ -282,7 +285,7 @@ public class InitTreeTableData {
 		List<Object> info = new ArrayList<>();
 		VarDataNode result =  readArrayElements(init, obj.type, obj.name, node, address, 0, main, info);
 		
-		if( info.get(0) instanceof List ){
+		if( !info.isEmpty() && info.get(0) instanceof List ){
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			List<Object> l = (List)(info.get(0));
 			if( l.get(0) instanceof List )
@@ -293,7 +296,7 @@ public class InitTreeTableData {
 		else
 			dimensions = 1;
 		
-		if( dimensions < 3 ){
+		if( dimensions < 3 && !info.isEmpty() ){
 			JButton b = new JButton(_("Show contents"));
 			MouseListener l = new ArrayPopupListener(main, info);
 			b.addMouseListener(l);
@@ -341,33 +344,45 @@ public class InitTreeTableData {
 				if( obj.elemType.kind == Struct.CHAR ){
 					typeName = "char";
 					value = Memory.loadChar(address + offset + size * i);
-					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized)
+					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized) {
 						node.add(init, new VarDataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
-					else
+						info.add(value.toString());
+					}
+					else {
 						node.add(init, new VarDataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
+						info.add("?");
+					}
 				}
 				else if( obj.elemType.kind == Struct.FLOAT ){
 					typeName = "float";
 					value = Memory.loadFloat(address + offset + size * i);
-					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized)
+					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized) {
 						node.add(init, new VarDataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
-					else
+						info.add(value.toString());
+					}
+					else {
 						node.add(init, new VarDataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
+						info.add("?");
+					}
 				}
 				else if( obj.elemType.kind == Struct.BOOL ){
 					typeName = "bool";
 					value = Memory.loadBool(address + offset + size * i);
-					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized)
+					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized) {
 						node.add(init, new VarDataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
-					else
+						info.add(value.toString());
+					}
+					else {
 						node.add(init, new VarDataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
+						info.add("?");
+					}
 				}
 				else if( obj.elemType.kind == Struct.INT ){
 					typeName = "int";
 					value = Memory.loadInt(address + offset + size * i);
-					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized){
+					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized) {
 						node.add(init, new VarDataNode("[" + i + "]", typeName, "" + value, null, address + offset + size * i, -1));
-						info.add(value);
+						info.add(value.toString());
 					}
 					else {
 						node.add(init, new VarDataNode("[" + i + "]", typeName, "undef", null, address + offset + size * i, -1));
@@ -375,7 +390,7 @@ public class InitTreeTableData {
 					}
 				}
 				else if( obj.elemType.kind == Struct.STRUCT ){
-					VarDataNode n = readVariables( init, obj.fields, new VarDataNode(name, "struct", "", new ArrayList<DataNode>(), -1, -1), address + offset + size * i, main, 0 );
+					VarDataNode n = readVariables( init, obj.elemType.fields, new VarDataNode("[" + i + "]", "struct", "", new ArrayList<DataNode>(), -1, -1), address + offset + size * i, main, 0 );
 					node.add(init, n);
 				}
 				else if( obj.elemType.kind == Struct.STRING ){
@@ -383,10 +398,14 @@ public class InitTreeTableData {
 					MouseListener l = new StringPopupListener(main, Strings.get(Memory.loadStringAddress(address + offset + size * i)));
 					b.addMouseListener(l);
 					
-					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized)
+					if(Memory.getMemoryInformation(address + offset + size * i).isInitialized) {
 						node.add(init, new VarDataNode("[" + i + "]", "string", b, null, address + offset + size * i, -1));
-					else
+						info.add(Strings.get(Memory.loadStringAddress(address + offset + size * i)));
+					}
+					else {
 						node.add(init, new VarDataNode("[" + i + "]", "string", "undef", null, address + offset + size * i, -1));
+						info.add("?");
+					}
 				}
 			}
 		}

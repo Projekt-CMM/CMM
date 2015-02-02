@@ -37,8 +37,6 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
-import at.jku.ssw.cmm.gui.properties.GUImainSettings;
-
 /**
  * Class containing static methods to initialize the left part of the main GUI. This includes functions to
  * initialize the syntax text field, the input text field and the output text field as well as labels
@@ -53,10 +51,9 @@ public class InitLeftPanel {
 	 * Initializes the text area for the source code in the main GUI.
 	 * 
 	 * @param pane The main panel for the GUI (JPanel)
-	 * @param settings The settings class which contains the config data of the window.
 	 * @return A reference to the text area generated (RSyntaxTextArea)
 	 */
-	public static RSyntaxTextArea initCodePane( JPanel pane, GUImainSettings settings ){
+	public static RSyntaxTextArea initCodePane( JPanel pane ){
 		
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		
@@ -73,7 +70,7 @@ public class InitLeftPanel {
 	    //textArea.setToolTipText("<html><b>Title</b><br>description<br>description2<br><i>italic text</i></html>");
 	    RTextScrollPane sp = new RTextScrollPane(textArea);
 	    sp.setFoldIndicatorEnabled(true);
-	    pane.add(sp);
+	    pane.add(sp, BorderLayout.CENTER);
         
         return textArea;
 	}

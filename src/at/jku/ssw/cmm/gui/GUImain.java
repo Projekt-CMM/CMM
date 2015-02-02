@@ -34,6 +34,8 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
@@ -186,7 +188,7 @@ public class GUImain {
 
 		// Initialize left panel (text fields, ...)
 		this.leftPanelControl = new GUIleftPanel(this);
-		sp.setLeftComponent(this.leftPanelControl.init());
+		sp.setLeftComponent(this.leftPanelControl.init(this.jFrame));
 
 		// Initialize right part of the GUI
 		this.rightPanelControl = new GUIrightPanel(this);
@@ -199,6 +201,12 @@ public class GUImain {
 		
 		sp.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
 		  .put(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), "none");
+		
+		BasicSplitPaneUI ui = (BasicSplitPaneUI)sp.getUI();
+		BasicSplitPaneDivider divider = ui.getDivider();
+		divider.addMouseListener(
+			new CursorListener(this.jFrame, divider, new Cursor(Cursor.E_RESIZE_CURSOR))
+		);
 
 		// Initialize the save dialog object
 		this.saveDialog = new SaveDialog(this.jFrame,
@@ -223,21 +231,18 @@ public class GUImain {
 			new CursorListener(this.jFrame, this.leftPanelControl.getOutputPane(), new Cursor(Cursor.TEXT_CURSOR))
 		);
 
-		// Initialize the menubar
-		MenuBarEventListener listener = new MenuBarEventListener(this.jFrame,
-				this.leftPanelControl.getSourcePane(),
-				this.leftPanelControl.getInputPane(), this, this.getSettings(),
-				this.rightPanelControl.getDebugPanel(), this.saveDialog);
+		// Initialize the menubar event listener
+		MenuBarEventListener listener = new MenuBarEventListener(this.jFrame, this);
 
 		this.menuBarControl = new MenuBarControl(listener);
 
 		InitMenuBar.initFileM(this.jFrame, this, this.menuBarControl, listener, this.rightPanelControl.getDebugPanel().getControlPanel());
-
-		this.menuBarControl.updateRecentFiles(this.settings.getRecentFiles(), this.settings.getCMMFilePath());
-		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), false);
 		
 		// Set debug panel to ready mode
 		this.rightPanelControl.getDebugPanel().setReadyMode();
+		
+		this.menuBarControl.updateRecentFiles(this.settings.getRecentFiles(), this.settings.getCMMFilePath());
+		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), false);
 
 		// Update window name
 		this.updateWinFileName();
@@ -389,9 +394,7 @@ public class GUImain {
 	public void setErrorMode(String msg, String file, int line) {
 		
 		this.menuBarControl.updateUndoRedo(this.leftPanelControl.getSourcePane(), false);
-
-		this.leftPanelControl.setErrorMode(file, line);
-		this.rightPanelControl.showErrorPanel(msg);
+		this.leftPanelControl.setErrorMode(file, this.rightPanelControl.showErrorPanel(msg), line);
 	}
 
 	/**

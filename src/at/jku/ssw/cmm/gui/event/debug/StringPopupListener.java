@@ -66,7 +66,9 @@ public class StringPopupListener implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		
 		//Invoke popup
-		ComponentPopup.createPopUp(main, new JTextArea(text), e.getLocationOnScreen().x, e.getLocationOnScreen().y);
+		JTextArea ta = new JTextArea(text);
+		ta.setEditable(false);
+		ComponentPopup.createPopUp(main, ta, e.getLocationOnScreen().x, e.getLocationOnScreen().y);
 	}
 
 	@Override

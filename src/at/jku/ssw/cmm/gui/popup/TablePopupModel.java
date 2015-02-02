@@ -25,7 +25,7 @@ public class TablePopupModel implements TableModel {
 	@Override
 	public int getColumnCount() {
 		
-		if( info.get(0) instanceof List ){
+		if( !info.isEmpty() && info.get(0) instanceof List ){
 			List<Object> l = (List)(info.get(0));
 			return l.size()+1;
 		}
@@ -36,7 +36,7 @@ public class TablePopupModel implements TableModel {
 	@Override
 	public int getRowCount() {
 		
-		if( info.get(0) instanceof List )
+		if( !info.isEmpty() && info.get(0) instanceof List )
 			return info.size();
 		else
 			return 1;
@@ -44,7 +44,7 @@ public class TablePopupModel implements TableModel {
 
 	@Override
 	public String getColumnName(int arg0) {
-		if( info.get(0) instanceof List && arg0 == 0 )
+		if( !info.isEmpty() && info.get(0) instanceof List && arg0 == 0 )
 			return " ";
 		else if( info.get(0) instanceof List )
 			return "[" + (arg0-1) + "]";
@@ -55,7 +55,7 @@ public class TablePopupModel implements TableModel {
 	@Override
 	/* --- arg1 = x, arg0 = y --- */
 	public Object getValueAt(int arg0, int arg1) {
-		if( info.get(0) instanceof List && arg1 == 0 )
+		if( !info.isEmpty() && info.get(0) instanceof List && arg1 == 0 )
 			return "[" + arg0 + "]";
 		else if( info.get(0) instanceof List ){
 			List<Object> l = (List)(info.get(arg0));

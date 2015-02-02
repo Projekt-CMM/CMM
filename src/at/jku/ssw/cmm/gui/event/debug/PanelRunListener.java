@@ -210,6 +210,11 @@ public class PanelRunListener implements Debugger {
 		// Debugger log
 		DebugShell.out(State.LOG, Area.DEBUGGER, "Step: " + arg0);
 		
+		// Set debugger to pause mode if this is a wait command
+		if( !this.isPauseMode() && arg0.kind == Node.WAIT ) {
+			this.master.setPauseMode();
+		}
+		
 		// Update latest node's line
 		this.lastNode = arg0;
 

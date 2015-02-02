@@ -37,6 +37,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import at.jku.ssw.cmm.DebugShell;
+import at.jku.ssw.cmm.DebugShell.Area;
+import at.jku.ssw.cmm.DebugShell.State;
+
 public class ErrorTable {
 
 	public ErrorTable( String language ) {
@@ -91,11 +95,11 @@ public class ErrorTable {
 						.getElementsByTagName("file").item(0).getTextContent());
 			}
 		} catch (ParserConfigurationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (SAXException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DebugShell.out(State.ERROR, Area.ERROR, "Parser configuration exception when reading error table");
+		} catch (IOException e) {
+			DebugShell.out(State.ERROR, Area.ERROR, "I/O exception when reading error table");
+		} catch (SAXException e) {
+			DebugShell.out(State.ERROR, Area.ERROR, "SAX exception when reading error table");
 		}
 	}
 }

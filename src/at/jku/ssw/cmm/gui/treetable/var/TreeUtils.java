@@ -58,11 +58,7 @@ public class TreeUtils {
 		
 		VarDataNode node = parent;
 		
-		//System.out.println("[TreeTable][Expand] Starting expanding: " + node.getName());
-		
 		path.push(node);
-		
-		//System.out.println("Current path is: " + path.toString());
 		
 		if (node.getChildCount() >= 0) {
 			for (DataNode e : node.getChildren()) {
@@ -73,11 +69,9 @@ public class TreeUtils {
 	
 		// Expansion or collapse must be done bottom-up
 		if (expand) {
-			//System.out.println("[TreeTable][Expand] get expanded: " + parent);
 			tree.expandPath(new TreePath(path.toArray()));
 			path.pop();
 		} else {
-			//System.out.println("[TreeTable][Expand] get collapsed: " + parent);
 			tree.collapsePath(new TreePath(path.toArray()));
 			path.pop();
 		}
@@ -102,19 +96,15 @@ public class TreeUtils {
 		
 		String name = stack.pop();
 		
-		//System.out.println("[TreeTable][Expand] looking for: " + name);
-		
 		if (node.getChildCount() >= 0) {
 			for (DataNode e : node.getChildren()) {
 				if( ((VarDataNode)e).getName().equals(name) ){
-					//System.out.println("[TreeTable][Expand] entering new level: " + e.print());
 					path.push((VarDataNode)e);
 					lowest = expandPath(tree, (VarDataNode)e, stack, path);
 				}
 			}
 		}
-		
-		//System.out.println("[TreeTable][Expand] get expanded: " + path);
+
 		tree.expandPath(new TreePath(path.toArray()));
 		
 		path.pop();
@@ -123,7 +113,7 @@ public class TreeUtils {
 	}
 	
 	public static void expandByAddress(TreeTable<VarDataNode> tree, int address, boolean changed){
-		//System.err.println("Starting search: " + address);
+
 		VarDataNode root = (VarDataNode)tree.getCellRenderer().getModel().getRoot();
 		
 		Stack<VarDataNode> path = new Stack<>();
@@ -134,10 +124,7 @@ public class TreeUtils {
 	
 	private static boolean expandByAddress(TreeTableCellRenderer tree, VarDataNode node, int address, Stack<VarDataNode> path, boolean changed){
 		
-		//System.out.println("Checking search: " + node.print());
-		
 		if( node.getAddress() == address ){
-			System.out.println("Located: " + node.print());
 			if( changed )
 				node.markChanged();
 			else
@@ -150,7 +137,6 @@ public class TreeUtils {
 				
 				path.push((VarDataNode)e);
 				if(expandByAddress(tree, (VarDataNode)e, address, path, changed)){
-					//System.out.println("Expanding: " + path.toArray());
 					
 					tree.expandPath(new TreePath(path.toArray()));
 					path.pop();

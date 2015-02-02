@@ -28,20 +28,17 @@ import at.jku.ssw.cmm.gui.GUImain;
 
 public class ContextMenuListener implements ActionListener {
 
-	public ContextMenuListener( GUImain main, String name, int line ){
+	public ContextMenuListener( GUImain main, int line ){
 		this.main = main;
-		this.name = name;
 		this.line = line;
 	}
 	
 	private final GUImain main;
-	private final String name;
 	private final int line;
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		
-		System.out.println("Action performed: " + name + ", " + line);
 		this.main.getLeftPanel().highlightSourceCode(this.line);
 	}
 }

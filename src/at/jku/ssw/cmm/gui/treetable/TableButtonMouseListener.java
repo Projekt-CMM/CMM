@@ -98,18 +98,16 @@ public class TableButtonMouseListener implements MouseListener {
 				&& this.treeTable.getTreeModel().getRoot() instanceof VarDataNode) {
 			if (row >= 0 && col >= 0) {
 				
-				String name = (String)this.treeTable.getTable().getValueAt(row, 0);
-				
 				VarDataNode node = (VarDataNode) this.treeTable.getModelAdapter().nodeForRow(row);
 				
 				if( node.getDeclarationLine() >= 0 || node.getCallLine() >= 0 ){
-					InitContextMenu.initContextMenu(main, name, node.getDeclarationLine(), node.getCallLine()).show(e.getComponent(), e.getX(), e.getY());
+					InitContextMenu.initContextMenu(main, node.getDeclarationLine(), node.getCallLine()).show(e.getComponent(), e.getX(), e.getY());
 				}
 			}
 
-		} else {
-			System.out.println("mouse entered column");
-			
+		} 
+		// Left mouse clicked
+		else {
 			//Check in clicked reference TODO add reference highlighting
 			if( this.treeTable.getTable().getValueAt(row, 2) instanceof String && 
 					((String)this.treeTable.getTable().getValueAt(row, 2)).equals(_("reference")) ){

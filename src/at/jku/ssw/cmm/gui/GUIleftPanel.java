@@ -23,7 +23,9 @@ package at.jku.ssw.cmm.gui;
 
 import static at.jku.ssw.cmm.gettext.Language._;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -34,12 +36,15 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
@@ -48,6 +53,7 @@ import javax.swing.text.StyleContext;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+import at.jku.ssw.cmm.gui.event.CursorListener;
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.init.InitLeftPanel;
@@ -98,6 +104,7 @@ public class GUIleftPanel {
 	 * The text panel with the source code.
 	 */
 	private RSyntaxTextArea jSourcePane;
+	private JPanel jSourceCodeContainer;
 
 	/**
 	 * The text panel with input data for the cmm program.
@@ -153,14 +160,14 @@ public class GUIleftPanel {
 	 * 
 	 * @return A jPanel with all components of the main GUI
 	 */
-	public JSplitPane init() {
+	public JSplitPane init(JFrame jFrame) {
 		// Split panel for the left part of the GUI
 		JSplitPane jPanelLeft = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		jPanelLeft.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		// Panel for the source code text area
-		JPanel panel1 = new JPanel();
-		panel1.setLayout(new BoxLayout(panel1, BoxLayout.PAGE_AXIS));
+		jSourceCodeContainer = new JPanel();
+		jSourceCodeContainer.setLayout(new BorderLayout());//new BoxLayout(jSourceCodeContainer, BoxLayout.PAGE_AXIS));
 		
 		// Panel for the I/O text areas
 		JPanel panel2 = new JPanel();
@@ -179,11 +186,10 @@ public class GUIleftPanel {
 		this.jStatePanel.add(this.jStateLabel);
 
 		// Add debugger state panel to source code panel
-		panel1.add(this.jStatePanel);
+		jSourceCodeContainer.add(this.jStatePanel, BorderLayout.PAGE_START);
 
 		// Text area (text pane) for source code
-		this.jSourcePane = InitLeftPanel.initCodePane(panel1,
-				this.main.getSettings());
+		this.jSourcePane = InitLeftPanel.initCodePane(jSourceCodeContainer);
 
 		// Text area for input
 		this.jInputPane = InitLeftPanel.initInputPane(panel2);
@@ -200,10 +206,17 @@ public class GUIleftPanel {
 		panel2.setMaximumSize(new Dimension(2000, 2000));
 		
 		// Properties of the splitPanel
-		jPanelLeft.setTopComponent(panel1);
+		jPanelLeft.setTopComponent(jSourceCodeContainer);
 		jPanelLeft.setBottomComponent(panel2);
 		jPanelLeft.setDividerLocation(0.4);
 		jPanelLeft.setResizeWeight(1.0);
+		
+		// Custom cursor for split pane divider
+		BasicSplitPaneUI ui = (BasicSplitPaneUI)jPanelLeft.getUI();
+		BasicSplitPaneDivider divider = ui.getDivider();
+		divider.addMouseListener(
+			new CursorListener(jFrame, divider, new Cursor(Cursor.S_RESIZE_CURSOR))
+		);
 		
 		// Disable F6 keyboard shortcut for 
 		jPanelLeft.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
@@ -307,8 +320,7 @@ public class GUIleftPanel {
 			return;
 
 		// Correct offset in source code (offset caused by includes)
-		line = Integer.parseInt(Preprocessor.returnFileAndNumber(line, 
-						this.main.getLeftPanel().getSourceCodeRegister())[1].toString());
+		line = (int)Preprocessor.returnFileAndNumber(line, this.main.getLeftPanel().getSourceCodeRegister())[1];
 
 		// Do highlighting
 		this.highlightSourceCodeDirectly(line);
@@ -436,13 +448,16 @@ public class GUIleftPanel {
 	 * 
 	 * @param line
 	 */
-	public void setErrorMode(String file, int line) {
+	public void setErrorMode(String file, String[] title, int line) {
 		
 		this.unlockInput();
 		
 		this.jStatePanel.setBackground(new Color(255, 131, 131));
 		// TODO parse filename from Parser (when library error)
-		this.jStateLabel.setText("! ! ! " + _("error") + (file == null ? "" : " in file " + file) + " " + (line >= 0 ? _("in line") + " " + line : "") + " ! ! !");
+		this.jStateLabel.setText("! ! ! " + (title[0] == null ? _("error") : title[0]) +
+			(file == null ? "" : " in file " + file) + " " +
+			(line >= 0 ? _("in line") + " " + line : "") +
+			(title[1] == null ? "" : " " + title[1]) + " ! ! !");
 		
 		if( line >= 0 )
 			this.highlightSourceCodeDirectly(line);

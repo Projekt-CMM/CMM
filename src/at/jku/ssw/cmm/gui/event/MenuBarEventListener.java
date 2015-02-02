@@ -30,18 +30,12 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTextPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.credits.Credits;
-import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
-import at.jku.ssw.cmm.gui.file.SaveDialog;
 import at.jku.ssw.cmm.gui.properties.GUIProperties;
-import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
 import at.jku.ssw.cmm.profile.settings.GUIprofileSettings;
 
@@ -58,28 +52,12 @@ public class MenuBarEventListener {
 	 * 
 	 * @param jFrame
 	 *            The main window frame
-	 * @param jSourcePane
-	 *            The text area for the source code
 	 * @param main
 	 *            Reference to the main GUI
-	 * @param settings
-	 *            A reference to the configuration object of the main GUI
-	 * @param modifier
-	 *            Reference to the debug panel of the GUI which is responsible
-	 *            for debug control elements and the variable tree table
-	 * @param saveDialog
-	 *            A reference to the save dialog manager class
 	 */
-	public MenuBarEventListener(JFrame jFrame, RSyntaxTextArea jSourcePane,
-			JTextPane jInputPane, GUImain main, GUImainSettings settings,
-			GUIdebugPanel debug, SaveDialog saveDialog) {
+	public MenuBarEventListener(JFrame jFrame, GUImain main) {
 		this.jFrame = jFrame;
-		this.jSourcePane = jSourcePane;
-		this.jInputPane = jInputPane;
 		this.main = main;
-		this.settings = settings;
-		this.debug = debug;
-		this.saveDialog = saveDialog;
 	}
 
 	/**
@@ -88,35 +66,9 @@ public class MenuBarEventListener {
 	private final JFrame jFrame;
 
 	/**
-	 * The text area for the source code
-	 */
-	private final RSyntaxTextArea jSourcePane;
-
-	/**
-	 * The input text pane
-	 */
-	private final JTextPane jInputPane;
-
-	/**
 	 * Reference to the main GUI
 	 */
 	private final GUImain main;
-
-	/**
-	 * A reference to the configuration object of the main GUI
-	 */
-	private final GUImainSettings settings;
-
-	/**
-	 * Reference to the debug panel of the GUI which is responsible for debug
-	 * control elements and the variable tree table
-	 */
-	private final GUIdebugPanel debug;
-
-	/**
-	 * A reference to the save dialog manager class
-	 */
-	private final SaveDialog saveDialog;
 
 	/**
 	 * Event listener for the "new file" entry in the "file" drop-down menu
@@ -127,7 +79,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			if (settings.getCMMFilePath() != null && main.isFileChanged()) {
+			if (main.getSettings().getCMMFilePath() != null && main.isFileChanged()) {
 				// Custom button text
 				Object[] options = { _("Save now"), _("Proceed without saving") };
 
@@ -142,13 +94,14 @@ public class MenuBarEventListener {
 
 				if (n == JOptionPane.YES_OPTION)
 					// Save the last changes to current file path
-					saveDialog.directSave();
+					main.getSaveManager().directSave();
 			}
 
-			jSourcePane.setText("");
-			settings.setCMMFilePath(null);
+			main.getLeftPanel().getSourcePane().setText("");
+			main.getSettings().setCMMFilePath(null);
 			main.updateWinFileName();
-			debug.updateFileName();
+			main.getRightPanel().getDebugPanel().updateFileName();
+			main.getRightPanel().getDebugPanel().setReadyMode();
 		}
 
 	};
@@ -179,16 +132,18 @@ public class MenuBarEventListener {
 	
 	public void openFile( File file ){
 		// Open file and load text t source code panel
-		jSourcePane.setText(FileManagerCode.readSourceCode(file));
+		//this.leftPanelControl.initSourcePane(FileManagerCode.readSourceCode(file));
+		this.main.getLeftPanel().getSourcePane().setText(FileManagerCode.readSourceCode(file));
 
 		// Set input data
-		jInputPane.setText(FileManagerCode.readInputData(file));
+		this.main.getLeftPanel().getInputPane().setText(FileManagerCode.readInputData(file));
 
 		// Set the new C-- file directory
-		settings.setCMMFilePath(file.getPath());
+		main.getSettings().setCMMFilePath(file.getPath());
 
 		main.updateWinFileName();
-		debug.updateFileName();
+		main.getRightPanel().getDebugPanel().updateFileName();
+		main.getRightPanel().getDebugPanel().setReadyMode();
 	}
 	
 	public RecentFileHandler getRecentFileHandler( String path ){
@@ -231,10 +186,10 @@ public class MenuBarEventListener {
 
 			// Call the main GUI's save dialog (contains file chooser and save
 			// routines
-			saveDialog.doSaveAs();
+			main.getSaveManager().doSaveAs();
 			main.setFileSaved();
 			main.updateWinFileName();
-			debug.updateFileName();
+			main.getRightPanel().getDebugPanel().updateFileName();
 		}
 
 	};
@@ -247,17 +202,16 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			if (settings.getCMMFilePath() != null)
+			if (main.getSettings().getCMMFilePath() != null && main.getSettings().equals(_("Unnamed")))
 				// Save to working directory
-				saveDialog.directSave();
+				main.getSaveManager().directSave();
 			else
 				// Open "save as" dialog if there is no working directory
-				saveDialog.doSaveAs();
+				main.getSaveManager().doSaveAs();
 
 			main.setFileSaved();
 			main.updateWinFileName();
-			debug.updateFileName();
-
+			main.getRightPanel().getDebugPanel().updateFileName();
 		}
 	};
 	
@@ -280,7 +234,7 @@ public class MenuBarEventListener {
 		public void actionPerformed(ActionEvent arg0) {
 
 			if(main.getSaveManager().safeCheck(_("Closing C Compact")))
-				WindowEventListener.updateAndExit(jFrame, settings);
+				WindowEventListener.updateAndExit(jFrame, main.getSettings());
 		}
 	};
 	
@@ -289,7 +243,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			jSourcePane.undoLastAction();
+			main.getLeftPanel().getSourcePane().undoLastAction();
 		}
 	};
 	
@@ -298,7 +252,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			jSourcePane.redoLastAction();
+			main.getLeftPanel().getSourcePane().redoLastAction();
 		}
 	};
 	
@@ -347,7 +301,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			main.dispose();
-			GUIprofileSettings.init(settings, false);
+			GUIprofileSettings.init(main.getSettings(), false);
 		}
 	};
 	
