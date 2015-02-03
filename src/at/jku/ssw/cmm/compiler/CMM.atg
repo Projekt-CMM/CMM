@@ -899,7 +899,8 @@ Term<out Node res>                  (.  int kind;
 = 
 Factor<out res> 
 { Mulop<out kind>
-  Factor<out n>                     (.  if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive() || n.type.equals(Tab.boolType))
+  Factor<out n>                     (.  if(res == null || res.type == null || !res.type.isPrimitive() 
+                                           || n == null || !n.type.isPrimitive() || n.type.equals(Tab.boolType))
                                             SemErr("type is not a primitive except bool");
                                         else {
                                             res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
