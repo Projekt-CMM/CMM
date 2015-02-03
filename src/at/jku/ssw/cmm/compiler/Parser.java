@@ -1315,7 +1315,8 @@ public class Parser {
 		while (la.kind == 64 || la.kind == 65 || la.kind == 66) {
 			kind = Mulop();
 			n = Factor();
-			if(!res.type.isPrimitive() || n == null || !n.type.isPrimitive() || n.type.equals(Tab.boolType))
+			if(res == null || res.type == null || !res.type.isPrimitive() 
+			  || n == null || !n.type.isPrimitive() || n.type.equals(Tab.boolType))
 			   SemErr("type is not a primitive except bool");
 			else {
 			   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);

@@ -603,117 +603,122 @@ public final class Interpreter {
 			} else {
 				throw new RunTimeException("type not supported as ident in condition", p, currentLine);
 			}
+		} else if(p.kind == Node.CALL && p.type.kind == Struct.BOOL) {
+			Call(p);
+			return Memory.getBoolReturnValue();
 		}
 		
 		switch (p.left.type.kind) {
-		case Struct.INT:
-			switch (p.kind) {
-			case Node.I2B:
-				if(IntExpr(p.left) == 0)
-					return false;
-				else
-					return true;
-			case Node.EQL:
-				return IntExpr(p.left) == IntExpr(p.right);
-			case Node.NEQ:
-				return IntExpr(p.left) != IntExpr(p.right);
-			case Node.LSS:
-				return IntExpr(p.left) < IntExpr(p.right); // Less <
-			case Node.LEQ:
-				return IntExpr(p.left) <= IntExpr(p.right); // Lesser Equal <=
-			case Node.GTR:
-				return IntExpr(p.left) > IntExpr(p.right); // greater >
-			case Node.GEQ:
-				return IntExpr(p.left) >= IntExpr(p.right); // greater Equal >=
-			case Node.OR:
-				return Condition(p.left) || Condition(p.right); // OR ||
-			case Node.AND:
-				return Condition(p.left) && Condition(p.right); // AND &&
-			case Node.NOT:
-				return !Condition(p.left); // NOT
-			case Node.CALL:								//Opens new Integer c-- Function
-				Call(p);
-				//getting return Value	
-				if(Memory.getIntReturnValue() == 0)
-					return false;
-				else
-					return true;	
-			default:
-				System.out.println("kind: " + p.kind);
-				throw new RunTimeException("Not supportet struct node kind", p, currentLine);
-			}
-		case Struct.FLOAT:
-			switch (p.kind) {
-			case Node.EQL:
-				return FloatExpr(p.left) == FloatExpr(p.right);
-			case Node.NEQ:
-				return FloatExpr(p.left) != FloatExpr(p.right);
-			case Node.LSS:
-				return FloatExpr(p.left) < FloatExpr(p.right); // Less <
-			case Node.LEQ:
-				return FloatExpr(p.left) <= FloatExpr(p.right); // Lesser Equal
-																// <=
-			case Node.GTR:
-				return FloatExpr(p.left) > FloatExpr(p.right); // greater >
-			case Node.GEQ:
-				return FloatExpr(p.left) >= FloatExpr(p.right); // greater Equal
-																// >=
-			case Node.OR:
-				return Condition(p.left) || Condition(p.right); // OR ||
-			case Node.AND:
-				return Condition(p.left) && Condition(p.right); // AND &&
-			case Node.NOT:
-				// TODO required?
-				return !Condition(p.left); // NOT
-			default:
-				throw new RunTimeException("Not supportet float node kind", p, currentLine);
-			}
+			case Struct.INT:
+				switch (p.kind) {
+					case Node.I2B:
+						if(IntExpr(p.left) == 0)
+							return false;
+						else
+							return true;
+					case Node.EQL:
+						return IntExpr(p.left) == IntExpr(p.right);
+					case Node.NEQ:
+						return IntExpr(p.left) != IntExpr(p.right);
+					case Node.LSS:
+						return IntExpr(p.left) < IntExpr(p.right); // Less <
+					case Node.LEQ:
+						return IntExpr(p.left) <= IntExpr(p.right); // Lesser Equal <=
+					case Node.GTR:
+						return IntExpr(p.left) > IntExpr(p.right); // greater >
+					case Node.GEQ:
+						return IntExpr(p.left) >= IntExpr(p.right); // greater Equal >=
+					case Node.OR:
+						return Condition(p.left) || Condition(p.right); // OR ||
+					case Node.AND:
+						return Condition(p.left) && Condition(p.right); // AND &&
+					case Node.NOT:
+						return !Condition(p.left); // NOT
+					case Node.CALL:								//Opens new Integer c-- Function
+						Call(p);
+						//getting return Value	
+						if(Memory.getIntReturnValue() == 0)
+							return false;
+						else
+							return true;	
+					default:
+						System.out.println("kind: " + p.kind);
+						throw new RunTimeException("Not supportet struct node kind", p, currentLine);
+				}
+			case Struct.FLOAT:
+				switch (p.kind) {
+					case Node.EQL:
+						return FloatExpr(p.left) == FloatExpr(p.right);
+					case Node.NEQ:
+						return FloatExpr(p.left) != FloatExpr(p.right);
+					case Node.LSS:
+						return FloatExpr(p.left) < FloatExpr(p.right); // Less <
+					case Node.LEQ:
+						return FloatExpr(p.left) <= FloatExpr(p.right); // Lesser Equal
+																		// <=
+					case Node.GTR:
+						return FloatExpr(p.left) > FloatExpr(p.right); // greater >
+					case Node.GEQ:
+						return FloatExpr(p.left) >= FloatExpr(p.right); // greater Equal
+																		// >=
+					case Node.OR:
+						return Condition(p.left) || Condition(p.right); // OR ||
+					case Node.AND:
+						return Condition(p.left) && Condition(p.right); // AND &&
+					case Node.NOT:
+						// TODO required?
+						return !Condition(p.left); // NOT
+					default:
+						throw new RunTimeException("Not supportet float node kind", p, currentLine);
+				}
 
-		case Struct.CHAR:
-			switch (p.kind) {
-			case Node.EQL:
-				return CharExpr(p.left) == CharExpr(p.right);
-			case Node.NEQ:
-				return CharExpr(p.left) != CharExpr(p.right);
-			case Node.LSS:
-				return CharExpr(p.left) < CharExpr(p.right); // Less <
-			case Node.LEQ:
-				return CharExpr(p.left) <= CharExpr(p.right); // Lesser Equal <=
-			case Node.GTR:
-				return CharExpr(p.left) > CharExpr(p.right); // greater >
-			case Node.GEQ:
-				return CharExpr(p.left) >= CharExpr(p.right); // greater Equal
-																// >=
-			case Node.OR:
-				return Condition(p.left) || Condition(p.right); // OR ||
-			case Node.AND:
-				return Condition(p.left) && Condition(p.right); // AND &&
-			case Node.NOT:
-				// TODO required?
-				return !Condition(p.left); // NOT
-			default:
-				throw new RunTimeException("Not supportet char node kind", p, currentLine);
-			}
+			case Struct.CHAR:
+				switch (p.kind) {
+					case Node.EQL:
+						return CharExpr(p.left) == CharExpr(p.right);
+					case Node.NEQ:
+						return CharExpr(p.left) != CharExpr(p.right);
+					case Node.LSS:
+						return CharExpr(p.left) < CharExpr(p.right); // Less <
+					case Node.LEQ:
+						return CharExpr(p.left) <= CharExpr(p.right); // Lesser Equal <=
+					case Node.GTR:
+						return CharExpr(p.left) > CharExpr(p.right); // greater >
+					case Node.GEQ:
+						return CharExpr(p.left) >= CharExpr(p.right); // greater Equal
+																		// >=
+					case Node.OR:
+						return Condition(p.left) || Condition(p.right); // OR ||
+					case Node.AND:
+						return Condition(p.left) && Condition(p.right); // AND &&
+					case Node.NOT:
+						// TODO required?
+						return !Condition(p.left); // NOT
+					default:
+						throw new RunTimeException("Not supportet char node kind", p, currentLine);
+				}
 			
-		case Struct.BOOL:
-			switch (p.kind) {
-			case Node.EQL:
-				return Condition(p.left) == Condition(p.right);
-			case Node.NEQ:
-				return Condition(p.left) != Condition(p.right);
-				
-			case Node.OR:
-				return Condition(p.left) || Condition(p.right); // OR ||
-			case Node.AND:
-				return Condition(p.left) && Condition(p.right); // AND &&
-			case Node.NOT:
-				return !Condition(p.left); // NOT
-			case Node.CALL:								//Opens new Integer c-- Function
-				Call(p);
-				return Memory.getBoolReturnValue();
-			default:
-				throw new RunTimeException("Not supportet char node kind", p, currentLine);
-			}
+			case Struct.BOOL:
+				switch (p.kind) {
+					case Node.IDENT:
+						return Memory.loadBoolSave(Adr(p), p);
+					case Node.EQL:
+						return Condition(p.left) == Condition(p.right);
+					case Node.NEQ:
+						return Condition(p.left) != Condition(p.right);
+						
+					case Node.OR:
+						return Condition(p.left) || Condition(p.right); // OR ||
+					case Node.AND:
+						return Condition(p.left) && Condition(p.right); // AND &&
+					case Node.NOT:
+						return !Condition(p.left); // NOT
+					case Node.CALL:								//Opens new Bool c-- Function
+						Call(p);
+						return Memory.getBoolReturnValue();
+					default:
+						throw new RunTimeException("Not supportet char node kind", p, currentLine);
+				}
 
 			// case Struct.BOOL: break; // Boolean Variables
 			// case Struct.STRING: break; // Compiler implentation
