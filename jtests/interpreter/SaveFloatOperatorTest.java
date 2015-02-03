@@ -31,26 +31,29 @@ public class SaveFloatOperatorTest {
 	@Test
 	public void testAdd() {
 		// test problematic values
-		assertEquals(SaveFloatOperator.add((float)0.0,(float)0.0), (float)0.0 + (float)0.0, 1e-4);
+		assertEquals(SaveFloatOperator.add((float)0.0, (float)0.0), (float)0.0 + (float)0.0, 1e-4);
+		assertEquals(SaveFloatOperator.add(Float.MAX_VALUE, (float)0.0), Float.MAX_VALUE, Float.MAX_VALUE/1000);
+		assertEquals(SaveFloatOperator.add((float)0.0, Float.MAX_VALUE), Float.MAX_VALUE, Float.MAX_VALUE/1000);
+		assertEquals(SaveFloatOperator.add(Float.MIN_VALUE, (float)0.0), Float.MIN_VALUE, Float.MIN_VALUE/1000);
+		assertEquals(SaveFloatOperator.add((float)0.0, Float.MIN_VALUE), Float.MIN_VALUE, Float.MIN_VALUE/1000);
 			
 		// test normal operations in all variants
-		assertEquals(SaveFloatOperator.add((float)1.5,(float)1.3), (float)1.5 + (float)1.3, 1e-4);
-		assertEquals(SaveFloatOperator.add((float)0.0,(float)5.3), (float)0.0 + (float)5.3, 1e-4);
-		assertEquals(SaveFloatOperator.add((float)2.0,(float)-5.3), (float)2.0 + (float)(-5.3), 1e-4);
-		
-		// test wrong values
-		// TODO
+		assertEquals(SaveFloatOperator.add((float)1.5, (float)1.3), (float)1.5 + (float)1.3, 1e-4);
+		assertEquals(SaveFloatOperator.add((float)0.0, (float)5.3), (float)0.0 + (float)5.3, 1e-4);
+		assertEquals(SaveFloatOperator.add((float)2.0, (float)-5.3), (float)2.0 + (float)(-5.3), 1e-4);
 	}
 
 	@Test
 	public void testSubtract() {
 		// test problematic values
-		assertEquals(SaveFloatOperator.subtract((float)0.0,(float)0.0), (float)0.0 - (float)0.0, 1e-4);
-			
+		assertEquals(SaveFloatOperator.subtract((float)0.0, (float)0.0), (float)0.0 - (float)0.0, 1e-4);
+		assertEquals(SaveFloatOperator.subtract(Float.MAX_VALUE, (float)0.0), Float.MAX_VALUE, Float.MAX_VALUE/1000);
+		assertEquals(SaveFloatOperator.subtract(Float.MIN_VALUE, (float)0.0), Float.MIN_VALUE, Float.MIN_VALUE/1000);
+		
 		// test normal operations in all variants
-		assertEquals(SaveFloatOperator.subtract((float)1.5,(float)1.3), (float)1.5 - (float)1.3, 1e-4);
-		assertEquals(SaveFloatOperator.subtract((float)0.0,(float)5.3), (float)0.0 - (float)5.3, 1e-4);
-		assertEquals(SaveFloatOperator.subtract((float)2.0,(float)-5.3), (float)2.0 - (float)(-5.3), 1e-4);
+		assertEquals(SaveFloatOperator.subtract((float)1.5, (float)1.3), (float)1.5 - (float)1.3, 1e-4);
+		assertEquals(SaveFloatOperator.subtract((float)0.0, (float)5.3), (float)0.0 - (float)5.3, 1e-4);
+		assertEquals(SaveFloatOperator.subtract((float)2.0, (float)-5.3), (float)2.0 - (float)(-5.3), 1e-4);
 		
 		// test wrong values
 		// TODO
