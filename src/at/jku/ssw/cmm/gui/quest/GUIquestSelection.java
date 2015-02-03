@@ -2,10 +2,11 @@ package at.jku.ssw.cmm.gui.quest;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,50 +14,48 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
-import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-
 import at.jku.ssw.cmm.gui.GUImain;
+import at.jku.ssw.cmm.gui.file.LoadStatics;
 import at.jku.ssw.cmm.gui.treetable.example.TreeTableExample;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
+import at.jku.ssw.cmm.quest.GUITestPanel;
 
 public class GUIquestSelection {
     
+	//private static final JTable treeTable = null;
 	private JFrame frame;
-	private JPanel jDescPanel;
+	private JPanel jDescPane;
 	private JPanel jTablePanel;
 	private JTable jTable;
 	private JSplitPane splitpane;
 	
 	private Quest currentQuest;
 	
+	private JEditorPane editorScrollPane;
+	
 	private String path = null;
+	
 	private final GUImain main;
+	private final GUITestPanel questPanel;
 	
 	private JButton openButton;
 	
-	private QuestListener listener = new QuestListener(this);
+	private QuestListener listener ;
 	
-	public GUIquestSelection(GUImain main){
+	public GUIquestSelection(GUImain main,GUITestPanel questPanel){
 		this.main = main;
+		this.questPanel = questPanel;
 	}
 	
-	
-	/*public static void main(String args[]){
-		GUIquestSelection topic = new GUIquestSelection( null);
-		topic.inittable();
-		topic.initDescription();
-		topic.initFrame();
-	}*/
-	
 	public void init(){
+		listener = new QuestListener(this,questPanel);
 		if(path != null)
 			inittable();
 		else
@@ -84,7 +83,14 @@ public class GUIquestSelection {
 	public void changetoPackagesTable(){
 		splitpane.remove(jTablePanel);
 		splitpane.setLeftComponent(new TreeTableExample(this).getTreePanel());
-
+		
+		try {
+			this.editorScrollPane.setPage(LoadStatics.getHTMLUrl("packages/default/de.html"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
 		frame.validate();
 		frame.repaint();
 	}
@@ -93,13 +99,13 @@ public class GUIquestSelection {
         frame = new JFrame("Topic");
         frame.setPreferredSize(new Dimension(600, 400));
         frame.add(jTablePanel,BorderLayout.LINE_START);
-        frame.add(jDescPanel,BorderLayout.LINE_END);
+        frame.add(jDescPane,BorderLayout.LINE_END);
      
         splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         // Hier setzen wir links unser rotes JPanel und rechts das gelbe
         splitpane.setLeftComponent(jTablePanel);
-        splitpane.setRightComponent(jDescPanel);
-        splitpane.setResizeWeight(0.5);
+        splitpane.setRightComponent(jDescPane);
+        splitpane.setResizeWeight(0);
         
         frame.add(splitpane,BorderLayout.CENTER);
         
@@ -108,36 +114,31 @@ public class GUIquestSelection {
 	}
 	
 	public JPanel initDescription(){
-		jDescPanel = new JPanel();
-		jDescPanel.setLayout(new BorderLayout()); 
+        //Panel with Quests and Packages
+      	jDescPane = new JPanel();
+      	jDescPane.setLayout(new BorderLayout());
+      	jDescPane.setBorder(new TitledBorder("Description"));
 		
-		 //5-zeiliges und 20-spaltiges Textfeld wird erzeugt
-        JTextArea textfeld = new JTextArea();
- 
-        //Text für das Textfeld wird gesetzt
-        textfeld.setText("Lorem ipsum dolor sit amet, " +
-        		"consetetur sadipscing elitr, sed diam nonumy " +
-        		"eirmod tempor invidunt ut labore et " +
-        		"dolore magna aliquyam erat, sed diam voluptua. " +
-        		"At vero eos et accusam et justo duo dolores et " +
-                        "ea rebum.");
-        //Zeilenumbruch wird eingeschaltet
-        textfeld.setLineWrap(true);
- 
-        //Zeilenumbrüche erfolgen nur nach ganzen Wörtern
-        textfeld.setWrapStyleWord(true);
- 
-        //Ein JScrollPane, der das Textfeld beinhaltet, wird erzeugt
-        JScrollPane scrollpane = new JScrollPane(textfeld);
-        //scrollpane.setPreferredSize(new Dimension(200,200));
-		scrollpane.setMinimumSize(new Dimension(200,200));
+	      //Description Text Panel
+  		this.editorScrollPane = new JEditorPane();
+  		this.editorScrollPane.setEditable(false);
+  		this.editorScrollPane.setContentType("text/html");
+  	
+  	
+	try {
+		this.editorScrollPane.setPage(LoadStatics.getHTMLUrl("packages/default/de.html"));
+	} catch (IOException e) {
 		
-		scrollpane.setBorder(new TitledBorder("Beschreibung"));
- 
-        //Scrollpane wird unserem Panel hinzugefügt
-        jDescPanel.add(scrollpane);
-        
-        return jDescPanel;
+		e.printStackTrace();
+	}
+	this.editorScrollPane.setDocument(LoadStatics.readStyleSheet("packages/default/style.css"));
+	
+		//Quest description
+		editorScrollPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		jDescPane.add(editorScrollPane, BorderLayout.CENTER);
+    
+    
+        return jDescPane;
 	}
 	
 	public JPanel inittable(){
@@ -156,48 +157,48 @@ public class GUIquestSelection {
 		if(questList == null)
 			return jTablePanel;
 		
-		System.out.println(questList.getQuestList());
-		List<Quest> must = new ArrayList<>();
-		List<Quest> extra =  new ArrayList<>();
-		
-		if(questList != null){
-			for(Quest q: questList.getQuestList()){
-				if(!q.isOptional()){
-					extra.add(q);
-				}else{
-					must.add(q);
-				}
-			}
-		}
-
-		
 		
 		//jTable = new JTable(data, columnNames);
-		DefaultTableModel model = new DefaultTableModel(); 
+		DefaultTableModel model = new DefaultTableModel(){
+			private static final long serialVersionUID = -192877460720449116L;
+
+			//Disable Editing
+			@Override
+	        public boolean isCellEditable(int row, int column) {                
+	                return false;               
+	        };       
+		}; 
+		
 	    jTable = new JTable(model);
 		
 		//Setting the Column Names
-		model.addColumn("Must");
-		model.addColumn("Extra");
+	    model.addColumn("\u2714");
+		model.addColumn("Type");
+		model.addColumn("Title");
+		
+	
+		jTable.getColumnModel().getColumn(0).setMaxWidth(20);
+		jTable.getColumnModel().getColumn(1).setMinWidth(100);
+		jTable.getColumnModel().getColumn(2).setMinWidth(100);
+		
+		jTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION); 
+		
 		
 		//Adding Data
-		int count = 0;
-
-		while(extra.size() > count || must.size() > count){
-			Quest extraQuest = new Quest();
-			Quest mustQuest = new Quest();
-	
-			if(extra.size() > count)
-				extraQuest = extra.get(count);
-			else
-				extraQuest.setTitle("");
-			if(must.size() > count)
-				mustQuest = must.get(count);
-			else
-				mustQuest.setTitle("");
+		List<Quest> qList = questList.getQuestList();
+		
+		if(qList != null)
+		for(Quest q : qList){
 			
-			model.addRow(new Object[]{extraQuest, mustQuest});
-			count++;
+			String exersice = q.getAttribute();
+			String finished;
+			
+			if(q.getState().equals(Quest.STATE_FINISHED))
+				finished = "\u2714";
+			else 
+				finished = "";
+			
+			model.addRow(new Object[]{finished,exersice,q});
 		}
 		
 		jTable.setFillsViewportHeight(true);
@@ -206,39 +207,52 @@ public class GUIquestSelection {
 		
 		jTable.setCellSelectionEnabled(true);
 	    ListSelectionModel cellSelectionModel = jTable.getSelectionModel();
-	    //cellSelectionModelhttp://java-tutorial.org/jsplitpane.html.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
+	    //TODO Select full row
+	    
 	    cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
-			
+	    	
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				Object obj = null;
 				
 		        int[] selectedRow = jTable.getSelectedRows();
-		        int[] selectedColumns = jTable.getSelectedColumns();
 
-		        for (int i = 0; i < selectedRow.length; i++) {
-		          for (int j = 0; j < selectedColumns.length; j++) {
-		        	  obj = jTable.getValueAt(selectedRow[i], selectedColumns[j]);
-		          }
-		        }
 		        
-		        if(obj instanceof Quest && obj != null){
-		        	Quest q = (Quest)obj;
-		        	System.out.println("Selected: " + q.getTitle());
-		        	setCurrentQuest(q);
-		        	
-		        	openButton.setEnabled(true);
-		        	
+		        for (int i = 0; i < selectedRow.length; i++) {
+		        	  obj = jTable.getValueAt(selectedRow[i], 2);
 		        }
-		        else
-		        	openButton.setEnabled(false);
+
+		        
+		        if(!e.getValueIsAdjusting()){
+			        if(obj instanceof Quest && obj != null ){
+			        	Quest q = (Quest)obj;
+			        	System.out.println("Selected: " + q.getTitle());
+			        	setCurrentQuest(q);
+			        	
+			        	String path = q.getInitPath() + Quest.sep + q.getPackagePath() + Quest.sep + q.getQuestPath();
+			        	
+			        	 if(q.isDescription() && q.isStyle()){
+					        	displayURL(path + Quest.sep + Quest.FILE_DESCRIPTION, path + Quest.sep + Quest.FILE_STYLE);
+					      
+					        //When the Quest only has a description
+					        }else if(q.isDescription())
+					        	displayURL(path + Quest.sep + Quest.FILE_DESCRIPTION);
+			        	 
+			        	openButton.setEnabled(true);
+			        	
+			        }
+			        else{
+			        	displayURL("packages/default/de.html"); 
+			        	openButton.setEnabled(false);
+			        }
+				}
 			}
 		});
 		
 		scroll = new JScrollPane(jTable);
 		//scroll.setPreferredSize(new Dimension(200,200));
-		scroll.setMinimumSize(new Dimension(200,200));
+		scroll.setMinimumSize(new Dimension(200,0));
+		scroll.setPreferredSize(new Dimension(200,200));
 		scroll.setBorder(new TitledBorder("Aufgaben"));
 		//scroll.add(jTabel);
 		
@@ -289,6 +303,32 @@ public class GUIquestSelection {
 		topPanel.add(button, BorderLayout.LINE_START);
 		
 		return topPanel;
+	}
+	
+	
+	public void displayURL(String file){
+		displayURL(file,"packages/default/style.css");
+	}
+	
+	public void displayURL(String file, String style) {
+		jDescPane.remove(editorScrollPane);
+		
+		
+		try {
+			if(this.editorScrollPane.getPage() != null && !this.editorScrollPane.getPage().equals(LoadStatics.getHTMLUrl(file))){
+				this.editorScrollPane.setPage(LoadStatics.getHTMLUrl(file));
+				this.editorScrollPane.setDocument(LoadStatics.readStyleSheet(style));
+			}
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		
+		//editorScrollPane = LoadStatics.loadHTMLdoc(file, style);
+      	editorScrollPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+      	jDescPane.add(editorScrollPane, BorderLayout.CENTER);
+      	jDescPane.updateUI();
+		
 	}
 	
 	/**

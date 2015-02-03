@@ -222,22 +222,14 @@ public class GUILauncherMain extends JFrame implements ActionListener{
 			if(!profile.isMaster()){	
 				
 				JLabel name = new JLabel(_("Name") + ": " + profile.getName());
-				JLabel level = new JLabel(_("Level") + ": " + 1);
 			
 			
 				jProfileTop.add(name,BorderLayout.PAGE_START);
-				jProfileTop.add(level,BorderLayout.CENTER);
 			}
 			
 		jProfile.add(jProfileTop, BorderLayout.PAGE_START);
-		
+		//TODO Add Achievement Count
 		JPanel profilePicPanel = new JPanel();
-		
-		/*try {
-			profilePicPanel.setBackground(ImageIO.read(new File("profileTest/icon.png")));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
 		
 		
 		profilePicPanel.setPreferredSize(new Dimension(200,200));

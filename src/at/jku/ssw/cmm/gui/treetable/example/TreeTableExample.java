@@ -13,7 +13,6 @@ import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
 import at.jku.ssw.cmm.gui.quest.GUIquestSelection;
-import at.jku.ssw.cmm.gui.treetable.TableButtonMouseListener;
 import at.jku.ssw.cmm.gui.treetable.TableButtonRenderer;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
@@ -22,10 +21,6 @@ import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
 
 public class TreeTableExample {
-
-	public static void main(String[] args) {
-		new TreeTableExample(null).init();
-	}
 	
 	private final GUIquestSelection main;
 	
@@ -56,8 +51,7 @@ public class TreeTableExample {
 		treeTable = new TreeTable<>(treeTableModel);
 		
 		//Setting the Mouse Listener
-		treeTable.addMouseListener(new TableButtonMouseListener(null, treeTable));
-		//treeTable.getTableHeader().setVisible(true);
+		treeTable.addMouseListener(new PackagesTableMouseListener(main, treeTable));
 		
 		//Setting the Sizes of the last Columns
 		treeTable.getColumnModel().getColumn(2).setMinWidth(50);
@@ -92,66 +86,6 @@ public class TreeTableExample {
 		return master;
 	}
 	
-	public void init() {
-		//Initializes the window for the treeTable example
-		this.jFrame = new JFrame("TreeTable Example");
-		this.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.jFrame.getContentPane().setPreferredSize(new Dimension(800, 500));
-		this.jFrame.setMinimumSize(new Dimension(600, 400));
-		this.jFrame.setLocation(10, 10);
-		
-		System.out.println("Starting treeTable example");
-		
-		//Create the tree
-		DataNodeExample root = new DataNodeExample("Packages", "", "");
-		
-		root = getFolderView("packages", root,0);
-		//root = addNodes(null, new File("packages"));
-		
-		treeTableModel = new TreeTableDataModel<>(root, columnNames, columnTypes);
-		
-		treeTable = new TreeTable<>(treeTableModel);
-		
-		//Setting the Mouse Listener
-		treeTable.addMouseListener(new TableButtonMouseListener(null, treeTable));
-		//treeTable.getTableHeader().setVisible(true);
-		
-		//Setting the Sizes of the last Columns
-		treeTable.getColumnModel().getColumn(2).setMinWidth(50);
-		treeTable.getColumnModel().getColumn(2).setMaxWidth(100);
-		
-		//Setting the size of the middle Column
-		treeTable.getColumnModel().getColumn(1).setMinWidth(100);
-		
-		//Setting the size of the First Column
-		treeTable.getColumnModel().getColumn(0).setMinWidth(200);
-	
-		
-		//Setting the Types of the Columns
-        this.treeTable.getColumnModel().getColumn(2).setCellRenderer(
-        		new TableButtonRenderer(this.treeTable.getDefaultRenderer(JButton.class))
-        );
-        this.treeTable.getColumnModel().getColumn(1).setCellRenderer(
-        		new TableButtonRenderer(this.treeTable.getDefaultRenderer(JProgressBar.class))
-        );
-		
-		//treeTable.updateTreeModel();
-		
-		JScrollPane p = new JScrollPane(treeTable);
-		//p.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		
-		JPanel master = new JPanel();
-		master.setLayout(new BorderLayout());
-		master.setBorder(new TitledBorder("Tree table"));
-		
-		master.add(p, BorderLayout.CENTER);
-		this.jFrame.add(master);
-
-		// Causes this Window to be sized to fit the preferred size and layouts
-		// of its subcomponents.
-		this.jFrame.pack();
-		this.jFrame.setVisible(true);
-	}
 	
 private DataNodeExample getFolderView(String path, DataNodeExample node, int layer){
 	
@@ -164,12 +98,14 @@ private DataNodeExample getFolderView(String path, DataNodeExample node, int lay
 	DataNodeExample subNode = null;
 	
 	for(String subfolder : subFolders){
-		
+		TreeTableListener tListener = new TreeTableListener(path + File.separator + subfolder,main, subfolder);
+
 		if(isPackage(path + File.separator + subfolder)){
 			
 			//TODO Add Profile.. uncomment
 			at.jku.ssw.cmm.profile.Package p = Profile.ReadPackageQuests(main.getGUImain().getSettings().getProfile(), path + File.separator + subfolder);
 			//at.jku.ssw.cmm.profile.Package p = Package.readPackage(path + File.separator + subfolder, "");
+			
 			if(p != null){
 				int[] qCount = p.getQuestCount();
 				
@@ -179,16 +115,17 @@ private DataNodeExample getFolderView(String path, DataNodeExample node, int lay
 				b.setString(qCount[0] + " of " + qCount[2] + " finished!");
 	
 				JButton button = new JButton("\u21E8");
-				button.addMouseListener(new TreeTableListener(path + File.separator + subfolder,main).mouseListener);
+				
+				button.addMouseListener(tListener.mouseListener);
 				
 				//Adding the Current Node
 				
-				subNode = new DataNodeExample(subfolder, b, button);
+				subNode = new DataNodeExample(tListener, b, button);
 			}
 		}else{
 			if(!isPathQuest(path + File.separator + subfolder))
 				//adding an empty subNode
-				subNode = new DataNodeExample(subfolder, "", "");
+				subNode = new DataNodeExample(tListener, "", "");
 		}
 		
 		if(subNode != null){

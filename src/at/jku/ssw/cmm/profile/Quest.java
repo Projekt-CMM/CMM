@@ -73,7 +73,13 @@ public class Quest {
 	/**
 	 * true if the Quest is optional
 	 */
-	private boolean optional;
+	//private boolean optional;
+	
+	
+	/**
+	 * attribute of the Quest, displayed in Front of the Questselection
+	 */
+	private String attribute;
 	
 	/**
 	 * true if the Quest has a ref.cmm
@@ -126,9 +132,10 @@ public class Quest {
 		FILE_STYLE = "style.css",
 		FiLE_QUEST = "quest.xml",
 		FILE_REF = "ref.cmm",
-		//FILE_INPUT_TXT = "input.txt",
 		FILE_INPUT_CMM = "input.cmm",
-		FOLDER_TOKENS = "tokens";
+		FOLDER_TOKENS = "tokens",
+		ATTRIBUTE_EXTRA = "extra",
+		ATTRIBUTE_EXERSICE = "exercise";
 	
 	/**
 	 * Strings for reading the XML file
@@ -141,9 +148,9 @@ public class Quest {
 		XML_NEXTQUEST = "nextquest",
 		XML_STATE = "state",
 		XML_REWARD = "reward",
-		XML_OPTIONAL = "optional",
 		XML_INPUT = "input",
-		XML_REF = "ref";
+		XML_REF = "ref",
+		XML_ATTRIBUTE = "attribute";
 
 	/**
 	 * Strings for the correct State
@@ -280,10 +287,19 @@ public class Quest {
 				}
 				
 				try{
+					String attr = eElement.getElementsByTagName(Quest.XML_REWARD).item(0).getTextContent();	
+					quest.setAttribute(attr);
+					
+				}catch(NullPointerException e){
+					//Setting Exercise Attribute
+					quest.setAttribute(Quest.ATTRIBUTE_EXERSICE);
+				}
+				
+				/*try{
 					quest.setOptional(Boolean.parseBoolean(eElement.getElementsByTagName(Quest.XML_OPTIONAL).item(0).getTextContent()));
 				}catch(NullPointerException e){
 					quest.setOptional(false);
-				}
+				}*/
 
 				try{
 				String s = eElement.getElementsByTagName(Quest.XML_STATE).item(0).getTextContent();
@@ -551,14 +567,22 @@ public class Quest {
 		this.input = input;
 	}
 
-	public boolean isOptional() {
+	public String getAttribute(){
+		return attribute;
+	}
+	
+	public void setAttribute(String attribute){
+		this.attribute = attribute;
+	}
+	
+/*	public boolean isOptional() {
 		return optional;
 	}
 
 	public void setOptional(boolean optional) {
 		this.optional = optional;
 	}
-
+*/
 
 
 	/*public String getInput() {

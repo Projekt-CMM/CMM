@@ -1,23 +1,22 @@
 package at.jku.ssw.cmm.gui.treetable.example;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
 import at.jku.ssw.cmm.gui.quest.GUIquestSelection;
 
 public class TreeTableListener {
 	
 	private String path;
 	private GUIquestSelection mainSelection;
+	private String name;
 	
-	public TreeTableListener(String path,GUIquestSelection mainSelection) {
+	public TreeTableListener(String path,GUIquestSelection mainSelection, String name) {
 		this.path = path;
 		this.mainSelection = mainSelection;
+		this.name = name;
 	}
 	
-	public MouseListener mouseListener = new MouseListener(){
+	public MouseAdapter mouseListener = new MouseAdapter(){
 
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
@@ -30,22 +29,17 @@ public class TreeTableListener {
 				
 			}
 			
-			//TODO close Old frame and open another one
-			
 		}
 
-		@Override
-		public void mouseEntered(MouseEvent arg0) {}
-
-		@Override
-		public void mouseExited(MouseEvent arg0) {}
-
-		@Override
-		public void mousePressed(MouseEvent arg0) {}
-
-		@Override
-		public void mouseReleased(MouseEvent arg0) {}
-
+		
 		
 	};
+	
+	public String getPath(){
+		return path;
+	}
+	
+	public String toString(){
+		return name;
+	}
 }

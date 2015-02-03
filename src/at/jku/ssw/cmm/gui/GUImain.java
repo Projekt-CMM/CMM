@@ -46,7 +46,7 @@ import at.jku.ssw.cmm.gui.file.SaveDialog;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
 import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
-import at.jku.ssw.cmm.gui.quest.GUIquestMain;
+import at.jku.ssw.cmm.gui.quest.GUIquestSelection;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
 
 /**
@@ -342,7 +342,9 @@ public class GUImain {
 
 		// Ignoring Quest GUI if there is no active Profile
 		if (this.getSettings().getProfile() != null)
-			new GUIquestMain(this.rightPanelControl.getTestPanel(), this).start();
+			new GUIquestSelection(this, this.rightPanelControl.getTestPanel()).init();
+		
+		
 	}
 
 	/**
