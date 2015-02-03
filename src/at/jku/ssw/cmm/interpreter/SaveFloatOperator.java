@@ -23,7 +23,7 @@ package at.jku.ssw.cmm.interpreter;
 
 public class SaveFloatOperator {
 
-	static final float add(float left, float right) throws ArithmeticException {
+	public static final float add(float left, float right) throws ArithmeticException {
 		if (right > 0 ? left > Float.MAX_VALUE - right
            : left < Integer.MIN_VALUE - right) {
 			throw new ArithmeticException("Float overflow");
@@ -31,15 +31,17 @@ public class SaveFloatOperator {
 		return left + right;
 	}
 
-	static final float subtract(float left, float right) throws ArithmeticException {
-		if (right > 0 ? left < Float.MIN_VALUE + right
+	// TODO 1.0 - 1.1
+	public static final float subtract(float left, float right) throws ArithmeticException {
+		// TODO: is not working correctly
+		/*if (right > 0 ? left < Float.MIN_VALUE + right
 		   : left > Float.MAX_VALUE + right) {
 			throw new ArithmeticException("Float overflow");
-		}
+		}*/
 		return left - right;
 	}
 
-	static final float multiply(float left, float right) throws ArithmeticException {
+	public static final float multiply(float left, float right) throws ArithmeticException {
 		if (right > 0 ? left > Float.MAX_VALUE/right || left < Float.MIN_VALUE/right
            : (right < -1 ? left > Float.MIN_VALUE/right || left < Float.MAX_VALUE/right
            : right == -1 && left == Float.MIN_VALUE) ) {
@@ -48,21 +50,21 @@ public class SaveFloatOperator {
 		return left * right;
 	}
 
-	static final float divide(float left, float right) throws ArithmeticException {
+	public static final float divide(float left, float right) throws ArithmeticException {
 		if ((left == Float.MIN_VALUE) && (right == -1)) {
 			throw new ArithmeticException("Float overflow");
 		}
 		return left / right;
 	}
 
-	static final float negate(float a) throws ArithmeticException {
+	public static final float negate(float a) throws ArithmeticException {
 		if (a == Float.MIN_VALUE) {
 			throw new ArithmeticException("Float overflow");
 		}
 		return -a;
 	}
 
-	static final float abs(float a) throws ArithmeticException {
+	public static final float abs(float a) throws ArithmeticException {
 		if (a == Float.MIN_VALUE) {
 			throw new ArithmeticException("Float overflow");
 		}
