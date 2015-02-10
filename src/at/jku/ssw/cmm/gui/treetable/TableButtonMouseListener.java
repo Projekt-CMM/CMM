@@ -43,7 +43,7 @@ public class TableButtonMouseListener implements MouseListener {
 	private final GUImain main;
 	private final TreeTable<?> treeTable;
 
-	private void forwardEventToButton(MouseEvent e, int row, int column) {
+	protected void forwardEventToButton(MouseEvent e, int row, int column) {
 
 		Object value;
 		JButton button;

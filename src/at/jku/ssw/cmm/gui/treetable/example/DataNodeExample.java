@@ -7,7 +7,7 @@ import at.jku.ssw.cmm.gui.treetable.DataNode;
 
 public class DataNodeExample extends DataNode {
 	
-	private final String name;
+	private final Object name;
 	private final Object value1;
 	private final Object value2;
 	
@@ -15,7 +15,9 @@ public class DataNodeExample extends DataNode {
 	
 	private final List<DataNode> children;
 	
-	public DataNodeExample( String name, Object value1, Object value2 ) {
+	private TreeTableListener tListener;
+	
+	public DataNodeExample( Object name, Object value1, Object value2 ) {
 		this.name = name;
 		this.value1 = value1;
 		this.value2 = value2;
@@ -53,7 +55,13 @@ public class DataNodeExample extends DataNode {
 
 	@Override
 	public String toString() {
-		return this.name;
+		if(name instanceof TreeTableListener){
+			tListener = (TreeTableListener) this.name;
+			return tListener.toString();
+		}else if(name instanceof String)
+			return (String)this.name;
+		else
+			return "";
 	}
 	
 	public void setQuestFlag( boolean flag ) {
