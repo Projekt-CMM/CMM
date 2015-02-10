@@ -83,7 +83,7 @@ public class GUIquestSelection {
 	public void changetoPackagesTable(){
 		splitpane.remove(jTablePanel);
 		splitpane.setLeftComponent(new TreeTableExample(this).getTreePanel());
-		
+
 		try {
 			this.editorScrollPane.setPage(LoadStatics.getHTMLUrl("packages/default/de.html"));
 		} catch (IOException e) {
@@ -97,7 +97,7 @@ public class GUIquestSelection {
 	
 	public void initFrame(){
         frame = new JFrame("Topic");
-        frame.setPreferredSize(new Dimension(600, 400));
+        frame.setPreferredSize(new Dimension(800, 400));
         frame.add(jTablePanel,BorderLayout.LINE_START);
         frame.add(jDescPane,BorderLayout.LINE_END);
      
@@ -201,10 +201,6 @@ public class GUIquestSelection {
 			model.addRow(new Object[]{finished,exersice,q});
 		}
 		
-		jTable.setFillsViewportHeight(true);
-		jTable.setMinimumSize(new Dimension(200,200));
-		jTable.setPreferredSize(new Dimension(200,200));
-		
 		jTable.setCellSelectionEnabled(true);
 	    ListSelectionModel cellSelectionModel = jTable.getSelectionModel();
 	    //TODO Select full row
@@ -251,7 +247,7 @@ public class GUIquestSelection {
 		
 		scroll = new JScrollPane(jTable);
 		//scroll.setPreferredSize(new Dimension(200,200));
-		scroll.setMinimumSize(new Dimension(200,0));
+		scroll.setMinimumSize(new Dimension(200,200));
 		scroll.setPreferredSize(new Dimension(200,200));
 		scroll.setBorder(new TitledBorder("Aufgaben"));
 		//scroll.add(jTabel);

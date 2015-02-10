@@ -111,8 +111,8 @@ private DataNodeExample getFolderView(String path, DataNodeExample node, int lay
 				
 				JProgressBar b = new JProgressBar(0, qCount[2]);
 				b.setStringPainted(true);
-				b.setValue(qCount[0]);
-				b.setString(qCount[0] + " of " + qCount[2] + " finished!");
+				b.setValue(qCount[1]);
+				b.setString(qCount[1] + " of " + qCount[2] + " ");
 	
 				JButton button = new JButton("\u21E8");
 				

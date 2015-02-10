@@ -30,19 +30,20 @@ public class PackagesTableMouseListener extends TableButtonMouseListener {
 		int col = this.treeTable.getTable().columnAtPoint(e.getPoint());
 
 		//Left Mouse Clicked
-		if(SwingUtilities.isLeftMouseButton(e) && this.treeTable.getTable().getValueAt(row, 0) instanceof TreeTableListener){
-			TreeTableListener name = (TreeTableListener)this.treeTable.getTable().getValueAt(row, 0);
-	
-			List<String> fileNames = Quest.ReadFileNames(name.getPath());
+		if(this.treeTable.getTable().getValueAt(row, 0) instanceof TreeTableListener){
 			
-			 if(fileNames.contains(Quest.FILE_DESCRIPTION) && fileNames.contains(Quest.FILE_STYLE)){
-				main.displayURL(name.getPath() + Quest.sep + Quest.FILE_DESCRIPTION, name.getPath() + Quest.sep + Quest.FILE_STYLE);
-			} else if(fileNames.contains(Quest.FILE_DESCRIPTION)){
-				main.displayURL(name.getPath() + Quest.sep + Quest.FILE_DESCRIPTION);
-			}
-			
-		}else{
-			main.displayURL("packages/default/de.html"); 
+			if(SwingUtilities.isLeftMouseButton(e)){
+				TreeTableListener name = (TreeTableListener)this.treeTable.getTable().getValueAt(row, 0);
+		
+				List<String> fileNames = Quest.ReadFileNames(name.getPath());
+				
+				 if(fileNames.contains(Quest.FILE_DESCRIPTION) && fileNames.contains(Quest.FILE_STYLE)){
+					main.displayURL(name.getPath() + Quest.sep + Quest.FILE_DESCRIPTION, name.getPath() + Quest.sep + Quest.FILE_STYLE);
+				} else if(fileNames.contains(Quest.FILE_DESCRIPTION)){
+					main.displayURL(name.getPath() + Quest.sep + Quest.FILE_DESCRIPTION);
+				}
+			}else
+				main.displayURL("packages/default/de.html"); 
 		}
 		
 		forwardEventToButton(e,	row, col);
