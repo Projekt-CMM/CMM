@@ -5,7 +5,7 @@
     <property name="build.lib" value="lib"/>
     <property name="java.dir" value="src"/>
     <property name="jtests.dir" value="jtests"/>
-    <property name="jtests.log.dir" value="jtests/log"/>
+    <property name="jtests.log.dir" value="log/junit"/>
     <property name="error.dir" value="error"/>
     <property name="clib.dir" value="clib"/>
     <property name="translation.dir" value="po"/>
