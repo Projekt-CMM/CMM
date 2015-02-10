@@ -30,10 +30,8 @@ import org.junit.Test;
 
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Error;
-import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.debugger.DebuggerMock;
 import at.jku.ssw.cmm.interpreter.Interpreter;
-import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
 import at.jku.ssw.cmm.debugger.StdInOut;
 
@@ -62,11 +60,8 @@ public class Tests implements StdInOut {
 			compiler.compile(new String(code));
 
 			Error e = compiler.getError();
-			int errCount = 0;
 			while (e != null) {
-				System.out.println("line " + e.line + ", col " + e.col + ": "
-						+ e.msg);
-				errCount++;
+				System.out.println("line " + e.line + ", col " + e.col + ": " + e.msg);
 				e = e.next;
 			}
 			//System.out.println(errCount + " errors detected");

@@ -27,6 +27,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import at.jku.ssw.cmm.compiler.Compiler;
+import at.jku.ssw.cmm.compiler.CompilerException;
 import at.jku.ssw.cmm.compiler.Error;
 import at.jku.ssw.cmm.debugger.DebuggerMock;
 import at.jku.ssw.cmm.debugger.StdInOut;
@@ -81,9 +82,7 @@ public class InterpreterRunTest implements StdInOut {
 		Error e = compiler.getError();
 
 		while (e != null) {
-			fail("line " + e.line + ", col " + e.col + ": "
-				+ e.msg);
-			e = e.next;
+			throw new CompilerException(e.msg, e.line);
 		}
 			
 		Memory.initialize();
@@ -112,49 +111,235 @@ public class InterpreterRunTest implements StdInOut {
 
 	@Test
 	public void testSimpleMain() throws Exception {
+		// basic main-function
 		runCode("void main() {}");
 		assertEquals(output, "");
+		
+		// no main-function declared
+		try {
+			runCode("void test() {}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+		
+		// function parameter not allowed
+		try {
+			runCode("void main(int i) {}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
 	}
 	
 	@Test
 	public void testCallPrint() throws Exception {
-		runCode("void main() { print(' '); }");
+		// print space
+		runCode("void main() {"
+				+ "  print(' ');"
+				+ "}");
 		assertEquals(output, " ");
 		
-		runCode("void main() { print('c'); }");
+		// print single char
+		runCode("void main() {"
+				+ "  print('c');"
+				+ "}");
 		assertEquals(output, "c");
 		
-		runCode("void main() { print('\\n'); }");
+		// print new line
+		runCode("void main() {"
+				+ "  print('\\n');"
+				+ "}");
 		assertEquals(output, "\n");
+		
+		// no function-parameter
+		try {
+			runCode("void main() {"
+					+ "  print();"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
 	}
 	
 	@Test
 	public void testCallPrintf() throws Exception {
-		runCode("void main() { printf(\"\"); }");
+		// printf empty string
+		runCode("void main() {"
+				+ "  printf(\"\");"
+				+ "}");
 		assertEquals(output, "");
 		
-		runCode("void main() { printf(\"Hello World\"); }");
+		// printf string
+		runCode("void main() {"
+				+ "  printf(\"Hello World\");"
+				+ "}");
 		assertEquals(output, "Hello World");
 		
-		runCode("void main() { printf(\"int: %d\", 12345); }");
+		// printf single integer
+		runCode("void main() {"
+				+ "  printf(\"int: %d\", 12345);"
+				+ "}");
 		assertEquals(output, "int: 12345");
 		
-		runCode("void main() { printf(\"a: %d\\tb: %d\", 1, 2); }");
+		// printf multible variables
+		runCode("void main() {"
+				+ "  printf(\"a: %d\\tb: %d\", 1, 2);"
+				+ "}");
 		assertEquals(output, "a: 1\tb: 2");
+		
+		// no function-parameter
+		try {
+			runCode("void main() {"
+					+ "  printf();"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
 	}
 	
 	@Test
 	public void testCallRead() throws Exception {
-		runCode("void main() { print(read()); print(read()); }", "pa");
+		// read characters from input-string
+		runCode("void main() {"
+				+ "  print(read());"
+				+ "  print(read());"
+				+ "}", "pa");
 		assertEquals(output, "pa");
 	}
 	
 	@Test
 	public void testCallLength() throws Exception {
-		runCode("void main() { print( (char)( length(\"123456\") + 48) ); }");
+		// length of simple string
+		runCode("void main() {"
+				+ "  print( (char)( length(\"123456\") + 48) );"
+				+ "}");
 		assertEquals(output, "6");
 		
-		runCode("void main() { print( (char)( length(\"\") + 48) ); }");
+		// length of empty string
+		runCode("void main() {"
+				+ "  print( (char)( length(\"\") + 48) );"
+				+ "}");
 		assertEquals(output, "0");
+		
+		// no function-parameter
+		try {
+			runCode("void main() {"
+					+ "  int i = length();"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+	}
+	
+	@Test
+	public void testInitVar() throws Exception {
+		// bool-init with assignment
+		runCode("void main() {"
+				+ "  bool b1=true, b2=false;"
+				+ "  printf(\"%d %d\",b1, b2);"
+				+ "}");
+		assertEquals(output, "1 0");
+		
+		// int-init with assignment
+		runCode("void main() {"
+				+ "  int i=42, j=12;"
+				+ "  printf(\"%d %d\",i, j);"
+				+ "}");
+		assertEquals(output, "42 12");
+		
+		// float-init with assignment
+		runCode("void main() {"
+				+ "  float f1=123.456, f2=98.321;"
+				+ "  printf(\"%f %f\",f1, f2);"
+				+ "}");
+		assertEquals(output, "123.456 98.321");
+		
+		// char-init with assignment
+		runCode("void main() {"
+				+ "  char c1='c', c2='q';"
+				+ "  printf(\"%c %c\",c1, c2);"
+				+ "}");
+		assertEquals(output, "c q");
+		
+		// string-init with assignment
+		runCode("void main() {"
+				+ "  string s1=\"Hello\", s2=\"World\";"
+				+ "  printf(s1 + \" \" + s2);"
+				+ "}");
+		assertEquals(output, "Hello World");
+		
+		// incorrect type-declaration
+		try {
+			runCode("void main() {"
+					+ "  noType i;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+	}
+	
+	@Test
+	public void testInitStruct() throws Exception {
+		// simple struct
+		runCode("struct Point {int x, y;} "
+				+ "void main() {"
+				+ "  Point p;"
+				+ "  p.x = 10;"
+				+ "  p.y = 55;"
+				+ "  printf(\"%d %d\", p.x, p.y);"
+				+ "}");
+		assertEquals(output, "10 55");
+		
+		// empty struct
+		try {
+			runCode("struct Point {"
+					+ "}"
+					+ "void main() {"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+		
+		// same struct inside struct
+		try {
+			runCode("struct Point {"
+					+ "  int x, y;"
+					+ "  Point p;"
+					+ "}"
+					+ "void main() {"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+	}
+	
+	@Test
+	public void testInitArray() throws Exception {
+		// single-dimension array
+		runCode("void main() {"
+				+ "  int a[5];"
+				+ "  a[0] = 2;"
+				+ "  a[3] = 10;"
+				+ "  printf(\"%d %d\", a[0], a[3]);"
+				+ "}");
+		assertEquals(output, "2 10");
+		
+		// multi-dimension array
+		runCode("void main() {"
+				+ "  int a[5][10];"
+				+ "  a[4][5] = 54;"
+				+ "  a[2][9] = 29;"
+				+ "  printf(\"%d %d\", a[4][5], a[2][9]);"
+				+ "}");
+		assertEquals(output, "54 29");
+		
+		// access to not initialized variables
+		try {
+			runCode("void main() {"
+					+ "  int a[5][10];"
+					+ "  printf(\"%d %d\", a[4][5], a[2][9]);"
+					+ "}");
+			fail("RunTimeException not thrown");
+		} catch(RunTimeException e) {}
+
+		// buffer-overflow
+		try {
+			runCode("void main() {"
+					+ "  int a[5][10];"
+					+ "  a[9][4] = 54;"
+					+ "}");
+			fail("RunTimeException not thrown");
+		} catch(RunTimeException e) {}
 	}
 }

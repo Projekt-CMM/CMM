@@ -21,7 +21,6 @@ package interpreter;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import at.jku.ssw.cmm.interpreter.SaveIntOperator;
@@ -31,14 +30,14 @@ public class SaveIntOperatorTest {
 	@Test
 	public void testAdd() {
 		// test problematic values
-		assertEquals(SaveIntOperator.add(0, 0), 0+0);
-		assertEquals(SaveIntOperator.add(0, Integer.MAX_VALUE), 0+Integer.MAX_VALUE);
-		assertEquals(SaveIntOperator.add(Integer.MAX_VALUE, 0), Integer.MAX_VALUE+0);
-		assertEquals(SaveIntOperator.add(0, Integer.MIN_VALUE), 0+Integer.MIN_VALUE);
-		assertEquals(SaveIntOperator.add(Integer.MIN_VALUE, 0), Integer.MIN_VALUE+0);
+		assertEquals(SaveIntOperator.add(0, 0), 0);
+		assertEquals(SaveIntOperator.add(0, Integer.MAX_VALUE), Integer.MAX_VALUE);
+		assertEquals(SaveIntOperator.add(Integer.MAX_VALUE, 0), Integer.MAX_VALUE);
+		assertEquals(SaveIntOperator.add(0, Integer.MIN_VALUE), Integer.MIN_VALUE);
+		assertEquals(SaveIntOperator.add(Integer.MIN_VALUE, 0), Integer.MIN_VALUE);
 		
 		// test normal operations
-		assertEquals(SaveIntOperator.add(500, 20), 500 + 20);
+		assertEquals(SaveIntOperator.add(500, 20), 520);
 		assertEquals(SaveIntOperator.add(123456, 9876), 123456+9876);
 		assertEquals(SaveIntOperator.add(123456, -9876), 123456-9876);
 
@@ -77,15 +76,15 @@ public class SaveIntOperatorTest {
 	@Test
 	public void testSubtract() {
 		// test problematic values
-		assertEquals(SaveIntOperator.subtract(0, 0), 0-0);
-		assertEquals(SaveIntOperator.subtract(0, Integer.MAX_VALUE), 0-Integer.MAX_VALUE);
-		assertEquals(SaveIntOperator.subtract(Integer.MAX_VALUE, 0), Integer.MAX_VALUE-0);
-		assertEquals(SaveIntOperator.subtract(Integer.MIN_VALUE, 0), Integer.MIN_VALUE-0);
+		assertEquals(SaveIntOperator.subtract(0, 0), 0);
+		assertEquals(SaveIntOperator.subtract(0, Integer.MAX_VALUE), -Integer.MAX_VALUE);
+		assertEquals(SaveIntOperator.subtract(Integer.MAX_VALUE, 0), Integer.MAX_VALUE);
+		assertEquals(SaveIntOperator.subtract(Integer.MIN_VALUE, 0), Integer.MIN_VALUE);
 		assertEquals(SaveIntOperator.subtract(Integer.MAX_VALUE, Integer.MAX_VALUE), 0);
 		assertEquals(SaveIntOperator.subtract(Integer.MIN_VALUE, Integer.MIN_VALUE), 0);
 		
 		// test normal operations
-		assertEquals(SaveIntOperator.subtract(500, 20), 500 - 20);
+		assertEquals(SaveIntOperator.subtract(500, 20), 480);
 		assertEquals(SaveIntOperator.subtract(123456, 9876), 123456-9876);
 		assertEquals(SaveIntOperator.subtract(123456, -9876), 123456+9876);
 		assertEquals(SaveIntOperator.subtract(-56, -9876), -56+9876);
@@ -111,15 +110,15 @@ public class SaveIntOperatorTest {
 	public void testMultiply() {
 		// test problematic values
 		assertEquals(SaveIntOperator.multiply(0, 0), 0 * 0);
-		assertEquals(SaveIntOperator.multiply(0, Integer.MAX_VALUE), 0 * Integer.MAX_VALUE);
-		assertEquals(SaveIntOperator.multiply(Integer.MAX_VALUE, 0), Integer.MAX_VALUE * 0);
-		assertEquals(SaveIntOperator.multiply(0, Integer.MAX_VALUE), 0 * Integer.MAX_VALUE);
-		assertEquals(SaveIntOperator.multiply(Integer.MIN_VALUE, 0), Integer.MIN_VALUE * 0);
-		assertEquals(SaveIntOperator.multiply(0, Integer.MIN_VALUE), 0 * Integer.MIN_VALUE);
-		assertEquals(SaveIntOperator.multiply(Integer.MAX_VALUE, 1), Integer.MAX_VALUE * 1);
-		assertEquals(SaveIntOperator.multiply(1, Integer.MAX_VALUE), 1 * Integer.MAX_VALUE);
-		assertEquals(SaveIntOperator.multiply(Integer.MIN_VALUE, 1), Integer.MIN_VALUE * 1);
-		assertEquals(SaveIntOperator.multiply(1, Integer.MIN_VALUE), 1 * Integer.MIN_VALUE);
+		assertEquals(SaveIntOperator.multiply(0, Integer.MAX_VALUE), 0);
+		assertEquals(SaveIntOperator.multiply(Integer.MAX_VALUE, 0), 0);
+		assertEquals(SaveIntOperator.multiply(0, Integer.MAX_VALUE), 0);
+		assertEquals(SaveIntOperator.multiply(Integer.MIN_VALUE, 0), 0);
+		assertEquals(SaveIntOperator.multiply(0, Integer.MIN_VALUE), 0);
+		assertEquals(SaveIntOperator.multiply(Integer.MAX_VALUE, 1), Integer.MAX_VALUE);
+		assertEquals(SaveIntOperator.multiply(1, Integer.MAX_VALUE), Integer.MAX_VALUE);
+		assertEquals(SaveIntOperator.multiply(Integer.MIN_VALUE, 1), Integer.MIN_VALUE);
+		assertEquals(SaveIntOperator.multiply(1, Integer.MIN_VALUE), Integer.MIN_VALUE);
 		assertEquals(SaveIntOperator.multiply(2, -1073741824), 2 * (-1073741824));
 		assertEquals(SaveIntOperator.multiply(-134217728, 16), (-134217728) * 16);
 		
@@ -144,10 +143,10 @@ public class SaveIntOperatorTest {
 	@Test
 	public void testDivide() {
 		// test problematic values
-		assertEquals(SaveIntOperator.divide(0, 1), 0 / 1);
-		assertEquals(SaveIntOperator.divide(1, 1), 1 / 1);
-		assertEquals(SaveIntOperator.divide(Integer.MAX_VALUE, 1), Integer.MAX_VALUE / 1);
-		assertEquals(SaveIntOperator.divide(Integer.MIN_VALUE, 1), Integer.MIN_VALUE / 1);
+		assertEquals(SaveIntOperator.divide(0, 1), 0);
+		assertEquals(SaveIntOperator.divide(1, 1), 1);
+		assertEquals(SaveIntOperator.divide(Integer.MAX_VALUE, 1), Integer.MAX_VALUE);
+		assertEquals(SaveIntOperator.divide(Integer.MIN_VALUE, 1), Integer.MIN_VALUE);
 		assertEquals(SaveIntOperator.divide(Integer.MAX_VALUE, Integer.MAX_VALUE), 1);
 		assertEquals(SaveIntOperator.divide(Integer.MIN_VALUE, Integer.MIN_VALUE), 1);
 		
@@ -172,16 +171,44 @@ public class SaveIntOperatorTest {
 		} catch(ArithmeticException e) {}
 	}
 
-	@Ignore
 	@Test
 	public void testNegate() {
-		fail("Not yet implemented");
+		// test problematic values
+		assertEquals(SaveIntOperator.negate(0), 0);
+		assertEquals(SaveIntOperator.negate(1), -1);
+		assertEquals(SaveIntOperator.negate(-1), 1);
+		assertEquals(SaveIntOperator.negate(Integer.MAX_VALUE), -Integer.MAX_VALUE);
+		assertEquals(SaveIntOperator.negate(-Integer.MAX_VALUE), Integer.MAX_VALUE);
+		
+		// test normal operations
+		assertEquals(SaveIntOperator.negate(123456), -123456);
+		assertEquals(SaveIntOperator.negate(-565), 565);
+		
+		// test wrong values
+		try {
+			SaveIntOperator.negate(Integer.MIN_VALUE);
+			fail("ArithmeticException not thrown");
+		} catch(ArithmeticException e) {}
 	}
 
-	@Ignore
 	@Test
 	public void testAbs() {
-		fail("Not yet implemented");
+		// test problematic values
+		assertEquals(SaveIntOperator.abs(0), 0);
+		assertEquals(SaveIntOperator.abs(1), 1);
+		assertEquals(SaveIntOperator.abs(-1), 1);
+		assertEquals(SaveIntOperator.abs(Integer.MAX_VALUE), Integer.MAX_VALUE);
+		assertEquals(SaveIntOperator.abs(Integer.MIN_VALUE+1), (Integer.MIN_VALUE+1)*-1);
+		
+		// test normal operations
+		assertEquals(SaveIntOperator.abs(12345), 12345);
+		assertEquals(SaveIntOperator.abs(-56889), 56889);
+		
+		// test wrong values
+		try {
+			SaveIntOperator.abs(Integer.MIN_VALUE);
+			fail("ArithmeticException not thrown");
+		} catch(ArithmeticException e) {}
 	}
 
 }
