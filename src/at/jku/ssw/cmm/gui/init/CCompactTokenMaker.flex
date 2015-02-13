@@ -265,6 +265,23 @@ URL                 = (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCh
    "write"  |
    "time"   |
    
+   /* assert.h */ 
+   "assert"             |
+   "assertTrue"         |
+   "assertFalse"        |
+   "assertEqBool"       |
+   "assertNotEqBool"    |
+   "assertEqChar"       |
+   "assertNotEqChar"    |
+   "assertEqInt"        |
+   "assertNotEqInt"     |
+   "assertEqFloat"      |
+   "assertNotEqFloat"   |
+   "assertEqString"     |
+   "assertNotEqString"  |
+   "assertMatch"        |
+   "assertNotMatch"     |
+
    /* math.h Functions*/
    "acos"   |
    "asin"   |
@@ -290,6 +307,9 @@ URL                 = (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCh
    "tan"    |
    "tanh"   |
    
+   /* regex.h */ 
+   "match"  |
+
    /* stdlib.h Functions*/
    "atoi"   |
 /* "atof"   | */
@@ -301,7 +321,12 @@ URL                 = (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCh
    /* stdio.h Functions*/
    "prints" |
    "putc"   |
-   "scanf"              { addToken(Token.FUNCTION); }   
+   "scanf"  |
+
+   /* string.h Functions*/
+   "strcat" |
+   "strcmp" |
+   "substr"             { addToken(Token.FUNCTION); }   
 
     {LineTerminator}    { addNullToken(); return firstToken; }
 
