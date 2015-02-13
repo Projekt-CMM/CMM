@@ -342,4 +342,104 @@ public class InterpreterRunTest implements StdInOut {
 			fail("RunTimeException not thrown");
 		} catch(RunTimeException e) {}
 	}
+	
+	@Test
+	public void testIntExpression() throws Exception {
+		// addition
+		runCode("void main() {"
+				+ "  int i = 1+2;"
+				+ "  int j = 2;"
+				+ "  j += i;"
+				+ "  printf(\"%d %d\", i, j);"
+				+ "}");
+		assertEquals(output, "3 5");
+
+		// substraction
+		runCode("void main() {"
+				+ "  int i = 5-9;"
+				+ "  int j = -10;"
+				+ "  j -= i;"
+				+ "  printf(\"%d %d\", i, j);"
+				+ "}");
+		assertEquals(output, "-4 -6");
+
+		// multiplication
+		runCode("void main() {"
+				+ "  int i = 2*5;"
+				+ "  int j = 12;"
+				+ "  j *= i;"
+				+ "  printf(\"%d %d\", i, j);"
+				+ "}");
+		assertEquals(output, "10 120");
+
+		// division
+		runCode("void main() {"
+				+ "  int i = 10/2;"
+				+ "  int j = 30;"
+				+ "  j /= i;"
+				+ "  printf(\"%d %d\", i, j);"
+				+ "}");
+		assertEquals(output, "5 6");
+
+		// modulo
+		runCode("void main() {"
+				+ "  int i = 15%10;"
+				+ "  int j = 22;"
+				+ "  j %= i;"
+				+ "  printf(\"%d %d\", i, j);"
+				+ "}");
+		assertEquals(output, "5 2");
+
+		// bit and
+		runCode("void main() {"
+				+ "  int i = 0xFF & 0x09;"
+				+ "  int j = 0x08;"
+				+ "  j &= i;"
+				+ "  printf(\"%d %d\", i, j);"
+				+ "}");
+		assertEquals(output, "9 8");
+
+		// bit or
+		runCode("void main() {"
+				+ "  int i = 0x08 | 0x01;"
+				+ "  int j = 0x12;"
+				+ "  j |= i;"
+				+ "  printf(\"%d %d\", i, j);"
+				+ "}");
+		assertEquals(output, "9 27");
+
+		// bit xor
+		runCode("void main() {"
+				+ "  int i = 0x0F ^ 0x1D;"
+				+ "  int j = 0x03;"
+				+ "  j ^= i;"
+				+ "  printf(\"%d %d\", i, j);"
+				+ "}");
+		assertEquals(output, "18 17");
+
+		// bit neq
+		runCode("void main() {"
+				+ "  int i = (~0xFA) & 0x7F;"
+				+ "  printf(\"%d\", i);"
+				+ "}");
+		assertEquals(output, "5");
+
+		// shift left
+		runCode("void main() {"
+				+ "  int i = 0x01 << 2;"
+				+ "  int j = 0x03;"
+				+ "  j <<= i;"
+				+ "  printf(\"%d %d\", i, j);"
+				+ "}");
+		assertEquals(output, "4 48");
+
+		// shift right
+		runCode("void main() {"
+				+ "  int i = 0x10 >> 3;"
+				+ "  int j = 0x44;"
+				+ "  j >>= i;"
+				+ "  printf(\"%d %d\", i, j);"
+				+ "}");
+		assertEquals(output, "2 17");
+	}
 }
