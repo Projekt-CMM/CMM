@@ -281,8 +281,11 @@ public class Preprocessor {
 
 	// http://stackoverflow.com/questions/2850203/count-the-number-of-lines-in-a-java-string
 	public static int countLines(String str){
-	   String[] lines = str.split("\r\n|\r|\n");
-	   return  lines.length;
+		if(str == null)
+			return 0;
+		
+		String[] lines = str.split("\r\n|\r|\n");
+		return  lines.length;
 	}
 
 	public static Object[] returnFileAndNumber(int codeLine, List<Object[]> codeRegister) {
@@ -291,10 +294,10 @@ public class Preprocessor {
 		
 		String objName = null;
 		int objLine = 0;
-
+		
 		// get name of codepart
 		for(Object[] curObj : codeRegister) {
-			if(codeLine >= Integer.parseInt(curObj[0].toString()) && codeLine <= Integer.parseInt(curObj[1].toString())) {
+			if(codeLine >= (int)curObj[0] && codeLine <= (int)curObj[1]) {
 				objName = curObj[2].toString();
 			}
 		}
@@ -303,10 +306,10 @@ public class Preprocessor {
 		if(objName != null) {
 			for(Object[] curObj : codeRegister) {
 				if(curObj[2].toString().equals(objName)) {
-					if(codeLine > Integer.parseInt(curObj[1].toString())) {
-						objLine += Integer.parseInt(curObj[1].toString()) - Integer.parseInt(curObj[0].toString()) + 1;
-					} else if(codeLine >= Integer.parseInt(curObj[0].toString()) && codeLine <= Integer.parseInt(curObj[1].toString())) {
-						objLine += codeLine - Integer.parseInt(curObj[0].toString()) + 1;
+					if(codeLine > (int)curObj[1]) {
+						objLine += (int)curObj[1] - (int)curObj[0] + 1;
+					} else if(codeLine >= (int)curObj[0] && codeLine <= (int)curObj[1]) {
+						objLine += codeLine - (int)curObj[0] + 1;
 					}
 				}
 			}
