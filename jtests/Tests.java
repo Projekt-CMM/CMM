@@ -81,7 +81,7 @@ public class Tests implements StdInOut {
 		}
 	}
 
-	@Test
+/*	@Test
 	public void test1() throws Exception {
 		String[] a = { "interpretertests/file01.cmm"};//, "-debug", "1", "1" };
 		run(a);
@@ -90,12 +90,12 @@ public class Tests implements StdInOut {
 		Assert.assertEquals(1,(char) ref.get(2));
 		
 		ref.clear();
-	}
+	}*/
 
 	/*
 	 * +  - *  / - Operatoren
 	 */
-	@Test
+/*	@Test
 	public void test2() throws Exception {
 		String[] a = { "interpretertests/file02.cmm" };
 		run(a);
@@ -106,7 +106,7 @@ public class Tests implements StdInOut {
 		Assert.assertEquals(50,(char) ref.get(3));
 		Assert.assertEquals(2,(char) ref.get(4));
 		ref.clear();
-	}
+	}*/
 	
 	/*
 	 * INT Array
