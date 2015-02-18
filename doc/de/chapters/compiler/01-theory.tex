@@ -64,12 +64,14 @@ Die Produktionsregel gibt an wie z.B. das Nichtterminalsymbol ``Expr'' aufgebaut
 
 Die Grammatik muss so aufgebaut sein, dass es für einen Tokenstrom nur eine eindeutige Möglichkeit gibt diesen zu parsen.\footnote{\url{http://www.iai.uni-bonn.de/III//lehre/vorlesungen/Informatik_I/WS05/Folien/VLWS0506-10.pdf}} Beim Parsen wird ein Tokenstrom in eine andere Darstellung \"uberf\"uhrt, welcher die weitere Verarbeitung erm\"oglicht. Dies kann aber nur dann reproduzierbar funktionieren, wenn der Parser einen bestimmten Tokenstrom nur in einem eindeutigen Weg durchlaufen darf.
 
-\htlParagraph{Beispiel}
+\htlParagraph{Mehrdeutige EBNF Regel}
 
-Es soll eine EBNF-Regel erstellt werden welche einen Mathematischen Ausdruck, aufgebaut aus Additionen und Subtraktionen korrekt parsen.
-\subhtlParagraph{Mehrdeutige EBNF Regel}
-
+\begin{figure}[h]
+\centering
 \includegraphics[width=0.6\textwidth]{./media/images/compiler/ambiguity_wrong.png}
+\caption{Mehrdeutige EBNF Regel f\"ur einen Ausdruck}
+\label{compiler_ambiguity_wrong}
+\end{figure}
 
 \begin{lstlisting}[language=EBNF]
 Expr = intCon | Expr ( "+" | "-" ) Expr.
@@ -77,15 +79,26 @@ Expr = intCon | Expr ( "+" | "-" ) Expr.
 
 Der Ausdruck $1-2+5$ kann mit dieser EBNF Regel auf mehreren Arten gelöst werden. Es liegt also eine Mehrdeutigkeit vor. Der Ausdruck $1-2+5$ kann dabei sowohl als $(1-2)+5$, aber auch als $1-(2+5)$ geparst werden.
 
+\begin{figure}[h]
+\centering
 \begin{tabular}{ c | c }
   $(1-2)+5=4$ & 
   $1-(2+5)=-6$ \\
   \includegraphics[width=0.2\textwidth]{./media/images/compiler/ambiguity_tree_correct.png} & 
   \includegraphics[width=0.2\textwidth]{./media/images/compiler/ambiguity_tree_wrong.png} \\
 \end{tabular}
-\subhtlParagraph{Eindeutige EBNF Regel}
+\caption{Es gibt mehrere M\"oglichkeiten diese EBNF-Regel zu durchlaufen}
+\label{compiler_ambiguity_wrong_possible_ways}
+\end{figure}
 
+\htlParagraph{Eindeutige EBNF Regel}
+
+\begin{figure}[h]
+\centering
 \includegraphics[width=0.6\textwidth]{./media/images/compiler/ambiguity_correct.png}
+\caption{Eindeutige EBNF Regel f\"ur einen Ausdruck}
+\label{compiler_ambiguity_correct}
+\end{figure}
 
 \begin{lstlisting}[language=EBNF]
 Expr = intCon [ ( "+" | "-" ) Expr ].
@@ -95,7 +108,12 @@ Der Ausdruck $1-2+5$ kann mit dieser EBNF Regel nur mehr auf eine Art gelöst we
 
 \subsubsection{EBNF-Beispiele}
 
+\begin{figure}[h]
+\centering
 \includegraphics[width=0.5\textwidth]{./media/images/compiler/ebnf_expr.png}
+\caption{Grafische Darstellung der EBNF Regel f\"ur einen Ausdruck}
+\label{compiler_ebnf_expr}
+\end{figure}
 
 \begin{lstlisting}[language=EBNF]
 Expr = Term { ( "+" | "-" ) Term }.
@@ -103,7 +121,13 @@ Expr = Term { ( "+" | "-" ) Term }.
 
 Eine Expression\footnote{\url{https://de.wikipedia.org/wiki/Ausdruck_(Programmierung)}} besteht dabei aus einem Term, und dann optional wiederum aus einem ``+'' oder ``-'' gefolgt von einem weiterem Term.
 
+\begin{figure}[h]
+\centering
 \includegraphics[width=0.5\textwidth]{./media/images/compiler/ebnf_term.png}
+\caption{Grafische Darstellung der EBNF Regel f\"ur einen Term}
+\label{compiler_ebnf_term}
+\end{figure}
+
 \begin{lstlisting}[language=EBNF]
 Term = Factor { ( "*" | "/" ) Factor }.
 \end{lstlisting}
@@ -114,7 +138,13 @@ Durch solche einfachen Regeln können z.B.: mathematische Regeln wie Punkt vor S
 
 Diese Produktionsregeln k\"onnen dabei beliebige Komplexit\"at aufweisen, und reichen von einfachen Ausdr\"ucken \"uber den Aufbau des Variablenbezeichners bis zu umfangreichen Zuweisungsoperatoren in allen m\"oglichen Varianten.
 
+\begin{figure}[h]
+\centering
 \includegraphics[width=\textwidth]{./media/images/compiler/ebnf_designator.png}
+\caption{Grafische Darstellung der EBNF Regel f\"ur einen Variablenbezeichner}
+\label{compiler_ebnf_designator}
+\end{figure}
+
 \begin{lstlisting}[language=EBNF]
 Designator = ident { "." ident | "[" BinExpr "]" }.
 \end{lstlisting}
@@ -122,7 +152,6 @@ Designator = ident { "." ident | "[" BinExpr "]" }.
 %\includegraphics[width=0.6\textwidth]{./media/images/compiler/ebnf_factor.png}
 
 \newpage
-
 \subsection{Lexikalische Analyse - Scanner}
 
 Bei der lexikalischen Analyse zerlegt der sogenannt Scanner\footnote{\url{https://de.wikipedia.org/wiki/Tokenizer}} den Zeichenstrom in einen sogenannten Tokenstrom. Ein Token\footnote{\url{https://de.wikipedia.org/wiki/Token_(\%C3\%9Cbersetzerbau)}} stellt dabei eine logische Einheit dar (z.B.: eine Variable, oder ein Operatorzeichen), und wird nicht mehr weiter zerlegt (Terminalsymbol).
@@ -131,7 +160,12 @@ Bei der lexikalischen Analyse zerlegt der sogenannt Scanner\footnote{\url{https:
 
 Der Scanner bekommt einen Zeichenstrom, welcher aus einzelnen Zeichen besteht. Ein Zeichen ist z.B. ein Buchstabe, eine Zahl oder Sonderzeichen wie ``='', oder ``+''.
 
+\begin{figure}[h]
+\centering
 \includegraphics[width=0.6\textwidth]{./media/images/compiler/input_characterstream.png}
+\caption{M\"oglicher Eingabedatenstrom aus einzelnen Zeichen}
+\label{compiler_input_characterstream}
+\end{figure}
 
 \htlParagraph{Resultierender Tokenstrom}
 
@@ -139,7 +173,12 @@ Aus diesem Zeichenstrom werden dann die Tokens extrahiert, welche dann die sogen
 
 Manche Tokens wie z.B. Variablen oder Konstanten besitzen au\ss{}er der Tokennummer(welche definiert, um welchen Token es sich handelt) des-weiteren noch einen Tokenwert, mit dem sp\"ater z.B. der Variablenname, oder der Wert einer Variable ausgelesen werden kann.
 
+\begin{figure}[h]
+\centering
 \includegraphics[width=\textwidth]{./media/images/compiler/scanner_tokenstream.png}
+\caption{Tokenstrom, welcher aus den Eingabedaten generiert wird}
+\label{compiler_scanner_tokenstream}
+\end{figure}
 
 \subsection{Syntaxanalyse - Parser}
 
@@ -157,7 +196,12 @@ Ein LL(1) Parser arbeitet dabei so, dass er jeweils um 1. Token nach vorne schau
 
 Der Parser \"ubersetzt den Tokenstrom in einem sogenannten Syntaxbaum\footnote{\url{https://de.wikipedia.org/wiki/Syntaxbaum}}, welcher die Struktur des Programmes repr\"asentiert. Dieser umfasst alle Terminal wie auch Nichtterminalsymbole, und zeigt auf wie die EBNF-Regeln aufeinander aufgebaut sind.
 
-\includegraphics[width=0.6\textwidth]{./media/images/compiler/parser_syntaxtree.png}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{./media/images/compiler/parser_syntaxtree.png}
+\caption{Syntaxbaum welcher aus dem Tokenstrom generiert werden kann}
+\label{compiler_parser_syntaxtree}
+\end{figure}
 
 \subsection{Abstrakter Syntaxbaum}
 
@@ -165,7 +209,12 @@ Der ``allgemeine'' Syntaxbaum enth\"alt viele unn\"otigen Daten, welche beim abs
 
 Der abstrakte Syntaxbaum wird explitzit w\"ahrend des Parsens gebaut; z.B. mithilfe einer attributierte Gramatik, welche den abstrakten Syntaxbaum an bestimten Stellen innerhalb der EBNF erweitert.
 
-\includegraphics[width=0.6\textwidth]{./media/images/compiler/abstract_syntaxtree.png}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{./media/images/compiler/abstract_syntaxtree.png}
+\caption{Abstrakter Syntaxbaum welcher nur mehr notwendige Daten enth\"alt}
+\label{compiler_parser_syntaxtree}
+\end{figure}
 
 \subsubsection{homogene und heterogene Syntaxbäume}
 
