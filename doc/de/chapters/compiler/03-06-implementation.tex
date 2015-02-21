@@ -1,0 +1,80 @@
+%!TEX root=../Vorlage_DA.tex
+%	########################################################
+% 				Allgemeiner Teil (Theorie)
+%	########################################################
+
+
+%	--------------------------------------------------------
+% 	Implementierung
+%	--------------------------------------------------------
+\newpage
+\subsection{Implementierung}
+
+\subsubsection{CMM.atg}
+
+In CMM.atg ist die gesammte attributierte Grammatik von C-Compact enthalten. Mit Hilfe der darin enthaltenen Information kann Coco/R eine Scanner und einen Parser generieren, welche nach der definierten EBNF-Syntax arbeitet.
+
+Die Datei enth\"alt unter anderem die EBNF-Syntax, welche den grundlegenden Aufbau der Programmiersprache definiert. Desweiteren kann Java-Code eingebettet werden, welcher ausgef\"uhrt wird wenn bestimmte Teile der EBNF durchlaufen werden. So ist es m\"oglich einen abstrakten Syntaxbaum und eine Symboltabelle aufzubauen, und den durchlaufenen Code auf Syntaxbedingungen zu \"uberpr\"ufen, welche von der EBNF nicht erkannt werden k\"onnen. Da Coco/R einen LL(1) Parser generiert, gewisse Teile der Programmiersprache aber nicht mithilfe eines LL(1) Parsers implementiert werden k\"onnen gibt es LL(1) conflict resolvers, welche den Parser an bestimmten Stellen mitteilen k\"onnen, wie dieser weiter zu Verfahren hat.
+
+\htlParagraph{Beispiel}
+
+Es ist in C-Compact m\"oglich explizite Typenumwandlung durchzuf\"uhren. Dies wird wie in C realisiert, indem der gew\"unschte Typ in Klammern angegeben wird. Es ist aber genauso m\"oglich in Gleichungen Klammern einzusetzen, wodurch Coco/R nicht in der Lage ist zwischen einer Typumwandlung, und einer Gleichung (oder auch einer geklammerten Variable) zu unterscheiden.
+
+Um dieses Problem zu l\"osen wird ein LL(1) conflict resolvers eingesetzt. Dieser kann einerseits mehrere Tokens nach vorne schauen, und anderseits den Token auf bereits bekannten Informationen \"uberpr\"ufen (z.B. ist dieser Identifier ein Typ oder eine Variable). Auf Basis dieser Informationen wird dann der weitere Parservorgang gesteuert.
+
+\begin{lstlisting}[language=Java]
+boolean isCast() {
+	// get next token
+	Token x = scanner.Peek();
+
+	// if it is not an identifier, it cannot be a cast
+	if (x.kind != _ident) 
+		return false;
+
+	// get the identifier
+	Obj obj = tab.find(x.val);
+
+	// check if the identfier declare a type
+	return obj.kind == Obj.TYPE;
+}
+\end{lstlisting}
+
+Um zu \"uberpr\"ufen ob eine Typumwandlung oder ein normaler Klammerausdruck vorliegt wird zuerst der n\"achste Token ermittelt. Dann wird \"uberpr\"uft ob \"uberhaupt ein korrekter Token vorliegt (ident), und falls dies zutrifft wird mit hilfe der Symboltabelle \"uberpr\"uft ob der vorliegende Identifier einen g\"ultigen Typen darstellt.
+
+Es kann dann dieser LL(1) conflict resolvers genutzt werden, um auf Basis der vorliegenden Informationen zu entscheiden, wie bei dem weiteren Parservorgang vorgegangen werden soll. In diesem Fall wird bei vorliegen einer Typkonvertierung eine Explizite Typumwandlung durchgef\"uhrt, welche wenn n\"otig den Abstrakten Syntaxbaum erweitert.
+
+\begin{lstlisting}[language=EBNF]
+//...
+| IF (isCast())                        
+  "(" 
+  Type<out type>
+  ")"
+  Factor<out n>                     (.  n = tab.expliciteTypeCon(n, type); .)
+| "("
+    BinExpr<out n>
+ ")"
+\end{lstlisting}
+
+\subsubsection{Scanner.java}
+
+Diese Datei wird auf Grundlage von CMM.atg und Scanner.frame durch den Parsergenerator Coco/R generiert. 
+
+\subsubsection{Parser.java}
+
+\subsubsection{Node.java}
+
+\subsubsection{Obj.java}
+
+\subsubsection{Compiler.java}
+
+\subsubsection{Error.java}
+
+\subsubsection{NodeList.java}
+
+\subsubsection{Scope.java}
+
+\subsubsection{Strings.java}
+
+\subsubsection{Struct.java}
+
+\subsubsection{Tab.java}

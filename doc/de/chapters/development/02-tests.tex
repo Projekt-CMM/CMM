@@ -17,25 +17,54 @@ W\"ahrend der Softwareentwicklung ist es leicht m\"oglich, ungewollt Fehler zu p
 
 \subsubsection{Testf\"alle}
 
-Bei der entwicklung von Tests ist es unm\"oglich alle Testf\"alle abzudecken. Deshalb beschr\"ankt man sich auf einen Untergruppe von Eingabedaten welche f\"ur den jeweiligen Test relevant erscheinen.
+Bei der Entwicklung von Tests ist es unm\"oglich alle Testf\"alle abzudecken. Deshalb beschr\"ankt man sich auf einen Untergruppe von Eingabedaten welche f\"ur den jeweiligen Test relevant erscheinen.
 
 Dies umfasst nicht nur durchschnittliche Eingabedaten, sondern in besonderem Umfang auch Grenzwerte und fehlerhafte Eingabedaten. Die Testf\"alle sollen daher besonders stark die Teile abdecken, bei denen die Funktion fehlerhaft reagieren kann.
 
 \subsubsection{Black-Box-Test}
 
+\newpage
 \subsection{JUnit}
+
+JUnit ist ein Framework welches dazu verwendet wird automatisierte Unit-Tests zu entwickeln.\footnote{\url{https://de.wikipedia.org/wiki/JUnit}} Es werden verschiedene Testf\"alle entwickelt, welche mithilfe sogenannter Assertion\footnote{\url{https://de.wikipedia.org/wiki/Assertion_(Informatik)}} auf korrekte Ergebnisse \"uberpr\"uft werden k\"onnen.
+
+Ein Funktion wird mithilfe der Annotation\footnote{\url{https://de.wikipedia.org/wiki/Annotation_(Java)}}  @Test als Test definiert. Falls ein Test tempor\"ar deaktiviert werden soll, schreibt man ein @Ignore wodurch der Test einerseits deaktiviert ist, bei der Visualisierung der Testergebnisse aber unter Skipped aufscheint. Dadurch ist im Gegensatz zum Auskommentieren eines Testfalles gew\"ahrleistet, dass ein Programmierer darauf aufmerksam gemacht wird dass bestimmte Testf\"alle nicht durchlaufen werden.
+
+\begin{lstlisting}[language=Java]
+@Test
+public void testCharVal() {
+	Tab tab = createTabObj("");
+
+	// test problematic values
+	assertEquals(tab.charVal("' '"),' ');
+	assertEquals(tab.charVal("'\\n'"),'\n');
+	assertEquals(tab.charVal("'\\0'"),'\0');
+	assertEquals(tab.charVal("'\\''"),'\'');
+
+	// test normal values
+	assertEquals(tab.charVal("'a'"),'a');
+	assertEquals(tab.charVal("'%'"),'%');
+
+	// test wrong values
+	assertEquals(tab.charVal(""),'\0');
+	assertEquals(tab.charVal("'ab'"),'\0');
+	assertEquals(tab.charVal("c"),'\0');
+	assertEquals(tab.charVal("\"string\""),'\0');
+	assertEquals(tab.charVal(null),'\0');
+}
+\end{lstlisting}
 
 \subsection{Fuzzing}
 
-Bei Programmen, welche mit umfangreichen Eingabedaten umgehen m\"ussen, ist schwer m\"oglich alle Testf\"alle abzudecken. Fuzzing\footnote{\url{https://de.wikipedia.org/wiki/Fuzzing}} stellt eine Art Stresstest f\"ur ein Programm dar, welche das Programm mit zuf\"alligen Eingabedaten f\"uttert. Dadurch k\"onnen Probleme entdeckt werden, welche bei anderen Tests nicht bemerkt worden sind.
+Bei Programmen, welche mit umfangreichen Eingabedaten umgehen m\"ussen, ist schwer m\"oglich alle Testf\"alle abzudecken. Fuzzing\footnote{\url{https://de.wikipedia.org/wiki/Fuzzing}} stellt eine Art Stresstest f\"ur ein Programm dar, welches das Programm mit zuf\"alligen Eingabedaten f\"uttert. Dadurch k\"onnen Probleme entdeckt werden, welche bei anderen Tests nicht bemerkt worden sind.
 
-Wir nutzen Fuzzing daf\"ur um den Compiler mit Zuf\"alligen Kombination von Zeichen zu konfrontieren, welcher diese ohne Abst\"urze Verarbeiten muss.
+Wir nutzen Fuzzing daf\"ur um den Compiler mit Zuf\"alligen Kombination von Zeichen zu konfrontieren, welcher dieser ohne Abst\"urze Verarbeiten muss.
 
 \subsection{Statische Codeanalyse}
 
 Es gibt diverse Arten von Fehlern, welche mithilfe einer statischen Codeanalyse\footnote{\url{https://de.wikipedia.org/wiki/Statische_Code-Analyse}} gefunden werden k\"onnen. Diese kann zum Beispiel erkennen ob es m\"oglich ist dass auf ein uninitialisiertes Objekt zugegriffen wird, oder ein Programmierkonstrukt eingesetzt wird, welches im Normalfall nicht das gewollte Verhalten aufweist.
 
-%https://de.wikipedia.org/wiki/FindBugs
+Wir nutzen das Programm FindBugs\footnote{\url{https://de.wikipedia.org/wiki/FindBugs}}, welches den Java-Bytecode auf bekannte Fehlermuster untersucht.
 
 \subsubsection{Beispiele}
 
@@ -47,16 +76,16 @@ In Java gilt das Prinzip Copy by Reference. Dies stellt ein h\"aufiger Fehler f\
 String s1 = "Hello World";
 String s2 = "Hello World";
 if(s1 == s2)
-	System.out.println("s1 is eqal to s2");
+	System.out.println("s1 is equal to s2");
 \end{lstlisting}
 
-Da dies ein oft gemachter Fehler in Java ist, w...
+Der Vergleichsoperator \"uberpr\"uft die Objektadresse, und nicht den Inhalt des Strings. Um den Inhalt zu vergleichen wird die Funktion equals ben\"otigt.
 
 \begin{lstlisting}[language=Java]
 String s1 = "Hello World";
 String s2 = "Hello World";
 if(s1.equals(s2))
-	System.out.println("s1 is eqal to s2");
+	System.out.println("s1 is equal to s2");
 \end{lstlisting}
 
 \htlParagraph{Uninitialisiertes Objekt}
