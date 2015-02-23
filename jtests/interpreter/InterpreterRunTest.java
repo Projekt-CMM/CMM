@@ -347,8 +347,8 @@ public class InterpreterRunTest implements StdInOut {
 	public void testIntExpression() throws Exception {
 		// addition
 		runCode("void main() {"
-				+ "  int i = 1+2;"
-				+ "  int j = 2;"
+				+ "  int i = 1 + 2;"
+				+ "  int j = +2;"
 				+ "  j += i;"
 				+ "  printf(\"%d %d\", i, j);"
 				+ "}");
@@ -356,7 +356,7 @@ public class InterpreterRunTest implements StdInOut {
 
 		// substraction
 		runCode("void main() {"
-				+ "  int i = 5-9;"
+				+ "  int i = 5 - 9;"
 				+ "  int j = -10;"
 				+ "  j -= i;"
 				+ "  printf(\"%d %d\", i, j);"
@@ -365,7 +365,7 @@ public class InterpreterRunTest implements StdInOut {
 
 		// multiplication
 		runCode("void main() {"
-				+ "  int i = 2*5;"
+				+ "  int i = 2 * 5;"
 				+ "  int j = 12;"
 				+ "  j *= i;"
 				+ "  printf(\"%d %d\", i, j);"
@@ -374,22 +374,38 @@ public class InterpreterRunTest implements StdInOut {
 
 		// division
 		runCode("void main() {"
-				+ "  int i = 10/2;"
+				+ "  int i = 10 / 2;"
 				+ "  int j = 30;"
 				+ "  j /= i;"
 				+ "  printf(\"%d %d\", i, j);"
 				+ "}");
 		assertEquals(output, "5 6");
 
+		// division with zero
+		try {
+			runCode("void main() {"
+					+ "  int i = 10 / 0;"
+					+ "}");
+			fail("RunTimeException not thrown");
+		} catch(RunTimeException e) {}
+		
 		// modulo
 		runCode("void main() {"
-				+ "  int i = 15%10;"
+				+ "  int i = 15 % 10;"
 				+ "  int j = 22;"
 				+ "  j %= i;"
 				+ "  printf(\"%d %d\", i, j);"
 				+ "}");
 		assertEquals(output, "5 2");
 
+		// modulo with zero
+		try {
+			runCode("void main() {"
+					+ "  int i = 10 % 0;"
+					+ "}");
+			fail("RunTimeException not thrown");
+		} catch(RunTimeException e) {}
+		
 		// bit and
 		runCode("void main() {"
 				+ "  int i = 0xFF & 0x09;"
@@ -441,5 +457,216 @@ public class InterpreterRunTest implements StdInOut {
 				+ "  printf(\"%d %d\", i, j);"
 				+ "}");
 		assertEquals(output, "2 17");
+		
+		// call int function
+		runCode("int foo() { return 10; }"
+				+ "void main() {"
+				+ "  int i = foo();"
+				+ "  printf(\"%d\", i);"
+				+ "}");
+		assertEquals(output, "10");
+		
+		// typeconversation: float to int
+		runCode("void main() {"
+				+ "  int i = (int)12.345;"
+				+ "  printf(\"%d\", i);"
+				+ "}");
+		assertEquals(output, "12");
+		
+		// typeconversation: char to int
+		runCode("void main() {"
+				+ "  int i = (int)'a';"
+				+ "  printf(\"%d\", i);"
+				+ "}");
+		assertEquals(output, "97");
+		
+		// typeconversation: char to int
+		runCode("void main() {"
+				+ "  int i = (int)false;"
+				+ "  int j = (int)true;"
+				+ "  printf(\"%d %d\", i, j);"
+				+ "}");
+		assertEquals(output, "0 1");
+		
+		// access int inside struct
+		runCode("struct Point { int x; int y; }"
+				+ "void main() {"
+				+ "  Point p;"
+				+ "  p.x = 5;"
+				+ "  p.y = 23;"
+				+ "  printf(\"%d %d\", p.x, p.y);"
+				+ "}");
+		assertEquals(output, "5 23");
+		
+		// access int inside array
+		runCode("void main() {"
+				+ "  int arr[5];"
+				+ "  arr[0] = 120;"
+				+ "  arr[3] = 345;"
+				+ "  printf(\"%d %d\", arr[0], arr[3]);"
+				+ "}");
+		assertEquals(output, "120 345");
+		
+		// arithmetic exception
+		try {
+			runCode("void main() {"
+					+ "  int i = 0xCFFF * 0xCFFF;"
+					+ "}");
+			fail("RunTimeException not thrown");
+		} catch(RunTimeException e) {}
+	}
+	
+	@Test
+	public void testFloatExpression() throws Exception {
+		// addition
+		runCode("void main() {"
+				+ "  float f = 1.1 + 2.2;"
+				+ "  printf(\"%f\", f);"
+				+ "}");
+		assertEquals(Float.parseFloat(output), 3.3, 0.001);
+		
+		runCode("void main() {"
+				+ "  float f = +123.45;"
+				+ "  printf(\"%f\", f);"
+				+ "}");
+		assertEquals(Float.parseFloat(output), 123.45, 0.001);
+
+		// substraction
+		runCode("void main() {"
+				+ "  float f = 5.5 - 3.2;"
+				+ "  printf(\"%f\", f);"
+				+ "}");
+		assertEquals(Float.parseFloat(output), 2.3, 0.001);
+
+		runCode("void main() {"
+				+ "  float f = -987.63;"
+				+ "  printf(\"%f\", f);"
+				+ "}");
+		assertEquals(Float.parseFloat(output), -987.63, 0.001);
+
+		// multiplication
+		runCode("void main() {"
+				+ "  float f = 12.3 * 15.5;"
+				+ "  printf(\"%f\", f);"
+				+ "}");
+		assertEquals(Float.parseFloat(output), 190.65, 0.001);
+
+		// division
+		runCode("void main() {"
+				+ "  float f = 25.13 / 6.3;"
+				+ "  printf(\"%f\", f);"
+				+ "}");
+		assertEquals(Float.parseFloat(output), 3.98889, 0.001);
+
+		// division with zero
+		try {
+			runCode("void main() {"
+					+ "  float f = 123.345 / 0.;"
+					+ "}");
+			fail("RunTimeException not thrown");
+		} catch(RunTimeException e) {}
+				
+		// modulo
+		runCode("void main() {"
+				+ "  float f = 8.2 % 4.4;"
+				+ "  printf(\"%f\", f);"
+				+ "}");
+		assertEquals(Float.parseFloat(output), 3.799999, 0.001);
+
+		// modulo with zero
+		try {
+			runCode("void main() {"
+					+ "  float f = 1.2 % 0.;"
+					+ "}");
+			fail("RunTimeException not thrown");
+		} catch(RunTimeException e) {}
+				
+		// bit and
+		try {
+			runCode("void main() {"
+					+ "  float f = 1.2 & 3.4;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// bit or
+		try {
+			runCode("void main() {"
+					+ "  float f = 2.3 | 4.5;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// bit xor
+		try {
+			runCode("void main() {"
+					+ "  float f = 2.3 ^ 4.5;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// bit neq
+		try {
+			runCode("void main() {"
+					+ "  float f = ~12.34;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// shift left
+		try {
+			runCode("void main() {"
+					+ "  float f = 12.34 << 2;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// shift right
+		try {
+			runCode("void main() {"
+					+ "  float f = 1.2 >> 3;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+				
+		// call float function
+		runCode("float foo() { return 52.16; }"
+				+ "void main() {"
+				+ "  float f = foo();"
+				+ "  printf(\"%f\", f);"
+				+ "}");
+		assertEquals(Float.parseFloat(output), 52.16, 0.001);
+				
+		// typeconversation: int to float
+		runCode("void main() {"
+				+ "  float f = (float)12;"
+				+ "  printf(\"%f\", f);"
+				+ "}");
+		assertEquals(Float.parseFloat(output), 12, 0.001);
+
+		// access float inside struct
+		runCode("struct Point { float x; float y; }"
+				+ "void main() {"
+				+ "  Point p;"
+				+ "  p.x = 123.456;"
+				+ "  printf(\"%f\", p.x);"
+				+ "}");
+		assertEquals(Float.parseFloat(output), 123.456, 0.001);
+				
+		// access float inside array
+		runCode("void main() {"
+				+ "  float arr[5];"
+				+ "  arr[4] = 654.321;"
+				+ "  printf(\"%f\", arr[4]);"
+				+ "}");
+		assertEquals(Float.parseFloat(output), 654.321, 0.001);
+
+		// arithmetic exception
+		/*try {
+			runCode("void main() {"
+					+ "  float f = 0xCFFF * 0xCFFF;"
+					+ "}");
+			fail("RunTimeException not thrown");
+		} catch(RunTimeException e) {}*/
 	}
 }

@@ -847,9 +847,9 @@ BinExpr<out Node res>               (.  int kind;
 =
 Shift<out res>
 { Binop<out kind>
-  Shift<out n>                      (.  if(res == null || res.type == null || !res.type.isPrimitive() 
-                                           || n == null || n.type == null || !n.type.isPrimitive())
-                                            SemErr("type is not a primitive");
+  Shift<out n>                      (.  if(res == null || res.type == null || !res.type.equals(Tab.intType)
+                                           || n == null || n.type == null || !n.type.equals(Tab.intType))
+                                            SemErr("type is not an int");
                                         else {
                                             res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
                                             n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
@@ -863,9 +863,9 @@ Shift<out Node res>                 (.  int kind;
 =
 Expr<out res>
 { Shiftop<out kind>
-  Expr<out n>                       (.  if(res == null || res.type == null || !res.type.isPrimitive()
-                                           || n == null || n.type == null|| !n.type.isPrimitive() || n.type.equals(Tab.boolType))
-                                            SemErr("type is not a primitive except bool");
+  Expr<out n>                       (.  if(res == null || res.type == null || !res.type.equals(Tab.intType)
+                                           || n == null || n.type == null|| !res.type.equals(Tab.intType))
+                                            SemErr("type is not an int");
                                         else {
                                             res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
                                             n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
@@ -946,8 +946,8 @@ Factor<out Node n>                  (.  Struct type;
                                             SemErr("type is not a primitive except bool");
                                         else
                                             n = new Node(Node.PLUS,n,null,n.type); .)
-| "~" Factor<out n>                 (.  if(n == null || !n.type.isPrimitive() || n.type.equals(Tab.boolType))
-                                            SemErr("type is not a primitive except bool");
+| "~" Factor<out n>                 (.  if(n == null || !n.type.isPrimitive() || !n.type.equals(Tab.intType))
+                                            SemErr("type is not an int");
                                         else
                                             n = new Node(Node.BITNEQ,n,null,n.type); .)
 | IF (isCast())                        
