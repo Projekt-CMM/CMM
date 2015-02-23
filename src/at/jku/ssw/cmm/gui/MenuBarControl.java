@@ -55,14 +55,16 @@ public class MenuBarControl {
 		for( JMenuItem mi : this.list ){
 			mi.setEnabled(false);
 		}
-		this.recentMI.setEnabled(false);
+		if( this.recentMI != null )
+			this.recentMI.setEnabled(false);
 	}
 	
 	public void unlockAll(){
 		for( JMenuItem mi : this.list ){
 			mi.setEnabled(true);
 		}
-		this.recentMI.setEnabled(true);
+		if( this.recentMI != null )
+			this.recentMI.setEnabled(true);
 	}
 	
 	public void setRecentMenu( JMenu mi ){
