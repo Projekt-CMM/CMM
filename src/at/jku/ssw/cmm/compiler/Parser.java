@@ -584,9 +584,9 @@ public class Parser {
 		while (la.kind == 33 || la.kind == 34 || la.kind == 35) {
 			kind = Binop();
 			n = Shift();
-			if(res == null || res.type == null || !res.type.equals(Tab.intType)
-			  || n == null || n.type == null || !n.type.equals(Tab.intType))
-			   SemErr("type is not an int");
+			if(res == null || res.type == null || !(res.type.equals(Tab.intType) || res.type.equals(Tab.boolType))
+			  || n == null || n.type == null || !(n.type.equals(Tab.intType) || n.type.equals(Tab.boolType)))
+			   SemErr("type is not an int or bool");
 			else {
 			   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
 			   n = tab.doImplicitCastByAritmetic(n, res.type, n.type);

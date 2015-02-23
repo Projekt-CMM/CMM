@@ -345,7 +345,7 @@ public final class Interpreter {
 			return BoolExpr(p.left) || BoolExpr(p.right);
 		case Node.BITXOR:
 			return BoolExpr(p.left) ^ BoolExpr(p.right);
-			
+
 		case Node.CALL:								//Opens new Integer c-- Function
 			Call(p);
 			return Memory.getBoolReturnValue();		//getting return Value						

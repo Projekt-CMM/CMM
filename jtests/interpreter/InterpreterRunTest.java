@@ -344,6 +344,139 @@ public class InterpreterRunTest implements StdInOut {
 	}
 	
 	@Test
+	public void testBoolExpression() throws Exception {
+		// addition
+		try {
+			runCode("void main() {"
+					+ "  bool b = true + false;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// substraction
+		try {
+			runCode("void main() {"
+					+ "  bool b = true - false;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// multiplication
+		try {
+			runCode("void main() {"
+					+ "  bool b = false * true;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// division
+		try {
+			runCode("void main() {"
+					+ "  bool b = true / true;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+		
+		// modulo
+		try {
+			runCode("void main() {"
+					+ "  bool b = true % true;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+		
+		// bit and
+		runCode("void main() {"
+				+ "  bool b1 = true & true;"
+				+ "  bool b2 = false & true;"
+				+ "  bool b3 = false & false;"
+				+ "  printf(\"%d %d %d\", b1, b2, b3);"
+				+ "}");
+		assertEquals(output, "1 0 0");
+
+		// bit or
+		runCode("void main() {"
+				+ "  bool b1 = true | true;"
+				+ "  bool b2 = false | true;"
+				+ "  bool b3 = false | false;"
+				+ "  printf(\"%d %d %d\", b1, b2, b3);"
+				+ "}");
+		assertEquals(output, "1 1 0");
+
+		// bit xor
+		runCode("void main() {"
+				+ "  bool b1 = true ^ true;"
+				+ "  bool b2 = false ^ true;"
+				+ "  bool b3 = false ^ false;"
+				+ "  printf(\"%d %d %d\", b1, b2, b3);"
+				+ "}");
+		assertEquals(output, "0 1 0");
+
+		// bit neq
+		try {
+			runCode("void main() {"
+					+ "  bool b = ~true;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// shift left
+		try {
+			runCode("void main() {"
+					+ "  bool b = true << 1;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// shift right
+		try {
+			runCode("void main() {"
+					+ "  bool b = true >> 2;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+		
+		// call bool function
+		runCode("bool foo() { return true; }"
+				+ "bool bar() { return false; }"
+				+ "void main() {"
+				+ "  bool b1 = foo();"
+				+ "  bool b2 = bar();"
+				+ "  printf(\"%d %d\", b1, b2);"
+				+ "}");
+		assertEquals(output, "1 0");
+		
+		// typeconversation: int to bool
+		runCode("void main() {"
+				+ "  bool b1 = (bool)1;"
+				+ "  bool b2 = (bool)0;"
+				+ "  bool b3 = (bool)123;"
+				+ "  printf(\"%d %d %d\", b1, b2, b3);"
+				+ "}");
+		assertEquals(output, "1 0 1");
+		
+		// access bool inside struct
+		runCode("struct Point { bool x; bool y; }"
+				+ "void main() {"
+				+ "  Point p;"
+				+ "  p.x = true;"
+				+ "  p.y = false;"
+				+ "  printf(\"%d %d\", p.x, p.y);"
+				+ "}");
+		assertEquals(output, "1 0");
+		
+		// access bool inside array
+		runCode("void main() {"
+				+ "  bool arr[5];"
+				+ "  arr[0] = true;"
+				+ "  arr[3] = false;"
+				+ "  arr[4] = true;"
+				+ "  printf(\"%d %d %d\", arr[0], arr[3], arr[4]);"
+				+ "}");
+		assertEquals(output, "1 0 1");
+	}
+
+	@Test
 	public void testIntExpression() throws Exception {
 		// addition
 		runCode("void main() {"
@@ -480,7 +613,7 @@ public class InterpreterRunTest implements StdInOut {
 				+ "}");
 		assertEquals(output, "97");
 		
-		// typeconversation: char to int
+		// typeconversation: bool to int
 		runCode("void main() {"
 				+ "  int i = (int)false;"
 				+ "  int j = (int)true;"

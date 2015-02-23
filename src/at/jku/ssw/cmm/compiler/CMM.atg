@@ -847,9 +847,9 @@ BinExpr<out Node res>               (.  int kind;
 =
 Shift<out res>
 { Binop<out kind>
-  Shift<out n>                      (.  if(res == null || res.type == null || !res.type.equals(Tab.intType)
-                                           || n == null || n.type == null || !n.type.equals(Tab.intType))
-                                            SemErr("type is not an int");
+  Shift<out n>                      (.  if(res == null || res.type == null || !(res.type.equals(Tab.intType) || res.type.equals(Tab.boolType))
+                                           || n == null || n.type == null || !(n.type.equals(Tab.intType) || n.type.equals(Tab.boolType)))
+                                            SemErr("type is not an int or bool");
                                         else {
                                             res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
                                             n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
