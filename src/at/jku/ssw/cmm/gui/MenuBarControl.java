@@ -36,7 +36,8 @@ public class MenuBarControl {
 	public MenuBarControl( MenuBarEventListener listener ){
 		this.list = new LinkedList<>();
 		this.listener = listener;
-		this.recentMI = null;
+		//this.recentMI = null;
+		this.recentMI = new JMenu();
 	}
 	
 	private final List<JMenuItem> list;

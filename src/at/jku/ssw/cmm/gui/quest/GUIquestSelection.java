@@ -156,7 +156,7 @@ public class GUIquestSelection {
 		
 		if(questList == null)
 			return jTablePanel;
-		
+	
 		
 		//jTable = new JTable(data, columnNames);
 		DefaultTableModel model = new DefaultTableModel(){
@@ -182,6 +182,11 @@ public class GUIquestSelection {
 		jTable.getColumnModel().getColumn(2).setMinWidth(100);
 		
 		jTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION); 
+		
+		//TODO
+		jTable.setFillsViewportHeight(true);
+		jTable.setMinimumSize(new Dimension(200,200));
+		jTable.setPreferredSize(new Dimension(200,200));	
 		
 		
 		//Adding Data

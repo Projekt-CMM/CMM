@@ -123,7 +123,7 @@ private DataNodeExample getFolderView(String path, DataNodeExample node, int lay
 				subNode = new DataNodeExample(tListener, b, button);
 			}
 		}else{
-			if(!isPathQuest(path + File.separator + subfolder))
+			if(!Quest.isPathQuest(path + File.separator + subfolder))
 				//adding an empty subNode
 				subNode = new DataNodeExample(tListener, "", "");
 		}
@@ -148,7 +148,7 @@ private boolean isPackage(String path){
 	//Searching for a Quest
 	if(subFolders != null)
 		for(String sub : subFolders){
-			if(isPathQuest(path + File.separator + sub)){
+			if(Quest.isPathQuest(path + File.separator + sub)){
 				System.out.println("Package Path" + path + File.separator + sub);
 				return true;
 			}
@@ -158,25 +158,5 @@ private boolean isPackage(String path){
 	return false;
 }
 
-/**
- * Checks if the Path contains a Quest
- * @param path
- * @return
- */
-private boolean isPathQuest(String path){
-	
-	List<String> fileNames = Quest.ReadFileNames(path);
-	
-	//Hide Folders which are Quest Folders
-	if(fileNames != null && fileNames.contains(Quest.FILE_REF) &&
-			fileNames.contains(Quest.FILE_DESCRIPTION) &&
-			fileNames.contains(Quest.FILE_INPUT_CMM)){
-		
-		//Only adding Quest Nodes
-		return true;
-	}else
-	
-	return false;
-}
 	
 }

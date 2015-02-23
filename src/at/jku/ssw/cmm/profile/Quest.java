@@ -575,6 +575,64 @@ public class Quest {
 		this.attribute = attribute;
 	}
 	
+	
+	/**
+	 * Checks if the Path contains a Quest
+	 * @param path
+	 * @return true if the Path contains a Quest
+	 */
+	public static boolean isPathQuest(String path){
+		
+		List<String> fileNames = Quest.ReadFileNames(path);
+		
+		//Hide Folders which are Quest Folders
+		if(fileNames != null && fileNames.contains(Quest.FILE_REF) &&
+				fileNames.contains(Quest.FILE_DESCRIPTION) &&
+				fileNames.contains(Quest.FILE_INPUT_CMM)){
+			
+			//Only adding Quest Nodes
+			return true;
+		}else
+		
+		return false;
+	}
+	
+	
+	/**
+	 * TODO Max Folders without a Quest to go..
+	 * Iterating through the Folders and checking if there is a Quest
+	 * @param path
+	 * @param path: "max Folder to go into"
+	 * @return
+	 */
+	public static boolean containsQuests(String path, int max){
+		//Returning if the Value Max is too high
+		if(max == 0)
+			return false;
+		
+		//Checking if there is a Quest in the Current Folder
+		if(isPathQuest(path))
+			return true;
+		//Iterate Through all other Folders
+		else{
+			List<String> subFolders = Quest.ReadFolderNames(path);
+			if(subFolders != null){
+				for(String subFolder : subFolders){
+					boolean check = containsQuests(path + File.separator + subFolder,--max);
+					System.out.println(subFolder);
+					if(check){
+						return true;
+					}
+				}
+			}
+			
+		}
+	
+		
+		//Checking if the Current Path is a Quest Path
+		return false;
+	}
+	
 /*	public boolean isOptional() {
 		return optional;
 	}
