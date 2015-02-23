@@ -1,5 +1,7 @@
 package at.jku.ssw.cmm.gui.treetable.var;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.Color;
 
 import javax.swing.Icon;
@@ -32,7 +34,8 @@ public class TreeStructImageRenderer extends DefaultTreeCellRenderer {
 		if (node.getName().endsWith("()")) {
 			setOpenIcon(function);
 			setClosedIcon(function);
-		} else if (node.getName().endsWith(".cmm")) {
+			setLeafIcon(function);
+		} else if (node.getName().endsWith(".cmm")||node.getName().equals(_("Unnamed"))) {
 			setOpenIcon(cmm);
 			setClosedIcon(cmm);
 			setLeafIcon(cmm);

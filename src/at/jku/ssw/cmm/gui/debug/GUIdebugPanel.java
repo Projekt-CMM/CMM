@@ -307,6 +307,15 @@ public class GUIdebugPanel {
 			this.setErrorModeDirect(e1.getMessage(), e1.getFile(), e1.getLine());
 						
 			return false;
+		} catch (Exception e1) {
+			Object[] e = { 1, 0, null };
+			this.main.getLeftPanel().getSourceCodeRegister().clear();
+			this.main.getLeftPanel().getSourceCodeRegister().add(e);
+			
+			// Preprocessor error
+			this.setErrorModeDirect("Preprocessor." + e1, "", -1);
+						
+			return false;
 		}
 
 		/* --- Code statistics --- */
@@ -339,7 +348,12 @@ public class GUIdebugPanel {
 		/* --- end of statistics --- */
 
 		// Compile
-		at.jku.ssw.cmm.compiler.Error e = compileManager.compile(sourceCode);
+		at.jku.ssw.cmm.compiler.Error e = null;
+		try {
+			e = compileManager.compile(sourceCode);
+		} catch(Exception e1) {
+			this.setErrorMode("Compiler." + e1, -1, false);
+		}
 
 		// compiler returns errors
 		if (e != null) {

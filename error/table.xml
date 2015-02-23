@@ -292,4 +292,12 @@
 	<error id="no input data">
 		<file>gui/noinput.html</file>
 	</error>
+
+	<!--### Unknown Exceptions ###-->
+	<error id="Preprocessor.([\w./]+)">
+		<file>exception/preprocessor.html</file>
+	</error>
+	<error id="Compiler.([\w./]+)">
+		<file>exception/compiler.html</file>
+	</error>
 </errorTable>

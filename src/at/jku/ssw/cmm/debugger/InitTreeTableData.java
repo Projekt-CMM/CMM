@@ -238,14 +238,18 @@ public class InitTreeTableData {
 				//Normal array
 				if( obj.type.elements > 0 )
 					node.add(init, readArray(init, obj, node.getChild(obj.name, nPars > 0 ? "<html><b>array</b></html>" : "array", "", -1, obj.line), address + obj.adr, main));
-				//Reference array TODO
+				//Reference array
 				else
 					node.add(init, node.getChild(obj.name, nPars > 0 ? "<html><b>array</b></html>" : "array", _("reference"), address + obj.adr, obj.line));
 			}
 			//Reading a STRUCTURE
 			else if( obj.type.kind == Struct.STRUCT && obj.kind != Obj.PROC && obj.kind != Obj.TYPE && !obj.library ){
-				VarDataNode n = readVariables( init, obj.type.fields, node.getChild(obj.name, nPars > 0 ? "<html><b>struct</b></html>" : "struct", "", -1, obj.line), address + obj.adr, main, 0 );
-				node.add(init, n);
+				if( obj.isRef )
+					node.add(init, new VarDataNode(obj.name, nPars > 0 ? "<html><b>struct</b></html>" : "struct", "reference", null, -1, obj.line));
+				else {
+					VarDataNode n = readVariables( init, obj.type.fields, node.getChild(obj.name, nPars > 0 ? "<html><b>struct</b></html>" : "struct", "", -1, obj.line), address + obj.adr, main, 0 );
+					node.add(init, n);
+				}
 			}
 			//READING A STRING
 			else if( obj.type.kind == Struct.STRING && obj.kind != Obj.PROC && !obj.library ){

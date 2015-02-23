@@ -100,7 +100,7 @@ public class GUIrightPanel {
 	/**
 	 * A reference to the quest/profile info panel.
 	 */
-	private GUIProfilePanel questPanel;
+	private ProfilePanel2 questPanel;
 	
 	/**
 	 * A reference to the panel controller for quest success tests
@@ -206,9 +206,8 @@ public class GUIrightPanel {
 			tabbedPane.add(jTestPanel, _("Quest"));
 			
 			
-			jQuestPanel.setLayout(new BorderLayout());
-			questPanel = new GUIProfilePanel(jQuestPanel, main);
-			tabbedPane.add(jQuestPanel, _("Profile"), 2);
+			questPanel = new ProfilePanel2(main);
+			tabbedPane.add(questPanel.init(), _("Profile"), 2);
 		}
 		
 		tabbedPane.setMinimumSize(new Dimension(250, 400));
@@ -228,7 +227,7 @@ public class GUIrightPanel {
 	/**
 	 * @return A reference to the quest/profile info panel manager
 	 */
-	public GUIProfilePanel getProfilePanel() {
+	public ProfilePanel2 getProfilePanel() {
 		return this.questPanel;
 	}
 	

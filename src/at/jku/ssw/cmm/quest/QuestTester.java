@@ -34,10 +34,20 @@ import at.jku.ssw.cmm.preprocessor.Preprocessor;
 import at.jku.ssw.cmm.quest.exception.CompilerErrorException;
 
 public class QuestTester extends Thread {
+	
+	public static void main(String[] args) {
+		
+		QuestTester tester = new QuestTester(new TestReplyMock(),
+				"packages/1 Erste Schritte/1. Hello World/input.txt",
+				"packages/1 Erste Schritte/1. Hello World/ref.cmm",
+				"packages/1 Erste Schritte/1. Hello World/user.cmm",
+				null);
+		tester.run();
+	}
 
 	public static final int STEPS = 5;
 
-	public QuestTester(TestReply testReply, String generator, String verifier, String usercode, String[] ignore) {
+	public QuestTester(TestReply testReply, String generator, String verifier, String usercode, Object ignore) {
 		
 		this.testReply = testReply;
 		
@@ -54,7 +64,7 @@ public class QuestTester extends Thread {
 	private final String generator;
 	private final String verifier;
 	private final String usercode;
-	private final String[] ignore;	//TODO user regex
+	private final Object ignore;	//TODO user regex
 
 	private final QuestRun questRun;
 
@@ -215,14 +225,25 @@ public class QuestTester extends Thread {
 	
 	private boolean equalOutput(String s1, String s2){
 		
-		// Remove signs which shall be ignored
-		if( ignore != null ){
-			for( String c : ignore ){
-				s1 = s1.replace(c, "");
-				s2 = s2.replace(c, "");
-			}
-		}
+		if( this.ignore == null )
+			return s1.equals(s2);
 		
-		return s1.equals(s2);
+		if( this.ignore instanceof String[] ) {
+			String[] ignore = (String[]) this.ignore;
+			// Remove signs which shall be ignored
+			if( ignore != null ){
+				for( String c : ignore ){
+					s1 = s1.replace(c, "");
+					s2 = s2.replace(c, "");
+				}
+			}
+			return s1.equals(s2);
+		}
+		if( this.ignore instanceof String ) {
+			s1.replaceAll((String) this.ignore, "");
+			s2.replaceAll((String) this.ignore, "");
+			return s1.equals(s2);
+		}
+		throw new IllegalArgumentException();
 	}
 }
