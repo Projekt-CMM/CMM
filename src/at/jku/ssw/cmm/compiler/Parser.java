@@ -1167,6 +1167,8 @@ public class Parser {
 				e = BinExpr();
 				if(con == null || e == null || con.type == null || e.type == null)
 				   SemErr("please check condition");
+				else if(con.type.equals(Tab.boolType) && !(kind == Node.EQL || kind == Node.NEQ))
+				   SemErr("condition with boolean only support equal and not equal and not operator");
 				else {
 				   if((!con.type.isPrimitive() && !con.type.equals(Tab.stringType)) || (!e.type.isPrimitive() && !e.type.equals(Tab.stringType)))
 				       SemErr("type is not a primitive or string");

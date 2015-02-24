@@ -344,6 +344,175 @@ public class InterpreterRunTest implements StdInOut {
 	}
 	
 	@Test
+	public void testStatement() throws Exception {
+		// TODO: Assign
+		
+		// TODO: CALL
+		
+		// TODO: STATSEQ
+		
+		// no return specified
+		try {
+			runCode("int foo() {}"
+					+ "void main() {"
+					+ "  int i = foo();"
+					+ "}");
+			fail("RunTimeException not thrown");
+		} catch(RunTimeException e) {}
+		
+		// return int
+		
+		// return ...
+		
+		// if
+		runCode("void main() {"
+				+ "  if(true) {"
+				+ "    print('1');"
+				+ "  }"
+				+ "  if(false)"
+				+ "    print('2');"
+				+ "}");
+		assertEquals(output, "1");
+
+		// if-else
+		runCode("void main() {"
+				+ "  if(true) {"
+				+ "    print('1');"
+				+ "  } else {"
+				+ "    print('2');"
+				+ "  }"
+				+ "  if(false)"
+				+ "    print('3');"
+				+ "  else"
+				+ "    print('4');"
+				+ "}");
+		assertEquals(output, "14");
+		
+		// while
+		runCode("void main() {"
+				+ "  int i = 0;"
+				+ "  while(i < 10) {"
+				+ "    i ++;"
+				+ "    if(i == 5)"
+				+ "      continue;"
+				+ "    if(i == 8)"
+				+ "      break;"
+				+ "    printf(\"%d\", i);"
+				+ "  }"
+				+ "}");
+		assertEquals(output, "123467");
+
+		runCode("void main() {"
+				+ "  int i = 0;"
+				+ "  while(i < 5) {"
+				+ "    printf(\"%d\", i);"
+				+ "    i ++;"
+				+ "  }"
+				+ "}");
+		assertEquals(output, "01234");
+		
+		runCode("void main() {"
+				+ "  while(read() != 'c');"
+				+ "  print(read());"
+				+ "}", "abcde");
+		assertEquals(output, "d");
+		
+		// do while
+		runCode("void main() {"
+				+ "  int i = 0;"
+				+ "  do {"
+				+ "    i ++;"
+				+ "    if(i == 5)"
+				+ "      continue;"
+				+ "    if(i == 8)"
+				+ "      break;"
+				+ "    printf(\"%d\", i);"
+				+ "  } while(i < 10);"
+				+ "}");
+		assertEquals(output, "123467");
+
+		runCode("void main() {"
+				+ "  int i = 0;"
+				+ "  do {"
+				+ "    printf(\"%d\", i);"
+				+ "    i ++;"
+				+ "  } while(false);"
+				+ "}");
+		assertEquals(output, "0");
+
+		// for
+		runCode("void main() {"
+				+ "  int i;"
+				+ "  for(i = 0; i < 10; i++) {"
+				+ "    if(i == 2)"
+				+ "      continue;"
+				+ "    if(i == 5)"
+				+ "      break;"
+				+ "    printf(\"%d\", i);"
+				+ "  }"
+				+ "}");
+		assertEquals(output, "0134");
+		
+		runCode("void main() {"
+				+ "  int i = 0;"
+				+ "  for(; i < 3; i++)"
+				+ "    printf(\"%d\", i);"
+				+ "}");
+		assertEquals(output, "012");
+		
+		runCode("void main() {"
+				+ "  int i = 0;"
+				+ "  for(; i < 6;) {"
+				+ "    printf(\"%d\", i);"
+				+ "    i += 2;"
+				+ "  }"
+				+ "}");
+		assertEquals(output, "024");
+		
+		runCode("void main() {"
+				+ "  int i;"
+				+ "  for(i = 0; i < 6; i++);"
+				+ "  printf(\"%d\", i);"
+				+ "}");
+		assertEquals(output, "6");
+
+		// switch
+		runCode("void main() {"
+				+ "  int i;"
+				+ "  for(i = 0; i < 6; i++) {"
+				+ "    switch(i) {"
+				+ "      case 0:"
+				+ "        print('a');"
+				+ "        break;"
+				+ "      case 2:"
+				+ "        print('e');"
+				+ "      default:"
+				+ "        printf(\"%d\", i);"
+				+ "        break;"
+				+ "      case 3:"
+				+ "        print('d');"
+				+ "        break;"
+				+ "    }"
+				+ "  }"
+				+ "}");
+		assertEquals(output, "a1e2d45");
+		
+		runCode("void main() {"
+				+ "  int i;"
+				+ "  for(i = 0; i < 6; i++) {"
+				+ "    switch(i) {"
+				+ "      case 1:"
+				+ "      case 3:"
+				+ "        printf(\"%d\", i);"
+				+ "        break;"
+				+ "    }"
+				+ "  }"
+				+ "}");
+		assertEquals(output, "13");
+	}
+	
+	
+	@Test
 	public void testBoolExpression() throws Exception {
 		// addition
 		try {
@@ -1140,5 +1309,360 @@ public class InterpreterRunTest implements StdInOut {
 				+ "  printf(arr[0] + \" \"+ arr[3]);"
 				+ "}");
 		assertEquals(output, "ar0 bar3");
+	}
+	
+	@Test
+	public void testIntCondition() throws Exception {		
+		// condition with ident
+		runCode("void main() {"
+				+ "  int i1 = 12;"
+				+ "  int i2 = 0;"
+				+ "  if(i1)"
+				+ "    print('d');"
+				+ "  if(i2)"
+				+ "    print('s');"
+				+ "}");
+		assertEquals(output, "d");
+
+		// int condition
+		runCode("void main() {"
+				+ "  if(1)"
+				+ "    print('d');"
+				+ "  if(1234)"
+				+ "    print('a');"
+				+ "  if(0)"
+				+ "    print('s');"
+				+ "}");
+		assertEquals(output, "da");
+		
+		// equal condition
+		runCode("void main() {"
+				+ "  if(15 == 15)"
+				+ "    print('s');"
+				+ "  if(12 == 13)"
+				+ "    print('d');"
+				+ "}");
+		assertEquals(output, "s");
+		
+		// not equal condition
+		runCode("void main() {"
+				+ "  if(15 != 15)"
+				+ "    print('t');"
+				+ "  if(12 != 13)"
+				+ "    print('z');"
+				+ "}");
+		assertEquals(output, "z");
+		
+		// lesser condition
+		runCode("void main() {"
+				+ "  if(15 < 14)"
+				+ "    print('a');"
+				+ "  if(15 < 15)"
+				+ "    print('b');"
+				+ "  if(15 < 16)"
+				+ "    print('c');"
+				+ "}");
+		assertEquals(output, "c");
+		
+		// lesser equal condition
+		runCode("void main() {"
+				+ "  if(15 <= 14)"
+				+ "    print('a');"
+				+ "  if(15 <= 15)"
+				+ "    print('b');"
+				+ "  if(15 <= 16)"
+				+ "    print('c');"
+				+ "}");
+		assertEquals(output, "bc");
+		
+		// greater condition
+		runCode("void main() {"
+				+ "  if(15 > 14)"
+				+ "    print('a');"
+				+ "  if(15 > 15)"
+				+ "    print('b');"
+				+ "  if(15 > 16)"
+				+ "    print('c');"
+				+ "}");
+		assertEquals(output, "a");
+				
+		// greater equal condition
+		runCode("void main() {"
+				+ "  if(15 >= 14)"
+				+ "    print('a');"
+				+ "  if(15 >= 15)"
+				+ "    print('b');"
+				+ "  if(15 >= 16)"
+				+ "    print('c');"
+				+ "}");
+		assertEquals(output, "ab");
+		
+		// call condition
+		runCode("int foo() {"
+				+ "  return 123;"
+				+ "}"
+				+ "int bar() {"
+				+ "  return 0;"
+				+ "}"
+				+ "void main() {"
+				+ "  if(foo())"
+				+ "    print('f');"
+				+ "  if(bar())"
+				+ "    print('b');"
+				+ "}");
+		assertEquals(output, "f");
+	}
+
+	@Test
+	public void testFloatCondition() throws Exception {				
+		// equal condition
+		runCode("void main() {"
+				+ "  if(15.5 == 15.5)"
+				+ "    print('s');"
+				+ "  if(12.2 == 13.3)"
+				+ "    print('d');"
+				+ "}");
+		assertEquals(output, "s");
+		
+		// not equal condition
+		runCode("void main() {"
+				+ "  if(15.5 != 15.5)"
+				+ "    print('t');"
+				+ "  if(12.2 != 13.3)"
+				+ "    print('z');"
+				+ "}");
+		assertEquals(output, "z");
+		
+		// lesser condition
+		runCode("void main() {"
+				+ "  if(15.5 < 14.4)"
+				+ "    print('a');"
+				+ "  if(15.5 < 15.5)"
+				+ "    print('b');"
+				+ "  if(15.5 < 16.6)"
+				+ "    print('c');"
+				+ "}");
+		assertEquals(output, "c");
+		
+		// lesser equal condition
+		runCode("void main() {"
+				+ "  if(15.5 <= 14.4)"
+				+ "    print('a');"
+				+ "  if(15.5 <= 15.5)"
+				+ "    print('b');"
+				+ "  if(15.5 <= 16.6)"
+				+ "    print('c');"
+				+ "}");
+		assertEquals(output, "bc");
+		
+		// greater condition
+		runCode("void main() {"
+				+ "  if(15.5 > 14.4)"
+				+ "    print('a');"
+				+ "  if(15.5 > 15.5)"
+				+ "    print('b');"
+				+ "  if(15.5 > 16.6)"
+				+ "    print('c');"
+				+ "}");
+		assertEquals(output, "a");
+				
+		// greater equal condition
+		runCode("void main() {"
+				+ "  if(15.5 >= 14.4)"
+				+ "    print('a');"
+				+ "  if(15.5 >= 15.5)"
+				+ "    print('b');"
+				+ "  if(15.5 >= 16.6)"
+				+ "    print('c');"
+				+ "}");
+		assertEquals(output, "ab");
+	}
+
+	@Test
+	public void testCharCondition() throws Exception {				
+		// equal condition
+		runCode("void main() {"
+				+ "  if('c' == 'c')"
+				+ "    print('s');"
+				+ "  if('b' == 'c')"
+				+ "    print('d');"
+				+ "}");
+		assertEquals(output, "s");
+		
+		// not equal condition
+		runCode("void main() {"
+				+ "  if('c' != 'c')"
+				+ "    print('t');"
+				+ "  if('a' != 'b')"
+				+ "    print('z');"
+				+ "}");
+		assertEquals(output, "z");
+		
+		// lesser condition
+		runCode("void main() {"
+				+ "  if('c' < 'b')"
+				+ "    print('a');"
+				+ "  if('c' < 'c')"
+				+ "    print('b');"
+				+ "  if('c' < 'd')"
+				+ "    print('c');"
+				+ "}");
+		assertEquals(output, "c");
+		
+		// lesser equal condition
+		runCode("void main() {"
+				+ "  if('c' <= 'b')"
+				+ "    print('a');"
+				+ "  if('c' <= 'c')"
+				+ "    print('b');"
+				+ "  if('c' <= 'd')"
+				+ "    print('c');"
+				+ "}");
+		assertEquals(output, "bc");
+		
+		// greater condition
+		runCode("void main() {"
+				+ "  if('c' > 'b')"
+				+ "    print('a');"
+				+ "  if('c' > 'c')"
+				+ "    print('b');"
+				+ "  if('c' > 'd')"
+				+ "    print('c');"
+				+ "}");
+		assertEquals(output, "a");
+				
+		// greater equal condition
+		runCode("void main() {"
+				+ "  if('c' >= 'b')"
+				+ "    print('a');"
+				+ "  if('c' >= 'c')"
+				+ "    print('b');"
+				+ "  if('c' >= 'd')"
+				+ "    print('c');"
+				+ "}");
+		assertEquals(output, "ab");
+	}
+
+	@Test
+	public void testBoolCondition() throws Exception {
+		// condition with ident
+		runCode("void main() {"
+				+ "  bool b1 = true;"
+				+ "  bool b2 = false;"
+				+ "  if(b1)"
+				+ "    print('d');"
+				+ "  if(b2)"
+				+ "    print('s');"
+				+ "}");
+		assertEquals(output, "d");
+
+		// bool condition
+		runCode("void main() {"
+				+ "  if(true)"
+				+ "    print('d');"
+				+ "  if(false)"
+				+ "    print('s');"
+				+ "}");
+		assertEquals(output, "d");
+		
+		// equal condition
+		runCode("void main() {"
+				+ "  if(true == true)"
+				+ "    print('s');"
+				+ "  if(true == false)"
+				+ "    print('d');"
+				+ "}");
+		assertEquals(output, "s");
+		
+		// not equal condition
+		runCode("void main() {"
+				+ "  if(true != true)"
+				+ "    print('t');"
+				+ "  if(true != false)"
+				+ "    print('z');"
+				+ "}");
+		assertEquals(output, "z");
+
+		// lesser condition
+		try {
+			runCode("void main() {"
+					+ "  if(true < false)"
+					+ "    print('a');"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+		
+		// lesser equal condition
+		try {
+			runCode("void main() {"
+					+ "  if(true <= false)"
+					+ "    print('a');"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+		
+		// greater condition
+		try {
+			runCode("void main() {"
+					+ "  if(true > false)"
+					+ "    print('a');"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+				
+		// greater equal condition
+		try {
+			runCode("void main() {"
+					+ "  if(true >= false)"
+					+ "    print('a');"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+		
+		// or inside condition
+		runCode("void main() {"
+				+ "  if(true || true)"
+				+ "    print('a');"
+				+ "  if(true || false)"
+				+ "    print('b');"
+				+ "  if(false || false)"
+				+ "    print('c');"
+				+ "}");
+		assertEquals(output, "ab");
+		
+		// and inside condition
+		runCode("void main() {"
+				+ "  if(true && true)"
+				+ "    print('a');"
+				+ "  if(true && false)"
+				+ "    print('b');"
+				+ "  if(false && false)"
+				+ "    print('c');"
+				+ "}");
+		assertEquals(output, "a");
+		
+		// or inside condition
+		runCode("void main() {"
+				+ "  if(!true)"
+				+ "    print('a');"
+				+ "  if(!false)"
+				+ "    print('b');"
+				+ "}");
+		assertEquals(output, "b");
+		
+		// call condition
+		runCode("bool foo() {"
+				+ "  return true;"
+				+ "}"
+				+ "bool bar() {"
+				+ "  return false;"
+				+ "}"
+				+ "void main() {"
+				+ "  if(foo())"
+				+ "    print('f');"
+				+ "  if(bar())"
+				+ "    print('b');"
+				+ "}");
+		assertEquals(output, "f");
 	}
 }

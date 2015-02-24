@@ -325,7 +325,7 @@ public final class Interpreter {
 	 * ident, dot, index
 	 * @throws RunTimeException 
 	 */
-	boolean BoolExpr(Node p) throws ReturnException, AbortException, RunTimeException { //TODO
+	boolean BoolExpr(Node p) throws ReturnException, AbortException, RunTimeException {
 		selectCurrentLine(p);
 		
 		switch (p.kind) {
@@ -372,7 +372,7 @@ public final class Interpreter {
 	 * ident, dot, index
 	 * @throws RunTimeException 
 	 */
-	int IntExpr(Node p) throws ReturnException, AbortException, RunTimeException { //TODO
+	int IntExpr(Node p) throws ReturnException, AbortException, RunTimeException {
 		selectCurrentLine(p);
 		
 		try{
@@ -453,7 +453,7 @@ public final class Interpreter {
 	 * ident, dot, index
 	 * @throws RunTimeException 
 	 */
-	float FloatExpr(Node p) throws AbortException, ReturnException, RunTimeException { //TODO
+	float FloatExpr(Node p) throws AbortException, ReturnException, RunTimeException {
 		selectCurrentLine(p);
 		
 		try {
@@ -512,7 +512,7 @@ public final class Interpreter {
 	 * Char Expressions: Charcon, i2c, ident, dot, index
 	 * @throws RunTimeException 
 	 */
-	char CharExpr(Node p) throws AbortException, ReturnException, RunTimeException { //TODO
+	char CharExpr(Node p) throws AbortException, ReturnException, RunTimeException {
 		selectCurrentLine(p);
 		
 		switch (p.kind) {
@@ -551,7 +551,7 @@ public final class Interpreter {
 		}
 	}
 
-	int StringExpr(Node p) throws AbortException, ReturnException, RunTimeException { //TODO
+	int StringExpr(Node p) throws AbortException, ReturnException, RunTimeException {
 		selectCurrentLine(p);
 		
 		switch (p.kind) {
