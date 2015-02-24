@@ -592,7 +592,7 @@ public class Tab {
 		} else if(type.kind == Struct.CHAR && element.type.kind == Struct.INT) 
 			return new Node(Node.I2C, element, null, Tab.charType);
 		
-		else if(type.kind == Struct.STRING && element.type.kind == Struct.ARR && element.type.elemType.kind == Struct.CHAR) 
+		else if(type.kind == Struct.STRING && element.type.kind == Struct.ARR && element.type.elemType.kind == Struct.CHAR)
 			return new Node(Node.A2S, element, null, Tab.stringType);
 		
 		else {

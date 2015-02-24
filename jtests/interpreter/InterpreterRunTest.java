@@ -802,4 +802,343 @@ public class InterpreterRunTest implements StdInOut {
 			fail("RunTimeException not thrown");
 		} catch(RunTimeException e) {}*/
 	}
+
+	@Test
+	public void testCharExpression() throws Exception {
+		// addition
+		try {
+			runCode("void main() {"
+					+ "  char ch = 'a' + 'b';"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// substraction
+		try {
+			runCode("void main() {"
+					+ "  char ch = 'c' - 'd';"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// multiplication
+		try {
+			runCode("void main() {"
+					+ "  char ch = 'e' * 'f';"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// division
+		try {
+			runCode("void main() {"
+					+ "  char ch = 'g' / 'h';"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+		
+		// modulo
+		try {
+			runCode("void main() {"
+					+ "  char ch = 'i' % 'j';"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+		
+		// bit and
+		try {
+			runCode("void main() {"
+					+ "  char ch = 'k' & 'l';"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// bit or
+		try {
+			runCode("void main() {"
+					+ "  char ch = 'm' | 'n';"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// bit xor
+		try {
+			runCode("void main() {"
+					+ "  char ch = 'o' ^ 'p';"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// bit neq
+		try {
+			runCode("void main() {"
+					+ "  char ch = ~'q';"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// shift left
+		try {
+			runCode("void main() {"
+					+ "  char ch = 'r' << 2;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// shift right
+		try {
+			runCode("void main() {"
+					+ "  char ch = 's' >> 3;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+		
+		// call int function
+		runCode("char foo() { return 'A'; }"
+				+ "void main() {"
+				+ "  char ch = foo();"
+				+ "  printf(\"%c\", ch);"
+				+ "}");
+		assertEquals(output, "A");
+		
+		// typeconversation: int to char
+		runCode("void main() {"
+				+ "  char i = (char)100;"
+				+ "  printf(\"%c\", i);"
+				+ "}");
+		assertEquals(output, "d");
+		
+		// access char inside struct
+		runCode("struct Point { char x; char y; }"
+				+ "void main() {"
+				+ "  Point p;"
+				+ "  p.x = 'X';"
+				+ "  p.y = 'y';"
+				+ "  printf(\"%c %c\", p.x, p.y);"
+				+ "}");
+		assertEquals(output, "X y");
+		
+		// access char inside array
+		runCode("void main() {"
+				+ "  char arr[5];"
+				+ "  arr[0] = 'h';"
+				+ "  arr[3] = 'j';"
+				+ "  printf(\"%c %c\", arr[0], arr[3]);"
+				+ "}");
+		assertEquals(output, "h j");
+		
+		// access char from string
+		runCode("void main() {"
+				+ "  string s = \"abcdefg\";"
+				+ "  char ch1 = s[1];"
+				+ "  char ch2 = s[5];"
+				+ "  printf(\"%c %c\", ch1, ch2);"
+				+ "}");
+		assertEquals(output, "b f");
+		
+		// access char from string reference
+		runCode("void foo(string &str) {"
+				+ "  char ch1 = str[0];"
+				+ "  char ch2 = str[4];"
+				+ "  printf(\"%c %c\", ch1, ch2);"
+				+ "}"
+				+ "void main() {"
+				+ "  string s = \"abcdefg\";"
+				+ "  foo(s);"
+				+ "}");
+		assertEquals(output, "a e");
+		
+		// access char from string array reference
+		runCode("void foo(string str[][]) {"
+				+ "  char ch1 = str[1][2][0];"
+				+ "  char ch2 = str[1][2][6];"
+				+ "  printf(\"%c %c\", ch1, ch2);"
+				+ "}"
+				+ "void main() {"
+				+ "  string s[2][4];"
+				+ "  s[1][2] = \"abcdefg\";"
+				+ "  foo(s);"
+				+ "}");
+		assertEquals(output, "a g");
+		
+		// access negativ index from string
+		try {
+			runCode("void main() {"
+					+ "  string s = \"abcdefg\";"
+					+ "  char ch = s[-1];"
+					+ "}");
+			fail("RunTimeException not thrown");
+		} catch(RunTimeException e) {}
+		
+		// access to high index from string
+		try {
+			runCode("void main() {"
+					+ "  string s = \"abcdefg\";"
+					+ "  char ch = s[10];"
+					+ "}");
+			fail("RunTimeException not thrown");
+		} catch(RunTimeException e) {}
+	}
+
+	@Test
+	public void testStringExpression() throws Exception {
+		// addition
+		runCode("void main() {"
+				+ "  string str = \"abc\" + \"def\";"
+				+ "  printf(str);"
+				+ "}");
+		assertEquals(output, "abcdef");
+
+		// substraction
+		try {
+			runCode("void main() {"
+					+ "  string str = \"abc\" - \"def\";"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// multiplication
+		try {
+			runCode("void main() {"
+					+ "  string str = \"abc\" * \"def\";"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// division
+		try {
+			runCode("void main() {"
+					+ "  string str = \"abc\" / \"def\";"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+		
+		// modulo
+		try {
+			runCode("void main() {"
+					+ "  string str = \"abc\" % \"def\";"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+		
+		// bit and
+		try {
+			runCode("void main() {"
+					+ "  string str = \"abc\" & \"def\";"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// bit or
+		try {
+			runCode("void main() {"
+					+ "  string str = \"abc\" | \"def\";"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// bit xor
+		try {
+			runCode("void main() {"
+					+ "  string str = \"abc\" ^ \"def\";"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// bit neq
+		try {
+			runCode("void main() {"
+					+ "  string str = ~\"abc\";"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// shift left
+		try {
+			runCode("void main() {"
+					+ "  string str = \"abc\" << 2;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+
+		// shift right
+		try {
+			runCode("void main() {"
+					+ "  string str = \"abc\" >> 1;"
+					+ "}");
+			fail("CompilerException not thrown");
+		} catch(CompilerException e) {}
+		
+		// call string function
+		runCode("string foo() { return \"test\"; }"
+				+ "void main() {"
+				+ "  string str = foo();"
+				+ "  printf(str);"
+				+ "}");
+		assertEquals(output, "test");
+		
+		// typeconversation: char to string
+		runCode("void main() {"
+				+ "  string str = 'c';"
+				+ "  printf(str);"
+				+ "}");
+		assertEquals(output, "c");
+		
+		// typeconversation: array to string
+		runCode("void main() {"
+				+ "  char cha[3];"
+				+ "  cha[0] = 'a';"
+				+ "  cha[1] = 'b';"
+				+ "  cha[2] = '\\0';"
+				+ "  string str = (string)cha;"
+				+ "  printf(str);"
+				+ "}");
+		assertEquals(output, "ab");
+		
+		// typeconversation: array to string without \0 at the end
+		try {
+			runCode("void main() {"
+					+ "  char cha[3];"
+					+ "  cha[0] = 'a';"
+					+ "  cha[1] = 'b';"
+					+ "  cha[2] = 'c';"
+					+ "  string str = (string)cha;"
+					+ "  printf(str);"
+					+ "}");
+			fail("RunTimeException not thrown");
+		} catch(RunTimeException e) {}
+		
+		// typeconversation: multi-dim array as reference to string
+		runCode("void foo(char cha[][]) {"
+				+ "  string str = (string)cha[1];"
+				+ "  printf(str);"
+				+ "}"
+				+ "void main() {"
+				+ "  char cha[2][3];"
+				+ "  cha[1][0] = 'c';"
+				+ "  cha[1][1] = 'z';"
+				+ "  cha[1][2] = '\\0';"
+				+ "  foo(cha);"
+				+ "}");
+		assertEquals(output, "cz");
+
+		// access string inside struct
+		runCode("struct Point { string x; string y; }"
+				+ "void main() {"
+				+ "  Point p;"
+				+ "  p.x = \"xX\";"
+				+ "  p.y = \"yY\";"
+				+ "  printf(p.x + \" \" + p.y);"
+				+ "}");
+		assertEquals(output, "xX yY");
+		
+		// access string inside array
+		runCode("void main() {"
+				+ "  string arr[5];"
+				+ "  arr[0] = \"ar0\";"
+				+ "  arr[3] = \"bar3\";"
+				+ "  printf(arr[0] + \" \"+ arr[3]);"
+				+ "}");
+		assertEquals(output, "ar0 bar3");
+	}
 }
