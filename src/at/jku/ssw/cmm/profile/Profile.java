@@ -23,6 +23,7 @@ package at.jku.ssw.cmm.profile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -616,6 +617,7 @@ public class Profile {
 	public void changeProfileImage( String sourcePath) throws IOException, XMLWriteException{
 		String extension = sourcePath.substring(sourcePath.lastIndexOf('.'), sourcePath.length());
 		
+		File oldImage = new File(getInitPath() + File.separator + getProfileimage());
 		
 		//TODO add all file extensions
 		if(sourcePath.endsWith(".bmp") ||
@@ -634,6 +636,10 @@ public class Profile {
 				LoadStatics.copyFileUsingStream(source, dest);
 				setProfileimage(dest.getName());
 				writeProfile();
+				
+				//Deleting old image
+				if(!oldImage.getPath().equals(dest.getPath()))
+					oldImage.delete();
 				
 		}else
 			throw new IOException();

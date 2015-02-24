@@ -98,14 +98,16 @@ public class ProfilePanel2 {
 			if(profile.getInitPath() != null)
 				jProfilePicture.setIcon(LoadStatics.loadIcon(profile.getInitPath() + Profile.sep + profile.getProfileimage(), 128, 128));
 		
-			//Loading temporary choosen Image files
-			else{
+			//Loading temporary chosen Image files
+			else
 				jProfilePicture.setIcon(LoadStatics.loadIcon(profile.getProfileimage(), 128, 128));
-				System.out.println("Current ProfilePic: " + profile.getProfileimage());
-			}
 		
-		if(jProfilePicture.getIcon() == null || (jProfilePicture.getIcon().getIconHeight() == -1 && jProfilePicture.getIcon().getIconWidth() == -1))
+		if(jProfilePicture.getIcon() == null || (jProfilePicture.getIcon().getIconHeight() == -1 && jProfilePicture.getIcon().getIconWidth() == -1)){
 			jProfilePicture.setText(_("Corrupted Avatar"));
+			jProfilePicture.setIcon(LoadStatics.loadIcon(Profile.IMAGE_DEFAULT,	128, 128));
+		}
+		else
+			jProfilePicture.setText("");
 				
 
 		jProfilePicture.revalidate();

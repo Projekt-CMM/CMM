@@ -76,6 +76,7 @@ public class Preprocessor {
 		// parse code
 		int line = offset;		
 		int fileLine = 0;
+		if(sourceCode != null)
 		for( String s : sourceCode.split("\n") ){
 			line ++;
 			fileLine ++;

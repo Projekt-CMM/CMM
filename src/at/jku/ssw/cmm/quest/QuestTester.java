@@ -38,9 +38,9 @@ public class QuestTester extends Thread {
 	public static void main(String[] args) {
 		
 		QuestTester tester = new QuestTester(new TestReplyMock(),
-				"packages/1 Erste Schritte/1. Hello World/input.txt",
-				"packages/1 Erste Schritte/1. Hello World/ref.cmm",
-				"packages/1 Erste Schritte/1. Hello World/user.cmm",
+				"packages/01 Einstieg/01 Simples Hello World/input.cmm",
+				"packages/01 Einstieg/01 Simples Hello World/ref.cmm",
+				"packages/01 Einstieg/01 Simples Hello World/user.cmm",
 				null);
 		tester.run();
 	}
