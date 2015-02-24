@@ -584,9 +584,9 @@ public class Parser {
 		while (la.kind == 33 || la.kind == 34 || la.kind == 35) {
 			kind = Binop();
 			n = Shift();
-			if(res == null || res.type == null || !res.type.isPrimitive() 
-			  || n == null || n.type == null || !n.type.isPrimitive())
-			   SemErr("type is not a primitive");
+			if(res == null || res.type == null || !(res.type.equals(Tab.intType) || res.type.equals(Tab.boolType))
+			  || n == null || n.type == null || !(n.type.equals(Tab.intType) || n.type.equals(Tab.boolType)))
+			   SemErr("type is not an int or bool");
 			else {
 			   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
 			   n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
@@ -1244,9 +1244,9 @@ public class Parser {
 		while (la.kind == 62 || la.kind == 63) {
 			kind = Shiftop();
 			n = Expr();
-			if(res == null || res.type == null || !res.type.isPrimitive()
-			  || n == null || n.type == null|| !n.type.isPrimitive() || n.type.equals(Tab.boolType))
-			   SemErr("type is not a primitive except bool");
+			if(res == null || res.type == null || !res.type.equals(Tab.intType)
+			  || n == null || n.type == null|| !res.type.equals(Tab.intType))
+			   SemErr("type is not an int");
 			else {
 			   res = tab.doImplicitCastByAritmetic(res, res.type, n.type);
 			   n = tab.doImplicitCastByAritmetic(n, res.type, n.type);
@@ -1403,8 +1403,8 @@ public class Parser {
 		} else if (la.kind == 60) {
 			Get();
 			n = Factor();
-			if(n == null || !n.type.isPrimitive() || n.type.equals(Tab.boolType))
-			   SemErr("type is not a primitive except bool");
+			if(n == null || !n.type.isPrimitive() || !n.type.equals(Tab.intType))
+			   SemErr("type is not an int");
 			else
 			   n = new Node(Node.BITNEQ,n,null,n.type); 
 		} else if (isCast()) {

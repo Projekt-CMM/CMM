@@ -345,7 +345,7 @@ public final class Interpreter {
 			return BoolExpr(p.left) || BoolExpr(p.right);
 		case Node.BITXOR:
 			return BoolExpr(p.left) ^ BoolExpr(p.right);
-			
+
 		case Node.CALL:								//Opens new Integer c-- Function
 			Call(p);
 			return Memory.getBoolReturnValue();		//getting return Value						
@@ -519,8 +519,7 @@ public final class Interpreter {
 		case Node.CHARCON:
 			return (char) p.val;					//Returning an Char constant
 		case Node.I2C:
-			if (IntExpr(p.left) >= 0)
-				return (char) IntExpr(p.left);		//Casting an IntExpression to Char
+			return (char) IntExpr(p.left);			//Casting an IntExpression to Char
 		case Node.IDENT:
 			return Memory.loadCharSave(IdentAdr(p.obj),p);			//more at @Adr
 		case Node.DOT:
@@ -552,14 +551,10 @@ public final class Interpreter {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	int StringExpr(Node p) throws AbortException, ReturnException, RunTimeException { //TODO
 		selectCurrentLine(p);
 		
 		switch (p.kind) {
-		case Node.IDENT:
-			return Memory.loadStringAddressSave(Adr(p),p);
-			
 		case Node.PLUS:		//Reads the left and the right String and putting them together
 			return Strings.put(Strings.get(StringExpr(p.left)) + Strings.get(StringExpr(p.right)));
 		case Node.STRINGCON:
@@ -570,16 +565,60 @@ public final class Interpreter {
 		case Node.A2S:
 			String s = "";
 			char ref;
+			int numberOfArrayElements = p.left.type.elements;
+			
+			int baseAdr = Adr(p.left);
 
-			for (int a = 0; a <= p.left.type.size; a++) { 
-				ref = Memory.loadCharSave(Adr(p.left) + p.left.type.elemType.size* a, p); //Left side * CharSize + Main Address 
-				if (ref != '0') {
-					s += ref;			//Putting the Array, together to an String
+			// check if array is a reference, and return array size
+			if(numberOfArrayElements == -1) {
+				Node pHelp = p;
+				
+				for(pHelp = p;pHelp != null && pHelp.kind != Node.IDENT; pHelp = pHelp.left);
+
+				if(pHelp == null)
+					throw new RunTimeException("There is no informations about the array size available", p, currentLine);
+
+				List<Integer>  singleArrayElements = Memory.getMemoryInformation(IdentAdr(pHelp.obj)).arrayElements;
+				
+				// calculate number of array Elements which can be used
+				numberOfArrayElements = singleArrayElements.get(singleArrayElements.size()-1);
+
+				List<Object[]> arrayElements = new ArrayList<>();
+				
+				int arrayElementSize = p.left.type.elemType.size;
+				
+				// create Object which store how much elements the Array store and how big one element is
+				for(int i = singleArrayElements.size()-1; i >= 0 ; i--) {
+					Object[] arrayObj = {singleArrayElements.get(i), arrayElementSize};
+					arrayElementSize *=singleArrayElements.get(i);
+					arrayElements.add(arrayObj);
 				}
-				return Strings.put(s);	//Saving the new String and returns Int Adress
+				
+				arrayElements.remove(0);
+				
+				baseAdr = Adr(p.left, arrayElements);
 			}
+
+			for (int a = 0; a <= numberOfArrayElements; a++) {
+				if (a == numberOfArrayElements)
+					throw new RunTimeException("last Array Element has to be '\\0'", p, currentLine);
+
+				ref = Memory.loadCharSave(baseAdr + p.left.type.elemType.size * a, p); //Left side * CharSize + Main Address
+				
+				if (ref == '\0')
+					break;
+				
+				s += ref;			//Putting the Array, together to an String
+			}
+			return Strings.put(s);	//Saving the new String and returns Int Adress
 		case Node.C2S:
 			return Strings.put(Character.toString(CharExpr(p.left)));
+		case Node.IDENT:						//more at @Adr
+			return Memory.loadStringAddressSave(Adr(p),p);
+		case Node.DOT:							//more at @Adr
+			return Memory.loadStringAddressSave(Adr(p),p);
+		case Node.INDEX:						//more at @Adr
+			return Memory.loadStringAddressSave(Adr(p),p);
 		default:
 			throw new RunTimeException("Not supportet node kind", p, currentLine);
 		}
@@ -1032,6 +1071,7 @@ public final class Interpreter {
 			else if(index >= p.left.type.elements) {
 				throw new RunTimeException("too high index choosen", p, currentLine);
 			}
+
 			return Adr(p.left) + p.left.type.elemType.size * index;
 		case Node.REF://TODO
 			return Adr(p.left);

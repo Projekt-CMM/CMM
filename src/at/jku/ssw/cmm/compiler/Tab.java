@@ -529,7 +529,7 @@ public class Tab {
 	 * @return converted type or make SemError
 	 */
 	public Node impliciteTypeCon(Node element, Struct type) {
-		if(element == null) {
+		if(element == null || element.type == null) {
 			parser.SemErr("cast from 'null' to " +  getNameOfType(type) + " not allowed");
 			return element;
 		} else if(type == null) {
@@ -576,7 +576,7 @@ public class Tab {
 	 * @return converted type or make SemError
 	 */
 	public Node expliciteTypeCon(Node element, Struct type) {
-		if(element == null) {
+		if(element == null || element.type == null) {
 			parser.SemErr("cast from null to " +  getNameOfType(type) + " not allowed");
 			return element;
 		} else if(type == null) {
@@ -592,7 +592,7 @@ public class Tab {
 		} else if(type.kind == Struct.CHAR && element.type.kind == Struct.INT) 
 			return new Node(Node.I2C, element, null, Tab.charType);
 		
-		else if(type.kind == Struct.STRING && element.type.kind == Struct.ARR && element.type.elemType.kind == Struct.CHAR) 
+		else if(type.kind == Struct.STRING && element.type.kind == Struct.ARR && element.type.elemType.kind == Struct.CHAR)
 			return new Node(Node.A2S, element, null, Tab.stringType);
 		
 		else {
