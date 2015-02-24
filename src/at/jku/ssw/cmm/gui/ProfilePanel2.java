@@ -27,13 +27,19 @@ public class ProfilePanel2 {
 	private JLabel jProfilePicture;
 	private JTextField jProfileName;
 	
+	private String profilePicPath;
+	
+	private ProfileListener listener = new ProfileListener(this);
+	
+	//private ProfileSettingsListener listener = new ProfileSettingsListener(main.getSettings());
+	
 	public JPanel init() {
 		
 		JPanel masterPanel = new JPanel();
 		masterPanel.setLayout(new BorderLayout());
 		
 		masterPanel.add(this.initProfileInfo(), BorderLayout.PAGE_START);
-		masterPanel.add(new CentralPanel(this.main.getSettings().getProfile(), null), BorderLayout.CENTER);
+		masterPanel.add(new CentralPanel(this.main.getSettings().getProfile()), BorderLayout.CENTER);
 		
 		return masterPanel;
 	}
@@ -51,13 +57,83 @@ public class ProfilePanel2 {
 		panel.add(this.jProfileName);
 		
 		//Load Profile Image
-		String path = profile.getInitPath() + profile.getProfileimage();
-		System.out.println("Path: " + path);
 		this.jProfilePicture = new JLabel();
-		this.jProfilePicture.setIcon(LoadStatics.loadIcon(path, 120, 120));
+		
+		loadProfilePic();
+		jProfilePicture.setToolTipText("<html><b>" + _("click to change image")
+				+ "</b><br>" + _("click here and select your<br>profile image")
+				+ "</html>");
+		jProfilePicture.addMouseListener(listener.profileImageListener);
 		panel.add(this.jProfilePicture);
 		
 		return panel;
 	}
+	
+	
+	/**
+	 * The choosen Profile Pic Path, in the image selection window
+	 * @return profilePicPath
+	 */
+	public String getProfilePic(){
+		
+		return profilePicPath;
+	}
+	
+	
+	/**
+	 * load the current profile Image
+	 */
+	public void loadProfilePic(){
+		Profile profile = main.getSettings().getProfile();
+		
+		if (profile == null || profile.getProfileimage() == null)
+			jProfilePicture.setIcon(LoadStatics.loadIcon(Profile.IMAGE_DEFAULT,
+					128, 128));
+		else
+			//Loading fixed profile image
+			if(profile.getInitPath() != null)
+				jProfilePicture.setIcon(LoadStatics.loadIcon(profile.getInitPath() + Profile.sep + profile.getProfileimage(), 128, 128));
+		
+			//Loading temporary choosen Image files
+			else{
+				jProfilePicture.setIcon(LoadStatics.loadIcon(profile.getProfileimage(), 128, 128));
+				System.out.println("Current ProfilePic: " + profile.getProfileimage());
+			}
+		
+		if(jProfilePicture.getIcon() == null || (jProfilePicture.getIcon().getIconHeight() == -1 && jProfilePicture.getIcon().getIconWidth() == -1))
+			jProfilePicture.setText(_("Corrupted Avatar"));
+				
+
+		jProfilePicture.revalidate();
+		jProfilePicture.repaint();
+	}
+	
+	/**
+	 * Refreshes the Profile pic, TODO
+	 */
+	public void refreshProfilePic(String profilePicPath){
+		Profile profile = main.getSettings().getProfile();
+		
+		if( profile != null )
+			System.out.println("Current ProfilePic: " + profile.getProfileimage());
+		jProfilePicture.setIcon(LoadStatics.loadIcon(profilePicPath,  128, 128));
+		
+		//Setting for later usage
+		if(jProfilePicture.getIcon().getIconHeight() == -1 && jProfilePicture.getIcon().getIconWidth() == -1)
+			jProfilePicture.setText(_("Corrupted Image"));
+		else{
+			//Only saving if the file is useable, TODO Error field
+			this.profilePicPath = profilePicPath;
+			jProfilePicture.setText("");
+		}
+		
+	}
+	
+	public GUImain getGUImain(){
+		return main;
+	}
+	
+	
+	
 
 }

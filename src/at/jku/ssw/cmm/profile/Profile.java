@@ -260,7 +260,7 @@ public class Profile {
 		String path = profilePath + sep + Profile.FILE_PROFILE;
 		
 		try {
-			profile = ReadProfileXML(path, profile);
+			profile.ReadProfileXML(path);
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
@@ -278,15 +278,12 @@ public class Profile {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	private static Profile ReadProfileXML(String path, Profile profile) throws ParserConfigurationException, SAXException, IOException{
+	private void ReadProfileXML(String path) throws ParserConfigurationException, SAXException, IOException{
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
 		        .newInstance();
 		    DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 		    Document document = docBuilder.parse(new File(path));
-		    profile = readxml(document.getDocumentElement(), profile);
-		    
-	
-			return profile;
+		    readxml(document.getDocumentElement());  
 	}
 	
 	/**
@@ -295,23 +292,23 @@ public class Profile {
 	 * @param profile
 	 * @return profile
 	 */
-	private static Profile readxml(Node node, Profile profile) {
+	private void readxml(Node node) {
 	    //System.out.println(node.getNodeName());
 	    
 		List<Quest> questList = new ArrayList<>();
 		Quest quest = new Quest();
 			if(node.getNodeName().equals(Profile.XML_NAME))
-				 profile.setName(node.getTextContent());
+				 setName(node.getTextContent());
 			
 			if(node.getNodeName().equals(Profile.XML_MASTER))
 				if(node.getTextContent().equals("true"))
-					profile.setMaster(true);
+					setMaster(true);
 							
 			if(node.getNodeName().equals(Profile.XML_PROFILEIMAGE))
-        		profile.setProfileimage(node.getTextContent());
+        		setProfileimage(node.getTextContent());
 			
 			if(node.getNodeName().equals(Profile.XML_CURRENT))
-				profile.setCurrent(node.getTextContent());
+				setCurrent(node.getTextContent());
 			
 			if(node.getNodeName().equals(Profile.XML_STATE)){
 				String s = node.getAttributes().item(0).getTextContent();
@@ -334,7 +331,7 @@ public class Profile {
 				        		
 				        		//getting the relative and absolute Path of the Token
 				        		String relPath = currentNode.getTextContent();
-				        		String absoluteInitPath = profile.getInitPath() + sep + profile.getPackagesPath() + sep + quest.getPackagePath() + sep + Quest.FOLDER_TOKENS;				        		
+				        		String absoluteInitPath = getInitPath() + sep + getPackagesPath() + sep + quest.getPackagePath() + sep + Quest.FOLDER_TOKENS;				        		
 				        		
 				        		quest.setToken(Token.readToken(absoluteInitPath, relPath ));
 				        	}
@@ -342,14 +339,14 @@ public class Profile {
 				    }
 				    
 				    //When the Profile Quests wasn't set
-				    if(profile.getProfileQuests() != null)
-				    	questList = profile.getProfileQuests();
+				    if(getProfileQuests() != null)
+				    	questList = getProfileQuests();
 				    
 				    //if all Components are there than only the Quest will be added to ProfileQuests
 				    if(quest != null && quest.getQuestPath() != null && quest.getPackagePath() != null)
 				    	questList.add(quest);
 
-				    profile.setProfileQuests(questList);
+				    setProfileQuests(questList);
 				}
 			}
 			
@@ -359,14 +356,9 @@ public class Profile {
 			        Node currentNode = nodeList.item(i);
 			        if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
 			            //calls this method for all the children which is Element
-			        	profile = readxml(currentNode, profile);
+			        	readxml(currentNode);
 			        }
 		    }
-				 
-	
-		    
-		    return profile;
-			
 		}
 	
 	/**
@@ -375,8 +367,8 @@ public class Profile {
 	 * @param profilePath
 	 * @throws XMLWriteException 
 	 */
-	public static void writeProfile(Profile profile) throws XMLWriteException{
-		if(profile == null || profile.getInitPath() == null)
+	public void writeProfile() throws XMLWriteException{
+		if(getInitPath() == null)
 			throw new XMLWriteException();
 		
         DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
@@ -384,7 +376,7 @@ public class Profile {
         
  
 
-        String path = profile.getInitPath() + sep + Profile.FILE_PROFILE;
+        String path = getInitPath() + sep + Profile.FILE_PROFILE;
         
             try {
 				icBuilder = icFactory.newDocumentBuilder();
@@ -392,22 +384,22 @@ public class Profile {
             Element mainRootElement = doc.createElementNS(path, Profile.XML_PROFILE);
             doc.appendChild(mainRootElement);
             
-           if(profile.getName() != null) 
-        	   mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_NAME, profile.getName()));
+           if(getName() != null) 
+        	   mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_NAME, getName()));
            
            //TODO Check
-           if(profile.isMaster())
-               mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_MASTER, profile.isMaster() +""));
+           if(isMaster())
+               mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_MASTER, isMaster() +""));
         	   
-           if(profile.getProfileimage() != null)
-            	mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_PROFILEIMAGE, profile.getProfileimage()));
+           if(getProfileimage() != null)
+            	mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_PROFILEIMAGE, getProfileimage()));
             
-            if(profile.getCurrent() != null)
-                mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_CURRENT, profile.getCurrent()));
+            if(getCurrent() != null)
+                mainRootElement.appendChild(writeProfileElements(doc, mainRootElement, Profile.XML_CURRENT, getCurrent()));
             
-            if(profile.getProfileQuests() != null)
+            if(getProfileQuests() != null)
             // append xp and state to root element
-            for(Quest q: profile.getProfileQuests())
+            for(Quest q: getProfileQuests())
             	mainRootElement.appendChild(writeProfileState(doc, q));
 
             // output DOM XML to console
@@ -599,7 +591,7 @@ public class Profile {
 				profile.setProfileQuests(questList);
 				
 				//save Profile
-				writeProfile(profile);
+				profile.writeProfile();
 				
 				System.out.println("Quest State changed!");
 				return profile;
@@ -611,7 +603,7 @@ public class Profile {
 		profile.setProfileQuests(questList);
 		
 		//save Profile
-		writeProfile(profile);
+		profile.writeProfile();
 			
 		return profile;
 	}
@@ -629,7 +621,7 @@ public class Profile {
 	 * @throws IOException 
 	 * @throws XMLWriteException 
 	 */
-	public static Profile changeProfileImage(Profile profile, String sourcePath) throws IOException, XMLWriteException{
+	public void changeProfileImage( String sourcePath) throws IOException, XMLWriteException{
 		String extension = sourcePath.substring(sourcePath.lastIndexOf('.'), sourcePath.length());
 		
 		
@@ -641,20 +633,18 @@ public class Profile {
 				sourcePath.endsWith(".wbmp") ||
 				sourcePath.endsWith(".gif") ){
 			
-				String destPath = profile.getInitPath() + Profile.sep + Profile.FILE_PROFILEIMAGE + extension;
+				String destPath = getInitPath() + Profile.sep + Profile.FILE_PROFILEIMAGE + extension;
 				
 				File source  = new File(sourcePath);
 				File dest = new File(destPath);
 				
 				//Copying the File
 				LoadStatics.copyFileUsingStream(source, dest);
-				profile.setProfileimage(dest.getName());
+				setProfileimage(dest.getName());
+				writeProfile();
 				
 		}else
 			throw new IOException();
-		
-		//Returning the new profile with the correct imagePath
-		return profile;
 	}
 	
 	

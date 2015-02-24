@@ -37,7 +37,6 @@ import at.jku.ssw.cmm.gui.credits.Credits;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.properties.GUIProperties;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
-import at.jku.ssw.cmm.profile.settings.GUIprofileSettings;
 
 /**
  * Contains event listeners for the menu bar in the main GUI.
@@ -274,7 +273,13 @@ public class MenuBarEventListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			
+			// ...and saved
+			System.out.println("[up to date]");
+			main.getSettings().writeXMLsettings();
 			main.dispose();
+			
+			//Starting Launcher
 			new GUILauncherMain();
 		}
 	};
@@ -296,13 +301,13 @@ public class MenuBarEventListener {
 	 * Event listener for the "edit profile" option in the "progress"
 	 * drop-down menu of menu bar
 	 */
-	public ActionListener editProfileHandler = new ActionListener() {
+	/*public ActionListener editProfileHandler = new ActionListener() {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			main.dispose();
 			GUIprofileSettings.init(main.getSettings(), false);
 		}
-	};
-	
+	};*/
+
 }

@@ -52,7 +52,7 @@ public class ProfileTest {
 		if(qlist != null) {
 			System.out.println("Quest: " + qlist.get(0).getTitle());
 			try {
-				Profile.writeProfile(profile);
+				profile.writeProfile();
 				profile = Profile.changeQuestState(profile, qlist.get(0), Quest.STATE_FINISHED);
 			} catch (XMLWriteException e) {
 				e.printStackTrace();

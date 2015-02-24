@@ -179,10 +179,10 @@ public class InitMenuBar {
 			questM.add(profileMI);
 			
 			// --- progress -> edit ---
-			JMenuItem profileep = new JMenuItem(_("Edit Profile"));
+			/*JMenuItem profileep = new JMenuItem(_("Edit Profile"));
 			profileep.addActionListener(listener.editProfileHandler);
 			profileep.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
-			questM.add(profileep);
+			questM.add(profileep);*/
 					
 			// --- progress -> quests ---
 			JMenuItem questMI = new JMenuItem(_("Select Quest"));
