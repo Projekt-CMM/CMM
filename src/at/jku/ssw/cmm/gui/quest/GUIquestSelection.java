@@ -40,6 +40,8 @@ public class GUIquestSelection {
 	
 	private JEditorPane editorScrollPane;
 	
+	private JScrollPane jScrollPane;
+	
 	private String path = null;
 	
 	private final GUImain main;
@@ -135,7 +137,8 @@ public class GUIquestSelection {
 	
 		//Quest description
 		editorScrollPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		jDescPane.add(editorScrollPane, BorderLayout.CENTER);
+		jScrollPane = new JScrollPane(editorScrollPane);
+		jDescPane.add(jScrollPane, BorderLayout.CENTER);
     
     
         return jDescPane;
@@ -312,7 +315,7 @@ public class GUIquestSelection {
 	}
 	
 	public void displayURL(String file, String style) {
-		jDescPane.remove(editorScrollPane);
+		jDescPane.remove(jScrollPane);
 		
 		
 		try {
@@ -327,7 +330,8 @@ public class GUIquestSelection {
 		
 		//editorScrollPane = LoadStatics.loadHTMLdoc(file, style);
       	editorScrollPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-      	jDescPane.add(editorScrollPane, BorderLayout.CENTER);
+		jScrollPane = new JScrollPane(editorScrollPane);
+      	jDescPane.add(jScrollPane, BorderLayout.CENTER);
       	jDescPane.updateUI();
 		
 	}
