@@ -1,5 +1,8 @@
 package at.jku.ssw.cmm.gui;
 
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -22,6 +25,25 @@ public class ProfileListener {
 	public ProfileListener(ProfilePanel2 main) {
 		this.main = main;
 	}
+	
+	public FocusAdapter nameFocusListener = new FocusAdapter(){
+		
+		@Override
+		public void focusLost(FocusEvent e) {
+			if(main.getJProfileName().getText() != null){
+				main.getGUImain().getSettings().getProfile().setName(main.getJProfileName().getText());
+				
+				try {
+					main.getGUImain().getSettings().getProfile().writeProfile();
+				} catch (XMLWriteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}
+		
+		
+	};
 	
 	/**
 	 * Listener for the profile image. If the User clicks his profile image,
@@ -79,4 +101,6 @@ public class ProfileListener {
         	throw new ProfileCreateException();
 		
 	}
+	
+	
 }

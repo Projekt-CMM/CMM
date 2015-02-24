@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import at.jku.ssw.cmm.gui.file.LoadStatics;
 import at.jku.ssw.cmm.profile.Profile;

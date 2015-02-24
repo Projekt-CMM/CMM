@@ -23,6 +23,7 @@ package at.jku.ssw.cmm.profile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -134,12 +135,7 @@ public class Profile {
 
 	/**
 	 * Returning Sorted Package Quests:
-	 * Sorting: (by date)
-	 * 	- OPEN			
-	 *  - INPROGRESS
-	 *  - SELECTABLE
-	 *  - FINISHED
-	 *  - LOCKED
+	 * Sorting: (by date and Name)
 	 * @param profile
 	 * @param allPackagesPath:  the PackageFolderName of the Profile mostly "packages"
 	 * @param packagePath: 		the PackagePath of the Current Profile
@@ -147,21 +143,18 @@ public class Profile {
 	 */
 	
 	public static Package ReadPackageQuests(Profile profile, String packagePath){
-		System.err.println(packagePath);
+		//initial Packages Path
 		String first = packagePath.substring(0,packagePath.indexOf(File.separator));
-		String last = packagePath.substring(packagePath.indexOf(File.separator));
+		
+		//the Packages Path
+		String last = packagePath.substring(1+packagePath.indexOf(File.separator));
 		
 		return ReadPackageQuests( profile,first, last);
 	}	
 	
 /**
  * Returning Sorted Profile + Package Quests:
- * Sorting: (by date)
- * 	- OPEN			
- *  - INPROGRESS
- *  - SELECTABLE
- *  - FINISHED
- *  - LOCKED
+ * Sorting: (by date and Name)
  * @param profile
  * @param allPackagesPath:  the PackageFolderName of the Profile mostly "packages"
  * @param packagePath: 		the PackagePath of the Current Profile
@@ -624,6 +617,7 @@ public class Profile {
 	public void changeProfileImage( String sourcePath) throws IOException, XMLWriteException{
 		String extension = sourcePath.substring(sourcePath.lastIndexOf('.'), sourcePath.length());
 		
+		File oldImage = new File(getInitPath() + File.separator + getProfileimage());
 		
 		//TODO add all file extensions
 		if(sourcePath.endsWith(".bmp") ||
@@ -642,6 +636,10 @@ public class Profile {
 				LoadStatics.copyFileUsingStream(source, dest);
 				setProfileimage(dest.getName());
 				writeProfile();
+				
+				//Deleting old image
+				if(!oldImage.getPath().equals(dest.getPath()))
+					oldImage.delete();
 				
 		}else
 			throw new IOException();

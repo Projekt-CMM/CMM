@@ -3,14 +3,12 @@ package at.jku.ssw.cmm.quest.importexport;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -95,6 +93,7 @@ public class ImportQuests {
      * @param sourceFilePath
      * @throws IOException
      */
+	@SuppressWarnings("resource")
 	private static void unzipFiles(String zipFile,String extractFolder) throws IOException{
 	    try
 	    {
@@ -105,7 +104,7 @@ public class ImportQuests {
 	        String newPath = extractFolder;
 
 	        new File(newPath).mkdir();
-	        Enumeration zipFileEntries = zip.entries();
+	        Enumeration<?> zipFileEntries = zip.entries();
 
 	        // Process each entry
 	        while (zipFileEntries.hasMoreElements())
@@ -159,11 +158,12 @@ public class ImportQuests {
 	 * @throws IOException 
 	 * @throws ZipException 
 	 */
+	@SuppressWarnings("resource")
 	private static boolean testZipFile(String zipFile) throws ZipException, IOException{
 		 File file = new File(zipFile);
 
 	        ZipFile zip = new ZipFile(file);
-	        Enumeration zipFileEntries = zip.entries();
+	        Enumeration<?> zipFileEntries = zip.entries();
 
 	        boolean ref = false;
 	        boolean input = false;
