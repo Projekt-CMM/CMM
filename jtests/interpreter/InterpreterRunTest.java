@@ -344,6 +344,175 @@ public class InterpreterRunTest implements StdInOut {
 	}
 	
 	@Test
+	public void testStatement() throws Exception {
+		// TODO: Assign
+		
+		// TODO: CALL
+		
+		// TODO: STATSEQ
+		
+		// no return specified
+		try {
+			runCode("int foo() {}"
+					+ "void main() {"
+					+ "  int i = foo();"
+					+ "}");
+			fail("RunTimeException not thrown");
+		} catch(RunTimeException e) {}
+		
+		// return int
+		
+		// return ...
+		
+		// if
+		runCode("void main() {"
+				+ "  if(true) {"
+				+ "    print('1');"
+				+ "  }"
+				+ "  if(false)"
+				+ "    print('2');"
+				+ "}");
+		assertEquals(output, "1");
+
+		// if-else
+		runCode("void main() {"
+				+ "  if(true) {"
+				+ "    print('1');"
+				+ "  } else {"
+				+ "    print('2');"
+				+ "  }"
+				+ "  if(false)"
+				+ "    print('3');"
+				+ "  else"
+				+ "    print('4');"
+				+ "}");
+		assertEquals(output, "14");
+		
+		// while
+		runCode("void main() {"
+				+ "  int i = 0;"
+				+ "  while(i < 10) {"
+				+ "    i ++;"
+				+ "    if(i == 5)"
+				+ "      continue;"
+				+ "    if(i == 8)"
+				+ "      break;"
+				+ "    printf(\"%d\", i);"
+				+ "  }"
+				+ "}");
+		assertEquals(output, "123467");
+
+		runCode("void main() {"
+				+ "  int i = 0;"
+				+ "  while(i < 5) {"
+				+ "    printf(\"%d\", i);"
+				+ "    i ++;"
+				+ "  }"
+				+ "}");
+		assertEquals(output, "01234");
+		
+		runCode("void main() {"
+				+ "  while(read() != 'c');"
+				+ "  print(read());"
+				+ "}", "abcde");
+		assertEquals(output, "d");
+		
+		// do while
+		runCode("void main() {"
+				+ "  int i = 0;"
+				+ "  do {"
+				+ "    i ++;"
+				+ "    if(i == 5)"
+				+ "      continue;"
+				+ "    if(i == 8)"
+				+ "      break;"
+				+ "    printf(\"%d\", i);"
+				+ "  } while(i < 10);"
+				+ "}");
+		assertEquals(output, "123467");
+
+		runCode("void main() {"
+				+ "  int i = 0;"
+				+ "  do {"
+				+ "    printf(\"%d\", i);"
+				+ "    i ++;"
+				+ "  } while(false);"
+				+ "}");
+		assertEquals(output, "0");
+
+		// for
+		runCode("void main() {"
+				+ "  int i;"
+				+ "  for(i = 0; i < 10; i++) {"
+				+ "    if(i == 2)"
+				+ "      continue;"
+				+ "    if(i == 5)"
+				+ "      break;"
+				+ "    printf(\"%d\", i);"
+				+ "  }"
+				+ "}");
+		assertEquals(output, "0134");
+		
+		runCode("void main() {"
+				+ "  int i = 0;"
+				+ "  for(; i < 3; i++)"
+				+ "    printf(\"%d\", i);"
+				+ "}");
+		assertEquals(output, "012");
+		
+		runCode("void main() {"
+				+ "  int i = 0;"
+				+ "  for(; i < 6;) {"
+				+ "    printf(\"%d\", i);"
+				+ "    i += 2;"
+				+ "  }"
+				+ "}");
+		assertEquals(output, "024");
+		
+		runCode("void main() {"
+				+ "  int i;"
+				+ "  for(i = 0; i < 6; i++);"
+				+ "  printf(\"%d\", i);"
+				+ "}");
+		assertEquals(output, "6");
+
+		// switch
+		runCode("void main() {"
+				+ "  int i;"
+				+ "  for(i = 0; i < 6; i++) {"
+				+ "    switch(i) {"
+				+ "      case 0:"
+				+ "        print('a');"
+				+ "        break;"
+				+ "      case 2:"
+				+ "        print('e');"
+				+ "      default:"
+				+ "        printf(\"%d\", i);"
+				+ "        break;"
+				+ "      case 3:"
+				+ "        print('d');"
+				+ "        break;"
+				+ "    }"
+				+ "  }"
+				+ "}");
+		assertEquals(output, "a1e2d45");
+		
+		runCode("void main() {"
+				+ "  int i;"
+				+ "  for(i = 0; i < 6; i++) {"
+				+ "    switch(i) {"
+				+ "      case 1:"
+				+ "      case 3:"
+				+ "        printf(\"%d\", i);"
+				+ "        break;"
+				+ "    }"
+				+ "  }"
+				+ "}");
+		assertEquals(output, "13");
+	}
+	
+	
+	@Test
 	public void testBoolExpression() throws Exception {
 		// addition
 		try {
