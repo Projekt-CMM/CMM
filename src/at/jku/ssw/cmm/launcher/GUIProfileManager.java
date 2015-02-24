@@ -103,7 +103,7 @@ public class GUIProfileManager {
 				    	
 				    	//TODO change to Throws
 				    	try {
-							Profile.writeProfile(profile);
+				    		profile.writeProfile();
 							System.out.println("Profile created!");
 						} catch (XMLWriteException e) {
 							System.err.println("Profile could not be created");

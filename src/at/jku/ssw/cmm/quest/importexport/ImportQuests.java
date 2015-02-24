@@ -1,4 +1,4 @@
-package at.jku.ssw.cmm.quest.importpackage;
+package at.jku.ssw.cmm.quest.importexport;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -42,7 +42,7 @@ public class ImportQuests {
 				
 				//Copy Folder into Packages!
 				try {
-					copyFolder(path, new File("packages"));
+					LoadStatics.copyFolder(path, new File("packages"));
 					System.out.println("Copied Quests");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -87,37 +87,7 @@ public class ImportQuests {
 	}
 	
 	
-	/**
-	 * Copying the whole Folder into another one!
-	 * @param source
-	 * @param destination
-	 * @throws IOException
-	 */
-    public static void copyFolder(File source, File destination) throws IOException{
-        	if(source.isDirectory()){
-        		//if directory not exists, create it
-        		if(!destination.exists()){
-        		   destination.mkdir();
-        		   System.out.println("Directory copied from " 
-                                  + source + "  to " + destination);
-        		}
-     
-        		//list all the directory contents
-        		String files[] = source.list();
-     
-        		for (String file : files) {
-        		   //construct the src and dest file structure
-        		   File srcFile = new File(source, file);
-        		   File destFile = new File(destination, file);
-        		   //recursive copy
-        		   copyFolder(srcFile,destFile);
-        		}
-     
-        	}else{
-        		LoadStatics.copyFileUsingStream(source, destination);
-        	    System.out.println("File copied from " + source + " to " + destination);
-        	}
-        }
+
 	
     /**
      * TODO Check if in there is a Quest in the ZIP File

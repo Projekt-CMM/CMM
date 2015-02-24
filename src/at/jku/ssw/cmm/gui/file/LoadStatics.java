@@ -181,7 +181,6 @@ public final class LoadStatics {
 		if(source.equals(dest))
 			return;
 		
-		//TODO
 		//Creating direktories,:
 		String absolutePath = dest.getAbsolutePath();
 		new File(absolutePath.substring(0, absolutePath.indexOf(dest.getName()))).mkdirs();
@@ -205,6 +204,38 @@ public final class LoadStatics {
 	    		os.close();
 	    }
 	}
+	
+	/**
+	 * Copying the whole Folder into another one!
+	 * @param source
+	 * @param destination
+	 * @throws IOException
+	 */
+    public static void copyFolder(File source, File destination) throws IOException{
+        	if(source.isDirectory()){
+        		//if directory not exists, create it
+        		if(!destination.exists()){
+        		   destination.mkdir();
+        		   System.out.println("Directory copied from " 
+                                  + source + "  to " + destination);
+        		}
+     
+        		//list all the directory contents
+        		String files[] = source.list();
+     
+        		for (String file : files) {
+        		   //construct the src and dest file structure
+        		   File srcFile = new File(source, file);
+        		   File destFile = new File(destination, file);
+        		   //recursive copy
+        		   copyFolder(srcFile,destFile);
+        		}
+     
+        	}else{
+        		LoadStatics.copyFileUsingStream(source, destination);
+        	    System.out.println("File copied from " + source + " to " + destination);
+        	}
+        }
 	
 	@Deprecated
 	public static final JScrollPane loadHTMLdoc(String path, String pathCSS) {

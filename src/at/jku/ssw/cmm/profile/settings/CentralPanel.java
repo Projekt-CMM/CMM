@@ -61,7 +61,7 @@ public class CentralPanel extends JPanel {
 	 * @param listener
 	 *            The listener for the profile settings GUI
 	 */
-	public CentralPanel(Profile profile, ProfileSettingsListener listener) {
+	public CentralPanel(Profile profile) {
 
 		// Call super constructor (JPanel)
 		super();
@@ -125,7 +125,6 @@ public class CentralPanel extends JPanel {
 	 * 
 	 * @return ListModel (List data) with example achievements
 	 */
-	//TODO Peda read user's tokens and initialize list
 	private static DefaultListModel<JPanel> initList(Profile profile) {
 		DefaultListModel<JPanel> model = new DefaultListModel<>();
 

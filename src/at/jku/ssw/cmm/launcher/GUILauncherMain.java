@@ -241,7 +241,7 @@ public class GUILauncherMain extends JFrame implements ActionListener{
 		else
 			profilePicPanel.add(new JLabel(LoadStatics.loadIcon(profile.getInitPath() + File.separator + profile.getProfileimage(), 200, 200)));//profilePicPanel.add(LoadStatics.loadImage(profile.getInitPath() + File.separator + profile.getProfileimage(), false, 200, 200));
 		
-		profilePicPanel.addMouseListener(new EditProfileListener((JFrame)this,settings, profile));
+		profilePicPanel.addMouseListener(new LauncherListener(settings,(JFrame)this, profile));
 		profilePicPanel.setToolTipText("<html><b>" + _("Edit profile") + "</b><br>" + _("Click image to change profile properties") + "</html>");
 			
 		jProfile.add(profilePicPanel, BorderLayout.CENTER);

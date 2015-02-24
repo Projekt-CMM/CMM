@@ -21,15 +21,26 @@
  
 package at.jku.ssw.cmm.launcher;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.io.File;
 
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
+import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
-import at.jku.ssw.cmm.profile.settings.GUIprofileSettings;
+import at.jku.ssw.cmm.profile.Profile;
+import at.jku.ssw.cmm.profile.XMLWriteException;
 
-public class AddProfileListener implements MouseListener {
+public class AddProfileListener extends MouseAdapter {
 
 	private final JFrame jFrame;
 	private final GUImainSettings settings;
@@ -43,27 +54,68 @@ public class AddProfileListener implements MouseListener {
 	public void mouseClicked(MouseEvent arg0) {
 		
 		//Setting the profile to null, for creating a new one
-		settings.setProfile(null);
+		Profile p = new Profile();
 		
 		//Disposing the Launcher
 		jFrame.dispose();
 		
-		
-		GUIprofileSettings.init(settings, false);
+		//Getting Profile Path
+		File filePath = getPath();
+		if(filePath == null)
+			new GUILauncherMain();
 
+		//Getting name
+		String name = JOptionPane.showInputDialog(null,"Geben Sie Ihren Namen ein",
+                "Eine Eingabeaufforderung",JOptionPane.PLAIN_MESSAGE);
+		p.setName(name);
+		
+		if(name == null)
+			new GUILauncherMain();
+	
+		//Setting new Initial Path, if no Path exists
+		if(p.getInitPath() == null){
+			String initPath = filePath.getAbsolutePath() + File.separator + Profile.FILE_BEFORE_PROFILE + p.getName();
+			File dir = new File(initPath);
+		     
+		    // attempt to create the directory here
+		    boolean successful = dir.mkdirs();
+		    if (!successful){
+		    	System.err.println("Profile could not be created at:" + initPath);
+
+		  
+				JFrame frame = new JFrame("Warnung");
+        		JOptionPane.showMessageDialog(frame,"Profile was already created there","Warning:",
+        			    JOptionPane.WARNING_MESSAGE);
+		    }
+			
+		    System.out.println("Setting initial Path:" + initPath);
+		    p.setInitPath(initPath);
+		    settings.setProfile(p);
+		    try {
+				settings.getProfile().writeProfile();
+			} catch (XMLWriteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		    
+		}
+		
+		//Starting CMM with the new Profile
+		GUImain app = new GUImain(settings);
+		app.start(false);
 		
 	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {}
-
-	@Override
-	public void mouseExited(MouseEvent e) {}
-
-	@Override
-	public void mousePressed(MouseEvent e) {}
-
-	@Override
-	public void mouseReleased(MouseEvent e){}
+	
+	private static File getPath(){
+		   JFileChooser chooser = new JFileChooser();
+		   chooser.setDialogTitle("Bitte wähle einen Pfad zum Erstellen aus");
+		    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		    
+		    int returnVal = chooser.showOpenDialog(chooser);
+		    if(returnVal == JFileChooser.APPROVE_OPTION) {
+		       return chooser.getSelectedFile();
+		    }else{
+		    	return null;
+		    }
+	}
 
 }
