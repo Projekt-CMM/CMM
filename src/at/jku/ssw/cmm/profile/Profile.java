@@ -134,12 +134,7 @@ public class Profile {
 
 	/**
 	 * Returning Sorted Package Quests:
-	 * Sorting: (by date)
-	 * 	- OPEN			
-	 *  - INPROGRESS
-	 *  - SELECTABLE
-	 *  - FINISHED
-	 *  - LOCKED
+	 * Sorting: (by date and Name)
 	 * @param profile
 	 * @param allPackagesPath:  the PackageFolderName of the Profile mostly "packages"
 	 * @param packagePath: 		the PackagePath of the Current Profile
@@ -147,21 +142,18 @@ public class Profile {
 	 */
 	
 	public static Package ReadPackageQuests(Profile profile, String packagePath){
-		System.err.println(packagePath);
+		//initial Packages Path
 		String first = packagePath.substring(0,packagePath.indexOf(File.separator));
-		String last = packagePath.substring(packagePath.indexOf(File.separator));
+		
+		//the Packages Path
+		String last = packagePath.substring(1+packagePath.indexOf(File.separator));
 		
 		return ReadPackageQuests( profile,first, last);
 	}	
 	
 /**
  * Returning Sorted Profile + Package Quests:
- * Sorting: (by date)
- * 	- OPEN			
- *  - INPROGRESS
- *  - SELECTABLE
- *  - FINISHED
- *  - LOCKED
+ * Sorting: (by date and Name)
  * @param profile
  * @param allPackagesPath:  the PackageFolderName of the Profile mostly "packages"
  * @param packagePath: 		the PackagePath of the Current Profile

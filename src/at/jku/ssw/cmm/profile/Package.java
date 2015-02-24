@@ -64,8 +64,6 @@ public class Package {
 		XML_MINLEVEL = "minlevel";
 	
 	public static Package readPackage(String initPath, String packagePath){
-		System.out.println(initPath + packagePath);
-		
 		Package package1 = readPackageFile(initPath, packagePath);
 		List<String> fileNames = Quest.ReadFileNames(initPath + sep + packagePath);
 		
