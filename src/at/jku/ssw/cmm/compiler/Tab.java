@@ -529,7 +529,7 @@ public class Tab {
 	 * @return converted type or make SemError
 	 */
 	public Node impliciteTypeCon(Node element, Struct type) {
-		if(element == null) {
+		if(element == null || element.type == null) {
 			parser.SemErr("cast from 'null' to " +  getNameOfType(type) + " not allowed");
 			return element;
 		} else if(type == null) {
@@ -576,7 +576,7 @@ public class Tab {
 	 * @return converted type or make SemError
 	 */
 	public Node expliciteTypeCon(Node element, Struct type) {
-		if(element == null) {
+		if(element == null || element.type == null) {
 			parser.SemErr("cast from null to " +  getNameOfType(type) + " not allowed");
 			return element;
 		} else if(type == null) {
