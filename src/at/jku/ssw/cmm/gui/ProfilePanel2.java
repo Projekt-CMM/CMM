@@ -54,6 +54,10 @@ public class ProfilePanel2 {
 		
 		//Init Profile text field
 		this.jProfileName = new JTextField(profile.getName());
+		jProfileName.addFocusListener(listener.nameFocusListener);
+		jProfileName.setToolTipText("<html><b>" + _("click to change name")
+				+ "</b><br>" + _("click here to change your<br>profile name")
+				+ "</html>");
 		panel.add(this.jProfileName);
 		
 		//Load Profile Image
@@ -133,6 +137,9 @@ public class ProfilePanel2 {
 		return main;
 	}
 	
+	public JTextField getJProfileName(){
+		return jProfileName;
+	}
 	
 	
 

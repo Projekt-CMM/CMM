@@ -49,6 +49,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import at.jku.ssw.cmm.gettext.Language;
+import at.jku.ssw.cmm.gui.ProfilePanel2;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.XMLWriteException;
 
@@ -136,6 +137,11 @@ public class GUImainSettings {
 	private int textSize;
 	private int varSize;
 	private int varOffset;
+	
+	/**
+	 * Reference to the Profile Panel
+	 */
+	private ProfilePanel2 profilePanel;
 
 	/**
 	 * Set the path of the current cmm file.
@@ -246,6 +252,10 @@ public class GUImainSettings {
 	public void setVarOffset(int offset) {
 		this.varOffset = offset;
 	}
+	
+	public void setProfilePanel2(ProfilePanel2 profilePanel){
+		this.profilePanel = profilePanel;
+	}
 
 	public int getCodeSize() {
 		return this.codeSize;
@@ -276,6 +286,9 @@ public class GUImainSettings {
 	}
 	
 	public void setProfile( Profile p ) {
+		if(profilePanel != null && profilePanel.getJProfileName().getText() != "")
+			p.setName(profilePanel.getJProfileName().getText());
+		
 		this.currentProfile = p;
 		if( p != null ){
 			if(this.lastProfiles.contains(p.getInitPath()))
