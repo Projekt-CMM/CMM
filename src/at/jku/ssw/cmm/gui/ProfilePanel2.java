@@ -4,7 +4,9 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -48,7 +50,9 @@ public class ProfilePanel2 {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(_("Profile Information")));
-		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+		Box box = new Box(BoxLayout.Y_AXIS);
+	    box.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+	    box.add(Box.createVerticalGlue());
 		
 		Profile profile = this.main.getSettings().getProfile();
 		
@@ -58,7 +62,7 @@ public class ProfilePanel2 {
 		jProfileName.setToolTipText("<html><b>" + _("click to change name")
 				+ "</b><br>" + _("click here to change your<br>profile name")
 				+ "</html>");
-		panel.add(this.jProfileName);
+		box.add(this.jProfileName);
 		
 		//Load Profile Image
 		this.jProfilePicture = new JLabel();
@@ -68,7 +72,11 @@ public class ProfilePanel2 {
 				+ "</b><br>" + _("click here and select your<br>profile image")
 				+ "</html>");
 		jProfilePicture.addMouseListener(listener.profileImageListener);
-		panel.add(this.jProfilePicture);
+		
+        box.add(jProfilePicture);
+        box.add(Box.createVerticalGlue());
+        
+		panel.add(box);
 		
 		return panel;
 	}

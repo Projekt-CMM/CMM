@@ -12,6 +12,7 @@ public class ExportProfile {
 	public static void Export(Profile p){
 		File destpath = getPath();
 		
+		//Zip Datei implementieren
 		if(destpath != null)
 			try {
 				LoadStatics.copyFolder(new File(p.getInitPath()), destpath);
