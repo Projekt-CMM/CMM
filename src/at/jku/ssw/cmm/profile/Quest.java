@@ -282,7 +282,7 @@ public class Quest {
 				try{
 					quest.setRewardPath(eElement.getElementsByTagName(Quest.XML_REWARD).item(0).getTextContent());
 				}catch(NullPointerException e){
-					//No Token found
+					//No Reward found
 					quest.setRewardPath(null);
 				}
 				
