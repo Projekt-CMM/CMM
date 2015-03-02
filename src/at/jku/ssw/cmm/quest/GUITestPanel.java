@@ -87,6 +87,10 @@ public class GUITestPanel {
 	public void output(String s){
 		this.jResultInfo.setText(this.jResultInfo.getText() + "\n" + s);
 	}
+	
+	public void reset() {
+		this.jResultInfo.setText("");
+	}
 
 	public void setDescDoc(String html, String css) {
 		
