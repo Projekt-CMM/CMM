@@ -129,6 +129,10 @@ public class GUIProfileManager {
 		FileFilter filter = new FileNameExtensionFilter("CMM Profile", Profile.FILE_EXTENDSION);
 		chooser.setFileFilter(filter);
 		
+		ProfilePreviewPanel preview = new ProfilePreviewPanel();
+		chooser.setAccessory(preview);
+		chooser.addPropertyChangeListener(preview);
+		
 		//Disable Renaming etc.
 		UIManager.put("FileChooser.readOnly", Boolean.TRUE);
 		

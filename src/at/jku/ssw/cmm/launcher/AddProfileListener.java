@@ -21,20 +21,13 @@
  
 package at.jku.ssw.cmm.launcher;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.profile.Profile;
@@ -73,7 +66,6 @@ public class AddProfileListener extends MouseAdapter {
 			new GUILauncherMain();
 	
 		//Setting new Initial Path, if no Path exists
-		if(p.getInitPath() == null){
 			String initPath = filePath.getAbsolutePath() + File.separator + Profile.FILE_BEFORE_PROFILE + p.getName();
 			File dir = new File(initPath);
 		     
@@ -86,6 +78,9 @@ public class AddProfileListener extends MouseAdapter {
 				JFrame frame = new JFrame("Warnung");
         		JOptionPane.showMessageDialog(frame,"Profile was already created there","Warning:",
         			    JOptionPane.WARNING_MESSAGE);
+        		
+        		new GUILauncherMain();
+        		return;
 		    }
 			
 		    System.out.println("Setting initial Path:" + initPath);
@@ -97,7 +92,7 @@ public class AddProfileListener extends MouseAdapter {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}		    
-		}
+		
 		
 		//Starting CMM with the new Profile
 		GUImain app = new GUImain(settings);

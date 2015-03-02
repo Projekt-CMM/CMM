@@ -199,14 +199,16 @@ public class GUIquestSelection {
 		for(Quest q : qList){
 			
 			String exersice = q.getAttribute();
-			String finished;
+			String state;
 			
 			if(q.getState().equals(Quest.STATE_FINISHED))
-				finished = "\u2714";
-			else 
-				finished = "";
+				state = "\u2714";
+			else if(q.getState().equals(Quest.STATE_INPROGRESS)) 
+				state = "\u231A";
+			else
+				state = "";
 			
-			model.addRow(new Object[]{finished,exersice,q});
+			model.addRow(new Object[]{state,exersice,q});
 		}
 		
 		jTable.setCellSelectionEnabled(true);
