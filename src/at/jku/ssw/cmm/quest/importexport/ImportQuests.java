@@ -18,18 +18,11 @@ import at.jku.ssw.cmm.profile.Quest;
 
 public class ImportQuests {
 	
-	/**
-	 * Only for testing purposes
-	 */
-	public static void main(String[] args){
-	/*	System.out.println(getPath());
-		
-		System.out.println(Quest.containsQuests("/home/peda/Dokumente",3));*/
-		copyPackage();
-	}
-	
-	private static void copyPackage(){
+	public static void copyPackage(){
 		File path = getPath();
+		
+		if( path == null )
+			return;
 		
 		/**
 		 * Checks if there are Quests in the Folders
