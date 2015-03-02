@@ -990,11 +990,12 @@ public final class Interpreter {
 			} catch(ContinueException e) {
 				throw new RunTimeException("continue is not allowed here", p, currentLine);
 			} finally {
-				if(p.obj.library)
-					libraryFunctionLevel --;
 				// stop debugger after closing function
 				if (libraryFunctionLevel == 0 && !debugger.step(p, Memory.readVariables, Memory.changedVariables))
 					throw new AbortException();
+
+				if(p.obj.library)
+					libraryFunctionLevel --;
 			}
 
 			try {
