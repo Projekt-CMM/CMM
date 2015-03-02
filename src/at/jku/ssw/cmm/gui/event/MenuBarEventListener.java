@@ -37,6 +37,8 @@ import at.jku.ssw.cmm.gui.credits.Credits;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.properties.GUIProperties;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
+import at.jku.ssw.cmm.quest.importexport.ExportProfile;
+import at.jku.ssw.cmm.quest.importexport.ImportQuests;
 
 /**
  * Contains event listeners for the menu bar in the main GUI.
@@ -283,6 +285,19 @@ public class MenuBarEventListener {
 			new GUILauncherMain();
 		}
 	};
+	
+	/**
+	 * Event listener for the "export profile" option in the "progress"
+	 * drop-down menu of menu bar
+	 */
+	public ActionListener profileExportHandler = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			ExportProfile.Export(main.getSettings().getProfile());
+		}
+	};
 
 	/**
 	 * Event listener for the "select quest" option in the "progress" drop-down
@@ -294,6 +309,19 @@ public class MenuBarEventListener {
 		public void actionPerformed(ActionEvent arg0) {
 
 			main.startQuestGUI();
+		}
+	};
+	
+	/**
+	 * Event listener for the "import quest package" option in the "progress" drop-down
+	 * menu of the menu bar
+	 */
+	public ActionListener questImportHandler = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			ImportQuests.copyPackage();
 		}
 	};
 	

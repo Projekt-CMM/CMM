@@ -10,7 +10,7 @@ import at.jku.ssw.cmm.profile.Profile;
 
 public class ExportProfile {
 	public static void Export(Profile p){
-		File destpath = getPath();
+		File destpath = new File(getPath().getAbsolutePath()+File.separator+p.getName());
 		
 		//Zip Datei implementieren
 		if(destpath != null)
