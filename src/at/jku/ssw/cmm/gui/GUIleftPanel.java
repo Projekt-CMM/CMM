@@ -454,10 +454,10 @@ public class GUIleftPanel {
 		
 		this.jStatePanel.setBackground(new Color(255, 131, 131));
 		// TODO parse filename from Parser (when library error)
-		this.jStateLabel.setText("! ! ! " + (title[0] == null ? _("error") : title[0]) +
+		this.jStateLabel.setText("<html>! ! ! " + (title[0] == null ? _("error") : title[0]) +
 			(file == null ? "" : " in file " + file) + " " +
 			(line >= 0 ? _("in line") + " " + line : "") +
-			(title[1] == null ? "" : " " + title[1]) + " ! ! !");
+			(title[1] == null ? "" : " " + title[1]) + " ! ! !</html>");
 		
 		if( line >= 0 )
 			this.highlightSourceCodeDirectly(line);
