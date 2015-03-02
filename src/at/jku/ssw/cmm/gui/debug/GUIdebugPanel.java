@@ -82,7 +82,7 @@ public class GUIdebugPanel {
 		jVarPanel.setLayout(new BorderLayout());
 		
 		this.varView = new TreeTableView(main, jVarPanel,
-				main.getSettings().setCMMFile());
+				main.getSettings().getCMMFile());
 		
 		cp.add(jVarPanel, BorderLayout.CENTER);
 
@@ -156,7 +156,7 @@ public class GUIdebugPanel {
 	 * table.
 	 */
 	public void updateFileName() {
-		this.varView.standby(this.main.getSettings().setCMMFile());
+		this.varView.standby(this.main.getSettings().getCMMFile());
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class GUIdebugPanel {
 	 * current view maine.
 	 */
 	public void updateVariableTables(boolean completeUpDate) {
-		this.varView.update(compileManager, this.main.getSettings().setCMMFile(), completeUpDate);
+		this.varView.update(compileManager, this.main.getSettings().getCMMFile(), completeUpDate);
 	}
 	
 	public void updateFontSize(){
@@ -196,7 +196,7 @@ public class GUIdebugPanel {
 
 		// Mode-specific
 		this.main.getLeftPanel().resetInputHighlighter();
-		this.varView.standby(this.main.getSettings().setCMMFile());
+		this.varView.standby(this.main.getSettings().getCMMFile());
 		
 		//Input lock
 		this.main.unlockInput();
@@ -217,7 +217,7 @@ public class GUIdebugPanel {
 		// Mode-specific
 		this.main.getLeftPanel().resetInputHighlighter();
 		if( !keepTable )
-			this.varView.standby(this.main.getSettings().setCMMFile());
+			this.varView.standby(this.main.getSettings().getCMMFile());
 		
 		//Input lock
 		this.main.unlockInput();
@@ -234,7 +234,7 @@ public class GUIdebugPanel {
 		
 		// Mode-specific
 		this.main.getLeftPanel().resetInputHighlighter();
-		this.varView.standby(this.main.getSettings().setCMMFile());
+		this.varView.standby(this.main.getSettings().getCMMFile());
 		
 		//Input lock
 		this.main.unlockInput();

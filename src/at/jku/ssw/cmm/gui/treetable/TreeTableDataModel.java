@@ -37,9 +37,20 @@ public class TreeTableDataModel<TreeNode extends DataNode> extends AbstractTreeT
  
     // Column types
     protected final Class<?>[] columnTypes;// = { TreeTableModel.class, String.class, Object.class };
- 
+    
+    private int currFunc;
+
+    public TreeTableDataModel(TreeNode rootNode, String[] columnNames, Class<?>[] columnTypes, int currFunc) {
+        super(rootNode);
+        this.currFunc = currFunc;
+        root = rootNode;
+        this.columnNames = columnNames;
+        this.columnTypes = columnTypes;
+    }
+    
     public TreeTableDataModel(TreeNode rootNode, String[] columnNames, Class<?>[] columnTypes) {
         super(rootNode);
+        this.currFunc = -1;
         root = rootNode;
         this.columnNames = columnNames;
         this.columnTypes = columnTypes;
@@ -89,5 +100,13 @@ public class TreeTableDataModel<TreeNode extends DataNode> extends AbstractTreeT
  
     public void setValueAt(Object aValue, Object node, int column) {
     }
+    
+    public int getCurrentFunction(){
+    	return this.currFunc;
+    }
+
+	public void setCurrentFunction(int currFunc) {
+		this.currFunc = currFunc;
+	}
  
 }

@@ -203,7 +203,7 @@ public class PanelRunListener implements Debugger {
 		
 		// Check if debugger is in ready mode -> stop interpreter
 		if( this.isReadyMode() ){
-			DebugShell.out(State.ERROR, Area.DEBUGGER, "Interpreter is running although GUI is on editor mode");
+			DebugShell.out(State.ERROR, Area.DEBUGGER, "Interpreter is running although GUI is in editor mode");
 			return false;
 		}
 		
