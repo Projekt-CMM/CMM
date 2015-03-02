@@ -13,18 +13,29 @@ import javax.swing.JFrame;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
+/**
+ * This class is responsible for the "credits" window of C Compact.
+ * As we do not want anyone to change the credits information
+ * (except under the terms of GNU GPL3 of course), we attached the
+ * credits text to the projekt resources.
+ * 
+ * @author fabian
+ */
 public class Credits {
-	
-	private JFrame jFrame;
 
+	/**
+	 * Initializes and shows a window displaying credits information
+	 */
 	public void start() {
-		// Initialize window
-		this.jFrame = new JFrame(_("About C Compact"));
-		this.jFrame.setLocationRelativeTo(null);
-		this.jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		this.jFrame.setPreferredSize(new Dimension(400, 400));
-		this.jFrame.setResizable(false);
 		
+		// Initialize window
+		JFrame jFrame = new JFrame(_("About C Compact"));
+		jFrame.setLocationRelativeTo(null);
+		jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		jFrame.setPreferredSize(new Dimension(400, 400));
+		jFrame.setResizable(false);
+		
+		//Load resource for stylesheet
 		java.net.URL cssURL = null;
 		javax.swing.text.Document doc = null;
 		try {
@@ -44,6 +55,7 @@ public class Credits {
 			doc = kit.createDefaultDocument();
 		}
 		
+		// Load credits text
 		java.net.URL htmlURL = null;
 		try {
 			htmlURL = getClass().getResource("/at/jku/ssw/cmm/gui/credits/credits.html").toURI().toURL();
@@ -54,11 +66,14 @@ public class Credits {
 			e.printStackTrace();
 		}
 		
+		// Initialize text pane for credits information
 		JEditorPane editorPane = new JEditorPane();
 		
+		// Set style information
 		if( doc != null )
 			editorPane.setDocument(doc);
 		
+		// Load credits text into text pane
 		try {
 			editorPane.setPage(htmlURL);
 		} catch (IOException e) {
@@ -66,14 +81,15 @@ public class Credits {
 			return;
 		}
 		
-		this.jFrame.setLayout(new BorderLayout());
-		this.jFrame.add(editorPane, BorderLayout.CENTER);
+		// Add text pane to window
+		jFrame.setLayout(new BorderLayout());
+		jFrame.add(editorPane, BorderLayout.CENTER);
 
 		// Causes this Window to be sized to fit the preferred size and layouts
 		// of its subcomponents.
-		this.jFrame.setResizable(false);
-		this.jFrame.pack();
-		this.jFrame.setVisible(true);
+		jFrame.setResizable(false);
+		jFrame.pack();
+		jFrame.setVisible(true);
 	}
 
 }

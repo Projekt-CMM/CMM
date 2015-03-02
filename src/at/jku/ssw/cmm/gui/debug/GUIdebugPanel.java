@@ -41,17 +41,12 @@ import at.jku.ssw.cmm.preprocessor.exception.PreprocessorException;
 import at.jku.ssw.cmm.preprocessor.Preprocessor;
 
 /**
- * Controls the right panel of the main GUI. This is a bit more complex, as this
- * panel can have three different states with different user interfaces. The
- * three different states are initialized into an array of JPanels of which is
- * only shown one at a time. The three different states are: <br>
- * - user is typing code -> right panel shows a "compile" button see method
- * "private void initEditmaine()" <br>
- * - compiler returned error messages -> right panel shows message, total errors
- * and a "view error" button see method "private void initErrormaine()" <br>
- * - interpreter is running -> right panel shows tables and lists for variables
- * as well as buttons for controlling the interpreter see method
- * "private void initRunmaine()"
+ * This class controls the panel in the "debug" tab in the right part
+ * of the main GUI. This class forms an interface between the debugger
+ * and the main GUI.
+ * <br>
+ * Moreover, it contains the debugging control elements (play/step/stop
+ * button) and the variable tree table.
  * 
  * @author fabian
  *
@@ -59,24 +54,25 @@ import at.jku.ssw.cmm.preprocessor.Preprocessor;
 public class GUIdebugPanel {
 
 	/**
+	 * This class controls the panel in the "debug" tab in the right part
+	 * of the main GUI. This class forms an interface between the debugger
+	 * and the main GUI.
 	 * 
-	 * @param cp
-	 *            Main component of the main GUI
-	 * @param main
-	 *            Interface for main GUI manipulations
+	 * @param cp Main component of the main GUI
+	 * @param main Reference to the main GUI
 	 */
 	public GUIdebugPanel(JPanel cp, GUImain main) {
-
-		// Constructor parameter init
 		this.main = main;
 
 		cp.setLayout(new BorderLayout());
 
+		// Initialize the control elements
 		this.jControlPanel = new JPanel();
 		this.jControlPanel.setBorder(new TitledBorder(_("Control elements")));
 		this.ctrlPanel = new GUIcontrolPanel(this.jControlPanel, this, main);
 		cp.add(jControlPanel, BorderLayout.PAGE_START);
 
+		// Initialize the variable tree table
 		JPanel jVarPanel = new JPanel();
 		jVarPanel.setBorder(new TitledBorder(_("Variables")));
 		jVarPanel.setLayout(new BorderLayout());
@@ -141,8 +137,7 @@ public class GUIdebugPanel {
 	 * switches from any maine to "fast run" maine; so that the interpreter does
 	 * not stop at breakpoints which should already have been passed.
 	 * 
-	 * @param line
-	 *            The current line
+	 * @param line The current line
 	 */
 	public void updateBreakPoints(int line) {
 		for (int i = 0; i < this.breakpoints.size(); i++) {
@@ -182,10 +177,17 @@ public class GUIdebugPanel {
 		this.varView.update(compileManager, this.main.getSettings().getCMMFile(), completeUpDate);
 	}
 	
+	/**
+	 * Updates the font size of the text in the variable tree table
+	 */
 	public void updateFontSize(){
 		this.varView.updateFontSize();
 	}
 
+	/**
+	 * Sets the main GUI to ready mode. This is when the user can edit his
+	 * source code, save and open files, etc.
+	 */
 	public void setReadyMode() {
 		
 		DebugShell.out(State.LOG, Area.GUI, "Setting main GUI to ready mode");
@@ -202,44 +204,40 @@ public class GUIdebugPanel {
 		this.main.unlockInput();
 	}
 
-	public void setErrorMode(String html, int line, boolean keepTable) {
+	/**
+	 * Sets the main GUI to error mode
+	 * 
+	 * @param html The error message
+	 * @param file The file where the error ocurred (null if not in a library)
+	 * @param line The line where the error ocurred
+	 * @param keepTable FALSE if the variable tree table shall be reset immediately,
+	 * 		otherwise TRUE
+	 */
+	public void setErrorMode(String html, String file, int line, boolean keepTable) {
 		
-		DebugShell.out(State.LOG, Area.GUI, "Setting main GUI to error mode " +
+		DebugShell.out(State.LOG, Area.GUI, "Setting main GUI to error mode, " +
 				(keepTable ? "keeping" : "discarding") + " table");
 
+		// Set debugging control elements to ready mode
 		this.ctrlPanel.setReadyMode();
 		this.ctrlPanel.getListener().setReadyMode();
 		
-		this.main.setErrorMode(html, null, Integer.parseInt(
+		// Set main GUI (and its child elements) to error mode
+		this.main.setErrorMode(html, file, Integer.parseInt(
 			Preprocessor.returnFileAndNumber(line, 
 					this.main.getLeftPanel().getSourceCodeRegister())[1].toString()));
 		
-		// Mode-specific
-		this.main.getLeftPanel().resetInputHighlighter();
+		// Eventually reset variable tree table
 		if( !keepTable )
 			this.varView.standby(this.main.getSettings().getCMMFile());
 		
-		//Input lock
-		this.main.unlockInput();
-	}
-	
-	public void setErrorModeDirect(String html, String file, int line) {
-		
-		DebugShell.out(State.LOG, Area.GUI, "Setting main GUI to preprocessor error mode, discarding table");
-
-		this.ctrlPanel.setReadyMode();
-		this.ctrlPanel.getListener().setReadyMode();
-		
-		this.main.setErrorMode(html, file, line);
-		
-		// Mode-specific
-		this.main.getLeftPanel().resetInputHighlighter();
-		this.varView.standby(this.main.getSettings().getCMMFile());
-		
-		//Input lock
+		// Unlock input methods -> user can edit source code again
 		this.main.unlockInput();
 	}
 
+	/**
+	 * Sets the main GUI to run mode (debugger is running automatically)
+	 */
 	public void setRunMode() {
 		this.ctrlPanel.setRunMode();
 		this.ctrlPanel.getListener().setRunMode();
@@ -249,6 +247,9 @@ public class GUIdebugPanel {
 		this.main.lockInput();
 	}
 
+	/**
+	 * Sets the main GUI to pause mode (user is debugging step by step)
+	 */
 	public void setPauseMode() {
 		this.ctrlPanel.setPauseMode();
 		this.ctrlPanel.getListener().setPauseMode();
@@ -259,8 +260,6 @@ public class GUIdebugPanel {
 	}
 	
 	/**
-	 * <br>
-	 * <br>
 	 * <i>THREAD SAFE by default </i>
 	 * 
 	 * @return A reference to the right panel's compiler wrapper object, see
@@ -288,37 +287,45 @@ public class GUIdebugPanel {
 	 * method is not thread safe as it changes the right panel of the main GUI.
 	 * <hr>
 	 */
-	public boolean compile() {
+	private boolean compile() {
 
+		// Get source code from source code text panel
 		String sourceCode = this.main.getLeftPanel().getSourceCode();
-		this.breakpoints.clear();
 
+		// Assemble complete source code using preprocessor
 		try {
 			sourceCode = Preprocessor.expand(sourceCode,
 					this.main.getSettings().getWorkingDirectory(),
 					this.main.getLeftPanel().getSourceCodeRegister(), this.breakpoints);
-		} catch (PreprocessorException e1) {
+		}
+		// Preprocessor exception, reason ins known
+		catch (PreprocessorException e1) {
 			
+			// Reset source code file register
 			Object[] e = { 1, 0, null };
 			this.main.getLeftPanel().getSourceCodeRegister().clear();
 			this.main.getLeftPanel().getSourceCodeRegister().add(e);
 			
-			// Preprocessor error
-			this.setErrorModeDirect(e1.getMessage(), e1.getFile(), e1.getLine());
+			// Show preprocessor error
+			this.setErrorMode(e1.getMessage(), e1.getFile(), e1.getLine(), false);
 						
 			return false;
-		} catch (Exception e1) {
+		}
+		// Preprocessor error, reason in unknown
+		catch (Exception e1) {
+			
+			// Reset source code file register
 			Object[] e = { 1, 0, null };
 			this.main.getLeftPanel().getSourceCodeRegister().clear();
 			this.main.getLeftPanel().getSourceCodeRegister().add(e);
 			
-			// Preprocessor error
-			this.setErrorModeDirect("Preprocessor." + e1, "", -1);
+			// Display default message for preprocessor error
+			this.setErrorMode("Preprocessor." + e1, "", -1, false);
 						
 			return false;
 		}
 
-		/* --- Code statistics --- */
+		/* --- Code statistics in the shell --- */
 		DebugShell.out(State.STAT, Area.COMPILER,
 				"\n-------------------------------------\nUsed input files: ");
 		for (Object[] o : this.main.getLeftPanel().getSourceCodeRegister()) {
@@ -345,19 +352,21 @@ public class GUIdebugPanel {
 
 		DebugShell.out(State.STAT, Area.COMPILER,
 				"-------------------------------------");
-		/* --- end of statistics --- */
+		/* --- end of code statistics --- */
 
-		// Compile
+		// Compile the source code
 		at.jku.ssw.cmm.compiler.Error e = null;
 		try {
 			e = compileManager.compile(sourceCode);
-		} catch(Exception e1) {
-			this.setErrorMode("Compiler." + e1, -1, false);
+		}
+		// In case of compiler crash
+		catch(Exception e1) {
+			this.setErrorMode("Compiler." + e1, null, -1, false);
 		}
 
-		// compiler returns errors
+		// compiler returned errors
 		if (e != null) {
-			this.setErrorMode(e.msg, e.line, false);
+			this.setErrorMode(e.msg, null, e.line, false);
 			return false;
 		}
 		
@@ -365,20 +374,21 @@ public class GUIdebugPanel {
 	}
 
 	/**
-	 * Starts the interpreter thread via the compiler wrapper class. Initializes
-	 * the call stack.
+	 * Compiles the source code and starts the interpreter thread via
+	 * the compiler wrapper class. Initializes the call stack.
 	 * 
-	 * <hr>
+	 * <br>
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
 	 */
 	public boolean runInterpreter() {
-		this.main.getSaveManager().directSave();
 		
+		// Save the current file
+		this.main.getSaveManager().directSave();
 		this.main.setFileSaved();
 		this.main.updateWinFileName();
 		this.updateFileName();
 		
+		// Compile and run
 		if( this.compile() )
 			return this.compileManager.runInterpreter(ctrlPanel.getListener(),
 				new IOstream(this.main));
