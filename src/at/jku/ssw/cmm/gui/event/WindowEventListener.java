@@ -30,6 +30,9 @@ import javax.swing.JFrame;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
+import at.jku.ssw.cmm.profile.Profile;
+import at.jku.ssw.cmm.profile.Quest;
+import at.jku.ssw.cmm.profile.XMLWriteException;
 
 /**
  * Event listener for the main GUI window. Used for triggering an event when the
@@ -114,6 +117,19 @@ public class WindowEventListener implements WindowListener {
 		// ...and saved
 		System.out.println("[up to date]");
 		settings.writeXMLsettings();
+		
+		//Saving the Profile, and adding the Quests which are inprogress
+		Profile profile = settings.getProfile();
+		if(profile != null && profile.getCurrentQuest() != null){
+			try {
+				if(!profile.getCurrentQuest().getState().equals(Quest.STATE_OPEN))
+					Profile.changeQuestStateToInprogress(profile, profile.getCurrentQuest());
+				//TODO save current path
+				profile.writeProfile();
+			} catch (XMLWriteException e) {
+				e.printStackTrace();
+			}
+		}
 
 		System.exit(0);
 	}

@@ -120,9 +120,7 @@ public class Quest {
 	/**
 	 * Path of the Quest
 	 */
-	private String questPath;
-	
-	
+	private String questPath;	
 	
 	/**
 	 * Files and folderNames
