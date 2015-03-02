@@ -218,14 +218,23 @@ public class Preprocessor {
 					    else
 					    	path = workingDirectory + "/" + path;
 						
-						includeCode = FileManagerCode.readSourceCode(new File(path));
+						try {
+							includeCode = FileManagerCode.readSourceCode(new File(path));
+						} catch(StackOverflowError e) {
+							throw new PreprocessorException("cyclic includes" , file, fileLine);
+						}
 						
 						if( includeCode != null ){
 							// add include tag
 							newSourceCode += addString(s,commentString);
 							
 							// parse file
-							String newSourceCodeHelp = parseFile(includeCode, workingDirectory, codeRegister, breakpoints, defines, line, path);
+							String newSourceCodeHelp = "";
+							try {
+								newSourceCodeHelp = parseFile(includeCode, workingDirectory, codeRegister, breakpoints, defines, line, path);
+							} catch(StackOverflowError e) {
+								throw new PreprocessorException("cyclic includes" , file, fileLine);
+							}
 							
 							// copy source-code
 							newSourceCode += newSourceCodeHelp;
