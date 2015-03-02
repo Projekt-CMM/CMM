@@ -178,17 +178,23 @@ public class InitMenuBar {
 			profileMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 			questM.add(profileMI);
 			
-			// --- progress -> edit ---
-			/*JMenuItem profileep = new JMenuItem(_("Edit Profile"));
-			profileep.addActionListener(listener.editProfileHandler);
-			profileep.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
-			questM.add(profileep);*/
+			// --- progress -> export profile ---
+			JMenuItem profileExportMI = new JMenuItem(_("Export Profile"));
+			profileExportMI.addActionListener(listener.profileExportHandler);
+			questM.add(profileExportMI);
+			
+			questM.addSeparator();
 					
 			// --- progress -> quests ---
 			JMenuItem questMI = new JMenuItem(_("Select Quest"));
 			questMI.addActionListener(listener.questHandler);
 			questMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 			questM.add(questMI);
+			
+			// --- progress -> quests ---
+			JMenuItem questImportMI = new JMenuItem(_("Import Quest Package"));
+			questImportMI.addActionListener(listener.questImportHandler);
+			questM.add(questImportMI);
 			
 		}
 	}
