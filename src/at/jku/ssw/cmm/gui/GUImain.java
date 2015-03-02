@@ -269,6 +269,10 @@ public class GUImain {
 		this.jFrame.pack();
 		this.jFrame.setVisible(true);
 	}
+	
+	public JFrame getJFrame() {
+		return this.jFrame;
+	}
 
 	/**
 	 * Sets the title of the main GUI window. Note: Method from interface
