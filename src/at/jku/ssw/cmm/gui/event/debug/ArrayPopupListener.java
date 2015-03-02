@@ -11,6 +11,11 @@ import at.jku.ssw.cmm.gui.popup.ComponentPopup;
 import at.jku.ssw.cmm.gui.popup.TablePopupModel;
 import at.jku.ssw.cmm.gui.popup.TablePopupRenderer;
 
+/**
+ * This is a listener class for the array popup
+ * 
+ * @author fabian
+ */
 public class ArrayPopupListener implements MouseListener {
 	
 	public ArrayPopupListener( GUImain main, List<Object> info ) {
