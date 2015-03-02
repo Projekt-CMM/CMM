@@ -9,9 +9,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class QuestCreatorListener {
 	
-	private QuestCreatorMain main;
+	private NewQuestPanel main;
 	
-	public QuestCreatorListener(QuestCreatorMain main) {
+	public QuestCreatorListener(NewQuestPanel main) {
 		this.main = main;
 	}
 	
@@ -19,10 +19,10 @@ public class QuestCreatorListener {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			File file = getPath(new FileNameExtensionFilter("description.html", "html"));
+			File file = QuestCreatorStatics.getPath(new FileNameExtensionFilter("description.html", "html"));
 			if(file != null){
 				main.getData().setDescription(file);
-				main.getRightPanel().setDescription("\u2714");
+				main.setDescription("\u2714");
 				System.out.println("Ref File selected");
 			}	
 			
@@ -34,10 +34,10 @@ public class QuestCreatorListener {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			File file = getPath(new FileNameExtensionFilter("Input.cmm", "cmm"));
+			File file = QuestCreatorStatics.getPath(new FileNameExtensionFilter("Input.cmm", "cmm"));
 			if(file != null){
 				main.getData().setInput(file);
-				main.getRightPanel().setInput("\u2714");
+				main.setInput("\u2714");
 				System.out.println("Input File selected");
 			}	
 			
@@ -48,10 +48,10 @@ public class QuestCreatorListener {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			File file = getPath(new FileNameExtensionFilter("Ref.cmm", "cmm"));
+			File file = QuestCreatorStatics.getPath(new FileNameExtensionFilter("Ref.cmm", "cmm"));
 			if(file != null ){
 				main.getData().setRef(file);
-				main.getRightPanel().setReference("\u2714");
+				main.setReference("\u2714");
 				System.out.println("Ref File selected");
 			}	
 		}
@@ -72,6 +72,7 @@ public class QuestCreatorListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Pressed");
+			new ResourcesFrame();
 			// TODO Auto-generated method stub
 			
 		}
@@ -86,22 +87,6 @@ public class QuestCreatorListener {
 			
 		}
 	};
-	
-	private static File getPath(FileNameExtensionFilter filter){
-		   JFileChooser chooser = new JFileChooser();
-		    /*FileNameExtensionFilter filter = new FileNameExtensionFilter(
-		        "ZIP-Files", "zip");*/
-		    chooser.setFileFilter(filter);
-		    
-		    chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		    
-		    int returnVal = chooser.showOpenDialog(chooser);
-		    if(returnVal == JFileChooser.APPROVE_OPTION) {
-		       return chooser.getSelectedFile();
-		    }else{
-		    	return null;
-		    }
-	}
 	
 	
 }

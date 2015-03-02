@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -38,11 +39,18 @@ public class LeftPanel {
 	
 	public JPanel bottomPanel(){
 		JPanel bottomPanel = new JPanel(new BorderLayout());
+	
+		
+		JPanel addPanel = new JPanel(new BorderLayout());
+		String[] optionString = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
+		JComboBox options = new JComboBox(optionString);
+		addPanel.add(options,BorderLayout.WEST);
 		
 		JButton addButton = new JButton("Add");
-		JButton exportButton = new JButton("Export");
+		addPanel.add(addButton,BorderLayout.EAST);
 		
-		bottomPanel.add(addButton,BorderLayout.WEST);
+		bottomPanel.add(addPanel,BorderLayout.WEST);
+		JButton exportButton = new JButton("Export");
 		bottomPanel.add(exportButton,BorderLayout.EAST);
 		
 		return bottomPanel;
