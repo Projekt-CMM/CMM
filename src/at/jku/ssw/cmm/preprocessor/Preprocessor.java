@@ -58,7 +58,7 @@ public class Preprocessor {
 	
 	public static String parseFile( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints, Map<String, Integer> defines, int offset, String file) throws PreprocessorException{
 		// Debug message
-		DebugShell.out(State.LOG, Area.COMPILER, "parse File");
+		DebugShell.out(State.LOG, Area.PREPROCESSOR, "parse File");
 		
 		// Init new SourceCode storage
 		String newSourceCode = "";
@@ -248,7 +248,7 @@ public class Preprocessor {
 					    	lastCodeRegisterInsert = line;
 						}
 					    else{
-					    	DebugShell.out(State.WARNING, Area.COMPILER, "File not found: " + path);
+					    	DebugShell.out(State.WARNING, Area.PREPROCESSOR, "File not found: " + path);
 					    	throw new PreprocessorException("include not found: " + path , file, fileLine);
 					    }
 						continue;
