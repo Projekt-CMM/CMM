@@ -992,6 +992,9 @@ public final class Interpreter {
 			} finally {
 				if(p.obj.library)
 					libraryFunctionLevel --;
+				// stop debugger after closing function
+				if (libraryFunctionLevel == 0 && !debugger.step(p, Memory.readVariables, Memory.changedVariables))
+					throw new AbortException();
 			}
 
 			try {
