@@ -35,7 +35,7 @@ import at.jku.ssw.cmm.quest.exception.CompilerErrorException;
 
 public class QuestTester extends Thread {
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		
 		QuestTester tester = new QuestTester(new TestReplyMock(),
 				"packages/01 Einstieg/01 Simples Hello World/input.cmm",
@@ -43,7 +43,9 @@ public class QuestTester extends Thread {
 				"packages/01 Einstieg/01 Simples Hello World/user.cmm",
 				null);
 		tester.run();
-	}
+	}*/
+	
+	public static final String VALIDTYPES = "";
 
 	public static final int STEPS = 5;
 
@@ -74,6 +76,7 @@ public class QuestTester extends Thread {
 		String inputData = null;
 		testReply.output("[info] generating input data");
 		testReply.output("[path] " + this.generator);
+		
 		try {
 			// Read or generate input data
 			inputData = getInputData();
