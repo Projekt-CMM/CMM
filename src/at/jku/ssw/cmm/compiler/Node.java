@@ -21,6 +21,10 @@
  
 package at.jku.ssw.cmm.compiler;
 
+import java.util.HashMap;
+import java.util.Map;
+
+
 /*--------------------------------------------------------------------------------
 Node   Node of the abstract syntax tree (AST) of a C-- program
 ====   =======================================================
@@ -195,6 +199,64 @@ public final class Node {
 
 	//----------------------- for dumping ASTs -----------------------------------
 
+	public Map<Integer,Integer> countNodes() {
+		Map<Integer,Integer> nodeCounter = new HashMap<>();
+		if(this.left != null) {
+			Map<Integer,Integer> helpCounter = this.left.countNodes();
+			
+			for (int key : helpCounter.keySet()) {
+				int value = 0;
+				// get current number of keys inside map
+				if(nodeCounter.containsKey(key))
+					value = nodeCounter.get(key);
+				// add new nodes
+				value += helpCounter.get(key);
+				// put new value into map
+				nodeCounter.put(key, value);
+			}
+		}
+		
+		if(this.right != null) {
+			Map<Integer,Integer> helpCounter = this.right.countNodes();
+			
+			for (int key : helpCounter.keySet()) {
+				int value = 0;
+				// get current number of keys inside map
+				if(nodeCounter.containsKey(key))
+					value = nodeCounter.get(key);
+				// add new nodes
+				value += helpCounter.get(key);
+				// put new value into map
+				nodeCounter.put(key, value);
+			}
+		}
+		
+		if(this.next != null) {
+			Map<Integer,Integer> helpCounter = this.next.countNodes();
+			
+			for (int key : helpCounter.keySet()) {
+				int value = 0;
+				// get current number of keys inside map
+				if(nodeCounter.containsKey(key))
+					value = nodeCounter.get(key);
+				// add new nodes
+				value += helpCounter.get(key);
+				// put new value into map
+				nodeCounter.put(key, value);
+			}
+		}
+		
+		int valueOfThisNode = 0;
+		// get current number of keys inside map
+		if(nodeCounter.containsKey(this.kind))
+			valueOfThisNode = nodeCounter.get(this.kind);
+		valueOfThisNode ++;
+		// put new value into map
+		nodeCounter.put(this.kind, valueOfThisNode);
+		
+		return nodeCounter;
+	}
+	
 	static String[] name = {
 		"STATSEQ", "ASSIGN", "ASSIGNPLUS", "ASSIGNMINUS", "ASSIGNTIMES", "ASSIGNDIV","ASSIGNREM",
 		"ASSIGNSHIFTLEFT", "ASSIGNSHIFTRIGHT", "ASSIGNBITAND", "ASSIGNBITXOR", "ASSIGNBITOR",
