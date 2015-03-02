@@ -294,9 +294,8 @@ public class GUIleftPanel {
 	/**
 	 * Note: Method from interface <i>GUImod</i>
 	 * 
-	 * <hr>
+	 * <br>
 	 * <i>THREAD SAFE by default</i>
-	 * <hr>
 	 * 
 	 * @return The source code written in the source code text area of the main
 	 *         GUI
@@ -328,7 +327,7 @@ public class GUIleftPanel {
 	
 	/**
 	 * Moves the cursor to the given line in the source code (highlights the whole line).<br>
-	 * <br><b> Parameter line is direct. </b>
+	 * <br><b> Parameter line is relative. </b>
 	 * This means that you have to take the line number in the user's source code (without
 	 * libraries). Otherwise take <i>highlightSourceCode()</i>.
 	 * 
@@ -452,10 +451,12 @@ public class GUIleftPanel {
 		
 		this.unlockInput();
 		
+		this.resetInputHighlighter();
+		
 		this.jStatePanel.setBackground(new Color(255, 131, 131));
 		// TODO parse filename from Parser (when library error)
 		this.jStateLabel.setText("<html>! ! ! " + (title[0] == null ? _("error") : title[0]) +
-			(file == null ? "" : " in file " + file) + " " +
+			(file == null || file != "main" ? "" : " in file " + file) + " " +
 			(line >= 0 ? _("in line") + " " + line : "") +
 			(title[1] == null ? "" : " " + title[1]) + " ! ! !</html>");
 		

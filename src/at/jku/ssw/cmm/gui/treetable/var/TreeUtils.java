@@ -112,22 +112,30 @@ public class TreeUtils {
 		return lowest;
 	}
 	
-	public static void expandByAddress(TreeTable<VarDataNode> tree, int address, boolean changed){
-
+	public static void expandByAddressAndPattern(TreeTable<VarDataNode> tree, int address, int highlighter, String pattern){
 		VarDataNode root = (VarDataNode)tree.getCellRenderer().getModel().getRoot();
 		
 		Stack<VarDataNode> path = new Stack<>();
 		path.push(root);
 		
-		expandByAddress(tree.getCellRenderer(), root, address, path, changed);
+		expandByAddress(tree.getCellRenderer(), root, address, path, highlighter, pattern);
+	}
+	//[\w]+[\(\)] -> function
+	//^((?!\(\)).)*$ -> no function
+	public static void expandByAddress(TreeTable<VarDataNode> tree, int address, int highlighter){
+		expandByAddressAndPattern(tree, address, highlighter, "^((?!\\(\\)).)*$");
 	}
 	
-	private static boolean expandByAddress(TreeTableCellRenderer tree, VarDataNode node, int address, Stack<VarDataNode> path, boolean changed){
+	public final static int HIGHLIGHT_NOT = 0;
+	public final static int HIGHLIGHT_CHANGED = 0;
+	public final static int HIGHLIGHT_READ = 0;
+	
+	private static boolean expandByAddress(TreeTableCellRenderer tree, VarDataNode node, int address, Stack<VarDataNode> path, int highlighter, String pattern){
 		
-		if( node.getAddress() == address ){
-			if( changed )
+		if( node.getAddress() == address && node.getName().matches(pattern) ){
+			if( highlighter == HIGHLIGHT_CHANGED )
 				node.markChanged();
-			else
+			else if( highlighter == HIGHLIGHT_READ )
 				node.markRead();
 			return true;
 		}
@@ -136,7 +144,7 @@ public class TreeUtils {
 			for (DataNode e : node.getChildren()) {
 				
 				path.push((VarDataNode)e);
-				if(expandByAddress(tree, (VarDataNode)e, address, path, changed)){
+				if(expandByAddress(tree, (VarDataNode)e, address, path, highlighter, pattern)){
 					
 					tree.expandPath(new TreePath(path.toArray()));
 					path.pop();

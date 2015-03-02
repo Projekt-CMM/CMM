@@ -110,11 +110,11 @@ public class CMMrun extends Thread {
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					if ( e.getNode() != null && e.getNode().line > 0)
-						debug.setErrorMode(e.getMessage(), e.getNode().line, true);
+						debug.setErrorMode(e.getMessage(), null, e.getNode().line, true);
 					else if( e.getLine() > 0 )
-						debug.setErrorMode(e.getMessage(), e.getLine(), true);
+						debug.setErrorMode(e.getMessage(), null, e.getLine(), true);
 					else
-						debug.setErrorMode(e.getMessage(), -1, true);
+						debug.setErrorMode(e.getMessage(), null, -1, true);
 				}
 			});
 			reply.setNotRunning();
@@ -129,7 +129,7 @@ public class CMMrun extends Thread {
 			// error mode
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					debug.setErrorMode("unknown interpreter exception", -1, true);
+					debug.setErrorMode("unknown interpreter exception", null, -1, true);
 				}
 			});
 			reply.setNotRunning();

@@ -28,16 +28,41 @@ import java.awt.event.MouseListener;
 import javax.swing.JFrame;
 import javax.swing.text.JTextComponent;
 
+/**
+ * This listener monitors the mouse cursor and changes its look if it is
+ * over a defined object (eg. text cursor for text fields)
+ * 
+ * @author fabian
+ */
 public class CursorListener implements MouseListener {
 	
+	/**
+	 * This listener monitors the mouse cursor and changes its look if it is
+	 * over a defined object (eg. text cursor for text fields)
+	 * 
+	 * @param frame The JFrame of the main GUI window
+	 * @param component The component whichs mouse events are monitored
+	 * @param cursor The cursor we want to see when the mouse is over "component"
+	 */
 	public CursorListener( JFrame frame, Object component, Cursor cursor ){
 		this.component = component;
 		this.frame = frame;
 		this.cursor = cursor;
 	}
 	
+	/**
+	 * The JFrame of the main GUI window
+	 */
 	private final JFrame frame;
+	
+	/**
+	 * The component whichs mouse events are monitored
+	 */
 	private final Object component;
+	
+	/**
+	 * The cursor we want to see when the mouse is over "component"
+	 */
 	private final Cursor cursor;
 
 	@Override

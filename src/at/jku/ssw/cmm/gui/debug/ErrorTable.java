@@ -41,40 +41,84 @@ import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 
+/**
+ * This class links low-level error messages from comiler, interpreter
+ * or GUI to the error html documents which are displayed to support the
+ * user in finding problems in his source code.
+ * <br>
+ * The linking information is extracted from "error/table.xml". Depending
+ * on the language chosen, different subfolders of "error" are used to build
+ * the error message path, eg "error/en/..." for english error information.
+ * 
+ * @author fabian
+ */
 public class ErrorTable {
 
+	/**
+	 * This class links low-level error messages from comiler, interpreter
+	 * or GUI to the error html documents which are displayed to support the
+	 * user in finding problems in his source code
+	 * 
+	 * @param language The language chosen by the user
+	 */
 	public ErrorTable( String language ) {
 		
 		this.language = language;
+		
+		// Read error message linking data
 		this.readErrorTable();
 	}
 
+	/**
+	 * The language chosen by the user
+	 */
 	private String language;
 	
+	/**
+	 * All error message linking information available is stored in this
+	 * HashMap. The key is the error message from the system, the data is
+	 * the name of the error file.
+	 */
 	private Map<String, String> errorMap;
 
+	/**
+	 * Links an error message to the according error description document
+	 * in the right laguage
+	 * 
+	 * @param msg The error message
+	 * @return The relative path to the error description document
+	 */
 	public String getErrorHTML(String msg) {
 		
+		// Return default description if error is undefined
 		if( msg == null )
 			return "error" + File.separator + language + File.separator + this.errorMap.get("default");
 
+		// Look for the right error document
 		for (Map.Entry<String, String> entry : this.errorMap.entrySet()) {
+			
+			// Regex matiching is allowed
 			if( Pattern.matches( entry.getKey(), msg ) ){
+				
+				// Assemble the complete path to the error file
 				return "error" + File.separator + language + File.separator + entry.getValue();
 			}
 		}
-		
-		System.err.println(msg);
 
 		return "error" + File.separator + language + File.separator + this.errorMap.get("default");
 	}
 
+	/**
+	 * Reads the error linking data from the linking source file
+	 */
 	private void readErrorTable() {
 		this.errorMap = new HashMap<>();
 		
+		// Select default language if given language does not exist
 		if( !new File("error" + File.separator + language).exists() )
 			this.language = "en";
 
+		// Open linking table file
 		File fXmlFile = new File("error/table.xml");
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = null;
@@ -86,6 +130,7 @@ public class ErrorTable {
 			
 			doc.getDocumentElement().normalize();
 
+			// Every linking information is tagged <error>
 			NodeList nList = ((org.w3c.dom.Document) doc)
 					.getElementsByTagName("error");
 

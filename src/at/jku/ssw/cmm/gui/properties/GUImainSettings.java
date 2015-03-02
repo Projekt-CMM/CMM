@@ -167,7 +167,7 @@ public class GUImainSettings {
 	 * 
 	 * @return Name of the current file without path, eg "file2.cmm"
 	 */
-	public String setCMMFile() {
+	public String getCMMFile() {
 
 		if (this.currentFile == null)
 			return _("Unnamed");
