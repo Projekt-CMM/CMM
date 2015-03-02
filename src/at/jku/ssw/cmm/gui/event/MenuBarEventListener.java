@@ -295,7 +295,7 @@ public class MenuBarEventListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			
-			ExportProfile.Export(main.getSettings().getProfile());
+			ExportProfile.Export(main.getJFrame(), main.getSettings().getProfile());
 		}
 	};
 
