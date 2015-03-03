@@ -22,7 +22,6 @@
 package at.jku.ssw.cmm.gui.popup;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
@@ -32,28 +31,12 @@ import javax.swing.border.EmptyBorder;
 import at.jku.ssw.cmm.gui.GUImain;
 
 public class ComponentPopup {
+	
+	public static void createPopUp( GUImain main, JComponent component, int x, int y, int w, int h, int orientation ) {
+		createPopUp(main, component, x, y, w, h, orientation, 0.5);
+	}
 
-	/*public static void createPopUp( GUImain main, JComponent component, int x, int y, String path ){
-		
-		ImagePopup popup = new ImagePopup(path);
-		//popup.setBounds(main.getGlassPane().getMousePosition().x-271, main.getGlassPane().getMousePosition().y-151, 310, 151);
-		popup.setBounds(x-271, y-151, 310, 151);
-		
-		//JTextArea ta = new JTextArea( text );
-		JScrollPane scrollPane = new JScrollPane(component);
-		scrollPane.setBounds(10, 10, 298, 117);
-		scrollPane.setPreferredSize(new Dimension(298, 117));
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		popup.add(scrollPane);
-		
-		main.invokePopup(popup, main.getGlassPane().getMousePosition().x-271, main.getGlassPane().getMousePosition().y-151, 310, 143);
-	}*/
-	
-	/*public static void createPopUp( GUImain main, JComponent component, int w, int h ){
-		createPopUp( main, component, main.getGlassPane().getMousePosition().x, main.getGlassPane().getMousePosition().y, w, h );
-	}*/
-	
-	public static void createPopUp( GUImain main, JComponent component, int x, int y, int w, int h, int orientation ){
+	public static void createPopUp( GUImain main, JComponent component, int x, int y, int w, int h, int orientation, double weight ){
 		
 		ImagePopup popup = null;
 		int x_abs=0;
@@ -63,16 +46,16 @@ public class ComponentPopup {
 		
 		switch( orientation ) {
 		case ImagePopup.NORTH:
-			popup = new ImagePopup(x_abs=x-w/2, y_abs=y+ImagePopup.EDGE_OFFSET, w, h, x, y, orientation);
+			popup = new ImagePopup(x_abs=x-(int)(w*weight), y_abs=y+ImagePopup.EDGE_OFFSET, w, h, x, y, orientation);
 			break;
 		case ImagePopup.SOUTH:
-			popup = new ImagePopup(x_abs=x-w/2, y_abs=y-h-ImagePopup.EDGE_OFFSET, w, h, x, y, orientation);
+			popup = new ImagePopup(x_abs=x-(int)(w*weight), y_abs=y-h-ImagePopup.EDGE_OFFSET, w, h, x, y, orientation);
 			break;
 		case ImagePopup.WEST:
-			popup = new ImagePopup(x_abs=x+ImagePopup.EDGE_OFFSET, y_abs=y-h/2, w, h, x, y, orientation);
+			popup = new ImagePopup(x_abs=x+ImagePopup.EDGE_OFFSET, y_abs=y-(int)(w*weight), w, h, x, y, orientation);
 			break;
 		case ImagePopup.EAST:
-			popup = new ImagePopup(x_abs=x-w-ImagePopup.EDGE_OFFSET, y_abs=y-h/2, w, h, x, y, orientation);
+			popup = new ImagePopup(x_abs=x-w-ImagePopup.EDGE_OFFSET, y_abs=y-(int)(w*weight), w, h, x, y, orientation);
 			break;
 		}
 		

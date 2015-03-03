@@ -41,9 +41,12 @@ public class ArrayPopupListener implements MouseListener {
 		for( int i = 0; i < table.getColumnModel().getColumnCount(); i++ ){
 			table.getColumnModel().getColumn(i).setMinWidth(28);
 		}
+		
+		System.out.println("Table width = " + table.getWidth());
+		//table.setBounds(0, 0, 200, 200);
 
 		//Invoke popup
-		ComponentPopup.createPopUp(main, table, main.getGlassPane().getMousePosition().x, main.getGlassPane().getMousePosition().y, 250, 120, ImagePopup.SOUTH);
+		ComponentPopup.createPopUp(main, table, main.getGlassPane().getMousePosition().x, main.getGlassPane().getMousePosition().y, 250, 120, ImagePopup.SOUTH, 0.85);
 	}
 	
 	@Override
