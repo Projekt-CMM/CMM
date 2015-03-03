@@ -70,7 +70,7 @@ public class StringPopupListener implements MouseListener {
 		//Invoke popup
 		JTextArea ta = new JTextArea(text);
 		ta.setEditable(false);
-		ComponentPopup.createPopUp(main, ta, e.getX(), e.getY(), 60, 70, ImagePopup.SOUTH);
+		ComponentPopup.createPopUp(main, ta, main.getGlassPane().getMousePosition().x, main.getGlassPane().getMousePosition().y, 200, 120, ImagePopup.SOUTH);
 	}
 
 	@Override

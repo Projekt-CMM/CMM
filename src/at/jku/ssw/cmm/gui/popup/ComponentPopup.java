@@ -78,6 +78,7 @@ public class ComponentPopup {
 		
 		JScrollPane scrollPane = new JScrollPane(component);
 		scrollPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		popup.add(scrollPane, BorderLayout.CENTER);
 		
 		main.invokePopup(popup, x_abs, y_abs, w, h);

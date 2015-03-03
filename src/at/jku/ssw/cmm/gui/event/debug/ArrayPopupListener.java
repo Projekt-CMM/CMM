@@ -43,7 +43,7 @@ public class ArrayPopupListener implements MouseListener {
 		}
 
 		//Invoke popup
-		ComponentPopup.createPopUp(main, table, e.getLocationOnScreen().x, e.getLocationOnScreen().y, 250, 120, ImagePopup.SOUTH);
+		ComponentPopup.createPopUp(main, table, main.getGlassPane().getMousePosition().x, main.getGlassPane().getMousePosition().y, 250, 120, ImagePopup.SOUTH);
 	}
 	
 	@Override
