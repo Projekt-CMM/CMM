@@ -75,17 +75,37 @@ public class Language {
 		// Variables for reading the translations file
 		BufferedReader file;
 		String line;
-		String line2;
+		
+		String key = "", msg = "";
+		int mode = 0;
 		
 		// Start reading file
 		try {
 			file = new BufferedReader(new FileReader("po/" + langCode ));
 			while ((line = file.readLine()) != null) {
+				
 				//Load a translated String
-				if( line.startsWith("msgid") && !line.contains("\"\"") && (line2 = file.readLine()) != null && line2.startsWith("msgstr") && !line.contains("\"\"") ){
+				if( !line.startsWith("#") ){
+				
+					if( (mode == 0 || mode == 2) && line.contains("msgid") ) {
+						if( mode == 2 )
+							langMap.put(key, msg);
+						key = "";
+						msg = "";
+						
+						mode = 1;
+					}
 					
-					//Save translated String
-					langMap.put(line.substring(line.indexOf("\"")+1, line.length()-1), line2.substring(line2.indexOf("\"")+1, line2.length()-1));
+					if( mode == 1 && line.contains("msgstr") ) {
+						mode = 2;
+					}
+					else if( mode == 1 && line.contains("\"") ){
+						key += line.substring(line.indexOf("\"")+1, line.length()-1);
+					}
+					
+					if( mode == 2 && line.contains("\"") ) {
+						msg += line.substring(line.indexOf("\"")+1, line.length()-1);
+					}
 				}
 			}
 			file.close();
