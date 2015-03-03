@@ -879,7 +879,9 @@ public class Parser {
 		Node e = null; 
 		int kind;
 		st = null; 
-		int line = la.line; 
+		int line = la.line;
+		int col = la.col;
+		int colLength = la.val.length(); 
 		design = Designator();
 		if (StartOf(7)) {
 			kind = AssignOp();
@@ -939,6 +941,8 @@ public class Parser {
 			   SemErr("only void is allowed");
 			                                     // create CALL node
 			st = new Node(Node.CALL,e,null,line);
+			st.col = col;
+			st.colLength = colLength;
 			st.obj = design.obj;
 			tab.checkFunctionParams(design.obj,st); 
 		} else if (la.kind == 58) {
@@ -1346,7 +1350,9 @@ public class Parser {
 		Struct type; 
 		Node design; 
 		n = null; 
-		int line = la.line; 
+		int line = la.line;
+		int col = la.col;
+		int colLength = la.val.length(); 
 		if (la.kind == 1) {
 			design = Designator();
 			if (la.kind == 6) {
@@ -1357,6 +1363,8 @@ public class Parser {
 				   SemErr("function call of a void procedure"); 
 				else {
 				   n = new Node(Node.CALL,n,null,line); 
+				   n.col = col;
+				   n.colLength = colLength;
 				   n.type = design.obj.type; 
 				   n.obj = design.obj;
 				   tab.checkFunctionParams(design.obj,n); 

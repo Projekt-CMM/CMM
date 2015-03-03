@@ -673,7 +673,9 @@ Command<out Node st>                (.  Node design;
                                         Node e = null; 
                                         int kind;.)
 =                                   (.  st = null; 
-                                        int line = la.line; .)
+                                        int line = la.line;
+                                        int col = la.col;
+                                        int colLength = la.val.length(); .)
 Designator<out design>            
   ( AssignOp<out kind>              (.  // check if designator is from the correct kind
                                         if(design.kind == Node.BOOLCON || design.kind == Node.INTCON
@@ -734,6 +736,8 @@ Designator<out design>
                                      
                                         // create CALL node
                                         st = new Node(Node.CALL,e,null,line);
+                                        st.col = col;
+                                        st.colLength = colLength;
                                         st.obj = design.obj;
                                         tab.checkFunctionParams(design.obj,st); .) 
   | "++"                            (.  if(design.kind != Node.IDENT && design.kind != Node.DOT && design.kind != Node.INDEX) 
@@ -915,7 +919,9 @@ Factor<out res>
 Factor<out Node n>                  (.  Struct type; 
                                         Node design; .)
 =                                   (.  n = null; 
-                                        int line = la.line; .)
+                                        int line = la.line;
+                                        int col = la.col;
+                                        int colLength = la.val.length(); .)
 ( Designator<out design>            
     [ ActPars<out n>                (.  if(design.obj == null || design.obj.kind != Obj.PROC )
                                             SemErr("name is not a procedure"); 
@@ -923,6 +929,8 @@ Factor<out Node n>                  (.  Struct type;
                                             SemErr("function call of a void procedure"); 
                                         else {
                                             n = new Node(Node.CALL,n,null,line); 
+                                            n.col = col;
+                                            n.colLength = colLength;
                                             n.type = design.obj.type; 
                                             n.obj = design.obj;
                                             tab.checkFunctionParams(design.obj,n); 

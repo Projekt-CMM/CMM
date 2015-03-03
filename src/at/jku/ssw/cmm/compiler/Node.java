@@ -284,9 +284,12 @@ public final class Node {
 			else if (x.kind == FLOATCON) System.out.print(" " + x.fVal);
 			else if (x.kind == CHARCON) System.out.print(" \'" + (char)x.val + "\'");
 			else if (x.kind == STRINGCON) System.out.print(" \"" +  x.val + "\"");
-			else if (x.kind == CALL && x.obj != null) System.out.print(" " + x.obj.name);
-			if (x.type != null) System.out.print(" type=" + typ[x.type.kind]);
-			if (x.kind >= STATSEQ && x.kind <= TRAP) System.out.print(" line=" + x.line);
+			else if (x.kind == CALL && x.obj != null)
+				System.out.print(" " + x.obj.name + " col=" + x.col + " colLenght=" +  x.colLength);
+			if (x.type != null)
+				System.out.print(" type=" + typ[x.type.kind]);
+			if (x.kind >= STATSEQ && x.kind <= TRAP)
+				System.out.print(" line=" + x.line);
 			System.out.println();
 			if (x.left != null || x.right != null) {
 				dump(x.left, indent + 1);
