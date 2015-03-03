@@ -66,7 +66,7 @@ public class GUILauncherMain extends JFrame implements ActionListener{
 	
 	public GUILauncherMain(GUImainSettings settings){
 		super("C Compact Launcher");
-		super.setMinimumSize(new Dimension(700,520));
+		super.setMinimumSize(new Dimension(700,480));
 		
 		this.settings = settings;
 		
@@ -194,6 +194,7 @@ public class GUILauncherMain extends JFrame implements ActionListener{
 			
 			//Scrollbar only Horizontal activated
 			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+			scrollPane.getHorizontalScrollBar().addAdjustmentListener(new ScrollBarRepainter(scrollPane));
 			//scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS); 
 			
 		jProfilePanel.add(scrollPane);
@@ -215,6 +216,7 @@ public class GUILauncherMain extends JFrame implements ActionListener{
 		JPanel jProfile = new JPanel(new BorderLayout());
 		jProfile.setBackground(Color.WHITE);
 		jProfile.setBorder(new EmptyBorder(10, 10, 10, 10));
+		//jProfile.setBorder(BorderFactory.createRaisedBevelBorder());
 		
 		JPanel jProfileTop = new JPanel(new BorderLayout());
 			jProfileTop.setBackground(Color.WHITE);
@@ -235,6 +237,8 @@ public class GUILauncherMain extends JFrame implements ActionListener{
 		profilePicPanel.setPreferredSize(new Dimension(200,200));
 		profilePicPanel.setMinimumSize(new Dimension(200,200));
 		
+		//profilePicPanel.setBorder(BorderFactory.createRaisedBevelBorder());
+		
 		//TODO save images in labels
 		if( profile.getProfileimage() == null )
 			profilePicPanel.add(new JLabel(LoadStatics.loadIcon(Profile.FILE_DEFAULTIMAGE, 200, 200)));//LoadStatics.loadImage(Profile.FILE_DEFAULTIMAGE, false, 200, 200));
@@ -242,14 +246,14 @@ public class GUILauncherMain extends JFrame implements ActionListener{
 			profilePicPanel.add(new JLabel(LoadStatics.loadIcon(profile.getInitPath() + File.separator + profile.getProfileimage(), 200, 200)));//profilePicPanel.add(LoadStatics.loadImage(profile.getInitPath() + File.separator + profile.getProfileimage(), false, 200, 200));
 		
 		profilePicPanel.addMouseListener(new LauncherListener(settings,(JFrame)this, profile));
-		profilePicPanel.setToolTipText("<html><b>" + _("Edit profile") + "</b><br>" + _("Click image to change profile properties") + "</html>");
+		profilePicPanel.setToolTipText("<html><b>" + _("Select this profile") + "</b><br>" + _("Click image to change start<br>C Compact with this profile") + "</html>");
 			
 		jProfile.add(profilePicPanel, BorderLayout.CENTER);
 		
-			JButton openProfile = new JButton(_("Open"));
+			/*JButton openProfile = new JButton(_("Open"));
 			openProfile.setToolTipText("<html><b>" + _("Launch C Compact") + "</b><br>" + _("using this profile") + "</html>");
 			openProfile.addMouseListener(new LauncherListener(settings,(JFrame)this, profile));
-		jProfile.add(openProfile,BorderLayout.PAGE_END);
+		jProfile.add(openProfile,BorderLayout.PAGE_END);*/
 			
 		jMarginPanel.add(jProfile,BorderLayout.CENTER);
 		
