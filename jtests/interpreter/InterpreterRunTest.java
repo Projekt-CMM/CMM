@@ -1665,4 +1665,186 @@ public class InterpreterRunTest implements StdInOut {
 				+ "}");
 		assertEquals(output, "f");
 	}
+
+	@Test
+	public void testCall() throws Exception {
+		// bool parameter
+		runCode("void foo(bool b) {"
+				+ "  printf(\"%d\", b);"
+				+ "}"
+				+ "void main() {"
+				+ "  foo(true);"
+				+ "}");
+		assertEquals(output, "1");
+		
+		// int parameter
+		runCode("void foo(int i) {"
+				+ "  printf(\"%d\", i);"
+				+ "}"
+				+ "void main() {"
+				+ "  foo(1254);"
+				+ "}");
+		assertEquals(output, "1254");
+		
+		// char parameter
+		runCode("void foo(char c) {"
+				+ "  printf(\"%c\", c);"
+				+ "}"
+				+ "void main() {"
+				+ "  foo('d');"
+				+ "}");
+		assertEquals(output, "d");
+		
+		// float parameter
+		runCode("void foo(float f) {"
+				+ "  printf(\"%f\", f);"
+				+ "}"
+				+ "void main() {"
+				+ "  foo(15.66);"
+				+ "}");
+		assertEquals(Float.parseFloat(output), 15.66, 0.001);
+		
+		// string parameter
+		runCode("void foo(string s) {"
+				+ "  printf(s);"
+				+ "}"
+				+ "void main() {"
+				+ "  foo(\"Hello\");"
+				+ "}");
+		assertEquals(output, "Hello");
+		
+		// struct reference
+		runCode("struct Point{int x,y;}"
+				+ "void foo(Point p) {"
+				+ "  printf(\"%d %d\", p.x, p.y);"
+				+ "}"
+				+ "void main() {"
+				+ "  Point p1;"
+				+ "  p1.x = 23;"
+				+ "  p1.y = -10;"
+				+ "  foo(p1);"
+				+ "}");
+		assertEquals(output, "23 -10");
+	}	
+	
+	@Test
+	public void testCallReference() throws Exception {
+		// bool reference
+		runCode("void foo(bool &b) {"
+				+ "  b = false;"
+				+ "}"
+				+ "void main() {"
+				+ "  bool b1 = true;"
+				+ "  foo(b1);"
+				+ "  printf(\"%d\", b1);"
+				+ "}");
+		assertEquals(output, "0");
+		
+		// int reference
+		runCode("void foo(int &i) {"
+				+ "  i = 5366;"
+				+ "}"
+				+ "void main() {"
+				+ "  int i1 = 1234;"
+				+ "  foo(i1);"
+				+ "  printf(\"%d\", i1);"
+				+ "}");
+		assertEquals(output, "5366");
+		
+		// char reference
+		runCode("void foo(char &c) {"
+				+ "  c = 'h';"
+				+ "}"
+				+ "void main() {"
+				+ "  char c1 = 'a';"
+				+ "  foo(c1);"
+				+ "  printf(\"%c\", c1);"
+				+ "}");
+		assertEquals(output, "h");
+		
+		// float reference
+		runCode("void foo(float &f) {"
+				+ "  f = 1.234;"
+				+ "}"
+				+ "void main() {"
+				+ "  float f1 = -22.5;"
+				+ "  foo(f1);"
+				+ "  printf(\"%f\", f1);"
+				+ "}");
+		assertEquals(Float.parseFloat(output), 1.234, 0.001);
+		
+		// string reference
+		runCode("void foo(string &s) {"
+				+ "  s = \"foo_ref\";"
+				+ "}"
+				+ "void main() {"
+				+ "  string s1 = \"abc\";"
+				+ "  foo(s1);"
+				+ "  printf(s1);"
+				+ "}");
+		assertEquals(output, "foo_ref");
+		
+		// struct reference
+		runCode("struct Point{int x,y;}"
+				+ "void foo(Point &p) {"
+				+ "  p.x = 5;"
+				+ "  p.y = 11;"
+				+ "}"
+				+ "void main() {"
+				+ "  Point p1;"
+				+ "  foo(p1);"
+				+ "  printf(\"%d %d\", p1.x, p1.y);"
+				+ "}");
+		assertEquals(output, "5 11");
+		
+		// array reference
+		runCode("void foo(int i[][]) {"
+				+ "  i[5][3] = 5366;"
+				+ "  i[2][2] = 988;"
+				+ "}"
+				+ "void main() {"
+				+ "  int i1[10][5];"
+				+ "  foo(i1);"
+				+ "  printf(\"%d %d\", i1[5][3], i1[2][2]);"
+				+ "}");
+		assertEquals(output, "5366 988");
+	}
+	
+	@Test
+	public void testConst() throws Exception {
+		// bool const
+		runCode("const bool c_b = true;"
+				+ "void main() {"
+				+ "  printf(\"%d\", c_b);"
+				+ "}");
+		assertEquals(output, "1");
+		
+		// int const
+		runCode("const int c_i = 1568;"
+				+ "void main() {"
+				+ "  printf(\"%d\", c_i);"
+				+ "}");
+		assertEquals(output, "1568");
+		
+		// char const
+		runCode("const char c_c = 'c';"
+				+ "void main() {"
+				+ "  printf(\"%c\", c_c);"
+				+ "}");
+		assertEquals(output, "c");
+		
+		// float const
+		runCode("const float c_f = 15.336;"
+				+ "void main() {"
+				+ "  printf(\"%f\", c_f);"
+				+ "}");
+		assertEquals(Float.parseFloat(output), 15.336, 0.001);
+		
+		// string const
+		runCode("const string c_s = \"asdf\";"
+				+ "void main() {"
+				+ "  printf(c_s);"
+				+ "}");
+		assertEquals(output, "asdf");
+	}
 }
