@@ -21,6 +21,7 @@
  
 package at.jku.ssw.cmm.launcher;
 
+import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -28,6 +29,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.profile.Profile;
@@ -102,7 +104,7 @@ public class AddProfileListener extends MouseAdapter {
 	
 	private static File getPath(){
 		   JFileChooser chooser = new JFileChooser();
-		   chooser.setDialogTitle("Bitte wähle einen Pfad zum Erstellen aus");
+		   chooser.setDialogTitle(_("Please select a directory for your new profile"));
 		    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		    
 		    int returnVal = chooser.showOpenDialog(chooser);

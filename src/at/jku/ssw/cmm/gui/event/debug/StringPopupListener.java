@@ -21,6 +21,7 @@
  
 package at.jku.ssw.cmm.gui.event.debug;
 
+import java.awt.MouseInfo;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -28,6 +29,7 @@ import javax.swing.JTextArea;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.popup.ComponentPopup;
+import at.jku.ssw.cmm.gui.popup.ImagePopup;
 
 /**
  * Listener for the string popup button in the variable tree table.
@@ -68,7 +70,7 @@ public class StringPopupListener implements MouseListener {
 		//Invoke popup
 		JTextArea ta = new JTextArea(text);
 		ta.setEditable(false);
-		ComponentPopup.createPopUp(main, ta, e.getLocationOnScreen().x, e.getLocationOnScreen().y);
+		ComponentPopup.createPopUp(main, ta, main.getGlassPane().getMousePosition().x, main.getGlassPane().getMousePosition().y, 200, 120, ImagePopup.SOUTH);
 	}
 
 	@Override

@@ -63,18 +63,22 @@ public class GUIcontrolPanel {
 	}
 	
 	/**
-	 * Wrapper class with listeners for the "run" maine. Also contains the debug
+	 * Wrapper class with listeners for the "run" mode. Also contains the debug
 	 * and I/O stream interface for the interpreter as well as (interpreter)
-	 * "run" maine event routines.
+	 * "run" mode event routines.
 	 */
 	private final PanelRunListener listener;
 
-	/* --- run maine objects --- */
+	/* --- run mode objects --- */
 	/**
 	 * This button starts or pauses interpreting.
 	 */
 	private JButton jButtonPlay;
 	
+	/**
+	 * The menu item in the main GUI menubar which does exactly the same
+	 * as the "play" button
+	 */
 	private JMenuItem jMenuItemPlay;
 
 	/**
@@ -82,18 +86,26 @@ public class GUIcontrolPanel {
 	 */
 	private JButton jButtonStep;
 	
+	/**
+	 * The menu item in the main GUI menubar which does exactly the same
+	 * as the "step" button
+	 */
 	private JMenuItem jMenuItemStep;
 
 	/**
-	 * Stops the interpreter. Also used to get out of an error message maine.
+	 * Stops the interpreter. Also used to get out of an error message mode.
 	 */
 	private JButton jButtonStop;
 	
+	/**
+	 * The menu item in the main GUI menubar which does exactly the same
+	 * as the "stop" button
+	 */
 	private JMenuItem jMenuItemStop;
 
 	/**
 	 * Slider for interpreter speed (regulates the period of each interpreter
-	 * step in RUN maine).
+	 * step in RUN mode).
 	 */
 	private JSlider jSlider;
 
@@ -103,12 +115,12 @@ public class GUIcontrolPanel {
 	private JLabel jLabelTimer;
 	
 	/**
-	 * Start value of the JSlider which controls the automatic debugging speed in run maine
+	 * Start value of the JSlider which controls the automatic debugging speed in run mode
 	 */
 	public static final int SLIDER_START = 5;
 
 	/**
-	 * Initializes the objects of the "run" maine, which is active during
+	 * Initializes the objects of the "run" mode, which is active during
 	 * interpreting
 	 * <hr>
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT.</i><br>
@@ -165,7 +177,7 @@ public class GUIcontrolPanel {
 	 * <br>
 	 * <b> DO NOT CALL THIS METHOD </b>
 	 * <br>
-	 * If you need to change the mode, call the method setReadymaine() in <i>GUIdebugPanel.java</i>
+	 * If you need to change the mode, call the method setReadymode() in <i>GUIdebugPanel.java</i>
 	 */
 	public void setReadyMode(){
 		this.jButtonPlay.setEnabled(true);
@@ -191,7 +203,7 @@ public class GUIcontrolPanel {
 	}
 	
 	/**
-	 * Sets the control element panel to ERROR maine
+	 * Sets the control element panel to ERROR mode
 	 * (this is when an error occurred)
 	 * <br>
 	 * <b> DO NOT CALL THIS METHOD </b>
@@ -215,7 +227,7 @@ public class GUIcontrolPanel {
 	 * <br>
 	 * <b> DO NOT CALL THIS METHOD </b>
 	 * <br>
-	 * If you need to change the mode, call the method setReadymaine() in <i>GUIdebugPanel.java</i>
+	 * If you need to change the mode, call the method setReadymode() in <i>GUIdebugPanel.java</i>
 	 */
 	public void setRunMode(){
 		this.jButtonPlay.setEnabled(true);
@@ -246,7 +258,7 @@ public class GUIcontrolPanel {
 	 * <br>
 	 * <b> DO NOT CALL THIS METHOD </b>
 	 * <br>
-	 * If you need to change the mode, call the method setReadymaine() in <i>GUIdebugPanel.java</i>
+	 * If you need to change the mode, call the method setReadymode() in <i>GUIdebugPanel.java</i>
 	 */
 	public void setPauseMode(){
 		this.jButtonPlay.setEnabled(true);
@@ -299,6 +311,13 @@ public class GUIcontrolPanel {
 		return this.jSlider.getValue();
 	}
 	
+	/**
+	 * Initializes the menu items of the main GUI menubar for debug mode controls
+	 * 
+	 * @param play Menuitem for "play"
+	 * @param step Menuitem for "step"
+	 * @param stop Menuitem for "stop"
+	 */
 	public void initMenuItems( JMenuItem play, JMenuItem step, JMenuItem stop){
 		this.jMenuItemPlay = play;
 		this.jMenuItemStep = step;

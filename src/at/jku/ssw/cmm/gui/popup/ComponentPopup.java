@@ -21,28 +21,46 @@
  
 package at.jku.ssw.cmm.gui.popup;
 
-import java.awt.Dimension;
-
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.border.EmptyBorder;
 
 import at.jku.ssw.cmm.gui.GUImain;
 
 public class ComponentPopup {
+	
+	public static void createPopUp( GUImain main, JComponent component, int x, int y, int w, int h, int orientation ) {
+		createPopUp(main, component, x, y, w, h, orientation, 0.5);
+	}
 
-	public static void createPopUp( GUImain main, JComponent component, int x, int y ){
+	public static void createPopUp( GUImain main, JComponent component, int x, int y, int w, int h, int orientation, double weight ){
 		
-		ImagePopup popup = new ImagePopup("images/popup3.png");
-		popup.setBounds(main.getGlassPane().getMousePosition().x-271, main.getGlassPane().getMousePosition().y-151, 310, 151);
+		ImagePopup popup = null;
+		int x_abs=0;
+		int y_abs=0;
 		
-		//JTextArea ta = new JTextArea( text );
+		System.out.println("x: " + x + ", y: " + y);
+		
+		switch( orientation ) {
+		case ImagePopup.NORTH:
+			popup = new ImagePopup(x_abs=x-(int)(w*weight), y_abs=y+ImagePopup.EDGE_OFFSET, w, h, x, y, orientation);
+			break;
+		case ImagePopup.SOUTH:
+			popup = new ImagePopup(x_abs=x-(int)(w*weight), y_abs=y-h-ImagePopup.EDGE_OFFSET, w, h, x, y, orientation);
+			break;
+		case ImagePopup.WEST:
+			popup = new ImagePopup(x_abs=x+ImagePopup.EDGE_OFFSET, y_abs=y-(int)(w*weight), w, h, x, y, orientation);
+			break;
+		case ImagePopup.EAST:
+			popup = new ImagePopup(x_abs=x-w-ImagePopup.EDGE_OFFSET, y_abs=y-(int)(w*weight), w, h, x, y, orientation);
+			break;
+		}
+		
 		JScrollPane scrollPane = new JScrollPane(component);
-		scrollPane.setBounds(10, 10, 298, 117);
-		scrollPane.setPreferredSize(new Dimension(298, 117));
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		popup.add(scrollPane);
+		scrollPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		//scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		popup.add(scrollPane);//, BorderLayout.CENTER);
 		
-		main.invokePopup(popup, main.getGlassPane().getMousePosition().x-271, main.getGlassPane().getMousePosition().y-151, 310, 143);
+		main.invokePopup(popup, x_abs, y_abs, w, h);
 	}
 }

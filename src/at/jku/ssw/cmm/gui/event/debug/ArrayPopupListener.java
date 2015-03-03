@@ -8,9 +8,15 @@ import javax.swing.JTable;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.popup.ComponentPopup;
+import at.jku.ssw.cmm.gui.popup.ImagePopup;
 import at.jku.ssw.cmm.gui.popup.TablePopupModel;
 import at.jku.ssw.cmm.gui.popup.TablePopupRenderer;
 
+/**
+ * This is a listener class for the array popup
+ * 
+ * @author fabian
+ */
 public class ArrayPopupListener implements MouseListener {
 	
 	public ArrayPopupListener( GUImain main, List<Object> info ) {
@@ -33,11 +39,14 @@ public class ArrayPopupListener implements MouseListener {
 		table.getTableHeader().setReorderingAllowed(false);
 
 		for( int i = 0; i < table.getColumnModel().getColumnCount(); i++ ){
-			table.getColumnModel().getColumn(i).setMinWidth(28);
+			table.getColumnModel().getColumn(i).setMinWidth(24);
+			table.getColumnModel().getColumn(i).setPreferredWidth(28);
 		}
+		
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 		//Invoke popup
-		ComponentPopup.createPopUp(main, table, e.getLocationOnScreen().x, e.getLocationOnScreen().y);
+		ComponentPopup.createPopUp(main, table, main.getGlassPane().getMousePosition().x, main.getGlassPane().getMousePosition().y, 250, 120, ImagePopup.SOUTH, 0.85);
 	}
 	
 	@Override
