@@ -160,6 +160,9 @@ public class GUImain {
 	 * @throws InvocationTargetException 
 	 */
 	public void start(boolean test) {
+		//Setting the last Quest of the Profile
+		settings.setCurrentQuestFile();
+		
 		
 		// EDT Thread analysis
 		if (SwingUtilities.isEventDispatchThread())

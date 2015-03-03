@@ -121,7 +121,8 @@ public class Profile {
 		XML_TOKEN = "token",
 		XML_PROFILEIMAGE = "profileimage",
 		XML_CURRENT = "current",
-		XML_MASTER = "master";
+		XML_MASTER = "master",
+		XML_FILEPATH = "filepath";
 	
 	public static final String 
 		IMAGE_DEFAULT = "images/prodef.png";
@@ -152,6 +153,50 @@ public class Profile {
 		return ReadPackageQuests( profile,first, last);
 	}	
 	
+public static Quest ReadLastQuest(Profile profile){
+	Quest quest = null;
+	
+	if(profile.getProfileQuests() != null)
+		for(Quest q: profile.getProfileQuests()){
+			if(quest == null && q.getState().equals(Quest.STATE_OPEN)){
+				quest = Quest.ReadQuest("packages", q.getPackagePath(), q.getQuestPath());
+				updateQuestVariables(quest,q);
+			}
+		}
+	
+	
+	
+	return quest;
+}
+
+/**
+ * Updates the current opened Quest in the Profile
+ * @param profile
+ * @param quest
+ * @return
+ */
+public static Profile UpdateOpen(Profile profile, Quest quest){
+	if(profile.getProfileQuests() != null)
+		for(Quest q: profile.getProfileQuests()){
+			if(q.getState().equals(Quest.STATE_OPEN)){
+				q.setState(Quest.STATE_INPROGRESS);
+			}
+			if(q.getPackagePath().equals(quest.getPackagePath()) &&
+					q.getQuestPath().equals(quest.getQuestPath())){
+				q.setnewDate();
+				q.setState(Quest.STATE_OPEN);
+			}
+		}
+	
+	try {
+		profile.writeProfile();
+	} catch (XMLWriteException e) {
+		e.printStackTrace();
+	}
+	
+	return profile;
+}
+	
 /**
  * Returning Sorted Profile + Package Quests:
  * Sorting: (by date and Name)
@@ -178,9 +223,9 @@ public class Profile {
 		
 		for(Quest packageQuest : packageQuests){
 			for(Quest profileQuest : profileQuests){
-				if(profileQuest.getQuestPath().equals(packageQuest.getQuestPath()) && profileQuest.getPackagePath().equals(packageQuest.getPackagePath())){
-					packageQuest.setState(profileQuest.getState());
-					packageQuest.setDate(profileQuest.getDate());
+				if(profileQuest.getQuestPath().equals(packageQuest.getQuestPath()) 
+						&& profileQuest.getPackagePath().equals(packageQuest.getPackagePath())){
+					updateQuestVariables(packageQuest, profileQuest);
 				}
 			}
 		}
@@ -190,6 +235,17 @@ public class Profile {
 		package1.setQuestList(sortQuestList(packageQuests));
 		return package1;
 		
+	}
+	
+	/**
+	 * Updates the Current Quest with the Profile Quest
+	 * @param packageQuest
+	 * @param profileQuest
+	 */
+	private static void updateQuestVariables(Quest packageQuest, Quest profileQuest){
+		packageQuest.setState(profileQuest.getState());
+		packageQuest.setDate(profileQuest.getDate());
+		packageQuest.setCmmFilePath(profileQuest.getCmmFilePath());
 	}
 
 	/**
@@ -316,10 +372,16 @@ public class Profile {
 				        if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
 				        	if(currentNode.getNodeName().equals(Profile.XML_QUEST)) //quest
 				        		quest.setQuestPath(currentNode.getTextContent());
+				        	
 				        	if(currentNode.getNodeName().equals(Profile.XML_PACKAGE)) //package
 				        		quest.setPackagePath(currentNode.getTextContent());
+				        	
 				        	if(currentNode.getNodeName().equals(Profile.XML_DATE)) //date
 				        		quest.setStringDate(currentNode.getTextContent());
+				        	
+				        	if(currentNode.getNodeName().equals(Profile.XML_FILEPATH)) //cmmfilepath
+				        		quest.setCmmFilePath(currentNode.getTextContent());
+				        	
 				        	if(currentNode.getNodeName().equals(Profile.XML_TOKEN)){ //token
 				        		
 				        		//getting the relative and absolute Path of the Token
@@ -425,6 +487,9 @@ public class Profile {
         state.appendChild(writeProfileElements(doc, state, Profile.XML_QUEST, quest.getQuestPath()));
         state.appendChild(writeProfileElements(doc, state, Profile.XML_PACKAGE, quest.getPackagePath()));
         state.appendChild(writeProfileElements(doc, state, Profile.XML_DATE, quest.getStringDate()));
+        if(quest.getCmmFilePath() != null)
+        	state.appendChild(writeProfileElements(doc, state, Profile.XML_FILEPATH, quest.getCmmFilePath()));
+
         //TODO check this in a real programm
         if(quest.getToken() != null)
         	state.appendChild(writeProfileElements(doc, state, Profile.XML_TOKEN, quest.getToken().getRelPath()));
@@ -526,6 +591,17 @@ public class Profile {
 		return changeQuestState(profile, quest, Quest.STATE_FINISHED);
 	}
 	
+	/**
+	 * Updating the Current Profile
+	 * @param profile
+	 * @param quest
+	 * @return profile
+	 * @throws XMLWriteException
+	 */
+	public static Profile updateProfileQuestPath(Profile profile, Quest quest) throws XMLWriteException{
+		return changeQuestState(profile, quest, null);
+	}
+	
 /**
  * Changes the State of the Quest, adding new Date and returning new Profile Object.
  * On wrong Quest file, returning the old Profile
@@ -545,7 +621,7 @@ public class Profile {
 			return profile;
 		
 		//TODO Tokens
-		if(state.equals(Quest.STATE_FINISHED)){
+		if(state != null && state.equals(Quest.STATE_FINISHED)){
 			if(quest.getToken() != null){
 				String questTokenPathFile = quest.getInitPath()+ sep + quest.getPackagePath() + sep + Quest.FOLDER_TOKENS;
 				String profileTokenPath = profile.getInitPath() + sep + Profile.FILE_PACKAGESPATH + sep +  quest.getPackagePath() + sep + Quest.FOLDER_TOKENS ;
@@ -564,11 +640,18 @@ public class Profile {
 			}
 		}
 		
-		
-		//Setting a new Date
-		quest.setnewDate();
-		quest.setState(state);
+		//New Quest List
 		List<Quest> questList;
+		
+		//Setting a new Date only if the State has changed
+		if(state != null){
+			quest.setnewDate();
+			quest.setState(state);
+		}
+		
+		//Only to handle wrong usage of the method
+		if(quest.getDate() == null)
+			quest.setnewDate();
 		
 		//getting Profile Quests
 		if(profile.getProfileQuests() != null)

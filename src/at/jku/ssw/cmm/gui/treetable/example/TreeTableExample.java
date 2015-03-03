@@ -6,7 +6,6 @@ import java.io.File;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -28,7 +27,6 @@ public class TreeTableExample {
 		this.main = mainSelection;
 	}
 
-	private JFrame jFrame;
 	
 	private TreeTable<DataNodeExample> treeTable;
 	private TreeTableDataModel<DataNodeExample> treeTableModel;

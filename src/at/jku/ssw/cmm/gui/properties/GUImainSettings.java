@@ -51,7 +51,9 @@ import org.xml.sax.SAXException;
 import at.jku.ssw.cmm.gettext.Language;
 import at.jku.ssw.cmm.gui.ProfilePanel2;
 import at.jku.ssw.cmm.profile.Profile;
+import at.jku.ssw.cmm.profile.Quest;
 import at.jku.ssw.cmm.profile.XMLWriteException;
+import at.jku.ssw.cmm.quest.GUITestPanel;
 
 /**
  * Contains configuration data for the main GUI. The main GUI has a reference to
@@ -109,8 +111,8 @@ public class GUImainSettings {
 	}
 	
 	public GUImainSettings(Profile p) {
-		this.readConfigXML();
 		this.currentProfile = p;
+		this.readConfigXML();
 	}
 
 	/**
@@ -142,7 +144,7 @@ public class GUImainSettings {
 	 * Reference to the Profile Panel
 	 */
 	private ProfilePanel2 profilePanel;
-
+	
 	/**
 	 * Set the path of the current cmm file.
 	 * 
@@ -345,13 +347,32 @@ public class GUImainSettings {
 			this.lastLanguage = Language.DEFAULT_LANGUAGE;
 		}
 
-		// Initialize the current *.cmm file
-		if (this.lastFiles.size() > 0)
-			// Take first file from recent files as latest file
-			this.currentFile = this.lastFiles.get(0);
-		else
-			// No recent file
-			this.currentFile = null;
+		if(currentProfile == null){
+			// Initialize the current *.cmm file
+			if (this.lastFiles.size() > 0)
+				// Take first file from recent files as latest file
+				this.currentFile = this.lastFiles.get(0);
+			else
+				// No recent file
+				this.currentFile = null;
+		}
+
+			
+		
+	}
+	
+	/**
+	 * Reading the Profile and setting the last opened Quest
+	 */
+	public void setCurrentQuestFile(){
+		if(currentProfile == null)
+			return;
+		
+			Quest q = Profile.ReadLastQuest(currentProfile);
+			if(q != null && q.getCmmFilePath() != null){
+				currentProfile.setCurrentQuest(q);
+				this.currentFile = q.getCmmFilePath();
+			}
 	}
 
 	/**
@@ -446,6 +467,11 @@ public class GUImainSettings {
 						mainRootElement.appendChild(writeNode(doc, XML_LASTFILE, this.lastFiles.get(i)));
 				}
 			}
+			
+			//Adding information about the last quest opened in the Profile
+			if(currentProfile != null && currentProfile.getCurrentQuest() != null){
+				Profile.changeQuestState(currentProfile, currentProfile.getCurrentQuest(), Quest.STATE_OPEN);
+			}
 
 			// Add infromation about recent profiles
 			if (this.lastProfiles != null && !this.lastProfiles.isEmpty()) {
@@ -513,5 +539,24 @@ public class GUImainSettings {
 		Element node = doc.createElement(name);
 		node.appendChild(doc.createTextNode(value));
 		return node;
+	}
+	
+	public void updateDescPane(GUITestPanel questPanel){
+		if(getProfile() == null || getProfile().getCurrentQuest() == null)
+			return;
+		
+		Quest lastClickedQuest = getProfile().getCurrentQuest();
+    	String path = lastClickedQuest.getInitPath() + Quest.sep + lastClickedQuest.getPackagePath() + Quest.sep + lastClickedQuest.getQuestPath();
+		
+    	if(lastClickedQuest.isDescription() && lastClickedQuest.isStyle()){
+			questPanel.setDescDoc(path + Quest.sep + Quest.FILE_DESCRIPTION, path + Quest.sep + Quest.FILE_STYLE);
+        	questPanel.setjQuestTitle(getProfile().getCurrentQuest().getTitle());
+      
+        	
+		//When the Quest only has a description
+        }else if(lastClickedQuest.isDescription()){
+        	questPanel.setDescDoc(path + Quest.sep + Quest.FILE_DESCRIPTION,"packages/default/style.css");
+        	questPanel.setjQuestTitle(getProfile().getCurrentQuest().getTitle());		        
+		}
 	}
 }
