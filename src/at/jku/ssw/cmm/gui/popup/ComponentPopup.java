@@ -21,11 +21,8 @@
  
 package at.jku.ssw.cmm.gui.popup;
 
-import java.awt.BorderLayout;
-
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
 import at.jku.ssw.cmm.gui.GUImain;
@@ -61,8 +58,8 @@ public class ComponentPopup {
 		
 		JScrollPane scrollPane = new JScrollPane(component);
 		scrollPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		popup.add(scrollPane, BorderLayout.CENTER);
+		//scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		popup.add(scrollPane);//, BorderLayout.CENTER);
 		
 		main.invokePopup(popup, x_abs, y_abs, w, h);
 	}
