@@ -27,6 +27,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -542,6 +543,18 @@ public class GUIleftPanel {
 	 */
 	public RSyntaxTextArea getSourcePane(){
 		return this.jSourcePane;
+	}
+	
+	public Rectangle getPositionInSource( int line, int col ) {
+		
+		try {
+			return this.jSourcePane.modelToView(this.jSourcePane.getLineStartOffset(line)+col);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	/**

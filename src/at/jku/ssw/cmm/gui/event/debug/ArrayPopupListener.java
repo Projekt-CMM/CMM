@@ -8,6 +8,7 @@ import javax.swing.JTable;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.popup.ComponentPopup;
+import at.jku.ssw.cmm.gui.popup.ImagePopup;
 import at.jku.ssw.cmm.gui.popup.TablePopupModel;
 import at.jku.ssw.cmm.gui.popup.TablePopupRenderer;
 
@@ -42,7 +43,7 @@ public class ArrayPopupListener implements MouseListener {
 		}
 
 		//Invoke popup
-		ComponentPopup.createPopUp(main, table, e.getLocationOnScreen().x, e.getLocationOnScreen().y);
+		ComponentPopup.createPopUp(main, table, e.getLocationOnScreen().x, e.getLocationOnScreen().y, 250, 120, ImagePopup.SOUTH);
 	}
 	
 	@Override
