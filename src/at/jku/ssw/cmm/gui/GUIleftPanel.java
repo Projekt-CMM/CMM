@@ -27,6 +27,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -294,9 +295,8 @@ public class GUIleftPanel {
 	/**
 	 * Note: Method from interface <i>GUImod</i>
 	 * 
-	 * <hr>
+	 * <br>
 	 * <i>THREAD SAFE by default</i>
-	 * <hr>
 	 * 
 	 * @return The source code written in the source code text area of the main
 	 *         GUI
@@ -328,7 +328,7 @@ public class GUIleftPanel {
 	
 	/**
 	 * Moves the cursor to the given line in the source code (highlights the whole line).<br>
-	 * <br><b> Parameter line is direct. </b>
+	 * <br><b> Parameter line is relative. </b>
 	 * This means that you have to take the line number in the user's source code (without
 	 * libraries). Otherwise take <i>highlightSourceCode()</i>.
 	 * 
@@ -452,10 +452,12 @@ public class GUIleftPanel {
 		
 		this.unlockInput();
 		
+		this.resetInputHighlighter();
+		
 		this.jStatePanel.setBackground(new Color(255, 131, 131));
 		// TODO parse filename from Parser (when library error)
 		this.jStateLabel.setText("<html>! ! ! " + (title[0] == null ? _("error") : title[0]) +
-			(file == null ? "" : " in file " + file) + " " +
+			(file == null || file != "main" ? "" : " in file " + file) + " " +
 			(line >= 0 ? _("in line") + " " + line : "") +
 			(title[1] == null ? "" : " " + title[1]) + " ! ! !</html>");
 		
@@ -541,6 +543,18 @@ public class GUIleftPanel {
 	 */
 	public RSyntaxTextArea getSourcePane(){
 		return this.jSourcePane;
+	}
+	
+	public Rectangle getPositionInSource( int line, int col ) {
+		
+		try {
+			return this.jSourcePane.modelToView(this.jSourcePane.getLineStartOffset(line)+col);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	/**

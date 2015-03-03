@@ -71,10 +71,10 @@ public class InitTreeTableData {
 		node = readVariables( true, compiler.getSymbolTable().curScope.locals, node, Memory.getGlobalPointer(), main, 0 );
 		
 		//Read local variables recursively
-		getNextAddress( true, compiler, Memory.getFramePointer(), node, main );
+		int currFunc = getNextAddress( true, compiler, Memory.getFramePointer(), node, main );
 		
 		//Create tree table model
-		TreeTableDataModel<VarDataNode> model = new TreeTableDataModel<>( node, columnNames, columnTypes );
+		TreeTableDataModel<VarDataNode> model = new TreeTableDataModel<>( node, columnNames, columnTypes, currFunc );
 		
 		return model;
 	}
@@ -96,7 +96,7 @@ public class InitTreeTableData {
 		readVariables( false, compiler.getSymbolTable().curScope.locals, node, Memory.getGlobalPointer(), main, 0 );
 				
 		//Read local variables recursively
-		getNextAddress( false, compiler, Memory.getFramePointer(), node, main );
+		model.setCurrentFunction(getNextAddress( false, compiler, Memory.getFramePointer(), node, main ));
 	}
 	
 	/**
@@ -110,25 +110,23 @@ public class InitTreeTableData {
 	 * @param node The data node which has to be updated (the data node of this function)
 	 * @param main A reference to the main interface which is necessary to invoke mains
 	 */
-	private static void getNextAddress( boolean init, CMMwrapper compiler, int address, VarDataNode node, GUImain main ){
+	private static int getNextAddress( boolean init, CMMwrapper compiler, int address, VarDataNode node, GUImain main ){
 		
 		//Name of the function
 		String name;
 		name = MethodContainer.getMethodName(Memory.loadInt(address-8));
-
+		
 		//Tree table data node of this function
 		VarDataNode funcNode;
-		
-		System.out.println("Reading function " + name + ", called on " + Memory.loadInt(address-12));
 		
 		Obj obj = findNodeByName(compiler.getSymbolTable().curScope.locals, name);
 		
 		if( init )
 			//Initialize data node if re-creating the data model
-			funcNode = new VarDataNode( name + "()", "", "", new ArrayList<DataNode>(), -1, obj.line, Memory.loadInt(address-12) );
+			funcNode = new VarDataNode( name + "()", "", "", new ArrayList<DataNode>(), address, obj.line, Memory.loadInt(address-12) );
 		else
 			//Update the data node
-			funcNode = node.getChild( name + "()", "", "", -1, obj.line, Memory.loadInt(address-12) );
+			funcNode = node.getChild( name + "()", "", "", address, obj.line, Memory.loadInt(address-12) );
 		
 		//Read local variables of the current function
 		readVariables( init, obj.locals, funcNode, address, main, obj.nPars );
@@ -136,10 +134,12 @@ public class InitTreeTableData {
 		
 		if( name == "main" )
 			//Return if reached the bottom of the call stack (main)
-			return;
+			return address;
 		else
 			//Read next function in call stack
 			getNextAddress( init, compiler, Memory.loadInt(address-4), node, main );
+		
+		return address;
 	}
 	
 	/**
@@ -155,9 +155,6 @@ public class InitTreeTableData {
 	 * @return The updated data node (see papam "node")
 	 */
 	private static VarDataNode readVariables( boolean init, Obj obj, VarDataNode node, int address, GUImain main, int nPars ){
-		
-		if( obj == null )
-			System.err.println("Error reading " + node.getName());
 		
 		//Iterate through symbol table
 		while( obj != null ){

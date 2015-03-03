@@ -261,11 +261,9 @@ public class GUImain {
 	}
 
 	/**
-	 * Repaints the main GUI. Note: Method from interface <i>GUImod</i>
-	 * 
-	 * <hr>
+	 * Repaints the main GUI
+	 * <br>
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
 	 */
 	public void repaint() {
 		jFrame.repaint();
@@ -273,17 +271,17 @@ public class GUImain {
 		this.jFrame.setVisible(true);
 	}
 	
+	/**
+	 * @return The JFrame of the main GUI
+	 */
 	public JFrame getJFrame() {
 		return this.jFrame;
 	}
 
 	/**
-	 * Sets the title of the main GUI window. Note: Method from interface
-	 * <i>GUImod</i>
-	 * 
-	 * <hr>
+	 * Updates the title of the main window so that it displays the current file's name
+	 * <br>
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
 	 */
 	public void updateWinFileName() {
 		if (this.getSettings().getCMMFilePath() == null) {

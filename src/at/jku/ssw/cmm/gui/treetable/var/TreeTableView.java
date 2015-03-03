@@ -24,6 +24,7 @@ package at.jku.ssw.cmm.gui.treetable.var;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
+import java.util.Stack;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -95,33 +96,36 @@ public class TreeTableView{
 	 * 
 	 * @param compiler
 	 */
-	public void update(final CMMwrapper compiler, final String fileName, boolean completeUpDate ) {
+	public void update(final CMMwrapper compiler, final String fileName, final boolean completeUpDate ) {
 		
-		if( completeUpDate || this.forceUpdate ){
-			DebugShell.out(State.LOG, Area.READVAR, "complete variable structure update");
-			
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				public void run() {
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				
+				if( completeUpDate || forceUpdate ){
 					varTreeTable.setTreeModel(InitTreeTableData.readSymbolTable(compiler, main, fileName, columnNames, columnTypes));
 					varTreeTable.addMouseListener(new TableButtonMouseListener(main, varTreeTable));
+						
+					forceUpdate = false;
 				}
-			});
-			this.forceUpdate = false;
-			this.varTreeTable.revalidate();
-			this.varTreeTable.repaint();
-		}
-		else{
-			DebugShell.out(State.LOG, Area.READVAR, "updating variable values");
-			InitTreeTableData.updateTreeTable(this.varTreeTable.getTreeModel(), (VarDataNode)this.varTreeTable.getCellRenderer().getModel().getRoot(), compiler, main, fileName);
-			
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				public void run() {
+				else{
+					InitTreeTableData.updateTreeTable(varTreeTable.getTreeModel(), (VarDataNode)varTreeTable.getCellRenderer().getModel().getRoot(), compiler, main, fileName);
 					varTreeTable.updateTreeModel();
 				}
-			});
-			this.varTreeTable.revalidate();
-			this.varTreeTable.repaint();
-		}
+				
+				//varTreeTable.revalidate();
+				//varTreeTable.repaint();
+				
+				System.out.println("Current Function: "+ varTreeTable.getTreeModel().getCurrentFunction());
+				
+				if(varTreeTable.getTreeModel().getCurrentFunction() != -1) {
+					Stack<String> s = new Stack<>();
+					s.push(main.getSettings().getCMMFile());
+					s.push(varTreeTable.getTreeModel().getCurrentFunction() + "()");
+					System.out.println("Expand Stack : " + s);
+					TreeUtils.expandByAddressAndPattern(varTreeTable, varTreeTable.getTreeModel().getCurrentFunction(), TreeUtils.HIGHLIGHT_NOT, "[\\w]+[\\(\\)]");
+				}
+			}
+		});
 	}
 
 	/**
@@ -145,7 +149,7 @@ public class TreeTableView{
 	 * 		FALSE if highlighting read variables
 	 */
 	public void highlightVariable( int adr, boolean changed ){
-		TreeUtils.expandByAddress(varTreeTable, adr, changed);
+		TreeUtils.expandByAddress(varTreeTable, adr, TreeUtils.HIGHLIGHT_CHANGED);
 		varTreeTable.repaint();
 	}
 	
