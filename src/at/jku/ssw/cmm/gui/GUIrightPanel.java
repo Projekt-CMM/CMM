@@ -208,6 +208,9 @@ public class GUIrightPanel {
 			
 			questPanel = new ProfilePanel2(main);
 			tabbedPane.add(questPanel.init(), _("Profile"), 2);
+			
+			//Opening last Used Quest
+			main.getSettings().updateDescPane(testPanel);
 		}
 		
 		tabbedPane.setMinimumSize(new Dimension(250, 400));

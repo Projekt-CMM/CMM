@@ -70,11 +70,6 @@ public class Quest {
 	 */
 	private boolean style;			
 	
-	/**
-	 * true if the Quest is optional
-	 */
-	//private boolean optional;
-	
 	
 	/**
 	 * attribute of the Quest, displayed in Front of the Questselection
@@ -121,6 +116,9 @@ public class Quest {
 	 * Path of the Quest
 	 */
 	private String questPath;	
+	
+	
+	private String cmmFilePath;
 	
 	/**
 	 * Files and folderNames
@@ -629,6 +627,20 @@ public class Quest {
 		
 		//Checking if the Current Path is a Quest Path
 		return false;
+	}
+
+	/**
+	 * @return the cmmFilePath
+	 */
+	public String getCmmFilePath() {
+		return cmmFilePath;
+	}
+
+	/**
+	 * @param cmmFilePath the cmmFilePath to set
+	 */
+	public void setCmmFilePath(String cmmFilePath) {
+		this.cmmFilePath = cmmFilePath;
 	}
 	
 /*	public boolean isOptional() {

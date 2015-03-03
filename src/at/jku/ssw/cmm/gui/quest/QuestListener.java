@@ -1,8 +1,13 @@
 package at.jku.ssw.cmm.gui.quest;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
+import at.jku.ssw.cmm.gui.event.MenuBarEventListener;
+import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
 import at.jku.ssw.cmm.quest.GUITestPanel;
 
@@ -39,18 +44,24 @@ public class QuestListener {
 				Quest lastClickedQuest = main.getCurrentQuest();
 	        	String path = lastClickedQuest.getInitPath() + Quest.sep + lastClickedQuest.getPackagePath() + Quest.sep + lastClickedQuest.getQuestPath();
 
-	        	if(lastClickedQuest.isDescription() && lastClickedQuest.isStyle()){
-        			questPanel.setDescDoc(path + Quest.sep + Quest.FILE_DESCRIPTION, path + Quest.sep + Quest.FILE_STYLE);
-		        	questPanel.setjQuestTitle(main.getGUImain().getSettings().getProfile().getCurrentQuest().getTitle());
-		      
-		        	
-        		//When the Quest only has a description
-		        }else if(lastClickedQuest.isDescription()){
-		        	questPanel.setDescDoc(path + Quest.sep + Quest.FILE_DESCRIPTION,"packages/default/style.css");
-		        	questPanel.setjQuestTitle(main.getGUImain().getSettings().getProfile().getCurrentQuest().getTitle());		        
-        		//TODO
-	        	//this.questPanel.setjQuestInfo(LoadStatics.loadHTMLdoc(file, style));
-        		}
+	        	//Opening new Quest File
+	        	if(lastClickedQuest != null){
+	        		if(lastClickedQuest.getCmmFilePath() != null){
+	        		File file = new File(lastClickedQuest.getCmmFilePath());
+	        		if(file.exists()){
+	        			//Saving the Current File
+		        		main.getGUImain().getSaveManager().safeCheck(_("Opening new file"));
+		        		
+		        		//Opening the Last File
+		        		new MenuBarEventListener(null,main.getGUImain()).openFile(file);
+	        		}
+	        	}
+	        		//changing the file to be opened
+	        		Profile.UpdateOpen(main.getGUImain().getSettings().getProfile(), lastClickedQuest);
+	        	}
+	        	
+	        	//Updating the QuestPanelDescription
+	        	main.getGUImain().getSettings().updateDescPane(questPanel);
         	
 			
 				System.out.println("Quest Selected");

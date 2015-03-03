@@ -34,6 +34,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
+import at.jku.ssw.cmm.profile.Profile;
+import at.jku.ssw.cmm.profile.Quest;
+import at.jku.ssw.cmm.profile.XMLWriteException;
 
 /**
  * This is a manager class for opening a dialog window for choosing a file in order to save the source
@@ -81,6 +84,7 @@ public class SaveDialog {
 	 */
 	private final GUImainSettings settings;
 	
+	
 	/**
 	 * Calls the "save as" dialog. The chosen file directory is automatically saved to the
 	 * main GUI configuration object and the source code is automatically saved.
@@ -99,9 +103,37 @@ public class SaveDialog {
 			FileManagerCode.saveSourceCode(chooser.getSelectedFile(), jSourcePane.getText(), jInputPane.getText());
 			String path = chooser.getSelectedFile().getPath();
 			settings.setCMMFilePath(path.endsWith(".cmm") ? path : path + ".cmm");
+			
+			saveInProfile();
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Saves the Path of the File in the current Quest and changes the quest to inprogress, 
+	 * if the quest isn't finished!
+	 */
+	private void saveInProfile(){
+		
+		//Saving the Profile, and adding the Quests which are inprogress
+		Profile profile = settings.getProfile();
+		if(profile != null && profile.getCurrentQuest() != null && settings.getCMMFilePath() != null){
+			try {
+				//Adding LastCmmFile
+				profile.getCurrentQuest().setCmmFilePath(settings.getCMMFilePath());
+				
+				//Updating Profile
+				if(!profile.getCurrentQuest().getState().equals(Quest.STATE_FINISHED))
+					Profile.changeQuestStateToInprogress(profile, profile.getCurrentQuest());
+				else
+					Profile.updateProfileQuestPath(profile, profile.getCurrentQuest());
+				
+				
+			} catch (XMLWriteException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/**
@@ -111,6 +143,7 @@ public class SaveDialog {
 	public boolean directSave(){
 		if( settings.getCMMFilePath() != null ){
 			FileManagerCode.saveSourceCode(new File(settings.getCMMFilePath()), jSourcePane.getText(), jInputPane.getText());
+			saveInProfile();
 			return false;
 		}
 		else

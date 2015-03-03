@@ -117,19 +117,6 @@ public class WindowEventListener implements WindowListener {
 		// ...and saved
 		System.out.println("[up to date]");
 		settings.writeXMLsettings();
-		
-		//Saving the Profile, and adding the Quests which are inprogress
-		Profile profile = settings.getProfile();
-		if(profile != null && profile.getCurrentQuest() != null){
-			try {
-				if(!profile.getCurrentQuest().getState().equals(Quest.STATE_OPEN))
-					Profile.changeQuestStateToInprogress(profile, profile.getCurrentQuest());
-				//TODO save current path
-				profile.writeProfile();
-			} catch (XMLWriteException e) {
-				e.printStackTrace();
-			}
-		}
 
 		System.exit(0);
 	}
