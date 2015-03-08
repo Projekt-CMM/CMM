@@ -139,13 +139,9 @@ public class Quest {
 	public static final String
 		XML_QUEST = "quest",
 		XML_TITLE = "title",
-		XML_LEVEL = "level",
 		XML_TOKEN = "token",
-		XML_NEXTQUEST = "nextquest",
 		XML_STATE = "state",
 		XML_REWARD = "reward",
-		XML_INPUT = "input",
-		XML_REF = "ref",
 		XML_ATTRIBUTE = "attribute";
 
 	/**
@@ -283,7 +279,7 @@ public class Quest {
 				}
 				
 				try{
-					String attr = eElement.getElementsByTagName(Quest.XML_REWARD).item(0).getTextContent();	
+					String attr = eElement.getElementsByTagName(Quest.XML_ATTRIBUTE).item(0).getTextContent();	
 					quest.setAttribute(attr);
 					
 				}catch(NullPointerException e){
@@ -300,16 +296,12 @@ public class Quest {
 				try{
 				String s = eElement.getElementsByTagName(Quest.XML_STATE).item(0).getTextContent();
 					if(s.contains(Quest.STATE_SELECTABLE) || s.contains(Quest.STATE_LOCKED))
-						quest.setState(eElement.getElementsByTagName(Quest.XML_STATE).item(0).getTextContent());
+						quest.setState(s);
 					else
 						throw new NullPointerException();
 						
 				}catch(NullPointerException e){
-					//No state found
 					
-					//System.out.println("No / Wrong State set!");
-
-					//quest.setState(Quest.STATE_LOCKED);
 					quest.setState(Quest.STATE_SELECTABLE);
 				}
 				

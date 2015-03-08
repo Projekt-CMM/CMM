@@ -205,6 +205,8 @@ public class GUIquestSelection {
 				state = "\u2714";
 			else if(q.getState().equals(Quest.STATE_INPROGRESS)) 
 				state = "\u231A";
+			else if(q.getState().equals(Quest.STATE_LOCKED)) 
+				state = "\u2718";
 			else
 				state = "";
 			
@@ -244,10 +246,13 @@ public class GUIquestSelection {
 					        }else if(q.isDescription())
 					        	displayURL(path + Quest.sep + Quest.FILE_DESCRIPTION);
 			        	 
-			        	openButton.setEnabled(true);
+			        	//Checks if the quest is locked or not
+			        	if(!q.getState().equals(Quest.STATE_LOCKED))
+			        		openButton.setEnabled(true);
 			        	
 			        }
 			        else{
+			        	setCurrentQuest(null);
 			        	displayURL("packages/default/de.html"); 
 			        	openButton.setEnabled(false);
 			        }

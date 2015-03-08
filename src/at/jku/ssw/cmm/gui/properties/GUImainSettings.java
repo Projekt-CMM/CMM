@@ -470,7 +470,7 @@ public class GUImainSettings {
 			
 			//Adding information about the last quest opened in the Profile
 			if(currentProfile != null && currentProfile.getCurrentQuest() != null){
-				Profile.changeQuestState(currentProfile, currentProfile.getCurrentQuest(), Quest.STATE_OPEN);
+				Profile.UpdateOpen(currentProfile, currentProfile.getCurrentQuest());
 			}
 
 			// Add infromation about recent profiles

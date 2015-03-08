@@ -37,7 +37,8 @@ public class QuestListener {
 		
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if(main != null && main.getCurrentQuest() != null){
+        	//Checks if the quest is locked or not
+			if(main != null && main.getCurrentQuest() != null && !main.getCurrentQuest().getState().equals(Quest.STATE_LOCKED)){
 				main.getGUImain().getSettings().getProfile().setCurrentQuest(main.getCurrentQuest());
 				main.getFrame().dispose();
 				
