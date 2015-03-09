@@ -170,10 +170,10 @@ public static Quest ReadLastQuest(Profile profile){
 }
 
 /**
- * Updates the current opened Quest in the Profile
+ * Updates the opened Quest in the profile, if the current Quest is not finished
  * @param profile
  * @param quest
- * @return
+ * @return the profile
  */
 public static Profile UpdateOpen(Profile profile, Quest quest){
 	if(profile.getProfileQuests() != null)
@@ -182,7 +182,8 @@ public static Profile UpdateOpen(Profile profile, Quest quest){
 				q.setState(Quest.STATE_INPROGRESS);
 			}
 			if(q.getPackagePath().equals(quest.getPackagePath()) &&
-					q.getQuestPath().equals(quest.getQuestPath())){
+					q.getQuestPath().equals(quest.getQuestPath()) &&
+					!q.getState().equals(Quest.STATE_FINISHED)){
 				q.setnewDate();
 				q.setState(Quest.STATE_OPEN);
 			}
