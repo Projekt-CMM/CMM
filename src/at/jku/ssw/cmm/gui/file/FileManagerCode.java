@@ -122,28 +122,29 @@ public class FileManagerCode {
 	public static String readInputData(File fileName) {
 
 		// Get input data file path
-		return readInputDataBlank(new File(fileName.getPath().substring(0, fileName.getPath().indexOf(".cmm")) + ".input.txt"));
+		try {
+			return readInputDataBlank(new File(fileName.getPath().substring(0, fileName.getPath().indexOf(".cmm")) + ".input.txt"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
-	public static String readInputDataBlank(File inputFile) {
+	public static String readInputDataBlank(File inputFile) throws IOException {
 
 		BufferedReader file;
 		String line;
 		String input = null;
+		
+		file = new BufferedReader(new FileReader(inputFile));
+		input = file.readLine();
 
-		try {
-
-			file = new BufferedReader(new FileReader(inputFile));
-			input = file.readLine();
-
-			while ((line = file.readLine()) != null) {
-				input = input + "\n" + line;
-			}
-			file.close();
-
-		} catch (IOException e) {
-			return null;
+		while ((line = file.readLine()) != null) {
+			input = input + "\n" + line;
 		}
+		file.close();
 
 		return input;
 	}

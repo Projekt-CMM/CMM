@@ -24,10 +24,8 @@ package at.jku.ssw.cmm.gui.file;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,15 +37,12 @@ import java.net.MalformedURLException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
-
-import sun.swing.ImageIconUIResource;
 
 public final class LoadStatics {
 
@@ -291,13 +286,9 @@ public final class LoadStatics {
 		return editorScrollPane;
 	}
 
-	public static javax.swing.text.Document readStyleSheet(String path) {
+	public static javax.swing.text.Document readStyleSheet(String path) throws MalformedURLException {
 		java.net.URL cssURL = null;
-		try {
-			cssURL = new File(path).toURI().toURL();
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
-		}
+		cssURL = new File(path).toURI().toURL();
 
 		// Import stylesheet
 		if (cssURL != null) {

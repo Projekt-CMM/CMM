@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 
 import org.w3c.dom.Document;
 
+import javax.swing.JFrame;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -61,12 +62,12 @@ public class ErrorTable {
 	 * 
 	 * @param language The language chosen by the user
 	 */
-	public ErrorTable( String language ) {
+	public ErrorTable( JFrame frame, String language ) {
 		
 		this.language = language;
 		
 		// Read error message linking data
-		this.readErrorTable();
+		this.readErrorTable(frame);
 	}
 
 	/**
@@ -111,7 +112,7 @@ public class ErrorTable {
 	/**
 	 * Reads the error linking data from the linking source file
 	 */
-	private void readErrorTable() {
+	private void readErrorTable( JFrame frame ) {
 		this.errorMap = new HashMap<>();
 		
 		// Select default language if given language does not exist
@@ -123,6 +124,7 @@ public class ErrorTable {
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = null;
 		
+		String errorID = null;
 		
 		try {
 			dBuilder = dbFactory.newDocumentBuilder();
@@ -141,10 +143,23 @@ public class ErrorTable {
 			}
 		} catch (ParserConfigurationException e1) {
 			DebugShell.out(State.ERROR, Area.ERROR, "Parser configuration exception when reading error table");
+			errorID = "#1002";
 		} catch (IOException e) {
 			DebugShell.out(State.ERROR, Area.ERROR, "I/O exception when reading error table");
+			errorID = "#1001";
 		} catch (SAXException e) {
 			DebugShell.out(State.ERROR, Area.ERROR, "SAX exception when reading error table");
+			errorID = "#1003";
+		} finally {
+			
+			if( errorID == null )
+				return;
+			
+			// Set error map to null if the mapping information could not be found
+			this.errorMap = null;
+			
+			// Show error message
+			new ErrorMessage().showErrorMessage(frame, errorID, language);
 		}
 	}
 }
