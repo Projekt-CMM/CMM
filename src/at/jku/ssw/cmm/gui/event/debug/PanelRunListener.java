@@ -26,7 +26,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -230,9 +229,9 @@ public class PanelRunListener implements Debugger {
 			ComponentPopup.createPopUp(main, ep, (int)r.getX()+200, (int)r.getY()+100, 60, 60, ImagePopup.WEST);
 			ComponentPopup.createPopUp(main, ep, (int)r.getX()+200, (int)r.getY()+100, 60, 60, ImagePopup.EAST);
 		}
-		if( arg0.kind == Node.CALL ) {//getintreturnvalue...
-			System.out.println("Call: " + arg0.line + ", " + arg0.col + ", " + arg0.colLength + " | " + arg0.type.kind );
-		}
+		/*if( arg0 != null && arg0.kind == Node.CALL ) {//getintreturnvalue...
+			System.out.println(getReturnIntValue);
+		}*/
 		
 		// Update latest node's line
 		this.lastNode = arg0;
@@ -294,9 +293,8 @@ public class PanelRunListener implements Debugger {
 	 * {@link userReply()} <b> Do not call this method </b> unless you know what
 	 * you do!
 	 * 
-	 * <hr>
+	 * <br>
 	 * <i>SYNCHRONIZED | THREAD SAFE </i>
-	 * <hr>
 	 */
 	synchronized private void waitForUserReply() {
 		try {
@@ -312,9 +310,8 @@ public class PanelRunListener implements Debugger {
 	 * This method unblocks the interpreter and enables it to execute the next
 	 * step.
 	 * 
-	 * <hr>
+	 * <br>
 	 * <i>SYNCHRONIZED | THREAD SAFE </i>
-	 * <hr>
 	 */
 	synchronized private void userReply() {
 		wait = true;

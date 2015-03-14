@@ -27,6 +27,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
@@ -37,6 +39,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import org.w3c.dom.Document;
+
+import at.jku.ssw.cmm.gui.debug.ErrorMessage;
 import at.jku.ssw.cmm.gui.debug.ErrorTable;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
@@ -176,7 +181,7 @@ public class GUIrightPanel {
 		tabbedPane.add(jDebugPanel, _("Debug"));
 
 		// Initialize error panel
-		this.errorMap = new ErrorTable(main.getSettings().getLanguage());
+		this.errorMap = new ErrorTable(main.getJFrame(), main.getSettings().getLanguage());
 		this.errorPanel = new JPanel();
 		this.errorPanel.setLayout(new BorderLayout());
 
@@ -253,14 +258,30 @@ public class GUIrightPanel {
 	 */
 	public String[] showErrorPanel(String errorCode) {
 
-		this.errorDesc.setDocument(LoadStatics.readStyleSheet("error"
-				+ File.separator + "style.css"));
+		javax.swing.text.Document style = null;
+		try {
+			style = LoadStatics.readStyleSheet("error"
+					+ File.separator + "style.css");
+		} catch (MalformedURLException e) {
+			new ErrorMessage().showErrorMessage(this.main.getJFrame(), "#1011", this.main.getSettings().getLanguage());
+		}
 		
-		String desc = FileManagerCode.readInputDataBlank(new File(this.errorMap
-				.getErrorHTML(errorCode)));
-
-		this.errorDesc.setContentType("text/html");
-		this.errorDesc.setText(desc);
+		if( style == null )
+			new ErrorMessage().showErrorMessage(this.main.getJFrame(), "#1012", this.main.getSettings().getLanguage());
+		
+		this.errorDesc.setDocument(style);
+		
+		String desc = null;
+		try {
+			desc = FileManagerCode.readInputDataBlank(new File(
+					this.errorMap == null ? null : this.errorMap
+					.getErrorHTML(errorCode)));
+			this.errorDesc.setContentType("text/html");
+			this.errorDesc.setText(desc);
+		} catch (IOException e) {
+			new ErrorMessage().showErrorMessage(this.main.getJFrame(), "#1021", this.main.getSettings().getLanguage());
+			this.errorDesc.setText("#1021: Error message not found");
+		}
 
 		if (this.tabbedPane.indexOfTab(_("Error")) == -1) {
 			this.tabbedPane.add(errorPanel, _("Error"), 1);
@@ -271,6 +292,9 @@ public class GUIrightPanel {
 		this.tabbedPane.setSelectedIndex(1);
 		
 		String[] result = new String[2];
+		
+		if(desc == null)
+			return result;
 		
 		if(desc.contains("<postfix>"))
 			result[1] = desc.substring(desc.indexOf("<postfix>")+9, desc.indexOf("</postfix>"));

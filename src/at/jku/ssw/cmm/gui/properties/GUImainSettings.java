@@ -48,7 +48,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import at.jku.ssw.cmm.gettext.Language;
 import at.jku.ssw.cmm.gui.ProfilePanel2;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
@@ -344,7 +343,7 @@ public class GUImainSettings {
 
 			// Initialize default settings
 			this.currentFile = null;
-			this.lastLanguage = Language.DEFAULT_LANGUAGE;
+			this.lastLanguage = null;
 		}
 
 		if(currentProfile == null){

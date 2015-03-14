@@ -23,6 +23,7 @@ package at.jku.ssw.cmm.quest;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import at.jku.ssw.cmm.compiler.Compiler;
@@ -188,7 +189,13 @@ public class QuestTester extends Thread {
 						"Input text file does not exist");
 
 			// Read input data
-			return FileManagerCode.readInputDataBlank(new File(this.generator));
+			try {
+				return FileManagerCode.readInputDataBlank(new File(this.generator));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
 		} else
 			throw new FileNotFoundException("Invalid input file ending");
 	}
@@ -201,7 +208,12 @@ public class QuestTester extends Thread {
 					"Input file for compilation not found: " + path);
 		
 		String sourceCode = null;
-		sourceCode = Preprocessor.expand(FileManagerCode.readSourceCode(inputFile), "", new ArrayList<Object[]>(), new ArrayList<Integer>());
+		try {
+			sourceCode = Preprocessor.expand(FileManagerCode.readSourceCode(inputFile), "", new ArrayList<Object[]>(), new ArrayList<Integer>());
+		} catch (IOException e1) {
+			// TODO Add error handling
+			e1.printStackTrace();
+		}
 		
 		if( sourceCode == null )
 			throw new CompilerErrorException("Source code is null", null);

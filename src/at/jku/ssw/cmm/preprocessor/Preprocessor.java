@@ -22,6 +22,7 @@
 package at.jku.ssw.cmm.preprocessor;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +38,7 @@ import at.jku.ssw.cmm.gui.file.FileManagerCode;
 
 public class Preprocessor {
 
-	public static String expand( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints ) throws PreprocessorException{ // Debug message
+	public static String expand( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints ) throws PreprocessorException, IOException{ // Debug message
 		DebugShell.out(State.LOG, Area.COMPILER, "Starting preprocessor");
 	
 		// Init new SourceCode storage
@@ -56,7 +57,7 @@ public class Preprocessor {
 		return newSourceCode;
 	}
 	
-	public static String parseFile( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints, Map<String, Integer> defines, int offset, String file) throws PreprocessorException{
+	public static String parseFile( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints, Map<String, Integer> defines, int offset, String file) throws PreprocessorException, IOException{
 		// Debug message
 		DebugShell.out(State.LOG, Area.PREPROCESSOR, "parse File");
 		

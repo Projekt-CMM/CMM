@@ -5,6 +5,7 @@ import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -94,7 +95,12 @@ public class GUITestPanel {
 
 	public void setDescDoc(String html, String css) {
 		
-		this.jDescPane.setDocument(LoadStatics.readStyleSheet(css));
+		try {
+			this.jDescPane.setDocument(LoadStatics.readStyleSheet(css));
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		try {
 			this.jDescPane.setPage(LoadStatics.getHTMLUrl(html));

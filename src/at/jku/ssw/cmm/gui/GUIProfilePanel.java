@@ -27,6 +27,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
@@ -383,6 +384,11 @@ public class GUIProfilePanel {
 			
 			e.printStackTrace();
 		}
-		this.jQuestInfo.setDocument(LoadStatics.readStyleSheet(css));
+		try {
+			this.jQuestInfo.setDocument(LoadStatics.readStyleSheet(css));
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

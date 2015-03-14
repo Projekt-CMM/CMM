@@ -30,6 +30,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,7 @@ import javax.swing.text.StyleContext;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+import at.jku.ssw.cmm.gui.debug.ErrorMessage;
 import at.jku.ssw.cmm.gui.event.CursorListener;
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
@@ -225,8 +227,12 @@ public class GUIleftPanel {
 
 		// Open latest file and show it's contents in the source code text area
 		if (this.main.getSettings().hasCMMFilePath()) {
-			this.jSourcePane.setText(FileManagerCode.readSourceCode(new File(
-					this.main.getSettings().getCMMFilePath())));
+			try {
+				this.jSourcePane.setText(FileManagerCode.readSourceCode(new File(
+						this.main.getSettings().getCMMFilePath())));
+			} catch (IOException e) {
+				new ErrorMessage().showErrorMessage(jFrame, "#2011", main.getSettings().getLanguage());
+			}
 			//TODO prevent source code panel from undoing setText
 			//TODO clear undo list when loading new file
 			this.jInputPane.setText(FileManagerCode.readInputData(new File(

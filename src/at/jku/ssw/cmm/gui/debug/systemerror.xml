@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<systemerror>
+	<common>
+		<en>To find further information about this error, see error number #xxxx on <i>https://github.com/Projekt-CMM/CMM/wiki/List-of-internal-error-numbers</i>.</en>
+		<de>Weitere Informationen über diesen Fehler finden Sie bei Fehlernummer #xxxx unter <i>https://github.com/Projekt-CMM/CMM/wiki/List-of-internal-error-numbers</i>.</de>
+	</common>
+	<error id="#1001">
+		<title>
+			<en>Problem when reading error table</en>
+			<de>Problem beim Einlesen der Fehlertabelle</de>
+		</title>
+		<message>
+			<en>It seems like the file "error/table.xml" is missing or corrupted. Did you delete any files in the C Compact directory recently?</en>
+			<de>Es sieht aus als wäre die Datei "error/table.xml" beschädigt oder nicht vorhanden. Haben Sie Dateien im Ordner von C Compact gelöscht?</de>
+		</message>
+	</error>
+	<error id="#1002">
+		<title>
+			<en>Problem when reading error table</en>
+			<de>Problem beim Einlesen der Fehlertabelle</de>
+		</title>
+		<message>
+			<en>The content of "error/table.xml" is unreadable. Did you modify any files in the C Compact directory recently?</en>
+			<de>Informationen in "error/table.xml" sind nicht lesbar. Haben Sie Dateien im Ordner von C Compact manuell bearbeitet?</de>
+		</message>
+	</error>
+	<error id="#1003">
+		<title>
+			<en>Problem when reading error table</en>
+			<de>Problem beim Einlesen der Fehlertabelle</de>
+		</title>
+		<message>
+			<en>The content of "error/table.xml" is unreadable. Did you modify any files in the C Compact directory recently?</en>
+			<de>Informationen in "error/table.xml" sind nicht lesbar. Haben Sie Dateien im Ordner von C Compact manuell bearbeitet?</de>
+		</message>
+	</error>
+	<error id="#1011">
+		<title>
+			<en>Problem when reading style information</en>
+			<de>Problem beim Lesen der Formatierung</de>
+		</title>
+		<message>
+			<en></en>
+			<de></de>
+		</message>
+	</error>
+	<error id="#1012">
+		<title>
+			<en>Problem when reading style information</en>
+			<de>Problem beim Lesen der Formatierung</de>
+		</title>
+		<message>
+			<en></en>
+			<de></de>
+		</message>
+	</error>
+	<error id="#1021">
+		<title>
+			<en>Problem when reading error description</en>
+			<de>Problem beim Lesen der Fehlerinfromation</de>
+		</title>
+		<message>
+			<en></en>
+			<de></de>
+		</message>
+	</error>
+	<error id="#2001">
+		<title>
+			<en>Could not save file</en>
+			<de>Datei konnte nicht gespeichert werden</de>
+		</title>
+		<message>
+			<en></en>
+			<de></de>
+		</message>
+	</error>
+	<error id="#2011">
+		<title>
+			<en>Could not open file</en>
+			<de>Datei konnte nicht geöffnet werden</de>
+		</title>
+		<message>
+			<en></en>
+			<de></de>
+		</message>
+	</error>
+	<error id="#2012">
+		<title>
+			<en>Could not open file</en>
+			<de>Datei konnte nicht geöffnet werden</de>
+		</title>
+		<message>
+			<en></en>
+			<de></de>
+		</message>
+	</error>
+	<error id="#2013">
+		<title>
+			<en>Could not open library file</en>
+			<de>Bibliothek konnte nicht geöffnet werden</de>
+		</title>
+		<message>
+			<en></en>
+			<de></de>
+		</message>
+	</error>
+</systemerror>

@@ -3,6 +3,7 @@ package at.jku.ssw.cmm.gui.quest;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -20,6 +21,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.file.LoadStatics;
 import at.jku.ssw.cmm.gui.treetable.example.TreeTableExample;
@@ -133,7 +135,12 @@ public class GUIquestSelection {
 		
 		e.printStackTrace();
 	}
-	this.editorScrollPane.setDocument(LoadStatics.readStyleSheet("packages/default/style.css"));
+	try {
+		this.editorScrollPane.setDocument(LoadStatics.readStyleSheet("packages/default/style.css"));
+	} catch (MalformedURLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 	
 		//Quest description
 		editorScrollPane.setBorder(new EmptyBorder(5, 5, 5, 5));

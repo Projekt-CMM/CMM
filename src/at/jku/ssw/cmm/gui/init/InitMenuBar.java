@@ -109,10 +109,15 @@ public class InitMenuBar {
 			
 			fileM.addSeparator();
 			
-			// --- edit -> properties ---
+			// --- file -> properties ---
 			JMenuItem propertiesMI = new JMenuItem(_("Properties"));
 			propertiesMI.addActionListener(listener.propertiesHandler);
 			fileM.add(propertiesMI);
+			
+			// --- file -> language ---
+			JMenuItem languageMI = new JMenuItem(_("Language"));
+			languageMI.addActionListener(listener.languageHandler);
+			fileM.add(languageMI);
 			
 			// --- file -> credits ---
 			JMenuItem creditsMI = new JMenuItem(_("About C Compact"));
