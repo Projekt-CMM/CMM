@@ -294,6 +294,9 @@
 	</error>
 
 	<!--### Unknown Exceptions ###-->
+	<error id="Preprocessor.IOException">
+		<file>exception/preprocessor.html</file>
+	</error>
 	<error id="Preprocessor.([\w./]+)">
 		<file>exception/preprocessor.html</file>
 	</error>

@@ -53,7 +53,8 @@
 			<en></en>
 			<de></de>
 		</message>
-		<error id="#1021">
+	</error>
+	<error id="#1021">
 		<title>
 			<en>Problem when reading error description</en>
 			<de>Problem beim Lesen der Fehlerinfromation</de>
@@ -63,5 +64,44 @@
 			<de></de>
 		</message>
 	</error>
+	<error id="#2001">
+		<title>
+			<en>Could not save file</en>
+			<de>Datei konnte nicht gespeichert werden</de>
+		</title>
+		<message>
+			<en></en>
+			<de></de>
+		</message>
+	</error>
+	<error id="#2011">
+		<title>
+			<en>Could not open file</en>
+			<de>Datei konnte nicht geöffnet werden</de>
+		</title>
+		<message>
+			<en></en>
+			<de></de>
+		</message>
+	</error>
+	<error id="#2012">
+		<title>
+			<en>Could not open file</en>
+			<de>Datei konnte nicht geöffnet werden</de>
+		</title>
+		<message>
+			<en></en>
+			<de></de>
+		</message>
+	</error>
+	<error id="#2013">
+		<title>
+			<en>Could not open library file</en>
+			<de>Bibliothek konnte nicht geöffnet werden</de>
+		</title>
+		<message>
+			<en></en>
+			<de></de>
+		</message>
 	</error>
 </systemerror>

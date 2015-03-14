@@ -208,7 +208,12 @@ public class QuestTester extends Thread {
 					"Input file for compilation not found: " + path);
 		
 		String sourceCode = null;
-		sourceCode = Preprocessor.expand(FileManagerCode.readSourceCode(inputFile), "", new ArrayList<Object[]>(), new ArrayList<Integer>());
+		try {
+			sourceCode = Preprocessor.expand(FileManagerCode.readSourceCode(inputFile), "", new ArrayList<Object[]>(), new ArrayList<Integer>());
+		} catch (IOException e1) {
+			// TODO Add error handling
+			e1.printStackTrace();
+		}
 		
 		if( sourceCode == null )
 			throw new CompilerErrorException("Source code is null", null);

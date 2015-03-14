@@ -18,12 +18,13 @@
  *  Copyright (c) 2014-2015 Thomas Pointhuber
  *  Copyright (c) 2014-2015 Peter Wassermair
  */
- 
+
 package at.jku.ssw.cmm.gui.debug;
 
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,12 +42,11 @@ import at.jku.ssw.cmm.preprocessor.exception.PreprocessorException;
 import at.jku.ssw.cmm.preprocessor.Preprocessor;
 
 /**
- * This class controls the panel in the "debug" tab in the right part
- * of the main GUI. This class forms an interface between the debugger
- * and the main GUI.
- * <br>
- * Moreover, it contains the debugging control elements (play/step/stop
- * button) and the variable tree table.
+ * This class controls the panel in the "debug" tab in the right part of the
+ * main GUI. This class forms an interface between the debugger and the main
+ * GUI. <br>
+ * Moreover, it contains the debugging control elements (play/step/stop button)
+ * and the variable tree table.
  * 
  * @author fabian
  *
@@ -54,12 +54,14 @@ import at.jku.ssw.cmm.preprocessor.Preprocessor;
 public class GUIdebugPanel {
 
 	/**
-	 * This class controls the panel in the "debug" tab in the right part
-	 * of the main GUI. This class forms an interface between the debugger
-	 * and the main GUI.
+	 * This class controls the panel in the "debug" tab in the right part of the
+	 * main GUI. This class forms an interface between the debugger and the main
+	 * GUI.
 	 * 
-	 * @param cp Main component of the main GUI
-	 * @param main Reference to the main GUI
+	 * @param cp
+	 *            Main component of the main GUI
+	 * @param main
+	 *            Reference to the main GUI
 	 */
 	public GUIdebugPanel(JPanel cp, GUImain main) {
 		this.main = main;
@@ -76,14 +78,14 @@ public class GUIdebugPanel {
 		JPanel jVarPanel = new JPanel();
 		jVarPanel.setBorder(new TitledBorder(_("Variables")));
 		jVarPanel.setLayout(new BorderLayout());
-		
-		this.varView = new TreeTableView(main, jVarPanel,
-				main.getSettings().getCMMFile());
-		
+
+		this.varView = new TreeTableView(main, jVarPanel, main.getSettings()
+				.getCMMFile());
+
 		cp.add(jVarPanel, BorderLayout.CENTER);
 
 		this.breakpoints = new ArrayList<>();
-		
+
 		this.compileManager = new CMMwrapper(this.main, this);
 	}
 
@@ -137,7 +139,8 @@ public class GUIdebugPanel {
 	 * switches from any maine to "fast run" maine; so that the interpreter does
 	 * not stop at breakpoints which should already have been passed.
 	 * 
-	 * @param line The current line
+	 * @param line
+	 *            The current line
 	 */
 	public void updateBreakPoints(int line) {
 		for (int i = 0; i < this.breakpoints.size(); i++) {
@@ -157,9 +160,11 @@ public class GUIdebugPanel {
 	/**
 	 * Highlights the variable with the given address in the variable tree table
 	 * 
-	 * @param adr The address of the variable to be highlighted
-	 * @param changed TRUE if highlighting changed variables,
-	 * 		FALSE if highlighting read variables
+	 * @param adr
+	 *            The address of the variable to be highlighted
+	 * @param changed
+	 *            TRUE if highlighting changed variables, FALSE if highlighting
+	 *            read variables
 	 */
 	public void highlightVariable(final int adr, final boolean changed) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
@@ -174,13 +179,14 @@ public class GUIdebugPanel {
 	 * current view maine.
 	 */
 	public void updateVariableTables(boolean completeUpDate) {
-		this.varView.update(compileManager, this.main.getSettings().getCMMFile(), completeUpDate);
+		this.varView.update(compileManager, this.main.getSettings()
+				.getCMMFile(), completeUpDate);
 	}
-	
+
 	/**
 	 * Updates the font size of the text in the variable tree table
 	 */
-	public void updateFontSize(){
+	public void updateFontSize() {
 		this.varView.updateFontSize();
 	}
 
@@ -189,9 +195,9 @@ public class GUIdebugPanel {
 	 * source code, save and open files, etc.
 	 */
 	public void setReadyMode() {
-		
+
 		DebugShell.out(State.LOG, Area.GUI, "Setting main GUI to ready mode");
-		
+
 		this.ctrlPanel.setReadyMode();
 		this.ctrlPanel.getListener().setReadyMode();
 		this.main.setReadyMode();
@@ -199,38 +205,43 @@ public class GUIdebugPanel {
 		// Mode-specific
 		this.main.getLeftPanel().resetInputHighlighter();
 		this.varView.standby(this.main.getSettings().getCMMFile());
-		
-		//Input lock
+
+		// Input lock
 		this.main.unlockInput();
 	}
 
 	/**
 	 * Sets the main GUI to error mode
 	 * 
-	 * @param html The error message
-	 * @param file The file where the error ocurred (null if not in a library)
-	 * @param line The line where the error ocurred
-	 * @param keepTable FALSE if the variable tree table shall be reset immediately,
-	 * 		otherwise TRUE
+	 * @param html
+	 *            The error message
+	 * @param file
+	 *            The file where the error ocurred (null if not in a library)
+	 * @param line
+	 *            The line where the error ocurred
+	 * @param keepTable
+	 *            FALSE if the variable tree table shall be reset immediately,
+	 *            otherwise TRUE
 	 */
-	public void setErrorMode(String html, String file, int line, boolean keepTable) {
-		
-		DebugShell.out(State.LOG, Area.GUI, "Setting main GUI to error mode, " +
-				(keepTable ? "keeping" : "discarding") + " table");
+	public void setErrorMode(String html, String file, int line,
+			boolean keepTable) {
+
+		DebugShell.out(State.LOG, Area.GUI, "Setting main GUI to error mode, "
+				+ (keepTable ? "keeping" : "discarding") + " table");
 
 		// Set debugging control elements to ready mode
 		this.ctrlPanel.setReadyMode();
 		this.ctrlPanel.getListener().setReadyMode();
-		
+
 		// Set main GUI (and its child elements) to error mode
-		this.main.setErrorMode(html, file, Integer.parseInt(
-			Preprocessor.returnFileAndNumber(line, 
-					this.main.getLeftPanel().getSourceCodeRegister())[1].toString()));
-		
+		this.main.setErrorMode(html, file, Integer.parseInt(Preprocessor
+				.returnFileAndNumber(line, this.main.getLeftPanel()
+						.getSourceCodeRegister())[1].toString()));
+
 		// Eventually reset variable tree table
-		if( !keepTable )
+		if (!keepTable)
 			this.varView.standby(this.main.getSettings().getCMMFile());
-		
+
 		// Unlock input methods -> user can edit source code again
 		this.main.unlockInput();
 	}
@@ -242,8 +253,8 @@ public class GUIdebugPanel {
 		this.ctrlPanel.setRunMode();
 		this.ctrlPanel.getListener().setRunMode();
 		this.main.setRunMode();
-		
-		//Input lock
+
+		// Input lock
 		this.main.lockInput();
 	}
 
@@ -254,11 +265,11 @@ public class GUIdebugPanel {
 		this.ctrlPanel.setPauseMode();
 		this.ctrlPanel.getListener().setPauseMode();
 		this.main.setPauseMode();
-		
-		//Input lock
+
+		// Input lock
 		this.main.lockInput();
 	}
-	
+
 	/**
 	 * <i>THREAD SAFE by default </i>
 	 * 
@@ -272,7 +283,7 @@ public class GUIdebugPanel {
 	/**
 	 * @return A reference to the control panel manager class
 	 */
-	public GUIcontrolPanel getControlPanel(){
+	public GUIcontrolPanel getControlPanel() {
 		return this.ctrlPanel;
 	}
 
@@ -294,34 +305,45 @@ public class GUIdebugPanel {
 
 		// Assemble complete source code using preprocessor
 		try {
-			sourceCode = Preprocessor.expand(sourceCode,
-					this.main.getSettings().getWorkingDirectory(),
-					this.main.getLeftPanel().getSourceCodeRegister(), this.breakpoints);
+			sourceCode = Preprocessor.expand(sourceCode, this.main
+					.getSettings().getWorkingDirectory(), this.main
+					.getLeftPanel().getSourceCodeRegister(), this.breakpoints);
 		}
 		// Preprocessor exception, reason ins known
 		catch (PreprocessorException e1) {
-			
+
 			// Reset source code file register
 			Object[] e = { 1, 0, null };
 			this.main.getLeftPanel().getSourceCodeRegister().clear();
 			this.main.getLeftPanel().getSourceCodeRegister().add(e);
-			
+
 			// Show preprocessor error
-			this.setErrorMode(e1.getMessage(), e1.getFile(), e1.getLine(), false);
-						
+			this.setErrorMode(e1.getMessage(), e1.getFile(), e1.getLine(),
+					false);
+
+			return false;
+		} catch (IOException e1) {
+			// Reset source code file register
+			Object[] e = { 1, 0, null };
+			this.main.getLeftPanel().getSourceCodeRegister().clear();
+			this.main.getLeftPanel().getSourceCodeRegister().add(e);
+
+			// Display default message for preprocessor error
+			this.setErrorMode("Preprocessor.IOException", "", -1, false);
+
 			return false;
 		}
-		// Preprocessor error, reason in unknown
+		// Preprocessor error, reason is unknown
 		catch (Exception e1) {
-			
+
 			// Reset source code file register
 			Object[] e = { 1, 0, null };
 			this.main.getLeftPanel().getSourceCodeRegister().clear();
 			this.main.getLeftPanel().getSourceCodeRegister().add(e);
-			
+
 			// Display default message for preprocessor error
 			this.setErrorMode("Preprocessor." + e1, "", -1, false);
-						
+
 			return false;
 		}
 
@@ -335,8 +357,10 @@ public class GUIdebugPanel {
 		DebugShell.out(State.STAT, Area.COMPILER,
 				"-------------------------------------");
 
-		DebugShell.out(State.STAT, Area.COMPILER, "Source code begins @ line "
-				+ (int) this.main.getLeftPanel().getSourceCodeRegister().get(0)[0] + "\n");
+		DebugShell.out(State.STAT, Area.COMPILER,
+				"Source code begins @ line "
+						+ (int) this.main.getLeftPanel()
+								.getSourceCodeRegister().get(0)[0] + "\n");
 
 		for (int i : this.breakpoints) {
 			DebugShell.out(State.STAT, Area.COMPILER, "line " + i);
@@ -360,7 +384,7 @@ public class GUIdebugPanel {
 			e = compileManager.compile(sourceCode);
 		}
 		// In case of compiler crash
-		catch(Exception e1) {
+		catch (Exception e1) {
 			this.setErrorMode("Compiler." + e1, null, -1, false);
 		}
 
@@ -369,29 +393,29 @@ public class GUIdebugPanel {
 			this.setErrorMode(e.msg, null, e.line, false);
 			return false;
 		}
-		
+
 		return true;
 	}
 
 	/**
-	 * Compiles the source code and starts the interpreter thread via
-	 * the compiler wrapper class. Initializes the call stack.
+	 * Compiles the source code and starts the interpreter thread via the
+	 * compiler wrapper class. Initializes the call stack.
 	 * 
 	 * <br>
 	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
 	 */
 	public boolean runInterpreter() {
-		
+
 		// Save the current file
 		this.main.getSaveManager().directSave();
 		this.main.setFileSaved();
 		this.main.updateWinFileName();
 		this.updateFileName();
-		
+
 		// Compile and run
-		if( this.compile() )
+		if (this.compile())
 			return this.compileManager.runInterpreter(ctrlPanel.getListener(),
-				new IOstream(this.main));
+					new IOstream(this.main));
 		else
 			return false;
 	}

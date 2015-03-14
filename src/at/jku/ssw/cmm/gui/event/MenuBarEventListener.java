@@ -26,6 +26,7 @@ import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -34,6 +35,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.credits.Credits;
+import at.jku.ssw.cmm.gui.debug.ErrorMessage;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.properties.GUIProperties;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
@@ -134,7 +136,11 @@ public class MenuBarEventListener {
 	public void openFile( File file ){
 		// Open file and load text t source code panel
 		//this.leftPanelControl.initSourcePane(FileManagerCode.readSourceCode(file));
-		this.main.getLeftPanel().getSourcePane().setText(FileManagerCode.readSourceCode(file));
+		try {
+			this.main.getLeftPanel().getSourcePane().setText(FileManagerCode.readSourceCode(file));
+		} catch (IOException e) {
+			new ErrorMessage().showErrorMessage(jFrame, "#2012", main.getSettings().getLanguage());
+		}
 
 		// Set input data
 		this.main.getLeftPanel().getInputPane().setText(FileManagerCode.readInputData(file));

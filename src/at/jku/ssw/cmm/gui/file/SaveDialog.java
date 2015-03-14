@@ -24,6 +24,8 @@ package at.jku.ssw.cmm.gui.file;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -33,6 +35,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+import at.jku.ssw.cmm.gui.debug.ErrorMessage;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
@@ -100,7 +103,11 @@ public class SaveDialog {
 		int option = chooser.showSaveDialog(jFrame);
 		
 		if (option == JFileChooser.APPROVE_OPTION) {
-			FileManagerCode.saveSourceCode(chooser.getSelectedFile(), jSourcePane.getText(), jInputPane.getText());
+			try {
+				FileManagerCode.saveSourceCode(chooser.getSelectedFile(), jSourcePane.getText(), jInputPane.getText());
+			} catch (IOException e) {
+				new ErrorMessage().showErrorMessage(this.jFrame, "#2001", this.settings.getLanguage());
+			}
 			String path = chooser.getSelectedFile().getPath();
 			settings.setCMMFilePath(path.endsWith(".cmm") ? path : path + ".cmm");
 			
@@ -142,7 +149,11 @@ public class SaveDialog {
 	 */
 	public boolean directSave(){
 		if( settings.getCMMFilePath() != null ){
-			FileManagerCode.saveSourceCode(new File(settings.getCMMFilePath()), jSourcePane.getText(), jInputPane.getText());
+			try {
+				FileManagerCode.saveSourceCode(new File(settings.getCMMFilePath()), jSourcePane.getText(), jInputPane.getText());
+			} catch (IOException e) {
+				new ErrorMessage().showErrorMessage(this.jFrame, "#2001", this.settings.getLanguage());
+			}
 			saveInProfile();
 			return false;
 		}

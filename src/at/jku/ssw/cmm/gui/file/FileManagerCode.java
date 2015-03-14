@@ -43,9 +43,10 @@ public class FileManagerCode {
 	 * @param code
 	 *            The text which has to be saved
 	 * @return TRUE if saving successful, FALSE if saving failed
+	 * @throws IOException 
 	 */
 	public static boolean saveSourceCode(File fileName, String code,
-			String input) {
+			String input) throws IOException {
 
 		// Add file type extension of necessary
 		if (!fileName.getName().endsWith(".cmm")) {
@@ -55,25 +56,17 @@ public class FileManagerCode {
 
 		// Write source code file
 		BufferedWriter file;
-		try {
-			file = new BufferedWriter(new FileWriter(fileName));
-			file.write(code);
-			file.close();
-		} catch (IOException e) {
-			return false;
-		}
+		file = new BufferedWriter(new FileWriter(fileName));
+		file.write(code);
+		file.close();
 
 		// Get input data file path
 		File inputFile = new File(fileName.getPath().substring(0,
 				fileName.getPath().indexOf(".cmm"))
 				+ ".input.txt");
-		try {
-			file = new BufferedWriter(new FileWriter(inputFile));
-			file.write(input);
-			file.close();
-		} catch (IOException e) {
-			return false;
-		}
+		file = new BufferedWriter(new FileWriter(inputFile));
+		file.write(input);
+		file.close();
 
 		return true;
 	}
@@ -86,26 +79,21 @@ public class FileManagerCode {
 	 *            The file which has to be opened
 	 * @return The content of the file (as String). Returns null if file reading
 	 *         failed
+	 * @throws IOException 
 	 */
-	public static String readSourceCode(File fileName) {
+	public static String readSourceCode(File fileName) throws IOException {
 
 		BufferedReader file;
 		String line;
 		String code = null;
+		
+		file = new BufferedReader(new FileReader(fileName));
+		code = file.readLine();
 
-		try {
-
-			file = new BufferedReader(new FileReader(fileName));
-			code = file.readLine();
-
-			while ((line = file.readLine()) != null) {
-				code = code + "\n" + line;
-			}
-			file.close();
-
-		} catch (IOException e) {
-			return null;
+		while ((line = file.readLine()) != null) {
+			code = code + "\n" + line;
 		}
+		file.close();
 
 		return code;
 	}
@@ -119,7 +107,7 @@ public class FileManagerCode {
 	 * @return The content of the file (as String). Returns null if file reading
 	 *         failed
 	 */
-	public static String readInputData(File fileName) {
+	public static String readInputData(File fileName) { //TODO add error management?
 
 		// Get input data file path
 		try {
