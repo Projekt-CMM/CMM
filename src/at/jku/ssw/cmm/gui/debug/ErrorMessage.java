@@ -75,7 +75,7 @@ public class ErrorMessage {
 		common = common.replace("#xxxx", id);
 			
 		JOptionPane.showMessageDialog(frame,
-				   message + "\n" + common,
+				   "<html>" + message + "<br>" + common + "</html>",
 				   title,
 				   JOptionPane.ERROR_MESSAGE);
 		
