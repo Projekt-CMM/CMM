@@ -47,6 +47,7 @@ import at.jku.ssw.cmm.gui.event.WindowEventListener;
 import at.jku.ssw.cmm.gui.file.SaveDialog;
 import at.jku.ssw.cmm.gui.init.InitMenuBar;
 import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
+import at.jku.ssw.cmm.gui.properties.GUILanguage;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.gui.quest.GUIquestSelection;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
@@ -71,23 +72,35 @@ public class GUImain {
 		
 		final GUImain app = new GUImain(settings);
 		
-		// Load translations
-		Language.loadLanguage(settings.getLanguage() + ".po");
-
 		boolean test = false;
-		for (String s : args)
-			if (s.equals("-t"))
+		for (String s : args) {
+			if (s.equals("-t")) {
 				test = true;
+				settings.setLanguage(Language.DEFAULT_LANGUAGE);
+			}
+		}
 		
 		final boolean t = test;
 		
-		SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-            	app.start(t);
-            }
-		});
+		// Get the user's language
+		if( settings.getLanguage() == null && !test ) {
+			SwingUtilities.invokeLater(new Runnable() {
+	            public void run() {
+	            	new GUILanguage(app).start();
+	            }
+			});
+		}
 		
-
+		else {
+			// Load translations
+			Language.loadLanguage(settings.getLanguage() + ".po");
+			
+			SwingUtilities.invokeLater(new Runnable() {
+	            public void run() {
+	            	app.start(t);
+	            }
+			});
+		}
 	}
 
 	/**
@@ -134,7 +147,7 @@ public class GUImain {
 	/**
 	 * The current version of C Compact, used as window title.
 	 */
-	public static final String VERSION = "C Compact Alpha 1.3";
+	public static final String VERSION = "C Compact Alpha 1.4.0";
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)

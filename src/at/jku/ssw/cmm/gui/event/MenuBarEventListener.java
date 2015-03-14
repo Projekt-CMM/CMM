@@ -37,6 +37,7 @@ import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.credits.Credits;
 import at.jku.ssw.cmm.gui.debug.ErrorMessage;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
+import at.jku.ssw.cmm.gui.properties.GUILanguage;
 import at.jku.ssw.cmm.gui.properties.GUIProperties;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
 import at.jku.ssw.cmm.quest.importexport.ExportProfile;
@@ -263,6 +264,16 @@ public class MenuBarEventListener {
 		}
 	};
 	
+	public ActionListener languageHandler = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			GUILanguage l = new GUILanguage(main);
+			l.start();
+		}
+	};
+	
 	public ActionListener propertiesHandler = new ActionListener() {
 
 		@Override
@@ -283,7 +294,7 @@ public class MenuBarEventListener {
 		public void actionPerformed(ActionEvent arg0) {
 			
 			// ...and saved
-			System.out.println("[up to date]");
+			main.getSaveManager().directSave();
 			main.getSettings().writeXMLsettings();
 			main.dispose();
 			

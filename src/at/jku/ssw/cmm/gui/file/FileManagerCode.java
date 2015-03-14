@@ -113,14 +113,15 @@ public class FileManagerCode {
 		try {
 			return readInputDataBlank(new File(fileName.getPath().substring(0, fileName.getPath().indexOf(".cmm")) + ".input.txt"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (StringIndexOutOfBoundsException e) {
+			
 		}
 		
 		return null;
 	}
 
-	public static String readInputDataBlank(File inputFile) throws IOException {
+	public static String readInputDataBlank(File inputFile) throws IOException, StringIndexOutOfBoundsException {
 
 		BufferedReader file;
 		String line;
