@@ -65,7 +65,7 @@ public class GUILanguage implements MouseListener {
 		
 		String[] languages = {"English", "Deutsch"};
 		jLanguageChooser = new JComboBox<>(languages);
-		jLanguageChooser.setSelectedIndex(1);
+		jLanguageChooser.setSelectedIndex(0);
 		jLanguageChooser.setMinimumSize(new Dimension(100,30));
 		jLanguageChooser.setPreferredSize(new Dimension(100,30));
 		center.add(jLanguageChooser);
