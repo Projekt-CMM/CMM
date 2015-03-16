@@ -79,33 +79,44 @@ public class MenuBarEventListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-
-			if (main.getSettings().getCMMFilePath() != null && main.isFileChanged()) {
-				// Custom button text
-				Object[] options = { _("Save now"), _("Proceed without saving") };
-
-				// Init warning dialog with two buttons
-				int n = JOptionPane.showOptionDialog(jFrame,
-						_("The current file has not yet been saved!"),
-						_("Opening new file"), JOptionPane.YES_NO_OPTION,
-						JOptionPane.WARNING_MESSAGE, null, // do not use a
-															// custom Icon
-						options, // the titles of buttons
-						options[0]); // default button title
-
-				if (n == JOptionPane.YES_OPTION)
-					// Save the last changes to current file path
-					main.getSaveManager().directSave();
-			}
-
-			main.getLeftPanel().getSourcePane().setText("");
-			main.getSettings().setCMMFilePath(null);
-			main.updateWinFileName();
-			main.getRightPanel().getDebugPanel().updateFileName();
-			main.getRightPanel().getDebugPanel().setReadyMode();
+			newFile(null);
 		}
 
 	};
+	
+	/**
+	 * Creating a new File, and opens a predefined text if the file is not null
+	 * @param file
+	 */
+	public void newFile(File file){
+		if (main.getSettings().getCMMFilePath() != null && main.isFileChanged()) {
+			// Custom button text
+			Object[] options = { _("Save now"), _("Proceed without saving") };
+
+			// Init warning dialog with two buttons
+			int n = JOptionPane.showOptionDialog(jFrame,
+					_("The current file has not yet been saved!"),
+					_("Opening new file"), JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE, null, // do not use a
+														// custom Icon
+					options, // the titles of buttons
+					options[0]); // default button title
+
+			if (n == JOptionPane.YES_OPTION)
+				// Save the last changes to current file path
+				main.getSaveManager().directSave();
+		}
+
+		if(file == null)
+			main.getLeftPanel().getSourcePane().setText("");
+		else
+			this.main.getLeftPanel().getSourcePane().setText(FileManagerCode.readSourceCode(file));
+
+		main.getSettings().setCMMFilePath(null);
+		main.updateWinFileName();
+		main.getRightPanel().getDebugPanel().updateFileName();
+		main.getRightPanel().getDebugPanel().setReadyMode();
+	}
 
 	/**
 	 * Event listener for the "open" entry in the "file" drop-down menu
