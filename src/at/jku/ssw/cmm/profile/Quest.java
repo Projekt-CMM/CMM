@@ -87,6 +87,11 @@ public class Quest {
 	private boolean input;
 	
 	/**
+	 * true if the Quest has a default.cmm
+	 */
+	private boolean defaultCmm;
+	
+	/**
 	 * State of the Quest, this can be: locked, selectable, inprogress, open or finished
 	 */
 	private String state;					
@@ -129,6 +134,7 @@ public class Quest {
 		FiLE_QUEST = "quest.xml",
 		FILE_REF = "ref.cmm",
 		FILE_INPUT_CMM = "input.cmm",
+		FILE_DEFAULT = "default.cmm",
 		FOLDER_TOKENS = "tokens",
 		ATTRIBUTE_EXTRA = "extra",
 		ATTRIBUTE_EXERSICE = "exercise";
@@ -182,8 +188,10 @@ public class Quest {
 					quest.setStyle(true);
 				if(fileNames.contains(Quest.FILE_REF))
 					quest.setRef(true);
-				if(fileNames.contains(/*Quest.FILE_INPUT_TXT) || fileNames.contains(*/Quest.FILE_INPUT_CMM))
+				if(fileNames.contains(Quest.FILE_INPUT_CMM))
 					quest.setInput(true);
+				if(fileNames.contains(Quest.FILE_DEFAULT))
+					quest.setDefaultCmm(true);
 				
 				//Setting Quest Paths for later use:
 				quest.setInitPath(allPackagesFolder);
@@ -633,6 +641,14 @@ public class Quest {
 	 */
 	public void setCmmFilePath(String cmmFilePath) {
 		this.cmmFilePath = cmmFilePath;
+	}
+
+	public boolean isDefaultCmm() {
+		return defaultCmm;
+	}
+
+	public void setDefaultCmm(boolean defaultCmm) {
+		this.defaultCmm = defaultCmm;
 	}
 	
 /*	public boolean isOptional() {
