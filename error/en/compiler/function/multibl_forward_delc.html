@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<body>
+    <h1>Forward declaration already declared</h1>
+    <h2>What happened?</h2>
+    <p>
+        You have done the forward delcaration of a function multible times.
+    </p>
+    <h3>Example</h3>
+    <p class="code">
+        <strong class="key">void</strong> foo();<br/>
+        ...<br/>
+        <strong class="error">void foo();</strong>
+    </p>
+    <h2>Troubleshooting</h2>
+    <p>
+        Look on previous forward declarations and delete redundant declarations.<br/>
+        Please notice that the forward declaration has to be before the first call of the function.
+    </p>
+</body>
