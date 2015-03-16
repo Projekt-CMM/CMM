@@ -26,6 +26,7 @@ import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.Dimension;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -114,6 +115,8 @@ public class GUIcontrolPanel {
 	 */
 	private JLabel jLabelTimer;
 	
+	private JCheckBox jReturnBox;
+	
 	/**
 	 * Start value of the JSlider which controls the automatic debugging speed in run mode
 	 */
@@ -166,6 +169,8 @@ public class GUIcontrolPanel {
 
 		panel.add(jSlider);
 		
+		/* ---------- CHECKBOX ---------- */
+		panel.add(this.jReturnBox = new JCheckBox(_("Show return values")));
 
 		panel.setPreferredSize(new Dimension(300, 100));
 		panel.setMinimumSize(new Dimension(200, 100));
@@ -322,5 +327,9 @@ public class GUIcontrolPanel {
 		this.jMenuItemPlay = play;
 		this.jMenuItemStep = step;
 		this.jMenuItemStop = stop;
+	}
+	
+	public boolean showReturnValues() {
+		return this.jReturnBox.isSelected();
 	}
 }
