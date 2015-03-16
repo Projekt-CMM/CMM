@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<head>
+    <prefix>Semikolon</prefix>
+    <postfix>(or before) forgotten</postfix>
+</head>
+<body>
+    <h1>Semikolon expected</h1>
+    <h2>What happened?</h2>
+    <p>
+        You have forgotten an semicolon ";".
+    </p>
+    <h2>Troubleshooting</h2>
+    <p>
+        Please notice that the compiler is detecting the missing semicolon in the next line.<br>
+        For example, the error is detected in line 18, but the error is located in line 16:
+    </p>
+    <p class="code">
+        15: <strong class="key">int</strong> a = 5;<br>
+        16: a = b * 7<strong class="key">&nbsp;</strong><br>
+        17:<br>
+        18: printf(<strong class="string">"a = %i"</strong>, a );
+    </p>
+    <p>
+        You should probably search the error in the line before reported line.
+    </p>
+</body>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<body>
+    <h1>Forward declaration and declaration of function are not equal</h1>
+    <h2>What happened?</h2>
+    <p>
+        The declaration of the function is not equal to the forward declaration of this function.
+    </p>
+    <h3>Example</h3>
+    <p class="code">
+        <strong class="key">int</strong> foo();<br/>
+        ...<br/>
+        <strong class="error">void</strong> foo(<strong class="error">int a</strong>) {<br/>
+        }
+    </p>
+    <h2>Troubleshooting</h2>
+    <p>
+        Look on the forward declaration and the declaration of the function. They have to match exactly.
+    </p>
+</body>

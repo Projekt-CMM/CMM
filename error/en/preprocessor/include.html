@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<body>
+    <h1>library not found</h1>
+    <h2>What happened?</h2>
+    <p>
+        A library which you would use is not found. A library is a file, which can be included with the command <strong id="code">#include &lt;stdlib.h&gt;</strong>.
+    </p>
+    <h2>Troubleshooting</h2>
+    <p>
+        Standard libraries containing many function, which you know from C, and they can be included using the following way:
+        <div class="code">
+            #include
+            <strong class = "error">&lt;</strong>
+            stdlib.h
+            <strong class = "error">&gt;</strong>
+        </div>
+        Watch out for typing errors. The following librarys are implemented yet:
+        <ul>
+            <li>stdlib.h</li>
+            <li>stdio.h</li>
+            <li>math.h</li>
+        </ul>
+    </p><br>
+    <h2>Importing own libraries</h2>
+    <p>
+        If you include own librarys, you have to note that it is located inside the same directory as your .cmm file. Furthermore the syntax differs a little bit:
+        <div class="code">
+            #include
+            <strong class = "error">"</strong>
+            yourlibrary.h
+            <strong class = "error">"</strong>
+        </div>
+    </p>
+</body>
