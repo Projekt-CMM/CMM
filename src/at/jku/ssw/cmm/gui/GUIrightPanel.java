@@ -212,7 +212,7 @@ public class GUIrightPanel {
 			
 			
 			questPanel = new ProfilePanel2(main);
-			tabbedPane.add(questPanel.init(), _("Profile"), 2);
+			tabbedPane.add(questPanel.getProfilePanel(), _("Profile"), 2);
 			
 			//Opening last Used Quest
 			main.getSettings().updateDescPane(testPanel);

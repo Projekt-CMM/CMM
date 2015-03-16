@@ -22,6 +22,7 @@ public class ProfilePanel2 {
 	
 	public ProfilePanel2( GUImain main ) {
 		this.main = main;
+		init();
 	}
 	
 	private final GUImain main;
@@ -34,16 +35,33 @@ public class ProfilePanel2 {
 	private ProfileListener listener = new ProfileListener(this);
 	
 	//private ProfileSettingsListener listener = new ProfileSettingsListener(main.getSettings());
+	private CentralPanel centralPanel;
 	
-	public JPanel init() {
+	private JPanel masterPanel;
+	
+	public void init() {
 		
-		JPanel masterPanel = new JPanel();
+		masterPanel = new JPanel();
 		masterPanel.setLayout(new BorderLayout());
 		
 		masterPanel.add(this.initProfileInfo(), BorderLayout.PAGE_START);
-		masterPanel.add(new CentralPanel(this.main.getSettings().getProfile()), BorderLayout.CENTER);
-		
+		centralPanel = new CentralPanel(this.main.getSettings().getProfile()) ;
+		masterPanel.add(centralPanel, BorderLayout.CENTER);
+	}
+	
+	public JComponent getProfilePanel(){
 		return masterPanel;
+	}
+	
+	public CentralPanel getCentralPanel(){
+		return centralPanel;
+	}
+	
+	public void refreshCentralPanel(){
+		masterPanel.remove(centralPanel);
+		this.centralPanel = new CentralPanel(this.main.getSettings().getProfile());
+		masterPanel.add(centralPanel, BorderLayout.CENTER);
+		masterPanel.repaint();
 	}
 	
 	private JPanel initProfileInfo() {

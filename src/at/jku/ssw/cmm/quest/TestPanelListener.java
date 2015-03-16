@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.profile.Quest;
+import at.jku.ssw.cmm.profile.XMLWriteException;
 
 public class TestPanelListener implements MouseListener, TestReply {
 	
@@ -95,8 +96,19 @@ public class TestPanelListener implements MouseListener, TestReply {
 			public void run() {
 				
 				//Test successful
-				if( e == null )
+				if( e == null ){
 					main.getRightPanel().setSuccessMode();
+					try {
+						//Change the Quest to finished
+						main.getSettings().getProfile().changeQuestStateToFinished( main.getSettings().getProfile().getCurrentQuest());
+						
+						//Repaint the Tokens
+						main.getRightPanel().getProfilePanel().refreshCentralPanel();
+					} catch (XMLWriteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
 				//Test failed
 				else{
 					main.getRightPanel().setFailedMode();
