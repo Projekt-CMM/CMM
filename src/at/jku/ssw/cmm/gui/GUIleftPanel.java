@@ -224,12 +224,13 @@ public class GUIleftPanel {
 
 		// Open latest file and show it's contents in the source code text area
 		if (this.main.getSettings().hasCMMFilePath()) {
-			this.jSourcePane.setText(FileManagerCode.readSourceCode(new File(
-					this.main.getSettings().getCMMFilePath())));
-			//TODO prevent source code panel from undoing setText
-			//TODO clear undo list when loading new file
-			this.jInputPane.setText(FileManagerCode.readInputData(new File(
-					this.main.getSettings().getCMMFilePath())));
+			File file = new File(this.main.getSettings().getCMMFilePath());
+			if(file.exists()){
+				this.jSourcePane.setText(FileManagerCode.readSourceCode(file));
+				//TODO prevent source code panel from undoing setText
+				//TODO clear undo list when loading new file
+				this.jInputPane.setText(FileManagerCode.readInputData(file));
+			}
 		}
 
 		// Variable initialization
