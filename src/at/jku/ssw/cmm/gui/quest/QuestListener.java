@@ -43,21 +43,32 @@ public class QuestListener {
 				main.getFrame().dispose();
 				
 				Quest lastClickedQuest = main.getCurrentQuest();
-	        	String path = lastClickedQuest.getInitPath() + Quest.sep + lastClickedQuest.getPackagePath() + Quest.sep + lastClickedQuest.getQuestPath();
 
 	        	//Opening new Quest File
 	        	if(lastClickedQuest != null){
-	        		if(lastClickedQuest.getCmmFilePath() != null){
-	        		File file = new File(lastClickedQuest.getCmmFilePath());
-	        		if(file.exists()){
+	        		File file;
+	        		if(lastClickedQuest != null && lastClickedQuest.getCmmFilePath() != null){
+	        			file = new File(lastClickedQuest.getCmmFilePath());
+	        			//String path = lastClickedQuest.getInitPath() + Quest.sep + lastClickedQuest.getPackagePath() + Quest.sep + lastClickedQuest.getQuestPath();
+
+		        		if(file.exists()){
+		        			//Saving the Current File
+			        		main.getGUImain().getSaveManager().safeCheck(_("Opening new file"));
+			        		
+			        		//Opening the Last File
+			        		new MenuBarEventListener(null,main.getGUImain()).openFile(file);
+		        		}
+	        		
+	        		}else if( lastClickedQuest.isDefaultCmm()){
+	        			String path =  lastClickedQuest.getInitPath() + File.separator + lastClickedQuest.getPackagePath() + File.separator +
+	        							lastClickedQuest.getQuestPath() + File.separator + Quest.FILE_DEFAULT;
+	        			file = new File(path);
+	        					
 	        			//Saving the Current File
-		        		main.getGUImain().getSaveManager().safeCheck(_("Opening new file"));
-		        		
-		        		//Opening the Last File
-		        		new MenuBarEventListener(null,main.getGUImain()).openFile(file);
+	        			new MenuBarEventListener(null, main.getGUImain()).newFile(file);
 	        		}
-	        	}
-	        		//changing the file to be opened
+	        	
+	        		//changing the opened file (in the profile)
 	        		Profile.UpdateOpen(main.getGUImain().getSettings().getProfile(), lastClickedQuest);
 	        	}
 	        	
