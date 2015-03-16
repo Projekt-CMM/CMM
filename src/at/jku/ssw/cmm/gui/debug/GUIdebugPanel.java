@@ -302,6 +302,11 @@ public class GUIdebugPanel {
 
 		// Get source code from source code text panel
 		String sourceCode = this.main.getLeftPanel().getSourceCode();
+		
+		// Replace tabs with spaces (used for correct position calculation)
+		sourceCode = sourceCode.replace("\t",
+				new String(new char[this.main.getLeftPanel().getSourcePane().getTabSize()+1]).replace("\0", " ")
+		);
 
 		// Assemble complete source code using preprocessor
 		try {
@@ -407,10 +412,10 @@ public class GUIdebugPanel {
 	public boolean runInterpreter() {
 
 		// Save the current file
-		this.main.getSaveManager().directSave();
-		this.main.setFileSaved();
-		this.main.updateWinFileName();
-		this.updateFileName();
+		//this.main.getSaveManager().directSave();
+		//this.main.setFileSaved();
+		//this.main.updateWinFileName();
+		//this.updateFileName();
 
 		// Compile and run
 		if (this.compile())

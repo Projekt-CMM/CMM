@@ -46,10 +46,8 @@ public class ImagePopup extends JPanel {
 		super();
 		
 		this.centerX = centerX-x;
-		this.centerY = centerY-y;//+(orientation==SOUTH?10:0);//;+(orientation==NORTH||orientation==SOUTH?(orientation==NORTH?+EDGE_OFFSET:-EDGE_OFFSET):0);
+		this.centerY = centerY-y;
 		this.orientation = orientation;
-		
-		System.out.println("Orientation: " + orientation + ", cx: " + centerX + ", cy: " + centerY);
 
 		super.setBorder(BorderFactory.createRaisedBevelBorder());
 		super.setBackground(Color.WHITE);

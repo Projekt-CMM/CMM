@@ -45,6 +45,7 @@ import at.jku.ssw.cmm.gui.popup.ComponentPopup;
 import at.jku.ssw.cmm.gui.popup.ImagePopup;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
 import at.jku.ssw.cmm.compiler.Node;
+import at.jku.ssw.cmm.compiler.Struct;
 
 /**
  * This class has two important tasks:
@@ -222,16 +223,33 @@ public class PanelRunListener implements Debugger {
 		if( arg0.kind == Node.RETURN ) {
 			System.out.println("Return: " + arg0.line + ", " + arg0.col + ", " + arg0.colLength + " | " + arg0.val);
 			
-			JEditorPane ep;
+			/*JEditorPane ep;
 			ep = new JEditorPane();
 			ep.setText("hello");
 			Rectangle r = this.main.getLeftPanel().getPositionInSource(arg0.line, arg0.col);
 			ComponentPopup.createPopUp(main, ep, (int)r.getX()+200, (int)r.getY()+100, 60, 60, ImagePopup.WEST);
-			ComponentPopup.createPopUp(main, ep, (int)r.getX()+200, (int)r.getY()+100, 60, 60, ImagePopup.EAST);
+			ComponentPopup.createPopUp(main, ep, (int)r.getX()+200, (int)r.getY()+100, 60, 60, ImagePopup.EAST);*/
 		}
-		/*if( arg0 != null && arg0.kind == Node.CALL ) {//getintreturnvalue...
-			System.out.println(getReturnIntValue);
-		}*/
+		if( arg0 != null && arg0.kind == Node.CALL ) {//getintreturnvalue...
+			String rval = "";
+			
+			switch(arg0.type.kind){
+			case Struct.INT: rval += Memory.getIntReturnValue(); break;
+			case Struct.FLOAT: rval += Memory.getFloatReturnValue(); break;
+			case Struct.BOOL: rval += Memory.getBoolReturnValue(); break;
+			//case Struct.STRING: rval += String.get(Memory.getIntReturnValue()); break;
+			case Struct.CHAR: rval += Memory.getBoolReturnValue(); break;
+			}
+			
+			JEditorPane ep;
+			ep = new JEditorPane();
+			ep.setText(rval);
+			Rectangle r = this.main.getLeftPanel().getPositionInSource(arg0.line, arg0.col);
+			System.out.println("Return pos: " + arg0.line + ", " + arg0.col);
+			int px = (int) r.getX() + (int)main.getLeftPanel().getSourcePane().getLocationOnScreen().getX() - (int)main.getJFrame().getLocationOnScreen().getX();
+			int py = (int) r.getY() + (int)main.getLeftPanel().getSourcePane().getLocationOnScreen().getY() - (int)main.getJFrame().getLocationOnScreen().getY();
+			ComponentPopup.createPopUp(main, ep, (int)(px + 0.5*arg0.col*main.getSettings().getCodeSize()), py-main.getSettings().getCodeSize(), 60, 60, ImagePopup.SOUTH);
+		}
 		
 		// Update latest node's line
 		this.lastNode = arg0;
