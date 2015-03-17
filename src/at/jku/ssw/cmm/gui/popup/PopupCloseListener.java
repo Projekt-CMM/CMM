@@ -87,6 +87,8 @@ public class PopupCloseListener implements MouseListener {
 	            componentPoint.y,
 	            e.getClickCount(),
 	            e.isPopupTrigger()));
+	        
+	        this.glassPane.setVisible(true);
 		}
 	}
 

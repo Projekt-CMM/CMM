@@ -249,6 +249,9 @@ public class PanelRunListener implements Debugger {
 				int px = (int) r.getX() + (int)main.getLeftPanel().getSourcePane().getLocationOnScreen().getX() - (int)main.getJFrame().getLocationOnScreen().getX();
 				int py = (int) r.getY() + (int)main.getLeftPanel().getSourcePane().getLocationOnScreen().getY() - (int)main.getJFrame().getLocationOnScreen().getY();
 				ComponentPopup.createPopUp(main, ep, (int)(px + 0.5*(arg0.col+3)*main.getSettings().getCodeSize()), py-(int)(main.getSettings().getCodeSize()*0.9), rval.length()>10?130:80, rval.length()>10?70:35, ImagePopup.SOUTH);
+			
+				// Set debugger to pause mode
+				this.master.setPauseMode();
 			}
 		}
 		
