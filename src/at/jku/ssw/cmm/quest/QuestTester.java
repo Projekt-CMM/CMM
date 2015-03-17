@@ -255,8 +255,8 @@ public class QuestTester extends Thread {
 			return s1.equals(s2);
 		}
 		if( this.ignore instanceof String ) {
-			s1.replaceAll((String) this.ignore, "");
-			s2.replaceAll((String) this.ignore, "");
+			s1 = s1.replaceAll((String) this.ignore, "");
+			s2 = s2.replaceAll((String) this.ignore, "");
 			return s1.equals(s2);
 		}
 		throw new IllegalArgumentException();

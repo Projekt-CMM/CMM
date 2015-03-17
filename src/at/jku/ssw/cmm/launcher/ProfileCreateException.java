@@ -22,5 +22,10 @@
 package at.jku.ssw.cmm.launcher;
 
 public class ProfileCreateException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3601238420319528760L;
 	//Exception
 }

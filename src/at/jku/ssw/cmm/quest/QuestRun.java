@@ -24,16 +24,13 @@ package at.jku.ssw.cmm.quest;
 import java.util.List;
 
 import at.jku.ssw.cmm.compiler.Node;
-import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.compiler.Tab;
 import at.jku.ssw.cmm.debugger.Debugger;
 import at.jku.ssw.cmm.debugger.StdInOut;
 import at.jku.ssw.cmm.interpreter.Interpreter;
 import at.jku.ssw.cmm.interpreter.exceptions.RunTimeException;
-import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
 import at.jku.ssw.cmm.interpreter.exceptions.StackUnderflowException;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
-import at.jku.ssw.cmm.interpreter.memory.MethodContainer;
 
 public class QuestRun implements StdInOut, Debugger {
 	

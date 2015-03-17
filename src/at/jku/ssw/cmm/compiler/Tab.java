@@ -715,7 +715,7 @@ public class Tab {
 			  if (o.type == Tab.floatType) 
 				  System.out.print(" fVal=" + o.fVal + " library=" + o.library + " decLine=" + o.line);
 			  else if (o.type == Tab.stringType) 
-				  System.out.print(" val=" + o.val + " library=" + o.library + " string=\"" + parser.strings.get(o.val) + "\"" + " decLine=" + o.line);
+				  System.out.print(" val=" + o.val + " library=" + o.library + " string=\"" + Strings.get(o.val) + "\"" + " decLine=" + o.line);
 			  else 
 				  System.out.print(" val=" + o.val + " library=" + o.library + " decLine=" + o.line);
 			  break;

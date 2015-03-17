@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
 public class RightPanel {
+	@SuppressWarnings("unused")
 	private final QuestCreatorMain main;
 	
 	public RightPanel(QuestCreatorMain main) {
@@ -32,7 +33,7 @@ public class RightPanel {
 		
 		JPanel addPanel = new JPanel(new BorderLayout());
 		String[] optionString = { "New Quest", "Add Resource" };
-		JComboBox options = new JComboBox(optionString);
+		JComboBox<Object> options = new JComboBox<Object>(optionString);
 		
 		options.addItemListener(new ItemListener() {
 			

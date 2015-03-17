@@ -24,7 +24,6 @@ package at.jku.ssw.cmm.gui.file;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;

@@ -73,7 +73,6 @@ public class CentralPanel extends JPanel {
 		this.init();
 	}
 
-	@SuppressWarnings("unused")
 	/**
 	 * The profile which is currently displayed and edited
 	 */
@@ -130,7 +129,6 @@ public class CentralPanel extends JPanel {
 
 		JPanel panel;
 		
-		@SuppressWarnings("unchecked")
 		List<Token> allTokens = Profile.readProfileTokens(profile);
 		
 		if(allTokens != null)

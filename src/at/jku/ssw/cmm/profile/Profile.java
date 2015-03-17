@@ -23,7 +23,6 @@ package at.jku.ssw.cmm.profile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -256,7 +255,7 @@ public static Profile UpdateOpen(Profile profile, Quest quest){
 	 * @param profile
 	 * @return List<Token>
 	 */
-	public static List readProfileTokens(Profile profile){
+	public static List<Token> readProfileTokens(Profile profile){
 		List<Token> allTokens = new ArrayList<Token>();
 		
 		if(profile.getProfileQuests() == null)

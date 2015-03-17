@@ -1,7 +1,5 @@
 package at.jku.ssw.cmm.gui.treetable.example;
 
-import static at.jku.ssw.cmm.gettext.Language._;
-
 import java.awt.event.MouseEvent;
 import java.util.List;
 

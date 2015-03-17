@@ -317,7 +317,7 @@ public class Parser {
 			   SemErr("char constant not allowed here"); 
 		} else if (la.kind == 5) {
 			Get();
-			curCon.val = strings.put(tab.stringVal(t.val));
+			curCon.val = Strings.put(tab.stringVal(t.val));
 			if (!type.equals(Tab.stringType))
 			   SemErr("string constant not allowed here"); 
 		} else SynErr(70);
@@ -330,7 +330,6 @@ public class Parser {
 		Expect(43);
 		Struct type = new Struct(Struct.STRUCT); 
 		Expect(1);
-		String name = t.val;
 		Obj struct = tab.insert(Obj.TYPE, t.val, type, line); 
 		Expect(8);
 		tab.openScope(); 
@@ -1006,7 +1005,7 @@ public class Parser {
 		               n = new Node(true);
 		           break;
 		       case Struct.STRING:
-		           n = new Node(strings.get(obj.val));
+		           n = new Node(Strings.get(obj.val));
 		           n.val = obj.val;
 		           break;
 		       default:
@@ -1387,7 +1386,7 @@ public class Parser {
 		} else if (la.kind == 5) {
 			Get();
 			n = new Node(tab.stringVal(t.val)); 
-			n.val = strings.put(tab.stringVal(t.val)); 
+			n.val = Strings.put(tab.stringVal(t.val)); 
 		} else if (la.kind == 38 || la.kind == 39) {
 			if (la.kind == 38) {
 				Get();

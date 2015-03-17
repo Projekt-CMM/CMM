@@ -17,6 +17,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class NewResourcePanel {
 
+	@SuppressWarnings("unused")
 	private final QuestCreatorMain main;
 	
 	
@@ -97,7 +98,5 @@ public class NewResourcePanel {
 				}	
 		}
 	};
-	
-	
-	
+
 }

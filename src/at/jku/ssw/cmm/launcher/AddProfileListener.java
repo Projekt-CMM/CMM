@@ -56,16 +56,20 @@ public class AddProfileListener extends MouseAdapter {
 		
 		//Getting Profile Path
 		File filePath = getPath();
-		if(filePath == null)
+		if(filePath == null) {
 			new GUILauncherMain();
+			return;
+		}
 
 		//Getting name
 		String name = JOptionPane.showInputDialog(null,"Geben Sie Ihren Namen ein",
                 "Eine Eingabeaufforderung",JOptionPane.PLAIN_MESSAGE);
 		p.setName(name);
 		
-		if(name == null)
+		if(name == null) {
 			new GUILauncherMain();
+			return;
+		}
 	
 		//Setting new Initial Path, if no Path exists
 			String initPath = filePath.getAbsolutePath() + File.separator + Profile.FILE_BEFORE_PROFILE + p.getName();

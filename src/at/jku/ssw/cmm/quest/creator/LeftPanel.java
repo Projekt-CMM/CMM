@@ -3,13 +3,13 @@ package at.jku.ssw.cmm.quest.creator;
 import java.awt.BorderLayout;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 public class LeftPanel {
+	@SuppressWarnings("unused")
 	private QuestCreatorMain main;
 	
 	public LeftPanel(QuestCreatorMain main) {
@@ -43,7 +43,7 @@ public class LeftPanel {
 		
 		JPanel addPanel = new JPanel(new BorderLayout());
 		String[] optionString = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
-		JComboBox options = new JComboBox(optionString);
+		JComboBox<Object> options = new JComboBox<Object>(optionString);
 		addPanel.add(options,BorderLayout.WEST);
 		
 		JButton addButton = new JButton("Add");

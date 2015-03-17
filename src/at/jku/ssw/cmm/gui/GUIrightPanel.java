@@ -39,8 +39,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import org.w3c.dom.Document;
-
 import at.jku.ssw.cmm.gui.debug.ErrorMessage;
 import at.jku.ssw.cmm.gui.debug.ErrorTable;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
@@ -203,7 +201,6 @@ public class GUIrightPanel {
 		this.errorPanel.add(this.errorMsg, BorderLayout.PAGE_END);
 
 		// Initialize Quest Panel
-		JPanel jQuestPanel = new JPanel();
 		if (main.hasAdvancedGUI()) {
 			this.testPanel = new GUITestPanel(main);
 			JPanel jTestPanel = new JPanel();

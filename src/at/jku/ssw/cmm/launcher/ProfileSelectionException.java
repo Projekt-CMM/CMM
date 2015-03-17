@@ -23,4 +23,9 @@ package at.jku.ssw.cmm.launcher;
 
 public class ProfileSelectionException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3112198300300256943L;
+
 }

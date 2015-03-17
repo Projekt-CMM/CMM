@@ -8,8 +8,6 @@ import javax.swing.JComponent;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import at.jku.ssw.cmm.gui.treetable.var.VarDataNode;
-
 public class TreePackageImageRenderer extends DefaultTreeCellRenderer {
 
 	private static final long serialVersionUID = 1L;
@@ -23,8 +21,6 @@ public class TreePackageImageRenderer extends DefaultTreeCellRenderer {
 	@Override
 	public JComponent getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean exp, boolean leaf, int row, boolean hasFocus) {
 		
-		DataNodeExample node = (DataNodeExample) value;
-
 		setLeafIcon(scroll);
 
 		super.getTreeCellRendererComponent(tree, value, sel, exp, leaf, row,

@@ -23,4 +23,9 @@ package at.jku.ssw.cmm.profile;
 
 public class XMLWriteException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8455185842053516748L;
+
 }
