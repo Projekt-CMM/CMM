@@ -112,9 +112,15 @@ public class MenuBarEventListener {
 
 		if(file == null)
 			main.getLeftPanel().getSourcePane().setText("");
-		else
-			this.main.getLeftPanel().getSourcePane().setText(FileManagerCode.readSourceCode(file));
-
+		else{
+			try {
+				this.main.getLeftPanel().getSourcePane().setText(FileManagerCode.readSourceCode(file));
+			} catch (IOException e) {
+				//TODO
+				new ErrorMessage().showErrorMessage(jFrame, "#2012", main.getSettings().getLanguage());
+			}
+		}
+			
 		main.getSettings().setCMMFilePath(null);
 		main.updateWinFileName();
 		main.getRightPanel().getDebugPanel().updateFileName();

@@ -154,19 +154,21 @@ public class Profile {
 	}	
 	
 public static Quest ReadLastQuest(Profile profile){
-	Quest quest = null;
-	
+
 	if(profile.getProfileQuests() != null)
 		for(Quest q: profile.getProfileQuests()){
-			if(quest == null && q.getState().equals(Quest.STATE_OPEN)){
-				quest = Quest.ReadQuest("packages", q.getPackagePath(), q.getQuestPath());
-				updateQuestVariables(quest,q);
+			if(q != null && q.getState().equals(Quest.STATE_OPEN)){
+				Quest quest = Quest.ReadQuest("packages", q.getPackagePath(), q.getQuestPath());
+				if(quest != null){
+					updateQuestVariables(quest,q);
+					return quest;
+				}
 			}
 		}
 	
 	
 	
-	return quest;
+	return null;
 }
 
 /**
@@ -566,19 +568,8 @@ public static Profile UpdateOpen(Profile profile, Quest quest){
 	 * @return profile
 	 * @throws XMLWriteException
 	 */
-	public static Profile changeQuestStateToInprogress(Profile profile, Quest quest) throws XMLWriteException{
-		return changeQuestState(profile, quest, Quest.STATE_INPROGRESS);
-	}
-	
-	/**
-	 * Adding the specific Quest to the Profile and sets the quest to selectable
-	 * @param profile
-	 * @param quest
-	 * @return profile
-	 * @throws XMLWriteException
-	 */
-	public static Profile changeQuestStateToSelectable(Profile profile, Quest quest) throws XMLWriteException{
-		return changeQuestState(profile, quest, Quest.STATE_SELECTABLE);
+	public Profile changeQuestStateToInprogress( Quest quest) throws XMLWriteException{
+		return changeQuestState( quest, Quest.STATE_INPROGRESS);
 	}
 
 	/**
@@ -588,8 +579,8 @@ public static Profile UpdateOpen(Profile profile, Quest quest){
 	 * @return profile
 	 * @throws XMLWriteException
 	 */
-	public static Profile changeQuestStateToFinished(Profile profile, Quest quest) throws XMLWriteException{
-		return changeQuestState(profile, quest, Quest.STATE_FINISHED);
+	public Profile changeQuestStateToFinished(Quest quest) throws XMLWriteException{
+		return changeQuestState( quest, Quest.STATE_FINISHED);
 	}
 	
 	/**
@@ -599,8 +590,8 @@ public static Profile UpdateOpen(Profile profile, Quest quest){
 	 * @return profile
 	 * @throws XMLWriteException
 	 */
-	public static Profile updateProfileQuestPath(Profile profile, Quest quest) throws XMLWriteException{
-		return changeQuestState(profile, quest, null);
+	public Profile updateProfileQuestPath( Quest quest) throws XMLWriteException{
+		return changeQuestState( quest, null);
 	}
 	
 /**
@@ -615,17 +606,17 @@ public static Profile UpdateOpen(Profile profile, Quest quest){
  * @return profile
  * @throws XMLWriteException 
  */
-	public static Profile changeQuestState(Profile profile, Quest quest, String state) throws XMLWriteException{
+	public Profile changeQuestState( Quest quest, String state) throws XMLWriteException{
 		
 		//Returning old Profile if Quest is Null
 		if(quest == null)
-			return profile;
+			return this;
 		
 		//TODO Tokens
 		if(state != null && state.equals(Quest.STATE_FINISHED)){
 			if(quest.getToken() != null){
 				String questTokenPathFile = quest.getInitPath()+ sep + quest.getPackagePath() + sep + Quest.FOLDER_TOKENS;
-				String profileTokenPath = profile.getInitPath() + sep + Profile.FILE_PACKAGESPATH + sep +  quest.getPackagePath() + sep + Quest.FOLDER_TOKENS ;
+				String profileTokenPath = this.getInitPath() + sep + Profile.FILE_PACKAGESPATH + sep +  quest.getPackagePath() + sep + Quest.FOLDER_TOKENS ;
 			
 				try {
 				
@@ -655,8 +646,8 @@ public static Profile UpdateOpen(Profile profile, Quest quest){
 			quest.setnewDate();
 		
 		//getting Profile Quests
-		if(profile.getProfileQuests() != null)
-			questList = profile.getProfileQuests();
+		if(this.getProfileQuests() != null)
+			questList = this.getProfileQuests();
 		else 
 			questList = new ArrayList<>();
 	
@@ -665,24 +656,24 @@ public static Profile UpdateOpen(Profile profile, Quest quest){
 			if(questList.get(i).getQuestPath().equals(quest.getQuestPath()) && questList.get(i).getPackagePath().equals(quest.getPackagePath())){
 				
 				questList.set(i, quest);
-				profile.setProfileQuests(questList);
+				this.setProfileQuests(questList);
 				
 				//save Profile
-				profile.writeProfile();
+				this.writeProfile();
 				
 				System.out.println("Quest State changed!");
-				return profile;
+				return this;
 			}
 		}
 
 		//if the Variable is not existing in the profile
 		questList.add(quest);
-		profile.setProfileQuests(questList);
+		this.setProfileQuests(questList);
 		
 		//save Profile
-		profile.writeProfile();
+		this.writeProfile();
 			
-		return profile;
+		return this;
 	}
 	
 	/**

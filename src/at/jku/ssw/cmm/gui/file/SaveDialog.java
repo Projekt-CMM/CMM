@@ -126,19 +126,21 @@ public class SaveDialog {
 		//Saving the Profile, and adding the Quests which are inprogress
 		Profile profile = settings.getProfile();
 		if(profile != null && profile.getCurrentQuest() != null && settings.getCMMFilePath() != null){
-			try {
-				//Adding LastCmmFile
-				profile.getCurrentQuest().setCmmFilePath(settings.getCMMFilePath());
-				
-				//Updating Profile
-				if(!profile.getCurrentQuest().getState().equals(Quest.STATE_FINISHED))
-					Profile.changeQuestStateToInprogress(profile, profile.getCurrentQuest());
-				else
-					Profile.updateProfileQuestPath(profile, profile.getCurrentQuest());
-				
-				
-			} catch (XMLWriteException e) {
-				e.printStackTrace();
+			if (!settings.getCMMFilePath().equals(_("Unnamed"))){
+				try {
+					//Adding LastCmmFile
+					profile.getCurrentQuest().setCmmFilePath(settings.getCMMFilePath());
+					
+					//Updating Profile
+					if(!profile.getCurrentQuest().getState().equals(Quest.STATE_FINISHED))
+						profile.changeQuestStateToInprogress( profile.getCurrentQuest());
+					else
+						profile.updateProfileQuestPath( profile.getCurrentQuest());
+					
+					
+				} catch (XMLWriteException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

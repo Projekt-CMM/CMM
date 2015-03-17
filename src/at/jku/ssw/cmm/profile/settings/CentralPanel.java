@@ -130,6 +130,7 @@ public class CentralPanel extends JPanel {
 
 		JPanel panel;
 		
+		@SuppressWarnings("unchecked")
 		List<Token> allTokens = Profile.readProfileTokens(profile);
 		
 		if(allTokens != null)
@@ -137,60 +138,14 @@ public class CentralPanel extends JPanel {
 			panel = new JPanel();
 			panel.setLayout(new FlowLayout(FlowLayout.LEFT));
 			panel.add(LoadStatics.loadImage(t.getInitPath() + Quest.sep + t.getImagePath(),false));
+			panel.setToolTipText("<html><b><p width=\"200\">" + t.getDescription()
+					+ "</p></b></html>");
+			
 			panel.add(new JLabel(t.getTitle()));
 			model.addElement(panel);
 			
 		}
 		
-//		panel = new JPanel();
-//		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-//		panel.add(LoadStatics.loadImage("profileTest/tokens/Icon_Craft.png",
-//				false));
-//		panel.add(new JLabel("Token of code crafting"));
-//		model.addElement(panel);
-//
-//		panel = new JPanel();
-//		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-//		panel.add(LoadStatics.loadImage("profileTest/tokens/Icon_Deko.png",
-//				false));
-//		panel.add(new JLabel("Golden star of efficient coding"));
-//		model.addElement(panel);
-//
-//		panel = new JPanel();
-//		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-//		panel.add(LoadStatics.loadImage("profileTest/tokens/Icon_Fisch.png",
-//				false));
-//		panel.add(new JLabel("Achievement of fishy programming"));
-//		model.addElement(panel);
-//
-//		panel = new JPanel();
-//		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-//		panel.add(LoadStatics.loadImage("profileTest/tokens/Icon_Haus.png",
-//				false));
-//		panel.add(new JLabel("Token of clean comments, Level 2"));
-//		model.addElement(panel);
-//
-//		panel = new JPanel();
-//		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-//		panel.add(LoadStatics.loadImage("profileTest/tokens/Icon_Komp.png",
-//				false));
-//		panel.add(new JLabel("Artefact of C Compact code logics"));
-//		model.addElement(panel);
-//
-//		panel = new JPanel();
-//		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-//		panel.add(LoadStatics.loadImage("profileTest/tokens/Icon_Rescue.png",
-//				false));
-//		panel.add(new JLabel("Token of error handling, Level 4"));
-//		model.addElement(panel);
-//
-//		panel = new JPanel();
-//		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-//		panel.add(LoadStatics.loadImage("profileTest/tokens/Icon_Segel.png",
-//				false));
-//		panel.add(new JLabel("Achievement of super fast algorithms, Level 3"));
-//		model.addElement(panel);
-
 		return model;
 	}
 

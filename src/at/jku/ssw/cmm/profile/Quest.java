@@ -180,8 +180,10 @@ public class Quest {
 			//Read all FileNames of the current path set before
 			List<String> fileNames = ReadFileNames(path);
 			
+				if(fileNames == null)
+					return null;
 			
-			//if the files are there, setting them to true
+				//if the files are there, setting them to true
 				if(fileNames.contains(Quest.FILE_DESCRIPTION))
 					quest.setDescription(true);	
 				if(fileNames.contains(Quest.FILE_STYLE))
