@@ -117,9 +117,9 @@
 	<error id="no function declared">
 		<file>default.html</file>
 	</error>
-	<!--<error id="parameter not declared">
+	<error id="parameter not declared">
 		<file>compiler/function/param_not_decl.html</file>
-	</error>-->
+	</error>
 	<error id="there is no type-conversation for ref-parameter(s) allowed">
 		<file>default.html</file>
 	</error>
