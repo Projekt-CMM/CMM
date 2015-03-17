@@ -21,14 +21,19 @@
  
 package at.jku.ssw.cmm.gui.popup;
 
+import java.awt.Component;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 public class PopupCloseListener implements MouseListener {
 	
-	public PopupCloseListener( JPanel glassPane, JPanel target, int x, int y, int w, int h ){
+	public PopupCloseListener( JFrame frame, JPanel glassPane, JPanel target, int x, int y, int w, int h ){
+		this.jFrame = frame;
 		this.x = x;
 		this.y = y;
 		this.w = w;
@@ -37,6 +42,7 @@ public class PopupCloseListener implements MouseListener {
 		this.target = target;
 	}
 	
+	private final JFrame jFrame;
 	private final int x, y, w, h;
 	private final JPanel glassPane;
 	private final JPanel target;
@@ -50,6 +56,39 @@ public class PopupCloseListener implements MouseListener {
 			this.glassPane.removeMouseListener(this);
 			this.glassPane.validate();
 			this.glassPane.repaint();
+			
+			this.glassPane.setVisible(false);
+		
+			Point containerPoint = e.getPoint();
+	
+	        // find the component that under this point
+	        Component component = SwingUtilities.getDeepestComponentAt(
+	                    jFrame,
+	                    containerPoint.x,
+	                    containerPoint.y);
+	
+	        // return if nothing was found
+	        if (component == null) {
+	            return;
+	        }
+	
+	        // convert point relative to the target component
+	        Point componentPoint = SwingUtilities.convertPoint(
+	            jFrame,
+	            e.getPoint(),
+	            component);
+	
+	        // redispatch the event
+	        component.dispatchEvent(new MouseEvent(component,
+	            e.getID(),
+	            e.getWhen(),
+	            e.getModifiers(),
+	            componentPoint.x,
+	            componentPoint.y,
+	            e.getClickCount(),
+	            e.isPopupTrigger()));
+	        
+	        this.glassPane.setVisible(true);
 		}
 	}
 

@@ -194,9 +194,9 @@ public class GUImain {
 		glassPane.setLayout(null);
 
 		// Assign glass pane to jFrame
-		jFrame.setGlassPane(glassPane);
-		jFrame.getGlassPane().setVisible(true);
-
+		this.jFrame.setGlassPane(glassPane);
+		this.jFrame.getGlassPane().setVisible(true);
+		
 		// Initialize the split pane which separates the text fields from
 		// the debugging, error and quest panels
 		JSplitPane sp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -391,7 +391,7 @@ public class GUImain {
 
 		((JPanel) this.jFrame.getGlassPane()).add(popup);
 		((JPanel) this.jFrame.getGlassPane())
-				.addMouseListener(new PopupCloseListener(((JPanel) this.jFrame
+				.addMouseListener(new PopupCloseListener(this.jFrame, ((JPanel) this.jFrame
 						.getGlassPane()), popup, x, y, width, height));
 		((JPanel) this.jFrame.getGlassPane()).validate();
 		((JPanel) this.jFrame.getGlassPane()).repaint();

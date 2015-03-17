@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-14 17:59+0100\n"
+"POT-Creation-Date: 2015-03-17 09:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -181,19 +181,19 @@ msgid "Redo"
 msgstr ""
 
 #: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:156
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:193
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:196
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:198
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:201
 msgid "compile and run"
 msgstr ""
 
 #: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:162
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:198
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:202
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:203
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:207
 msgid "compile and step"
 msgstr ""
 
 #: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:168
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:149
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:152
 msgid "stop"
 msgstr ""
 
@@ -242,14 +242,14 @@ msgid ""
 msgstr ""
 
 #: src/at/jku/ssw/cmm/gui/treetable/var/TreeStructImageRenderer.java:38
-#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:167
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:184
 #: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:213
 #: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:157
 #: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:158
 #: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:161
 #: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:174
 #: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:465
-#: src/at/jku/ssw/cmm/gui/GUImain.java:301
+#: src/at/jku/ssw/cmm/gui/GUImain.java:300
 msgid "Unnamed"
 msgstr ""
 
@@ -309,33 +309,41 @@ msgstr ""
 msgid "current quest"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:101
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:100
 #: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:126
 msgid "file"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:170
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:111
+msgid "Would you like to replace the existing file?"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:112
+msgid "This file does already exist"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:187
 msgid "Yes"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:170
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:187
 msgid "No"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:174
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:191
 msgid "Do you want to save the new file?"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:197
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:211
 #: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:88
 msgid "Save now"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:197
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:211
 msgid "Close without saving"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:201
+#: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:215
 #: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:92
 msgid "The current file has not yet been saved!"
 msgstr ""
@@ -364,73 +372,77 @@ msgstr ""
 msgid "Corrupted Image"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:133
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:136
 #: src/at/jku/ssw/cmm/gui/debug/GUIdebugPanel.java:73
 msgid "Control elements"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:133
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:136
 msgid ""
 "With the elements int this panel, you can<br>run and debug your source code"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:150
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:153
 msgid "return to text edit mode immediately"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:154
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:304
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:157
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:309
 msgid "sec"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:155
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:164
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:158
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:167
 msgid "debugger step delay"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:155
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:158
 msgid "change this value with<br>the slider below"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:165
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:168
 msgid "change automatic debugging<br>delay with this slider"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:194
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:173
+msgid "Show return values"
+msgstr ""
+
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:199
 msgid "compile source code<br>and run debugger"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:200
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:205
 msgid "compile source code and<br>run debugger step by step"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:243
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:247
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:248
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:252
 msgid "pause"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:245
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:250
 msgid "pause automatic debugging"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:249
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:252
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:280
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:283
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:254
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:257
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:285
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:288
 msgid "next step"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:250
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:281
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:255
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:286
 msgid "proceed to next step manually"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:274
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:278
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:279
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:283
 msgid "play"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:276
+#: src/at/jku/ssw/cmm/gui/debug/GUIcontrolPanel.java:281
 msgid "run automatic debugging"
 msgstr ""
 
@@ -438,7 +450,7 @@ msgstr ""
 msgid "Variables"
 msgstr ""
 
-#: src/at/jku/ssw/cmm/gui/event/WindowEventListener.java:91
+#: src/at/jku/ssw/cmm/gui/event/WindowEventListener.java:88
 #: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:244
 msgid "Closing C Compact"
 msgstr ""

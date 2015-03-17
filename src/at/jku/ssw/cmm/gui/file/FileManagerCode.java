@@ -18,7 +18,7 @@
  *  Copyright (c) 2014-2015 Thomas Pointhuber
  *  Copyright (c) 2014-2015 Peter Wassermair
  */
- 
+
 package at.jku.ssw.cmm.gui.file;
 
 import java.io.BufferedReader;
@@ -34,6 +34,15 @@ import java.io.IOException;
  */
 public class FileManagerCode {
 
+	public static File completeFileName(File file) {
+		// Add file type extension of necessary
+		if (!file.getName().endsWith(".cmm")) {
+			String path = file.getPath();
+			return new File(path + ".cmm");
+		}
+		return file;
+	}
+
 	/**
 	 * Saves the given text to a *.cmm file. If the ".cmm" postfix is missing at
 	 * the end of the given path, it is added automatically.
@@ -43,16 +52,12 @@ public class FileManagerCode {
 	 * @param code
 	 *            The text which has to be saved
 	 * @return TRUE if saving successful, FALSE if saving failed
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public static boolean saveSourceCode(File fileName, String code,
+	public static String saveSourceCode(File fileName, String code,
 			String input) throws IOException {
-
-		// Add file type extension of necessary
-		if (!fileName.getName().endsWith(".cmm")) {
-			String path = fileName.getPath();
-			fileName = new File(path + ".cmm");
-		}
+		
+		fileName = completeFileName(fileName);
 
 		// Write source code file
 		BufferedWriter file;
@@ -68,7 +73,7 @@ public class FileManagerCode {
 		file.write(input);
 		file.close();
 
-		return true;
+		return fileName.getPath();
 	}
 
 	/**
@@ -79,14 +84,14 @@ public class FileManagerCode {
 	 *            The file which has to be opened
 	 * @return The content of the file (as String). Returns null if file reading
 	 *         failed
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static String readSourceCode(File fileName) throws IOException {
 
 		BufferedReader file;
 		String line;
 		String code = null;
-		
+
 		file = new BufferedReader(new FileReader(fileName));
 		code = file.readLine();
 
@@ -107,26 +112,30 @@ public class FileManagerCode {
 	 * @return The content of the file (as String). Returns null if file reading
 	 *         failed
 	 */
-	public static String readInputData(File fileName) { //TODO add error management?
+	public static String readInputData(File fileName) { // TODO add error
+														// management?
 
 		// Get input data file path
 		try {
-			return readInputDataBlank(new File(fileName.getPath().substring(0, fileName.getPath().indexOf(".cmm")) + ".input.txt"));
+			return readInputDataBlank(new File(fileName.getPath().substring(0,
+					fileName.getPath().indexOf(".cmm"))
+					+ ".input.txt"));
 		} catch (IOException e) {
 
 		} catch (StringIndexOutOfBoundsException e) {
-			
+
 		}
-		
+
 		return null;
 	}
 
-	public static String readInputDataBlank(File inputFile) throws IOException, StringIndexOutOfBoundsException {
+	public static String readInputDataBlank(File inputFile) throws IOException,
+			StringIndexOutOfBoundsException {
 
 		BufferedReader file;
 		String line;
 		String input = null;
-		
+
 		file = new BufferedReader(new FileReader(inputFile));
 		input = file.readLine();
 
