@@ -101,7 +101,8 @@ public class MenuBarEventListener {
 					main.getSaveManager().directSave();
 			}
 
-			main.getLeftPanel().getSourcePane().setText("");
+			main.getLeftPanel().getSourcePane().setText("#include <stdio.h>\n#include <stdlib.h>\n\nvoid main() {\n\t//Your code here...\n}");
+			main.getLeftPanel().getInputPane().setText("");
 			main.getSettings().setCMMFilePath(null);
 			main.updateWinFileName();
 			main.getRightPanel().getDebugPanel().updateFileName();
