@@ -170,7 +170,8 @@ public class GUIcontrolPanel {
 		panel.add(jSlider);
 		
 		/* ---------- CHECKBOX ---------- */
-		panel.add(this.jReturnBox = new JCheckBox(_("Show return values")));
+		this.jReturnBox = new JCheckBox(_("Show return values"));
+		//TODO this is currently disabled: panel.add(this.jReturnBox);
 
 		panel.setPreferredSize(new Dimension(300, 100));
 		panel.setMinimumSize(new Dimension(200, 100));

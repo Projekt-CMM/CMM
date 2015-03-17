@@ -234,9 +234,7 @@ public class GUIdebugPanel {
 		this.ctrlPanel.getListener().setReadyMode();
 
 		// Set main GUI (and its child elements) to error mode
-		this.main.setErrorMode(html, file, Integer.parseInt(Preprocessor
-				.returnFileAndNumber(line, this.main.getLeftPanel()
-						.getSourceCodeRegister())[1].toString()));
+		this.main.setErrorMode(html, file, line);
 
 		// Eventually reset variable tree table
 		if (!keepTable)
