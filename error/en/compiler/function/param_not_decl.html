@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<body>
+    <h1>Parameter not found</h1>
+    <h2>What happened?</h2>
+    <p>
+        Probably, the function you would call is not declarated.
+    </p>
+    <h3>Example</h3>
+    <p class="code">
+        <strong class="good"><strong class="key">void</strong> foo(int a);</strong><br><br>
+        <strong class="key">void</strong> main(){<br>
+        foo();<br>
+        }
+        <br>
+        <strong class="key">void</strong> foo(<strong class="key">int</strong> a )<br>
+        ...<br>
+        }
+    </p>
+        <h2>Troubleshooting</h2>
+    <p>
+        If you want to use a function, you have to declare them before the first call. Please use forward-declaration if you implement recursive functions which point to itself.
+    </p>
+</body>
