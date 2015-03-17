@@ -154,19 +154,21 @@ public class Profile {
 	}	
 	
 public static Quest ReadLastQuest(Profile profile){
-	Quest quest = null;
-	
+
 	if(profile.getProfileQuests() != null)
 		for(Quest q: profile.getProfileQuests()){
-			if(quest == null && q.getState().equals(Quest.STATE_OPEN)){
-				quest = Quest.ReadQuest("packages", q.getPackagePath(), q.getQuestPath());
-				updateQuestVariables(quest,q);
+			if(q != null && q.getState().equals(Quest.STATE_OPEN)){
+				Quest quest = Quest.ReadQuest("packages", q.getPackagePath(), q.getQuestPath());
+				if(quest != null){
+					updateQuestVariables(quest,q);
+					return quest;
+				}
 			}
 		}
 	
 	
 	
-	return quest;
+	return null;
 }
 
 /**
