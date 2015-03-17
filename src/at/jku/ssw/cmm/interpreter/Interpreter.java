@@ -1045,6 +1045,9 @@ public final class Interpreter {
 					// read number of array Elements
 					List<Integer> singleArrayElements = Memory.getMemoryInformation(IdentAdr(pHelp.obj)).arrayElements;					
 					
+					if(singleArrayElements == null)
+						throw new RunTimeException("There is no informations about the array size available", p, currentLine);
+					
 					arrayElements = new ArrayList<>();
 					
 					int arrayElementSize = p.left.type.elemType.size;
