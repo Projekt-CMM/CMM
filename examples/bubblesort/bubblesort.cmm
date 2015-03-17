@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void library readArray(int a[], int length) {
+	int i;
+	for(i = 0; i < length; i++)
+		a[i] = atoi(scanf());
+}
+
+void library printArray(int a[], int length) {
+	int i;
+	for(i = 0; i < length; i++)
+		prints(itoa(a[i]) + " ");
+}
+
+void main() {
+	const int aLength = 10;
+	int a[aLength];
+
+	// read input
+	readArray(a, aLength);
+
+	// check if bubblesort is finished
+	bool success;
+	
+	// help variables
+	int i;
+	int help;
+	
+	// don't sort elements which are already sorted
+	int aLengthHelp = aLength;
+
+	// bubblesort
+	for(success = false; !success;) {
+		success = true;
+		for(i = 0; i < aLengthHelp-1; i++) {
+			if(a[i] > a [i+1]) {
+				help = a[i];
+				a[i] = a[i+1];
+				a[i+1] = help;
+				success = false;
+			}
+		}
+		aLengthHelp --;
+	}
+
+	// print output
+	printArray(a, aLength);
+}
