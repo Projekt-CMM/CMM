@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <systemerror>
 	<common>
-		<en>To find further information about this error, see error number #xxxx on <i>https://github.com/Projekt-CMM/CMM/wiki/List-of-internal-error-numbers</i>.</en>
-		<de>Weitere Informationen über diesen Fehler finden Sie bei Fehlernummer #xxxx unter <i>https://github.com/Projekt-CMM/CMM/wiki/List-of-internal-error-numbers</i>.</de>
+		<en>To find further information about this error, see error number #xxxx on &lt;a href='https://github.com/Projekt-CMM/CMM/wiki/List-of-internal-error-numbers'&gt;List of internal Errors&lt;/a&gt;.</en>
+		<de>Weitere Informationen über diesen Fehler finden Sie bei Fehlernummer #xxxx unter &lt;a href='https://github.com/Projekt-CMM/CMM/wiki/List-of-internal-error-numbers'&gt;List of internal Errors&lt;/a&gt;.</de>
 	</common>
 	<error id="#1001">
 		<title>
