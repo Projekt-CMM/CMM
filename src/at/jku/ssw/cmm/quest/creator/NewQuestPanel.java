@@ -2,10 +2,7 @@ package at.jku.ssw.cmm.quest.creator;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -17,8 +14,8 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 public class NewQuestPanel {
+	@SuppressWarnings("unused")
 	private final QuestCreatorMain main;
-	
 	
 	private JTextField nameInput = new JTextField("",15);
 	private JTextField attributeInput = new JTextField("",15);
@@ -106,7 +103,4 @@ public class NewQuestPanel {
 		
 		return data;
 	}
-	
-	
-    
 }

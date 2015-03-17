@@ -30,9 +30,6 @@ import javax.swing.JFrame;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
-import at.jku.ssw.cmm.profile.Profile;
-import at.jku.ssw.cmm.profile.Quest;
-import at.jku.ssw.cmm.profile.XMLWriteException;
 
 /**
  * Event listener for the main GUI window. Used for triggering an event when the

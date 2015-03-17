@@ -72,7 +72,8 @@ public class ErrorMessage {
 					"SAX exception when reading INTERNAL error table");
 		}
 		
-		common = common.replace("#xxxx", id);
+		if(common != null)
+			common = common.replace("#xxxx", id);
 			
 		JOptionPane.showMessageDialog(frame,
 				   "<html>" + message + "<br>" + common + "</html>",

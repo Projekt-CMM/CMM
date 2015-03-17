@@ -6,13 +6,18 @@ import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 public class ResourcesFrame extends JPanel{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4161401409585675156L;
+
+
 	public ResourcesFrame() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		addComp(new JLabel("Subfolder"),new JLabel("hallo"));

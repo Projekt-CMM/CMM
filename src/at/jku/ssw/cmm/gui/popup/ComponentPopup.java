@@ -49,6 +49,7 @@ public class ComponentPopup {
 			popup = new ImagePopup(x_abs=x-(int)(w*weight), y_abs=y+ImagePopup.EDGE_OFFSET, w, h, x, y, orientation);
 			break;
 		case ImagePopup.SOUTH:
+		default:
 			popup = new ImagePopup(x_abs=x-(int)(w*weight), y_abs=y-h-ImagePopup.EDGE_OFFSET, w, h, x, y, orientation);
 			break;
 		case ImagePopup.WEST:

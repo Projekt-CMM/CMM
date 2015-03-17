@@ -22,5 +22,10 @@
 package at.jku.ssw.cmm.profile;
 
 public class XMLReadingException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3830873175283259776L;
 	
 }

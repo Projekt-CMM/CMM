@@ -5,6 +5,7 @@ import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.*;   
 
+@SuppressWarnings("unused")
 %%   
 
 %public   

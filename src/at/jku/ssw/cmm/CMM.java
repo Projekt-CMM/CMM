@@ -28,10 +28,8 @@ import java.util.List;
 
 import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Error;
-import at.jku.ssw.cmm.compiler.Obj;
 import at.jku.ssw.cmm.debugger.DebuggerMock;
 import at.jku.ssw.cmm.interpreter.Interpreter;
-import at.jku.ssw.cmm.interpreter.exceptions.StackOverflowException;
 import at.jku.ssw.cmm.interpreter.memory.Memory;
 import at.jku.ssw.cmm.preprocessor.Preprocessor;
 

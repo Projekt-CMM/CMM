@@ -287,7 +287,7 @@ public class GUImainSettings {
 	}
 	
 	public void setProfile( Profile p ) {
-		if(profilePanel != null && profilePanel.getJProfileName().getText() != "")
+		if(profilePanel != null && !profilePanel.getJProfileName().getText().isEmpty())
 			p.setName(profilePanel.getJProfileName().getText());
 		
 		this.currentProfile = p;

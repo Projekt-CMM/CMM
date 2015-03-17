@@ -24,22 +24,23 @@ package at.jku.ssw.cmm.gui;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 
-import at.jku.ssw.cmm.profile.Package;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.ProfileNotFoundException;
-import at.jku.ssw.cmm.profile.Quest;
 import at.jku.ssw.cmm.profile.XMLReadingException;
 
 import java.beans.*;
 import java.awt.*;
-import java.io.File;
 
 
 //TODO get working maybe unused later..
 public class ProfilePreview extends JPanel implements PropertyChangeListener {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1863297680687682220L;
+
 	//Profile Picture
 	private JLabel jProfilePicture;
 	

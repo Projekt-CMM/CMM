@@ -21,7 +21,6 @@
  
 package at.jku.ssw.cmm.gui.event.debug;
 
-import java.awt.MouseInfo;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 

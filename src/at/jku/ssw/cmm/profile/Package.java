@@ -314,8 +314,6 @@ public class Package {
 	 * 1.... Other Quests
 	 */
 	public int[] getQuestCount(){
-		int count = 0;
-		
 		int finishedQuests = 0;
 		int otherQuests = 0;
 		if(questList != null)
