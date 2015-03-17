@@ -1,10 +1,20 @@
 package at.jku.ssw.cmm.gui.debug;
 
+import java.awt.Cursor;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Font;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -74,11 +84,42 @@ public class ErrorMessage {
 		
 		if(common != null)
 			common = common.replace("#xxxx", id);
-			
-		JOptionPane.showMessageDialog(frame,
-				   "<html>" + message + "<br>" + common + "</html>",
-				   title,
-				   JOptionPane.ERROR_MESSAGE);
+		
+		//jeb.setContentType("text/html");//set content as html
+		final JEditorPane editorPane = new JEditorPane();
+
+        // Enable use of custom set fonts
+        editorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);  
+        editorPane.setFont(new Font("Arial", Font.BOLD, 13));
+
+        editorPane.setPreferredSize(new Dimension(520,100));
+        editorPane.setContentType("text/html");
+        System.out.println(message + common);
+        editorPane.setText("" + message + "<br>" + common + ""); //TODO SET text
+        
+        editorPane.setEditable(false);//so its not editable
+        editorPane.setOpaque(false);//so we dont see whit background
+        
+        editorPane.addHyperlinkListener(new HyperlinkListener() {
+            @Override
+            public void hyperlinkUpdate(HyperlinkEvent hle) {
+                if (HyperlinkEvent.EventType.ACTIVATED.equals(hle.getEventType())) {
+                    System.out.println(hle.getURL());
+                    Desktop desktop = Desktop.getDesktop();
+                    try {
+                        desktop.browse(hle.getURL().toURI());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        JOptionPane.showMessageDialog(null,
+                new JScrollPane(editorPane),
+                "Error Message",
+                JOptionPane.ERROR_MESSAGE);
+		
 		
 	}
 	

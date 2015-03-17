@@ -1,0 +1,5 @@
+<quest>
+	<title>Example-Quest-Name</title>
+	<attribute>Übung</attribute>
+	<token>example.xml</token>
+</quest>
