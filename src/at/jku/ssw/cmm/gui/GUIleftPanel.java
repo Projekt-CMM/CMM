@@ -465,7 +465,7 @@ public class GUIleftPanel {
 			(title[1] == null ? "" : " " + title[1]) + " ! ! !</html>");
 		
 		if( line >= 0 )
-			this.highlightSourceCodeDirectly(line);
+			this.highlightSourceCode(line);
 	}
 
 	/**
