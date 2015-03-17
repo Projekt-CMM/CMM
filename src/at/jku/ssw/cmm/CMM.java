@@ -66,8 +66,8 @@ public class CMM {
 				}
 			}
 			
-			List<Object[]> codeRegister = new ArrayList();
-			List<Integer> breakpoints = new ArrayList();
+			List<Object[]> codeRegister = new ArrayList<>();
+			List<Integer> breakpoints = new ArrayList<>();
 			String preprocessorOutput = Preprocessor.expand(new String(code), "./clib", codeRegister, breakpoints);
 			
 			System.out.println("######################\n" + preprocessorOutput + "\n######################");

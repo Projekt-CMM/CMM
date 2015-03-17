@@ -106,6 +106,7 @@
             optimize="true" 
             includeantruntime="false">
             <classpath refid="classpath.base" />
+            <compilerarg value="-Xlint:unchecked"/>
         </javac>
         
         <!-- build tests -->
