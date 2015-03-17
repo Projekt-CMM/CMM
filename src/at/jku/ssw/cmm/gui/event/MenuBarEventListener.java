@@ -111,14 +111,20 @@ public class MenuBarEventListener {
 		}
 
 		if(file == null)
-			main.getLeftPanel().getSourcePane().setText("");
+			main.getLeftPanel().getSourcePane().setText("#include <stdio.h>\n#include <stdlib.h>\n\nvoid main() {\n\t//Your code here...\n}");
 		else{
 			try {
 				this.main.getLeftPanel().getSourcePane().setText(FileManagerCode.readSourceCode(file));
 			} catch (IOException e) {
-				//TODO
-				new ErrorMessage().showErrorMessage(jFrame, "#2012", main.getSettings().getLanguage());
+				new ErrorMessage().showErrorMessage(jFrame, "#2014", main.getSettings().getLanguage());
+				main.getLeftPanel().getSourcePane().setText("");
 			}
+
+			main.getLeftPanel().getInputPane().setText("");
+			main.getSettings().setCMMFilePath(null);
+			main.updateWinFileName();
+			main.getRightPanel().getDebugPanel().updateFileName();
+			main.getRightPanel().getDebugPanel().setReadyMode();
 		}
 			
 		main.getSettings().setCMMFilePath(null);
