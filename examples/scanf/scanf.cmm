@@ -1,0 +1,9 @@
+#include <stdio.h>
+
+void main() {
+	// read string unless space or \0 is reached
+	string input = scanf();
+
+	// print readed string
+	printf("input: " + input);
+}

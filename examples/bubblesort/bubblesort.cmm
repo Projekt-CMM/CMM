@@ -17,7 +17,7 @@ void main() {
 	const int aLength = 10;
 	int a[aLength];
 
-	// read input
+	// read intput into array
 	readArray(a, aLength);
 
 	// check if bubblesort is finished
@@ -30,7 +30,7 @@ void main() {
 	// don't sort elements which are already sorted
 	int aLengthHelp = aLength;
 
-	// bubblesort
+	// bubblesort algorithm
 	for(success = false; !success;) {
 		success = true;
 		for(i = 0; i < aLengthHelp-1; i++) {
@@ -44,6 +44,6 @@ void main() {
 		aLengthHelp --;
 	}
 
-	// print output
+	// print array
 	printArray(a, aLength);
 }
