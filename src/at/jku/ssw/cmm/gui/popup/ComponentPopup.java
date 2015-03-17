@@ -25,6 +25,9 @@ import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import at.jku.ssw.cmm.DebugShell;
+import at.jku.ssw.cmm.DebugShell.Area;
+import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gui.GUImain;
 
 public class ComponentPopup {
@@ -39,7 +42,7 @@ public class ComponentPopup {
 		int x_abs=0;
 		int y_abs=0;
 		
-		System.out.println("x: " + x + ", y: " + y);
+		DebugShell.out(State.LOG, Area.GUI, "Creating popup on x: " + x + ", y: " + y);
 		
 		switch( orientation ) {
 		case ImagePopup.NORTH:

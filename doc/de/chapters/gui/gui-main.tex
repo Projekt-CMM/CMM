@@ -1,0 +1,31 @@
+%!TEX root=../../DA_GUI.tex
+%	########################################################
+% 				Allgemeiner Teil (Theorie)
+%	########################################################
+
+
+%	--------------------------------------------------------
+% 	Aufbau der Benutzeroberfläche
+%	--------------------------------------------------------
+\chapter{Aufbau der Benutzeroberfläche}
+In diesem Kapitel wird der Aufbau aller Fenster und Benutzeroberflächen von C Compact beschrieben - sowohl die konzeptuelle Konstruktion als auch die Implementierung.
+\subsubsection*{Das Konzept}
+Die Erscheinung und Bedienung von C Compact folgt durchgehend der grundlegenden Idee, eine einfach und intuitiv zu bedienende Entwichlungsumgebung zu schaffen. Das bedeutet, Features möglichst Zielgruppenorientiert zu integrieren und überflüssige Funktionen zu vermeiden. Durch besondere Rücksicht auf Vollständigkeit und logische Bedienvorgänge haben wir ein durchgängig logisches Bedienerlebnis angestrebt.
+Konkret haben wir uns dabei an folgende Ŕegeln gehalten:
+\begin{itemize}
+\item Das Erscheinen von Elementen in der Benutzeroberfläche soll logisch begründbar und verständlich vermittelbar sein
+\item Funktionen, die im FSST-Unterricht der ersten und zweiten Klassen wahrscheinlich nicht benötigt werden, werden vermieden oder sind standardmäßig deaktiviert; Bedienelemente werden also auf das wesentlichste reduziert
+\item Wir sind der Meinung, dass eine intuitiv zu bedinenede Oberfläche nicht durch Animationen und große Symbole erzeilt werden kann, sondern durch einfache, bereits bekannte Konzepte. So sind in C Compact bekannte Elemente wie beispielsweise eine Menüleiste mit gewohnten Datei- und Dokumentoperationen zu finden.
+%TODO reference GUImain
+\end{itemize}
+
+\subsubsection*{Daraus resultierende Einschränkungen}
+Durch diese Reduktion der gesamten Oberfläche ist C Compact auf einen bestimmten Zweck, also die Ausbildung, beschränkt. Das sehen wir allerdings nicht als Nachteil, sondern als besondere Stärke. Mit C Compact wollen wir eine Entwicklungsumgebung schaffen, die Anfänger nicht überfordert und ihnen hilft, sich auf das wesentliche zu konzentrieren.
+Das Konzept einer anfängerfreundlichen Entwichlungsumgebung ist mit dem Aufbau einer Umgebung für die professionelle Entwicklung nicht vereinbar. C Compact soll aber auf späteres Arbeiten mit komplexeren Programmen vorbereiten. Schüler, die ihre erste Programmiersprache mit C Compact erlernen, kennen bereits den Umgang mit einem Debugger und haben ein tieferes verständnis für den Ablauf von Programmen.
+
+\section{Die Benutzeroberfläche der Entwicklungsumgebung}
+Zu diesem Bereich zählen alle Elemente des Hauptfensters. Der Grundlegende Aufbau wurde bereits vor dem Projektstart entworfen und in unserem Praktikum im Sommer 2014 implementiert. Vom Herbst 2014 bis Ende Januar 2015 wurde der Aufbau und die Bedienung dieser Oberfläche erweitert und verbessert. Eine besondere Hilfestellung dabei waren die Versuche mit SchulerInnen der zweiten Klassen im FSST-Unterricht.
+%TODO reference versuche
+
+\subsection{Das Bedineungskonzept}
+Die Entwicklungsumgebung selbst ist in zwei Hälften geteilt. Im Linken Teil befinden sich die Textfelder für den Quelltext und für die Ein- und Augabe des CMM-Programmes. Der rechte Teil der Entwicklungsumgebung ist in 
