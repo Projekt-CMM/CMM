@@ -234,8 +234,7 @@ public class PanelRunListener implements Debugger {
 			case Struct.CHAR: rval += Memory.getBoolReturnValue(); break;
 			}
 			
-			JEditorPane ep;
-			ep = new JEditorPane();
+			JEditorPane ep = new JEditorPane();
 			ep.setText(rval);
 			ep.setMinimumSize(new Dimension(1, 1));
 			ep.setPreferredSize(new Dimension(10, 10));
