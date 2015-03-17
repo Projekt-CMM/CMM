@@ -321,15 +321,12 @@ public class GUIleftPanel {
 	 */
 	public void highlightSourceCode(int line) {
 
-		// Line out of user source code range (#include)
-		if (line <= (int) this.codeRegister.get(0)[0])
-			return;
-
 		// Correct offset in source code (offset caused by includes)
-		line = (int)Preprocessor.returnFileAndNumber(line, this.main.getLeftPanel().getSourceCodeRegister())[1];
+		Object[] objLine = Preprocessor.returnFileAndNumber(line, this.main.getLeftPanel().getSourceCodeRegister());
 
-		// Do highlighting
-		this.highlightSourceCodeDirectly(line);
+		if(objLine[0].equals("main"))
+			// Do highlighting
+			this.highlightSourceCodeDirectly((int)objLine[1]);
 	}
 	
 	/**
@@ -551,16 +548,15 @@ public class GUIleftPanel {
 		return this.jSourcePane;
 	}
 	
-	public Rectangle getPositionInSource( int line, int col ) {
+	public Rectangle getPositionInSource( int line, int col ) throws BadLocationException {
 		
-		try {
-			return this.jSourcePane.modelToView(this.jSourcePane.getLineStartOffset(line)+col);
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// Correct offset in source code (offset caused by includes)
+		Object[] objLine = Preprocessor.returnFileAndNumber(line, this.main.getLeftPanel().getSourceCodeRegister());
 		
-		return null;
+		if(!objLine[0].equals("main"))
+			throw new BadLocationException("Wrong file", 1);
+		
+		return this.jSourcePane.modelToView(this.jSourcePane.getLineStartOffset((int)objLine[1])+col);
 	}
 	
 	/**

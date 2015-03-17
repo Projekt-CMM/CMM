@@ -34,6 +34,7 @@ import java.util.TimerTask;
 import javax.swing.JEditorPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.BadLocationException;
 
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
@@ -238,11 +239,17 @@ public class PanelRunListener implements Debugger {
 			ep.setText(rval);
 			ep.setMinimumSize(new Dimension(1, 1));
 			ep.setPreferredSize(new Dimension(10, 10));
-			Rectangle r = this.main.getLeftPanel().getPositionInSource(arg0.line, arg0.col);
-			System.out.println("Return pos: " + arg0.line + ", " + arg0.col);
-			int px = (int) r.getX() + (int)main.getLeftPanel().getSourcePane().getLocationOnScreen().getX() - (int)main.getJFrame().getLocationOnScreen().getX();
-			int py = (int) r.getY() + (int)main.getLeftPanel().getSourcePane().getLocationOnScreen().getY() - (int)main.getJFrame().getLocationOnScreen().getY();
-			ComponentPopup.createPopUp(main, ep, (int)(px + 0.5*(arg0.col+3)*main.getSettings().getCodeSize()), py-(int)(main.getSettings().getCodeSize()*0.9), rval.length()>10?130:80, rval.length()>10?70:35, ImagePopup.SOUTH);
+			Rectangle r = null;
+			try {
+				r = this.main.getLeftPanel().getPositionInSource(arg0.line, arg0.col);
+			} catch (BadLocationException e) {
+				DebugShell.out(State.WARNING, Area.DEBUGGER, "Bad location when initializing return popup: " + e.getMessage());
+			}
+			if( r != null ) {
+				int px = (int) r.getX() + (int)main.getLeftPanel().getSourcePane().getLocationOnScreen().getX() - (int)main.getJFrame().getLocationOnScreen().getX();
+				int py = (int) r.getY() + (int)main.getLeftPanel().getSourcePane().getLocationOnScreen().getY() - (int)main.getJFrame().getLocationOnScreen().getY();
+				ComponentPopup.createPopUp(main, ep, (int)(px + 0.5*(arg0.col+3)*main.getSettings().getCodeSize()), py-(int)(main.getSettings().getCodeSize()*0.9), rval.length()>10?130:80, rval.length()>10?70:35, ImagePopup.SOUTH);
+			}
 		}
 		
 		// Update latest node's line
