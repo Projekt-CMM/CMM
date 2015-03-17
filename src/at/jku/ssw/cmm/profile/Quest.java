@@ -200,6 +200,11 @@ public class Quest {
 				quest.setPackagePath(packageFolder);
 				quest.setQuestPath(questFolder);
 				
+				//Setting default Values:
+				quest.setTitle(quest.getQuestPath());
+				quest.setState(STATE_SELECTABLE);
+				quest.setAttribute(Quest.ATTRIBUTE_EXERSICE);
+				
 				try {
 					//Reading the XML File
 					quest = ReadQuestXML(path,quest);
@@ -243,8 +248,7 @@ public class Quest {
 		
 		}catch(FileNotFoundException e){
 			System.err.println(file + " not found!" + " trying to open Quest without .xml");
-			quest.setTitle(quest.getQuestPath());
-			quest.setState(STATE_SELECTABLE);
+
 			
 			return quest;
 		}	
@@ -265,8 +269,7 @@ public class Quest {
 				try{
 				quest.setTitle(eElement.getElementsByTagName(Quest.XML_TITLE).item(0).getTextContent());
 				}catch(NullPointerException e){
-					//No Title found
-					quest.setTitle(null);
+					//Nothing happens..
 				}
 				
 				try{
@@ -296,12 +299,6 @@ public class Quest {
 					//Setting Exercise Attribute
 					quest.setAttribute(Quest.ATTRIBUTE_EXERSICE);
 				}
-				
-				/*try{
-					quest.setOptional(Boolean.parseBoolean(eElement.getElementsByTagName(Quest.XML_OPTIONAL).item(0).getTextContent()));
-				}catch(NullPointerException e){
-					quest.setOptional(false);
-				}*/
 
 				try{
 				String s = eElement.getElementsByTagName(Quest.XML_STATE).item(0).getTextContent();
