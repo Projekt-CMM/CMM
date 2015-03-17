@@ -24,7 +24,6 @@ package at.jku.ssw.cmm.gui.file;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;
@@ -94,24 +93,42 @@ public class SaveDialog {
 	 */
 	public boolean doSaveAs(){
 		
-		System.out.println("save as ... ");
+		boolean repeat = true;
 		
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(new FileNameExtensionFilter(
 				"CMM " + _("file"), "cmm"));
 		
-		int option = chooser.showSaveDialog(jFrame);
+		while( repeat ) {
 		
-		if (option == JFileChooser.APPROVE_OPTION) {
-			try {
-				FileManagerCode.saveSourceCode(chooser.getSelectedFile(), jSourcePane.getText(), jInputPane.getText());
-			} catch (IOException e) {
-				new ErrorMessage().showErrorMessage(this.jFrame, "#2001", this.settings.getLanguage());
-			}
-			String path = chooser.getSelectedFile().getPath();
-			settings.setCMMFilePath(path.endsWith(".cmm") ? path : path + ".cmm");
+			int option = chooser.showSaveDialog(jFrame);
 			
-			saveInProfile();
+			if (option == JFileChooser.APPROVE_OPTION) {
+				
+				if( FileManagerCode.completeFileName(chooser.getSelectedFile()).exists() ) {
+					int n = JOptionPane.showConfirmDialog(
+							jFrame,
+						    _("Would you like to replace the existing file?"),
+						    _("This file does already exist"),
+						    JOptionPane.YES_NO_OPTION);
+					if( n == 1 )
+						continue;
+				}
+				
+					String filePath = null;
+					try {
+						filePath = FileManagerCode.saveSourceCode(chooser.getSelectedFile(), jSourcePane.getText(), jInputPane.getText());
+					} catch (IOException e) {
+						new ErrorMessage().showErrorMessage(this.jFrame, "#2001", this.settings.getLanguage());
+					}
+					settings.setCMMFilePath(filePath);
+					
+					saveInProfile();
+					return true;
+				
+			}
+			if (option == JFileChooser.CANCEL_OPTION)
+				return false;
 		}
 		
 		return false;
@@ -119,7 +136,7 @@ public class SaveDialog {
 	
 	/**
 	 * Saves the Path of the File in the current Quest and changes the quest to inprogress, 
-	 * if the quest isn't finished!
+	 * if the quest isn't finished!		System.out.println("save as ... ");
 	 */
 	private void saveInProfile(){
 		
@@ -147,7 +164,7 @@ public class SaveDialog {
 	 * Saves the current file directly without calling a save dialog.
 	 * Save dialog is called though, if there is no working directory for the file defined.
 	 */
-	public boolean directSave(){
+	public void directSave(){
 		if( settings.getCMMFilePath() != null ){
 			try {
 				FileManagerCode.saveSourceCode(new File(settings.getCMMFilePath()), jSourcePane.getText(), jInputPane.getText());
@@ -155,10 +172,10 @@ public class SaveDialog {
 				new ErrorMessage().showErrorMessage(this.jFrame, "#2001", this.settings.getLanguage());
 			}
 			saveInProfile();
-			return false;
+			return;
 		}
 		else
-			return this.doSaveAs();
+			this.doSaveAs();
 	}
 	
 	public boolean safeCheck(String title) {
@@ -180,10 +197,7 @@ public class SaveDialog {
 
 			if (n == JOptionPane.YES_OPTION) {
 				// Open a save dialog to save current source code
-				if (doSaveAs())
-					return true;
-				else
-					return false;
+				return doSaveAs();
 			} else if (n == JOptionPane.NO_OPTION)
 				return true;
 			else
