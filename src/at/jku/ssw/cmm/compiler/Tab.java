@@ -40,13 +40,13 @@ public class Tab {
 	public Scope curScope;	         // current scope
 	public int   curLevel;	         // nesting level of current scope
 
-	public static Struct intType;    // predefined types
-	public static Struct floatType;
-	public static Struct charType;
-	public static Struct boolType;
-	public static Struct stringType;
-	public static Struct noType;
-	public static Obj noObj;		     // predefined objects
+	public static final Struct intType 		= new Struct(Struct.INT);    // predefined types
+	public static final Struct floatType 	= new Struct(Struct.FLOAT);
+	public static final Struct charType 	= new Struct(Struct.CHAR);
+	public static final Struct boolType 	= new Struct(Struct.BOOL);
+	public static final Struct stringType 	= new Struct(Struct.STRING);
+	public static final Struct noType 		= new Struct(Struct.NONE);
+	public static final Obj noObj 			= new Obj(Obj.VAR, "???", noType, -1);		     // predefined objects
 	public static Obj printProc;
 	public static Obj printfProc;
 	public static Obj readProc;
@@ -758,15 +758,6 @@ public class Tab {
 		curScope.outer = null;
 		curLevel = -1;
 
-		// create predeclared types
-		intType   = new Struct(Struct.INT);
-		floatType = new Struct(Struct.FLOAT);
-		charType  = new Struct(Struct.CHAR);
-		boolType  = new Struct(Struct.BOOL);
-		stringType= new Struct(Struct.STRING);
-		noType    = new Struct(Struct.NONE);
-		noObj     = new Obj(Obj.VAR, "???", noType, -1);
-		
 		// insert predeclared types into universe
 		insert(Obj.TYPE, "bool", boolType, -1);
 		insert(Obj.TYPE, "int", intType, -1);

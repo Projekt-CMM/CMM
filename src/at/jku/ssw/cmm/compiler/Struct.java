@@ -85,6 +85,10 @@ public class Struct implements Cloneable {
 		return (Struct)super.clone();
     }
 	
+	public boolean equals(Object _obj) {
+		return ((Object)this == (Object)_obj);
+	}
+	
 	public boolean equals(Struct _s2) {
 		if(_s2 == null)
 			return false;
