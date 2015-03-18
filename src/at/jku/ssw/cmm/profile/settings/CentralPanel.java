@@ -135,7 +135,7 @@ public class CentralPanel extends JPanel {
 		for(Token t : allTokens){
 			panel = new JPanel();
 			panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-			panel.add(LoadStatics.loadImage(t.getInitPath() + Quest.sep + t.getImagePath(),false));
+			panel.add(new JLabel(LoadStatics.loadIcon(t.getInitPath() + Quest.sep + t.getImagePath(), 32, 32)));
 			panel.setToolTipText("<html><b><p width=\"200\">" + t.getDescription()
 					+ "</p></b></html>");
 			
