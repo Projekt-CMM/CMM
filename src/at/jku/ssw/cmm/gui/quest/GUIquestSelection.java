@@ -289,8 +289,7 @@ public class GUIquestSelection {
 		
 		JProgressBar progressBar;
         progressBar = new JProgressBar(0, count[2]);
-        progressBar.setValue(count[2]);
-        System.out.println("1." + count[0] + " 2." + count[2]);
+        progressBar.setValue(count[1]);
         progressBar.setStringPainted(true);      
         
         //progressBar.setString(_("Total Quest Progress") + finishedquests + " von " + allQuests);
