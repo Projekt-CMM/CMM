@@ -30,7 +30,7 @@ bool library match(string regexp, string text) {
 		if(matchhere(regexp, text))
 			return true;
 		text = substr(text,1);
-	} while (length(text) != 1);
+	} while (length(text) >= 1);
 	return false;
 }
 
