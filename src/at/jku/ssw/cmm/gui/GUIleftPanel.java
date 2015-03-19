@@ -324,7 +324,7 @@ public class GUIleftPanel {
 		// Correct offset in source code (offset caused by includes)
 		Object[] objLine = Preprocessor.returnFileAndNumber(line, this.main.getLeftPanel().getSourceCodeRegister());
 
-		if(objLine[0].equals("main"))
+		if(objLine[0].equals("main") && (int)objLine[1] >= 0)
 			// Do highlighting
 			this.highlightSourceCodeDirectly((int)objLine[1]);
 	}
@@ -457,15 +457,19 @@ public class GUIleftPanel {
 		
 		this.resetInputHighlighter();
 		
+		// Correct offset in source code (offset caused by includes)
+		Object[] objLine = Preprocessor.returnFileAndNumber(line, this.main.getLeftPanel().getSourceCodeRegister());
+		
 		this.jStatePanel.setBackground(new Color(255, 131, 131));
 		// TODO parse filename from Parser (when library error)
 		this.jStateLabel.setText("<html>! ! ! " + (title[0] == null ? _("error") : title[0]) +
 			(file == null || file != "main" ? "" : " in file " + file) + " " +
-			(line >= 0 ? _("in line") + " " + line : "") +
+			(line >= 0 ? _("in line") + " " + (int)objLine[1] : "") +
 			(title[1] == null ? "" : " " + title[1]) + " ! ! !</html>");
 		
-		if( line >= 0 )
-			this.highlightSourceCode(line);
+		if(objLine[0].equals("main") && (int)objLine[1] >= 0)
+			// Do highlighting
+			this.highlightSourceCodeDirectly((int)objLine[1]);
 	}
 
 	/**
