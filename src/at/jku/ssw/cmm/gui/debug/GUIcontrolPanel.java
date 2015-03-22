@@ -158,7 +158,7 @@ public class GUIcontrolPanel {
 		jLabelTimer.setToolTipText("<html><b>" + _("debugger step delay") + "</b><br>" + _("change this value with<br>the slider below") + "</html>");
 		panel.add(jLabelTimer);
 
-		jSlider = new JSlider(JSlider.HORIZONTAL, 1, 9, 1);
+		jSlider = new JSlider(JSlider.HORIZONTAL, 1, 11, 1);
 		jSlider.setMajorTickSpacing(1);
 		jSlider.setMinorTickSpacing(1);
 		jSlider.setPaintTicks(true);
