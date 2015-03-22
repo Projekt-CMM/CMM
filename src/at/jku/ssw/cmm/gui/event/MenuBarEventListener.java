@@ -25,6 +25,7 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.IOException;
 
@@ -246,6 +247,22 @@ public class MenuBarEventListener {
 		}
 	};
 	
+	/**
+	 * Event listener for the "save" entry in the "file" drop-down menu
+	 */
+	public ActionListener printHandler = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			try {
+				main.getLeftPanel().getSourcePane().print();
+			} catch (PrinterException e) {
+				new ErrorMessage().showErrorMessage(jFrame, "#9001", main.getSettings().getLanguage());
+			}
+		}
+	};
+	
 	public ActionListener creditsHandler = new ActionListener() {
 
 		@Override
@@ -266,6 +283,33 @@ public class MenuBarEventListener {
 
 			if(main.getSaveManager().safeCheck(_("Closing C Compact")))
 				WindowEventListener.updateAndExit(jFrame, main.getSettings());
+		}
+	};
+	
+	public ActionListener cutHandler = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			main.getLeftPanel().getSourcePane().cut();
+		}
+	};
+	
+	public ActionListener copyHandler = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			main.getLeftPanel().getSourcePane().copy();
+		}
+	};
+	
+	public ActionListener pasteHandler = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			main.getLeftPanel().getSourcePane().paste();
 		}
 	};
 	
