@@ -26,6 +26,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
+import javax.swing.JSplitPane;
 import javax.swing.text.JTextComponent;
 
 /**
@@ -47,7 +48,15 @@ public class CursorListener implements MouseListener {
 	public CursorListener( JFrame frame, Object component, Cursor cursor ){
 		this.component = component;
 		this.frame = frame;
-		this.cursor = cursor;
+		this.cursor1 = cursor;
+		this.cursor2 = null;
+	}
+	
+	public CursorListener( JFrame frame, Object component, Cursor cursor1, Cursor cursor2 ){
+		this.component = component;
+		this.frame = frame;
+		this.cursor1 = cursor1;
+		this.cursor2 = cursor2;
 	}
 	
 	/**
@@ -63,7 +72,8 @@ public class CursorListener implements MouseListener {
 	/**
 	 * The cursor we want to see when the mouse is over "component"
 	 */
-	private final Cursor cursor;
+	private final Cursor cursor1;
+	private final Cursor cursor2;
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
@@ -75,8 +85,20 @@ public class CursorListener implements MouseListener {
 			if( !c.isEditable() )
 				return;
 		}
-		// Set custom cursor
-		this.frame.setCursor(this.cursor);
+		
+		// Two different cursors for SplitPane
+		if( this.component != null && this.component instanceof JSplitPane ) {
+			JSplitPane sp = (JSplitPane)this.component;
+			
+			if( sp.getOrientation() == JSplitPane.HORIZONTAL_SPLIT )
+				this.frame.setCursor(this.cursor1);
+			else
+				this.frame.setCursor(this.cursor2);
+		}
+		
+		// Set default custom cursor
+		else
+			this.frame.setCursor(this.cursor1);
 	}
 
 	@Override

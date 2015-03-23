@@ -133,7 +133,7 @@ public class GUIcontrolPanel {
 	 */
 	private void initRunMode( JPanel panel ) {
 		
-		panel.setToolTipText("<html><b>" + _("Control elements") + "</b><br>" + _("With the elements int this panel, you can<br>run and debug your source code") + "</html>");
+		//panel.setToolTipText("<html><b>" + _("Control elements") + "</b><br>" + _("With the elements int this panel, you can<br>run and debug your source code") + "</html>");
 
 		/* ---------- BUTTONS ---------- */
 		//"play" button
@@ -158,7 +158,7 @@ public class GUIcontrolPanel {
 		jLabelTimer.setToolTipText("<html><b>" + _("debugger step delay") + "</b><br>" + _("change this value with<br>the slider below") + "</html>");
 		panel.add(jLabelTimer);
 
-		jSlider = new JSlider(JSlider.HORIZONTAL, 1, 9, 1);
+		jSlider = new JSlider(JSlider.HORIZONTAL, 1, 11, 1);
 		jSlider.setMajorTickSpacing(1);
 		jSlider.setMinorTickSpacing(1);
 		jSlider.setPaintTicks(true);

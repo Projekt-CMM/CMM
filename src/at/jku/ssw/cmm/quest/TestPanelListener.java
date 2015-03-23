@@ -33,13 +33,13 @@ public class TestPanelListener implements MouseListener, TestReply {
 		if (main.getSettings().getCMMFilePath() != null)
 			// Save to working directory
 			main.getSaveManager().directSave();
-		else
+		/*else
 			// Open "save as" dialog if there is no working directory
 			main.getSaveManager().doSaveAs();
 
 		main.setFileSaved();
 		main.updateWinFileName();
-		main.getRightPanel().getDebugPanel().updateFileName();
+		main.getRightPanel().getDebugPanel().updateFileName();*/
 		
 		//Start test -> set right panel to test mode
 		main.getRightPanel().setTestMode();
@@ -59,9 +59,10 @@ public class TestPanelListener implements MouseListener, TestReply {
 		
 		String[] ignore = {"\n", ",", ";"};
 		QuestTester qt = new QuestTester((TestReply)this,
-				"packages" + File.separator + quest.getPackagePath() + File.separator + quest.getQuestPath() + File.separator + Quest.FILE_INPUT_CMM,
-				"packages" + File.separator + quest.getPackagePath() + File.separator + quest.getQuestPath() + File.separator + Quest.FILE_REF,
-				main.getSettings().getCMMFilePath(), ignore);
+				new File("packages" + File.separator + quest.getPackagePath() + File.separator + quest.getQuestPath() + File.separator + Quest.FILE_INPUT_CMM),
+				new File("packages" + File.separator + quest.getPackagePath() + File.separator + quest.getQuestPath() + File.separator + Quest.FILE_REF),
+				main.getSettings().hasCMMFilePath() ? new File(main.getSettings().getCMMFilePath()) : main.getLeftPanel().getSourceCode(),
+				ignore);
 		qt.start();
 	}
 

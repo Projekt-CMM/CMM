@@ -114,4 +114,14 @@
 			<de></de>
 		</message>
 	</error>
+	<error id="#9001">
+		<title>
+			<en>Could not print file</en>
+			<de>Fehler beim Drucken</de>
+		</title>
+		<message>
+			<en></en>
+			<de></de>
+		</message>
+	</error>
 </systemerror>

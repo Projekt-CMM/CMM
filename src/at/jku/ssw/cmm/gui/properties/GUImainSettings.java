@@ -208,7 +208,7 @@ public class GUImainSettings {
 	 *         FALSE if the current cmm file has not yet been saved
 	 */
 	public boolean hasCMMFilePath() {
-		if (this.currentFile != null)
+		if (this.currentFile != null && !this.currentFile.equals(_("Unnamed")))
 			return true;
 		return false;
 	}

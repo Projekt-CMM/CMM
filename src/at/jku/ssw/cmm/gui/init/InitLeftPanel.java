@@ -30,6 +30,7 @@ import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
 import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
@@ -81,7 +82,7 @@ public class InitLeftPanel {
 	 * @param pane The main panel for the GUI (JPanel)
 	 * @return A reference to the JTextArea generated
 	 */
-	public static JInputDataPane initInputPane( JPanel pane ){
+	public static JInputDataPane initInputPane( JSplitPane pane ){
 		
 		//Label saying "input" above the text area for the input stream
 		JPanel valuePanel = new JPanel();
@@ -98,7 +99,7 @@ public class InitLeftPanel {
         JScrollPane scroll = new JScrollPane(tArea);
         
         valuePanel.add(scroll, BorderLayout.CENTER);
-        pane.add(valuePanel);
+        pane.setTopComponent(valuePanel);
         
         return tArea;
 	}
@@ -109,7 +110,7 @@ public class InitLeftPanel {
 	 * @param pane The main panel for the GUI (JPanel)
 	 * @return A reference to the JTextArea generated
 	 */
-	public static JTextArea initOutputPane( JPanel pane ){
+	public static JTextArea initOutputPane( JSplitPane pane ){
 		
 		//Label saying "output" above the text area for the output stream
 		JPanel valuePanel = new JPanel();
@@ -126,7 +127,7 @@ public class InitLeftPanel {
         JScrollPane scroll = new JScrollPane(tArea);
         
         valuePanel.add(scroll, BorderLayout.CENTER);
-        pane.add(valuePanel);
+        pane.setBottomComponent(valuePanel);
         
         return tArea;
 	}

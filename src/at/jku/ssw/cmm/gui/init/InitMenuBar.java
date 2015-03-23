@@ -101,11 +101,20 @@ public class InitMenuBar {
 			menuBarControl.add(saveAsMI);
 			
 			// --- file -> save ---
-			JMenuItem saveMI = new JMenuItem(_("Save..."));
+			JMenuItem saveMI = new JMenuItem(_("Save"));
 			fileM.add(saveMI);
 			saveMI.addActionListener(listener.saveHandler);
 			saveMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 			menuBarControl.add(saveMI);
+			
+			fileM.addSeparator();
+			
+			// --- file -> print ---
+			JMenuItem printMI = new JMenuItem(_("Print"));
+			fileM.add(printMI);
+			printMI.addActionListener(listener.printHandler);
+			printMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+			menuBarControl.add(printMI);
 			
 			fileM.addSeparator();
 			
@@ -135,6 +144,29 @@ public class InitMenuBar {
 		/* --- MENU: "source code" --- */
 		JMenu codeM = new JMenu(_("Source code"));
 		menubar.add(codeM);
+		
+			// --- edit -> cut ---
+			JMenuItem cutMI = new JMenuItem(_("Cut"));
+			cutMI.addActionListener(listener.cutHandler);
+			cutMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+			codeM.add(cutMI);
+			menuBarControl.setUndo(cutMI);
+					
+			// --- edit -> copy ---
+			JMenuItem copyMI = new JMenuItem(_("Copy"));
+			copyMI.addActionListener(listener.copyHandler);
+			copyMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+			codeM.add(copyMI);
+			menuBarControl.setUndo(copyMI);
+					
+			// --- edit -> paste ---
+			JMenuItem pasteMI = new JMenuItem(_("Paste"));
+			pasteMI.addActionListener(listener.pasteHandler);
+			pasteMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+			codeM.add(pasteMI);
+			menuBarControl.setUndo(pasteMI);
+			
+			codeM.addSeparator();
 		
 			// --- edit -> undo ---
 			JMenuItem undoMI = new JMenuItem(_("Undo"));
