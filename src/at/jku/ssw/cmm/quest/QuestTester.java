@@ -219,12 +219,8 @@ public class QuestTester extends Thread {
 		else if( data instanceof String ) {
 			sourceCode = (String)data;
 		}
-		
-		try {
-			sourceCode = Preprocessor.expand(sourceCode, "", new ArrayList<Object[]>(), new ArrayList<Integer>());
-		} catch (IOException e1) {
-			throw new FileNotFoundException("Library file not found");
-		}
+
+		sourceCode = Preprocessor.expand(sourceCode, "", new ArrayList<Object[]>(), new ArrayList<Integer>());
 		
 		if( sourceCode == null )
 			throw new CompilerErrorException("Source code is null", null);
