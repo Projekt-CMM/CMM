@@ -22,8 +22,10 @@
 package at.jku.ssw.cmm.gettext;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,7 +83,8 @@ public class Language {
 		
 		// Start reading file
 		try {
-			file = new BufferedReader(new FileReader("po/" + langCode ));
+			//file = new BufferedReader(new FileReader( ));
+			file = new BufferedReader(new InputStreamReader(new FileInputStream(new File("po/" + langCode)), "UTF8"));
 			while ((line = file.readLine()) != null) {
 				
 				//Load a translated String
