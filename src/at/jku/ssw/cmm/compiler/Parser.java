@@ -608,10 +608,13 @@ public class Parser {
 		Node newNode = null;
 		Struct rawType = curObj.type; 
 		int arraySize = rawType.elements;
-		while(rawType.elemType != null)
+		if(rawType != null && rawType.elemType != null) {
 		   rawType = rawType.elemType;
-		   if(rawType.elemType != null)
-		       arraySize = rawType.elements;
+		   
+		   if(rawType.kind == Struct.ARR)
+		       SemErr("you can only init 1. dimensional arrays");
+		} else
+		   SemErr("unknow array type");
 		
 		Expect(8);
 		newNode = BinExpr();
@@ -629,6 +632,8 @@ public class Parser {
 			Get();
 			newNode = BinExpr();
 			iteration ++;
+			if(iteration >= arraySize)
+			   SemErr("too high index choosen");
 			// check if Expression is not null
 			if(newNode == null) 
 			   SemErr("right operator is not defined");

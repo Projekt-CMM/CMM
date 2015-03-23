@@ -352,6 +352,14 @@ public class InterpreterRunTest implements StdInOut {
 				+ "}");
 		assertEquals(output, "3 3 3 3 3");
 		
+		// assignment while array declaration (to high index)
+		try {
+			runCode("void main() {"
+					+ "  int a[5] = {1,2,3,4,5,6};"
+					+ "}");
+			fail("RunTimeException not thrown");
+		} catch(CompilerException e) {}
+		
 		// access to not initialized variables
 		try {
 			runCode("void main() {"
