@@ -133,7 +133,7 @@ public class GUIcontrolPanel {
 	 */
 	private void initRunMode( JPanel panel ) {
 		
-		panel.setToolTipText("<html><b>" + _("Control elements") + "</b><br>" + _("With the elements int this panel, you can<br>run and debug your source code") + "</html>");
+		//panel.setToolTipText("<html><b>" + _("Control elements") + "</b><br>" + _("With the elements int this panel, you can<br>run and debug your source code") + "</html>");
 
 		/* ---------- BUTTONS ---------- */
 		//"play" button
