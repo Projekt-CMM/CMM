@@ -16,6 +16,7 @@ import at.jku.ssw.cmm.gui.treetable.TableButtonRenderer;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
 import at.jku.ssw.cmm.gui.treetable.TreeTableModel;
+import at.jku.ssw.cmm.gui.treetable.var.TreeUtils;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
 
@@ -100,10 +101,8 @@ private DataNodeExample getFolderView(String path, DataNodeExample node, int lay
 
 		if(isPackage(path + File.separator + subfolder)){
 			
-			//TODO Add Profile.. uncomment
 			at.jku.ssw.cmm.profile.Package p = Profile.ReadPackageQuests(main.getGUImain().getSettings().getProfile(), path + File.separator + subfolder);
-			//at.jku.ssw.cmm.profile.Package p = Package.readPackage(path + File.separator + subfolder, "");
-			
+			System.out.println("Checking Package"+path + File.separator + subfolder);
 			if(p != null){
 				int[] qCount = p.getQuestCount();
 				
@@ -119,27 +118,32 @@ private DataNodeExample getFolderView(String path, DataNodeExample node, int lay
 				//Adding the Current Node
 				
 				subNode = new DataNodeExample(tListener, b, button);
+				
+				if(subNode != null){
+					getFolderView(path + File.separator + subfolder, subNode, ++layer);
+					node.addChild(subNode);
+				}
 			}
+			
 		}else{
-			if(!Quest.isPathQuest(path + File.separator + subfolder))
-				//adding an empty subNode
+			if(!Quest.isPathQuest(path + File.separator + subfolder) && Quest.containsQuests(path + File.separator + subfolder)){
 				subNode = new DataNodeExample(tListener, "", "");
+				
+				if(subNode != null){
+					getFolderView(path + File.separator + subfolder, subNode, ++layer);
+					node.addChild(subNode);
+				}
+			}
 		}
 		
-		if(subNode != null){
-			subNode = getFolderView(path + File.separator + subfolder, subNode, ++layer);
-			//subNode.setQuestFlag(flag);
-	
-			node.addChild(subNode);
-		}
+
 					
 	}
 	return node;
 }				
 
 private boolean isPackage(String path){
-	
-	System.out.println("Checking Package " + path);
+
 	//Reading all FolderNames
 	List<String> subFolders = Quest.ReadFolderNames(path);
 	
@@ -147,7 +151,6 @@ private boolean isPackage(String path){
 	if(subFolders != null)
 		for(String sub : subFolders){
 			if(Quest.isPathQuest(path + File.separator + sub)){
-				System.out.println("Package Path" + path + File.separator + sub);
 				return true;
 			}
 		}
