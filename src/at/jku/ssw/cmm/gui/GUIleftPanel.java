@@ -211,6 +211,13 @@ public class GUIleftPanel {
 		innerPane.setPreferredSize(new Dimension(200, 200));
 		innerPane.setMaximumSize(new Dimension(2000, 2000));
 		
+		// Custom cursor for split pane divider
+		BasicSplitPaneUI ui = (BasicSplitPaneUI)innerPane.getUI();
+		BasicSplitPaneDivider divider = ui.getDivider();
+		divider.addMouseListener(
+			new CursorListener(jFrame, innerPane, new Cursor(Cursor.E_RESIZE_CURSOR), new Cursor(Cursor.S_RESIZE_CURSOR))
+		);
+		
 		// Properties of the splitPanel
 		outerPane.setTopComponent(jSourceCodeContainer);
 		outerPane.setBottomComponent(innerPane);
@@ -218,10 +225,10 @@ public class GUIleftPanel {
 		outerPane.setResizeWeight(1.0);
 		
 		// Custom cursor for split pane divider
-		BasicSplitPaneUI ui = (BasicSplitPaneUI)outerPane.getUI();
-		BasicSplitPaneDivider divider = ui.getDivider();
+		ui = (BasicSplitPaneUI)outerPane.getUI();
+		divider = ui.getDivider();
 		divider.addMouseListener(
-			new CursorListener(jFrame, divider, new Cursor(Cursor.S_RESIZE_CURSOR))
+			new CursorListener(jFrame, outerPane, new Cursor(Cursor.E_RESIZE_CURSOR), new Cursor(Cursor.S_RESIZE_CURSOR))
 		);
 		
 		// Disable F6 keyboard shortcut for 
