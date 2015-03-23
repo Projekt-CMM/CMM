@@ -197,8 +197,8 @@
 	<error id="name must be an designator">
 		<file>compiler/type_error/must_be_designator.html</file>
 	</error>
-	<error id=".* is not an integer"> <!-- TODO special error-template -->
-		<file>interpreter/operator/int_overflow.html</file>
+	<error id=".* is not an integer">
+		<file>compiler/type_error/is_not_int.html</file>
 	</error>
 	<error id=".* is not an float"> <!-- TODO special error-template -->
 		<file>interpreter/operator/float_overflow.html</file>
