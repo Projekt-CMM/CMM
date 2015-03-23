@@ -593,6 +593,10 @@ public class Quest {
 	}
 	
 	
+	public static boolean containsQuests(String path){
+		return containsQuests(path,-1);
+	}
+	
 	/**
 	 * TODO Max Folders without a Quest to go..
 	 * Iterating through the Folders and checking if there is a Quest
@@ -602,7 +606,7 @@ public class Quest {
 	 */
 	public static boolean containsQuests(String path, int max){
 		//Returning if the Value Max is too high
-		if(max == 0)
+		if(max == 0 && max != -1)
 			return false;
 		
 		//Checking if there is a Quest in the Current Folder
