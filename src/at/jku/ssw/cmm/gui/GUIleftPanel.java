@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -173,8 +172,9 @@ public class GUIleftPanel {
 		jSourceCodeContainer.setLayout(new BorderLayout());//new BoxLayout(jSourceCodeContainer, BoxLayout.PAGE_AXIS));
 		
 		// Panel for the I/O text areas
-		JPanel panel2 = new JPanel();
-		panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
+		JSplitPane panel2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		panel2.setDividerLocation(0.5);
+		panel2.setResizeWeight(0.5);
 		
 		// Initialize the panel which visualizes the debugger state
 		this.jStatePanel = new JPanel();
@@ -246,7 +246,9 @@ public class GUIleftPanel {
 		this.jSourcePane.getDocument().addDocumentListener(new SourceCodeListener(this.main));
 		// TODO I/O text fields do not yet have document listeners
 		// this.jInputPane.getDocument().addDocumentListener(this.codeListener);
-
+		
+		this.jSourcePane.setCurrentLineHighlightColor(new Color(0xFFA1A1));
+		
 		return jPanelLeft;
 	}
 	
@@ -439,6 +441,8 @@ public class GUIleftPanel {
 		
 		this.unlockInput();
 		
+		this.jSourcePane.setCurrentLineHighlightColor(Color.LIGHT_GRAY);
+		
 		this.jStatePanel.setBackground(Color.LIGHT_GRAY);
 		this.jStateLabel.setText("--- " + _("text edit mode") + " ---");
 	}
@@ -456,6 +460,8 @@ public class GUIleftPanel {
 		this.unlockInput();
 		
 		this.resetInputHighlighter();
+		
+		this.jSourcePane.setCurrentLineHighlightColor(new Color(0xFFA1A1));
 		
 		// Correct offset in source code (offset caused by includes)
 		Object[] objLine = Preprocessor.returnFileAndNumber(line, this.main.getLeftPanel().getSourceCodeRegister());
@@ -479,6 +485,8 @@ public class GUIleftPanel {
 	public void setRunMode() {
 		
 		this.lockInput();
+		
+		this.jSourcePane.setCurrentLineHighlightColor(new Color(0x92FC9B));
 
 		this.jStatePanel.setBackground(new Color(0x92FC9B));
 		this.jStateLabel.setText(">>> " + _("automatic debug mode") + " >>>");
@@ -491,6 +499,8 @@ public class GUIleftPanel {
 	public void setPauseMode() {
 		
 		this.lockInput();
+		
+		this.jSourcePane.setCurrentLineHighlightColor(new Color(0xEFDD1E));
 		
 		this.jStatePanel.setBackground(new Color(0xEFDD1E));
 		this.jStateLabel.setText("||| " + _("pause or step by step mode") + " |||");
