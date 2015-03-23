@@ -325,16 +325,6 @@ public class GUIdebugPanel {
 					false);
 
 			return false;
-		} catch (IOException e1) {
-			// Reset source code file register
-			Object[] e = { 1, 0, null };
-			this.main.getLeftPanel().getSourceCodeRegister().clear();
-			this.main.getLeftPanel().getSourceCodeRegister().add(e);
-
-			// Display default message for preprocessor error
-			this.setErrorMode("Preprocessor.IOException", "", -1, false);
-
-			return false;
 		}
 		// Preprocessor error, reason is unknown
 		catch (Exception e1) {

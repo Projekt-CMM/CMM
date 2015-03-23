@@ -38,7 +38,7 @@ import at.jku.ssw.cmm.gui.file.FileManagerCode;
 
 public class Preprocessor {
 
-	public static String expand( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints ) throws PreprocessorException, IOException{ // Debug message
+	public static String expand( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints ) throws PreprocessorException { // Debug message
 		DebugShell.out(State.LOG, Area.COMPILER, "Starting preprocessor");
 	
 		// Init new SourceCode storage
@@ -57,7 +57,7 @@ public class Preprocessor {
 		return newSourceCode;
 	}
 	
-	public static String parseFile( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints, Map<String, Integer> defines, int offset, String file) throws PreprocessorException, IOException{
+	public static String parseFile( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints, Map<String, Integer> defines, int offset, String file) throws PreprocessorException {
 		// Debug message
 		DebugShell.out(State.LOG, Area.PREPROCESSOR, "parse File");
 		
@@ -223,6 +223,9 @@ public class Preprocessor {
 							includeCode = FileManagerCode.readSourceCode(new File(path));
 						} catch(StackOverflowError e) {
 							throw new PreprocessorException("cyclic includes" , file, fileLine);
+						} catch(IOException e) {
+							DebugShell.out(State.WARNING, Area.PREPROCESSOR, "File not found: " + path);
+					    	throw new PreprocessorException("include not found: " + path , file, fileLine);
 						}
 						
 						if( includeCode != null ){
