@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<body>
+	<h1> deklarierter Wert ist kein Integer </h1>
+	<h2> Was ist passiert? </h2>
+	<p>
+		Du hast versucht einen Integer mit einem Wert zu füllen welcher nicht korrekt ist.
+	</p>
+	<h3>Beispiel</h3>
+	<p id="code">
+		<strong class="key">int</strong> a = <strong class="error">0909</strong>;<br>
+	</p>
+    <h2> Fehlersuche </h2>
+    <p>
+        Beachte dass C-Compact verschiedene Arten von Zahlenformaten unterstützt. Wenn diese Zahl mit einer 0 beginnt, wird diese als Oktalzahl ausgewertet.<br/>
+        Desweiteren besitzt ein Integer einen Wertebereich von -2<sup>31</sup> (-2147483648) bis 2<sup>31</sup>-1 (+2147483647). Wenn dieser überschritten wird tritt ein Overflow auf.
+    </p>
+</body>

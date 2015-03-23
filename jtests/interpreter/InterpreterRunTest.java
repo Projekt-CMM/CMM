@@ -262,6 +262,13 @@ public class InterpreterRunTest implements StdInOut {
 				+ "}");
 		assertEquals(output, "Hello World");
 		
+		// assignment not for all variable declarations
+		runCode("void main() {"
+				+ "  int a, b=12, c;"
+				+ "  printf(\"%d\",b);"
+				+ "}");
+		assertEquals(output, "12");
+		
 		// incorrect type-declaration
 		try {
 			runCode("void main() {"
@@ -323,6 +330,35 @@ public class InterpreterRunTest implements StdInOut {
 				+ "  printf(\"%d %d\", a[4][5], a[2][9]);"
 				+ "}");
 		assertEquals(output, "54 29");
+		
+		// assignment while array declaration
+		runCode("void main() {"
+				+ "  int a[5] = {1,2,3,4,5};"
+				+ "  printf(\"%d %d %d %d %d\",a[0], a[1], a[2], a[3], a[4]);"
+				+ "}");
+		assertEquals(output, "1 2 3 4 5");
+		
+		// assignment while array declaration (only part of array-elements)
+		runCode("void main() {"
+				+ "  int a[5] = {1,2};"
+				+ "  printf(\"%d %d %d %d %d\",a[0], a[1], a[2], a[3], a[4]);"
+				+ "}");
+		assertEquals(output, "1 2 0 0 0");
+		
+		// assignment while array declaration (all elements with the same value)
+		runCode("void main() {"
+				+ "  int a[5] = {3};"
+				+ "  printf(\"%d %d %d %d %d\",a[0], a[1], a[2], a[3], a[4]);"
+				+ "}");
+		assertEquals(output, "3 3 3 3 3");
+		
+		// assignment while array declaration (to high index)
+		try {
+			runCode("void main() {"
+					+ "  int a[5] = {1,2,3,4,5,6};"
+					+ "}");
+			fail("RunTimeException not thrown");
+		} catch(CompilerException e) {}
 		
 		// access to not initialized variables
 		try {

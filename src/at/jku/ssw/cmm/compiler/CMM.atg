@@ -282,10 +282,13 @@ Type<out type>
 VarDeclPart<out e, type, library>       (.  // if no assignment has occour yet, do the following
                                             eHelp = e; .)
 { "," 
-  VarDeclPart<out eNew, type, library>  (.  if(eNew != null) {
-                                                if(eHelp == null)
-                                                    eHelp = eNew;
-                                                else
+  VarDeclPart<out eNew, type, library>  (.  while(eHelp != null && eHelp.next != null)
+                                                eHelp.next = eHelp;
+
+                                            if(eNew != null) {
+                                                if(e == null) {
+                                                    e = eNew;
+                                                } else
                                                     eHelp.next = eNew;
                                                 eHelp = eNew; 
                                             } .)
@@ -325,7 +328,7 @@ ident                               (.  String varName = t.val;
                                         curObj = tab.insert(Obj.VAR, varName, curType, line); 
                                         curObj.library = library; .)
   [ "="                                
-    BinExpr<out newNode>            (.  // check if type of variable declaration is correct
+    ( BinExpr<out newNode>          (.  // check if type of variable declaration is correct
                                         if(curType == null || (!curType.isPrimitive() && !curType.equals(Tab.stringType) && curType.kind != Struct.STRUCT)) 
                                             SemErr("type is not a primitive, string or struct");
                                         else if(curType.kind == Struct.STRUCT && !curType.equals(type))
@@ -340,7 +343,79 @@ ident                               (.  String varName = t.val;
                                             newNode = tab.impliciteTypeCon(newNode, curType);
 
                                         e = new Node(Node.ASSIGN,new Node(curObj),newNode,line); .)
+    | VarArrDeclAssignment<out e, curObj, dimensions, null>
+    )
   ]
+.
+//-------------------------------------------------------------------------
+VarArrDeclAssignment<out Node e, Obj curObj, ArrayList dimensions, ArrayList openDimensions>
+                                    (.  e = null; 
+                                        int iteration = 0; 
+                                        Node newNode = null;
+                                        Struct rawType = curObj.type; 
+                                        int arraySize = rawType.elements;
+                                        if(rawType != null && rawType.elemType != null) {
+                                            rawType = rawType.elemType;
+                                            
+                                            if(rawType.kind == Struct.ARR)
+                                                SemErr("you can only init 1. dimensional arrays");
+                                        } else
+                                            SemErr("unknow array type");
+                                        .)
+=
+"{" BinExpr<out newNode>            (.  // check if Expression is not null
+                                        if(newNode == null) 
+                                            SemErr("right operator is not defined");
+                                         
+                                        // make implicit type conversation
+                                        else 
+                                            newNode = tab.impliciteTypeCon(newNode, rawType);
+                                        
+                                        Node newElement = tab.createArrayAssignment(curObj, dimensions, openDimensions, iteration);
+
+                                        e = new Node(Node.ASSIGN, newElement, newNode, t.line);
+                                        
+                                        Node eHelp = e;
+                                        .)
+    { "," BinExpr<out newNode>      (.  iteration ++;
+                                        if(iteration >= arraySize)
+                                            SemErr("too high index choosen");
+                                        // check if Expression is not null
+                                        if(newNode == null) 
+                                            SemErr("right operator is not defined");
+                                         
+                                        // make implicit type conversation
+                                        else 
+                                            newNode = tab.impliciteTypeCon(newNode, rawType);
+                                        
+                                        newElement = tab.createArrayAssignment(curObj, dimensions, openDimensions, iteration);
+
+                                        eHelp.next = new Node(Node.ASSIGN, newElement, newNode, t.line);
+                                        eHelp = eHelp.next;
+                                        .)
+    }                               (.  if(iteration == 0) {
+                                            for(iteration = 1; iteration < arraySize; iteration++) {
+                                                // check if Expression is not null
+                                                if(newNode == null) 
+                                                    SemErr("right operator is not defined");
+                                                 
+                                                // make implicit type conversation
+                                                else 
+                                                    newNode = tab.impliciteTypeCon(newNode, rawType);
+                                                
+                                                newElement = tab.createArrayAssignment(curObj, dimensions, openDimensions, iteration);
+                                                eHelp.next = new Node(Node.ASSIGN, newElement, newNode, t.line);
+                                                eHelp = eHelp.next;
+                                            }
+                                        } else {
+                                            for(iteration += 1; iteration < arraySize; iteration++) {
+                                                newElement = tab.createArrayAssignment(curObj, dimensions, openDimensions, iteration);
+                                                eHelp.next = new Node(Node.ASSIGN, newElement, new Node(0), t.line);
+                                                eHelp = eHelp.next;
+                                            }
+                                        }
+                                        .)
+"}"
 .
 //-------------------------------------------------------------------------
 StructDecl                          (.  Node e; 

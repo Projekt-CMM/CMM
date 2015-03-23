@@ -21,6 +21,8 @@
  
 package at.jku.ssw.cmm.compiler;
 
+import java.util.ArrayList;
+
 /*--------------------------------------------------------------------------------
 Tab   Symbol table for C--
 ===   ====================
@@ -632,6 +634,17 @@ public class Tab {
 			element = impliciteTypeCon(element, Tab.intType);
 		}
 		return element;
+	}
+	
+	public Node createArrayAssignment(Obj curObj, ArrayList<Integer> dimensions, ArrayList<Integer> openDimensions, int index) {
+		Struct curType = curObj.type.elemType;
+		
+		Node e = new Node(Node.INDEX,new Node(curObj), new Node(index), curObj.line);
+		e.type = curType;
+
+		curType = curType.elemType;
+
+		return e;
 	}
 	
 	//---------------- methods for dumping the symbol table --------------
