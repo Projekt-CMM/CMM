@@ -153,6 +153,9 @@ public class GUIleftPanel {
 	 * </ul>
 	 */
 	private final List<Object[]> codeRegister;
+	
+	JSplitPane outerPane;
+	JSplitPane innerPane;
 
 
 	/**
@@ -164,17 +167,17 @@ public class GUIleftPanel {
 	 */
 	public JSplitPane init(JFrame jFrame) {
 		// Split panel for the left part of the GUI
-		JSplitPane jPanelLeft = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		jPanelLeft.setBorder(new EmptyBorder(5, 5, 5, 5));
+		outerPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		outerPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		// Panel for the source code text area
 		jSourceCodeContainer = new JPanel();
 		jSourceCodeContainer.setLayout(new BorderLayout());//new BoxLayout(jSourceCodeContainer, BoxLayout.PAGE_AXIS));
 		
 		// Panel for the I/O text areas
-		JSplitPane panel2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		panel2.setDividerLocation(0.5);
-		panel2.setResizeWeight(0.5);
+		innerPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		innerPane.setDividerLocation(0.5);
+		innerPane.setResizeWeight(0.5);
 		
 		// Initialize the panel which visualizes the debugger state
 		this.jStatePanel = new JPanel();
@@ -195,34 +198,34 @@ public class GUIleftPanel {
 		this.jSourcePane = InitLeftPanel.initCodePane(jSourceCodeContainer);
 
 		// Text area for input
-		this.jInputPane = InitLeftPanel.initInputPane(panel2);
+		this.jInputPane = InitLeftPanel.initInputPane(innerPane);
 
 		// Text area for output
-		this.jOutputPane = InitLeftPanel.initOutputPane(panel2);
+		this.jOutputPane = InitLeftPanel.initOutputPane(innerPane);
 		
 		// Update text panel font sizes
 		this.updateFontSize();
 		
 		// Properties of I/O text fields' master panel
-		panel2.setMinimumSize(new Dimension(200, 150));
-		panel2.setPreferredSize(new Dimension(200, 200));
-		panel2.setMaximumSize(new Dimension(2000, 2000));
+		innerPane.setMinimumSize(new Dimension(200, 150));
+		innerPane.setPreferredSize(new Dimension(200, 200));
+		innerPane.setMaximumSize(new Dimension(2000, 2000));
 		
 		// Properties of the splitPanel
-		jPanelLeft.setTopComponent(jSourceCodeContainer);
-		jPanelLeft.setBottomComponent(panel2);
-		jPanelLeft.setDividerLocation(0.4);
-		jPanelLeft.setResizeWeight(1.0);
+		outerPane.setTopComponent(jSourceCodeContainer);
+		outerPane.setBottomComponent(innerPane);
+		outerPane.setDividerLocation(0.4);
+		outerPane.setResizeWeight(1.0);
 		
 		// Custom cursor for split pane divider
-		BasicSplitPaneUI ui = (BasicSplitPaneUI)jPanelLeft.getUI();
+		BasicSplitPaneUI ui = (BasicSplitPaneUI)outerPane.getUI();
 		BasicSplitPaneDivider divider = ui.getDivider();
 		divider.addMouseListener(
 			new CursorListener(jFrame, divider, new Cursor(Cursor.S_RESIZE_CURSOR))
 		);
 		
 		// Disable F6 keyboard shortcut for 
-		jPanelLeft.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+		outerPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
 		  .put(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), "none");
 
 		// Open latest file and show it's contents in the source code text area
@@ -249,7 +252,7 @@ public class GUIleftPanel {
 		
 		this.jSourcePane.setCurrentLineHighlightColor(new Color(0xFFA1A1));
 		
-		return jPanelLeft;
+		return outerPane;
 	}
 	
 	/**
@@ -582,5 +585,67 @@ public class GUIleftPanel {
 	
 	public JTextArea getOutputPane(){
 		return this.jOutputPane;
+	}
+	
+	public void setOrientation(int orientation) {
+		switch(orientation) {
+		default:
+			swap(true);
+			this.outerPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+			this.innerPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+			this.outerPane.setDividerLocation(0.6);
+			this.outerPane.setResizeWeight(1.0);
+			this.innerPane.setDividerLocation(0.5);
+			break;
+		case 1:
+			swap(true);
+			this.outerPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+			this.innerPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+			this.outerPane.setDividerLocation(0.6);
+			this.outerPane.setResizeWeight(1.0);
+			this.innerPane.setDividerLocation(0.5);
+			break;
+		case 2:
+			swap(false);
+			this.outerPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+			this.innerPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+			this.outerPane.setDividerLocation(0.3);
+			this.outerPane.setResizeWeight(0.0);
+			this.innerPane.setDividerLocation(0.5);
+			break;
+		case 3:
+			swap(true);
+			this.outerPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+			this.innerPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+			this.outerPane.setDividerLocation(0.6);
+			this.outerPane.setResizeWeight(1.0);
+			this.innerPane.setDividerLocation(0.5);
+			break;
+		}
+	}
+	
+	private void swap(boolean def) {
+		
+		// Reset splitPane
+		this.outerPane.setTopComponent(null);
+		this.outerPane.setBottomComponent(null);
+		
+		// Decide what to do
+		if( def ) {
+			this.outerPane.setTopComponent(this.jSourceCodeContainer);
+			this.outerPane.setBottomComponent(this.innerPane);
+		}
+		else {
+			this.outerPane.setBottomComponent(this.jSourceCodeContainer);
+			this.outerPane.setTopComponent(this.innerPane);
+		}
+	}
+	
+	public int getOuterPaneOrientation() {
+		return this.outerPane.getOrientation();
+	}
+	
+	public int getInnerPaneOrientation() {
+		return this.innerPane.getOrientation();
 	}
 }

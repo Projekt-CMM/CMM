@@ -23,7 +23,10 @@ package at.jku.ssw.cmm.gui.properties;
 
 import static at.jku.ssw.cmm.gettext.Language._;
 
+import java.awt.BorderLayout;
+
 import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -67,6 +70,7 @@ public class GUIProperties{
 		this.jFrame.add(mainPanel);
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
 		
+		mainPanel.add(this.initLayoutPanel());
 		mainPanel.add(this.initCodeSizePanel());
 		mainPanel.add(this.initTextSizePanel());
 		//mainPanel.add(this.initVarSizePanel());
@@ -122,6 +126,26 @@ public class GUIProperties{
 		
 		this.jLabelText = new JLabel("" + this.main.getSettings().getTextSize() + " " + _("pixels"));
 		panel.add(this.jLabelText);
+		
+		// Return ready panel
+		return panel;
+	}
+	
+	private JPanel initLayoutPanel() {
+		
+		//Initialize panel
+		JPanel panel = new JPanel();
+		
+		// Panel properties
+		panel.setBorder(new TitledBorder(_("Interface Layout")));
+		panel.setLayout(new BorderLayout());
+		
+		// Combo box
+		String[] layouts = {_("Classic Vertical"), _("Classic Horizontal"), _("Widescreen Central"), _("Widescreen Left")};
+		JComboBox<String> combo = new JComboBox<>(layouts);
+		combo.addActionListener(new PropertiesComboListener(this.main));
+		
+		panel.add(combo, BorderLayout.CENTER);
 		
 		// Return ready panel
 		return panel;
