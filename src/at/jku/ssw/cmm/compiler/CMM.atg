@@ -283,9 +283,9 @@ VarDeclPart<out e, type, library>       (.  // if no assignment has occour yet, 
                                             eHelp = e; .)
 { "," 
   VarDeclPart<out eNew, type, library>  (.  if(eNew != null) {
-                                                if(eHelp == null)
-                                                    eHelp = eNew;
-                                                else
+                                                if(e == null) {
+                                                    e = eNew;
+                                                } else
                                                     eHelp.next = eNew;
                                                 eHelp = eNew; 
                                             } .)

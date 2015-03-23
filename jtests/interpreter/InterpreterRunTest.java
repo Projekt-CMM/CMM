@@ -262,6 +262,13 @@ public class InterpreterRunTest implements StdInOut {
 				+ "}");
 		assertEquals(output, "Hello World");
 		
+		// assignment not for all variable declarations
+		runCode("void main() {"
+				+ "  int a, b=12, c;"
+				+ "  printf(\"%d\",b);"
+				+ "}");
+		assertEquals(output, "12");
+		
 		// incorrect type-declaration
 		try {
 			runCode("void main() {"

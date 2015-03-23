@@ -371,9 +371,9 @@ public class Parser {
 			Get();
 			eNew = VarDeclPart(type, library);
 			if(eNew != null) {
-			   if(eHelp == null)
-			       eHelp = eNew;
-			   else
+			   if(e == null) {
+			       e = eNew;
+			   } else
 			       eHelp.next = eNew;
 			   eHelp = eNew; 
 			} 
