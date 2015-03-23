@@ -57,6 +57,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import at.jku.ssw.cmm.gui.debug.ErrorMessage;
 import at.jku.ssw.cmm.gui.event.CursorListener;
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
+import at.jku.ssw.cmm.gui.event.SourcePaneListener;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.init.InitLeftPanel;
 import at.jku.ssw.cmm.gui.init.JInputDataPane;
@@ -107,6 +108,7 @@ public class GUIleftPanel {
 	 */
 	private RSyntaxTextArea jSourcePane;
 	private JPanel jSourceCodeContainer;
+	private SourcePaneListener sourcePaneListener;
 
 	/**
 	 * The text panel with input data for the cmm program.
@@ -196,6 +198,8 @@ public class GUIleftPanel {
 
 		// Text area (text pane) for source code
 		this.jSourcePane = InitLeftPanel.initCodePane(jSourceCodeContainer);
+		this.sourcePaneListener = new SourcePaneListener(this.main);
+		this.jSourcePane.addMouseListener(this.sourcePaneListener);
 
 		// Text area for input
 		this.jInputPane = InitLeftPanel.initInputPane(innerPane);
@@ -336,9 +340,10 @@ public class GUIleftPanel {
 		// Correct offset in source code (offset caused by includes)
 		Object[] objLine = Preprocessor.returnFileAndNumber(line, this.main.getLeftPanel().getSourceCodeRegister());
 
-		if(objLine[0].equals("main") && (int)objLine[1] >= 0)
+		if(objLine[0].equals("main") && (int)objLine[1] >= 0) {
 			// Do highlighting
 			this.highlightSourceCodeDirectly((int)objLine[1]);
+		}
 	}
 	
 	/**
@@ -353,6 +358,9 @@ public class GUIleftPanel {
 
 		int i, l = 0;
 		final String code = this.jSourcePane.getText();
+		
+		// Save highlighted line
+		this.sourcePaneListener.setLine(line);
 
 		// TODO readLoopLock
 		for (i = 0; l < line - 1; i++) {
@@ -443,6 +451,10 @@ public class GUIleftPanel {
 		this.jOutputPane.setBackground(Color.WHITE);
 	}
 	
+	public void setReadyHighlighter() {
+		this.jSourcePane.setCurrentLineHighlightColor(Color.LIGHT_GRAY);
+	}
+	
 	/**
 	 * Sets left panel to read mode.
 	 * This means, the user can edit the source code and the input data.
@@ -452,6 +464,8 @@ public class GUIleftPanel {
 		this.unlockInput();
 		
 		this.jSourcePane.setCurrentLineHighlightColor(Color.LIGHT_GRAY);
+		
+		this.sourcePaneListener.setLine(-1);
 		
 		this.jStatePanel.setBackground(Color.LIGHT_GRAY);
 		this.jStateLabel.setText("--- " + _("text edit mode") + " ---");
@@ -473,11 +487,13 @@ public class GUIleftPanel {
 		
 		this.jSourcePane.setCurrentLineHighlightColor(new Color(0xFFA1A1));
 		
+		this.sourcePaneListener.setLine(-1);
+		
 		// Correct offset in source code (offset caused by includes)
 		Object[] objLine = Preprocessor.returnFileAndNumber(line, this.main.getLeftPanel().getSourceCodeRegister());
 		
 		this.jStatePanel.setBackground(new Color(255, 131, 131));
-		// TODO parse filename from Parser (when library error)
+
 		this.jStateLabel.setText("<html>! ! ! " + (title[0] == null ? _("error") : title[0]) +
 			(file == null || file != "main" ? "" : " in file " + file) + " " +
 			(line >= 0 ? _("in line") + " " + (int)objLine[1] : "") +
