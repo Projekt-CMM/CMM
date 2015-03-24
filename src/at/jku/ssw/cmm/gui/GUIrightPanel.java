@@ -258,14 +258,13 @@ public class GUIrightPanel {
 		javax.swing.text.Document style = null;
 		try {
 			style = LoadStatics.readStyleSheet("error"
-					+ File.separator + "style.css");
+					+ File.separator + "style.css", main.getSettings().getDescSize());
 		} catch (MalformedURLException e) {
 			new ErrorMessage().showErrorMessage(this.main.getJFrame(), "#1011", this.main.getSettings().getLanguage());
 		}
 		
 		if( style == null )
 			new ErrorMessage().showErrorMessage(this.main.getJFrame(), "#1012", this.main.getSettings().getLanguage());
-		
 		this.errorDesc.setDocument(style);
 		
 		String desc = null;
@@ -274,6 +273,8 @@ public class GUIrightPanel {
 					this.errorMap == null ? null : this.errorMap
 					.getErrorHTML(errorCode)));
 			this.errorDesc.setContentType("text/html");
+			desc = desc.replace("<errormessage/>", errorCode);
+			desc = desc.replace("<errormessage>", errorCode);
 			this.errorDesc.setText(desc);
 		} catch (IOException e) {
 			new ErrorMessage().showErrorMessage(this.main.getJFrame(), "#1021", this.main.getSettings().getLanguage());

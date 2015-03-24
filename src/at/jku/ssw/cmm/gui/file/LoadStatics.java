@@ -23,7 +23,6 @@ package at.jku.ssw.cmm.gui.file;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -38,9 +37,7 @@ import java.net.MalformedURLException;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JEditorPane;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
@@ -231,62 +228,8 @@ public final class LoadStatics {
         	    System.out.println("File copied from " + source + " to " + destination);
         	}
         }
-	
-	@Deprecated
-	public static final JScrollPane loadHTMLdoc(String path, String pathCSS) {
-		JEditorPane editorPane = new JEditorPane();
-		editorPane.setEditable(false);
-		java.net.URL htmlURL = null;
-		java.net.URL cssURL = null;
-		try {
-			htmlURL = new File(path).toURI().toURL();
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
-		}
-		try {
-			cssURL = new File(pathCSS).toURI().toURL();
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
-		}
 
-		// Set content type of editor pane to HTML
-		editorPane.setContentType("text/html");
-
-		// Import stylesheet
-		if (cssURL != null) {
-			System.out.println("Reading stylesheet: " + cssURL);
-			StyleSheet s = new StyleSheet();
-			s.importStyleSheet(cssURL);
-			HTMLEditorKit kit = (HTMLEditorKit) editorPane.getEditorKit();
-			kit.setStyleSheet(s);
-			javax.swing.text.Document doc = kit.createDefaultDocument();
-			editorPane.setDocument(doc);
-		}
-
-		// Import Text
-		if (htmlURL != null) {
-			System.out.println("Loading HTML document: " + htmlURL);
-			try {
-				editorPane.setPage(htmlURL);
-			} catch (IOException e) {
-				System.err.println("Attempted to read a bad URL: " + htmlURL);
-			}
-		} else {
-			System.err.println("Couldn't find file");
-		}
-
-		// Put the editor pane in a scroll pane.
-		editorPane.setMinimumSize(new Dimension(10, 10));
-		JScrollPane editorScrollPane = new JScrollPane(editorPane);
-		editorScrollPane
-				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		editorScrollPane.setPreferredSize(new Dimension(100, 300));
-		editorScrollPane.setMinimumSize(new Dimension(10, 10));
-
-		return editorScrollPane;
-	}
-
-	public static javax.swing.text.Document readStyleSheet(String path) throws MalformedURLException {
+	public static javax.swing.text.Document readStyleSheet(String path, int size) throws MalformedURLException {
 		java.net.URL cssURL = null;
 		cssURL = new File(path).toURI().toURL();
 
@@ -295,12 +238,35 @@ public final class LoadStatics {
 			System.out.println("Reading stylesheet: " + cssURL);
 			StyleSheet s = new StyleSheet();
 			s.importStyleSheet(cssURL);
+	        setFontSize(s, size);
+			
 			HTMLEditorKit kit = new HTMLEditorKit();
 			kit.setStyleSheet(s);
 			javax.swing.text.Document doc = kit.createDefaultDocument();
+			
 			return doc;
 		}
 		return null;
+	}
+	
+	private static void setFontSize(StyleSheet s, int size) {
+		switch(size) {
+		case -1:
+			s.addRule("h1{font-size:1.2em;}h2{font-size:1.1em;}h3{font-size:1.0em;}p{font-size:0.9em;}");
+			break;
+		default:
+			s.addRule("h1{font-size:1.3em;}h2{font-size:1.2em;}h3{font-size:1.1em;}p{font-size:1.0em;}");
+			break;
+		case 1:
+			s.addRule("h1{font-size:1.4em;}h2{font-size:1.3em;}h3{font-size:1.2em;}p{font-size:1.1em;}");
+			break;
+		case 2:
+			s.addRule("h1{font-size:1.5em;}h2{font-size:1.4em;}h3{font-size:1.3em;}p{font-size:1.2em;}");
+			break;
+		case 3:
+			s.addRule("h1{font-size:1.6em;}h2{font-size:1.5em;}h3{font-size:1.4em;}p{font-size:1.3em;}");
+			break;
+		}
 	}
 
 	public static java.net.URL getHTMLUrl(String path) {

@@ -136,7 +136,7 @@ public class GUIquestSelection {
 		e.printStackTrace();
 	}
 	try {
-		this.editorScrollPane.setDocument(LoadStatics.readStyleSheet("packages/default/style.css"));
+		this.editorScrollPane.setDocument(LoadStatics.readStyleSheet("packages/default/style.css", 0));
 	} catch (MalformedURLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -334,7 +334,7 @@ public class GUIquestSelection {
 		try {
 			if(this.editorScrollPane.getPage() != null && !this.editorScrollPane.getPage().equals(LoadStatics.getHTMLUrl(file))){
 				this.editorScrollPane.setPage(LoadStatics.getHTMLUrl(file));
-				this.editorScrollPane.setDocument(LoadStatics.readStyleSheet(style));
+				this.editorScrollPane.setDocument(LoadStatics.readStyleSheet(style, 0));
 			}
 		} catch (IOException e) {
 			

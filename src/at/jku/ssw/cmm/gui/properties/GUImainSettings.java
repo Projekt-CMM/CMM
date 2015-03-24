@@ -95,6 +95,7 @@ public class GUImainSettings {
 	private static final String XML_TEXTSIZE = "textsize";
 	private static final String XML_VARSIZE = "varsize";
 	private static final String XML_VAROFFSET = "varoffset";
+	private static final String XML_DESCSIZE = "descsize";
 
 	/**
 	 * The maximum number of recently opened files which are saved in the
@@ -138,6 +139,7 @@ public class GUImainSettings {
 	private int textSize;
 	private int varSize;
 	private int varOffset;
+	private int descSize;
 	
 	/**
 	 * Reference to the Profile Panel
@@ -254,6 +256,10 @@ public class GUImainSettings {
 		this.varOffset = offset;
 	}
 	
+	public void setDescSize(int size) {
+		this.descSize = size;
+	}
+	
 	public void setProfilePanel2(ProfilePanel2 profilePanel){
 		this.profilePanel = profilePanel;
 	}
@@ -272,6 +278,10 @@ public class GUImainSettings {
 
 	public int getVarOffset() {
 		return this.varOffset;
+	}
+	
+	public int getDescSize() {
+		return this.descSize;
 	}
 
 	/**
@@ -317,6 +327,7 @@ public class GUImainSettings {
 		this.textSize = 16;
 		this.varOffset = 0;
 		this.varSize = 16;
+		this.descSize = 0;
 
 		try {
 			// Load settings.xml file
@@ -404,6 +415,9 @@ public class GUImainSettings {
 		// Is font size of source code?
 		else if (node.getNodeName().equals(XML_VAROFFSET))
 			this.varOffset = Integer.parseInt(node.getTextContent());
+		// Is font size of description documents?
+		else if (node.getNodeName().equals(XML_DESCSIZE))
+			this.descSize = Integer.parseInt(node.getTextContent());
 
 		// Iterate through child nodes
 		NodeList nodeList = node.getChildNodes();
@@ -453,6 +467,8 @@ public class GUImainSettings {
 					+ this.varSize));
 			properties.appendChild(writeNode(doc, XML_VAROFFSET, ""
 					+ this.varOffset));
+			properties.appendChild(writeNode(doc, XML_DESCSIZE, ""
+					+ this.descSize));
 
 			// Add properties to main root element
 			mainRootElement.appendChild(properties);

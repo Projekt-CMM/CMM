@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-23 14:34+0100\n"
+"POT-Creation-Date: 2015-03-24 09:00+0100\n"
 "PO-Revision-Date: 2014-11-23 14:41+0100\n"
 "Last-Translator: Fabian Hummer f.hummer@traunseenet.at\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -160,7 +160,7 @@ msgid "Print"
 msgstr "Drucken"
 
 #: src/at/jku/ssw/cmm/gui/init/InitMenuBar.java:122
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:65
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:67
 msgid "Properties"
 msgstr "Einstellungen"
 
@@ -262,12 +262,12 @@ msgstr "Die Breite der Spalten kann mit<br>der Maus verändert werden."
 #: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:146
 #: src/at/jku/ssw/cmm/gui/file/SaveDialog.java:186
 #: src/at/jku/ssw/cmm/gui/event/MenuBarEventListener.java:237
-#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:157
-#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:158
-#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:161
-#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:174
-#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:211
-#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:465
+#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:159
+#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:160
+#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:163
+#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:176
+#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:213
+#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:481
 #: src/at/jku/ssw/cmm/gui/GUImain.java:301
 msgid "Unnamed"
 msgstr "Unbenannt"
@@ -301,30 +301,30 @@ msgstr "Quest"
 msgid "Profile"
 msgstr "Profile"
 
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:282
 #: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:283
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:284
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:315
 #: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:316
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:317
 msgid "Error"
 msgstr "Fehler"
 
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:326
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:325
 msgid "test successful"
 msgstr "Test erfolgreich"
 
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:336
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:335
 msgid "test failed"
 msgstr "Test fehlgeschlagen"
 
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:346
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:345
 msgid "testing current quest"
 msgstr "Aktuelle Quest testen"
 
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:356
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:355
 msgid "no quest selected"
 msgstr "Keine Aufgabe ausgewählt"
 
-#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:368
+#: src/at/jku/ssw/cmm/gui/GUIrightPanel.java:367
 msgid "current quest"
 msgstr "Aktuelle Quest"
 
@@ -483,57 +483,81 @@ msgstr "Die folgende Datei wurde nicht gefunden: "
 msgid "File does not exist"
 msgstr "Datei existiert nicht"
 
-#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:508
+#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:524
 msgid "C Compact was not able to save your personal settings"
 msgstr "C Compact konnte deine persönlichen Einstellungen nicht speichern"
 
-#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:509
+#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:525
 msgid "The program returned"
 msgstr "Das Programm endete mit"
 
-#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:511
+#: src/at/jku/ssw/cmm/gui/properties/GUImainSettings.java:527
 msgid "Unable to save your settings"
 msgstr "Einstellungen konnten nicht gespeichert werden"
 
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:92
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:95
 msgid "Source code font size"
 msgstr "Schriftgröße des Sourcecode"
 
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:103
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:127
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:173
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:185
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:186
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:109
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:136
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:210
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:223
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:225
 msgid "pixels"
 msgstr "Pixel"
 
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:116
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:122
 msgid "Text field font size"
 msgstr "Schriftgröße der Textfelder"
 
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:140
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:148
+msgid "Document font size"
+msgstr "Schriftgröße von Dokumenten"
+
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:173
 msgid "Interface Layout"
 msgstr "Ansicht"
 
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:144
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:177
 msgid "Classic Vertical"
 msgstr "Klassisch, Vertikal"
 
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:144
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:177
 msgid "Classic Horizontal"
 msgstr "Klassisch, Horizontal"
 
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:144
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:178
 msgid "Widescreen Central"
 msgstr "Widescreen, Zentral"
 
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:144
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:178
 msgid "Widescreen Left"
 msgstr "Widescreen, Links"
 
-#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:162
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:196
 msgid "Variable table font size"
 msgstr "Schriftgröße der Variablentabelle"
+
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:233
+msgid "medium"
+msgstr "normal"
+
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:236
+msgid "small"
+msgstr "klein"
+
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:237
+msgid "large"
+msgstr "groß"
+
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:238
+msgid "extra large"
+msgstr "sehr groß"
+
+#: src/at/jku/ssw/cmm/gui/properties/GUIProperties.java:239
+msgid "giant"
+msgstr "riesig"
 
 #: src/at/jku/ssw/cmm/gui/properties/GUILanguage.java:64
 msgid "Choose a language"
@@ -543,23 +567,23 @@ msgstr "Wähle eine Sprache"
 msgid "OK"
 msgstr "OK"
 
-#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:450
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:471
 msgid "text edit mode"
 msgstr "Editormodus"
 
-#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:474
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:497
 msgid "error"
 msgstr "Fehler"
 
-#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:476
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:499
 msgid "in line"
 msgstr "in Zeile"
 
-#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:495
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:518
 msgid "automatic debug mode"
 msgstr "Automatischer Debugmodus"
 
-#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:509
+#: src/at/jku/ssw/cmm/gui/GUIleftPanel.java:532
 msgid "pause or step by step mode"
 msgstr "Pause oder schrittweises Debuggen"
 
