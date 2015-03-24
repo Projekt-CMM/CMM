@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<body>
+    <h1>variable is not a constant</h1>
+    <h2>What happened?</h2>
+    <p>
+        You tried to initialize the size of an array with an non constant variable.
+    </p>
+    <h3>Example</h3>
+    <p id="code">
+        <strong class="key">int</strong> size = 5;<br/>
+        <strong class="key">int</strong> a[<strong class="error">size</strong>];
+    </p>
+    <h2>Information</h2>
+    <p>
+        The size of an array has to be known at compiletime. Because of that, only constant values are allowed to set the size of an array.
+    </p>
+</body>

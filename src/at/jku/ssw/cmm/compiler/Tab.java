@@ -637,8 +637,11 @@ public class Tab {
 	}
 	
 	public Node createArrayAssignment(Obj curObj, ArrayList<Integer> dimensions, ArrayList<Integer> openDimensions, int index) {
+		if(curObj == null || curObj.type == null || curObj.type.elemType == null)
+			return null;
+
 		Struct curType = curObj.type.elemType;
-		
+
 		Node e = new Node(Node.INDEX,new Node(curObj), new Node(index), curObj.line);
 		e.type = curType;
 

@@ -68,7 +68,10 @@
 	<error id="assign expected">
 		<file>compiler/parser/assign_expected.html</file>
 	</error>
-	
+	<error id="this symbol not expected in CMM">
+		<file>compiler/parser/symbol_not_expected.html</file>
+	</error>
+
 	
 	<error id="invalid Factor">
 	    <file>default.html</file>
@@ -168,6 +171,12 @@
 	</error>
 	<error id="struct must contain at least one variable">
 		<file>compiler/variable_decl/struct_no_var.html</file>
+	</error>
+	<error id="([\w./]+) is not a constant">
+		<file>compiler/variable_decl/is_not_const.html</file>
+	</error>
+	<error id="([\w./]+) is not an int constant">
+		<file>compiler/variable_decl/is_not_int_const.html</file>
 	</error>
 	
 	<!-- const handling -->

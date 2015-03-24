@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<body>
+	<h1> Variable ist keine Konstante </h1>
+	<h2> Was ist passiert? </h2>
+	<p>
+		Du hast versucht die Gr&ouml;&szlig;e eines Arrays mit einer nicht konstanten Variable zu initialisieren.
+	</p>
+	<h3>Beispiel</h3>
+	<p id="code">
+	    <strong class="key">int</strong> size = 5;<br/>
+		<strong class="key">int</strong> a[<strong class="error">size</strong>];
+	</p>
+	<h2>Information</h2>
+	<p>
+		Die Gr&ouml;ße eines Arrays muss bereits zur Kompilierzeit feststehen. Es d&uuml;rfen deshalb nur konstante Werte für dessen gr&ouml;&szlig;enzuweisung verwendet werden.
+	</p>
+</body>
