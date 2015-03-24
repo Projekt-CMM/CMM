@@ -258,14 +258,13 @@ public class GUIrightPanel {
 		javax.swing.text.Document style = null;
 		try {
 			style = LoadStatics.readStyleSheet("error"
-					+ File.separator + "style.css");
+					+ File.separator + "style.css", main.getSettings().getDescSize());
 		} catch (MalformedURLException e) {
 			new ErrorMessage().showErrorMessage(this.main.getJFrame(), "#1011", this.main.getSettings().getLanguage());
 		}
 		
 		if( style == null )
 			new ErrorMessage().showErrorMessage(this.main.getJFrame(), "#1012", this.main.getSettings().getLanguage());
-		
 		this.errorDesc.setDocument(style);
 		
 		String desc = null;

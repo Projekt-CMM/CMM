@@ -385,7 +385,7 @@ public class GUIProfilePanel {
 			e.printStackTrace();
 		}
 		try {
-			this.jQuestInfo.setDocument(LoadStatics.readStyleSheet(css));
+			this.jQuestInfo.setDocument(LoadStatics.readStyleSheet(css, 0));
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

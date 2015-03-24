@@ -57,6 +57,16 @@ public class PropertiesSliderListener {
 		}
 	};
 	
+	public ChangeListener sliderDescListener = new ChangeListener() {
+
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			JSlider slider = (JSlider)e.getSource();
+			main.getSettings().setDescSize(slider.getValue()-1);
+			master.updateTextSize();
+		}
+	};
+	
 	public ChangeListener sliderVarListener = new ChangeListener() {
 
 		@Override

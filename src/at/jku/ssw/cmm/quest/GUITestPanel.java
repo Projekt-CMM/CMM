@@ -96,7 +96,7 @@ public class GUITestPanel {
 	public void setDescDoc(String html, String css) {
 		
 		try {
-			this.jDescPane.setDocument(LoadStatics.readStyleSheet(css));
+			this.jDescPane.setDocument(LoadStatics.readStyleSheet(css, 0));
 		} catch (MalformedURLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
