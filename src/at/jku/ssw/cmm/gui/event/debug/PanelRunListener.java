@@ -224,7 +224,7 @@ public class PanelRunListener implements Debugger {
 		}
 		
 		//if( arg0.kind == Node.RETURN ) {}
-		if( arg0 != null && arg0.kind == Node.CALL && this.master.getControlPanel().showReturnValues() ) {
+		if( arg0 != null && arg0.type != null && arg0.kind == Node.CALL && this.main.getSettings().getShowReturn() ) {
 			String rval = "";
 			
 			switch(arg0.type.kind){
@@ -248,8 +248,8 @@ public class PanelRunListener implements Debugger {
 			if( r != null ) {
 				int px = (int) r.getX() + (int)main.getLeftPanel().getSourcePane().getLocationOnScreen().getX() - (int)main.getJFrame().getLocationOnScreen().getX();
 				int py = (int) r.getY() + (int)main.getLeftPanel().getSourcePane().getLocationOnScreen().getY() - (int)main.getJFrame().getLocationOnScreen().getY();
-				ComponentPopup.createPopUp(main, ep, (int)(px + 0.5*(arg0.col+3)*main.getSettings().getCodeSize()), py-(int)(main.getSettings().getCodeSize()*0.9), rval.length()>10?130:80, rval.length()>10?70:35, ImagePopup.SOUTH);
-			
+				//ComponentPopup.createPopUp(main, ep, (int)(px + 0.5*(arg0.col+3)*main.getSettings().getCodeSize()), py-(int)(main.getSettings().getCodeSize()*0.9), rval.length()>10?130:80, rval.length()>10?70:35, ImagePopup.SOUTH);
+				ComponentPopup.createPopUp(main, ep, (int)(px - 2*main.getSettings().getCodeSize()), py-(int)(main.getSettings().getCodeSize()*1.8), rval.length()>10?130:80, rval.length()>10?70:35, ImagePopup.SOUTH);
 				// Set debugger to pause mode
 				this.master.setPauseMode();
 			}
