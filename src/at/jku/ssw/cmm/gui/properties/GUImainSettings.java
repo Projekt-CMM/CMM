@@ -494,7 +494,7 @@ public class GUImainSettings {
 
 				// Only add a certain number of recent files
 				for (int i = 0; i < this.lastFiles.size() && i < MAX_LASTFILES; i++) {
-					if (!this.lastFiles.get(i).equals(_("Unnamed")) && this.getProfile() == null)
+					if (!this.lastFiles.get(i).equals(_("Unnamed")))
 						mainRootElement.appendChild(writeNode(doc, XML_LASTFILE, this.lastFiles.get(i)));
 				}
 			}
