@@ -321,6 +321,7 @@ public class Parser {
 			if (!type.equals(Tab.stringType))
 			   SemErr("string constant not allowed here"); 
 		} else SynErr(70);
+		while (!(la.kind == 0 || la.kind == 12)) {SynErr(71); Get();}
 		Expect(12);
 	}
 
@@ -380,6 +381,7 @@ public class Parser {
 			   eHelp = eNew; 
 			} 
 		}
+		while (!(la.kind == 0 || la.kind == 12)) {SynErr(72); Get();}
 		Expect(12);
 		return e;
 	}
@@ -392,7 +394,7 @@ public class Parser {
 			type = Type();
 		} else if (la.kind == 44) {
 			Get();
-		} else SynErr(71);
+		} else SynErr(73);
 		if (la.kind == 37) {
 			Get();
 			library = true; 
@@ -492,13 +494,14 @@ public class Parser {
 			if (debug[1]) 
 			   Node.dump(curProc.ast, 0); 
 		} else if (la.kind == 12) {
+			while (!(la.kind == 0 || la.kind == 12)) {SynErr(74); Get();}
 			Get();
 			if(curProc.isForward) 
 			   SemErr("function is already forward declared");
 			   
 			// set forward-flag
 			curProc.isForward = true; 
-		} else SynErr(72);
+		} else SynErr(75);
 		curProc.locals = tab.curScope.locals;
 		                                        // copy variable size of lcurrent scope into procedure
 		curProc.size = tab.curScope.size;
@@ -544,7 +547,7 @@ public class Parser {
 				if(!helpObj.type.equals(Tab.intType))
 				   SemErr(helpObj.name + " is not an int constant");
 				arraySize = helpObj.val; 
-			} else SynErr(73);
+			} else SynErr(76);
 			dimensions.add(arraySize);
 			// check if size of dimension is at least 1 
 			if(arraySize <= 0)
@@ -576,7 +579,7 @@ public class Parser {
 				e = new Node(Node.ASSIGN,new Node(curObj),newNode,line); 
 			} else if (la.kind == 8) {
 				e = VarArrDeclAssignment(curObj, dimensions, null);
-			} else SynErr(74);
+			} else SynErr(77);
 		}
 		return e;
 	}
@@ -601,7 +604,7 @@ public class Parser {
 		return res;
 	}
 
-	Node  VarArrDeclAssignment(Obj curObj, ArrayList dimensions, ArrayList openDimensions) {
+	Node  VarArrDeclAssignment(Obj curObj, ArrayList<Integer> dimensions, ArrayList<Integer> openDimensions ) {
 		Node  e;
 		e = null; 
 		int iteration = 0; 
@@ -689,9 +692,11 @@ public class Parser {
 		Node e = null, con, curStat, newStat; 
 		st = null; 
 		int line = la.line; 
+		while (!(StartOf(6))) {SynErr(78); Get();}
 		switch (la.kind) {
 		case 1: {
 			st = Command();
+			while (!(la.kind == 0 || la.kind == 12)) {SynErr(79); Get();}
 			Expect(12);
 			break;
 		}
@@ -747,7 +752,7 @@ public class Parser {
 			if (la.kind == 1) {
 				command = Command();
 			} else if (la.kind == 12) {
-			} else SynErr(75);
+			} else SynErr(80);
 			if(command == null)
 			   command = new Node(Node.NOP,null,null,line); 
 			Expect(12);
@@ -756,7 +761,7 @@ public class Parser {
 			if (la.kind == 1) {
 				relopCommand = Command();
 			} else if (la.kind == 7) {
-			} else SynErr(76);
+			} else SynErr(81);
 			if(relopCommand == null)
 			   relopCommand = new Node(Node.NOP,null,null,line); 
 			Expect(7);
@@ -784,6 +789,7 @@ public class Parser {
 				n = null; 
 				newStat = null; 
 				if (la.kind == 51) {
+					while (!(la.kind == 0 || la.kind == 51)) {SynErr(82); Get();}
 					Get();
 					if (la.kind == 2) {
 						Get();
@@ -794,21 +800,22 @@ public class Parser {
 					} else if (la.kind == 4) {
 						Get();
 						n = new Node(tab.charVal(t.val)); 
-					} else SynErr(77);
+					} else SynErr(83);
 					if(n == null || e == null || !n.type.equals(e.type))
 					   SemErr("type of switch has to match type of case value");
 					newStat = new Node(Node.CASE,n,null,line); 
 				} else {
+					while (!(la.kind == 0 || la.kind == 52)) {SynErr(84); Get();}
 					Get();
 					newStat = new Node(Node.CASE,null,null,line);
 					if(defaultNode != null)
-					   SemErr("you cannot declare the default statement twice");
+					SemErr("you cannot declare the default statement twice");
 					defaultNode = newStat; 
 				}
 				Expect(53);
 				firstCaseStatement = null;
 				lastStatement.next = firstCaseStatement; 
-				while (StartOf(6)) {
+				while (StartOf(7)) {
 					n = Statement();
 					lastStatement.next = n;
 					                                        // get reference to first case-statement in this node
@@ -843,7 +850,7 @@ public class Parser {
 		case 8: {
 			Get();
 			curStat = null; con=null; 
-			while (StartOf(6)) {
+			while (StartOf(7)) {
 				newStat = Statement();
 				if(curStat == null) {
 				   curStat = newStat;
@@ -899,7 +906,7 @@ public class Parser {
 			st = null; 
 			break;
 		}
-		default: SynErr(78); break;
+		default: SynErr(85); break;
 		}
 		return st;
 	}
@@ -959,7 +966,7 @@ public class Parser {
 		int col = la.col;
 		int colLength = la.val.length(); 
 		design = Designator();
-		if (StartOf(7)) {
+		if (StartOf(8)) {
 			kind = AssignOp();
 			if(design.kind == Node.BOOLCON || design.kind == Node.INTCON
 			   || design.kind == Node.FLOATCON || design.kind == Node.CHARCON
@@ -1039,7 +1046,7 @@ public class Parser {
 			e = tab.impliciteTypeCon(new Node(1), design.type);
 			e = new Node(Node.MINUS, design, e, design.type);
 			st = new Node(Node.ASSIGN,design,e,line); 
-		} else SynErr(79);
+		} else SynErr(86);
 		return st;
 	}
 
@@ -1189,7 +1196,7 @@ public class Parser {
 			kind=Node.ASSIGNBITOR; 
 			break;
 		}
-		default: SynErr(80); break;
+		default: SynErr(87); break;
 		}
 		return kind;
 	}
@@ -1242,7 +1249,7 @@ public class Parser {
 		con = null; 
 		if (isExpr()) {
 			con = BinExpr();
-			if (StartOf(8)) {
+			if (StartOf(9)) {
 				kind = Relop();
 				e = BinExpr();
 				if(con == null || e == null || con.type == null || e.type == null)
@@ -1275,7 +1282,7 @@ public class Parser {
 			Get();
 			con = Condition();
 			Expect(7);
-		} else SynErr(81);
+		} else SynErr(88);
 		return con;
 	}
 
@@ -1313,7 +1320,7 @@ public class Parser {
 			kind = Node.LEQ; 
 			break;
 		}
-		default: SynErr(82); break;
+		default: SynErr(89); break;
 		}
 		return kind;
 	}
@@ -1349,7 +1356,7 @@ public class Parser {
 		} else if (la.kind == 34) {
 			Get();
 			kind=Node.BITOR; 
-		} else SynErr(83);
+		} else SynErr(90);
 		return kind;
 	}
 
@@ -1385,7 +1392,7 @@ public class Parser {
 		} else if (la.kind == 63) {
 			Get();
 			kind=Node.SHIFTRIGHT; 
-		} else SynErr(84);
+		} else SynErr(91);
 		return kind;
 	}
 
@@ -1417,7 +1424,7 @@ public class Parser {
 		} else if (la.kind == 41) {
 			Get();
 			kind=Node.MINUS; 
-		} else SynErr(85);
+		} else SynErr(92);
 		return kind;
 	}
 
@@ -1503,7 +1510,7 @@ public class Parser {
 			Get();
 			n = BinExpr();
 			Expect(7);
-		} else SynErr(86);
+		} else SynErr(93);
 		return n;
 	}
 
@@ -1518,7 +1525,7 @@ public class Parser {
 		} else if (la.kind == 66) {
 			Get();
 			kind=Node.REM; 
-		} else SynErr(87);
+		} else SynErr(94);
 		return kind;
 	}
 
@@ -1534,12 +1541,13 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
+		{T,T,x,x, x,x,x,x, T,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,T, T,T,x,T, T,T,T,T, T,x,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x},
 		{x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,x,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,T,x,x, x,x,x,x, T,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,T,x,T, T,T,T,x, x,x,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x},
 		{x,T,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x},
+		{T,T,x,x, x,x,x,x, T,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,x,T, T,T,T,x, x,x,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x},
 		{x,T,x,x, x,x,x,x, T,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,x,T, T,T,T,x, x,x,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,T,T,T, T,T,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x}
@@ -1632,23 +1640,30 @@ class Errors {
 			case 68: s = "this symbol not expected in CMM"; break;
 			case 69: s = "invalid ConstDecl"; break;
 			case 70: s = "invalid ConstDecl"; break;
-			case 71: s = "invalid ProcDecl"; break;
-			case 72: s = "invalid ProcDecl"; break;
-			case 73: s = "invalid VarDeclPart"; break;
-			case 74: s = "invalid VarDeclPart"; break;
-			case 75: s = "invalid Statement"; break;
-			case 76: s = "invalid Statement"; break;
-			case 77: s = "invalid Statement"; break;
-			case 78: s = "invalid Statement"; break;
-			case 79: s = "invalid Command"; break;
-			case 80: s = "invalid AssignOp"; break;
-			case 81: s = "invalid CondFact"; break;
-			case 82: s = "invalid Relop"; break;
-			case 83: s = "invalid Binop"; break;
-			case 84: s = "invalid Shiftop"; break;
-			case 85: s = "invalid Addop"; break;
-			case 86: s = "invalid Factor"; break;
-			case 87: s = "invalid Mulop"; break;
+			case 71: s = "this symbol not expected in ConstDecl"; break;
+			case 72: s = "this symbol not expected in VarDecl"; break;
+			case 73: s = "invalid ProcDecl"; break;
+			case 74: s = "this symbol not expected in ProcDecl"; break;
+			case 75: s = "invalid ProcDecl"; break;
+			case 76: s = "invalid VarDeclPart"; break;
+			case 77: s = "invalid VarDeclPart"; break;
+			case 78: s = "this symbol not expected in Statement"; break;
+			case 79: s = "this symbol not expected in Statement"; break;
+			case 80: s = "invalid Statement"; break;
+			case 81: s = "invalid Statement"; break;
+			case 82: s = "this symbol not expected in Statement"; break;
+			case 83: s = "invalid Statement"; break;
+			case 84: s = "this symbol not expected in Statement"; break;
+			case 85: s = "invalid Statement"; break;
+			case 86: s = "invalid Command"; break;
+			case 87: s = "invalid AssignOp"; break;
+			case 88: s = "invalid CondFact"; break;
+			case 89: s = "invalid Relop"; break;
+			case 90: s = "invalid Binop"; break;
+			case 91: s = "invalid Shiftop"; break;
+			case 92: s = "invalid Addop"; break;
+			case 93: s = "invalid Factor"; break;
+			case 94: s = "invalid Mulop"; break;
 			default: s = "error " + n; break;
 		}
 		storeError(line, col, s);
