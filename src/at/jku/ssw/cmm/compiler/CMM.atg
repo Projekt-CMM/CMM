@@ -305,7 +305,7 @@ VarDeclPart<out Node e, Struct type, boolean library>
 ident                               (.  String varName = t.val;
                                         // init array-list, which store the size of the dimensions
                                         ArrayList<Integer> dimensions = new ArrayList<>(); .)
-  { WEAK "["                        (.  int arraySize = 1; .)
+  { "["                             (.  int arraySize = 1; .)
   ( intCon                          (.  // get array size of this dimensions
                                         arraySize = tab.intVal(t.val); .)
   | ident                           (.  Obj helpObj = tab.find(t.val); 

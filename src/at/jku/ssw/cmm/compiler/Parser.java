@@ -529,7 +529,8 @@ public class Parser {
 		String varName = t.val;
 		// init array-list, which store the size of the dimensions
 		ArrayList<Integer> dimensions = new ArrayList<>(); 
-		while (WeakSeparator(10,7,8) ) {
+		while (la.kind == 10) {
+			Get();
 			int arraySize = 1; 
 			if (la.kind == 2) {
 				Get();
@@ -557,8 +558,8 @@ public class Parser {
 		curObj = tab.insert(Obj.VAR, varName, curType, line); 
 		curObj.library = library; 
 		if (la.kind == 13) {
-			Get();
-			if (StartOf(9)) {
+			ExpectWeak(13, 7);
+			if (StartOf(8)) {
 				newNode = BinExpr();
 				if(curType == null || (!curType.isPrimitive() && !curType.equals(Tab.stringType) && curType.kind != Struct.STRUCT)) 
 				   SemErr("type is not a primitive, string or struct");
@@ -626,8 +627,7 @@ public class Parser {
 		e = new Node(Node.ASSIGN, newElement, newNode, t.line);
 		                                        Node eHelp = e;
 		
-		while (la.kind == 42) {
-			Get();
+		while (WeakSeparator(42,8,9) ) {
 			newNode = BinExpr();
 			iteration ++;
 			if(iteration >= arraySize)
@@ -856,7 +856,7 @@ public class Parser {
 		}
 		case 54: {
 			Get();
-			if (StartOf(9)) {
+			if (StartOf(8)) {
 				e = BinExpr();
 				if(curProc.type.kind == Struct.NONE)
 				   SemErr("procedure has void as return type defined");
@@ -915,8 +915,7 @@ public class Parser {
 		}
 		Expect(1);
 		ident_val = t.val; 
-		while (la.kind == 10) {
-			Get();
+		while (WeakSeparator(10,12,13) ) {
 			Expect(11);
 			if(isRef && !isArray)
 			   SemErr("array call and call by reference cannot mixed up");
@@ -956,7 +955,7 @@ public class Parser {
 		int col = la.col;
 		int colLength = la.val.length(); 
 		design = Designator();
-		if (StartOf(12)) {
+		if (StartOf(14)) {
 			kind = AssignOp();
 			if(design.kind == Node.BOOLCON || design.kind == Node.INTCON
 			   || design.kind == Node.FLOATCON || design.kind == Node.CHARCON
@@ -1196,10 +1195,10 @@ public class Parser {
 		Node par, curPar = null; 
 		outPar = null; 
 		Expect(6);
-		if (StartOf(9)) {
+		if (StartOf(8)) {
 			outPar = ActPar();
 			curPar = outPar; 
-			while (WeakSeparator(42,9,10) ) {
+			while (WeakSeparator(42,8,10) ) {
 				par = ActPar();
 				if(curPar == null)
 				   SemErr("empty function parameters are not allowed");
@@ -1238,7 +1237,7 @@ public class Parser {
 		con = null; 
 		if (isExpr()) {
 			con = BinExpr();
-			if (StartOf(13)) {
+			if (StartOf(15)) {
 				kind = Relop();
 				e = BinExpr();
 				if(con == null || e == null || con.type == null || e.type == null)
@@ -1537,11 +1536,13 @@ public class Parser {
 		{x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,T,x,x, x,x,x,x, T,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,T,x,T, T,T,T,x, x,x,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x},
-		{x,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
-		{x,x,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
+		{T,T,T,T, T,T,T,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,T,T, T,T,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x},
 		{x,T,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x},
+		{x,x,x,x, x,x,x,x, x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,x,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,T,x,x, x,x,x,x, T,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,x,T, T,T,T,x, x,x,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x},
+		{x,x,x,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
+		{x,x,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,T,T,T, T,T,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x}
 
