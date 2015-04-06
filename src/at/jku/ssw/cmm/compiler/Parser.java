@@ -367,8 +367,7 @@ public class Parser {
 		}
 		e = VarDeclPart(type, library);
 		eHelp = e; 
-		while (la.kind == 42) {
-			Get();
+		while (WeakSeparator(42,4,5) ) {
 			eNew = VarDeclPart(type, library);
 			while(eHelp != null && eHelp.next != null)
 			   eHelp.next = eHelp;
@@ -426,7 +425,7 @@ public class Parser {
 			   curProc.isForward = false;
 			}
 			Node startNode = null, curNode = null, newNode; 
-			while (StartOf(4)) {
+			while (StartOf(6)) {
 				if (la.kind == 36) {
 					ConstDecl();
 				} else if (isVarDecl()) {
@@ -530,8 +529,7 @@ public class Parser {
 		String varName = t.val;
 		// init array-list, which store the size of the dimensions
 		ArrayList<Integer> dimensions = new ArrayList<>(); 
-		while (la.kind == 10) {
-			Get();
+		while (WeakSeparator(10,7,8) ) {
 			int arraySize = 1; 
 			if (la.kind == 2) {
 				Get();
@@ -560,7 +558,7 @@ public class Parser {
 		curObj.library = library; 
 		if (la.kind == 13) {
 			Get();
-			if (StartOf(5)) {
+			if (StartOf(9)) {
 				newNode = BinExpr();
 				if(curType == null || (!curType.isPrimitive() && !curType.equals(Tab.stringType) && curType.kind != Struct.STRUCT)) 
 				   SemErr("type is not a primitive, string or struct");
@@ -676,8 +674,7 @@ public class Parser {
 		int  n;
 		FormPar();
 		n = 1; 
-		while (la.kind == 42) {
-			Get();
+		while (WeakSeparator(42,4,10) ) {
 			FormPar();
 			n++; 
 		}
@@ -808,7 +805,7 @@ public class Parser {
 				Expect(53);
 				firstCaseStatement = null;
 				lastStatement.next = firstCaseStatement; 
-				while (StartOf(6)) {
+				while (StartOf(11)) {
 					n = Statement();
 					lastStatement.next = n;
 					                                        // get reference to first case-statement in this node
@@ -843,7 +840,7 @@ public class Parser {
 		case 8: {
 			Get();
 			curStat = null; con=null; 
-			while (StartOf(6)) {
+			while (StartOf(11)) {
 				newStat = Statement();
 				if(curStat == null) {
 				   curStat = newStat;
@@ -859,7 +856,7 @@ public class Parser {
 		}
 		case 54: {
 			Get();
-			if (StartOf(5)) {
+			if (StartOf(9)) {
 				e = BinExpr();
 				if(curProc.type.kind == Struct.NONE)
 				   SemErr("procedure has void as return type defined");
@@ -959,7 +956,7 @@ public class Parser {
 		int col = la.col;
 		int colLength = la.val.length(); 
 		design = Designator();
-		if (StartOf(7)) {
+		if (StartOf(12)) {
 			kind = AssignOp();
 			if(design.kind == Node.BOOLCON || design.kind == Node.INTCON
 			   || design.kind == Node.FLOATCON || design.kind == Node.CHARCON
@@ -1199,11 +1196,10 @@ public class Parser {
 		Node par, curPar = null; 
 		outPar = null; 
 		Expect(6);
-		if (StartOf(5)) {
+		if (StartOf(9)) {
 			outPar = ActPar();
 			curPar = outPar; 
-			while (la.kind == 42) {
-				Get();
+			while (WeakSeparator(42,9,10) ) {
 				par = ActPar();
 				if(curPar == null)
 				   SemErr("empty function parameters are not allowed");
@@ -1242,7 +1238,7 @@ public class Parser {
 		con = null; 
 		if (isExpr()) {
 			con = BinExpr();
-			if (StartOf(8)) {
+			if (StartOf(13)) {
 				kind = Relop();
 				e = BinExpr();
 				if(con == null || e == null || con.type == null || e.type == null)
@@ -1538,8 +1534,13 @@ public class Parser {
 		{x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,x,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
+		{x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,T,x,x, x,x,x,x, T,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,T,x,T, T,T,T,x, x,x,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x},
+		{x,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,T,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x},
+		{x,x,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,T,x,x, x,x,x,x, T,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,x,T, T,T,T,x, x,x,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,T,T,T, T,T,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x}

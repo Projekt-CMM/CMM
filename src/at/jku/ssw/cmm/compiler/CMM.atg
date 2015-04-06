@@ -281,7 +281,7 @@ Type<out type>
 ]
 VarDeclPart<out e, type, library>       (.  // if no assignment has occour yet, do the following
                                             eHelp = e; .)
-{ "," 
+{ WEAK "," 
   VarDeclPart<out eNew, type, library>  (.  while(eHelp != null && eHelp.next != null)
                                                 eHelp.next = eHelp;
 
@@ -305,7 +305,7 @@ VarDeclPart<out Node e, Struct type, boolean library>
 ident                               (.  String varName = t.val;
                                         // init array-list, which store the size of the dimensions
                                         ArrayList<Integer> dimensions = new ArrayList<>(); .)
-  { "["                             (.  int arraySize = 1; .)
+  { WEAK "["                        (.  int arraySize = 1; .)
   ( intCon                          (.  // get array size of this dimensions
                                         arraySize = tab.intVal(t.val); .)
   | ident                           (.  Obj helpObj = tab.find(t.val); 
@@ -377,7 +377,7 @@ VarArrDeclAssignment<. out Node e, Obj curObj, ArrayList<Integer> dimensions, Ar
                                         
                                         Node eHelp = e;
                                         .)
-    { "," BinExpr<out newNode>      (.  iteration ++;
+    { WEAK "," BinExpr<out newNode> (.  iteration ++;
                                         if(iteration >= arraySize)
                                             SemErr("too high index choosen");
                                         // check if Expression is not null
@@ -566,7 +566,7 @@ FormPars<out int n>
 = 
 FormPar                             (.  // Set number of procedure parameter to 1
                                         n = 1; .)
-{ "," 
+{ WEAK "," 
   FormPar                           (.  // increase number of procedure parameter
                                         n++; .)
 }.
@@ -582,7 +582,7 @@ Type<out type>                      (.  mainType = type; .)
                                         isRef = true; .)
 ]
 ident                               (.  ident_val = t.val; .)
-{ "[" "]"                           (.  // check if array declaration has reference symbol before
+{ WEAK "[" "]"                      (.  // check if array declaration has reference symbol before
                                         if(isRef && !isArray)
                                             SemErr("array call and call by reference cannot mixed up");
                                         // change state variables
@@ -851,7 +851,7 @@ ActPars<out Node outPar>            (.  Node par, curPar = null; .)
 =                                   (.  outPar = null; .)
 "(" 
 [ ActPar<out outPar>                (.  curPar = outPar; .)
-  { "," 
+  { WEAK "," 
   ActPar<out par>                   (.  if(curPar == null)
                                             SemErr("empty function parameters are not allowed");
                                         else {
@@ -914,7 +914,7 @@ CondFact<out Node con>              (.  Node e = null; int kind; .)
 //-------------------------------------------------------------------------
 Relop<out int kind>
 =                                   (.  kind = Node.EQL; .)
-("=="                               (.  kind = Node.EQL; .)
+( "=="                              (.  kind = Node.EQL; .)
 | "!="                              (.  kind = Node.NEQ; .)
 | ">"                               (.  kind = Node.GTR; .)
 | ">="                              (.  kind = Node.GEQ; .)
