@@ -1,9 +1,7 @@
 package at.jku.ssw.cmm.gui.debug;
 
-import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +10,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.xml.parsers.DocumentBuilder;
