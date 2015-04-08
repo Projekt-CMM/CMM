@@ -23,8 +23,6 @@ package at.jku.ssw.cmm;
 
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
-import at.jku.ssw.cmm.compiler.Compiler;
-import at.jku.ssw.cmm.compiler.Error;
 import at.jku.ssw.cmm.compiler.Tab;
 import at.jku.ssw.cmm.debugger.IOstream;
 import at.jku.ssw.cmm.gui.GUImain;
@@ -59,13 +57,8 @@ public class CMMwrapper {
 		//Init local references
 		this.main = main;
 		this.debug = debug;
-
-		// Object for the compiler is allocated
-		this.compiler = new Compiler();
-
-		// No debug modes
-		compiler.debug[0] = false;
-		compiler.debug[1] = false;
+		
+		this.table = null;
 	}
 
 	/**
@@ -73,11 +66,8 @@ public class CMMwrapper {
 	 * (inherits from Thread, starts interpreter)
 	 */
 	private CMMrun thread;
-
-	/**
-	 * The compiler
-	 */
-	private final Compiler compiler;
+	
+	private Tab table;
 
 	/**
 	 * The interpreter is reinitialized every time the debugger is started
@@ -112,10 +102,12 @@ public class CMMwrapper {
 	 *            "output" text area of the main GUI. Input messages have to be
 	 *            entered in the "input" text field in the main GUI
 	 */
-	public boolean runInterpreter(PanelRunListener listener, IOstream stream) {
+	public boolean runInterpreter(PanelRunListener listener, IOstream stream, Tab table) {
 
 		// Check if another interpreter thread is already running
-		if ( this.compiler != null && this.thread == null ) {
+		if ( table != null && this.thread == null ) {
+			
+			this.table = table;
 
 			// Reset the output text panel
 			this.main.getLeftPanel().resetOutputTextPane();
@@ -123,7 +115,7 @@ public class CMMwrapper {
 			this.interpreter = new Interpreter(listener, stream);
 
 			// Create new interpreter object
-			this.thread = new CMMrun(compiler, interpreter, this, debug);
+			this.thread = new CMMrun(table, interpreter, this, debug);
 
 			// Run interpreter thread
 			this.thread.start();
@@ -137,31 +129,6 @@ public class CMMwrapper {
 
 			return false;
 		}
-	}
-
-	/**
-	 * Compiles the source code given as parameter. This method has to be run
-	 * before interpreting. The interpreter method above checks if there is a
-	 * compiler, however it does not check whether the data given is valid.
-	 * 
-	 * <hr>
-	 * <i>NOT THREAD SAFE, do not call from any other thread than EDT</i>
-	 * <hr>
-	 * 
-	 * @param code
-	 *            The source code as String
-	 * @return The compiler errors (null if no errors)
-	 */
-	public Error compile(String code) {
-
-		// Compile current file
-		this.compiler.compile(code);
-
-		// Error displaying and error count
-		Error e = this.compiler.getError();
-		
-		// Return the errors
-		return e;
 	}
 
 	/**
@@ -202,7 +169,7 @@ public class CMMwrapper {
 	 * @return The compiler's symbol table
 	 */
 	public Tab getSymbolTable() {
-		return this.compiler.getSymbolTable();
+		return this.table;
 	}
 
 	/**

@@ -22,7 +22,7 @@
 package at.jku.ssw.cmm;
 
 import at.jku.ssw.cmm.DebugShell.Area;
-import at.jku.ssw.cmm.compiler.Compiler;
+import at.jku.ssw.cmm.compiler.Tab;
 import at.jku.ssw.cmm.gui.debug.GUIdebugPanel;
 import at.jku.ssw.cmm.gui.event.debug.PanelRunListener;
 import at.jku.ssw.cmm.interpreter.Interpreter;
@@ -55,18 +55,18 @@ public class CMMrun extends Thread {
 	 *            Interface which enables the thread to clean up after exiting
 	 *            by itself, see {@link CMMwrapper}
 	 */
-	public CMMrun(Compiler compiler, Interpreter interpreter, CMMwrapper reply,
+	public CMMrun(Tab table, Interpreter interpreter, CMMwrapper reply,
 			GUIdebugPanel debug) {
-		this.compiler = compiler;
+		this.table = table;
 		this.interpreter = interpreter;
 		this.reply = reply;
 		this.debug = debug;
 	}
 
 	/**
-	 * The compiler containing the syntax tree and the symbol table
+	 * ...
 	 */
-	private final Compiler compiler;
+	private final Tab table;
 
 	/**
 	 * Interface which enables the thread to clean up after exiting by itself,
@@ -98,7 +98,7 @@ public class CMMrun extends Thread {
 
 		// Run main function
 		try {
-			interpreter.run(compiler.getSymbolTable());
+			interpreter.run(table);
 		}
 		// Thrown when runtime error occurs
 		catch (final RunTimeException e) {
