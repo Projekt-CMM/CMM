@@ -3,7 +3,6 @@ package at.jku.ssw.cmm.quest;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.profile.Quest;
@@ -50,7 +49,6 @@ public class TestPanelListener implements MouseListener, TestReply {
 		
 		//No reference -> can not test
 		if( !quest.isRef()){
-			this.testPanel.output("[ERROR] Quest incomplete: no reference file");
 			this.main.getRightPanel().setFailedMode();
 			return;
 		}
@@ -76,21 +74,6 @@ public class TestPanelListener implements MouseListener, TestReply {
 	public void mouseReleased(MouseEvent e) {}
 
 	@Override
-	public void output(final String msg) {
-		
-		try {
-			java.awt.EventQueue.invokeAndWait(new Runnable() {
-				public void run() {
-					testPanel.output(msg);
-				}
-			});
-		} catch (InvocationTargetException | InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@Override
 	public void finished(final QuestMatchError e) {
 		
 		java.awt.EventQueue.invokeLater(new Runnable() {
@@ -113,9 +96,23 @@ public class TestPanelListener implements MouseListener, TestReply {
 				//Test failed
 				else{
 					main.getRightPanel().setFailedMode();
-					testPanel.output(e.getMessage());
 				}
 			}
 		});
+	}
+
+	@Override
+	public void setInputData(String data) {
+		this.main.getRightPanel().getTestPanel().setParamText(data, 0);
+	}
+
+	@Override
+	public void setCorrectOutput(String data) {
+		this.main.getRightPanel().getTestPanel().setParamText(data, 1);
+	}
+
+	@Override
+	public void setUserOutput(String data) {
+		this.main.getRightPanel().getTestPanel().setParamText(data, 2);
 	}
 }

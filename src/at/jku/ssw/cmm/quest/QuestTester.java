@@ -64,8 +64,6 @@ public class QuestTester extends Thread {
 
 		// ----- READ INPUT DATA -----
 		String inputData = null;
-		testReply.output("[info] generating input data");
-		testReply.output("[path] " + this.generator);
 		
 		try {
 			// Read or generate input data
@@ -84,11 +82,9 @@ public class QuestTester extends Thread {
 			return;
 		}
 		
-		testReply.output("[info] input: " + inputData + "\n");
+		testReply.setInputData(inputData);
 
 		// ----- COMPILE REFERENCE PROGRAM (which is 100% right) -----
-		testReply.output("[info] generating reference output data");
-		testReply.output("[path] " + this.verifier);
 		String referenceOutput = null;
 		Tab symbTab;
 		try {
@@ -103,14 +99,9 @@ public class QuestTester extends Thread {
 			return;
 		}
 		
-		testReply.output("[info] reference: " + referenceOutput + "\n");
+		testReply.setCorrectOutput(referenceOutput);
 
 		// ----- COMPILE USER'S PROGRAM  -----
-		testReply.output("[info] generating user output data");
-		if( this.usercode instanceof File )
-			testReply.output("[path] " + ((File) (this.usercode)).getPath());
-		else if( this.usercode instanceof String )
-			testReply.output("[source] user's code");
 		String userOutput = null;
 		try {
 			symbTab = compile(this.usercode, true);
@@ -139,10 +130,7 @@ public class QuestTester extends Thread {
 			});
 		}
 		
-		testReply.output("[info] user: " + userOutput + "\n");
-		
-		System.out.println("Out1: " + referenceOutput);
-		System.out.println("Out2: " + userOutput);
+		testReply.setUserOutput(userOutput);
 		
 		// Double-check if output data is available
 		if( referenceOutput == null || userOutput == null ){
