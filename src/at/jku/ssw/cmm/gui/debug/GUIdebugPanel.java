@@ -24,8 +24,6 @@ package at.jku.ssw.cmm.gui.debug;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
@@ -82,9 +80,7 @@ public class GUIdebugPanel {
 
 		cp.add(jVarPanel, BorderLayout.CENTER);
 
-		this.breakpoints = new ArrayList<>();
-
-		this.compileManager = new CMMwrapper(this.main, this);
+		this.runManager = new CMMwrapper(this.main, this);
 	}
 
 	/**
@@ -110,12 +106,7 @@ public class GUIdebugPanel {
 	/**
 	 * Wrapper class for the compiler. Also initiates the interpreter thread.
 	 */
-	private final CMMwrapper compileManager;
-
-	/**
-	 * List of breakpoints
-	 */
-	private final List<Integer> breakpoints;
+	private final CMMwrapper runManager;
 
 	/**
 	 * @return The first line of the original source code, without includes and
@@ -123,28 +114,6 @@ public class GUIdebugPanel {
 	 */
 	public int getBeginLine() {
 		return (int) this.main.getLeftPanel().getSourceCodeRegister().get(0)[0];
-	}
-
-	/**
-	 * @return A list of all breakpoints
-	 */
-	public List<Integer> getBreakPoints() {
-		return this.breakpoints;
-	}
-
-	/**
-	 * Deletes all breakpoints before the given line. Used when the user
-	 * switches from any maine to "fast run" maine; so that the interpreter does
-	 * not stop at breakpoints which should already have been passed.
-	 * 
-	 * @param line
-	 *            The current line
-	 */
-	public void updateBreakPoints(int line) {
-		for (int i = 0; i < this.breakpoints.size(); i++) {
-			if (this.breakpoints.get(i) <= line)
-				this.breakpoints.remove(i);
-		}
 	}
 
 	/**
@@ -177,7 +146,7 @@ public class GUIdebugPanel {
 	 * current view maine.
 	 */
 	public void updateVariableTables(boolean completeUpDate) {
-		this.varView.update(compileManager, this.main.getSettings()
+		this.varView.update(runManager, this.main.getSettings()
 				.getCMMFile(), completeUpDate);
 	}
 
@@ -272,8 +241,8 @@ public class GUIdebugPanel {
 	 * @return A reference to the right panel's compiler wrapper object, see
 	 *         {@link CMMwrapper}
 	 */
-	public CMMwrapper getCompileManager() {
-		return this.compileManager;
+	public CMMwrapper getRunManager() {
+		return this.runManager;
 	}
 
 	/**
@@ -301,9 +270,9 @@ public class GUIdebugPanel {
 		);
 
 		// Compile and run
-		Tab table = CompileManager.compile(sourceCode, this, this.main);
+		Tab table = CompileManager.compile(sourceCode, this.main);
 		if (table != null)
-			return this.compileManager.runInterpreter(ctrlPanel.getListener(),
+			return this.runManager.runInterpreter(ctrlPanel.getListener(),
 					new IOstream(this.main), table);
 		else
 			return false;

@@ -130,11 +130,6 @@ public class PanelRunListener implements Debugger {
 	private Timer timer;
 	
 	/**
-	 * The last node in the user's source code which has been processed
-	 */
-	private Node lastNode;
-	
-	/**
 	 * The start address of the previous node's function
 	 */
 	private int lastAdress;
@@ -156,7 +151,6 @@ public class PanelRunListener implements Debugger {
 
 		// Read debugger speed slider (useful for initializing
 		this.delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
-		this.lastNode = null;
 		
 		// Reset last address
 		this.lastAdress = 0;
@@ -254,9 +248,6 @@ public class PanelRunListener implements Debugger {
 				this.master.setPauseMode();
 			}
 		}
-		
-		// Update latest node's line
-		this.lastNode = arg0;
 
 		/* --- Quick run mode --- */
 		if( this.isRunMode() && this.delay == 0 ){
@@ -392,10 +383,6 @@ public class PanelRunListener implements Debugger {
 		else if (isPauseMode()) {
 			master.setRunMode();
 			userReply();
-			
-			//Remove already passed breakpoints if in fast run mode
-			if( delay == 0 )
-				master.updateBreakPoints(lastNode.line);
 		}
 	}
 
@@ -511,10 +498,6 @@ public class PanelRunListener implements Debugger {
 
 			delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
 			master.getControlPanel().setTimerLabelSeconds(delayScale(delay));
-			
-			if( delay == 0 && lastNode != null ){
-				master.updateBreakPoints(lastNode.line);
-			}
 		}
 	};
 	

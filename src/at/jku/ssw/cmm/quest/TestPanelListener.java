@@ -58,7 +58,7 @@ public class TestPanelListener implements MouseListener, TestReply {
 		this.testPanel.reset();
 		
 		String[] ignore = {"\n", ",", ";"};
-		QuestTester qt = new QuestTester((TestReply)this,
+		QuestTester qt = new QuestTester((TestReply)this, this.main,
 				new File("packages" + File.separator + quest.getPackagePath() + File.separator + quest.getQuestPath() + File.separator + Quest.FILE_INPUT_CMM),
 				new File("packages" + File.separator + quest.getPackagePath() + File.separator + quest.getQuestPath() + File.separator + Quest.FILE_REF),
 				main.getSettings().hasCMMFilePath() ? new File(main.getSettings().getCMMFilePath()) : main.getLeftPanel().getSourceCode(),

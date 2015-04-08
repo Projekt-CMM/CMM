@@ -24,14 +24,13 @@ package at.jku.ssw.cmm.quest;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 
-import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Tab;
 import at.jku.ssw.cmm.preprocessor.exception.PreprocessorException;
+import at.jku.ssw.cmm.gui.GUImain;
+import at.jku.ssw.cmm.gui.debug.CompileManager;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.interpreter.exceptions.RunTimeException;
-import at.jku.ssw.cmm.preprocessor.Preprocessor;
 import at.jku.ssw.cmm.quest.exception.CompilerErrorException;
 
 public class QuestTester extends Thread {
@@ -50,9 +49,10 @@ public class QuestTester extends Thread {
 
 	public static final int STEPS = 5;
 
-	public QuestTester(TestReply testReply, File generator, File verifier, Object usercode, Object ignore) {
+	public QuestTester(TestReply testReply, GUImain main, File generator, File verifier, Object usercode, Object ignore) {
 		
 		this.testReply = testReply;
+		this.main = main;
 		
 		this.generator = generator;
 		this.verifier = verifier;
@@ -63,6 +63,7 @@ public class QuestTester extends Thread {
 	}
 	
 	private final TestReply testReply;
+	private final GUImain main;
 
 	private final File generator;
 	private final File verifier;
@@ -110,7 +111,8 @@ public class QuestTester extends Thread {
 		Tab symbTab;
 		try {
 			symbTab = compile(this.verifier);
-			referenceOutput = this.questRun.run(symbTab, inputData);
+			if( symbTab != null )
+				referenceOutput = this.questRun.run(symbTab, inputData);
 		} catch (RunTimeException e) {
 			testReply.finished(new QuestMatchError( "Runtime error when generating reference output data", e));
 			return;
@@ -136,7 +138,8 @@ public class QuestTester extends Thread {
 		String userOutput = null;
 		try {
 			symbTab = compile(this.usercode);
-			userOutput = this.questRun.run(symbTab, inputData);
+			if( symbTab != null )
+				userOutput = this.questRun.run(symbTab, inputData);
 		} catch (RunTimeException e) {
 			testReply.finished(new QuestMatchError("Runtime error when generating user output data", e));
 			return;
@@ -199,7 +202,7 @@ public class QuestTester extends Thread {
 			throw new FileNotFoundException("Invalid input file ending");
 	}
 
-	private static Tab compile(Object data) throws FileNotFoundException, CompilerErrorException, PreprocessorException {
+	private Tab compile(Object data) throws FileNotFoundException, CompilerErrorException, PreprocessorException {
 
 		String sourceCode = null;
 		
@@ -220,34 +223,7 @@ public class QuestTester extends Thread {
 			sourceCode = (String)data;
 		}
 		
-		try {
-			sourceCode = Preprocessor.expand(sourceCode, "", new ArrayList<Object[]>(), new ArrayList<Integer>());
-		} catch (IOException e1) {
-			throw new FileNotFoundException("Library file not found");
-		}
-		
-		if( sourceCode == null )
-			throw new CompilerErrorException("Source code is null", null);
-
-		// Object for the compiler is allocated
-		Compiler compiler = new Compiler();
-
-		// No debug modes
-		compiler.debug[0] = false;
-		compiler.debug[1] = false;
-
-		// Compile current file
-		compiler.compile(sourceCode);
-
-		// Error displaying and error count
-		at.jku.ssw.cmm.compiler.Error e = compiler.getError();
-
-		if (e != null){
-			System.out.println("Error: " + e.msg + "\n" + sourceCode);
-			throw new CompilerErrorException(""+data, e);
-		}
-
-		return compiler.getSymbolTable();
+		return CompileManager.compile(sourceCode, main);
 	}
 	
 	private boolean equalOutput(String s1, String s2){
