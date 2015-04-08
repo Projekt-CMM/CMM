@@ -102,17 +102,29 @@ public class TestPanelListener implements MouseListener, TestReply {
 	}
 
 	@Override
-	public void setInputData(String data) {
-		this.main.getRightPanel().getTestPanel().setParamText(data, 0);
+	public void setInputData(final String data) {
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+					main.getRightPanel().getTestPanel().setParamText(data, 0);
+			}
+		});
 	}
 
 	@Override
-	public void setCorrectOutput(String data) {
-		this.main.getRightPanel().getTestPanel().setParamText(data, 1);
+	public void setCorrectOutput(final String data) {
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				main.getRightPanel().getTestPanel().setParamText(data, 1);
+			}
+		});
 	}
 
 	@Override
-	public void setUserOutput(String data) {
-		this.main.getRightPanel().getTestPanel().setParamText(data, 2);
+	public void setUserOutput(final String data) {
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				main.getRightPanel().getTestPanel().setParamText(data, 2);
+			}
+		});
 	}
 }
