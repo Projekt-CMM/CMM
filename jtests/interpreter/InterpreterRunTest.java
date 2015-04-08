@@ -109,7 +109,7 @@ public class InterpreterRunTest implements StdInOut {
 		output = output + arg0;
 	}
 
-	@Test
+	@Test(timeout=1000)
 	public void testSimpleMain() throws Exception {
 		// basic main-function
 		runCode("void main() {}");
@@ -128,7 +128,7 @@ public class InterpreterRunTest implements StdInOut {
 		} catch(CompilerException e) {}
 	}
 	
-	@Test
+	@Test(timeout=1000)
 	public void testCallPrint() throws Exception {
 		// print space
 		runCode("void main() {"
@@ -157,7 +157,7 @@ public class InterpreterRunTest implements StdInOut {
 		} catch(CompilerException e) {}
 	}
 	
-	@Test
+	@Test(timeout=1000)
 	public void testCallPrintf() throws Exception {
 		// printf empty string
 		runCode("void main() {"
@@ -192,7 +192,7 @@ public class InterpreterRunTest implements StdInOut {
 		} catch(CompilerException e) {}
 	}
 	
-	@Test
+	@Test(timeout=1000)
 	public void testCallRead() throws Exception {
 		// read characters from input-string
 		runCode("void main() {"
@@ -202,7 +202,7 @@ public class InterpreterRunTest implements StdInOut {
 		assertEquals(output, "pa");
 	}
 	
-	@Test
+	@Test(timeout=1000)
 	public void testCallLength() throws Exception {
 		// length of simple string
 		runCode("void main() {"
@@ -225,7 +225,7 @@ public class InterpreterRunTest implements StdInOut {
 		} catch(CompilerException e) {}
 	}
 	
-	@Test
+	@Test(timeout=1000)
 	public void testInitVar() throws Exception {
 		// bool-init with assignment
 		runCode("void main() {"
@@ -278,7 +278,7 @@ public class InterpreterRunTest implements StdInOut {
 		} catch(CompilerException e) {}
 	}
 	
-	@Test
+	@Test(timeout=1000)
 	public void testInitStruct() throws Exception {
 		// simple struct
 		runCode("struct Point {int x, y;} "
@@ -311,7 +311,7 @@ public class InterpreterRunTest implements StdInOut {
 		} catch(CompilerException e) {}
 	}
 	
-	@Test
+	@Test(timeout=1000)
 	public void testInitArray() throws Exception {
 		// single-dimension array
 		runCode("void main() {"
@@ -379,7 +379,7 @@ public class InterpreterRunTest implements StdInOut {
 		} catch(RunTimeException e) {}
 	}
 	
-	@Test
+	@Test(timeout=1000)
 	public void testStatement() throws Exception {
 		// TODO: Assign
 		
@@ -511,6 +511,16 @@ public class InterpreterRunTest implements StdInOut {
 				+ "  printf(\"%d\", i);"
 				+ "}");
 		assertEquals(output, "6");
+		
+		runCode("void main() {"
+				+ "  int i;"
+				+ "  for(i = 0; i < 10; i++) {"
+				+ "    if(i==3)"
+				+ "      break;"
+				+ "  }"
+				+ "  printf(\"%d\", i);"
+				+ "}");
+		assertEquals(output, "3");
 
 		// switch
 		runCode("void main() {"
@@ -548,7 +558,7 @@ public class InterpreterRunTest implements StdInOut {
 	}
 	
 	
-	@Test
+	@Test(timeout=1000)
 	public void testBoolExpression() throws Exception {
 		// addition
 		try {
@@ -681,7 +691,7 @@ public class InterpreterRunTest implements StdInOut {
 		assertEquals(output, "1 0 1");
 	}
 
-	@Test
+	@Test(timeout=1000)
 	public void testIntExpression() throws Exception {
 		// addition
 		runCode("void main() {"
@@ -854,7 +864,7 @@ public class InterpreterRunTest implements StdInOut {
 		} catch(RunTimeException e) {}
 	}
 	
-	@Test
+	@Test(timeout=1000)
 	public void testFloatExpression() throws Exception {
 		// addition
 		runCode("void main() {"
@@ -1008,7 +1018,7 @@ public class InterpreterRunTest implements StdInOut {
 		} catch(RunTimeException e) {}*/
 	}
 
-	@Test
+	@Test(timeout=1000)
 	public void testCharExpression() throws Exception {
 		// addition
 		try {
@@ -1185,7 +1195,7 @@ public class InterpreterRunTest implements StdInOut {
 		} catch(RunTimeException e) {}
 	}
 
-	@Test
+	@Test(timeout=1000)
 	public void testStringExpression() throws Exception {
 		// addition
 		runCode("void main() {"
@@ -1347,7 +1357,7 @@ public class InterpreterRunTest implements StdInOut {
 		assertEquals(output, "ar0 bar3");
 	}
 	
-	@Test
+	@Test(timeout=1000)
 	public void testIntCondition() throws Exception {		
 		// condition with ident
 		runCode("void main() {"
@@ -1449,7 +1459,7 @@ public class InterpreterRunTest implements StdInOut {
 		assertEquals(output, "f");
 	}
 
-	@Test
+	@Test(timeout=1000)
 	public void testFloatCondition() throws Exception {				
 		// equal condition
 		runCode("void main() {"
@@ -1514,7 +1524,7 @@ public class InterpreterRunTest implements StdInOut {
 		assertEquals(output, "ab");
 	}
 
-	@Test
+	@Test(timeout=1000)
 	public void testCharCondition() throws Exception {				
 		// equal condition
 		runCode("void main() {"
@@ -1579,7 +1589,7 @@ public class InterpreterRunTest implements StdInOut {
 		assertEquals(output, "ab");
 	}
 
-	@Test
+	@Test(timeout=1000)
 	public void testBoolCondition() throws Exception {
 		// condition with ident
 		runCode("void main() {"
@@ -1702,7 +1712,7 @@ public class InterpreterRunTest implements StdInOut {
 		assertEquals(output, "f");
 	}
 
-	@Test
+	@Test(timeout=1000)
 	public void testCall() throws Exception {
 		// bool parameter
 		runCode("void foo(bool b) {"
@@ -1763,7 +1773,7 @@ public class InterpreterRunTest implements StdInOut {
 		assertEquals(output, "23 -10");
 	}	
 	
-	@Test
+	@Test(timeout=1000)
 	public void testCallReference() throws Exception {
 		// bool reference
 		runCode("void foo(bool &b) {"
@@ -1846,7 +1856,7 @@ public class InterpreterRunTest implements StdInOut {
 		assertEquals(output, "5366 988");
 	}
 	
-	@Test
+	@Test(timeout=1000)
 	public void testConst() throws Exception {
 		// bool const
 		runCode("const bool c_b = true;"

@@ -246,9 +246,9 @@ public final class Interpreter {
 							Statement(statement);
 					} catch(ContinueException e) {
 					} finally {
-						Statement(relopNode);
-						selectCurrentLine(p);	// TODO test
+						selectCurrentLine(p);
 					}
+					Statement(relopNode);
 				}
 			} catch(BreakException e) {
 			}

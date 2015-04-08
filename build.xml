@@ -10,7 +10,11 @@
     <property name="clib.dir" value="clib"/>
     <property name="translation.dir" value="po"/>
     <property name="name" value="CMM"/>
+    <property name="name-launcher" value="CMM-launcher"/>
+    <property name="name-quest-creator" value="CMM-quest-creator"/>
     <property name="manifest" value="manifest.txt"/>
+    <property name="manifest-launcher" value="manifest-launcher.txt"/>
+    <property name="manifest-quest-creator" value="manifest-quest-creator.txt"/>
     <property name="coco-ant.file" value="${java.dir}/at/jku/ssw/cmm/compiler/CMM.atg"/>
     <property name="flex-ccompact.file" value="${java.dir}/at/jku/ssw/cmm/gui/init/CCompactTokenMaker.flex"/>
     <property name="java-flex-ccompact.file" value="${java.dir}/at/jku/ssw/cmm/gui/init/CCompactTokenMaker.java"/>
@@ -92,7 +96,7 @@
     </target>
 
     <!-- build project -->
-    <target name="build" depends="coco, flex" description="build project">
+    <target name="pre-build" depends="coco, flex" description="compile .java files">
 
         <!-- add directory -->
         <delete dir="${build.classes}"/>
@@ -127,7 +131,10 @@
                 <include name="${translation.dir}/**"/>
             </fileset>
         </copy>
+    </target>
 
+    <!-- build CMM -->
+    <target name="build-cmm" depends="pre-build" description="build CMM.jar">
         <!-- build jar file -->
         <jar jarfile="${name}.jar" manifest="${manifest}" includes="clib/*.h" >
             <fileset dir="${build.classes}"/>
@@ -138,6 +145,35 @@
            <zipfileset src="${name}.jar" includes="../clib/error.h"/>
         </jar>
     </target>
+
+    <!-- build launcher -->
+    <target name="build-launcher" depends="pre-build" description="build CMM-launcher.jar">
+        <!-- build launcher-jar file -->
+        <jar jarfile="${name-launcher}.jar" manifest="${manifest-launcher}" includes="clib/*.h" >
+            <fileset dir="${build.classes}"/>
+            <zipgroupfileset dir="${build.lib}" includes="*.jar"/>
+        </jar>
+
+        <jar update="yes" jarfile="${name-launcher}.jar">
+           <zipfileset src="${name-launcher}.jar" includes="../clib/error.h"/>
+        </jar>
+    </target>
+    
+    <!-- build quest-creator -->
+    <target name="build-quest-creator" depends="pre-build" description="build CMM-quest-creator.jar">
+        <!-- build launcher-jar file -->
+        <jar jarfile="${name-quest-creator}.jar" manifest="${manifest-quest-creator}" includes="clib/*.h" >
+            <fileset dir="${build.classes}"/>
+            <zipgroupfileset dir="${build.lib}" includes="*.jar"/>
+        </jar>
+
+        <jar update="yes" jarfile="${name-quest-creator}.jar">
+           <zipfileset src="${name-quest-creator}.jar" includes="../clib/error.h"/>
+        </jar>
+    </target>
+
+    <!-- build project -->
+    <target name="build" depends="build-cmm, build-launcher, build-quest-creator" description="build project"/>
 
     <!-- cleanup  -->
     <target name="clean" description="clear build-files">
