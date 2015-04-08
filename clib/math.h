@@ -247,6 +247,9 @@ float library modf() {
  * http://www.programminglogic.com/fast-exponentiation-algorithms/
  */
 float library pow(float x, int y)  {
+	if(y < 0)
+		__assert__(false, "negativ exponent not supported yet in math:pow()!");
+
     float result;
     result = 1;
 

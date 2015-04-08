@@ -8,13 +8,15 @@
 
 #define __CLIB_STDLIB__
 
+#include <math.h>
+
 //------------------- Forward declarations
 
 string library itoa(int x);
 string library ftoa(float f);
 
 int library atoi(string s);
-//float library atof(string s);
+float library atof(string s);
 
 int library rand();
 void library srand (int seed);
@@ -63,7 +65,7 @@ string library itoa(int x) {
  * @todo using exponential formating
  */
 string library ftoa(float f) {
-    // caluclate decimal
+    // calculate decimal part
     string s = itoa((int) f);
     s += '.';
     // f has to be positive
@@ -87,23 +89,27 @@ string library ftoa(float f) {
 /** convert string to int 
  *
  * @working yes
+ * @todo remove leading whitespaces
  */
 int library atoi(string s) {
     int ret = 0;
     int i = 0;
     int multpl = 1;
+
+    if(s[i] == '+') {
+        multpl = 1;
+        i++;
+    } else if(s[i] == '-') {
+      	multpl = -1;
+        i++;
+    }
     
-    // parse character
-    while(length(s) > i) {
+    // parse digits
+    for(; length(s) > i; i++) {
         if(s[i] >= '0' && s[i] <= '9') {
-            // parse digit
             ret *= 10;
             ret += s[i]-'0';
-        } else if(s[i] == '-') {
-            // parse '-' character
-            multpl *= -1;
         }
-        i += 1;
     }
     
     // return integer
@@ -111,24 +117,95 @@ int library atoi(string s) {
 }
 
 
-// convert string to float
-/*float library atof(string s) {
-    // TODO
+/** convert string to float
+ *
+ * @working yes
+ * @todo remove leading whitespaces
+ */
+float library atof(string s) {
     float ret = 0.;
     int i = 0;
-    int afterPoint = 0;
+    float multpl = 1.;
 
-    while(length(s) < i) {
-        if(s[i] >= '0' && s[i] <= '9') {
-            ret *= 10;
-            ret += s[i]-'0';
-        } else if(s[i] == '.') {
-            afterPoint = 1;
-        }
-        i += 1;
+    // check if string is not empty
+    if(length(s) == 0)
+    	return 0.;
+
+    // TODO: remove leading whitespaces
+
+    // check for leading sign
+    if(s[i] == '+') {
+    	multpl = 1.;
+    	i++;
+    } else if(s[i] == '-') {
+    	multpl = -1.;
+    	i++;
     }
-    return ret;
-}*/
+
+    // parse predecimals
+    for(; i < length(s); i++) {
+    	if(s[i] >= '0' && s[i] <= '9') {
+    		// parse digit
+    		ret *= 10;
+        	ret += s[i]-'0';
+        } else
+            break;
+    }
+
+    // check if function is already finished
+    if(i >= length(s))
+    	return ret*multpl;
+
+    // parse decimal places if possible
+    float factor = 0.1;
+    if(s[i] == '.') {
+    	i++;
+    	for(; i < length(s); i++) {
+    		if(s[i] >= '0' && s[i] <= '9')
+    	        ret += (s[i]-'0')*factor;
+    		else
+    			break;
+    		factor /= 10.;
+    	}
+    }
+
+    // check if function is already finished
+    if(i >= length(s))
+    	return ret*multpl;
+
+    // parse exponent
+    float exponentMultpl = 1.;
+    float exponent = 0;
+    if(s[i] == 'e' || s[i] == 'E') {
+    	i++;
+
+    	// check if function is already finished
+    	if(i >= length(s))
+    		return ret*multpl;
+
+    	if(s[i] == '+') {
+    		exponentMultpl = 1.;
+    	    i++;
+    	} else if(s[i] == '-') {
+    		exponentMultpl = -1.;
+    	    i++;
+    	}
+
+    	// parse exponent
+    	for(; i < length(s); i++) {
+    	    if(s[i] >= '0' && s[i] <= '9') {
+    	    	// parse digit
+    	    	exponent *= 10;
+    	    	exponent += s[i]-'0';
+    	    } else
+    	    	break;
+    	}
+
+    	ret *= pow(10, exponent*exponentMultpl);
+    }
+
+    return ret*multpl;
+}
 
 /** get random number
  *
