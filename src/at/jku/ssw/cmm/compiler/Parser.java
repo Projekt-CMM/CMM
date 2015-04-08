@@ -558,8 +558,8 @@ public class Parser {
 		curObj = tab.insert(Obj.VAR, varName, curType, line); 
 		curObj.library = library; 
 		if (la.kind == 13) {
-			ExpectWeak(13, 7);
-			if (StartOf(8)) {
+			Get();
+			if (StartOf(7)) {
 				newNode = BinExpr();
 				if(curType == null || (!curType.isPrimitive() && !curType.equals(Tab.stringType) && curType.kind != Struct.STRUCT)) 
 				   SemErr("type is not a primitive, string or struct");
@@ -627,7 +627,7 @@ public class Parser {
 		e = new Node(Node.ASSIGN, newElement, newNode, t.line);
 		                                        Node eHelp = e;
 		
-		while (WeakSeparator(42,8,9) ) {
+		while (WeakSeparator(42,7,8) ) {
 			newNode = BinExpr();
 			iteration ++;
 			if(iteration >= arraySize)
@@ -674,7 +674,7 @@ public class Parser {
 		int  n;
 		FormPar();
 		n = 1; 
-		while (WeakSeparator(42,4,10) ) {
+		while (WeakSeparator(42,4,9) ) {
 			FormPar();
 			n++; 
 		}
@@ -805,7 +805,7 @@ public class Parser {
 				Expect(53);
 				firstCaseStatement = null;
 				lastStatement.next = firstCaseStatement; 
-				while (StartOf(11)) {
+				while (StartOf(10)) {
 					n = Statement();
 					lastStatement.next = n;
 					                                        // get reference to first case-statement in this node
@@ -840,7 +840,7 @@ public class Parser {
 		case 8: {
 			Get();
 			curStat = null; con=null; 
-			while (StartOf(11)) {
+			while (StartOf(10)) {
 				newStat = Statement();
 				if(curStat == null) {
 				   curStat = newStat;
@@ -856,7 +856,7 @@ public class Parser {
 		}
 		case 54: {
 			Get();
-			if (StartOf(8)) {
+			if (StartOf(7)) {
 				e = BinExpr();
 				if(curProc.type.kind == Struct.NONE)
 				   SemErr("procedure has void as return type defined");
@@ -915,7 +915,7 @@ public class Parser {
 		}
 		Expect(1);
 		ident_val = t.val; 
-		while (WeakSeparator(10,12,13) ) {
+		while (WeakSeparator(10,11,12) ) {
 			Expect(11);
 			if(isRef && !isArray)
 			   SemErr("array call and call by reference cannot mixed up");
@@ -955,7 +955,7 @@ public class Parser {
 		int col = la.col;
 		int colLength = la.val.length(); 
 		design = Designator();
-		if (StartOf(14)) {
+		if (StartOf(13)) {
 			kind = AssignOp();
 			if(design.kind == Node.BOOLCON || design.kind == Node.INTCON
 			   || design.kind == Node.FLOATCON || design.kind == Node.CHARCON
@@ -1195,10 +1195,10 @@ public class Parser {
 		Node par, curPar = null; 
 		outPar = null; 
 		Expect(6);
-		if (StartOf(8)) {
+		if (StartOf(7)) {
 			outPar = ActPar();
 			curPar = outPar; 
-			while (WeakSeparator(42,8,10) ) {
+			while (WeakSeparator(42,7,9) ) {
 				par = ActPar();
 				if(curPar == null)
 				   SemErr("empty function parameters are not allowed");
@@ -1237,7 +1237,7 @@ public class Parser {
 		con = null; 
 		if (isExpr()) {
 			con = BinExpr();
-			if (StartOf(15)) {
+			if (StartOf(14)) {
 				kind = Relop();
 				e = BinExpr();
 				if(con == null || e == null || con.type == null || e.type == null)
@@ -1536,7 +1536,6 @@ public class Parser {
 		{x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,T,x,x, x,x,x,x, T,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,T,x,T, T,T,T,x, x,x,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x},
-		{T,T,T,T, T,T,T,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,T,T, T,T,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x},
 		{x,T,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x},
 		{x,x,x,x, x,x,x,x, x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,x,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},

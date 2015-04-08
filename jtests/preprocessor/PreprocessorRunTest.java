@@ -72,7 +72,7 @@ public class PreprocessorRunTest implements StdInOut {
 		output = output + arg0;
 	}
 
-	@Test
+	@Test(timeout=1000)
 	public void testComment() throws Exception {
 		// simple #define which is commented
 		runCode("//#define __DEF__\n"
@@ -109,7 +109,7 @@ public class PreprocessorRunTest implements StdInOut {
 		assertEquals(output, "e");
 	}
 	
-	@Test
+	@Test(timeout=1000)
 	public void testIf() throws Exception {
 		// simple #ifdef
 		runCode("#define __DEF__\n"
