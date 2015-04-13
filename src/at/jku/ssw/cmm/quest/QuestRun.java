@@ -37,7 +37,7 @@ public class QuestRun implements StdInOut, Debugger {
 	private String inputStream;
 	private String outputStream;
 
-	public String run(Tab symbolTab, String inputStream) throws RunTimeException {
+	public String run(Tab symbolTab, String inputStream) throws RunTimeException  {
 		
 		this.inputStream = inputStream;
 		this.outputStream = "";

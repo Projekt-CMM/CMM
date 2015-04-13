@@ -1,0 +1,7 @@
+// Hauptklasse, hier wird das Hauptprogramm geschrieben
+void main(){
+
+	//Das hier ist eine simple Ausgabe eines Textes
+	printf("Hello World");
+
+}

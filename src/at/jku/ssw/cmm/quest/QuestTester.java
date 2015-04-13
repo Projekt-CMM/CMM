@@ -24,35 +24,23 @@ package at.jku.ssw.cmm.quest;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 
-import at.jku.ssw.cmm.compiler.Compiler;
 import at.jku.ssw.cmm.compiler.Tab;
-import at.jku.ssw.cmm.preprocessor.exception.PreprocessorException;
+import at.jku.ssw.cmm.gui.GUImain;
+import at.jku.ssw.cmm.gui.debug.CompileManager;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.interpreter.exceptions.RunTimeException;
-import at.jku.ssw.cmm.preprocessor.Preprocessor;
-import at.jku.ssw.cmm.quest.exception.CompilerErrorException;
 
 public class QuestTester extends Thread {
-	
-	/*public static void main(String[] args) {
-		
-		QuestTester tester = new QuestTester(new TestReplyMock(),
-				"packages/01 Einstieg/01 Simples Hello World/input.cmm",
-				"packages/01 Einstieg/01 Simples Hello World/ref.cmm",
-				"packages/01 Einstieg/01 Simples Hello World/user.cmm",
-				null);
-		tester.run();
-	}*/
-	
+
 	public static final String VALIDTYPES = "";
 
 	public static final int STEPS = 5;
 
-	public QuestTester(TestReply testReply, File generator, File verifier, Object usercode, Object ignore) {
+	public QuestTester(TestReply testReply, GUImain main, File generator, File verifier, Object usercode, Object ignore) {
 		
 		this.testReply = testReply;
+		this.main = main;
 		
 		this.generator = generator;
 		this.verifier = verifier;
@@ -63,6 +51,7 @@ public class QuestTester extends Thread {
 	}
 	
 	private final TestReply testReply;
+	private final GUImain main;
 
 	private final File generator;
 	private final File verifier;
@@ -75,8 +64,6 @@ public class QuestTester extends Thread {
 
 		// ----- READ INPUT DATA -----
 		String inputData = null;
-		testReply.output("[info] generating input data");
-		testReply.output("[path] " + this.generator);
 		
 		try {
 			// Read or generate input data
@@ -87,12 +74,6 @@ public class QuestTester extends Thread {
 		} catch (FileNotFoundException e) {
 			testReply.finished(new QuestMatchError( "Input data file not found", e));
 			return;
-		} catch (CompilerErrorException e) {
-			testReply.finished(new QuestMatchError( "Error when compiling input data generator", e));
-			return;
-		} catch (PreprocessorException e) {
-			testReply.finished(new QuestMatchError( "Preprocessor error in generator source code", e));
-			return;
 		}
 
 		// Double-check if everything worked
@@ -101,60 +82,55 @@ public class QuestTester extends Thread {
 			return;
 		}
 		
-		testReply.output("[info] input: " + inputData + "\n");
+		testReply.setInputData(inputData);
 
 		// ----- COMPILE REFERENCE PROGRAM (which is 100% right) -----
-		testReply.output("[info] generating reference output data");
-		testReply.output("[path] " + this.verifier);
 		String referenceOutput = null;
 		Tab symbTab;
 		try {
-			symbTab = compile(this.verifier);
-			referenceOutput = this.questRun.run(symbTab, inputData);
+			symbTab = compile(this.verifier, false);
+			if( symbTab != null )
+				referenceOutput = this.questRun.run(symbTab, inputData);
 		} catch (RunTimeException e) {
 			testReply.finished(new QuestMatchError( "Runtime error when generating reference output data", e));
-			return;
-		} catch (CompilerErrorException e) {
-			testReply.finished(new QuestMatchError( "Error when compiling reference output data generator", e));
 			return;
 		} catch (FileNotFoundException e) {
 			testReply.finished(new QuestMatchError( "Reference output generator file could not be found", e));
 			return;
-		} catch (PreprocessorException e) {
-			testReply.finished(new QuestMatchError( "Preprocessor error in reference source code", e));
-			return;
 		}
 		
-		testReply.output("[info] reference: " + referenceOutput + "\n");
+		testReply.setCorrectOutput(referenceOutput);
 
 		// ----- COMPILE USER'S PROGRAM  -----
-		testReply.output("[info] generating user output data");
-		if( this.usercode instanceof File )
-			testReply.output("[path] " + ((File) (this.usercode)).getPath());
-		else if( this.usercode instanceof String )
-			testReply.output("[source] user's code");
 		String userOutput = null;
 		try {
-			symbTab = compile(this.usercode);
-			userOutput = this.questRun.run(symbTab, inputData);
-		} catch (RunTimeException e) {
-			testReply.finished(new QuestMatchError("Runtime error when generating user output data", e));
-			return;
-		} catch (CompilerErrorException e) {
-			testReply.finished(new QuestMatchError("Error when compiling user output data generator", e));
+			symbTab = compile(this.usercode, true);
+			if( symbTab != null )
+				userOutput = this.questRun.run(symbTab, inputData);
+		} catch (final RunTimeException e) {
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					if ( e.getNode() != null && e.getNode().line > 0)
+						main.getRightPanel().getDebugPanel().setErrorMode(e.getMessage(), null, e.getNode().line, true);
+					else if( e.getLine() > 0 )
+						main.getRightPanel().getDebugPanel().setErrorMode(e.getMessage(), null, e.getLine(), true);
+					else
+						main.getRightPanel().getDebugPanel().setErrorMode(e.getMessage(), null, -1, true);
+				}
+			});
 			return;
 		} catch (FileNotFoundException e) {
 			testReply.finished(new QuestMatchError("User's source code could not be found", e));
 			return;
-		} catch (PreprocessorException e) {
-			testReply.finished(new QuestMatchError("Preprocessor error in user's source code", e));
-			return;
+		} catch (Exception e) {
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					main.getRightPanel().getDebugPanel().setErrorMode("unknown error", null, -1, true);
+				}
+			});
 		}
 		
-		testReply.output("[info] user: " + userOutput + "\n");
-		
-		System.out.println("Out1: " + referenceOutput);
-		System.out.println("Out2: " + userOutput);
+		testReply.setUserOutput(userOutput);
 		
 		// Double-check if output data is available
 		if( referenceOutput == null || userOutput == null ){
@@ -171,12 +147,11 @@ public class QuestTester extends Thread {
 		return;
 	}
 
-	private String getInputData() throws FileNotFoundException,
-			CompilerErrorException, RunTimeException, PreprocessorException {
+	private String getInputData() throws FileNotFoundException, RunTimeException  {
 
 		// Input generator is .cmm file
 		if (this.generator.getPath().endsWith(".cmm")) {
-			Tab symbTab = compile(this.generator);
+			Tab symbTab = compile(this.generator, false);
 			return this.questRun.run(symbTab, null);
 		}
 		// Input data is in .txt file
@@ -199,7 +174,7 @@ public class QuestTester extends Thread {
 			throw new FileNotFoundException("Invalid input file ending");
 	}
 
-	private static Tab compile(Object data) throws FileNotFoundException, CompilerErrorException, PreprocessorException {
+	private Tab compile(Object data, boolean userCode) throws FileNotFoundException {
 
 		String sourceCode = null;
 		
@@ -219,31 +194,8 @@ public class QuestTester extends Thread {
 		else if( data instanceof String ) {
 			sourceCode = (String)data;
 		}
-
-		sourceCode = Preprocessor.expand(sourceCode, "", new ArrayList<Object[]>(), new ArrayList<Integer>());
 		
-		if( sourceCode == null )
-			throw new CompilerErrorException("Source code is null", null);
-
-		// Object for the compiler is allocated
-		Compiler compiler = new Compiler();
-
-		// No debug modes
-		compiler.debug[0] = false;
-		compiler.debug[1] = false;
-
-		// Compile current file
-		compiler.compile(sourceCode);
-
-		// Error displaying and error count
-		at.jku.ssw.cmm.compiler.Error e = compiler.getError();
-
-		if (e != null){
-			System.out.println("Error: " + e.msg + "\n" + sourceCode);
-			throw new CompilerErrorException(""+data, e);
-		}
-
-		return compiler.getSymbolTable();
+		return CompileManager.compile(sourceCode, main, userCode);
 	}
 	
 	private boolean equalOutput(String s1, String s2){

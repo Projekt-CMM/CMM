@@ -129,7 +129,6 @@ public class GUIleftPanel {
 	 */
 	private int inputHighlightOffset;
 
-	// TODO make codeRegister thread safe
 	/**
 	 * A list which contains the lines of all libraries in the complete source
 	 * code. When a library is loaded, its code is pasted to the source code of
@@ -577,7 +576,7 @@ public class GUIleftPanel {
 	 * 
 	 * @return The source code register list
 	 */
-	public List<Object[]> getSourceCodeRegister() {
+	public synchronized List<Object[]> getSourceCodeRegister() {
 		return this.codeRegister;
 	}
 	

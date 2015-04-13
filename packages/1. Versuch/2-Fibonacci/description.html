@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<head>
+	<title>Fibonacci-Reihe</title>
+</head>
+<body>
+	<h1>Fibonacci-Reihe</h1>
+
+	<h2>Einf&uuml;hrung</h2>
+	<p>
+		Die Fibonacci-Reihe ist unendliche Folge von Zahlen, bei der die Summe zweier benachbarter Zahlen die unmittelbar folgende Zahl ergibt. Allgemein gilt:
+		<div class="center">
+			<img src="images/allgemein.png"><br />
+		</div>
+		Allerdings muss es Anfangswerte geben. Deshalb gilt f&uuml;r die erste beiden Elemente:
+		<div class="center">
+			<img src="images/anfang.png"><br />
+		</div>
+		<div class="info">
+			Die ersten Elemente der Fibonacci-Reihe sind:<br/><b>1, 1, 2, 3, 5, 8, 13, ...</b><br/>
+		</div>
+	</p>
+
+	<h2>Beispiel</h2>
+	<p>	
+		Wir wollen das n&auml;chste Element dieser Reihe berechnen:
+		<div class="info">
+			<b>Reihe:</b> 1, 1, <b>?</b>
+		</div>
+		Das n&auml;chste Element l&auml;sst sich aus der Summe seiner beiden Vorg&auml;nger berechnen:
+		<div class="info">
+			1 + 1 = 2<br>
+			<b>Reihe:</b> 1, 1, <b>2</b>
+		</div>
+		So setzt sich die Reihe fort:
+		<div class="info">
+			1 + 2 = 3<br>
+			<b>Reihe:</b> 1, 1, 2, <b>3</b><hr>
+			2 + 3 = 5<br>
+			<b>Reihe:</b> 1, 1, 2, 3, <b>5</b><hr>
+			3 + 5 = 8<br>
+			<b>Reihe:</b> 1, 1, 2, 3, 5, <b>8</b>
+		</div>
+	</p>
+
+	<h2>Aufgabe</h2>
+	<p>
+		Speichere die ersten <b>15</b> Elemente der Fibonacci-Reihe in ein Array. Gib das Ergebnis aus, um die Aufgabe abzuschließen.
+	</p>
+
+	<h2>Hinweis</h2>
+	<p>
+		Ein Array kann mit dem Befehl <b>printArray</b> ausgegeben werden. Dabei ist <b>a</b> das Array und <b>n</b> die Anzahl der Elemente des Arrays.
+		<div class="code">
+			int a[n];
+			printArray(a, n);
+		</div>
+		F&uuml;r diesen Befehl muss die Bibliothek <b>array.h</b> eingebunden werden.
+		<div class="code">
+			#include &lt;array.h&gt;
+		</div>
+	<p>
+ </body>

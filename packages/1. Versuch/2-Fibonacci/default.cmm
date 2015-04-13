@@ -1,0 +1,13 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <array.h>
+
+void main(){
+	
+	int array[15];
+
+	// Die Fibonacci-Reihe in das Array speichern
+
+	//Das Array ausgeben
+	printArray(array, 15);
+}

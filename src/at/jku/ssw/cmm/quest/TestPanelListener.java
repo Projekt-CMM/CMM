@@ -3,7 +3,6 @@ package at.jku.ssw.cmm.quest;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.profile.Quest;
@@ -50,7 +49,6 @@ public class TestPanelListener implements MouseListener, TestReply {
 		
 		//No reference -> can not test
 		if( !quest.isRef()){
-			this.testPanel.output("[ERROR] Quest incomplete: no reference file");
 			this.main.getRightPanel().setFailedMode();
 			return;
 		}
@@ -58,7 +56,7 @@ public class TestPanelListener implements MouseListener, TestReply {
 		this.testPanel.reset();
 		
 		String[] ignore = {"\n", ",", ";"};
-		QuestTester qt = new QuestTester((TestReply)this,
+		QuestTester qt = new QuestTester((TestReply)this, this.main,
 				new File("packages" + File.separator + quest.getPackagePath() + File.separator + quest.getQuestPath() + File.separator + Quest.FILE_INPUT_CMM),
 				new File("packages" + File.separator + quest.getPackagePath() + File.separator + quest.getQuestPath() + File.separator + Quest.FILE_REF),
 				main.getSettings().hasCMMFilePath() ? new File(main.getSettings().getCMMFilePath()) : main.getLeftPanel().getSourceCode(),
@@ -74,21 +72,6 @@ public class TestPanelListener implements MouseListener, TestReply {
 	public void mousePressed(MouseEvent e) {}
 	@Override
 	public void mouseReleased(MouseEvent e) {}
-
-	@Override
-	public void output(final String msg) {
-		
-		try {
-			java.awt.EventQueue.invokeAndWait(new Runnable() {
-				public void run() {
-					testPanel.output(msg);
-				}
-			});
-		} catch (InvocationTargetException | InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
 	@Override
 	public void finished(final QuestMatchError e) {
@@ -113,8 +96,34 @@ public class TestPanelListener implements MouseListener, TestReply {
 				//Test failed
 				else{
 					main.getRightPanel().setFailedMode();
-					testPanel.output(e.getMessage());
 				}
+			}
+		});
+	}
+
+	@Override
+	public void setInputData(final String data) {
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+					main.getRightPanel().getTestPanel().setParamText(data, 0);
+			}
+		});
+	}
+
+	@Override
+	public void setCorrectOutput(final String data) {
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				main.getRightPanel().getTestPanel().setParamText(data, 1);
+			}
+		});
+	}
+
+	@Override
+	public void setUserOutput(final String data) {
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				main.getRightPanel().getTestPanel().setParamText(data, 2);
 			}
 		});
 	}
