@@ -24,6 +24,7 @@ public class TreeTableListener {
 			System.out.println("Mouse klicked: " + path);
 			if(mainSelection != null){
 				mainSelection.setPath(path);
+				mainSelection.getGUImain().getRightPanel().getTestPanel().getOpenPackageButton().setEnabled(true);
 				mainSelection.changetoQuestTable();
 				System.out.println("Selection repainted!");
 				

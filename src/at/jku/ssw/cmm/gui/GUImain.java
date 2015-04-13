@@ -348,6 +348,8 @@ public class GUImain {
 		return this.rightPanelControl;
 	}
 
+	private GUIquestSelection questSelection;
+	
 	/**
 	 * Invokes the Quest GUI window
 	 */
@@ -364,10 +366,16 @@ public class GUImain {
 		}
 
 		// Ignoring Quest GUI if there is no active Profile
-		if (this.getSettings().getProfile() != null)
-			new GUIquestSelection(this, this.rightPanelControl.getTestPanel()).init();
+		if (this.getSettings().getProfile() != null){
+			if(questSelection == null)
+				questSelection = new GUIquestSelection(this, this.rightPanelControl.getTestPanel());
+			questSelection.init();
+		}
 		
-		
+	}
+	
+	public GUIquestSelection getGUIquestSelection(){
+		return questSelection;
 	}
 
 	/**

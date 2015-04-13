@@ -151,6 +151,10 @@ public class GUIquestSelection {
         return jDescPane;
 	}
 	
+	public String getPath(){
+		return path;
+	}
+	
 	public JPanel inittable(){
 		jTablePanel = new JPanel();
 		jTablePanel.setLayout(new BorderLayout()); 
