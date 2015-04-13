@@ -42,6 +42,8 @@ public class GUITestPanel {
 	private JTextField[] jParamFields;
 	
 	private JProgressBar jProgressTest;
+	private JTextArea jResultInfo = new JTextArea();
+
 	private JButton jButtonTest;
 	
 	public void init( JPanel panel ){
@@ -51,7 +53,7 @@ public class GUITestPanel {
 		cp.setLayout(new BorderLayout());
 		this.initControlPanel();
 		this.initQuestPanel();
-		this.initResultPanel();
+		//this.initResultPanel();
 	}
 	
 	private void initQuestPanel(){
@@ -68,20 +70,34 @@ public class GUITestPanel {
 		this.cp.add(questPanel, BorderLayout.CENTER);
 	}
 	
+	private JButton openPackageButton;
+	
+	public JButton getOpenPackageButton(){
+		return openPackageButton;
+	}
+	
 	/**
 	 * Quest Control Panel
 	 */
 	private void initControlPanel(){
 		JButton testButton = new JButton(_("Run Test"));
-		JButton openPackage = new JButton(_("Package"));
+		openPackageButton = new JButton(_("Package"));
+		openPackageButton.setEnabled(false);
+		
 		JButton openAllPackages = new JButton(_("All Packages"));
 		
 		JPanel controlPanel = new JPanel();
 		controlPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 		controlPanel.setBorder(new TitledBorder(_("Test")));
 		
+		ControlPanelListener l = new ControlPanelListener(main);
+		openPackageButton.addMouseListener(l.openPackageListener);
+		openAllPackages.addMouseListener(l.openAllPackageListener);
+		
+		testButton.addMouseListener(new TestPanelListener(this.main, this));
+		
 		controlPanel.add(testButton);
-		controlPanel.add(openPackage);
+		controlPanel.add(openPackageButton);
 		controlPanel.add(openAllPackages);
 		
 		controlPanel.setPreferredSize(new Dimension(0,90));
@@ -90,6 +106,7 @@ public class GUITestPanel {
 		this.cp.add(controlPanel, BorderLayout.NORTH);
 	}
 	
+	@Deprecated
 	private void initResultPanel(){
 		this.resultPanel = new JPanel();
 		this.resultPanel.setBorder(new TitledBorder(_("Test Parameters")));
