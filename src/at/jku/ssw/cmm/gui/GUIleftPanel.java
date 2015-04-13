@@ -54,6 +54,9 @@ import javax.swing.text.StyleContext;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+import at.jku.ssw.cmm.DebugShell;
+import at.jku.ssw.cmm.DebugShell.Area;
+import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gui.debug.ErrorMessage;
 import at.jku.ssw.cmm.gui.event.CursorListener;
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
@@ -244,7 +247,8 @@ public class GUIleftPanel {
 				this.jSourcePane.setText(FileManagerCode.readSourceCode(new File(
 						this.main.getSettings().getCMMFilePath())));
 			} catch (IOException e) {
-				new ErrorMessage().showErrorMessage(jFrame, "#2011", main.getSettings().getLanguage());
+				//new ErrorMessage().showErrorMessage(jFrame, "#2011", main.getSettings().getLanguage());
+				DebugShell.out(State.WARNING, Area.SYSTEM, "Could not open latest file edited");
 			}
 			//TODO prevent source code panel from undoing setText
 			//TODO clear undo list when loading new file

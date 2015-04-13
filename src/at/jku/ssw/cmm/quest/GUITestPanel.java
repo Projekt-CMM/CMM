@@ -3,6 +3,8 @@ package at.jku.ssw.cmm.quest;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
