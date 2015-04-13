@@ -343,6 +343,7 @@ public class Parser {
 			   SemErr("variable assigment is not allowed in struct"); 
 		}
 		Expect(9);
+		Expect(12);
 		type.fields = tab.curScope.locals;
 		// copy size
 		                                        type.size = tab.curScope.size;

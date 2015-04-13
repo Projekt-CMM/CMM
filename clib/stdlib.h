@@ -18,12 +18,21 @@ string library ftoa(float f);
 int library atoi(string s);
 float library atof(string s);
 
+int abs (int n);
+
 int library rand();
 void library srand (int seed);
 
 //------------------- variable declarations
 
 int library __cur_rand_generator_state__;
+
+//------------------- type declarations
+
+struct div_t {
+	int quot;
+	int rem;
+};
 
 //------------------- declarations
 
@@ -36,13 +45,13 @@ string library itoa(int x) {
     char ch;
     int y = x;
       
-    if(x == 0) {
+    if(x == 0)
         return "0";
-    } else {
+    else {
         // y has to be positive
-        if(y < 0) {
+        if(y < 0)
             y *= -1;
-        }
+
         // calculate characters
         while(y != 0) {
             ch = (char)((y%10)+'0');
@@ -50,9 +59,8 @@ string library itoa(int x) {
             y /= 10;
         }
         // add minus-sign at begin of string if required
-        if(x < 0) {
+        if(x < 0)
             s = '-' + s;
-        }
     }
     
     // return string
@@ -69,9 +77,9 @@ string library ftoa(float f) {
     string s = itoa((int) f);
     s += '.';
     // f has to be positive
-	if(f < 0) {
+	if(f < 0)
 	    f *= -1;
-	}
+
     // calculate decimal places
     int n = 0;
     while(n <= 4) {
@@ -201,10 +209,20 @@ float library atof(string s) {
     	    	break;
     	}
 
-    	ret *= pow(10, exponent*exponentMultpl);
+    	ret *= ipow(10, exponent*exponentMultpl);
     }
 
     return ret*multpl;
+}
+
+/** Returns the absolute value of parameter n
+ *
+ */
+int abs (int n) {
+	if(n >= 0)
+		return n;
+	else
+		return -1*n;
 }
 
 /** get random number

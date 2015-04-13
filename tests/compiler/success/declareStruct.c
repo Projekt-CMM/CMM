@@ -7,7 +7,7 @@
 
 struct Point {
 	int x, y;
-}
+};
 
 Point p;
 

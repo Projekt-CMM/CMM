@@ -435,7 +435,7 @@ ident                               (.  // insert the struct in the current scop
                                         if(e!=null) 
                                             SemErr("variable assigment is not allowed in struct"); .)
 } 
-"}"                                 (.  // copy variables from local scope int struct
+"}" ";"                             (.  // copy variables from local scope int struct
                                         type.fields = tab.curScope.locals;
                                         // copy size
                                         

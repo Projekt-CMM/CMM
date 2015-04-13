@@ -6,7 +6,7 @@
 */
 
 struct Point {
-}
+};
 
 void main() {
 
