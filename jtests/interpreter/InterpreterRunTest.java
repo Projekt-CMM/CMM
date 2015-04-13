@@ -281,7 +281,7 @@ public class InterpreterRunTest implements StdInOut {
 	@Test(timeout=1000)
 	public void testInitStruct() throws Exception {
 		// simple struct
-		runCode("struct Point {int x, y;} "
+		runCode("struct Point {int x, y;};"
 				+ "void main() {"
 				+ "  Point p;"
 				+ "  p.x = 10;"
@@ -293,7 +293,7 @@ public class InterpreterRunTest implements StdInOut {
 		// empty struct
 		try {
 			runCode("struct Point {"
-					+ "}"
+					+ "};"
 					+ "void main() {"
 					+ "}");
 			fail("CompilerException not thrown");
@@ -304,7 +304,7 @@ public class InterpreterRunTest implements StdInOut {
 			runCode("struct Point {"
 					+ "  int x, y;"
 					+ "  Point p;"
-					+ "}"
+					+ "};"
 					+ "void main() {"
 					+ "}");
 			fail("CompilerException not thrown");
@@ -671,7 +671,7 @@ public class InterpreterRunTest implements StdInOut {
 		assertEquals(output, "1 0 1");
 		
 		// access bool inside struct
-		runCode("struct Point { bool x; bool y; }"
+		runCode("struct Point { bool x; bool y; };"
 				+ "void main() {"
 				+ "  Point p;"
 				+ "  p.x = true;"
@@ -837,7 +837,7 @@ public class InterpreterRunTest implements StdInOut {
 		assertEquals(output, "0 1");
 		
 		// access int inside struct
-		runCode("struct Point { int x; int y; }"
+		runCode("struct Point { int x; int y; };"
 				+ "void main() {"
 				+ "  Point p;"
 				+ "  p.x = 5;"
@@ -993,7 +993,7 @@ public class InterpreterRunTest implements StdInOut {
 		assertEquals(Float.parseFloat(output), 12, 0.001);
 
 		// access float inside struct
-		runCode("struct Point { float x; float y; }"
+		runCode("struct Point { float x; float y; };"
 				+ "void main() {"
 				+ "  Point p;"
 				+ "  p.x = 123.456;"
@@ -1124,7 +1124,7 @@ public class InterpreterRunTest implements StdInOut {
 		assertEquals(output, "d");
 		
 		// access char inside struct
-		runCode("struct Point { char x; char y; }"
+		runCode("struct Point { char x; char y; };"
 				+ "void main() {"
 				+ "  Point p;"
 				+ "  p.x = 'X';"
@@ -1338,7 +1338,7 @@ public class InterpreterRunTest implements StdInOut {
 		assertEquals(output, "cz");
 
 		// access string inside struct
-		runCode("struct Point { string x; string y; }"
+		runCode("struct Point { string x; string y; };"
 				+ "void main() {"
 				+ "  Point p;"
 				+ "  p.x = \"xX\";"
@@ -1760,7 +1760,7 @@ public class InterpreterRunTest implements StdInOut {
 		assertEquals(output, "Hello");
 		
 		// struct reference
-		runCode("struct Point{int x,y;}"
+		runCode("struct Point{int x,y;};"
 				+ "void foo(Point p) {"
 				+ "  printf(\"%d %d\", p.x, p.y);"
 				+ "}"
@@ -1831,7 +1831,7 @@ public class InterpreterRunTest implements StdInOut {
 		assertEquals(output, "foo_ref");
 		
 		// struct reference
-		runCode("struct Point{int x,y;}"
+		runCode("struct Point{int x,y;};"
 				+ "void foo(Point &p) {"
 				+ "  p.x = 5;"
 				+ "  p.y = 11;"

@@ -18,12 +18,21 @@ string library ftoa(float f);
 int library atoi(string s);
 float library atof(string s);
 
+int abs (int n);
+
 int library rand();
 void library srand (int seed);
 
 //------------------- variable declarations
 
 int library __cur_rand_generator_state__;
+
+//------------------- type declarations
+
+struct div_t {
+	int quot;
+	int rem;
+};
 
 //------------------- declarations
 
@@ -205,6 +214,16 @@ float library atof(string s) {
     }
 
     return ret*multpl;
+}
+
+/** Returns the absolute value of parameter n
+ *
+ */
+int abs (int n) {
+	if(n >= 0)
+		return n;
+	else
+		return -1*n;
 }
 
 /** get random number
