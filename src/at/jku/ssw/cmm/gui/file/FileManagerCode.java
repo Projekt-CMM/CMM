@@ -86,8 +86,7 @@ public class FileManagerCode {
 	 *         failed
 	 * @throws IOException
 	 */
-	public static String readSourceCode(File fileName) throws IOException {
-
+	public static String readSourceCode(File fileName) throws IOException { 
 		BufferedReader file;
 		String line;
 		String code = null;

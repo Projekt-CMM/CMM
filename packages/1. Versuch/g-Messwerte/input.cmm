@@ -1,0 +1,12 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void main() {
+
+	srand(time());
+	int i;
+	
+	for( i = 0; i < 30; i++ ) {
+		printf("%f, ", (float)rand()/(float)rand());
+	}
+}
