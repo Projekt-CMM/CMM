@@ -57,7 +57,6 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import at.jku.ssw.cmm.DebugShell;
 import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
-import at.jku.ssw.cmm.gui.debug.ErrorMessage;
 import at.jku.ssw.cmm.gui.event.CursorListener;
 import at.jku.ssw.cmm.gui.event.SourceCodeListener;
 import at.jku.ssw.cmm.gui.event.SourcePaneListener;
@@ -246,14 +245,15 @@ public class GUIleftPanel {
 			try {
 				this.jSourcePane.setText(FileManagerCode.readSourceCode(new File(
 						this.main.getSettings().getCMMFilePath())));
+				this.jInputPane.setText(FileManagerCode.readInputData(new File(
+						this.main.getSettings().getCMMFilePath())));
 			} catch (IOException e) {
 				//new ErrorMessage().showErrorMessage(jFrame, "#2011", main.getSettings().getLanguage());
 				DebugShell.out(State.WARNING, Area.SYSTEM, "Could not open latest file edited");
+				this.main.getSettings().setCMMFilePath(null);
 			}
 			//TODO prevent source code panel from undoing setText
 			//TODO clear undo list when loading new file
-			this.jInputPane.setText(FileManagerCode.readInputData(new File(
-					this.main.getSettings().getCMMFilePath())));
 		}
 
 		// Variable initialization
