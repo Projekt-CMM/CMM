@@ -45,13 +45,13 @@ string library itoa(int x) {
     char ch;
     int y = x;
       
-    if(x == 0) {
+    if(x == 0)
         return "0";
-    } else {
+    else {
         // y has to be positive
-        if(y < 0) {
+        if(y < 0)
             y *= -1;
-        }
+
         // calculate characters
         while(y != 0) {
             ch = (char)((y%10)+'0');
@@ -59,9 +59,8 @@ string library itoa(int x) {
             y /= 10;
         }
         // add minus-sign at begin of string if required
-        if(x < 0) {
+        if(x < 0)
             s = '-' + s;
-        }
     }
     
     // return string
@@ -78,9 +77,9 @@ string library ftoa(float f) {
     string s = itoa((int) f);
     s += '.';
     // f has to be positive
-	if(f < 0) {
+	if(f < 0)
 	    f *= -1;
-	}
+
     // calculate decimal places
     int n = 0;
     while(n <= 4) {

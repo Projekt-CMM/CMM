@@ -40,8 +40,8 @@ const float library HUGE_VAL    = 1.E+2000000;  //-- positive infinity.
 
 float library acos(float x);
 float library asin(float x);
-float library atan(float x);
-float library atan2(float y, float x);
+float library atan(float x);  // TODO
+float library atan2(float y, float x);  // TODO
 float library ceil(float x);
 float library cos(float x);
 float library cosh(float x);
@@ -50,11 +50,11 @@ int library fak(int x);
 float library fabs(float x);
 float library floor(float x);
 float library fmod(float x, float y);
-float library frexp(float x);
+//float library frexp(float x);  // TODO
 float library ldexp(float x, int y);
 float library log(float x);
 float library log10(float x);
-float library modf();  // TODO
+//float library modf();  // TODO
 float library pow(float x, float y);
 float library ipow(float x, int y);
 float library sin(float x);
@@ -66,12 +66,21 @@ float library tanh(float x);
 
 //------------------- declarations
 
-// Arkuskosinus \arccos x
-// https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
+/** Arkuskosinus \arccos x
+ *
+ * @working yes
+ *
+ * https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
+ * http://www.cplusplus.com/reference/cmath/acos/
+ */
 float library acos(float x) {
-    float result;
-    result = M_PI_2-asin(x);
-    result -= result*(int)((result)/M_PI);
+	if(x < -1 || x > 1)
+		__assert__(false, "math.h::acos: parameter has to be between -1 and +1");
+
+    float result = M_PI_2-asin(x);
+
+    result -= result*(int)(result/M_PI);
+
     return result; // TODO
 }
 
@@ -80,35 +89,47 @@ float library acos(float x) {
  * @working yes
  *
  * https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
+ * http://www.cplusplus.com/reference/cmath/asin/
  */
 float library asin(float x) {
-    float result;
-    int n;
-    result = 0;
-    n=0;
+	if(x < -1 || x > 1)
+		__assert__(false, "math.h::asin: parameter has to be between -1 and +1");
+
+    float result = 0;
+    int n = 0;
+
     while(n<=6) { // TODO
         result += fak(2*n)/(ipow(4,n)*ipow(fak(n),2)*(2*n+1))*ipow(x, 2*n+1);
-        n += 1;
+        n++;
     }
     return result; // TODO
 }
 
-// Arkustangens 	\arctan x
-// https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
+/** Arkustangens 	\arctan x
+ *
+ * @working partly
+ *
+ * https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
+ * http://www.cplusplus.com/reference/cmath/atan/
+ */
 float library atan(float x) {
-    float result;
-    int n;
-    result = 0;
-    n=0;
+    float result = 0;
+    int n = 0;
+
     while(n<=6) { // TODO
         result += ipow(-1,n)*1/(2*n+1)*ipow(x,2*n+1);
-        n += 1;
+        n++;
     }
     return result;  // TODO
 }
 
-// „Arkustangens“ mit zwei Argumenten 	\operatorname{atan2}(y, x)
-// https://en.wikipedia.org/wiki/Atan2#Definition_and_computation
+/** „Arkustangens“ mit zwei Argumenten 	\operatorname{atan2}(y, x)
+ *
+ * @working no (probably partly)
+ *
+ * https://en.wikipedia.org/wiki/Atan2#Definition_and_computation
+ * http://www.cplusplus.com/reference/cmath/atan2/
+ */
 float library atan2(float y, float x) {
     return (2*atan(y/(sqrt(ipow(x,2)+ipow(y,2))+x)));
 }
@@ -116,6 +137,8 @@ float library atan2(float y, float x) {
 /** Aufrundungsfunktion 	\lceil x \rceil
  *
  * @working yes
+ *
+ * http://www.cplusplus.com/reference/cmath/ceil/
  */
 float library ceil(float x) {
     int xAsInt = x;
@@ -131,44 +154,52 @@ float library ceil(float x) {
  * @working yes
  *
  * https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
+ * http://www.cplusplus.com/reference/cmath/cos/
  */
 float library cos(float x) {
+    float result = 0;
+    int n = 0;
     x = fmod(x, M_PI);
-    float result;
-    int n;
-    result = 0;
-    n=0;
+
     while(n<=6) {
         result += ipow(-1.,n) * ipow(x,2*n)/fak(2*n);
-        n += 1;
+        n++;
     }
     return result;
 }
 
-// Kosinus Hyperbolicus 	\cosh x
-// https://de.wikipedia.org/wiki/Sinus_Hyperbolicus_und_Kosinus_Hyperbolicus#Reihenentwicklungen
+/** Kosinus Hyperbolicus 	\cosh x
+ *
+ * @working yes
+ *
+ * https://de.wikipedia.org/wiki/Sinus_Hyperbolicus_und_Kosinus_Hyperbolicus#Reihenentwicklungen
+ * http://www.cplusplus.com/reference/cmath/cosh/
+ */
 float library cosh(float x) {
-    float result;
-    int n;
-    result = 0;
-    n=0;
+    float result = 0;
+    int n = 0;
+
     while(n<=6) { // TODO
         result += ipow(x,2*n) / fak(2*n);
-        n += 1;
+        n++;
     }
     return result;
 }
 
-// Exponentialfunktion 	e^x
-// https://de.wikipedia.org/wiki/Taylorreihe#Exponentialfunktionen_und_Logarithmen
+/** Exponentialfunktion 	e^x
+ *
+ * @working yes
+ *
+ * https://de.wikipedia.org/wiki/Taylorreihe#Exponentialfunktionen_und_Logarithmen
+ * http://www.cplusplus.com/reference/cmath/exp/
+ */
 float library exp(float x) {
-    float result;
-    int n;
-    result = 0;
-    n=0;
+    float result = 0;
+    int n = 0;
+
     while(n<=6) { // TODO
         result += ipow(x,n)/fak(n);
-        n += 1;
+        n++;
     }
     return result;
 }
@@ -178,57 +209,84 @@ float library exp(float x) {
  * @working yes
  */
 int library fak(int x) {
-    int result, n;
-    result = 1;
-    n = 1;
+    int result = 1, n = 1;
+
     while(n <= x) {
         result *= n;
-        n += 1;    
+        n++;
     }
     return result;
 }
 
-// Betragsfunktion |x|
+/** Betragsfunktion |x|
+ *
+ * @working yes
+ *
+ * http://www.cplusplus.com/reference/cmath/fabs/
+ */
 float library fabs(float x) {
-    if(x >= 0) {
+    if(x >= 0)
         return x;    
-    } else {
+    else
         return x * -1;
-    }
 }
 
-// Ganzteilfunktion 	\lfloor x \rfloor
+/** Ganzteilfunktion 	\lfloor x \rfloor
+ *
+ * @working yes
+ *
+ * http://www.cplusplus.com/reference/cmath/floor/
+ */
 float library floor(float x) {
     int xAsInt = x;
-    if(xAsInt <= x) {
+    if(xAsInt <= x)
         return (float)((int)x);
-    } else {
+    else
         return (float)((int)x)-1;
-    }
 }
 
 /** Führt die Modulo Funktion für Gleitkommazahlen durch 	x \bmod y
  *
  * @working yes
+ *
+ * http://www.cplusplus.com/reference/cmath/fmod/
  */
 float library fmod(float x, float y) {
     x -= y*floor((x)/y);
     return x;
 }
 
-// Teilt eine Gleitkommazahl in Faktor und Potenz mit der Basis 2 auf 	
-float library frexp(float x) {
+/** Teilt eine Gleitkommazahl in Faktor und Potenz mit der Basis 2 auf
+ *
+ * @working no
+ *
+ * http://www.cplusplus.com/reference/cmath/frexp/
+ */
+/*float library frexp(float x) {
     return 0.;
-}
+}*/
 
-// Multipliziert den ersten Parameter mit 2 um den zweiten Parameter potenziert 	x 2^y
+/** Multipliziert den ersten Parameter mit 2 um den zweiten Parameter potenziert 	x 2^y
+ *
+ * @working yes
+ *
+ * http://www.cplusplus.com/reference/cmath/ldexp/
+ */
 float library ldexp(float x, int y) {
     return pow(x*2,y);
 }
 
-// Natürlicher Logarithmus 	\ln x
-// http://fiziko.bureau42.com/teaching_tidbits/manual_logarithms.pdf
+/** Natürlicher Logarithmus 	\ln x
+ *
+ * @working yes
+ *
+ * http://fiziko.bureau42.com/teaching_tidbits/manual_logarithms.pdf
+ * http://www.cplusplus.com/reference/cmath/log/
+ */
 float library log(float x) {
+	if(x < 0)
+		__assert__(false, "math.h::log: parameter has to be positive");
+
 	float result = 0;
 	int n = 1;
 	// taylor expansion is only working from 0 <= x <= 2
@@ -243,34 +301,52 @@ float library log(float x) {
 	return result;
 }
 
-// Logarithmus zur Basis 10 	\log_{10} x
+/** Logarithmus zur Basis 10 	\log_{10} x
+ *
+ * @working yes
+ *
+ * http://www.cplusplus.com/reference/cmath/log10/
+ */
 float library log10(float x) {
+	if(x < 0)
+		__assert__(false, "math.h::log10: parameter has to be positive");
+
 	return log(x)/M_LN10;
 }
 
-// Teilt eine Gleitkommazahl in zwei Zahlen auf, vor und nach dem Komma
-float library modf() {
+/** Teilt eine Gleitkommazahl in zwei Zahlen auf, vor und nach dem Komma
+ *
+ * @working no
+ *
+ * http://www.cplusplus.com/reference/cmath/modf/
+ */
+/*float library modf() {
     return 0.; // TODO
-}
+}*/
 
 /** Potenziert ersten mit dem zweiten Parameter 	x^y
+ *
+ * @working yes
+ *
+ * http://www.cplusplus.com/reference/cmath/pow/
+ */
+float library pow(float x, float y) {
+	return exp(y * log(x));
+}
+
+/** Potenziert ersten mit dem zweiten Parameter 	x^(int)y
  *
  * @working yes
  *
  * https://de.wikipedia.org/wiki/Bin%C3%A4re_Exponentiation
  * http://www.programminglogic.com/fast-exponentiation-algorithms/
  */
-float library pow(float x, float y) {
-	return exp(y * log(x));
-}
-
 float library ipow(float x, int y) {
 	// if potence is negative, using 1/(x^(-y))
 	if(y < 0)
 		return 1/ipow(x, -1*y);
 
-    float result;
-    result = 1;
+    float result = 1;
 
     while (y != 0) {
         if (y&1 == 1) {
@@ -287,54 +363,83 @@ float library ipow(float x, int y) {
  * @working yes
  *
  * https://de.wikipedia.org/wiki/Taylorreihe#Trigonometrische_Funktionen
+ * http://www.cplusplus.com/reference/cmath/sin/
  */
 float library sin(float x) {
+    float result = 0;
+    int n = 0;
+
     x = fmod(x, M_PI);
-    float result;
-    int n;
-    result = 0;
-    n=0;
-    while(n<=6) {
+
+    while(n<=5) {
         result += ipow(-1.,n) * ipow(x,2*n+1)/fak(2*n+1);
-        n += 1;
+        n++;
     }
     return result;
 }
 
-// Sinus Hyperbolicus 	\sinh x
-// https://de.wikipedia.org/wiki/Sinus_Hyperbolicus_und_Kosinus_Hyperbolicus#Reihenentwicklungen
+/** Sinus Hyperbolicus 	\sinh x
+ *
+ * @working yes
+ *
+ * https://de.wikipedia.org/wiki/Sinus_Hyperbolicus_und_Kosinus_Hyperbolicus#Reihenentwicklungen
+ * http://www.cplusplus.com/reference/cmath/sinh/
+ */
 float library sinh(float x) {
-    float result;
-    int n;
-    result = 0;
-    n=0;
-    while(n<=6) { // TODO
+    float result = 0;
+    int n = 0;
+
+    while(n<=5) { // TODO
         result += ipow(x,2*n+1) / fak(2*n+1);
-        n += 1;
+        n++;
     }
     return result;
 }
 
-// Quadratwurzel 	\sqrt x
-// https://de.wikipedia.org/wiki/Babylonisches_Wurzelziehen
+/** Quadratwurzel 	\sqrt x
+ *
+ * @working no // TODO
+ *
+ * https://de.wikipedia.org/wiki/Babylonisches_Wurzelziehen
+ * http://www.cplusplus.com/reference/cmath/sqrt/
+ */
 float library sqrt(float x) {
-    float xn;
-    int n;
-    xn = (x+1)/2; // TODO
-    n = 0;
+    float xn = (x+1)/2;
+    int n = 0;
+
     while(n<=6) {
         xn += (xn + (x/xn)) / 2;
-        n += 1;
+        n++;
     }
     return xn;
 }
 
-// Tangens 	\tan x
+/** Tangens 	\tan x
+ *
+ * @working no // TODO
+ *
+ * https://de.wikipedia.org/wiki/Tangens_und_Kotangens#Reihenentwicklung
+ * http://www.cplusplus.com/reference/cmath/tan/
+ */
 float library tan(float x) {
-    return 0.;
+	float result = 0;
+	int n = 1;
+	// https://en.wikipedia.org/wiki/Bernoulli_number
+	float bernoulli_number[6] = {1/6, -1/30, 1/42, -1/30, 5/66, -691/2730};
+
+	while(n<=5) { // TODO
+		result += (ipow(-1,n-1)*ipow(2,2*n)*(ipow(2,2*n)-1)*bernoulli_number[n-1])/fak(2*n)*ipow(x,2*n-1);
+		n++;
+	}
+	return result;
 }
 
-// Tangens Hyperbolicus 	\tanh x
+/** Tangens Hyperbolicus 	\tanh x
+ *
+ * @working no // TODO
+ *
+ * http://www.cplusplus.com/reference/cmath/tanh/
+ */
 float library tanh(float x) {
     return 0.;
 }
