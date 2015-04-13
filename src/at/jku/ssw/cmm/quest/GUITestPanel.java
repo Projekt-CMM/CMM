@@ -4,6 +4,7 @@ import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -46,7 +47,7 @@ public class GUITestPanel {
 		
 		cp.setBorder(new EmptyBorder(5, 5, 5, 5));
 		cp.setLayout(new BorderLayout());
-		
+		this.initControlPanel();
 		this.initQuestPanel();
 		this.initResultPanel();
 	}
@@ -63,6 +64,28 @@ public class GUITestPanel {
 		
 		this.questPanel.add(scrollPane, BorderLayout.CENTER);
 		this.cp.add(questPanel, BorderLayout.CENTER);
+	}
+	
+	/**
+	 * Quest Control Panel
+	 */
+	private void initControlPanel(){
+		JButton testButton = new JButton(_("Run Test"));
+		JButton openPackage = new JButton(_("Package"));
+		JButton openAllPackages = new JButton(_("All Packages"));
+		
+		JPanel controlPanel = new JPanel();
+		controlPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		controlPanel.setBorder(new TitledBorder(_("Test")));
+		
+		controlPanel.add(testButton);
+		controlPanel.add(openPackage);
+		controlPanel.add(openAllPackages);
+		
+		controlPanel.setPreferredSize(new Dimension(0,90));
+		controlPanel.setMinimumSize(new Dimension(0,50));
+		
+		this.cp.add(controlPanel, BorderLayout.NORTH);
 	}
 	
 	private void initResultPanel(){
