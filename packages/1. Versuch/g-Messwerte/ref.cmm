@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <conio.h>
+
+void main() {
+
+	float f;
+	float small = 0, big = 0, avg = 0;
+	int i;
+
+	for( i = 0; i < 30; i++ ) {
+		f = atof(scanf());
+		avg += f;
+		if( i == 0 || i < small )
+			small = i;
+		if( i == 0 || i > big )
+			big = i;
+	}
+
+	avg /= 30;
+
+	printf("Kleinste: %f\nGroesste: %f\nDurchschnitt: %f\n", small, big, avg);
+}

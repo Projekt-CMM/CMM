@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <array.h>
+
+void main(){
+	
+	// Das Array
+	int array [15];
+
+	// Variable für den Durchschnitt
+	float durchschnitt;
+
+	// Eingabedaten einlesen
+	readIntArray(array, 15);
+
+	
+	//...
+
+	//Ausgabe der Lösung
+	printf("Der Notendurchschnitt ist: %f", durchschnitt);
+}

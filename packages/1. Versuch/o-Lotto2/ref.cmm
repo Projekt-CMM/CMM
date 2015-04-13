@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <array.h>
+
+void main() {
+	srand(atoi(scanf()));
+
+	int i, n, a[6];
+	for( i = 0; i < 6; i++ ) {
+
+		for( a[i] = 0; a[i] == 0; ){
+			a[i] = (rand()%45)+1;
+			for( n = 0; n < i-1; n++ ) {
+				if( a[n] == a[i] )
+					a[i] = 0;
+			}
+		}
+	}
+
+	printIntArray(a, 6);
+}

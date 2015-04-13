@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<head>
+	<title>BeispielQuest</title>
+</head>
+<body>
+	<h1>Messwerte</h1>
+	<h2>Aufgabe</h2>
+	<p>
+		Erstelle ein C-Programm, das vom Benutzer bis zu <b>30</b> Messwerte (Gleitpunktzahlen) einlesen kann. Im
+Anschluss sollen jeweils der <b>größte</b> und der <b>kleinste</b> Wert und der <b>arithmetische Mittelwert</b> dieser Messreihe
+ausgegeben werden.
+		<br/>
+		Format der Ausgabe:
+		<div class="code">
+			Kleinste: 0.01
+			Groesste: 10.34
+			Durchschnitt: 4.42
+		</div>
+	</p>
+	<h2>Hinweise</h2>
+	<p>
+		In C Compact gibt es den Datentyp <b>double</b> nicht. Verwende <b>float</b> f&uuml;r die Messwerte. <br/>
+		Den arithmetischen Mittelwert (Durchschnitt) einer Zahlenmenge erh&auml;lst du, indem du alle Elemente addierst und das Ergebnis dann duch die Anzahl der Elemente (n) dividierst:
+		<div class="center">
+			<img src="images/formel.png"><br />
+		</div>
+		Eine Zahl kann dem Befehl readFloatArray eingelesen werden. Dabei ist <b>a</b> das Array und <b>n</b> die Anzahl der Elemente des Arrays.
+		<div class="code">
+			readFloatArray(a, n);
+		</div>
+		F&uuml;r diesen Befehl muss die Bibliothek <b>array.h</b> eingebunden werden.
+		<div class="code">
+			#include &lt;array.h&gt;
+		</div>
+	</p>
+ </body>

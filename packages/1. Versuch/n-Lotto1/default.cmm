@@ -3,7 +3,8 @@
 #include <array.h>
 
 void main(){
+	srand(atoi(scanf)));
 	
-	//Das Array
-	int array[100];
+	// Array für die Lottozahlen
+	int zahlen[6];
 }

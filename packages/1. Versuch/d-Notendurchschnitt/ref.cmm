@@ -9,5 +9,5 @@ void main(){
 		result+=atoi(scanf());
 	}
 	result = result/15;
-	printf("%f", result);
+	printf("Der Notendurchschnitt ist: %f", result);
 }

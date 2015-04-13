@@ -1,0 +1,17 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Anzahl der Messwerte
+const int nWerte = 30;
+
+void main() {
+	
+	// Array für die Messwerte
+	float messwerte[nWerte];
+
+	// Messwerte einlesen
+	readFloatArray(messwerte, nWerte);
+
+	//...
+}
+

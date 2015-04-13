@@ -9,5 +9,5 @@ void main(){
 	// Die Fibonacci-Reihe in das Array speichern
 
 	//Das Array ausgeben
-	printArray(array, 15);
+	printIntArray(array, 15);
 }
