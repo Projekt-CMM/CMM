@@ -55,7 +55,8 @@ float library ldexp(float x, int y);
 float library log(float x);
 float library log10(float x);
 float library modf();  // TODO
-float library pow(float x, int y);
+float library pow(float x, float y);
+float library ipow(float x, int y);
 float library sin(float x);
 float library sinh(float x);
 float library sqrt(float x);
@@ -86,7 +87,7 @@ float library asin(float x) {
     result = 0;
     n=0;
     while(n<=6) { // TODO
-        result += fak(2*n)/(pow(4,n)*pow(fak(n),2)*(2*n+1))*pow(x, 2*n+1);
+        result += fak(2*n)/(ipow(4,n)*ipow(fak(n),2)*(2*n+1))*ipow(x, 2*n+1);
         n += 1;
     }
     return result; // TODO
@@ -100,7 +101,7 @@ float library atan(float x) {
     result = 0;
     n=0;
     while(n<=6) { // TODO
-        result += pow(-1,n)*1/(2*n+1)*pow(x,2*n+1);
+        result += ipow(-1,n)*1/(2*n+1)*ipow(x,2*n+1);
         n += 1;
     }
     return result;  // TODO
@@ -109,7 +110,7 @@ float library atan(float x) {
 // „Arkustangens“ mit zwei Argumenten 	\operatorname{atan2}(y, x)
 // https://en.wikipedia.org/wiki/Atan2#Definition_and_computation
 float library atan2(float y, float x) {
-    return (2*atan(y/(sqrt(pow(x,2)+pow(y,2))+x)));
+    return (2*atan(y/(sqrt(ipow(x,2)+ipow(y,2))+x)));
 }
 
 /** Aufrundungsfunktion 	\lceil x \rceil
@@ -138,7 +139,7 @@ float library cos(float x) {
     result = 0;
     n=0;
     while(n<=6) {
-        result += pow(-1.,n) * pow(x,2*n)/fak(2*n);
+        result += ipow(-1.,n) * ipow(x,2*n)/fak(2*n);
         n += 1;
     }
     return result;
@@ -152,7 +153,7 @@ float library cosh(float x) {
     result = 0;
     n=0;
     while(n<=6) { // TODO
-        result += pow(x,2*n) / fak(2*n);
+        result += ipow(x,2*n) / fak(2*n);
         n += 1;
     }
     return result;
@@ -166,7 +167,7 @@ float library exp(float x) {
     result = 0;
     n=0;
     while(n<=6) { // TODO
-        result += pow(x,n)/fak(n);
+        result += ipow(x,n)/fak(n);
         n += 1;
     }
     return result;
@@ -226,12 +227,25 @@ float library ldexp(float x, int y) {
 }
 
 // Natürlicher Logarithmus 	\ln x
+// http://fiziko.bureau42.com/teaching_tidbits/manual_logarithms.pdf
 float library log(float x) {
-    return 0.;
+	float result = 0;
+	int n = 1;
+	// taylor expansion is only working from 0 <= x <= 2
+	if(x >= 2) {
+		result = -1. * log(1./x);
+	} else {
+		while(n<=30) { // TODO
+			result += ipow(-1, n+1) * (ipow(x-1.,n)/n);
+			n++;
+		}
+	}
+	return result;
 }
 
 // Logarithmus zur Basis 10 	\log_{10} x
 float library log10(float x) {
+	return log(x)/M_LN10;
 }
 
 // Teilt eine Gleitkommazahl in zwei Zahlen auf, vor und nach dem Komma
@@ -246,9 +260,14 @@ float library modf() {
  * https://de.wikipedia.org/wiki/Bin%C3%A4re_Exponentiation
  * http://www.programminglogic.com/fast-exponentiation-algorithms/
  */
-float library pow(float x, int y)  {
+float library pow(float x, float y) {
+	return exp(y * log(x));
+}
+
+float library ipow(float x, int y) {
+	// if potence is negative, using 1/(x^(-y))
 	if(y < 0)
-		__assert__(false, "negativ exponent not supported yet in math:pow()!");
+		return 1/ipow(x, -1*y);
 
     float result;
     result = 1;
@@ -276,7 +295,7 @@ float library sin(float x) {
     result = 0;
     n=0;
     while(n<=6) {
-        result += pow(-1.,n) * pow(x,2*n+1)/fak(2*n+1);
+        result += ipow(-1.,n) * ipow(x,2*n+1)/fak(2*n+1);
         n += 1;
     }
     return result;
@@ -290,7 +309,7 @@ float library sinh(float x) {
     result = 0;
     n=0;
     while(n<=6) { // TODO
-        result += pow(x,2*n+1) / fak(2*n+1);
+        result += ipow(x,2*n+1) / fak(2*n+1);
         n += 1;
     }
     return result;

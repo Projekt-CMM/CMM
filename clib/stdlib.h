@@ -201,7 +201,7 @@ float library atof(string s) {
     	    	break;
     	}
 
-    	ret *= pow(10, exponent*exponentMultpl);
+    	ret *= ipow(10, exponent*exponentMultpl);
     }
 
     return ret*multpl;
