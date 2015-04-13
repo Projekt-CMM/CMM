@@ -1,0 +1,13 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <array.h>
+
+void main(){
+	int x, y;
+	for( y = 0; y < 10; y++ ) {
+		for( x = 0; x < 10; x++ ) {
+			printf("%d ", (y*10+x)*10);
+		}
+		print('\n');
+	}
+}
