@@ -26,6 +26,7 @@ import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.BorderLayout;
 
 import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -76,6 +77,7 @@ public class GUIProperties {
 		mainPanel.add(this.initCodeSizePanel());
 		mainPanel.add(this.initTextSizePanel());
 		mainPanel.add(this.initDescSizePanel());
+		mainPanel.add(this.initDebugOptionPanel());
 		// mainPanel.add(this.initVarSizePanel());
 		this.updateTextSize();
 
@@ -153,11 +155,12 @@ public class GUIProperties {
 		jSliderText.setMajorTickSpacing(1);
 		jSliderText.setMinorTickSpacing(1);
 		jSliderText.setPaintTicks(true);
-		jSliderText.setValue(this.main.getSettings().getDescSize()+1);
+		jSliderText.setValue(this.main.getSettings().getDescSize() + 1);
 		jSliderText.addChangeListener(this.listener.sliderDescListener);
 		panel.add(jSliderText);
 
-		this.jLabelDesc = new JLabel(this.getDescSizeName(this.main.getSettings().getDescSize()));
+		this.jLabelDesc = new JLabel(this.getDescSizeName(this.main
+				.getSettings().getDescSize()));
 		panel.add(this.jLabelDesc);
 
 		// Return ready panel
@@ -180,6 +183,26 @@ public class GUIProperties {
 		combo.addActionListener(new PropertiesComboListener(this.main));
 
 		panel.add(combo, BorderLayout.CENTER);
+
+		// Return ready panel
+		return panel;
+	}
+
+	private JPanel initDebugOptionPanel() {
+
+		// Initialize panel
+		JPanel panel = new JPanel();
+
+		// Panel properties
+		panel.setBorder(new TitledBorder(_("Debugger options")));
+		panel.setLayout(new BorderLayout());
+
+		// Combo box
+		JCheckBox popupCheck = new JCheckBox(_("Show return values"));
+		popupCheck.setSelected(this.main.getSettings().getShowReturn());
+		popupCheck.addActionListener(new PropertiesActionListener(this.main));
+
+		panel.add(popupCheck, BorderLayout.CENTER);
 
 		// Return ready panel
 		return panel;
@@ -223,22 +246,31 @@ public class GUIProperties {
 				+ " " + _("pixels"));
 		this.jLabelText.setText("" + this.main.getSettings().getTextSize()
 				+ " " + _("pixels"));
-		this.jLabelDesc.setText(this.getDescSizeName(this.main.getSettings().getDescSize()));
+		this.jLabelDesc.setText(this.getDescSizeName(this.main.getSettings()
+				.getDescSize()));
 		// this.jLabelVar.setText("" + this.main.getSettings().getVarSize() +
 		// " " + _("pixels"));
 	}
-	
-	private String getDescSizeName( int size ) {
-		
+
+	private String getDescSizeName(int size) {
+
 		String name = _("medium");
-		
-		switch(size) {
-		case -1:	name = _("small"); break;
-		case 1:		name = _("large"); break;
-		case 2:		name = _("extra large"); break;
-		case 3:		name = _("giant"); break;
+
+		switch (size) {
+		case -1:
+			name = _("small");
+			break;
+		case 1:
+			name = _("large");
+			break;
+		case 2:
+			name = _("extra large");
+			break;
+		case 3:
+			name = _("giant");
+			break;
 		}
-		
+
 		return name;
 	}
 

@@ -1,0 +1,11 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void main() {
+	srand(time());
+
+	int i;
+	for( i = 0; i < 15; i++ ) {
+		printf("%d ", rand()%5+1);
+	}
+}

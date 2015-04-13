@@ -1,0 +1,13 @@
+#include <stdio.h>
+#include <stdlib.h>
+// Hauptklasse, hier wird das Hauptprogramm geschrieben
+void main(){
+
+	int i;
+	float result=0;
+	for( i = 0; i < 15; i++ ) {
+		result+=atoi(scanf());
+	}
+	result = result/15;
+	printf("%f", result);
+}

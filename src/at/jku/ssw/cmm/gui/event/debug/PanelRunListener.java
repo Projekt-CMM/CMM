@@ -130,11 +130,6 @@ public class PanelRunListener implements Debugger {
 	private Timer timer;
 	
 	/**
-	 * The last node in the user's source code which has been processed
-	 */
-	private Node lastNode;
-	
-	/**
 	 * The start address of the previous node's function
 	 */
 	private int lastAdress;
@@ -156,7 +151,6 @@ public class PanelRunListener implements Debugger {
 
 		// Read debugger speed slider (useful for initializing
 		this.delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
-		this.lastNode = null;
 		
 		// Reset last address
 		this.lastAdress = 0;
@@ -224,7 +218,7 @@ public class PanelRunListener implements Debugger {
 		}
 		
 		//if( arg0.kind == Node.RETURN ) {}
-		if( arg0 != null && arg0.kind == Node.CALL && this.master.getControlPanel().showReturnValues() ) {
+		if( arg0 != null && arg0.type != null && arg0.kind == Node.CALL && this.main.getSettings().getShowReturn() ) {
 			String rval = "";
 			
 			switch(arg0.type.kind){
@@ -248,15 +242,12 @@ public class PanelRunListener implements Debugger {
 			if( r != null ) {
 				int px = (int) r.getX() + (int)main.getLeftPanel().getSourcePane().getLocationOnScreen().getX() - (int)main.getJFrame().getLocationOnScreen().getX();
 				int py = (int) r.getY() + (int)main.getLeftPanel().getSourcePane().getLocationOnScreen().getY() - (int)main.getJFrame().getLocationOnScreen().getY();
-				ComponentPopup.createPopUp(main, ep, (int)(px + 0.5*(arg0.col+3)*main.getSettings().getCodeSize()), py-(int)(main.getSettings().getCodeSize()*0.9), rval.length()>10?130:80, rval.length()>10?70:35, ImagePopup.SOUTH);
-			
+				//ComponentPopup.createPopUp(main, ep, (int)(px + 0.5*(arg0.col+3)*main.getSettings().getCodeSize()), py-(int)(main.getSettings().getCodeSize()*0.9), rval.length()>10?130:80, rval.length()>10?70:35, ImagePopup.SOUTH);
+				ComponentPopup.createPopUp(main, ep, (int)(px - 2*main.getSettings().getCodeSize()), py-(int)(main.getSettings().getCodeSize()*1.8), rval.length()>10?130:80, rval.length()>10?70:35, ImagePopup.SOUTH);
 				// Set debugger to pause mode
 				this.master.setPauseMode();
 			}
 		}
-		
-		// Update latest node's line
-		this.lastNode = arg0;
 
 		/* --- Quick run mode --- */
 		if( this.isRunMode() && this.delay == 0 ){
@@ -392,10 +383,6 @@ public class PanelRunListener implements Debugger {
 		else if (isPauseMode()) {
 			master.setRunMode();
 			userReply();
-			
-			//Remove already passed breakpoints if in fast run mode
-			if( delay == 0 )
-				master.updateBreakPoints(lastNode.line);
 		}
 	}
 
@@ -511,10 +498,6 @@ public class PanelRunListener implements Debugger {
 
 			delay = master.getControlPanel().getInterpreterSpeedSlider() - 1;
 			master.getControlPanel().setTimerLabelSeconds(delayScale(delay));
-			
-			if( delay == 0 && lastNode != null ){
-				master.updateBreakPoints(lastNode.line);
-			}
 		}
 	};
 	

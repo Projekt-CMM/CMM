@@ -3,17 +3,17 @@ package at.jku.ssw.cmm.quest;
 import static at.jku.ssw.cmm.gettext.Language._;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
@@ -39,7 +39,9 @@ public class GUITestPanel {
 	
 	private JPanel resultPanel;
 	
-	private JTextArea jResultInfo;
+	private JTextField[] jParamFields;
+	
+	private JProgressBar jProgressTest;
 	private JButton jButtonTest;
 	
 	public void init( JPanel panel ){
@@ -90,30 +92,44 @@ public class GUITestPanel {
 	
 	private void initResultPanel(){
 		this.resultPanel = new JPanel();
-		this.resultPanel.setBorder(new TitledBorder(_("Test")));
+		this.resultPanel.setBorder(new TitledBorder(_("Test Parameters")));
 		this.resultPanel.setLayout(new BoxLayout(this.resultPanel, BoxLayout.PAGE_AXIS));
 		
-		this.jResultInfo = new JTextArea();
-		this.jResultInfo.setEditable(false);
-		JScrollPane scrollPane = new JScrollPane(jResultInfo);
-		scrollPane.setMinimumSize(new Dimension(10, 100));
-		scrollPane.setPreferredSize(new Dimension(100, 105));
-		scrollPane.setMaximumSize(new Dimension(1000, 110));
-		this.resultPanel.add(scrollPane);//, BorderLayout.CENTER);
+		this.jParamFields = new JTextField[3];
+		
+		this.resultPanel.add(new JLabel(_("Input Data")));
+		this.jParamFields[0] = new JTextField();
+		this.resultPanel.add(this.jParamFields[0]);
+		
+		this.resultPanel.add(new JLabel(_("Correct Output")));
+		this.jParamFields[1] = new JTextField();
+		this.resultPanel.add(this.jParamFields[1]);
+		
+		this.resultPanel.add(new JLabel(_("Your Program's Output")));
+		this.jParamFields[2] = new JTextField();
+		this.resultPanel.add(this.jParamFields[2]);
+		
+		this.resultPanel.add(new JLabel(_("Test Progress")));
+		this.jProgressTest = new JProgressBar();
+		this.resultPanel.add(this.jProgressTest);
 		
 		this.jButtonTest = new JButton(_("Run test"));
 		this.jButtonTest.addMouseListener(new TestPanelListener(this.main, this));
+		this.resultPanel.add(this.jButtonTest);
 		
-		this.resultPanel.add(this.jButtonTest);//, BorderLayout.PAGE_END);
 		this.cp.add(resultPanel, BorderLayout.PAGE_END);
 	}
 	
-	public void output(String s){
-		this.jResultInfo.setText(this.jResultInfo.getText() + "\n" + s);
+	public void reset() {
+		for( int i = 0; i < 3; i++ )
+			this.jParamFields[i].setText("");
+		this.jProgressTest.setValue(0);
 	}
 	
-	public void reset() {
-		this.jResultInfo.setText("");
+	public void setParamText(String text, int index) {
+		if( index > 0 && index < 3 )
+			this.jParamFields[index].setText(text);
+		this.jProgressTest.setValue((index+1)*34);
 	}
 
 	public void setDescDoc(String html, String css) {

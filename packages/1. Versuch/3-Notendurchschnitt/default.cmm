@@ -1,0 +1,9 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <array.h>
+
+void main(){
+	
+	int array [15];
+	readArray(array, 15);
+}

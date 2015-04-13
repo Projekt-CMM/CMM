@@ -96,6 +96,7 @@ public class GUImainSettings {
 	private static final String XML_VARSIZE = "varsize";
 	private static final String XML_VAROFFSET = "varoffset";
 	private static final String XML_DESCSIZE = "descsize";
+	private static final String XML_SHOWRETURN = "returnpopup";
 
 	/**
 	 * The maximum number of recently opened files which are saved in the
@@ -140,6 +141,7 @@ public class GUImainSettings {
 	private int varSize;
 	private int varOffset;
 	private int descSize;
+	private boolean showReturn;
 	
 	/**
 	 * Reference to the Profile Panel
@@ -260,6 +262,10 @@ public class GUImainSettings {
 		this.descSize = size;
 	}
 	
+	public void setShowReturn(boolean showReturn) {
+		this.showReturn = showReturn;
+	}
+	
 	public void setProfilePanel2(ProfilePanel2 profilePanel){
 		this.profilePanel = profilePanel;
 	}
@@ -282,6 +288,10 @@ public class GUImainSettings {
 	
 	public int getDescSize() {
 		return this.descSize;
+	}
+	
+	public boolean getShowReturn() {
+		return this.showReturn;
 	}
 
 	/**
@@ -328,6 +338,7 @@ public class GUImainSettings {
 		this.varOffset = 0;
 		this.varSize = 16;
 		this.descSize = 0;
+		this.showReturn = false;
 
 		try {
 			// Load settings.xml file
@@ -418,6 +429,9 @@ public class GUImainSettings {
 		// Is font size of description documents?
 		else if (node.getNodeName().equals(XML_DESCSIZE))
 			this.descSize = Integer.parseInt(node.getTextContent());
+		// Is show return flag?
+		else if(node.getNodeName().equals(XML_SHOWRETURN))
+			this.showReturn = Boolean.parseBoolean(node.getTextContent());
 
 		// Iterate through child nodes
 		NodeList nodeList = node.getChildNodes();
@@ -469,6 +483,8 @@ public class GUImainSettings {
 					+ this.varOffset));
 			properties.appendChild(writeNode(doc, XML_DESCSIZE, ""
 					+ this.descSize));
+			properties.appendChild(writeNode(doc, XML_SHOWRETURN, ""
+					+ this.showReturn));
 
 			// Add properties to main root element
 			mainRootElement.appendChild(properties);
@@ -478,7 +494,7 @@ public class GUImainSettings {
 
 				// Only add a certain number of recent files
 				for (int i = 0; i < this.lastFiles.size() && i < MAX_LASTFILES; i++) {
-					if (!this.lastFiles.get(i).equals(_("Unnamed")) && this.getProfile() == null)
+					if (!this.lastFiles.get(i).equals(_("Unnamed")))
 						mainRootElement.appendChild(writeNode(doc, XML_LASTFILE, this.lastFiles.get(i)));
 				}
 			}

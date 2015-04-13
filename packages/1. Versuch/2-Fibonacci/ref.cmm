@@ -1,0 +1,14 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void main() {
+	int a1 = 1, a2 = 1, helper, i;
+
+	printf("1, 1, ");
+	for( i = 0; i < 13; i++ ) {
+		helper = a1 + a2;
+		printf("%d, ", helper );
+		a1 = a2;
+		a2 = helper;
+	}
+}
