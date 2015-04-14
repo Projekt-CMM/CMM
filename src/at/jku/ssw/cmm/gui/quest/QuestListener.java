@@ -40,6 +40,7 @@ public class QuestListener {
         	//Checks if the quest is locked or not
 			if(main != null && main.getCurrentQuest() != null && !main.getCurrentQuest().getState().equals(Quest.STATE_LOCKED)){
 				main.getGUImain().getSettings().getProfile().setCurrentQuest(main.getCurrentQuest());
+				main.getGUImain().getRightPanel().getTestPanel().getTestButton().setEnabled(true);
 				main.getFrame().dispose();
 				
 				Quest lastClickedQuest = main.getCurrentQuest();

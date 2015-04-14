@@ -75,24 +75,31 @@ public class GUITestPanel {
 	}
 	
 	private JButton openPackageButton;
+	private JButton testButton;
 	
 	public JButton getOpenPackageButton(){
 		return openPackageButton;
+	}
+	
+	public JButton getTestButton(){
+		return testButton;
 	}
 	
 	/**
 	 * Quest Control Panel
 	 */
 	private void initControlPanel(){
-		JButton testButton = new JButton(_("Run Test"));
+		testButton = new JButton(_("Run Test"));
 		openPackageButton = new JButton(_("Package"));
 		
 		if(main.getGUIquestSelection() == null && 
 				main.getSettings().getProfile() != null && main.getSettings().getProfile().getCurrentQuest() != null){
 			main.setnewGUIquestSelection();
-		}else
+		}else{
 			openPackageButton.setEnabled(false);
-
+			testButton.setEnabled(false);
+		}
+			
 		JButton openAllPackages = new JButton(_("All Packages"));
 		
 		JPanel controlPanel = new JPanel();

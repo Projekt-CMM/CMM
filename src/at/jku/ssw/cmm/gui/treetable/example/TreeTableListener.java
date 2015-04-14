@@ -21,7 +21,6 @@ public class TreeTableListener {
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
 			
-			System.out.println("Mouse klicked: " + path);
 			if(mainSelection != null){
 				mainSelection.setPath(path);
 				mainSelection.getGUImain().getRightPanel().getTestPanel().getOpenPackageButton().setEnabled(true);
