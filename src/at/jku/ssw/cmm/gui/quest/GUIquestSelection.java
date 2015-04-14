@@ -2,6 +2,7 @@ package at.jku.ssw.cmm.gui.quest;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
@@ -44,7 +45,7 @@ public class GUIquestSelection {
 	
 	private JScrollPane jScrollPane;
 	
-	private String path = null;
+	private String path;
 	
 	private final GUImain main;
 	private final GUITestPanel questPanel;
@@ -56,14 +57,17 @@ public class GUIquestSelection {
 	public GUIquestSelection(GUImain main,GUITestPanel questPanel){
 		this.main = main;
 		this.questPanel = questPanel;
+		
+		if(main.getSettings().getProfile().getCurrentQuest() != null) {
+			Quest q = main.getSettings().getProfile().getCurrentQuest();
+			path = q.getInitPath() + File.separator + q.getPackagePath();
+		}else
+			path = null;
 	}
 	
 	public void init(){
 		listener = new QuestListener(this,questPanel);
-		if(path != null)
-			inittable();
-		else
-			jTablePanel = new TreeTableExample(this).getTreePanel();
+		jTablePanel = new TreeTableExample(this).getTreePanel();
 		
 		initDescription();
 		initFrame();
@@ -152,6 +156,7 @@ public class GUIquestSelection {
 	}
 	
 	public String getPath(){
+		
 		return path;
 	}
 	

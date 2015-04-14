@@ -368,10 +368,14 @@ public class GUImain {
 		// Ignoring Quest GUI if there is no active Profile
 		if (this.getSettings().getProfile() != null){
 			if(questSelection == null)
-				questSelection = new GUIquestSelection(this, this.rightPanelControl.getTestPanel());
+				setnewGUIquestSelection();
 			questSelection.init();
 		}
 		
+	}
+	
+	public void setnewGUIquestSelection(){
+		this.questSelection = new GUIquestSelection(this, this.rightPanelControl.getTestPanel());
 	}
 	
 	public GUIquestSelection getGUIquestSelection(){

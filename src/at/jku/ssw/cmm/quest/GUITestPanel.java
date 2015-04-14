@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
@@ -24,6 +25,7 @@ import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.DebugShell.State;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.file.LoadStatics;
+import at.jku.ssw.cmm.profile.Quest;
 
 public class GUITestPanel {
 	
@@ -84,8 +86,13 @@ public class GUITestPanel {
 	private void initControlPanel(){
 		JButton testButton = new JButton(_("Run Test"));
 		openPackageButton = new JButton(_("Package"));
-		openPackageButton.setEnabled(false);
 		
+		if(main.getGUIquestSelection() == null && 
+				main.getSettings().getProfile() != null && main.getSettings().getProfile().getCurrentQuest() != null){
+			main.setnewGUIquestSelection();
+		}else
+			openPackageButton.setEnabled(false);
+
 		JButton openAllPackages = new JButton(_("All Packages"));
 		
 		JPanel controlPanel = new JPanel();
