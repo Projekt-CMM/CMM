@@ -57,7 +57,7 @@ public class AddProfileListener extends MouseAdapter {
 		//Getting Profile Path
 		File filePath = getPath();
 		if(filePath == null) {
-			new GUILauncherMain();
+			new GUILauncherMain(new GUImainSettings(null));
 			return;
 		}
 
@@ -67,7 +67,7 @@ public class AddProfileListener extends MouseAdapter {
 		p.setName(name);
 		
 		if(name == null) {
-			new GUILauncherMain();
+			new GUILauncherMain(new GUImainSettings(null));
 			return;
 		}
 	
@@ -85,7 +85,7 @@ public class AddProfileListener extends MouseAdapter {
         		JOptionPane.showMessageDialog(frame,"Profile was already created there","Warning:",
         			    JOptionPane.WARNING_MESSAGE);
         		
-        		new GUILauncherMain();
+        		new GUILauncherMain(new GUImainSettings(null));
         		return;
 		    }
 			

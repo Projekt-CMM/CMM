@@ -3,7 +3,7 @@
 #include <array.h>
 
 void main(){
-	srand(atoi(scanf)));
+	srand(atoi(scanf()));
 	int i;
 	for( i = 0; i < 6; i++ ) {
 		printf("%d, ", (rand()%45)+1);

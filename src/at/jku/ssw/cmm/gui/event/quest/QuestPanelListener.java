@@ -25,6 +25,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import at.jku.ssw.cmm.gui.GUImain;
+import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
 
 public class QuestPanelListener {
@@ -41,7 +42,7 @@ public class QuestPanelListener {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			main.dispose();
-			new GUILauncherMain();
+			new GUILauncherMain(new GUImainSettings(null));
 			
 		}
 
