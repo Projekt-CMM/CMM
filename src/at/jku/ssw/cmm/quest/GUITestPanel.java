@@ -30,6 +30,7 @@ public class GUITestPanel {
 	
 	public GUITestPanel( GUImain main ){
 		this.main = main;
+		this.listener = new TestPanelListener(this.main, this);
 	}
 	
 	private JPanel cp;
@@ -45,9 +46,10 @@ public class GUITestPanel {
 	private JTextField[] jParamFields;
 	
 	private JProgressBar jProgressTest;
-	private JTextArea jResultInfo = new JTextArea();
 
-	private JButton jButtonTest;
+	private JButton jButtonCancel;
+	
+	private final TestPanelListener listener;
 	
 	public void init( JPanel panel ){
 		this.cp = panel;
@@ -56,7 +58,7 @@ public class GUITestPanel {
 		cp.setLayout(new BorderLayout());
 		this.initControlPanel();
 		this.initQuestPanel();
-		//this.initResultPanel();
+		this.initResultPanel();
 	}
 	
 	private void initQuestPanel(){
@@ -97,7 +99,7 @@ public class GUITestPanel {
 		openPackageButton.addMouseListener(l.openPackageListener);
 		openAllPackages.addMouseListener(l.openAllPackageListener);
 		
-		testButton.addMouseListener(new TestPanelListener(this.main, this));
+		testButton.addMouseListener(this.listener.startListener);
 		
 		controlPanel.add(testButton);
 		controlPanel.add(openPackageButton);
@@ -109,7 +111,6 @@ public class GUITestPanel {
 		this.cp.add(controlPanel, BorderLayout.NORTH);
 	}
 	
-	@Deprecated
 	private void initResultPanel(){
 		this.resultPanel = new JPanel();
 		this.resultPanel.setBorder(new TitledBorder(_("Test Parameters")));
@@ -119,23 +120,26 @@ public class GUITestPanel {
 		
 		this.resultPanel.add(new JLabel(_("Input Data")));
 		this.jParamFields[0] = new JTextField();
+		this.jParamFields[0].setEditable(false);
 		this.resultPanel.add(this.jParamFields[0]);
 		
 		this.resultPanel.add(new JLabel(_("Correct Output")));
 		this.jParamFields[1] = new JTextField();
+		this.jParamFields[1].setEditable(false);
 		this.resultPanel.add(this.jParamFields[1]);
 		
 		this.resultPanel.add(new JLabel(_("Your Program's Output")));
 		this.jParamFields[2] = new JTextField();
+		this.jParamFields[2].setEditable(false);
 		this.resultPanel.add(this.jParamFields[2]);
 		
 		this.resultPanel.add(new JLabel(_("Test Progress")));
 		this.jProgressTest = new JProgressBar();
 		this.resultPanel.add(this.jProgressTest);
 		
-		this.jButtonTest = new JButton(_("Run test"));
-		this.jButtonTest.addMouseListener(new TestPanelListener(this.main, this));
-		this.resultPanel.add(this.jButtonTest);
+		this.jButtonCancel = new JButton(_("Cancel"));
+		this.jButtonCancel.addMouseListener(this.listener.cancelListener);
+		this.resultPanel.add(this.jButtonCancel);
 		
 		this.cp.add(resultPanel, BorderLayout.PAGE_END);
 	}

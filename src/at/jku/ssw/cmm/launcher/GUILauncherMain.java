@@ -39,36 +39,68 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
 import at.jku.ssw.cmm.gettext.Language;
+import at.jku.ssw.cmm.gui.GUIExecutable;
 import at.jku.ssw.cmm.gui.event.WindowEventListener;
 import at.jku.ssw.cmm.gui.file.LoadStatics;
+import at.jku.ssw.cmm.gui.properties.GUILanguage;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.ProfileNotFoundException;
 import at.jku.ssw.cmm.profile.XMLReadingException;
 
 
-public class GUILauncherMain extends JFrame implements ActionListener{
+public class GUILauncherMain implements ActionListener, GUIExecutable{
 	
-	private static final long serialVersionUID = 1L;
+	private JPanel jGlobalPanel;
 	
-	private final JPanel jGlobalPanel;
+	private JFrame jFrame;
 	
 	private final GUImainSettings settings;
 	
 	
 	public static void main(String[] args) {
-		new GUILauncherMain();
+		
+		GUImainSettings settings = new GUImainSettings(null);
+		
+		final GUILauncherMain app = new GUILauncherMain(settings);
+		
+		// Get the user's language
+		if( settings.getLanguage() == null ) {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					new GUILanguage((GUIExecutable)app).start();
+				}
+			});
+		}
+				
+		else {
+			// Load translations
+			Language.loadLanguage(settings.getLanguage() + ".po");
+					
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					app.start(false);
+				}
+			});
+		}
 	}
 	
 	public GUILauncherMain(GUImainSettings settings){
-		super("C Compact Launcher");
-		super.setMinimumSize(new Dimension(700,480));
-		
 		this.settings = settings;
+	}
+	
+	@Override
+	public void start(boolean test) {
+		
+		this.jFrame = new JFrame("C Compact Launcher");
+		this.jFrame.setMinimumSize(new Dimension(700,480));
+		
+		
 		
 		// Load translations
 		if( !Language.languageLoaded() )
@@ -85,15 +117,11 @@ public class GUILauncherMain extends JFrame implements ActionListener{
 		this.addProfilePanel();
 		this.addBottomPanel();	
 		
-		super.setResizable(false);
-		super.add(jGlobalPanel);
-		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		super.addWindowListener(new WindowEventListener((JFrame)this, settings));
-		super.setVisible(true);
-	}
-	
-	public GUILauncherMain(){
-		this(new GUImainSettings());
+		this.jFrame.setResizable(false);
+		this.jFrame.add(jGlobalPanel);
+		this.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.jFrame.addWindowListener(new WindowEventListener(this.jFrame, settings));
+		this.jFrame.setVisible(true);
 	}
 
 	/**
@@ -137,19 +165,19 @@ public class GUILauncherMain extends JFrame implements ActionListener{
 			
 				//creating the "find" button
 				JButton jFindProfile = new JButton(_("Find"));
-				jFindProfile.addMouseListener(new FindProfileListener((JFrame)this, settings));
+				jFindProfile.addMouseListener(new FindProfileListener(this.jFrame, settings));
 				jFindProfile.setToolTipText("<html><b>" + _("Open existing profile") + "</b><br>" +_("Open an existing profile which is not<br>listed below by selecting its directory.") + "</html>");
 				jRightButtons.add(jFindProfile);
 				
 				//creating "new" button
 				JButton jCreateProfile = new JButton(_("New"));
-				jCreateProfile.addMouseListener(new AddProfileListener((JFrame)this, settings));
+				jCreateProfile.addMouseListener(new AddProfileListener(this.jFrame, settings));
 				jCreateProfile.setToolTipText("<html><b>" + _("Create new profile") + "</b><br>" + _("Create a new profile and save it<br>anywhere on your computer.") + "</html>");
 				jRightButtons.add(jCreateProfile);
 				
 				//creating "launch without profile" button
 				JButton jBlankLaunch = new JButton(_("Launch without profile"));
-				jBlankLaunch.addMouseListener(new BlankLaunchListener((JFrame)this, settings));
+				jBlankLaunch.addMouseListener(new BlankLaunchListener(this.jFrame, settings));
 				jBlankLaunch.setToolTipText("<html><b>" + _("Launch C Compact without profile") + "</b><br>" + _("In this mode, you will not be able to do quests,<br>however you can still use all other features of C Compact.") + "</html>");
 				jRightButtons.add(jBlankLaunch);
 			
@@ -245,7 +273,7 @@ public class GUILauncherMain extends JFrame implements ActionListener{
 		else
 			profilePicPanel.add(new JLabel(LoadStatics.loadIcon(profile.getInitPath() + File.separator + profile.getProfileimage(), 200, 200)));//profilePicPanel.add(LoadStatics.loadImage(profile.getInitPath() + File.separator + profile.getProfileimage(), false, 200, 200));
 		
-		profilePicPanel.addMouseListener(new LauncherListener(settings,(JFrame)this, profile));
+		profilePicPanel.addMouseListener(new LauncherListener(settings,this.jFrame, profile));
 		profilePicPanel.setToolTipText("<html><b>" + _("Select this profile") + "</b><br>" + _("Click image to change start<br>C Compact with this profile") + "</html>");
 			
 		jProfile.add(profilePicPanel, BorderLayout.CENTER);
@@ -312,6 +340,16 @@ public class GUILauncherMain extends JFrame implements ActionListener{
 		Language.loadLanguage(settings.getLanguage() + ".po");
 		
 		this.jGlobalPanel.repaint();
+	}
+
+	@Override
+	public GUImainSettings getSettings() {
+		return this.settings;
+	}
+
+	@Override
+	public void saveAndDispose() {
+		this.jFrame.dispose();
 	}
 
 }

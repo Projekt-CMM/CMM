@@ -2,4 +2,5 @@
 <quest>
 	<title>Messwerte</title>
 	<attribute>★★☆☆☆</attribute>
+	<match>([a-zA-Z,;:\n\t])</match>
 </quest>

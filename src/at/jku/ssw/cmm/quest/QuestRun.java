@@ -36,17 +36,23 @@ public class QuestRun implements StdInOut, Debugger {
 	
 	private String inputStream;
 	private String outputStream;
+	
+	private boolean run = true;
+	
+	private Interpreter interpreter;
 
 	public String run(Tab symbolTab, String inputStream) throws RunTimeException  {
 		
 		this.inputStream = inputStream;
 		this.outputStream = "";
+		
+		this.run = true;
 
 		// Allocating memory for interpreter
 		Memory.initialize();
 		
 		// Initialize Interpreter
-		Interpreter interpreter = new Interpreter(this, this);
+		interpreter = new Interpreter(this, this);
 		
 		System.out.println("running");
 
@@ -66,7 +72,8 @@ public class QuestRun implements StdInOut, Debugger {
 	@Override
 	public boolean step(Node arg0, List<Integer> readVariables,
 			List<Integer> changedVariables) {
-		return true;
+		System.out.println("Step: " + arg0);
+		return run;
 	}
 
 	@Override
@@ -90,6 +97,10 @@ public class QuestRun implements StdInOut, Debugger {
 	@Override
 	public void out(char arg0) {
 		outputStream += arg0;
+	}
+	
+	public void stop() {
+		this.run = false;
 	}
 
 }

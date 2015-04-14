@@ -50,7 +50,6 @@ import at.jku.ssw.cmm.gui.popup.PopupCloseListener;
 import at.jku.ssw.cmm.gui.properties.GUILanguage;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.gui.quest.GUIquestSelection;
-import at.jku.ssw.cmm.launcher.GUILauncherMain;
 
 /**
  * Contains the main function which also initializes and controls the main GUI.
@@ -58,7 +57,7 @@ import at.jku.ssw.cmm.launcher.GUILauncherMain;
  * @author fabian
  *
  */
-public class GUImain {
+public class GUImain implements GUIExecutable {
 
 	/**
 	 * Launches the program and initiates the main window.
@@ -147,7 +146,7 @@ public class GUImain {
 	/**
 	 * The current version of C Compact, used as window title.
 	 */
-	public static final String VERSION = "C Compact Alpha 1.4.0";
+	public static final String VERSION = "C Compact Alpha 1.4.4";
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)
@@ -172,6 +171,7 @@ public class GUImain {
 	 * @throws InterruptedException 
 	 * @throws InvocationTargetException 
 	 */
+	@Override
 	public void start(boolean test) {
 		//Setting the last Quest of the Profile
 		settings.setCurrentQuestFile();
@@ -361,8 +361,9 @@ public class GUImain {
 		// Select Profile if there is no active Profile
 		if (this.getSettings().getProfile() == null) {
 			this.dispose();
-			new GUILauncherMain();
+			//new GUILauncherMain();
 			// selectProfile();
+			System.err.println("Trying to open quest GUI without profile");
 		}
 
 		// Ignoring Quest GUI if there is no active Profile
@@ -505,5 +506,12 @@ public class GUImain {
 	 */
 	public boolean hasAdvancedGUI() {
 		return this.settings.hasProfile();
+	}
+
+	@Override
+	public void saveAndDispose() {
+		this.getSaveManager().directSave();
+		this.getSettings().writeXMLsettings();
+		this.dispose();
 	}
 }

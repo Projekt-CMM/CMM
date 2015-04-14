@@ -26,7 +26,8 @@ public class TablePopupModel implements TableModel {
 	public int getColumnCount() {
 		
 		if( !info.isEmpty() && info.get(0) instanceof List ){
-			List<Object> l = (List)(info.get(0));
+			@SuppressWarnings("unchecked")
+			List<Object> l = (List<Object>)(info.get(0));
 			return l.size()+1;
 		}
 		else
@@ -58,7 +59,8 @@ public class TablePopupModel implements TableModel {
 		if( !info.isEmpty() && info.get(0) instanceof List && arg1 == 0 )
 			return "[" + arg0 + "]";
 		else if( info.get(0) instanceof List ){
-			List<Object> l = (List)(info.get(arg0));
+			@SuppressWarnings("unchecked")
+			List<Object> l = (List<Object>)(info.get(arg0));
 			return l.get(arg1-1);
 		}
 		else{

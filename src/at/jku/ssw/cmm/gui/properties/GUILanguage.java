@@ -15,16 +15,16 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
 import at.jku.ssw.cmm.gettext.Language;
-import at.jku.ssw.cmm.gui.GUImain;
+import at.jku.ssw.cmm.gui.GUIExecutable;
 import at.jku.ssw.cmm.gui.file.LoadStatics;
 
 public class GUILanguage implements MouseListener {
 
-	public GUILanguage(GUImain main) {
+	public GUILanguage(GUIExecutable main) {
 		this.main = main;
 	}
 
-	private final GUImain main;
+	private final GUIExecutable main;
 	
 	private JFrame jFrame;
 	
@@ -97,10 +97,7 @@ public class GUILanguage implements MouseListener {
 			this.main.start(false);
 		
 		else {
-			main.getSaveManager().directSave();
-			main.getSettings().writeXMLsettings();
-			main.dispose();
-			
+			main.saveAndDispose();
 			main.start(false);
 		}
 	}

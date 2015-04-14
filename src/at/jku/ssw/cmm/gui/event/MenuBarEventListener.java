@@ -40,6 +40,7 @@ import at.jku.ssw.cmm.gui.debug.ErrorMessage;
 import at.jku.ssw.cmm.gui.file.FileManagerCode;
 import at.jku.ssw.cmm.gui.properties.GUILanguage;
 import at.jku.ssw.cmm.gui.properties.GUIProperties;
+import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 import at.jku.ssw.cmm.launcher.GUILauncherMain;
 import at.jku.ssw.cmm.quest.importexport.ExportProfile;
 import at.jku.ssw.cmm.quest.importexport.ImportQuests;
@@ -366,7 +367,7 @@ public class MenuBarEventListener {
 			main.dispose();
 			
 			//Starting Launcher
-			new GUILauncherMain();
+			new GUILauncherMain(new GUImainSettings(null));
 		}
 	};
 	

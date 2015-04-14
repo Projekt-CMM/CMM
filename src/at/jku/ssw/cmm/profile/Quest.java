@@ -125,6 +125,10 @@ public class Quest {
 	
 	private String cmmFilePath;
 	
+	private String matcher;
+	
+	public static final String DEFAULT_MATCHER = "([,;:\n\t])";
+	
 	/**
 	 * Files and folderNames
 	 */
@@ -148,7 +152,8 @@ public class Quest {
 		XML_TOKEN = "token",
 		XML_STATE = "state",
 		XML_REWARD = "reward",
-		XML_ATTRIBUTE = "attribute";
+		XML_ATTRIBUTE = "attribute",
+		XML_MATCHER = "match";
 
 	/**
 	 * Strings for the correct State
@@ -270,6 +275,12 @@ public class Quest {
 				quest.setTitle(eElement.getElementsByTagName(Quest.XML_TITLE).item(0).getTextContent());
 				}catch(NullPointerException e){
 					//Nothing happens..
+				}
+				
+				try{
+					quest.setMatcher(eElement.getElementsByTagName(Quest.XML_MATCHER).item(0).getTextContent());
+				}catch(NullPointerException e){
+					quest.setMatcher(null);
 				}
 				
 				try{
@@ -652,6 +663,14 @@ public class Quest {
 
 	public void setDefaultCmm(boolean defaultCmm) {
 		this.defaultCmm = defaultCmm;
+	}
+	
+	public String getMatcher() {
+		return this.matcher == null ? DEFAULT_MATCHER : this.matcher;
+	}
+	
+	private void setMatcher( String matcher ) {
+		this.matcher = matcher;
 	}
 	
 /*	public boolean isOptional() {

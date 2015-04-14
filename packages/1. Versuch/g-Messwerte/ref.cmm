@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <conio.h>
+#include <stdlib.h>
 
 void main() {
 
@@ -10,13 +10,13 @@ void main() {
 	for( i = 0; i < 30; i++ ) {
 		f = atof(scanf());
 		avg += f;
-		if( i == 0 || i < small )
-			small = i;
-		if( i == 0 || i > big )
-			big = i;
+		if( i == 0 || f < small )
+			small = f;
+		if( i == 0 || f > big )
+			big = f;
 	}
 
 	avg /= 30;
 
-	printf("Kleinste: %f\nGroesste: %f\nDurchschnitt: %f\n", small, big, avg);
+	printf("Kleinste: %f\nGroesste: %f\nDurchschnitt: %f", small, big, avg);
 }

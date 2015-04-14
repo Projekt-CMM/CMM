@@ -25,6 +25,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import at.jku.ssw.cmm.DebugShell;
+import at.jku.ssw.cmm.DebugShell.Area;
 import at.jku.ssw.cmm.compiler.Tab;
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.debug.CompileManager;
@@ -36,8 +38,10 @@ public class QuestTester extends Thread {
 	public static final String VALIDTYPES = "";
 
 	public static final int STEPS = 5;
+	
+	private boolean run = true;
 
-	public QuestTester(TestReply testReply, GUImain main, File generator, File verifier, Object usercode, Object ignore) {
+	public QuestTester(TestReply testReply, GUImain main, File generator, File verifier, Object usercode, String ignore) {
 		
 		this.testReply = testReply;
 		this.main = main;
@@ -56,7 +60,7 @@ public class QuestTester extends Thread {
 	private final File generator;
 	private final File verifier;
 	private final Object usercode;
-	private final Object ignore;	//TODO user regex
+	private final String ignore;	//TODO user regex
 
 	private final QuestRun questRun;
 
@@ -77,7 +81,7 @@ public class QuestTester extends Thread {
 		}
 
 		// Double-check if everything worked
-		if (inputData == null){
+		if (inputData == null || !run){
 			testReply.finished(new QuestMatchError("Unknown error after reading input data", null));
 			return;
 		}
@@ -89,6 +93,10 @@ public class QuestTester extends Thread {
 		Tab symbTab;
 		try {
 			symbTab = compile(this.verifier, false);
+			if( !run ) {
+				testReply.finished(new QuestMatchError("Canceled", null));
+				return;
+			}
 			if( symbTab != null )
 				referenceOutput = this.questRun.run(symbTab, inputData);
 		} catch (RunTimeException e) {
@@ -100,11 +108,19 @@ public class QuestTester extends Thread {
 		}
 		
 		testReply.setCorrectOutput(referenceOutput);
+		if( !run ) {
+			testReply.finished(new QuestMatchError("Canceled", null));
+			return;
+		}
 
 		// ----- COMPILE USER'S PROGRAM  -----
 		String userOutput = null;
 		try {
 			symbTab = compile(this.usercode, true);
+			if( !run ) {
+				testReply.finished(new QuestMatchError("Canceled", null));
+				return;
+			}
 			if( symbTab != null )
 				userOutput = this.questRun.run(symbTab, inputData);
 		} catch (final RunTimeException e) {
@@ -131,6 +147,10 @@ public class QuestTester extends Thread {
 		}
 		
 		testReply.setUserOutput(userOutput);
+		if( !run ) {
+			testReply.finished(new QuestMatchError("Canceled", null));
+			return;
+		}
 		
 		// Double-check if output data is available
 		if( referenceOutput == null || userOutput == null ){
@@ -144,6 +164,7 @@ public class QuestTester extends Thread {
 		else
 			testReply.finished(new QuestMatchError("Output does not match", null));
 		
+		DebugShell.out(DebugShell.State.LOG, Area.SYSTEM, "Quest tester thread exited");
 		return;
 	}
 
@@ -203,22 +224,19 @@ public class QuestTester extends Thread {
 		if( this.ignore == null )
 			return s1.equals(s2);
 		
-		if( this.ignore instanceof String[] ) {
-			String[] ignore = (String[]) this.ignore;
-			// Remove signs which shall be ignored
-			if( ignore != null ){
-				for( String c : ignore ){
-					s1 = s1.replace(c, "");
-					s2 = s2.replace(c, "");
-				}
-			}
-			return s1.equals(s2);
-		}
-		if( this.ignore instanceof String ) {
-			s1 = s1.replaceAll((String) this.ignore, "");
-			s2 = s2.replaceAll((String) this.ignore, "");
-			return s1.equals(s2);
-		}
-		throw new IllegalArgumentException();
+		s1 = s1.replaceAll(ignore, " ");
+		s1 = s1.replaceAll("([\\s]{1,})", " ");
+		s1 = s1.replaceAll("(^\\s)|($\\s)", "");
+		
+		s2 = s2.replaceAll(ignore, " ");
+		s2 = s2.replaceAll("([\\s]{1,})", " ");
+		s2 = s2.replaceAll("(^\\s)|($\\s)", "");
+		
+		return s1.equals(s2);
+	}
+	
+	public synchronized void cancel() {
+		this.run = false;
+		this.questRun.stop();
 	}
 }
