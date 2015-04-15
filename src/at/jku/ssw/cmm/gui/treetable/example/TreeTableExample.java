@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.io.File;
 import java.util.List;
 
+import static at.jku.ssw.cmm.gettext.Language._;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -32,15 +34,13 @@ public class TreeTableExample {
 	private TreeTable<DataNodeExample> treeTable;
 	private TreeTableDataModel<DataNodeExample> treeTableModel;
 	
-	private static final String[] columnNames = { "Name", "Progress", "\u2692" };
+	private static final String[] columnNames = { _("Name"), _("Progress"), "\u2692" };
 	private static final Class<?>[] columnTypes = { TreeTableModel.class, JProgressBar.class, JButton.class };
 
 	public JPanel getTreePanel(){
 		
-		System.out.println("Starting treeTable example");
-		
 		//Create the tree
-		DataNodeExample root = new DataNodeExample("Packages", "", "");
+		DataNodeExample root = new DataNodeExample(_("Packages"), "", "");
 		
 		root = getFolderView("packages", root,0);
 		//root = addNodes(null, new File("packages"));
@@ -48,6 +48,8 @@ public class TreeTableExample {
 		treeTableModel = new TreeTableDataModel<>(root, columnNames, columnTypes);
 		
 		treeTable = new TreeTable<>(treeTableModel);
+		
+		treeTable.getCellRenderer().setRootVisible(false);
 		
 		//Setting the Mouse Listener
 		treeTable.addMouseListener(new PackagesTableMouseListener(main, treeTable));
@@ -78,7 +80,7 @@ public class TreeTableExample {
 		
 		JPanel master = new JPanel();
 		master.setLayout(new BorderLayout());
-		master.setBorder(new TitledBorder("Tree table"));
+		master.setBorder(new TitledBorder(_("Packages")));
 		
 		master.add(p, BorderLayout.CENTER);
 		master.setMinimumSize(new Dimension(400,0));

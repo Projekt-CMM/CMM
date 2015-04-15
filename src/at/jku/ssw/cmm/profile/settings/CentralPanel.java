@@ -26,6 +26,7 @@ import static at.jku.ssw.cmm.gettext.Language._;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -131,20 +132,46 @@ public class CentralPanel extends JPanel {
 		
 		List<Token> allTokens = Profile.readProfileTokens(profile);
 		
-		if(allTokens != null)
-		for(Token t : allTokens){
-			panel = new JPanel();
-			panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-			panel.add(new JLabel(LoadStatics.loadIcon(t.getInitPath() + Quest.sep + t.getImagePath(), 32, 32)));
-			panel.setToolTipText("<html><b><p width=\"200\">" + t.getDescription()
-					+ "</p></b></html>");
-			
-			panel.add(new JLabel(t.getTitle()));
-			model.addElement(panel);
-			
+		
+		if(allTokens != null){
+			List<Token> addedTokens = new ArrayList<Token>();
+			for(Token t : allTokens){
+				if(testToken(addedTokens, t)){
+					panel = new JPanel();
+					panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+					panel.add(new JLabel(LoadStatics.loadIcon(t.getInitPath() + Quest.sep + t.getImagePath(), 32, 32)));
+					panel.setToolTipText("<html><b><p width=\"200\">" + t.getDescription()
+							+ "</p></b></html>");
+					
+					panel.add(new JLabel(t.getTitle()));
+					model.addElement(panel);
+				}
+				
+			}
 		}
 		
 		return model;
+	}
+	
+	/**
+	 * Test if the Token is already in the List
+	 * @param tl
+	 * @param t
+	 * @return
+	 */
+	private static boolean testToken(List<Token> tl, Token t){
+		
+		if(tl != null && t != null){
+		for(Token token: tl){
+			if(token.getInitPath().equals(t.getInitPath())
+					&&token.getRelPath().equals(t.getRelPath())){
+				return false;
+			}
+		}}
+		
+		tl.add(t);
+
+		return true;
 	}
 
 }

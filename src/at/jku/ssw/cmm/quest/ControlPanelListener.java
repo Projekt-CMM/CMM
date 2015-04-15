@@ -25,7 +25,10 @@ public class ControlPanelListener {
 	public MouseAdapter openPackageListener = new MouseAdapter(){
 		@Override
 		public void mouseClicked(java.awt.event.MouseEvent e) {
-			if(main.getGUIquestSelection() != null && main.getGUIquestSelection().getPath() != null){
+
+			if((main.getGUIquestSelection() != null && main.getGUIquestSelection().getPath() != null)){
+								
+				System.out.println(main.getGUIquestSelection().getPath());
 				main.startQuestGUI();
 				main.getGUIquestSelection().changetoQuestTable();
 			}

@@ -67,7 +67,8 @@ public class ImportQuests {
 		        "ZIP-Files", "zip");
 		    chooser.setFileFilter(filter);
 		    
-		    chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		    //chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		    chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		    
 		    int returnVal = chooser.showOpenDialog(chooser);
 		    if(returnVal == JFileChooser.APPROVE_OPTION) {
