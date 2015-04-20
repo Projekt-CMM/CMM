@@ -61,7 +61,7 @@ public class GUITestPanel {
 		this.initQuestPanel();
 		this.initResultPanel();
 		
-		this.getTestButton().setVisible(false);
+		this.getTestButton().setEnabled(false);
 	}
 	
 	private void initQuestPanel(){
