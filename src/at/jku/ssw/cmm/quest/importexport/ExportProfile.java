@@ -13,6 +13,9 @@ import at.jku.ssw.cmm.profile.Profile;
 public class ExportProfile {
 	public static void Export(JFrame frame, Profile p){
 		File destfolder = getPath();
+		if(destfolder == null)
+			return;
+		
 		File destpath = new File(destfolder.getAbsolutePath()+File.separator+p.getName());
 		
 		for( File f : destfolder.listFiles() ) {
