@@ -147,7 +147,7 @@ public final class Interpreter {
 		//TODO add changed variable list
 		if (p.kind != Node.NOP && libraryFunctionLevel == 0 && !debugger.step(p, Memory.readVariables, Memory.changedVariables))
 			throw new AbortException();
-
+		
 		// clear ArrayLists
 		if(libraryFunctionLevel == 0) {
 			Memory.readVariables.clear();
@@ -203,9 +203,18 @@ public final class Interpreter {
 			try {
 				while (Condition(p.left)) {
 					try {
+						// TODO infinite loop in the current state
 						if(p.right != null)
 							Statement(p.right);
-						// TODO infinite loop in the current state
+						else {
+							if(libraryFunctionLevel == 0 && !debugger.step(p, Memory.readVariables, Memory.changedVariables))
+								throw new AbortException();
+							// clear ArrayLists
+							if(libraryFunctionLevel == 0) {
+								Memory.readVariables.clear();
+								Memory.changedVariables.clear();
+							}
+						}
 					} catch(ContinueException e) {
 					} finally {
 						selectCurrentLine(p);
@@ -218,9 +227,18 @@ public final class Interpreter {
 			try {
 				do
 					try {
+						// TODO infinite loop in the current state
 						if(p.right != null)
 							Statement(p.right);
-						// TODO infinite loop in the current state
+						else {
+							if(libraryFunctionLevel == 0 && !debugger.step(p, Memory.readVariables, Memory.changedVariables))
+								throw new AbortException();
+							// clear ArrayLists
+							if(libraryFunctionLevel == 0) {
+								Memory.readVariables.clear();
+								Memory.changedVariables.clear();
+							}
+						}
 					} catch(ContinueException e) {
 					} finally {
 						selectCurrentLine(p);
@@ -242,8 +260,18 @@ public final class Interpreter {
 				Statement(p.right);
 				while (Condition(p.left)) {
 					try {
+						// TODO infinite loop in the current state
 						if(statement != null)
 							Statement(statement);
+						else {
+							if(libraryFunctionLevel == 0 && !debugger.step(p, Memory.readVariables, Memory.changedVariables))
+								throw new AbortException();
+							// clear ArrayLists
+							if(libraryFunctionLevel == 0) {
+								Memory.readVariables.clear();
+								Memory.changedVariables.clear();
+							}
+						}
 					} catch(ContinueException e) {
 					} finally {
 						selectCurrentLine(p);
