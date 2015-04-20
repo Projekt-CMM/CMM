@@ -25,6 +25,7 @@ public class TreeTableListener {
 			if(mainSelection != null){
 				mainSelection.setPath(path);
 				mainSelection.getGUImain().getRightPanel().getTestPanel().getOpenPackageButton().setEnabled(true);
+				mainSelection.getGUImain().getRightPanel().getTestPanel().setTestButtonVisible(true);
 				mainSelection.changetoQuestTable();
 				System.out.println("Selection repainted!");
 				

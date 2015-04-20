@@ -58,6 +58,8 @@ public class GUITestPanel {
 		this.initControlPanel();
 		this.initQuestPanel();
 		this.initResultPanel();
+		
+		this.setTestButtonVisible(false);
 	}
 	
 	private void initQuestPanel(){
@@ -75,16 +77,21 @@ public class GUITestPanel {
 	}
 	
 	private JButton openPackageButton;
+	private JButton jTestButton;
 	
 	public JButton getOpenPackageButton(){
 		return openPackageButton;
+	}
+	
+	public void setTestButtonVisible(boolean visible) {
+		this.jTestButton.setEnabled(visible);
 	}
 	
 	/**
 	 * Quest Control Panel
 	 */
 	private void initControlPanel(){
-		JButton testButton = new JButton(_("Run Test"));
+		jTestButton = new JButton(_("Run Test"));
 		openPackageButton = new JButton(_("Package"));
 		openPackageButton.setEnabled(false);
 		
@@ -98,9 +105,9 @@ public class GUITestPanel {
 		openPackageButton.addMouseListener(l.openPackageListener);
 		openAllPackages.addMouseListener(l.openAllPackageListener);
 		
-		testButton.addMouseListener(this.listener.startListener);
+		jTestButton.addMouseListener(this.listener.startListener);
 		
-		controlPanel.add(testButton);
+		controlPanel.add(jTestButton);
 		controlPanel.add(openPackageButton);
 		controlPanel.add(openAllPackages);
 		
