@@ -22,6 +22,8 @@
 package at.jku.ssw.cmm.compiler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /*--------------------------------------------------------------------------------
 Tab   Symbol table for C--
@@ -766,6 +768,35 @@ public class Tab {
 		for (Obj o = head; o != null; o = o.next) dumpObj(o, indent);
 	}
 
+	/**
+	 * count number of used nodes in non-library functions
+	 * 
+	 * @return node-number pairs which show how much nodes are used
+	 */
+	public Map<Integer,Integer> countNonLibraryNodes() {
+		Map<Integer,Integer> nodeCounter = new HashMap<>();
+		
+		for(Scope scp = curScope; scp != null; scp = scp.outer) {
+			for (Obj p = scp.locals; p != null ; p = p.next) {
+				if (p.kind == Obj.PROC && p.ast != null && p.library == false) {
+					Map<Integer,Integer> helpCounter = p.ast.countNodes();
+				
+					for (int key : helpCounter.keySet()) {
+						int value = 0;
+						// get current number of keys inside map
+						if(nodeCounter.containsKey(key))
+							value = nodeCounter.get(key);
+						// add new nodes
+						value += helpCounter.get(key);
+						// put new value into map
+						nodeCounter.put(key, value);
+					}
+				}
+			}
+		}
+		
+		return nodeCounter;
+	}
 	//-------------- initialization of the symbol table ------------
 
 	public Tab(Parser parser) {

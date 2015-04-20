@@ -113,6 +113,9 @@ float library asin(float x) {
  * http://www.cplusplus.com/reference/cmath/atan/
  */
 float library atan(float x) {
+	if(x < -1*M_PI_2 || x > M_PI_2)
+		__assert__(false, "math.h::atan: parameter has to be between -PI/2 and +PI/2");
+
     float result = 0;
     int n = 0;
 
@@ -416,32 +419,23 @@ float library sqrt(float x) {
 
 /** Tangens 	\tan x
  *
- * @working no // TODO
+ * @working yes
  *
  * https://de.wikipedia.org/wiki/Tangens_und_Kotangens#Reihenentwicklung
  * http://www.cplusplus.com/reference/cmath/tan/
  */
 float library tan(float x) {
-	float result = 0;
-	int n = 1;
-	// https://en.wikipedia.org/wiki/Bernoulli_number
-	float bernoulli_number[6] = {1/6, -1/30, 1/42, -1/30, 5/66, -691/2730};
-
-	while(n<=5) { // TODO
-		result += (ipow(-1,n-1)*ipow(2,2*n)*(ipow(2,2*n)-1)*bernoulli_number[n-1])/fak(2*n)*ipow(x,2*n-1);
-		n++;
-	}
-	return result;
+	return sin(x)/cos(x);
 }
 
 /** Tangens Hyperbolicus 	\tanh x
  *
- * @working no // TODO
+ * @working yes
  *
  * http://www.cplusplus.com/reference/cmath/tanh/
  */
 float library tanh(float x) {
-    return 0.;
+	return sinh(x)/cosh(x);
 }
 
 #endif /* __CLIB_MATH__ */
