@@ -268,6 +268,7 @@ public class GUIquestSelection {
 			        	else
 			        		openButton.setEnabled(false);
 			        	
+			        	
 			        }
 			        else{
 			        	setCurrentQuest(null);

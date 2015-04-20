@@ -74,8 +74,9 @@ public class QuestListener {
 	        	}
 	        	
 	        	//Updating the QuestPanelDescription
-	        	main.getGUImain().getSettings().updateDescPane(questPanel);
-        	
+	        	main.getGUImain().getSettings().updateDescPane(questPanel); 
+	        	main.getGUImain().getRightPanel().getTestPanel().getTestButton().setEnabled(true);
+
 			
 				System.out.println("Quest Selected");
 			}
