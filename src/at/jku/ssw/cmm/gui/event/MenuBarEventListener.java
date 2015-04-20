@@ -367,7 +367,7 @@ public class MenuBarEventListener {
 			main.dispose();
 			
 			//Starting Launcher
-			new GUILauncherMain(new GUImainSettings(null));
+			new GUILauncherMain(new GUImainSettings(null)).start(false);
 		}
 	};
 	

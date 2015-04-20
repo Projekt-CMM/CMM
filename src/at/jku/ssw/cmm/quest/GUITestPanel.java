@@ -60,6 +60,8 @@ public class GUITestPanel {
 		this.initControlPanel();
 		this.initQuestPanel();
 		this.initResultPanel();
+		
+		this.setTestButtonVisible(false);
 	}
 	
 	private void initQuestPanel(){
@@ -91,6 +93,7 @@ public class GUITestPanel {
 	 * Quest Control Panel
 	 */
 	private void initControlPanel(){
+
 		testButton = new JButton(_("Run Test"));
 		openPackageButton = new JButton(_("Package"));
 		
@@ -112,9 +115,9 @@ public class GUITestPanel {
 		openPackageButton.addMouseListener(l.openPackageListener);
 		openAllPackages.addMouseListener(l.openAllPackageListener);
 		
-		testButton.addMouseListener(this.listener.startListener);
+		jTestButton.addMouseListener(this.listener.startListener);
 		
-		controlPanel.add(testButton);
+		controlPanel.add(jTestButton);
 		controlPanel.add(openPackageButton);
 		controlPanel.add(openAllPackages);
 		
