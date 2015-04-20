@@ -75,7 +75,7 @@ msgstr ""
 
 #: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:214
 msgid "No recent profiles"
-msgstr "keine vergangenen Profile"
+msgstr "keine zuletzt geöffneten Profile"
 
 #: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:254
 #: src/at/jku/ssw/cmm/gui/GUIProfilePanel.java:129
