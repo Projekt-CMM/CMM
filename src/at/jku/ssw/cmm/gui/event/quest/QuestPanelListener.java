@@ -42,7 +42,7 @@ public class QuestPanelListener {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			main.dispose();
-			new GUILauncherMain(new GUImainSettings(null));
+			new GUILauncherMain(new GUImainSettings(null)).start(false);
 			
 		}
 

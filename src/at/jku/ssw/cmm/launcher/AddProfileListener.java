@@ -57,7 +57,7 @@ public class AddProfileListener extends MouseAdapter {
 		//Getting Profile Path
 		File filePath = getPath();
 		if(filePath == null) {
-			new GUILauncherMain(new GUImainSettings(null));
+			new GUILauncherMain(new GUImainSettings(null)).start(false);
 			return;
 		}
 
