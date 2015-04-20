@@ -362,7 +362,6 @@ public class MenuBarEventListener {
 		public void actionPerformed(ActionEvent arg0) {
 			
 			// ...and saved
-			main.getSaveManager().directSave();
 			main.getSettings().writeXMLsettings();
 			main.dispose();
 			
