@@ -158,7 +158,7 @@ public class GUIrightPanel {
 			this.jStatePanel.setMaximumSize(new Dimension(8000, 30));
 			this.jStateLabel = new JLabel();
 			this.jStatePanel.add(this.jStateLabel);
-			this.setSuccessMode();
+			this.setIdleMode();
 			
 			JPanel wrapper = new JPanel();
 			wrapper.setBorder(new EmptyBorder(5, 5, 0, 5));
