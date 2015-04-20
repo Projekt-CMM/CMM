@@ -222,19 +222,34 @@ public static Profile UpdateOpen(Profile profile, Quest quest){
 			package1.setQuestList(sortQuestList(packageQuests));
 			return package1;
 		}
-		
+				
 		for(Quest packageQuest : packageQuests){
 			for(Quest profileQuest : profileQuests){
 				if(profileQuest.getQuestPath().equals(packageQuest.getQuestPath()) 
 						&& profileQuest.getPackagePath().equals(packageQuest.getPackagePath())){
-					updateQuestVariables(packageQuest, profileQuest);
+					updateQuestVariables(packageQuest, profileQuest);	
 				}
+			}
+		}
+		
+		for(Quest quest: packageQuests){
+			if(quest.getPreviousFolder() != null)
+			for(Quest prevQ : packageQuests){
+				if(quest.getPreviousFolder().equals(prevQ.getQuestPath())){
+					if(prevQ.getState().equals(Quest.STATE_FINISHED)){
+						quest.setState(Quest.STATE_SELECTABLE);
+						System.err.println("Test");
+					}
+				}
+				
 			}
 		}
 		
 		
 		//Sorts the Quests and Returns it
-		package1.setQuestList(sortQuestList(packageQuests));
+		//TODO Sort on Click
+		//package1.setQuestList(sortQuestList(packageQuests));
+		
 		return package1;
 		
 	}

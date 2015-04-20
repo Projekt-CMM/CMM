@@ -120,7 +120,12 @@ public class Quest {
 	/**
 	 * Path of the Quest
 	 */
-	private String questPath;	
+	private String questPath;
+	
+	/**
+	 * Path to the previous quest package intern
+	 */
+	private String previousFolder;
 	
 	
 	private String cmmFilePath;
@@ -153,7 +158,8 @@ public class Quest {
 		XML_STATE = "state",
 		XML_REWARD = "reward",
 		XML_ATTRIBUTE = "attribute",
-		XML_MATCHER = "match";
+		XML_MATCHER = "match",
+		XML_PREVIOUS_FOLDER = "previousFolder";
 
 	/**
 	 * Strings for the correct State
@@ -284,6 +290,12 @@ public class Quest {
 				}
 				
 				try{
+					quest.setPreviousFolder(eElement.getElementsByTagName(Quest.XML_PREVIOUS_FOLDER).item(0).getTextContent());
+				}catch(NullPointerException e){
+					quest.setPreviousFolder(null);
+				}
+				
+				try{
 					String relPath = eElement.getElementsByTagName(Quest.XML_TOKEN).item(0).getTextContent();
 					String tokeninitPath = quest.getInitPath() + sep + quest.packagePath + sep + Quest.FOLDER_TOKENS;
 					
@@ -325,6 +337,9 @@ public class Quest {
 				
 			}
 		}
+		
+		if(quest.getPreviousFolder() != null)
+			quest.setState(STATE_LOCKED);
 		
 		return quest;
 		
@@ -671,6 +686,14 @@ public class Quest {
 	
 	private void setMatcher( String matcher ) {
 		this.matcher = matcher;
+	}
+
+	public String getPreviousFolder() {
+		return previousFolder;
+	}
+
+	public void setPreviousFolder(String previousFolder) {
+		this.previousFolder = previousFolder;
 	}
 	
 /*	public boolean isOptional() {
