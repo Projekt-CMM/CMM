@@ -94,7 +94,7 @@ public class MenuBarEventListener {
 	 * @param file
 	 */
 	public void newFile(File file){
-		if (main.getSettings().getCMMFilePath() != null && main.isFileChanged()) {
+		if ((main.getSettings().getCMMFilePath() != null || file != null) && main.isFileChanged()) {
 			// Custom button text
 			Object[] options = { _("Save now"), _("Proceed without saving") };
 
