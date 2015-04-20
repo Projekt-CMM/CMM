@@ -265,6 +265,8 @@ public class GUIquestSelection {
 			        	//Checks if the quest is locked or not
 			        	if(!q.getState().equals(Quest.STATE_LOCKED))
 			        		openButton.setEnabled(true);
+			        	else
+			        		openButton.setEnabled(false);
 			        	
 			        }
 			        else{
