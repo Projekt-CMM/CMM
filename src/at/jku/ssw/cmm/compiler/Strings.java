@@ -47,7 +47,8 @@ public final class Strings {
 		if(top+s.length()+1 >= data.length) {
 			char[] oldData = data;
 			data = new char[data.length+4096];
-			data = oldData.clone();
+			for(int i = 0; i < oldData.length; i++)
+				data[i] = oldData[i];
 		}
 		
 		if(!map.containsKey(s)) {
@@ -89,7 +90,7 @@ public final class Strings {
 	}
 	
 	public static boolean checkAdr(int adr) {
-		if(adr < 0 || adr > data.length) {
+		if(adr < 0 || adr >= top) {
 			return false;
 		}
 		else {
@@ -97,7 +98,7 @@ public final class Strings {
 		}
 	}
 	
-	public void dump() {
+	public static void dump() {
 		System.out.println("Strings:");
 		for(int i=0; i < top;i++) {
 			String curChar = ""+charAt(i);
@@ -119,5 +120,11 @@ public final class Strings {
 			}
 			System.out.println("  char[" + i + "]='" + curChar + "'");
 		}
+	}
+	
+	public static void clear() {
+		data = new char[4096]; // grows automatically
+		top = 0;
+		map = new HashMap<>();
 	}
 }
