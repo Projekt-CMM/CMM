@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<token>
+	<title>Hello World</title>
+	<description>Diese Auszeichnung hast du für das Lösen der Einstiegsaufgabe erhalten.</description>
+	<imagepath>images/globe.png</imagepath>
+</token>

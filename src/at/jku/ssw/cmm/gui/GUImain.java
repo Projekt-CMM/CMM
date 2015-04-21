@@ -146,7 +146,7 @@ public class GUImain implements GUIExecutable {
 	/**
 	 * The current version of C Compact, used as window title.
 	 */
-	public static final String VERSION = "C Compact Alpha 1.4.4";
+	public static final String VERSION = "C Compact Alpha 1.4.5";
 
 	/**
 	 * Constructor requires specific configuration for the window (settings)

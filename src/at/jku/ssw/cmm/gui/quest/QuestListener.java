@@ -41,6 +41,7 @@ public class QuestListener {
 			if(main != null && main.getCurrentQuest() != null && !main.getCurrentQuest().getState().equals(Quest.STATE_LOCKED)){
 				main.getGUImain().getSettings().getProfile().setCurrentQuest(main.getCurrentQuest());
 				main.getGUImain().getRightPanel().getTestPanel().getTestButton().setEnabled(true);
+				main.getGUImain().getRightPanel().getTestPanel().reset();
 				main.getFrame().dispose();
 				
 				Quest lastClickedQuest = main.getCurrentQuest();

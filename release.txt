@@ -1,0 +1,14 @@
+clib/
+error/
+examples/
+images/
+license/
+packages/
+po/
+CMM.jar
+CMM-launcher.jar
+start.sh
+start.bat
+launcher.sh
+launcher.bat
+CCompact_Referenz.pdf
