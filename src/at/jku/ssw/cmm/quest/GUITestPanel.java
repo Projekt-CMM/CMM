@@ -61,7 +61,7 @@ public class GUITestPanel {
 		this.initQuestPanel();
 		this.initResultPanel();
 		
-		this.setTestButtonVisible(false);
+		this.testButton.setEnabled(false);
 	}
 	
 	private void initQuestPanel(){
@@ -115,9 +115,9 @@ public class GUITestPanel {
 		openPackageButton.addMouseListener(l.openPackageListener);
 		openAllPackages.addMouseListener(l.openAllPackageListener);
 		
-		jTestButton.addMouseListener(this.listener.startListener);
+		testButton.addMouseListener(this.listener.startListener);
 		
-		controlPanel.add(jTestButton);
+		controlPanel.add(testButton);
 		controlPanel.add(openPackageButton);
 		controlPanel.add(openAllPackages);
 		
