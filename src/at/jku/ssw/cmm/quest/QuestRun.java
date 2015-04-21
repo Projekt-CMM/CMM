@@ -72,7 +72,6 @@ public class QuestRun implements StdInOut, Debugger {
 	@Override
 	public boolean step(Node arg0, List<Integer> readVariables,
 			List<Integer> changedVariables) {
-		System.out.println("Step: " + arg0);
 		return run;
 	}
 

@@ -134,6 +134,7 @@ public class QuestTester extends Thread {
 						main.getRightPanel().getDebugPanel().setErrorMode(e.getMessage(), null, -1, true);
 				}
 			});
+			testReply.finished(new QuestMatchError( "Runtime error when generating user's output data", e));
 			return;
 		} catch (FileNotFoundException e) {
 			testReply.finished(new QuestMatchError("User's source code could not be found", e));
@@ -144,6 +145,7 @@ public class QuestTester extends Thread {
 					main.getRightPanel().getDebugPanel().setErrorMode("unknown error", null, -1, true);
 				}
 			});
+			testReply.finished(new QuestMatchError( "Unknown error when generating user's output data", e));
 		}
 		
 		testReply.setUserOutput(userOutput);

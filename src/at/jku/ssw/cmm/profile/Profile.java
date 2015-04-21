@@ -320,7 +320,8 @@ public static Profile UpdateOpen(Profile profile, Quest quest){
 		Profile profile = new Profile(profilePath,packagesPath);
 		
 		//setting default Name, can be changed by .profile
-		profile.setName(profilePath.split(sep)[profilePath.split(sep).length-1]);
+		File file = new File(profilePath);
+		profile.setName(file.getName());//TODO quick  fix
 		profile.setInitPath(profilePath);
 		
 		String path = profilePath + sep + Profile.FILE_PROFILE;
