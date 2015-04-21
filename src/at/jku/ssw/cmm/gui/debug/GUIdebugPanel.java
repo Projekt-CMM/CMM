@@ -275,6 +275,7 @@ public class GUIdebugPanel {
 			table = CompileManager.compile(sourceCode, this.main, true);
 		}catch(Exception e){
 			DebugShell.out(State.ERROR, Area.COMPILER, "Unknown compiler error. Compiler crashed.");
+			e.printStackTrace();
 			return false;
 		}
 		if (table != null)
