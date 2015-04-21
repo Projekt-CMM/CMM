@@ -236,7 +236,10 @@ public static Profile UpdateOpen(Profile profile, Quest quest){
 			if(quest.getPreviousFolder() != null)
 			for(Quest prevQ : packageQuests){
 				if(quest.getPreviousFolder().equals(prevQ.getQuestPath())){
-					if(prevQ.getState().equals(Quest.STATE_FINISHED)){
+					if(prevQ.getState().equals(Quest.STATE_FINISHED) ){
+						if(!quest.getState().equals(Quest.STATE_OPEN) && 
+								!quest.getState().equals(Quest.STATE_INPROGRESS) && 
+								!quest.getState().equals(Quest.STATE_FINISHED))
 						quest.setState(Quest.STATE_SELECTABLE);
 						System.err.println("Test");
 					}
@@ -320,7 +323,8 @@ public static Profile UpdateOpen(Profile profile, Quest quest){
 		Profile profile = new Profile(profilePath,packagesPath);
 		
 		//setting default Name, can be changed by .profile
-		profile.setName(profilePath.split(sep)[profilePath.split(sep).length-1]);
+		File file = new File(profilePath);
+		profile.setName(file.getName());//TODO quick  fix
 		profile.setInitPath(profilePath);
 		
 		String path = profilePath + sep + Profile.FILE_PROFILE;

@@ -104,6 +104,10 @@ int library atoi(string s) {
     int i = 0;
     int multpl = 1;
 
+    // check if string is empty
+    if(length(s) == 0)
+    	return 0;
+
     if(s[i] == '+') {
         multpl = 1;
         i++;
@@ -135,7 +139,7 @@ float library atof(string s) {
     int i = 0;
     float multpl = 1.;
 
-    // check if string is not empty
+    // check if string is empty
     if(length(s) == 0)
     	return 0.;
 

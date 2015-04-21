@@ -270,7 +270,14 @@ public class GUIdebugPanel {
 		);
 
 		// Compile and run
-		Tab table = CompileManager.compile(sourceCode, this.main, true);
+		Tab table = null;
+		try{
+			table = CompileManager.compile(sourceCode, this.main, true);
+		}catch(Exception e){
+			DebugShell.out(State.ERROR, Area.COMPILER, "Unknown compiler error. Compiler crashed.");
+			e.printStackTrace();
+			return false;
+		}
 		if (table != null)
 			return this.runManager.runInterpreter(ctrlPanel.getListener(),
 					new IOstream(this.main), table);
