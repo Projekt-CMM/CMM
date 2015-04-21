@@ -46,7 +46,8 @@ public class FindProfileListener implements MouseListener{
 		try {
 			
 			settings.setProfile(GUIProfileManager.selectProfile());	
-			
+		    settings.writeXMLsettings();
+
 			jFrame.dispose();
 			
 			GUImain app = new GUImain(settings);
