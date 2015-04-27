@@ -36,7 +36,7 @@ public class PreprocessorRunTest implements StdInOut {
 		
 		List<Object[]> codeRegister = new ArrayList();
 		List<Integer> breakpoints = new ArrayList();
-		String preprocessorOutput = preprocessorOutput = Preprocessor.expand(new String(code), "./clib", codeRegister, breakpoints);
+		String preprocessorOutput = preprocessorOutput = Preprocessor.expand(new String(code), "./clib", codeRegister);
 		
 		Compiler compiler = new Compiler();
 
@@ -165,6 +165,14 @@ public class PreprocessorRunTest implements StdInOut {
 		try {
 			runCode("void main() {\n"
 					+ "#endif\n"
+					+ "}");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
+		
+		// no end tag
+		try {
+			runCode("void main() {\n"
+					+ "#ifdef asdf\n"
 					+ "}");
 			fail("PreprocessorException not thrown");
 		} catch(PreprocessorException e) {}
