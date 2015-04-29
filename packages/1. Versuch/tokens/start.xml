@@ -3,4 +3,5 @@
 	<title>Start into C Compact</title>
 	<description>Für den erfolgreichen Einstieg in das Questsystem von C Compact.</description>
 	<imagepath>images/process_accept.png</imagepath>
+	<success>start.html</success>
 </token>
