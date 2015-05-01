@@ -1,4 +1,4 @@
-%!TEX root = "DA_GUI.tex"
+%!TEX root = "../../DA_GUI.tex"
 %	########################################################
 % 				Allgemeiner Teil (Theorie)
 %	########################################################
@@ -7,24 +7,11 @@
 %	--------------------------------------------------------
 % 	Aufbau der Benutzeroberfläche
 %	--------------------------------------------------------
-\chapter{Aufbau der Benutzeroberfläche}
-In diesem Kapitel wird der Aufbau aller Fenster und Benutzeroberflächen von C Compact beschrieben - sowohl die konzeptuelle Konstruktion als auch die Implementierung.
-\section{Das Konzept}
-Die Erscheinung und Bedienung von C Compact folgt durchgehend der grundlegenden Idee, eine einfach und intuitiv zu bedienende Entwichlungsumgebung zu schaffen. Das bedeutet, Features möglichst Zielgruppenorientiert zu integrieren und überflüssige Funktionen zu vermeiden. Durch besondere Rücksicht auf Vollständigkeit und logische Bedienvorgänge haben wir ein durchgängig logisches Bedienerlebnis angestrebt.
-Konkret haben wir uns dabei an folgende Ŕegeln gehalten:
-\begin{itemize}
-\item Das Erscheinen von Elementen in der Benutzeroberfläche soll logisch begründbar und verständlich vermittelbar sein
-\item Funktionen, die im FSST-Unterricht der ersten und zweiten Klassen wahrscheinlich nicht benötigt werden, werden vermieden oder sind standardmäßig deaktiviert; Bedienelemente werden also auf das wesentlichste reduziert
-\item Wir sind der Meinung, dass eine intuitiv zu bedinenede Oberfläche nicht durch Animationen und große Symbole erzeilt werden kann, sondern durch einfache, bereits bekannte Konzepte. So sind in C Compact bekannte Elemente wie beispielsweise eine Menüleiste mit gewohnten Datei- und Dokumentoperationen zu finden.
-%TODO reference GUImain
-\end{itemize}
 
-\subsection{Daraus resultierende Einschränkungen}
-Durch diese Reduktion der gesamten Oberfläche ist C Compact auf einen bestimmten Zweck, also die Ausbildung, beschränkt. Das sehen wir allerdings nicht als Nachteil, sondern als besondere Stärke. Mit C Compact wollen wir eine Entwicklungsumgebung schaffen, die Anfänger nicht überfordert und ihnen hilft, sich auf das wesentliche zu konzentrieren.
-Das Konzept einer anfängerfreundlichen Entwichlungsumgebung ist mit dem Aufbau einer Umgebung für die professionelle Entwicklung nicht vereinbar. C Compact soll aber auf späteres Arbeiten mit komplexeren Programmen vorbereiten. Schüler, die ihre erste Programmiersprache mit C Compact erlernen, kennen bereits den Umgang mit einem Debugger und haben ein tieferes verständnis für den Ablauf von Programmen.
 
-\section{Die Benutzeroberfläche der Entwicklungsumgebung}
-Zu diesem Bereich zählen alle Elemente des Hauptfensters. Der Grundlegende Aufbau wurde bereits vor dem Projektstart entworfen und in unserem Praktikum im Sommer 2014 implementiert. Vom Herbst 2014 bis Ende Januar 2015 wurde der Aufbau und die Bedienung dieser Oberfläche erweitert und verbessert. Eine besondere Hilfestellung dabei waren die Versuche mit SchulerInnen der zweiten Klassen im FSST-Unterricht.
+\chapter{Die Benutzeroberfläche der Entwicklungsumgebung}
+\label{sec:gui-main}
+Zu diesem Bereich zählen alle Elemente des Hauptfensters. Der Grundlegende Aufbau wurde bereits vor dem Projektstart entworfen und in unserem Praktikum im Sommer 2014 implementiert. Vom Herbst 2014 bis Ende Januar 2015 wurde der Aufbau und die Bedienung dieser Oberfläche erweitert und verbessert. Eine besondere Hilfestellung dabei waren die Versuche mit SchülerInnen der ersten und zweiten Klassen, die an unseren Versuchen teilgenommen haben.
 %TODO reference versuche
 
 %TODO list parts of GUI
@@ -146,6 +133,8 @@ public void updateFontSize()&Ändert die Schriftgröße in allen Textfeldern, Si
 \caption{Die wichtigsten Methoden der Klasse \textbf{GUIleftPanel}}\label{tab:gui-main-left-methods}
 \end{table}
 %TODO ref GUIProperties
+
+Die Textfelder in diesem Teil der Benutzeroberfläche werden mit statischen Methoden initialisiert, die in der Klasse \textbf{InitLeftPanel} im Package \textbf{at.jku.ssw.cmm.gui.init} zu finden sind. Im Folgenden wird bei dem jeweiligen Element erwähnt, in welcher Methode es initialisiert wird.
 
 \subsection{Anordnung der Elemente}
 \label{sec:gui-main-left-ord}
@@ -277,6 +266,8 @@ Präfix und Postfix können im Head der der Fehlerbeschreibungsdatei definiert w
 \item \textbf{Austomatisches debuggen:} Die andere Möglichkeit ist, den Interpreter in gewissen Zeitabständen selbst weiterspringen zu lassen. Auch hier ist das Bearbeiten des Source Code nicht möglich. Das Zustandspanel ist grün.
 \end{enumerate}
 
+Das Zustandspanel wird in der Methode \textbf{init()} der Klasse \textbf{GUIleftPanel} initialisiert.
+
 \subsection{Textfeld für den Source Code}
 \label{sec:gui-main-left-code}
 Das Feld für den Source Code wurde als \textbf{RSyntaxTextArea}\footnote{http://bobbylight.github.io/RSyntaxTextArea/} implementiert. Dieses Projekt wurde von Robert Futrell veröffentlicht und steht unter einer modifizierten BSD-Lizenz\footnote{https://github.com/bobbylight/RSyntaxTextArea/blob/master/src/main/dist/RSyntaxTextArea.License.txt}.
@@ -296,6 +287,8 @@ RSyntaxTextArea stellt noch eine Reihe weiterer praktischer Funktionen zur Verf�
 \end{figure}
 
 Die Zeile, in der sich der Cursor befindet, wird durch einen Farbigen Balken markiert. Dieser Balken hat, je nach Modus des Debuggers, die selbe Farbe wie das Zustandspanel (siehe Kapitel \ref{sec:gui-main-left-zust}).
+
+Dieses Textfeld wird mit der statischen Methode \textbf{initCodePane()} der Klasse \textbf{InitLeftPanel} initialisiert. Die Methode wird beim Erstellen des linken Teils der Benutzeroberfläche aufgerufen.
 
 \subsection{Ein- und Ausgabetextfeld}
 \label{sec:gui-main-left-io}
@@ -353,6 +346,10 @@ public void out(final char arg0) {
 
 Da der Interpreter in einem separaten Thread ausgeführt wird, muss die Ausgabe der übergebenen Daten in den \textbf{Event Dispatcher Thread} eingereiht werden. Für die Eingabedaten inst das nicht notwendig, da der Eingabestring in einer lokalen Variable dieses Objektes gespeichert ist, auf den kein anderer Thread zugreifen kann.
 %TODO ref EDT, thread problem
+
+Um das Markieren der bereits eingelesenen Daten und das Aussehen des Eingabedatenfeldes richtig zu organisieren, wurde das Element \textbf{JInputDataPane} erstellt. Diese Klasse erbt von dem zuvor verwendeten \textbf{JTextPane}\footnote{http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextPane.html}. Die Klasse JInputDataPane ist im Package \textbf{at.jku.ssw.cmm.gui.init} zu finden. 
+
+Die verwendeten Textfelder werden mit den statischen Methoden \textbf{initInputPane()} und \textbf{initOutputPane()} der Klasse \textbf{InitLeftPanel} initialisiert.
 
 \section{Rechter Teil der Benutzeroberfläche}
 Der rechte Teil der Benutzeroberfläche besteht aus einem Zustandspanel für die aktuelle Aufgabe (Quest) und einem Panel mit mehreren Registerkarten, die unterschiedliche Bedienelemente enthalten, zum Beispiel für den Debugger.
@@ -438,7 +435,7 @@ public GUITestPanel getTestPanel(){
 Anmerkung: Dieses Panel wird - vor Allem im Source Code von C Compact - auch als ,,testPanel'' bezeichnet, da der Benutzer mit Elementen dieses Komponenten überprüfen kann, ob er die aktuelle Aufgabe richtig gelöst hat.
 
 \subsection{Registerkarte ,,Profile''}
-Hier werden Informationen zum aktuellen Spielerprofil angezeigt. Siehe Kapitel \ref{}
+Hier werden Informationen zum aktuellen Spielerprofil angezeigt. Siehe Kapitel \ref{}.
 
 Eine Referenz auf das Panel in dieser Registerkarte wird von folgender Methode übergeben:
 \begin{lstlisting}[language=JAVA]
@@ -448,6 +445,7 @@ public ProfilePanel2 getProfilePanel() {
 \end{lstlisting}
 
 \section{Menüleiste}
+\label{sec:gui-main-menu}
 Menüs sind bei der Gestaltung einer Benutzeroberfläche nahezu unerlässlich. Eine Menüleiste, bzw. ein Menü erleichtert dem Benutzer die Orientierung, da alle Funktionen auf einen Blick zu finden sind. Die Menüleiste wird auch in den \emph{Common User Access}\footnote{http://de.wikipedia.org/wiki/Common\_User\_Access} Richtlinien für die Gestatlung von Benutzeroberflächen definiert; diese Standards wurden 1989 von der Firma IBM festgelegt. Diese Standards sind mittlerweile weit verbreitet und wurden in einer Reihe von Systemen umgesetzt.
 
 Die Menüleiste wird in der statischen Methode \textbf{initFileM()} in der Klasse \textbf{at.jku.ssw.cmm.gui.init.InitMenuBar} angelegt. Die Tastaturkürzel - \emph{,,Keyboard Shortcuts''} - zum Beispiel \emph{Strg + S} zum Speichern, werden ebenfalls hier definiert. Beim Verwenden eines Tastaturkürzels wird der Event Listener des zugehörigen Menüeintrages aufgerufen.
@@ -523,6 +521,7 @@ public void updateUndoRedo( RSyntaxTextArea tArea, boolean running ){
 \end{lstlisting}
 
 \subsection{Menü ,,Datei''}
+\label{sec:gui-main-menu-file}
 Das wohl gewohnteste Menü in jedem Programm ist das Menü ,,Datei'' In C Compact enthält es neben den grundlegenden Funktionen zum Öffnen oder Speichern einer vorhandenen oder neuen Datei auch noch weitere Funktionen. Der Eintrag ,,Drucken'' verwendet eine Methode, die in der RSyntaxTextArea implementiert ist (Siehe Kapitel \ref{sec:gui-main-left-code}; allerdings treetn bei der Formatoering oft Fehler auf. Wesentlich wichtiger sind die Menüpunkte ,,Einstellungen'' (Siehe Kapitel \ref{}), ,,Sprache'' (Siehe Kapitel \ref{}) und ,,Über C Compact'' (Siehe Kapitel \ref{}). Schließlich gibt es noch dem Menüpunkt ,,Beenden'', C Compact kann aber auch mit der Tastenkombination \emph{Alt + F4} (diese Kombination ist in den meisten Betriebssystemen und Oberflächen bereits standardmäßig integriert) oder über entsprechende Bedienelemente im Fensterrahmen geschlossen werden.
 %TODO ref sprache, einstellungen, about
 
