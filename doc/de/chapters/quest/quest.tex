@@ -1,10 +1,41 @@
 Quest System
-Das Quest System sollte dazu entwickelt werden den Lernerfolg und die Motivation der Schüler zu steigern. Dies sollte durch ein System welches Online-Spielen gleicht geschehen.
+Das Quest System wurde dazu entwickelt, den Lernerfolg der und die Motivation der Schüler zu steigern. Dies sollte durch ein System ermöglicht werden, wo Schüler für bewältigte Programmier-Aufgaben Errungenschaften erhalten.
 
 Quest
-Eine Quest ist grundsätzlich eine Aufgabe welche ein Schüler zu bewältigen hat. Diese Aufgabe kann zuerst in einer Auswahl ausgewählt werden, und mithilfe einer Überprüfungsroutine überprüft werden.
+Eine Quest ist ein Arbeitsauftrag, welcher der Schüler zu bewältigen hat.
+Zuerst kann der Benutzer in einer Liste von so genannten Packeten auswählen. Danach kommt er in ein Auswahlmenü, wo mögliche Quests angezeigt werden.
+Wenn die Quest richtig programmiert wurde, kann der Benutzer diese mit einer Überprüfungsroutine überprüfen. Wenn diese richtig war, bekommt der Benutzer eine Auszeichnung, wenn diese vorhanden ist.
+
+Packet
+Ein Packet besteht aus einer Ordnerstruktur, wobei sich im Untersten Ordner, Aufgaben befinden. Weiters kann im untersten Ordner eine "description.html" eingefügt werden. Diese wird bei der Aufgabenauswahl, sobald das Packet selektiert wird angezeigt.
 
 Unterschiede zur Herkömmlichen Aufgabenverteilung
-Der frühere Unterricht wurde so gestaltet, dass der Lehrer vor der Stunde an die Schüler die Aufgaben austeilte. Diese konnten nun vom Schüler abgearbeitet werden.
+Der frühere Unterricht wurde so gestaltet, dass der Lehrer vor der Stunde an die Schüler die Aufgaben austeilte. Diese konnten nun vom Schüler abgearbeitet werden. Jedoch mussten die Aufgaben von der Lehrperson auf Richtigkeit und Vollständigkeit überprüft werden.
 
-Bei diesem System, kann der Schüler direkt aus einem Themenblock auswählen und der Fortschritt wird im Profil vermerkt.
+Bei diesem System, kann der Schüler direkt aus einem Themenblock auswählen und der Fortschritt wird im Profil vermerkt. Dies hat vor allem dann Sinn, wenn Lehrpersonen überprüfen wollen, ob die Aufgaben erledigt wurden. Weiters kann somit der Schüler beim selbstständigen Lernen unterstützt werden.
+
+Erstellen einer Quest:
+
+Damit eine Quest vom C-Compact System als Aufgabe erkannt wird, müssen mehrere Dateien vorhanden sein:
+* description.html:
+Beinhaltet die Beschreibung der Quest.
+
+* ref:
+In der ref.cmm befindet sich das Referenzprogramm welches von der Überprüfungsroutine ausgeführt wird.
+
+* default.cmm:
+In der default.cmm befindet sich eine Programmvorgabe, welche beim Neuen öffnen von Quests angezeigt beziehungsweise zur weiteren Verarbeitung zur Verfügung gestellt wird.
+
+* input.cmm:
+Dieses File dient zur Erstellung der Input-Daten.
+
+Weiters kann noch ein weiteres File hinzugefügt werden:
+
+* quest.xml:
+In diesem File kann man einen Titel, Prefix, und eine Aufgabe angeben die vorher bereits erledigt werden musste. Weiters kann hier auch die Errungenschaft angegeben werden, welche man beim Abschluss der Aufgabe bekommt.
+
+Gliederung der Quests:
+Die Aufgaben können nun vom Ersteller in einem so genannten Package gegliedert werden. Dies ist einfach nur ein Ordner wo die Quests reingeschoben werden können. Dieser kann eine "description.html" enthalten. 
+
+Es können mehrere Unterordner für Packete verwendet werden.
+
