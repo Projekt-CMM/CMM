@@ -15,13 +15,21 @@ W\"ahrend der Softwareentwicklung ist es leicht m\"oglich, ungewollt Fehler zu p
 
 \subsubsection{Testabdeckung}
 
+Die ideale Testabdeckung eines Projektes liegt bei 100\%. Im Detail bedeutet dass das alle m\"oglichen Ausf\"uhrungswege einer Funktion durchlaufen werden. Um die Testabdeckung zu \"uberpr\"ufen gibt es z.B. Tools welche sich in die Testfunktion einklinken und dann \"uberpr\"ufen welche Codezeilen ausgef\"uhrt wurde. Wir verwenden EclEmma\footnote{\url{http://www.eclemma.org}}, welches grafisch anzeigt welche Teile des Codes durchlaufen wurden. Auf Basis dieser Informationen k\"onnen dann zus\"atzliche Testf\"alle entworfen werden.
+
 \subsubsection{Testf\"alle}
 
 Bei der Entwicklung von Tests ist es unm\"oglich alle Testf\"alle abzudecken. Deshalb beschr\"ankt man sich auf einen Untergruppe von Eingabedaten welche f\"ur den jeweiligen Test relevant erscheinen.
 
 Dies umfasst nicht nur durchschnittliche Eingabedaten, sondern in besonderem Umfang auch Grenzwerte und fehlerhafte Eingabedaten. Die Testf\"alle sollen daher besonders stark die Teile abdecken, bei denen die Funktion fehlerhaft reagieren kann.
 
+\subsubsection{White-Box-Test}
+
+Bei White-Box-Tests\footnote{\url{https://de.wikipedia.org/wiki/White-Box-Test}} wird auch die innere Struktur des Programmes f\"ur die erstellung von Testf\"alle genutzt. Dadurch k\"onnen unter anderem unbenutzte Codeteile identifiziert werden oder Probleme beim Ablaufpfad aufgedeckt werden. 
+
 \subsubsection{Black-Box-Test}
+
+Im gegensatz dazu wird beim Black-Box-Test\footnote{\url{https://de.wikipedia.org/wiki/Black-Box-Test}} die Funktion nach ihren Anforderungen gepr\"uft. Dabei wird die innere Strukture der Funktion unbeachtet gelassen, und es ist eine reine Funktionspr\"ufung ob die Spezifikation eingehalten werden.
 
 \newpage
 \subsection{JUnit}

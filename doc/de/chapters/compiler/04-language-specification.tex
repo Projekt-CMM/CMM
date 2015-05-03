@@ -238,7 +238,104 @@ char ch = (char)48; // explicite conversation of int to char
 
 \subsection{Funktionen}
 
+Funktionen k\"onnen maximal 1. R\"uckgabewert besitzen, und beliebig viele Argumente. Es ist m\"oglich Referenzen auf Variablen zu \"ubergeben, wobei dies bei Arrays immer der Fall ist.
+
+Zus\"atzlich ist es m\"oglich die Funktion mit dem Schl\"usselwort library in eine Biblioteksfunktion umzuwandeln, welche vom Debugger immer \"ubersprungen wird.
+
+\begin{lstlisting}[language=CMM]
+int library foo(int a, int b[], int &c) {
+	c = 3;
+	return b[3];
+}
+\end{lstlisting}
+
+\subsubsection{Vorw\"artsdeklarationen}
+
+Vorw\"artsdeklarationen werden ben\"otigt wenn auf eine Funktion zugegriffen werden muss, bevor diese vollst\"andig inclusive interner Logik Deklariert wurde. Dabei wird die Funktionsdeklaration kopiert, und anstatt mit geschwungenen Klammern und der Funktionslogik, nur mit einem Strichpunkt abgeschlossen.
+
+\begin{lstlisting}[language=CMM]
+int foo(int a);
+
+int foo(int a) {
+	if(a == 0)
+		return 0;
+	return (a + foo(a-1));
+}
+\end{lstlisting}
+
 \subsubsection{Vorimplementierte Funktionen}
+
+Es gibt eine gewisse Funktionen welche bereits im Interpreter und Compiler implementiert sind, um C-Compact eine Interaktion mit dem Debugger zu erm\"oglichen.
+
+\htlParagraph{print}
+
+Schreibt 1. Zeichen in die Ausgabe. 
+
+\begin{lstlisting}[language=CMM]
+print('a');
+\end{lstlisting}
+
+\htlParagraph{read}
+
+Lese das n\"achste Zeichen vom Eingabestrom.
+
+\begin{lstlisting}[language=CMM]
+char c = read();
+\end{lstlisting}
+
+\htlParagraph{printf}
+
+Schreibe eine Formatierte Ausgabe in die Ausgabe. Diese Funktion unterst\"utzt beliebig viele Argumente, wobei f\"ur jede Platzhalter im String ein Argument angegeben werden muss.
+
+\begin{lstlisting}[language=CMM]
+printf('a= %d, b=%f\n', 10, 2.2);
+\end{lstlisting}
+
+\subhtlParagraph{Platzhalter}
+
+Ein Platzhalter definiert ein Variable welche in einem spezifizierten Ausgabeformat ausgegeben wird. 
+
+ \begin{tabular}{l | l}
+  Typ & Platzhalter \\
+  \hline
+  char & \%c \\
+  int & \%d \\
+  hex & \%x \\
+  float & \%f \\
+ \end{tabular}
+
+\htlParagraph{length}
+
+Mithilfe der length-Funktion ist es m\"oglich die L\"ange eines Strings zu ermitteln.
+
+\begin{lstlisting}[language=CMM]
+int l = length("Hello World");
+\end{lstlisting}
+
+\htlParagraph{time}
+
+Diese Funktion gibt die vergangenen Sekunden aus beginnend mit dem 1. Januar 1970. Diese Funktion wird unter anderem f\"ur den Zufallsgenerator ben\"otigt.
+
+\begin{lstlisting}[language=CMM]
+int timestamp = time();
+\end{lstlisting}
+
+\htlParagraph{\_\_is\_def\_***\_\_}
+
+Dies is ist eine interne Funktion, welche f\"ur die Bibliotek ben\"otigt wird, und zugriff auf den Speicher gibt. Es gibt dabei f\"ur jeden Datentyp eine eigene Funktion, welche true zur\"uckliefert wenn die Variable bereits initialisiert wurde. Ansonsten wird false zur\"uckgegeben.
+
+\begin{lstlisting}[language=CMM]
+bool test;
+bool isTestInitialized = __is_def_bool__(test);
+\end{lstlisting}
+
+\htlParagraph{\_\_assert\_\_}
+
+Wenn der erste Paramter false ist, wird der Interpreter angehalten und eine definierte Fehlermeldung ausgegeben. diese Funktion wird auch nur in Biblioteksfunktionen verwendet, um unter anderem Eingabedaten auf Grenzwerte und Valid\"at zu zu pr\"ufen.
+
+\begin{lstlisting}[language=CMM]
+__assert__(false, "some error occured");
+\end{lstlisting}
 
 \subsection{Ausdrücke}
 
