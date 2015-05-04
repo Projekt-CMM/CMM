@@ -128,6 +128,7 @@ Die Resourcen sind im Package eingebunden und deshalb auch Teil der generierten 
 ... name eingeben ...
 
 \subsection{Dialoge}
+\label{sec:win-dialog}
 In C Compact werden viele verschiedene Dialogfenster verwendet. Der Begriff Dialogfenster\footnote{http://de.wikipedia.org/wiki/Dialog\_(Benutzeroberfläche)} umfasst eine Reihe von unterschiedlichen Anwendungen, bei denen ein Fenster werwendet wird, um Informationen oder Befehle vom Benutzer einzuholen. Dialoge werden in C Compact beispielsweise verwendet, um zu fragen, ob eine Datei gespeichert werden soll (Abbildung \ref{fig:win-dialog}), oder um den Benutzer auf ein Problem aufmerksam zu machen. Swing enthält bereits einige Funktionen zum Erstellen von Dialogen\footnote{http://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html}, anhand dieses Tutorials können einfache Dialoge sehr schnell erstellt werden.
 
 \begin{figure}[htp]
@@ -142,6 +143,7 @@ In C Compact werden viele verschiedene Dialogfenster verwendet. Der Begriff Dial
 
 %TODO add information about info saved in profiles
 \section{Einstellungen}
+\label{sec:guimainsettings}
 Für den Betrieb einer fortgeschrittenen Benutzeroberfläche ist es unerlässlich, diese anpassbar zu machen und Anpassungen des Benutzers zu speichern. Im Package \textbf{at.jku.ssw.cmm.gui.properites} befindet sich die Klasse \textbf{GUImainSettings}, die alle globalen Einstellungen überwacht. Diese Einstellungen umfassen:
 \begin{itemize}
 \item Die zuletzt geöffneten Dateien
@@ -183,4 +185,50 @@ Die Einstellungsdatei \textbf{settings.xml} ist wie folgt aufgebaut:
 
 Unter ,,properties'' befinden sich alle Parameter, die der Benutzer direkt einstellen kann (die Sprache bei den Spracheinstellungen, siehe Kapitel \ref{sec:win-lang} und alle anderen Einstellungen bei den allgemeinen Einstellungen, siehe Kapitel \ref{sec:win-set}). Darunter werden die zuletzt gewählten Profile aufgelistet (diese werden im Launcher angezeigt, siehe Kapitel \ref{sec:win-launcher}) und dann die zuletzt geöffneten Dateien (für die Auflistung im Menü der Entwicklungsumgebung, siehe Kapitel \ref{sec:gui-main-menu-ctrl}). Damit die Listen nicht zu lang werden, werden nur die letzten 10 geöffneten Dateien und die letzten 10 aktiven Profile gespeichert und angezeigt.
 %TODO appendix: how to read XML file
+
+\section{Anzeigen von internen Fehlern}
+Unter Unständen kann es bei C Compact zu internen Fehlern kommen. Zu diesen Zählen auch Probleme die entstehen, wenn eine wichtige Datei gelöscht wurde oder nicht gefunden werden kann. Die in diesem Abschnitt beschriebenen Fehlermeldungen sollten nicht mit den Fehlerbeschreibungen des Debuggers verwechselt werden (Siehe Kapitel \ref{}). Wenn ein Fehler auftritt, wird die Fehlermeldung in Form eines Dialoges (Siehe Kapitel \ref{sec:win-dialog} angezeigt.
+%TODO ref debugger error docs
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.5\textwidth]{./media/images/gui/elements/Bildschirmfoto-Error-Message.png}
+\caption{Eine interne Fehlereldung}
+\end{figure}
+
+Jeder Fehler der auftreten kann hat eine eindeutige Fehlernummer, alle Fehler sind in der C Compact Projektwiki auf GitHub\footnote{https://github.com/Projekt-CMM/CMM/wiki/List-of-internal-error-numbers} aufgelistet. Eine Fehlernummer besteht immer aus 4 Zahlen; die erste gibt den Bereich an, in dem der Fehler aufgetreten ist.
+%TODO keep this thable up to date
+%TODO add references to different files/chapters
+\def\arraystretch{1.6}
+\begin{minipage}{14cm}
+%\begin{table}[ht]
+\begin{tabular}{l|l|l}
+	Bereich&Nummer&Beschreibung\\
+	\hline
+	&1001&Datei \textbf{error/table.xml} fehlt\\
+	\multirow{5}{15mm}{\begin{sideways}\parbox{35mm}{Dateien fehlen oder sind beschädigt}\end{sideways}}&1002&\multirow{2}{*}{Inhalt der Datei \textbf{error/table.xml} ist ungültig}\\
+	&1003&\\
+	&1011&Datei \textbf{error/style.css} fehlt oder ist beschädigt\\
+	&1012&Inhalt der Datei \textbf{error/style.css} ist ungültig\\
+	&1021&Fehlerbeschreibungsdokument nicht gefunden\\
+	\hline
+	&2001&Aktuelle Datei konnte nicht gespeichert werden\\
+	\multirow{4}{15mm}{\begin{sideways}\parbox{25mm}{Dateien öffnen oder speichern}\end{sideways}}&2011&[inactive]\footnote{Dieser Fehler kann nicht mehr auftreten, da der zugehörige Bereich deaktiviert wurde}\\
+	&2012&Datei konne nicht geöffnet werden\\
+	&2013&Bibliothek konnte nicht gefunden werden\footnote{Dieser Fehler wird als Fehlermeldung im Debugger angezeigt. Die fehlernummer existiert nur formell}\\%TODO ref debugger error doc
+	&2014&Datei \textbf{default.cmm} einer Quest konnte nicht geöffnet werden\\%TODO ref quest
+	\hline
+	%TODO add refs to quest testing
+	&3001&Exception im Präprozessor\\
+	\multirow{4}{15mm}{\begin{sideways}\parbox{25mm}{Testen einer Quest}\end{sideways}}&3002&[inactive]\footnote{Dieser Fehler kann nicht mehr auftreten} IOException im Präprozessor\\
+	&3003&Unbekannter Fehler im Präprozessor\\
+	&3004&Compiler wurde unerwartet beendet (Exception)\\
+	&3005&Compiler durch Fehler im Sourcecode abgebrochen\\
+	\hline
+	\parbox{23mm}{Verbindungs- probleme}&9001&Fehler beim Drucken
+\end{tabular}
+%\caption{Interne Fehlernummern}
+%\label{tab:int-err}
+%\end{table}
+\end{minipage}
 
