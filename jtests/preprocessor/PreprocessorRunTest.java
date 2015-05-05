@@ -36,7 +36,7 @@ public class PreprocessorRunTest implements StdInOut {
 		
 		List<Object[]> codeRegister = new ArrayList();
 		List<Integer> breakpoints = new ArrayList();
-		String preprocessorOutput = preprocessorOutput = Preprocessor.expand(new String(code), "./clib", codeRegister);
+		String preprocessorOutput = preprocessorOutput = Preprocessor.expand(new String(code), ".", codeRegister);
 		
 		Compiler compiler = new Compiler();
 
@@ -177,6 +177,115 @@ public class PreprocessorRunTest implements StdInOut {
 			fail("PreprocessorException not thrown");
 		} catch(PreprocessorException e) {}
 		
+	}
+	
+	@Test(timeout=1000)
+	public void testPreprocessor() throws Exception {
+		// empty preprocessor command
+		try {
+			runCode("void main() {\n"
+					+ "}\n"
+					+ "#\n");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
+		
+		// invalide preprocessor command
+		try {
+			runCode("void main() {\n"
+					+ "}\n"
+					+ "#dafane 10\n");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
+	}
+	
+	@Test(timeout=1000)
+	public void testDefine() throws Exception {
+		// simple define without value
+		runCode("#define __DEF__\n"
+				+ "void main() {\n"
+				+ "#ifdef __DEF__\n"
+				+ "  print('e');\n"
+				+ "#else\n"
+				+ "  print('f');\n"
+				+ "#endif\n"
+				+ "}\n");
+		assertEquals(output, "e");
+		
+		// simple define without value
+		runCode("#define test 2\n"
+				+ "void main() {\n"
+				+ "}\n");
+		
+		// define without identifier
+		try {
+			runCode("#define\n"
+					+ "void main() {\n"
+					+ "}\n");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
+		
+		// define which is filled with an non integer
+		try {
+			runCode("#define test asdf\n"
+					+ "void main() {\n"
+					+ "}\n");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
+	}
+	
+	@Test(timeout=1000)
+	public void testUndef() throws Exception {
+		// simple undef
+		runCode("#define __DEF__\n"
+				+ "#undef __DEF__\n"
+				+ "void main() {\n"
+				+ "#ifdef __DEF__\n"
+				+ "  print('e');\n"
+				+ "#else\n"
+				+ "  print('f');\n"
+				+ "#endif\n"
+				+ "}\n");
+		assertEquals(output, "f");
+		
+		// undef without identifier
+		try {
+			runCode("#undef\n"
+					+ "void main() {\n"
+					+ "}\n");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
+	}
+	
+	@Test(timeout=1000)
+	public void testInclude() throws Exception {
+		/*runCode("#include \"testinclude.h\"\n"
+				+ "void main() {\n"
+				+ "  testfunction();"
+				+ "}\n");*/ // TODO
+		
+		// empty include
+		try {
+			runCode("#include \"\"\n"
+					+ "void main() {\n"
+					+ "}\n");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
+		
+		// empty include
+		try {
+			runCode("#include <>\n"
+					+ "void main() {\n"
+					+ "}\n");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
+		
+		// invalid include
+		try {
+			runCode("#include\n"
+					+ "void main() {\n"
+					+ "}\n");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
 	}
 
 }
