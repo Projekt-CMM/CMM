@@ -63,6 +63,7 @@ public class Preprocessor {
 		
 		// is parser inside comment?
 		boolean insideComment = false;
+		boolean insideString = false;
     	
 		// TODO check if code inside string
 		//boolean insideString = false;
@@ -74,55 +75,81 @@ public class Preprocessor {
 		// parse code
 		int line = offset;		
 		int fileLine = 0;
+		
 		if(sourceCode != null)
-		for( String s : sourceCode.split("\n") ){
+		for( String s : sourceCode.split("\n") ) {
 			line ++;
 			fileLine ++;
 
-			String commentString = null;
+			String commentString = "";
 			
 			boolean parseAllCode = true;
+			
+			commentString.replace('\r', ' ');
 			
 			// if one of the preprocessor if is not true, parsing of all code is not possible
 			for(int i=0; i< ifConditions.size(); i++) {
 				if(ifConditions.get(i) == false)
 					parseAllCode = false;
 			}
-			
-			if(s.contains("//")) {
-				commentString = s.substring(s.indexOf("//"));
-				s = s.substring(0, s.indexOf("//"));
-			}
-			
-			// check if code is inside comment
-			if(insideComment) {
-				// check if comment end in this line
-				if(s.contains("*/")) {
-					insideComment = false;
-					s += s.substring(0, s.indexOf("*/"));
-					s = s.substring(0, s.indexOf("*/")+2);
-				} else {
-					if(parseAllCode == false)
-						newSourceCode += addString("// ign " + s,commentString);
-					else
-						newSourceCode += addString(s,commentString);
-					continue;
-				}
-			}
 
-			// parse multiline comments
-			while(s.contains("/*")) {
-				if(s.contains("*/")) {
-					String newS = s.substring(0, s.indexOf("/*"));
-					newS += s.substring(s.indexOf("*/")+2);
-					s = newS;
+			// Parse Comments
+			for(int i = 0;i < s.length();) {
+				if(insideComment) {
+					if(s.regionMatches(i, "//", 0, 2)) {
+						commentString += s.substring(i);
+						if(i != 0)
+							s = s.substring(0, i-1);
+						else
+							s = "";
+						break;
+					} else if(s.regionMatches(i, "*/", 0, 2)) {
+						if(i != 0) {
+							s = s.subSequence(0, i) + s.substring(i+2);
+						} else {
+							s = s.substring(i+2);
+						}
+						insideComment = false;
+					} else {
+						if(i != 0) {
+							commentString += s.charAt(i);
+							s = s.subSequence(0, i) + s.substring(i+1);
+						} else {
+							commentString += s.charAt(0);
+							s = s.substring(1);
+						}
+					}
+				} else if(insideString) {
+					if(s.regionMatches(i, "\"", 0, 1)) {
+						if(i != 0) {
+							if(!s.regionMatches(i-1, "\\\"", 0, 1))
+								insideString = false;
+						} else {
+							insideString = false;
+						}
+					}
+					i++;
 				} else {
-					insideComment = true;
-					if(commentString != null)
-						commentString = s.substring(s.indexOf("/*")) + commentString;
-					else
-						commentString = s.substring(s.indexOf("/*")) ;
-					s = s.substring(0, s.indexOf("/*"));
+					if(s.regionMatches(i, "/*", 0, 2)) {
+						if(i != 0) {
+							s = s.subSequence(0, i) + s.substring(i+2);
+						} else {
+							s = s.substring(i+2);
+						}
+						insideComment = true;
+					} else if(s.regionMatches(i, "//", 0, 2)) {
+						commentString += s.substring(i);
+						if(i != 0)
+							s = s.substring(0, i-1);
+						else
+							s = "";
+						break;
+					} else if(s.regionMatches(i, "\"", 0, 1)) {
+						insideString = true;
+						i++;
+					} else {
+						i++;
+					}
 				}
 			}
 			
@@ -280,8 +307,8 @@ public class Preprocessor {
 	}
 	
 	public static String addString(String s, String commentString) {
-		if(commentString != null) 
-			return s + commentString + "\n";
+		if(commentString != null && !commentString.isEmpty()) 
+			return s + "// comment " + commentString + "\n";
 		else
 			return s + "\n";
 	}

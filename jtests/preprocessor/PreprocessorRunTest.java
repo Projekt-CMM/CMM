@@ -87,15 +87,15 @@ public class PreprocessorRunTest implements StdInOut {
 		
 		//TODO: fix bug
 		// simple #define which is commented
-		//runCode("/*#define __DEF__ \n"
-		//		+ "*/void main() {\n"
-		//		+ "#ifdef __DEF__\n"
-		//		+ "  print('c');\n"
-		//		+ "#else\n"
-		//		+ "  print('d');\n"
-		//		+ "#endif\n"
-		//		+ "}");
-		//assertEquals(output, "d");
+		runCode("/*#define __DEF__ \n"
+				+ "*/void main() {\n"
+				+ "#ifdef __DEF__\n"
+				+ "  print('c');\n"
+				+ "#else\n"
+				+ "  print('d');\n"
+				+ "#endif\n"
+				+ "}");
+		assertEquals(output, "d");
 		
 		// simple #define which is commented
 		runCode("/* cda */#define __DEF__/* asdf */\n"
@@ -107,6 +107,48 @@ public class PreprocessorRunTest implements StdInOut {
 				+ "#endif\n"
 				+ "}");
 		assertEquals(output, "e");
+		
+		// string with inlined comment
+		runCode("//#define __DEF__\n"
+				+ "void main() {\n"
+				+ "  printf(\"/*test*/\");\n"
+				+ "}");
+		assertEquals(output, "/*test*/");
+		
+		// string with inlined comment and real Qotation mark inside string
+		runCode("void main() {\n"
+				+ "  printf(\"ta\\\"//\");\n"
+				+ "}");
+		assertEquals(output, "ta\"//");
+		
+		// single comment after command
+		runCode("void main() {\n"
+				+ "  print('a'); // testcomment\n"
+				+ "}");
+		assertEquals(output, "a");
+		
+		// single comment after command with end of multi-line comment
+		runCode("void main() {\n"
+				+ "  print('a'); // testcomment */ asdf\n"
+				+ "}");
+		assertEquals(output, "a");
+		
+		// multiline-comment which should not deactivated inside single comment
+		runCode("void main() {\n"
+				+ "  print('a');\n"
+				+ "/*  print('b');\n"
+				+ "  print('c'); // testcomment\n"
+				+ "// test */\n"
+				+ "  print('d');*/\n"
+				+ "  print('e');\n"
+				+ "}");
+		assertEquals(output, "ae");
+		
+		// single comment inside multiline comment
+		runCode("void main() {\n"
+				+ "  print('a'); /* // testcomment */\n"
+				+ "*/}");
+		assertEquals(output, "a");
 	}
 	
 	@Test(timeout=1000)
