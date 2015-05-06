@@ -98,6 +98,8 @@ public class AddProfileListener extends MouseAdapter {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}		    
+		    
+		    settings.writeXMLsettings();
 		
 		
 		//Starting CMM with the new Profile
