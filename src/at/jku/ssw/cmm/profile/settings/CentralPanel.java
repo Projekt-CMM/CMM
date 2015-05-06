@@ -130,7 +130,7 @@ public class CentralPanel extends JPanel {
 
 		JPanel panel;
 		
-		List<Token> allTokens = Profile.readProfileTokens(profile);
+		List<Token> allTokens = profile.readProfileTokens();
 		
 		
 		if(allTokens != null){

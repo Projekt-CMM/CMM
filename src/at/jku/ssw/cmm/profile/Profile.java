@@ -273,17 +273,16 @@ public static Profile UpdateOpen(Profile profile, Quest quest){
 	 * @param profile
 	 * @return List<Token>
 	 */
-	public static List<Token> readProfileTokens(Profile profile){
+	public List<Token> readProfileTokens(){
 		List<Token> allTokens = new ArrayList<Token>();
 		
-		if(profile.getProfileQuests() == null)
+		if(getProfileQuests() == null)
 			return null;
 		
 		//Reads all Tokens
-		for(Quest q : profile.getProfileQuests()){
+		for(Quest q : getProfileQuests()){
 			if(q.getState().equals(Quest.STATE_FINISHED) && q.getToken() != null){
 				allTokens.add(q.getToken());
-				System.out.println(q.getToken().getTitle());
 			}
 		}
 			
