@@ -12,7 +12,7 @@
 
 \subsection{Pr\"aprozessor}
 
-Unser Pr\"aprozessor erm\"oglicht die Nutzung mehrer Dateien und verf\"ugt \"uber die funktion einzelne Codeteile zu deaktivieren, wie es auch in C der Fall ist. Pr\"aprozessorargumente beginnen dabei jeweils mit einem Hashtag, gefolgt von der jeweiligen Direktive und einem oder mehreren Argumenten.
+Unser Pr\"aprozessor erm\"oglicht die Nutzung mehrer Dateien und verf\"ugt \"uber die Funktion einzelne Codeteile zu deaktivieren, wie es auch in C der Fall ist. Pr\"aprozessorargumente beginnen dabei jeweils mit einem Hashtag, gefolgt von der jeweiligen Direktive und einem oder mehreren Argumenten.
 
 \subsubsection{\#include Direktive}
 
@@ -20,7 +20,7 @@ Mithilfe eines \#include k\"onnen andere Dateien eingebunden werden. Es gibt dab
 
 \htlParagraph{Suche im Standard-Include-Pfad}
 
-Der Standard-Include-Pfad stellt der Ordner clib dar, in welchem sich die Standardbibliotek befindet.
+Der Standard-Include-Pfad stellt der Ordner clib dar, in welchem sich die Standardbibliothek befindet.
 
 \begin{lstlisting}[language=C]
 #include <stdio.h>
@@ -28,7 +28,7 @@ Der Standard-Include-Pfad stellt der Ordner clib dar, in welchem sich die Standa
 
 \htlParagraph{Suche im aktuellen Verzeichnis}
 
-Wenn selbstgeschriebene Programmdateien eingebunden werden sollen wird der Pfad relativ zum aktuellen Verzeichnis angegeben. So ist es m\"oglich gro\"o\ss{}ere Projekte auf Basis mehrer Dateien zu entwickeln.
+Wenn selbst geschriebene Programmdateien eingebunden werden sollen wird der Pfad relativ zum aktuellen Verzeichnis angegeben. So ist es m\"oglich gro\"o\ss{}ere Projekte auf Basis mehrere Dateien zu entwickeln.
 
 \begin{lstlisting}[language=C]
 #include "foo.cmm"
@@ -45,7 +45,7 @@ Es ist m\"oglich einem Define einen Wert zuzuweisen, welcher eine Ganze Zahl sei
 #define __DEFINE_WITH_VALUE__ 0
 \end{lstlisting}
 
-Falls ein \#define mit dem gleichen Namen bereits exisitiert, wird dieses \"uberschrieben.
+Falls ein \#define mit dem gleichen Namen bereits existiert, wird dieses \"uberschrieben.
 
 \subsubsection{\#undef Direktive}
 
@@ -57,7 +57,7 @@ Mithilfe eines \#undef kann eine definierte Variable gel\"oscht werden. Die Vari
 
 \subsubsection{\#ifdef, \#ifndef, \#else und \#endif Direktive}
 
-Es ist m\"oglich abzufragen ob es eine bestimmte Variablendefinition gibt, oder nicht gibt. Diese Abfrage wird mit den Pr\"aprozessorargumenten \#ifdef bzw. \#ifndef eingeleitet, und muss mit einem \#endif enden. Falls es notwendig ist auch f\"ur das gegenargument code auszuf\"uhren kann dies mithilfe eines \#else eingeleitet werden.
+Es ist m\"oglich abzufragen ob es eine bestimmte Variablendefinition gibt, oder nicht gibt. Diese Abfrage wird mit den Pr\"aprozessorargumenten \#ifdef bzw. \#ifndef eingeleitet, und muss mit einem \#endif enden. Falls es notwendig ist auch f\"ur das Gegenargument code auszuf\"uhren kann dies mithilfe eines \#else eingeleitet werden.
 
 Eine Variable gilt als definiert wenn sie mithilfe eines \#define erzeugt wurde, und einen Wert ungleich 0 besitzt.
 
@@ -71,7 +71,7 @@ Eine Variable gilt als definiert wenn sie mithilfe eines \#define erzeugt wurde,
 
 \subsubsection{Beispiel}
 
-Der Pr\"aprozessor wird besonders daf\"ur ben\"otigt, dass Biblioteken bei mehrfachen \#include keine Fehler verursachen. Dazu ist es notwendig dass die Bibliotek bei mehrfachen \#include die nachfolgenden Ignoriert. Dies stellt ein standardkonstrukt in der C Programmierung dar.
+Der Pr\"aprozessor wird besonders daf\"ur ben\"otigt, dass Bibliotheken bei mehrfachen \#include keine Fehler verursachen. Dazu ist es notwendig dass die Bibliothek bei mehrfachen \#include die nachfolgenden Ignoriert. Dies stellt ein Standardkonstrukt in der C Programmierung dar.
 
 \begin{lstlisting}[language=C]
 #ifndef __CLIB_EXAMPLE__
@@ -86,9 +86,9 @@ Der Pr\"aprozessor wird besonders daf\"ur ben\"otigt, dass Biblioteken bei mehrf
 #endif /* __CLIB_EXAMPLE__ */
 \end{lstlisting}
 
-Zuerst wird ermittelt, ob die Bibliotek bereits eingebunden wurde (falls dies der Fall ist, ist die jeweilige Variable definiert), und \#ifndef igoriert infolge den folgenden Code bis zum \#endif.
+Zuerst wird ermittelt, ob die Bibliothek bereits eingebunden wurde (falls dies der Fall ist, ist die jeweilige Variable definiert), und \#ifndef ignoriert infolge den folgenden Code bis zum \#endif.
 
-Falls der Code aber das erste mal eingebunden wurde, ist die Variable (in diesem Beispiel $\_\_CLIB\_EXAMPLE\_\_$) noch nicht definiert worden. Folglich wird der Code welcher sich in \#ifndef befindet ausgef\"uhrt, wo unter anderem die jeweilige Variable definiert wird, welche einzigartig f\"ur die jeweilige Bibliotek sein muss.
+Falls der Code aber das erste mal eingebunden wurde, ist die Variable (in diesem Beispiel $\_\_CLIB\_EXAMPLE\_\_$) noch nicht definiert worden. Folglich wird der Code welcher sich in \#ifndef befindet ausgef\"uhrt, wo unter anderem die jeweilige Variable definiert wird, welche einzigartig f\"ur die jeweilige Bibliothek sein muss.
 
 \subsection{Kommentare}
 
@@ -194,7 +194,7 @@ const int i = 1234;
 
 Strukturen sind zusammengesetzte Datentypen welche aus 1. oder mehreren Datentypen bestehen. Eine definierte Struktur stellt einen neuer Datentyp dar, von welchem Variablen definiert werden k\"onnen, welche man auch an Funktionen \"ubergeben kann.
 
-Strukturen k\"onnen nicht auf sich selbst verweisen, da es ansonsten eine endlosen Rekursion darstellen w\"urde. Desweiteren k\"onnen keine Werte bei der Definition einer Struktur angegeben werden.
+Strukturen k\"onnen nicht auf sich selbst verweisen, da es ansonsten eine endlosen Rekursion darstellen w\"urde. Des weiteren k\"onnen keine Werte bei der Definition einer Struktur angegeben werden.
 
 \begin{lstlisting}[language=CMM]
 struct Point {
@@ -209,7 +209,7 @@ Point p;
 
 Arrays sind Felder von Datentypen, wobei ein einzelnes Feld mithilfe eines sogenannten Index spezifiziert werden kann.
 
-Falls ein Array in einer Funktion definiert wird, kann diesem ein initialisierungswert zugewiesen werden, welcher das Array mit definierten Werten f\"ullt.
+Falls ein Array in einer Funktion definiert wird, kann diesem ein Initialisierungswert zugewiesen werden, welcher das Array mit definierten Werten f\"ullt.
 
 \begin{lstlisting}[language=CMM]
 char cArr[10];
@@ -230,7 +230,7 @@ float f = 1 + 2.5; // 1 is implicit converted to float
 
 \htlParagraph{Explizite Typumwandlung}
 
-Die explizite Typumwandlung ist besonders dann notwendig, falls ein Datentyp in einen anderen umgewandelt werden muss, welcher weniger Daten speichern kann als sein ursprungstyp.
+Die explizite Typumwandlung ist besonders dann notwendig, falls ein Datentyp in einen anderen umgewandelt werden muss, welcher weniger Daten speichern kann als sein Ursprungstyp.
 
 \begin{lstlisting}[language=CMM]
 char ch = (char)48; // explicite conversation of int to char
@@ -240,7 +240,7 @@ char ch = (char)48; // explicite conversation of int to char
 
 Funktionen k\"onnen maximal 1. R\"uckgabewert besitzen, und beliebig viele Argumente. Es ist m\"oglich Referenzen auf Variablen zu \"ubergeben, wobei dies bei Arrays immer der Fall ist.
 
-Zus\"atzlich ist es m\"oglich die Funktion mit dem Schl\"usselwort library in eine Biblioteksfunktion umzuwandeln, welche vom Debugger immer \"ubersprungen wird.
+Zus\"atzlich ist es m\"oglich die Funktion mit dem Schl\"usselwort library in eine Bibliotheksfunktion umzuwandeln, welche vom Debugger immer \"ubersprungen wird.
 
 \begin{lstlisting}[language=CMM]
 int library foo(int a, int b[], int &c) {
@@ -251,7 +251,7 @@ int library foo(int a, int b[], int &c) {
 
 \subsubsection{Vorw\"artsdeklarationen}
 
-Vorw\"artsdeklarationen werden ben\"otigt wenn auf eine Funktion zugegriffen werden muss, bevor diese vollst\"andig inclusive interner Logik Deklariert wurde. Dabei wird die Funktionsdeklaration kopiert, und anstatt mit geschwungenen Klammern und der Funktionslogik, nur mit einem Strichpunkt abgeschlossen.
+Vorw\"artsdeklarationen werden ben\"otigt wenn auf eine Funktion zugegriffen werden muss, bevor diese vollst\"andig inklusive interner Logik Deklariert wurde. Dabei wird die Funktionsdeklaration kopiert, und anstatt mit geschwungenen Klammern und der Funktionslogik, nur mit einem Strichpunkt abgeschlossen.
 
 \begin{lstlisting}[language=CMM]
 int foo(int a);
@@ -322,7 +322,7 @@ int timestamp = time();
 
 \htlParagraph{\_\_is\_def\_***\_\_}
 
-Dies is ist eine interne Funktion, welche f\"ur die Bibliotek ben\"otigt wird, und zugriff auf den Speicher gibt. Es gibt dabei f\"ur jeden Datentyp eine eigene Funktion, welche true zur\"uckliefert wenn die Variable bereits initialisiert wurde. Ansonsten wird false zur\"uckgegeben.
+Dies is ist eine interne Funktion, welche f\"ur die Bibliothek ben\"otigt wird, und zugriff auf den Speicher gibt. Es gibt dabei f\"ur jeden Datentyp eine eigene Funktion, welche true zur\"uckliefert wenn die Variable bereits initialisiert wurde. Ansonsten wird false zur\"uckgegeben.
 
 \begin{lstlisting}[language=CMM]
 bool test;
@@ -331,11 +331,25 @@ bool isTestInitialized = __is_def_bool__(test);
 
 \htlParagraph{\_\_assert\_\_}
 
-Wenn der erste Paramter false ist, wird der Interpreter angehalten und eine definierte Fehlermeldung ausgegeben. diese Funktion wird auch nur in Biblioteksfunktionen verwendet, um unter anderem Eingabedaten auf Grenzwerte und Valid\"at zu zu pr\"ufen.
+Wenn der erste Parameter false ist, wird der Interpreter angehalten und eine definierte Fehlermeldung ausgegeben. diese Funktion wird auch nur in Bibliotheksfunktionen verwendet, um unter anderem Eingabedaten auf Grenzwerte und Valid\"at zu zu pr\"ufen.
 
 \begin{lstlisting}[language=CMM]
 __assert__(false, "some error occured");
 \end{lstlisting}
 
-\subsection{Ausdrücke}
+\subsection{Operatoren}
 
+C-Compact unterst\"utzt alle Standardoperatoren wie Plus, Minus, aber auch Stiftoperatoren und binäre Operatoren. Zu beachten ist dass Logische Operatoren nur in Bedingungen genutzt werden k\"onnen, nicht aber in normalen Ausdr\"ucken. Es gilt Punkt vor Strich vor Shift vor bin\"are Operatoren. Diese Reihenfolge kann nat\"urlich mit Klammern ver\"andert werden.
+
+\begin{lstlisting}[language=CMM]
+ a = ((5 + 2 - 3) / 4) << 2; // a = 4
+ b = 0x000f & 0x1003; // b = 0x0003
+\end{lstlisting}
+
+\subsubsection{Punktoperator}
+
+\subsubsection{Strichoperator}
+
+\subsubsection{Shiftoperator}
+
+\subsubsection{Bin\"arer Operator}
