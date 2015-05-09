@@ -386,7 +386,7 @@ public class Quest {
 			return null;
 		
 		File[] listOfFiles = folder.listFiles(); //get all File and Folder - Names
-		
+		if(listOfFiles != null)
 		for (int i = 0; i < listOfFiles.length; i++) {	
 		//Excludes Profile Folder and execludes FileNames, relative and absolute paths are allowed.
 		  if(listOfFiles[i].isFile()){

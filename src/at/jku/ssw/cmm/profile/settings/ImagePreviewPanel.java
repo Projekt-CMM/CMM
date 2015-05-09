@@ -31,6 +31,7 @@ import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class ImagePreviewPanel extends JPanel implements PropertyChangeListener {
@@ -41,10 +42,15 @@ public class ImagePreviewPanel extends JPanel implements PropertyChangeListener 
 	private Image image;
 	private static final int ACCSIZE = 155;
 	private Color bg;
+	
+	private JLabel label = new JLabel("");
 
 	public ImagePreviewPanel() {
 		setPreferredSize(new Dimension(ACCSIZE, -1));
 		bg = getBackground();
+		
+		this.add(label);
+
 	}
 
 	public void propertyChange(PropertyChangeEvent e) {
@@ -60,15 +66,14 @@ public class ImagePreviewPanel extends JPanel implements PropertyChangeListener 
 			else
 				name = selection.getAbsolutePath();
 
-			/*
-			 * Make reasonably sure we have an image format that AWT can handle
-			 * so we don't try to draw something silly.
-			 */
 			if ((name != null) && (name.toLowerCase().endsWith(".jpg")
 					|| name.toLowerCase().endsWith(".jpeg")
 					|| name.toLowerCase().endsWith(".gif")
 					|| name.toLowerCase().endsWith(".png"))) {
 				icon = new ImageIcon(name);
+				
+				label.setText(selection.getName());
+				
 				image = icon.getImage();
 				scaleImage();
 				repaint();
@@ -81,11 +86,6 @@ public class ImagePreviewPanel extends JPanel implements PropertyChangeListener 
 		height = image.getHeight(this);
 		double ratio = 1.0;
 
-		/*
-		 * Determine how to scale the image. Since the accessory can expand
-		 * vertically make sure we don't go larger than 150 when scaling
-		 * vertically.
-		 */
 		if (width >= height) {
 			ratio = (double) (ACCSIZE - 5) / width;
 			width = ACCSIZE - 5;

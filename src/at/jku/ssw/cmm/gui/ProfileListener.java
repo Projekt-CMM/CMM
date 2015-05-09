@@ -80,7 +80,7 @@ public class ProfileListener {
 		
 		JFileChooser chooser = new JFileChooser();
 		ImagePreviewPanel preview = new ImagePreviewPanel();
-		chooser.setAccessory(preview);
+		chooser.setAccessory(preview);		
 		
 		chooser.addPropertyChangeListener(preview);
 		
