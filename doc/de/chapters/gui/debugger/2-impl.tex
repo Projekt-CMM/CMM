@@ -11,6 +11,7 @@
 %   --------------------------------------------------------
 
 \subsection{Interfaces}
+\label{sec:deb-impl-interfaces}
 Für die Kommunikation mit dem Interpreter sind zwei Interfaces wichtig. Im Package \textbf{at.jku.ssw.cmm.debugger} befinden sich das Interface \textbf{Debugger} und das Interface \textbf{StdInOut}. Die Interfaces sind getrennt, da sie unterschiedliche Teile der Benutzeroberfläche betreffen. Bei einfacheren Anwendungen des Interpreters, wie etwa beim Testen von Quests, werden aber beide Interfaces in der selben Klasse implelemtiert.
 %TODO ref quest test
 
@@ -221,6 +222,60 @@ java.awt.EventQueue.invokeAndWait(new Runnable() {
 %   Abarbeiten von Schritten
 %   --------------------------------------------------------
 
+%TODO is ref to leftpanel->io necessary???
 \subsection{Abarbeiten von Knoten im Abstrakten Syntaxbaum}
-Die Schnittstelle zwischen Benutzeroberfläche und
+Die Schnittstelle zwischen Benutzeroberfläche und Interpreter bildet die Klasse \textbf{PanelRunListener} im Packet \textbf{at.jku.ssw.cmm.gui.event.debug}. Sie implementiert einerseits das Interface \textbf{Debugger} (Siehe Kapitel \ref{sec:deb-impl-interfaces}) zum Ausführen von Schritten des Debuggers, andererseits enthält sie Listener für Bedienelemente des Debuggers und den zugehörigen Hotkeys. Außerdem wird hier festgelegt und gespeichert, in welchem Modus sich der Debugger befindet.
+%TODO red ctrl-elements, mode
+
+%TODO ref interpreter, ast
+Die einzelnen Schritte im Abstrakten Syntaxbaum werden mit der Methode \textbf{step()} übergeben. Diese Methode wird vom thread des Interpreters aufgerufen und wie folgt abgearbeitet:
+
+\begin{enumerate}
+\item Ist der Knoten ein \textbf{wait}-Befehl, wird der Debugger in den \textbf{Pausemodus} versetzt.
+%TODO ref wait, pause
+\item Ist der Knoten eine Funktionsrückgabe, wird ein Popup im Sourcecode mit dem Rückgabewert angezeigt (falls diese Funktion aktiviert ist).
+%TODO ref return popup, properties
+\item Befindet sich der Debugger im \textbf{Schnelldurchlauf} (keine Verzögerung), wird der Thread des Interpreters nur eine Millisekunde lang verzögert. Danach wird die Methode verlassen.
+\begin{lstlisting}[language=JAVA]
+Thread.sleep(1);
+\end{lstlisting}
+Diese Verzögerung ist notwendig, damit die Benutzeroberfläche zwischen den einzelnen Schritten des Interpreters Zeit hat, auf Events zu reagieren.
+
+\item Aktualisierung der Benutzeroberfläche: Die Tabelle mit den Variablen wird aktualisiert, die aktuelle Zeile im Quelltext wird markiert.
+%TODO ref treetable
+\begin{lstlisting}[language=JAVA]
+/* --- Variable table update --- */
+this.master.updateVariableTables(Memory.getFramePointer() != this.lastAdress);
+this.lastAdress = Memory.getFramePointer();
+		
+/* --- Highlight the changed variables --- */
+for( int i : changedVariables )
+	this.master.highlightVariable(i, true);
+\end{lstlisting}
+\emph{Anmerkung zu Zeile 2:} Wenn bei der Aktualisierungsmethode der Variablentabelle \textbf{true} übergeben wird, wird das gesamte Datenmodell der Tabelle neu aufgebaut. Das ist aber nur notwendig, wenn neue Einträge hinzukommen oder Variablen gelöscht werden (Funktion wird aufgerufen oder geändert, Framepointer hat einen anderen Wert).
+
+\item Thread wartet auf Freigabe zum nächsten Schritt. Befindet sich der Debugger im \textbf{automatischen Debugmodus}, wird vorher ein Timer initialisiert, der den nächsten Schritt nach einiger Zeit von selbst auslöst.
+\begin{lstlisting}[language=JAVA]
+/* --- Initialize auto-debugging delay timer --- */
+if (this.isRunMode() && this.delay > 0) {
+	this.timer = new Timer();
+	// Start timer
+	this.timer.schedule(new TimerTask() {
+		@Override
+		public void run() {
+			if( isRunMode() || isPauseMode() )
+				userReply();
+		}
+	}, (int)(delayScale(delay)*1000) );
+}
+
+// Wait until timer runs out or user presses "next step" button
+waitForUserReply();
+		
+this.timer = null;
+\end{lstlisting}
+Die Methode \textbf{waitForUserReply} hält den Thread des Interpreters an, bis die Methode \textbf{userReply} aufgerufen wird. Dies kann --- je nach Modus --- entweder durch den Timer oder durch eine Eingabe in der Benutzeroebrfläche geschehen.
+\end{enumerate}
+
+
 
