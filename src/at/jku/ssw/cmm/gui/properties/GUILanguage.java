@@ -10,6 +10,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
@@ -17,6 +18,7 @@ import javax.swing.border.TitledBorder;
 import at.jku.ssw.cmm.gettext.Language;
 import at.jku.ssw.cmm.gui.GUIExecutable;
 import at.jku.ssw.cmm.gui.file.LoadStatics;
+import at.jku.ssw.cmm.profile.Profile;
 
 public class GUILanguage implements MouseListener {
 
@@ -57,7 +59,8 @@ public class GUILanguage implements MouseListener {
 	private void init(JPanel mainPanel) {
 		
 		JPanel logo = new JPanel();
-		logo.add(LoadStatics.loadImage("images/logo.png", false, 120, 120));
+		
+		logo.add(new JLabel(LoadStatics.loadIcon("images/logo.png", 120, 120)));
 		mainPanel.add(logo, BorderLayout.PAGE_START);
 		
 		JPanel center = new JPanel();

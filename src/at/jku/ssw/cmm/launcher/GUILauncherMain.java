@@ -98,7 +98,7 @@ public class GUILauncherMain implements ActionListener, GUIExecutable{
 	public void start(boolean test) {
 		
 		this.jFrame = new JFrame("C Compact Launcher");
-		this.jFrame.setMinimumSize(new Dimension(700,480));
+		this.jFrame.setMinimumSize(new Dimension(700,481));
 		
 		
 		
@@ -117,7 +117,7 @@ public class GUILauncherMain implements ActionListener, GUIExecutable{
 		this.addProfilePanel();
 		this.addBottomPanel();	
 		
-		this.jFrame.setResizable(false);
+		this.jFrame.setResizable(true);
 		this.jFrame.add(jGlobalPanel);
 		this.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.jFrame.addWindowListener(new WindowEventListener(this.jFrame, settings));
@@ -141,7 +141,7 @@ public class GUILauncherMain implements ActionListener, GUIExecutable{
 		
 		JPanel logo = new JPanel();
 		//Path for the logo image
-		logo.add(LoadStatics.loadImage("images/logo.png", false, 75, 75));
+		logo.add(new JLabel(LoadStatics.loadIcon("images/logo.png", 75, 75)));
 		
 		jWelcomePanel.add(logo,BorderLayout.LINE_END);
 	

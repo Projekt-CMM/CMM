@@ -86,7 +86,6 @@ public class GUIProfileManager {
 				    
 				    
 				    if (!success) {
-				    	//TODO Exception !! for looping
 				    	
 		        		JFrame frame = new JFrame("Warnung");
 		        		JOptionPane.showMessageDialog(frame,
@@ -132,6 +131,7 @@ public class GUIProfileManager {
 		ProfilePreviewPanel preview = new ProfilePreviewPanel();
 		chooser.setAccessory(preview);
 		chooser.addPropertyChangeListener(preview);
+
 		
 		//Disable Renaming etc.
 		UIManager.put("FileChooser.readOnly", Boolean.TRUE);

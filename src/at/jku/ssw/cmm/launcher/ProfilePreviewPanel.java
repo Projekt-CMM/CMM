@@ -11,6 +11,7 @@ import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import at.jku.ssw.cmm.profile.Profile;
@@ -26,9 +27,14 @@ public class ProfilePreviewPanel extends JPanel implements PropertyChangeListene
 	private static final int ACCSIZE = 155;
 	private Color bg;
 
+	private JLabel label = new JLabel("");
+	
 	public ProfilePreviewPanel() {
 		setPreferredSize(new Dimension(ACCSIZE, -1));
 		bg = getBackground();
+
+		this.add(label);
+
 	}
 
 	private Profile profile;
@@ -46,24 +52,24 @@ public class ProfilePreviewPanel extends JPanel implements PropertyChangeListene
 			else
 				name = selection.getAbsolutePath();
 
-			/*
-			 * Make reasonably sure we have an image format that AWT can handle
-			 * so we don't try to draw something silly.
-			 */
 			if ((name != null) && (name.toLowerCase().endsWith(".cp"))){
 				System.out.println(name);
 				try {
 					String path = selection.getAbsoluteFile().getParent();
 					profile = Profile.ReadProfile(path);
-					if(profile.getProfileimage() == null)
-						return;
 					
-					name = path + File.separator + profile.getProfileimage();
+					label.setText( profile.getName());
+					
+					if(profile.getProfileimage() == null){
+						name = Profile.IMAGE_DEFAULT;
+					}else
+						name = path + File.separator + profile.getProfileimage();
 					
 					icon = new ImageIcon(name);
 					image = icon.getImage();
 					scaleImage();
 					repaint();
+					
 				} catch (XMLReadingException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -75,6 +81,7 @@ public class ProfilePreviewPanel extends JPanel implements PropertyChangeListene
 		}
 	}
 
+	
 	private void scaleImage() {
 		width = image.getWidth(this);
 		height = image.getHeight(this);

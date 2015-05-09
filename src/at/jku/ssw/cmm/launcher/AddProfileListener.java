@@ -82,7 +82,7 @@ public class AddProfileListener extends MouseAdapter {
 
 		  
 				JFrame frame = new JFrame("Warnung");
-        		JOptionPane.showMessageDialog(frame,"Profile was already created there","Warning:",
+        		JOptionPane.showMessageDialog(frame,"An Error Occured while creating a Profile there","Warning:",
         			    JOptionPane.WARNING_MESSAGE);
         		
         		new GUILauncherMain(new GUImainSettings(null));
