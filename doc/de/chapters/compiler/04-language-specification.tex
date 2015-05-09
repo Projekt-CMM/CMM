@@ -346,10 +346,28 @@ C-Compact unterst\"utzt alle Standardoperatoren wie Plus, Minus, aber auch Stift
  b = 0x000f & 0x1003; // b = 0x0003
 \end{lstlisting}
 
-\subsubsection{Punktoperator}
+\subsubsection{Punktoperatoren}
 
-\subsubsection{Strichoperator}
+\subsubsection{Strichoperatoren}
 
-\subsubsection{Shiftoperator}
+\subsubsection{Shiftoperatoren}
 
-\subsubsection{Bin\"arer Operator}
+Der Logische Shiftoperator\footnote{\url{https://de.wikipedia.org/wiki/Logische_Verschiebung}} verschieben den Inhalt einer Speicherzelle logisch um eine gew\"ahlte L\"ange. Zu beachten ist dass Daten welche außerhalb der Speicherzelle geschrieben werden gel\"oscht werden, und ansonsten undefinierte Bits mit 0 initialisiert werden.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{./media/images/compiler/language_specification_shift_operator.png}
+\caption{Bitweise Verschiebung einer 1.Byte Variable um 2 nach links}
+\label{language_specification_shift_operator}
+\end{figure}
+
+\subsubsection{Bin\"are Operatoren}
+
+Bin\"are Operatoren f\"uhren jede Operation einzeln pro Bit aus, ohne Nachtbarbits zu ber\"ucksichtigen.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{./media/images/compiler/language_specification_binary_operator_xor.png}
+\caption{Bitweises XOR von 2. Variablen}
+\label{language_specification_binary_operator_xor}
+\end{figure}
