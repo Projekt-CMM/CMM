@@ -11,36 +11,63 @@
 %   --------------------------------------------------------
 
 \subsection{Die grundlegende Idee}
-Ein wichtiger Bestandteil von C Compact ist der integrierte eigene Debugger, der speziell für die Bedürfnisse von Anfängern ausgelegt ist. Während das Programm Schritt für Schritt abgearbeitet wird, sind alle Variablen und der Call Stack in übersichtlicher Form dargestellt. In der Variablentabelle werden Wertänderungen farbig hervorgehoben. Dadurch soll ein fundiertes Verständnis für den Programmablauf und die Logik dahinter entstehen.
+Ein wichtiger Bestandteil von C Compact ist der integrierte Debugger, der speziell für die Bedürfnisse von Anfängern ausgelegt ist. Während das Programm Schritt für Schritt abgearbeitet wird, sind alle Variablen und der Call Stack in übersichtlicher Form dargestellt. In der Variablentabelle werden Wertänderungen farbig hervorgehoben. Dadurch soll ein fundiertes Verständnis für den Programmablauf und die Logik dahinter entstehen.
 
-Ein daraus resultierender Vorteil ist, dass Schüler von Anfang an mit einem Debugger arbeiten und ähnliche Tools später auch in anderen Entwicklungsumgebungen verwenden werden.
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.7\textwidth]{./media/images/gui/debugger/gui-debugger-marked.png}
+\caption{Die vier Komponenten des Debuggers}
+\label{fig:deb-intro-m1}
+\end{figure}
 
-Da wir Compiler und Interpreter selbst entwickeln, kann die Grafische Oberfläche in den Programmablauf eingreifen und aktuelle Daten abfragen. Des Weiteren haben wir Schutzfunktionen implementiert, die Probleme wie etwa Pufferüberläufe erkennen. Solche Fehler werden besonders von Anfängern leicht übersehen und führen meist zu einem undefinierbaren Verhalten des Programmes.
+Während die Debugger professioneller Entwicklungsumgebungen eine Hilfestellung für erfahrene Programmierer sind, ist der Debugmodus von C Compact besonders auf Anfänger ausgelegt. Damit Einsteiger und unerfahrene Programmierer von Beginn an mit dem Debugger in Berührung kommen, ist er ein fester Bestandteil der Benutezroberfläche.
 
-Fehler im Präprozessor, Compiler oder Interpreter werden dem Benutzer übersichtlich angezeigt und verständlich erklärt. Außerdem werden Hinweise zur Fehlersuche und -behebung gegeben.
+Abbildung \ref{fig:deb-intro-m1} zeigt die vier Komponenten des Debuggers in der Benutzeroberfläche:
+\begin{enumerate}
+\item Im Quelltext wird die gerade abgearbeitete Zeile markiert
+\item Mit den Kontrollelementen kann der Debugger gestartet und angehalten werden
+\item Die Variablen des Programmes werden übersichtlich angezeigt
+\item Ein- und Ausgabe des laufenden Programmes befinden sich in getrennten Textfeldern, eingelesene Zeichen werden gelb markiert.
+\end{enumerate}
+
+%TODO somewhere else:
+% Fehler im Präprozessor, Compiler oder Interpreter werden dem Benutzer übersichtlich angezeigt und verständlich erklärt. Außerdem werden Hinweise zur Fehlersuche und -behebung gegeben.
 %TODO ref: nicht verwechseln mit internen Fehlern
 
 %   --------------------------------------------------------
 %   Bedienung des Debuggers
 %   --------------------------------------------------------
 
-\subsection{Bedineung des Debuggers}
-Bevor die konkrete Implementierung des Debuggers beschrieben wird, soll auf seine grundlegende Bedienung und die Kommunikation mit dem Benutzer eingegangen werden.
+\subsection{Bedienung des Debuggers}
+
+Mit den Kontrollelementen kann der Debugger intuitiv und einfach bedient werden. Die Bedienelemente (Abbildung \ref{fig:deb-gui-ctrl}) sind im rechten Teil des Hauptfensters im Tab \glqq{}Debug\grqq{} (Siehe Kapitel \ref{sec:gui-main-right-reg-deb}) zu finden.
+
+\def\arraystretch{1.4}
+\begin{table}[h]
+\begin{tabular}{|l|l|l|l|}
+	\hline
+	Element & \parbox{2cm}{Keyboard\\Shortcut}& Name & Funktion\\
+	\hline
+	\ding{228} / \ding{122}\thinspace \ding{122} & F5 & Play/Pause & Startet den Debugger/Hält den Debugger an\\
+	\ding{122}\thinspace \ding{228} & F6 & Step & Springt zum nächsten Schritt weiter\\
+	\ding{110} & F7 & Stop & Beendet den Debugger\\
+	--- & --- & Schieberegler & \parbox{7cm}{Ändert die Zeitabstände beim automatischen Debuggen}\\
+	\hline
+\end{tabular}
+\caption{Funktionen der Bedienelemente des Debuggers}\label{tab:deb-ctrl}
+\end{table}
+
+
 
 \begin{figure}[htp]
 \centering
-\includegraphics[width=0.4\textwidth]{./media/images/gui/debugger/CCompact-guimain-run.png}
-\caption{Bedienungspanel des Debuggers}
-\label{fig:deb-gui-rpanel}
+\includegraphics[width=0.4\textwidth]{./media/images/gui/debugger/ctrl-elements.png}
+\caption{Kontrollelemente des Debuggers}
+\label{fig:deb-gui-ctrl}
 \end{figure}
 
-Abbildung \ref{fig:deb-gui-rpanel} zeigt die Bedienelemente des Debuggers, die als Teil des rechten Panels (Siehe Kapitel \ref{sec:gui-main-right-reg-deb}) im Haupfenster von C Compact angezeigt werden. Im oberen Teil befindet sich ein Panel mit Kontrollelementen, darunter werden - wenn der Debugger läuft - Call Stack und Variablen des Programmes angezeigt.
-
-Der Debugger hat vier unterschiedliche Modi, diese wurden bereits in Kapitel \ref{sec:gui-main-left-zust} überblicksmäßig beschrieben. Der Wechsel zwischen diesen zuständen erfolgt durch Eingaben des Benutzers, entweder mit den Kontrollelementen (Buttons) in der Benutzeroberfläche, oder mit Keyboard Shortcuts.
+Der Debugger hat vier unterschiedliche Modi, diese wurden bereits in Kapitel \ref{sec:gui-main-left-zust} überblicksmäßig beschrieben. Der Wechsel zwischen diesen Zuständen erfolgt durch Eingaben des Benutzers, entweder mit den Kontrollelementen (Buttons) in der Benutzeroberfläche, oder mit Keyboard Shortcuts.
 %TODO ref keyboard shortcuts
-
-Mit dem Regler unter den Buttons kann der Zeitabstand eingestellt werden, nach beim automatischen Debuggen zum nächsten Schritt gesprungen wird. Die gewählte Zeit wird, je nach zur Verfügung stehendem Platz, neben oder über dem Regler angezeigt.
-%TODO diesen Absatz nochmal lesen
 
 Die vier Zustände sind:
 \begin{enumerate}
@@ -49,9 +76,6 @@ Die vier Zustände sind:
 \item \textbf{Programm Schritt für Schritt abarbeiten oder Pause (pause mode)}
 \item \textbf{Programm automatisch abarbeiten (run mode)}
 \end{enumerate}
-%TODO bedienelemente können ausgeblendet werden
-
-Obwohl der Debugger selbst zwischen Modus 1 und 2 unterscheidet, gibt es in der Benutzeroberfläche nur mehr den Editormodus. Der Fehlermodus wird trotzdem im Zustandspanel des Debuggers im Hauptfenster angezeigt, damit der Benutzer auf den aufgetretenen Fehler aufmerksam gemacht wird. Wie in Abbildung \ref{fig:deb-zust-simple} ersichtlich ist, erfüllen die beiden Modi die selben Funktionen.
 
 \begin{figure}[htp]
 \centering
@@ -60,9 +84,31 @@ Obwohl der Debugger selbst zwischen Modus 1 und 2 unterscheidet, gibt es in der 
 \label{fig:deb-zust-simple}
 \end{figure}
 
-Der dritte Zustand hat zwei Funktionen: einerseits entspricht dieser Modus einer Pausierung (bezogen auf Zustand 4, in dem der Debugger automatisch durchläuft) und andererseits kann in diesem Modus mit dem mittleren Button auch direkt zum nächsten Schritt gesprungen werden.
+Obwohl der Debugger selbst zwischen Modus Editormodus (1) und Fehlermodus (2) unterscheidet, gibt es in der Benutzeroberfläche nur mehr den Editormodus. Der Fehlermodus wird trotzdem im Zustandspanel des Debuggers im Hauptfenster angezeigt, damit der Benutzer auf den aufgetretenen Fehler aufmerksam gemacht wird. Wie in Abbildung \ref{fig:deb-zust-simple} ersichtlich ist, erfüllen die beiden Modi die selben Funktionen.
 
-Ein Sonderfall der 4. Modus ist der ,,quick run mode''. Wenn der Regler für die Zeitabstände zwischen den Schritten des Debuggers auf null gestellt wird, werden die folgenden Schritte so schnell wie möglich abgearbeitet, bis entweder das Programm zu Ende ist oder der Debugger auf einen ,,wait''-Befehl stößt (Siehe Kapitel \ref{})
+Mit dem Schieberegler kann der Zeitabstand eingestellt werden, nach beim automatischen Debuggen zum nächsten Schritt gesprungen wird. Die gewählte Zeit wird, je nach zur Verfügung stehendem Platz, neben oder über dem Regler angezeigt.
+
+\emph{Anmerkung 1:}
+\par
+\begingroup
+\leftskip=1cm % Parameter anpassen
+\noindent Der Pausemodus (3) hat zwei Funktionen: einerseits entspricht dieser Modus einer Pausierung (bezogen auf Zustand 4, in dem der Debugger automatisch durchläuft) und andererseits kann in diesem Modus mit dem mittleren Button auch direkt zum nächsten Schritt gesprungen werden.
+\par
+\endgroup
+
+
+\emph{Anmerkung 2:}
+\par
+\begingroup
+\leftskip=1cm % Parameter anpassen
+\noindent Ein Sonderfall des run mode ist der \glqq{}quick run mode\grqq{}. Wenn der Regler für die Zeitabstände zwischen den Schritten des Debuggers auf null gestellt wird, werden die folgenden Schritte so schnell wie möglich abgearbeitet, bis entweder das Programm zu Ende ist oder der Debugger auf einen \glqq{}wait\grqq{}-Befehl stößt (Siehe Kapitel \ref{}).
+\par
+\endgroup
+%TODO diesen Absatz nochmal lesen
+
+
+%TODO bedienelemente können ausgeblendet werden
+
 %TODO ref commands
 
 %   --------------------------------------------------------

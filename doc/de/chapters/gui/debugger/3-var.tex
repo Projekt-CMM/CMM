@@ -9,7 +9,7 @@
 %	--------------------------------------------------------
 \section{Darstellungsform der Variablen}
 
-Zur Darstellung wurden zwei Konzepte verfolgt:
+Zur Darstellung der Variablen während des Programmablaufes wurden zwei Konzepte verfolgt:
 \begin{enumerate}
 \item Die Anzeige des Call Stacks als Liste mit separaten Tabellen für die globalen und lokalen Variablen, Abbildung \ref{fig:deb-var-m1}.
 \item Die Anordnung aller Variablen in einem Baum, wobei lokale Variablen Funktionen untergeordnet sind, Abbildung \ref{fig:deb-var-m2}.
@@ -81,15 +81,17 @@ Der JTree in der TreeTable von C Compact verwendet ein eigenes Datenmodell, Tree
 \subsubsection*{JTable - Tabelle}
 Tabellen können in Swing mit dem Komponenten JTable\footnote{http://docs.oracle.com/javase/tutorial/uiswing/components/table.html} dargestellt werden. Wie auch bei der Klasse JTree werden die Daten nicht im Objekt von JTable gespeichert. Im einfachsten Fall kann eine Tabelle durch ein zweidimensionales Array initialisiert werden\footnote{http://www.java2s.com/Tutorial/Java/0240\_\_Swing/CreatingaJTable.htm}. In der Regel wird aber ein Datenmodell wie etwa DefaultTableModel\footnote{http://docs.oracle.com/javase/8/docs/api/javax/swing/table/DefaultTableModel.html} verwendet. Ein für eine Tabelle verwendbares Datenmodell ist ein Objekt einer Klasse, die das Interface TableModel\footnote{http://docs.oracle.com/javase/8/docs/api/javax/swing/table/TableModel.html} implementiert.
 
-\subsection{Implementierung}
+\subsection{Allgemeine Implementierung}
 Die grundlegende Implementierung erfolgte anhand eines Blogeintrages\footnote{http://www.hameister.org/JavaSwingTreeTable.html}, mittlerweile wurde der Code allerdings stark an die Anforderungen der Benutzeroberfläche angepasst und erweitert.
 
-Im folgenden Klassendiagramm wird der Aufbau der TreeTable dargestellt. Swing-Komponenten sind Dunkelblau, von Java vorgegebene Klassen und Interfaces sind Hellblau dargestellt. Die meisten Klassen sind selbst implementiert und daher mit weiß gekennzeichnet.
+Da die TreeTable auch zum Auswählen der Questpackete verwendet wird, wurde ein Großteil allgemein implementiert, sodass die TreeTable auch für andere Anwendungen ohne Probleme weiterverwendet werden kann. Für jede Anwendung muss eine eigene Klasse als Knoten des Baumes der TreeTable erstellt werden. Optional ist die Erweiterung durch einen eigenen Renderer, der den Elementen der TreeTable unterschiedliche Symbole gibt.
+
+Im folgenden Klassendiagramm wird der Aufbau der TreeTable dargestellt. Swing-Komponenten sind Dunkelblau, von Java vorgegebene Klassen und Interfaces sind Hellblau dargestellt. Die meisten Klassen sind selbst implementiert und daher mit weiß gekennzeichnet. Orange gefärbte Klassen müssen für die spezielle Anwendung implementiert werden.
 
 \begin{figure}
-\includegraphics[width=\textwidth]{./media/images/gui/var/TreeTableClasses.png}
-\caption{Klassendiagramm der TreeTable}
-\label{var_tt_class}
+\includegraphics[width=\textwidth]{./media/images/gui/var/TreeTableClassesRaw.png}
+\caption{Allgemeines Klassendiagramm der TreeTable}
+\label{fig:deb-var-tt-class-raw}
 \end{figure}
 
 \subsubsection*{TreeTable.java}
