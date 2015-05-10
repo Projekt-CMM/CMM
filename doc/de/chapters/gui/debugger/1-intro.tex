@@ -13,7 +13,7 @@
 \subsection{Die grundlegende Idee}
 Ein wichtiger Bestandteil von C Compact ist der integrierte Debugger, der speziell für die Bedürfnisse von Anfängern ausgelegt ist. Während das Programm Schritt für Schritt abgearbeitet wird, sind alle Variablen und der Call Stack in übersichtlicher Form dargestellt. In der Variablentabelle werden Wertänderungen farbig hervorgehoben. Dadurch soll ein fundiertes Verständnis für den Programmablauf und die Logik dahinter entstehen.
 
-\begin{figure}[htp]
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.7\textwidth]{./media/images/gui/debugger/gui-debugger-marked.png}
 \caption{Die vier Komponenten des Debuggers}
@@ -59,7 +59,7 @@ Mit den Kontrollelementen kann der Debugger intuitiv und einfach bedient werden.
 
 
 
-\begin{figure}[htp]
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.4\textwidth]{./media/images/gui/debugger/ctrl-elements.png}
 \caption{Kontrollelemente des Debuggers}
@@ -73,7 +73,7 @@ Die vier Zustände sind:
 \begin{enumerate}
 \item \textbf{Text bearbeiten (ready mode)}
 Dies ist der Standardzustand. Der Quelltext und Eingabedaten für den Debugger können bearbeitet werden. Außerdem sind Dateioperationen erlaubt.
-\begin{figure}[h!tp]
+\begin{figure}[h!]
 \centering
 \includegraphics[width=0.65\textwidth]{./media/images/gui/debugger/mode-idle.png}
 \caption{Zustandsanzeige für den Editormodus}
@@ -81,7 +81,7 @@ Dies ist der Standardzustand. Der Quelltext und Eingabedaten für den Debugger k
 \end{figure}
 \item \textbf{Fehler aufgetreten (error mode)}
 Beim Compilieren oder während der Laufzeit des Debuggers ist ein Fehler aufgetreten. Um diesen zu beheben, ist das Bearbeiten des Quelltexts nach wie vor erlaubt.
-\begin{figure}[h!tp]
+\begin{figure}[h!]
 \centering
 \includegraphics[width=0.65\textwidth]{./media/images/gui/debugger/mode-error.png}
 \caption{Zustandsanzeige für den Fehlermodus}
@@ -89,7 +89,7 @@ Beim Compilieren oder während der Laufzeit des Debuggers ist ein Fehler aufgetr
 \end{figure}
 \item \textbf{Programm Schritt für Schritt abarbeiten oder Pause (pause mode)}
 Der Debugger ist aktiv, wartet aber auf eine Eingabe des Benutzers, um den nächsten Befehl abzuarbeiten. In diesem Modus kann der Benutzer sein Programm Schritt für Schritt abarbeiten. Das Modifizieren des Quelltextes ist in diesem Modus nicht möglich.
-\begin{figure}[h!tp]
+\begin{figure}[h!]
 \centering
 \includegraphics[width=0.65\textwidth]{./media/images/gui/debugger/mode-step.png}
 \caption{Zustandsanzeige für den Pausemodus}
@@ -105,7 +105,7 @@ Das Programm des Benuters wird Schritt für Schritt abgearbeitet. Zwischen den B
 \end{figure}
 \end{enumerate}
 
-\begin{figure}[htp]
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.65\textwidth]{./media/images/gui/debugger/RunModes_Simple.png}
 \caption{Vereinfachtes Zustandsdiagramm des Debuggers}
@@ -145,7 +145,7 @@ Durch die Umsetzung der Breakpoint-Funktion als Befehl in der Sprache besteht im
 Funktionen und Variablen können vor dem Debugger \glqq{}versteckt\grqq{} werden. Das Attribut \textbf{library} kann sowohl für eine Variable, als auch für eine Funktion verwendet werden. Das Schlüsselwort muss immer zwischen Typ und Name der Variable bzw. Funktion stehen.
 
 \begin{lstlisting}[language=CMM]
-const float library M_PI    = 3.141592654;
+const float library M_PI = 3.141592654;
 \end{lstlisting}
 Eine Variable mit dem \textbf{library}-Attribut wird im Debugger nicht angezeigt. Dies wird zum Beispiel verwendet, um die zahlreichen Konstanten der Bibliothek \textbf{math.h} im Debugger auszublenden.
 

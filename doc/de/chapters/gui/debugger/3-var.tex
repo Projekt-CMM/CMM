@@ -66,14 +66,36 @@ Zusätzlich werden folgende Elemente in der Tabelle farbig markiert:
 % TODO refer to undef variables
 \end{itemize}
 
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.5\textwidth]{/home/fabian/Dokumente/C--/CMM/doc/de/media/images/gui/debugger/gui-treetable.png}
+\caption{Beispiel für farbige Hervorhebung von Variablen}
+\label{fig:deb-tt-example}
+\end{figure}
+%TODO erklären, wie Farben funktionieren???
+
 Bei Rechtsklick auf eine Variable im Baum wird ein Kontextmenü geöffnet. Mit der Option \glqq{}Gehe zur Deklaration\grqq{} kann der Benutzer zur Deklaration der Variable im Sourcecode springen. Die entsprechende Zeile wird markiert. Für Funktionen gibt es außerdem den Punkt \glqq{}Gehe zum Aufruf\grqq{}, der die Zeile markiert, in der diese Funktion aufgerufen wurde.
+
+%    ---------------------------------------------------------------------
+%        Grundlegende Komponenten
+%    ---------------------------------------------------------------------
 
 \subsection{Grundlegende Komponenten}
 Die Variablen werden in einer Tabelle mit Baumstruktur, deshalb auch ,,TreeTable'' genannt, angezeigt. Die TreeTable ist eine Kombination aus einem JTree und einer JTable.
 Im Folgenden werden diese Komponenten beschrieben und der Aufbau der TreeTable erläutert:
 
 \subsubsection*{JTree - Baum}
+
+\begin{wrapfigure}{r}{0.35\textwidth}
+  	\begin{center}
+    	\includegraphics[width=0.3\textwidth]{./media/images/gui/debugger/JTree-Example.png}
+  	\end{center}
+  	\caption{Beispiel für einen einfachen Baum}
+	\label{fig:deb-tt-example-jtree}
+\end{wrapfigure}
+
 Ein JTree\footnote{http://www.codejava.net/java-se/swing/jtree-basic-tutorial-and-examples} ist Swing-Element, das Daten hierarchisch untereinander darstellet. Die Daten sind allerdings nicht im JTree selbst gespeichert, sondern in externen Objekten. Ein JTree kann entweder mit einem Datenmodell oder mit dem Hauptknoten eines Baumes initialisiert werden\footnote{http://docs.oracle.com/javase/tutorial/uiswing/components/tree.html}. Da die Daten eines JTree einen Baum abbildet, kann durch diese Struktur traversiert werden. Solche Operationen\footnote{http://www.java-tutorial.ch/core-java-tutorial/expande-or-collapse-all-nodes-in-a-jtree} werden beispielsweise benötigt, um alle Knoten eines Baumes zu öffnen (expand) oder zu schließen (collapse).
+
 Wird ein JTree direkt mit einem Baum initialisiert, müssen die Knoten das Interface TreeNode implementieren\footnote{http://docs.oracle.com/javase/7/docs/api/javax/swing/tree/TreeNode.html}. Für einfache Aufgaben können Standardklassen, wie etwa DefaultMutableTreeNode\footnote{https://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultMutableTreeNode.html} verwendet werden.
 Mehr Möglichkeiten bietet aber die explizite Verwedung eines Datenmodells. Ein Datenmodell regelt die Interaktion des JTree mit seinem Datenbaum und stellt Methoden zum Einfügen, Löschen und Ändern von Knoten sowie zum Auslesen des Pfades eines Knotens zur Verfügung.
 Der JTree in der TreeTable von C Compact verwendet ein eigenes Datenmodell, TreeTableDataModel. Der Baum besteht aus Objekten der Klasse DataNode. Da ein eigenes Datenmodell verwendet wird, muss DataNode das Interface TreeNode nicht implementieren.
@@ -81,12 +103,25 @@ Der JTree in der TreeTable von C Compact verwendet ein eigenes Datenmodell, Tree
 \subsubsection*{JTable - Tabelle}
 Tabellen können in Swing mit dem Komponenten JTable\footnote{http://docs.oracle.com/javase/tutorial/uiswing/components/table.html} dargestellt werden. Wie auch bei der Klasse JTree werden die Daten nicht im Objekt von JTable gespeichert. Im einfachsten Fall kann eine Tabelle durch ein zweidimensionales Array initialisiert werden\footnote{http://www.java2s.com/Tutorial/Java/0240\_\_Swing/CreatingaJTable.htm}. In der Regel wird aber ein Datenmodell wie etwa DefaultTableModel\footnote{http://docs.oracle.com/javase/8/docs/api/javax/swing/table/DefaultTableModel.html} verwendet. Ein für eine Tabelle verwendbares Datenmodell ist ein Objekt einer Klasse, die das Interface TableModel\footnote{http://docs.oracle.com/javase/8/docs/api/javax/swing/table/TableModel.html} implementiert.
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{./media/images/gui/debugger/JTable-Example.png}
+\caption{Beispiel für eine einfache Tabelle}
+\label{fig:deb-tt-example-jtable}
+\end{figure}
+
+%    ---------------------------------------------------------------------
+%        Allgemeine Implementierung
+%    ---------------------------------------------------------------------
+
 \subsection{Allgemeine Implementierung}
 Die grundlegende Implementierung erfolgte anhand eines Blogeintrages\footnote{http://www.hameister.org/JavaSwingTreeTable.html}, mittlerweile wurde der Code allerdings stark an die Anforderungen der Benutzeroberfläche angepasst und erweitert.
 
 Da die TreeTable auch zum Auswählen der Questpackete verwendet wird, wurde ein Großteil allgemein implementiert, sodass die TreeTable auch für andere Anwendungen ohne Probleme weiterverwendet werden kann. Für jede Anwendung muss eine eigene Klasse als Knoten des Baumes der TreeTable erstellt werden. Optional ist die Erweiterung durch einen eigenen Renderer, der den Elementen der TreeTable unterschiedliche Symbole gibt.
 
-Im folgenden Klassendiagramm wird der Aufbau der TreeTable dargestellt. Swing-Komponenten sind Dunkelblau, von Java vorgegebene Klassen und Interfaces sind Hellblau dargestellt. Die meisten Klassen sind selbst implementiert und daher mit weiß gekennzeichnet. Orange gefärbte Klassen müssen für die spezielle Anwendung implementiert werden.
+Im folgenden Klassendiagramm wird der Aufbau der TreeTable dargestellt. Swing - Komponenten sind Dunkelblau, von Java vorgegebene Klassen und Interfaces sind Hellblau dargestellt. Die meisten Klassen sind selbst implementiert und daher mit weiß gekennzeichnet. Orange gefärbte Klassen müssen für die jeweilige Anwendung extra geschrieben bzw. angepasst werden.
+
+Alle Klassen der TreeTable, die allgemein verwendet werden können, befinden sich im Packet \textbf{at.jku.ssw.cmm.gui.treetable}.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{./media/images/gui/var/TreeTableClassesRaw.png}
@@ -97,66 +132,83 @@ Im folgenden Klassendiagramm wird der Aufbau der TreeTable dargestellt. Swing-Ko
 \subsubsection*{TreeTable.java}
 Diese Klasse ist die Hauptklasse der TreeTable und, da sie von JTable erbt, eine Swing-Komponente. Hier laufen alle Teile der TreeTable, wie etwa Datenmodelle und Renderer, zusammen.
 
-\subsubsection*{VarTreeTable.java}
-VarTreeTable ist eine Wrapperklasse für TreeTable. Sie übernimmt alle wichtigen Funktionen zur Kommunikation mit dem Variablenbaum und bildet so eine Schicht zwischen dem Debugger und der TreeTable. Auf diese Weise wird der Code übersichtlicher und ist besser strukturiert.
-TreeTableView hat folgende Methoden:
-\begin{itemize}
-\item \textbf{init} Initialisiert die TreeTable mit einem Standard-Datenmodell. Dieses besteht nur aus einem Hauptknoten (root), der den Namen der aktuellen Datei trägt; es werden keine Variablen angezeigt. Das Standard-Datenmodell wird immer dann angezeigt, wenn der Debugger nicht aktiv ist, also wenn der Benutzer den Sourcecode editiert.
-\item \textbf{standby} Löscht das aktuelle Datenmodell und übergibt ein Standard-Datenmodell an die TreeTable, sodass wie zu Beginn nur der aktuelle Dateiname angezeigt wird. Diese Methode wird immer aufgerufen, wenn der Debugger beendet wird.
-\item \textbf{update} Aktualisiert das Datenmodell der TreeTable im Debugmodus und zeigt die Variablen im Speicher des Interpreters an.
-\item \textbf{highlightVariable} Mit dieser Methode wird die Addresse einer zuletzt geänderten Variable an die TreeTable übergeben. Diese Variable wird in der Tabelle markiert. Es ist möglich, diese Funktion mehrmals aufzurufen und so mehrere Variablen zu markieren. Wenn das Datenmodell mit \textbf{update} aktualisiert wird, verfallen alle Addressen.
-\item \textbf{updateFontSize} Bei Aufruf dieser Methode wird die Schriftgröße der Tabelle geändert und die gesamte TreeTable neu gezeichnet. Diese Methode wird aufgerufen, wenn die Einstellungen der Benutzeroberfläche geändert wurden.
-\end{itemize}
+Im Konstruktor werden einige Einstellungen an der Tablelle geändert. Diese Einstellungen können auch über die TreeTable selbst geädert werden (da sie von JTable erbt), allerdings sollte das vertauschen der Tabellenspalten deaktiviert bleiben (da sonst Probleme mit den Renderen des Baumes auftreten können).
+\begin{lstlisting}[language=JAVA]
+public TreeTable( TreeTableDataModel<TreeNode> treeTableModel ){
+    super();
+    this.setTreeModel(treeTableModel);
+        
+    //Do not allow column reordering
+    getTableHeader().setReorderingAllowed(false);
+        
+    //Do not show the table grid
+    setShowGrid(false);
+        
+    //No spacing
+	setIntercellSpacing(new Dimension(0, 0));
+}
+\end{lstlisting}
+
+Die Klasse \textbf{TreeTable} enthält zwei Methoden, die für die Implementierung besonders wichtig sind:
+\begin{lstlisting}[language=JAVA]
+public void setTreeModel( TreeTableDataModel<TreeNode> treeTableModel );
+public void updateTreeModel();
+\end{lstlisting}
+
+Beide Methoden aktualisieren die angezeigten Daten in der TreeTable. Die Methode \textbf{setTreeModel(...)} muss verwendet werden, wenn ein neues Datenmodell angezeigt werden soll oder wenn sich die Struktur des Baumes verändert hat. Nach einfachen Wertänderungen in einem oder mehreren Knoten kann die Methode \textbf{updateTreeModel()} aufgerufen werden.
+
+\subsection*{DataNode}
+Ein Datenknoten (DataNode) ist ein Knoten des in der TreeTable abgebildeten Baumes. In diesen Knoten sind alle nötigen Informationen zu den angezeigten Variablen - auch jene, die nicht im Baum selbst sondern in der Tabelle angezeigt werden - gespeichert. Ein Knoten speichert immer alle Informationen einer ganzen Zeile.
+
+DataNode ist eine abstrakte Basisklasse, die alle Daten enthält, diezur Verwendung in der TreeTable notwending sind. Für die Anwendung muss eine eigene Node-Klasse implementiert werden, die von DataNode erbt.
+
+\begin{lstlisting}[language=JAVA]
+public abstract class DataNode {
+	public abstract List<DataNode> getChildren();
+	public abstract int getChildCount();
+	public abstract Object getValueByColumn(int col);
+	public abstract void addChild(DataNode n);
+	@Override
+	public abstract String toString();
+	public void add(DataNode subNode) {
+		// TODO Auto-generated method stub
+		
+	}
+}
+\end{lstlisting}
+
+Eine Verknüpfung zu allen Kindknoten (bestenfalls als \textbf{List}) muss in der abgeleiteten Klasse erfolgen. Die \textbf{toString}-Methode muss überschrieben werden, da diese für den Baum verwendet wird. \textbf{toString} sollte also den Namen des Datenknoten übergeben. Die Implementierung der Methode \textbf{add} ist empfehlenswert (da der Baum irgendwie aufgebaut werden muss), aber nicht erforderlich.
 
 \subsubsection*{TreeModel.java}
 TreeModel ist ein Interface für alle Datenmodelle eines JTree.
 
 \subsubsection*{TreeTableModel.java}
-Dieses Interface erweitert das Interface TreeModel so, dass es mit einer TreeTable kompatibel wird. TreeTableModel definiert zusätzliche Methoden, die für das Datenmodell einer Tabelle benötigt werden, beispielsweise ,,getColumnName()''.
+Dieses Interface erweitert das Interface TreeModel so, dass es mit einer TreeTable kompatibel wird. TreeTableModel definiert zusätzliche Methoden, die für das Datenmodell einer Tabelle benötigt werden, beispielsweise \textbf{getColumnName()}.
 
 \subsubsection*{AbstractTreeTableModel.java}
 Diese abstrakte Basisklasse implementiert einige konkrete Methoden für die Verwendung als Datenmodell eines JTree. In Objekten dieser Klasse werden der Hauptnoten (root) des Baumes gespeichert. Außerdem regelt AbstractTreeModel den Ablauf von Änderungsevents in der Datenstruktur des Baumes.
 
-\subsubsection*{DataNode.java}
-Ein Datenknoten (DataNode) ist ein Knoten des in der TreeTable abgebildeten Baumes. In diesen Knoten sind alle nötigen Informationen zu den angezeigten Variablen - auch jene, die nicht im Baum selbst sondern in der Tabelle angezeigt werden - gespeichert.
-\newline
-Die Klasse DataNode hat folgende Felder:
-\begin{lstlisting}[language=JAVA]
-// Informationen, die in der Tabelle angezeigt werden
-private final String name;
-private Object type;
-private Object value;
-
-// Zusätzliche Informationen
-private int address;
-private int declaration;
-\end{lstlisting}
-Die TreeTable besitzt drei Spalten: In der ersten befindet sich der Baum mit den Namen der Variablen. in der zweiten Spalte wird der Datentyp der Variable und in der dritten ihr Wert gezeigt. Die Felder für Datentyp und Wert haben den Typ Object, da sich in der Tabelle an der Stelle eines Wertes auch ein JButton befinden kann.
-%TODO refer to JTableButtonRenderer.java
-Zusätzlich werden die Addresse und die Deklarationszeile der Variable gespeichert. Die Adresse dient der eindeutigen Identifikation der Variable, zum Beispiel beim Traversieren durch den Variablenbaum. Dadurch können lokale Variablen auch bei mehrfachem Aufruf einer Funktion unterschieden werden.
-Bei Rechtsklick auf eine Variable in der TreeTable wird ein Kontextmenü mit der Option ''Jump to declaration'' geöffnet. Im Sourcecode wird dann die Zeile markiert, die im Feld ''declaration'' des betreffenden Datenknoten gespeichert ist.
-
 \subsubsection*{TreeTableDataModel.java}
-TreeTableDataModel erbt von AbstractTreeTableModel beinhaltet einen weiteren Schritt zu einem Tabellen-Datenmodell. Beispielsweise sind Methoden implementiert, die im Datenmodell einer Tabelle benötigt werden. Außerdem wird in dieser Klasse das kontrete Aussehen der Tabelle festgelegt, indem die Tabellenspalten definiert sind:
+TreeTableDataModel erbt von AbstractTreeTableModel und ist das komplette Tabellen-Datenmodell. Es sind einige Methoden implementiert, die im Datenmodell einer Tabelle benötigt werden. Außerdem wird in dieser Klasse das kontrete Aussehen der Tabelle festgelegt, indem die Tabellenspalten definiert werden.
+
+Um die TreeTable zu initialisieren, muss ein Datenmodell von dieser Klasse erstellt werden. Dabei müssen der Hauptknoten des Datenbaumes (mit Knoten, die von \textbf{DataNode} erben) und Namen und Datentypen der Tabellenspalten angegeben werden.
+%TODO ref rederer for special datatypes
 \begin{lstlisting}[language=JAVA]
-// Column names
-static protected String[] columnNames = {_("Name"), _("Type"), _("Value")};
- 
-// Column types
-static protected Class<?>[] columnTypes = {TreeTableModel.class, String.class, Object.class};
+public class TreeTableDataModel<TreeNode extends DataNode> extends AbstractTreeTableModel<TreeNode> {
+
+	public TreeTableDataModel(TreeNode rootNode, String[] columnNames, Class<?>[] columnTypes, int currFunc) {
+		super(rootNode);
+		...
+    }
+    ...
+}
 \end{lstlisting}
 
 \subsubsection*{TableModel.java}
 Dieses Interface bildet die Grundlage für alle Datenmodelle einer JTable\footnote{http://docs.oracle.com/javase/7/docs/api/javax/swing/table/TableModel.html}.
 
 \subsubsection*{AbstractTableModel.java}
-In dieser abstrakten Basisklasse sind bereits die meisten Methoden des Interface TreeModel implementiert\footnote{http://docs.oracle.com/javase/7/docs/api/javax/swing/table/AbstractTableModel.html}. Der Benutzer muss lediglich die folgenden Methoden selbst definieren:
-\begin{lstlisting}[language=JAVA]
-public int getRowCount();
-public int getColumnCount();
-public Object getValueAt(int row, int column);
-\end{lstlisting}
-Diese Methoden werden in der Klasse TreeTableModelAdapter implementiert.
+In dieser abstrakten Basisklasse sind bereits die meisten Methoden des Interface TreeModel implementiert\footnote{http://docs.oracle.com/javase/7/docs/api/javax/swing/table/AbstractTableModel.html}. Alle dazu noch benötigten Methoden werden in der Klasse \textbf{TreeTableModelAdapter} definiert.
 
 \subsubsection*{TreeTableModelAdapter.java}
 TreeTableModelAdapter bildet die Verbindung zwischen dem Datenmodell der Tabelle und dem des Baumes. Diese Klasse erbt von AbstractTreeTableModel und enthält eine Referenz auf TreeTableDataModel. Viele Methoden, wie etwa ,,getColumnName()'' oder ,,getValueAt()'' sind in TreeTableDataModel implementiert, da sich in dieser Klasse auch das eigentliche Datenmodell der TreeTable befindet, und werden in TreeTableModelAdapter übernommen. Beispielsweise greifen die folgenden Methoden auf die Implementierung in TreeTableDataModel zurück:
@@ -177,17 +229,79 @@ Ein CellEditor ist für die Dateneingabe in eine Tabelle verantwortlich\footnote
 \subsubsection*{AbstractCellEditor.java}
 AbstractCellEditor ist eine abstrakte Basisklasse für alle Arten eines CellEditor in Swing\footnote{https://docs.oracle.com/javase/7/docs/api/javax/swing/AbstractCellEditor.html}. Einige grundlegende Methoden sind bereits implementiert.
 
+\subsubsection*{TableCellEditor}
+Dieses Interface\footnote{http://docs.oracle.com/javase/7/docs/api/javax/swing/table/TableCellEditor.html} definiert die Methode \textbf{getTableCellEditorComponent(...)}. Diese Methode sollte den Kompontenten der Tabelle bzw. der betroffenen Zelle zurückgeben, der verwendet wird, um den Inhalt zu modifizieren.
+
 \subsubsection*{TreeTableCellEditor.java}
-Daten in der TreeTable sollen vom Benutzer zwar nicht verändert werden können, wenn das Editieren der Tabelle mit der Methode ,,setEditable()'' aber deaktiviert wird, werden auch Events (wie etwa Mausklicks) nicht mehr registriert. TreeTableCellEditor gibt also Events in der Tabelle bei Bedarf an den JTree weiter und verbietet Events in Zellen, die nur Text enthalten.
+Daten in der TreeTable sollen vom Benutzer zwar nicht verändert werden können, wenn das Editieren der Tabelle mit der Methode \glqq{}setEditable()\grqq{} aber deaktiviert wird, werden auch Events (wie etwa Mausklicks) nicht mehr registriert. TreeTableCellEditor gibt also Events in der Tabelle bei Bedarf an den JTree weiter und verbietet Events in Zellen, die nur Text enthalten.
+\begin{lstlisting}[language=JAVA]
+public boolean isCellEditable(EventObject e) {
+	if (e instanceof MouseEvent) {
+     	MouseEvent me = (MouseEvent) e;
+    	MouseEvent newME = new MouseEvent(tree, me.getID(), me.getWhen(), me.getModifiers(), me.getX() - table.getCellRect(0, 0, true).x, me.getY(), 2, me.isPopupTrigger());
+    	tree.dispatchEvent(newME);
+  	}
+  	return false;
+}
+\end{lstlisting}
+
+Außerdem wird die Methode \textbf{getTableCellEditorComponent(...)} implementiert, die je nach der betroffenen Spalte entweder die Tabelle selbst oder den Baum als zuständiges Swing-Element angibt.
+\begin{lstlisting}[language=JAVA]
+public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int r, int c) {
+    if( c == 0 )
+        return this.tree;
+    else
+        return this.table;
+}
+\end{lstlisting}
 
 \subsubsection*{TableCellRenderer.java}
 In diesem Interface sind alle Methoden definiert, die zum Rendern von Zellen einer JTable benötigt werden\footnote{https://docs.oracle.com/javase/7/docs/api/javax/swing/table/TableCellRenderer.html}.
 
 \subsubsection*{TreeTableCellRenderer.java}
-Diese Klasse erbt von JTree und wird verwendet, um einen Baum in die erste Spalte der Treetable zu rendern. Außerdem ist diese Klasse dafür verantwortlich, dass die Zeilen der Tabelle und des Baumes die selbe Höhe haben und dass die Zellen die richtige Farbe erhalten.
+Diese Klasse erbt von JTree und wird verwendet, um einen Baum in die erste Spalte der Treetable, also die Spalte mit de Baum - zu rendern. Außerdem ist diese Klasse dafür verantwortlich, dass die Zeilen der Tabelle und des Baumes die selbe Höhe haben und dass die Zellen die richtige Farbe erhalten.
 %TODO refer to table line colors
 
+
+%TODO TODO TODO continue here
+%TODO TODO TODO missing: TreeRenderer, TableButtonMouseListener, (swing)DefaultTreeCellRenderer
 \subsubsection*{TableButtonRenderer.java}
 Diese Klasse wird als Renderer für die zweite und dritte Spalte der TreeTable verwendet. Sie erlaubt das Verwenden von Swing-Komponenten wie etwa JButtons als Zellendaten und sorgt dafür, dass die Zellen die korrekte Hintergrundfarbe haben.
 
+%    ---------------------------------------------------------------------
+%        Spezielle Implementierung
+%    ---------------------------------------------------------------------
+\subsection{Implementierung für den Debugger}
+Hier werden die Erweiterungen an der TreeTable beschrieben, die für die Anwendung im Debugger nötig waren. Für andere Anwendungsfälle kann ähnlich verfahren werden.
+
+\subsubsection*{VarTreeTable.java}
+VarTreeTable ist eine Wrapperklasse für TreeTable. Sie übernimmt alle wichtigen Funktionen zur Kommunikation mit dem Variablenbaum und bildet so eine Schicht zwischen dem Debugger und der TreeTable. Auf diese Weise wird der Code übersichtlicher und ist besser strukturiert.
+TreeTableView hat folgende Methoden:
+\begin{itemize}
+\item \textbf{init} Initialisiert die TreeTable mit einem Standard-Datenmodell. Dieses besteht nur aus einem Hauptknoten (root), der den Namen der aktuellen Datei trägt; es werden keine Variablen angezeigt. Das Standard-Datenmodell wird immer dann angezeigt, wenn der Debugger nicht aktiv ist, also wenn der Benutzer den Sourcecode editiert.
+\item \textbf{standby} Löscht das aktuelle Datenmodell und übergibt ein Standard-Datenmodell an die TreeTable, sodass wie zu Beginn nur der aktuelle Dateiname angezeigt wird. Diese Methode wird immer aufgerufen, wenn der Debugger beendet wird.
+\item \textbf{update} Aktualisiert das Datenmodell der TreeTable im Debugmodus und zeigt die Variablen im Speicher des Interpreters an.
+\item \textbf{highlightVariable} Mit dieser Methode wird die Addresse einer zuletzt geänderten Variable an die TreeTable übergeben. Diese Variable wird in der Tabelle markiert. Es ist möglich, diese Funktion mehrmals aufzurufen und so mehrere Variablen zu markieren. Wenn das Datenmodell mit \textbf{update} aktualisiert wird, verfallen alle Addressen.
+\item \textbf{updateFontSize} Bei Aufruf dieser Methode wird die Schriftgröße der Tabelle geändert und die gesamte TreeTable neu gezeichnet. Diese Methode wird aufgerufen, wenn die Einstellungen der Benutzeroberfläche geändert wurden.
+
+\subsubsection*{VarDataNode.java}
+%TODO this text is not complete
+
+Die Klasse DataNode hat folgende Felder:
+\begin{lstlisting}[language=JAVA]
+// Informationen, die in der Tabelle angezeigt werden
+private final String name;
+private Object type;
+private Object value;
+
+// Zusätzliche Informationen
+private int address;
+private int declaration;
+\end{lstlisting}
+Die TreeTable besitzt drei Spalten: In der ersten befindet sich der Baum mit den Namen der Variablen. in der zweiten Spalte wird der Datentyp der Variable und in der dritten ihr Wert gezeigt. Die Felder für Datentyp und Wert haben den Typ Object, da sich in der Tabelle an der Stelle eines Wertes auch ein JButton befinden kann.
+%TODO refer to JTableButtonRenderer.java
+Zusätzlich werden die Addresse und die Deklarationszeile der Variable gespeichert. Die Adresse dient der eindeutigen Identifikation der Variable, zum Beispiel beim Traversieren durch den Variablenbaum. Dadurch können lokale Variablen auch bei mehrfachem Aufruf einer Funktion unterschieden werden.
+Bei Rechtsklick auf eine Variable in der TreeTable wird ein Kontextmenü mit der Option ''Jump to declaration'' geöffnet. Im Sourcecode wird dann die Zeile markiert, die im Feld ''declaration'' des betreffenden Datenknoten gespeichert ist.
+
+\end{itemize}
 %TODO weitere Elemente der TreeTable: Popup, Kontextmenü
