@@ -12,7 +12,7 @@
 
 \subsection{Interfaces}
 \label{sec:deb-impl-interfaces}
-Für die Kommunikation mit dem Interpreter sind zwei Interfaces wichtig. Im Package \textbf{at.jku.ssw.cmm.debugger} befinden sich das Interface \textbf{Debugger} und das Interface \textbf{StdInOut}. Die Interfaces sind getrennt, da sie unterschiedliche Teile der Benutzeroberfläche betreffen. Bei einfacheren Anwendungen des Interpreters, wie etwa beim Testen von Quests, werden aber beide Interfaces in der selben Klasse implelemtiert.
+Für die Kommunikation mit dem Interpreter sind zwei Interfaces wichtig. Im Package \textbf{at.jku.ssw.cmm.debugger} befinden sich das Interface \textbf{Debugger} und das Interface \textbf{StdInOut}. Die benötigten Methoden sind in zwei Interfaces aufgeteilt, da sie unterschiedliche Teile der Benutzeroberfläche betreffen. Bei einfacheren Anwendungen des Interpreters, wie etwa beim Testen von Quests, werden aber beide Interfaces in der selben Klasse implelemtiert.
 %TODO ref quest test
 
 Über das Interface \textbf{Debugger} übergibt der Interpreter jeweils den aktuellen Knoten im abstrakten Syntaxbaum. In der Methode \textbf{step} werden außerdem eine Liste der Variablen, die im letzten Schritt ausgelesen wurden und eine Liste der Variablen, die im letzten Schritt geändert wurden übergeben. Die geänderten Variablen werden in der Variablenliste im Hauptfenster gelb markiert. Es ist möglich, dass in einem Schritt mehrere Variablen geändert werden, da mit dem Befehl \textbf{library} eine ganze Funktion auf einmal abgearbeitet werden kann.
@@ -20,10 +20,10 @@ Für die Kommunikation mit dem Interpreter sind zwei Interfaces wichtig. Im Pack
 \begin{lstlisting}[language=JAVA]
 public interface Debugger {
 	boolean step(Node arg0, List<Integer> readVariables, List<Integer> changedVariables);
-	}
+}
 \end{lstlisting}
 
-Die Methode \textbf{step} muss \textbf{true} zurückgeben, ansonsten bricht der Interpreter ab. Auf diese Weise kann der Interpreter ohne Probleme angehalten werden.
+Die Methode \textbf{step} muss \textbf{true} zurückgeben, ansonsten bricht der Interpreter ab. Auf diese Weise kann der Interpreter beendet werden.
 
 Das Interface \textbf{StdInOut} enthält Methoden zur Ein- und Ausgabe im Programm. Die Methode \textbf{in} kann eine \textbf{RunTimeException} verursachen, um den Interpreter anzuhalten, wenn keine Eingabedaten vorhanden sind. Die Methode \textbf{out} übergibt einfach das Zeichen, das ausgegeben werden soll.
 
@@ -43,7 +43,7 @@ Alle Aktionen der Benutzeroberfläche werden im sogenannten Event Dispatch Threa
 
 Die Klasse \textbf{CMMwrapper} im Package \textbf{at.jku.ssw.cmm} enthält Methoden zum Starten des Threads und sorgt außerdem dafür, dass nicht mehrere Threads gleichzeitig ausgeführt werden.
 
-Der Interpreter wird mit folgender Methode in einem eigenen trhead gestartet:
+Der Interpreter wird mit folgender Methode in einem eigenen Thread gestartet:
 \begin{lstlisting}[language=JAVA]
 public boolean runInterpreter(PanelRunListener listener, IOstream stream, Tab table) {
 
@@ -75,7 +75,7 @@ public boolean runInterpreter(PanelRunListener listener, IOstream stream, Tab ta
 }
 \end{lstlisting}
 
-Die Variable \textbf{thread} der Klasse \textbf{CMMwrapper} ist eine Referenz auf den aktuell laufenden Interpreter-Thread. Wenn diese Variable nicht \textbf{null} ist, bedeuted das, dass bereits ein anderer trhead läuft. Wenn der Thread des Interpreters richtig beendet wird, ruft er die Methode \textbf{setNotRunning()} auf. Die Referenz auf diesen Thread wird gelöscht und ein neuer Thread kann bei bedarf gestartet werden.
+Die Variable \textbf{thread} der Klasse \textbf{CMMwrapper} ist eine Referenz auf den aktuell laufenden Interpreter-Thread. Wenn diese Variable nicht \textbf{null} ist, bedeuted das, dass bereits ein anderer Thread läuft. Wenn der Thread des Interpreters richtig beendet wird, ruft er die Methode \textbf{setNotRunning()} auf. Die Referenz auf diesen Thread wird gelöscht und ein neuer Thread kann bei bedarf gestartet werden.
 \begin{lstlisting}[language=JAVA]
 public void setNotRunning() {
 	this.thread = null;
@@ -83,7 +83,7 @@ public void setNotRunning() {
 \end{lstlisting}
 
 %TODO keep code ref up to date
-Die Klasse \textbf{CMMrun} erbt von der Klasse Thread\footnote{https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.html}. Ein neuer Thread wird gestartet, indem die Methode \textbf{start()}, die von der Klasse Thread vererbt wurde, aufgerufen wird (Siehe erstes Codebeispiel dieses Abschnitts, Zeile 17). Der Thread führt dann die Methoden \textbf{run()} aus, die ebenfalls vererbt wird und in der Kindklasse überschrieben werden muss.
+Die Klasse \textbf{CMMrun} erbt von der Klasse Thread\footnote{https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.html}. Ein neuer Thread wird gestartet, indem die Methode \textbf{start()}, die von der Klasse Thread vererbt wurde, aufgerufen wird (Siehe erstes Codebeispiel dieses Abschnitts, Zeile 17). Der Thread führt dann die Methode \textbf{run()} aus, die ebenfalls vererbt wird und in der Kindklasse überschrieben werden muss.
 \begin{lstlisting}[language=JAVA]
 @Override
 public void run() {
@@ -103,6 +103,7 @@ public void run() {
 		return;
 	} catch (Exception e) {
 		// Unerwartete Fehler abfangen
+		...
 		reply.setNotRunning();
 		return;
 	}
@@ -112,34 +113,58 @@ public void run() {
 }
 \end{lstlisting}
 
-Ein Thread wird beendet, indem die Methode \textbf{run} verlassen wird. Dies ist die einfachste und sicherste Möglichkeit einen Thread zu stoppen. Wenn der Thread unerwartet \glqq{}abgewürgt\grqq{} wird, kann nicht sichergestellt werden, dass er zu dieser Zeit nicht gerade auf eine Variable zugreift und durch den Abbruch einen Schreibprozess nicht abschließen kann.
-%TODO anderes Wort für "abgewürgt"
+Ein Thread wird beendet, indem die Methode \textbf{run} verlassen wird. Dies ist die einfachste und sicherste Möglichkeit einen Thread zu stoppen. Wenn der Thread von Außen beendet wird, kann nicht sichergestellt werden, dass er zu dieser Zeit nicht gerade auf eine Variable zugreift und durch den Abbruch einen Schreibprozess nicht abschließen kann.
 
-\subsection{Threadprobleme in Swing}
-Das Verwenden mehrerer Threads erfordert generell Vorsicht beim Zugriff auf eine Variable von mehreren Thread aus. In Swing ist dieses Thema besonders wichtig, da die Benutzeroberfläche abstürzen kann, wenn ein solcher Konflikt zwischen Threads auftritt. Zum Vermeiden solcher Probleme sollten folgende Grundregeln beachtet werden.
+\subsection{Probleme beim Arbeiten mit Threads}
+Das Verwenden mehrerer Threads erfordert generell Vorsicht; vor Allem wenn eine Variable oder eine Referenz von mehreren Threads verwendet wird können unerwartete Komplikationen auftreten. Um Probleme zu vermeiden, sollten folgende Regeln beachtet werden:
 
 \begin{enumerate}
 %TODO ref "Sprechen Sie Java?"
-\item Auf eine Datenstruktur oder Variable sollte immer nur ein Thread gleichzeitig zugreifen. Da die Wechsel zwischen Threads praktisch nicht vorhersehbar sind, ist es möglich, dass mehrere Threads gleichzeitig auf einem Speicherplatz schreiben oder lesen (Threadinterferenz). Im schlimmsten Fall führt dies zu Exceptions und Abstürzen, deren Ursache dann meistens schwer nachvollziehbar ist.
+\item Auf eine Datenstruktur oder Variable sollte immer nur ein Thread gleichzeitig zugreifen können. Da die Wechsel zwischen Threads praktisch nicht vorhersehbar sind, ist es bei unvorsichtiger Implementierung möglich, dass mehrere Threads gleichzeitig auf einem Speicherplatz schreiben oder lesen (Threadinterferenz). Im schlimmsten Fall führt dies zu Exceptions und Abstürzen, deren Ursache dann meistens schwer nachvollziehbar ist.
 
-Es kann auch vorkommen, dass ein Thread eine Variable ausliest, bevor sie durch einen anderen Thread aktualisiert wurde (Speicherinkonsistenz)\footnote{https://docs.oracle.com/javase/tutorial/essential/concurrency/memconsist.html}.
+Es kann auch vorkommen, dass ein Thread eine Variable ausliest, bevor sie durch einen anderen Thread aktualisiert wurde (Speicherinkonsistenz\footnote{https://docs.oracle.com/javase/tutorial/essential/concurrency/memconsist.html}).
 
 Um Variablen und Instanzen in mehreren Threads zu verweden, gibt es --- je nach Anwendungsfall --- unterschiedliche Möglichkeiten:
 
 \begin{enumerate}%TODO ist "inskonsistener Speicher" korrekt?, "threadübergreifenden"?
-\item Für alle Variablen und Referenzen, die zusätzlich mit dem Schlüsselwort $\textbf{volatile}\footnote{https://docs.oracle.com/javase/tutorial/essential/concurrency/atomic.html}$ deklariert werden, werden Lese- und Schreibvorgänge in einem Schritt ausgeführt. Dadurch werden Threadinterferenzen vermieden, allerdings sind Probleme durch Speicherinkonsistenz immer noch möglich.
+\item Für alle Variablen und Referenzen, die zusätzlich mit dem Schlüsselwort $\textbf{volatile}\footnote{https://docs.oracle.com/javase/tutorial/essential/concurrency/atomic.html}$ deklariert werden, werden Lese- und Schreibvorgänge in einem Schritt ausgeführt (die Operation ist nicht unterbrechbar, also atomar\footnote{http://www.angelikalanger.com/Articles/EffectiveJava/42.JMM-volatileIdioms/42.JMM-volatileIdioms.html}). Dadurch werden Threadinterferenzen vermieden, allerdings sind Probleme durch Speicherinkonsistenz immer noch möglich.
 Ein Zugriff auf eine mit \textbf{volatile} deklarierte Variable ist dafür schneller als ein Zugriff über eine \textbf{synchronzied}-Methode (siehe unten).
 
-\item Variablen und Referenzen, die als $\textbf{final}$ deklariert werden, können von allen Threads problemlos verwendet werden, da diese Variablen nach dem Initialisieren nicht mehr verändert werden können. Dieses Schlüsselwort wird oft für Funktionsparameter (einfache Wertübergaben) von threadübergreifenden Funktionen verwendet.
+\begin{lstlisting}[language=JAVA]
+volatile double d;
+\end{lstlisting}
 
-\emph{Achtung:} Wird die Referenz auf ein Objekt als $\textbf{final}$ deklariert, ist zwar die Referenz ansich schreibgeschützt, Variablen der Klasse können aber nach wie vor verändert werden.
+Bei \textbf{volatile} ist Außerdem zu beachten, dass erstens nur einfache Lese- und Schreibvorgänge atomar sein können (beispielsweise ist eine Inkrementation keine atomare Operation) und sich die atomaren Eigenschaften zweitens nur auf die Variable oder Referenz selbst beziehen, nicht auf das Objekt.
 
-\item Für die Kommunikation zwischen Klassen ist das Schlüsselwort $\textbf{synchronized}$ unerlässlich. 
+\item Variablen und Referenzen, die als $\textbf{final}$ deklariert werden, können von allen Threads problemlos verwendet werden, da diese Variablen nach dem Initialisieren nicht mehr verändert werden können. Dieses Schlüsselwort wird oft für Funktionsparameter (einfache Wertübergaben) von threadübergreifenden Methoden oder in Kombination mit dem Schlüsselwort \textbf{static} verwendet.
+
+\begin{lstlisting}[language=JAVA]
+static final double PI = 3.1415;
+
+public int add( final int a, final int b ) {
+	...
+}
+\end{lstlisting}
+
+Auch \textbf{final} bezieht sich nur auf die Variable oder Referenz selbst. Wird eine Referenz auf ein Objekt \textbf{final} deklariert, können die Variablen des Objektes trotzdem verändert werden.
+
+\begin{lstlisting}[language=JAVA]
+final JLabel panel = new JLabel();
+
+// erlaubt
+panel.setText("Hello");
+
+// nicht erlaubt
+panel = new JLabel("World");
+panel = null;
+\end{lstlisting}
+
+\item Für die Kommunikation zwischen Threads ist das Schlüsselwort $\textbf{synchronized}$ unerlässlich. 
 \begin{quote}%TODO correct quote
 \emph{Synchronized methods enable a simple strategy for preventing thread interference and memory consistency errors: if an object is visible to more than one thread, all reads or writes to that object's variables are done through synchronized methods}
-\begin{flushright}Oracle, The Java$^T$$^M$ Turorials\footnote{https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html}\end{flushright}
+\begin{flushright}Oracle, The Java Turorials\footnote{https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html}\end{flushright}
 \end{quote}
-Synchronized kann entweder auf Methoden oder auf einen Programmblock innerhalb einer Methode angewandt werden.
+\textbf{synchronized} kann entweder auf eine komplette Methode oder auf einen Programmblock innerhalb einer Methode angewandt werden.
 
 Eine mit \textbf{synchronized} deklarierte Methode wird immer abgeschlossen, bevor eine andere \textbf{synchronized}-Methode dieser Klasse abgearbeitet werden kann. Es wird also sichergestellt, dass keine gleichzeitigen Zugriffe erfolgen.
 \begin{lstlisting}[language=JAVA]
@@ -202,9 +227,9 @@ java.awt.EventQueue.invokeAndWait(new Runnable() {
 \end{lstlisting}
 	Der Thread, von dem aus das Runnable-Objekt instanziert wurde, wird so lange angehalten, bis die Methode run() ausgeführt wurde.
 
-	Diese Umsetzung erfortert allerdings etwas mehr Vorsicht. Während die Methode invokeLater() ohne Probleme im Event Dispatch Thread aufgerufen werden kann, würde ein Aufruf von invokeAndWait() aus dem EDT dazu führen, dass sich der Thread selbst blockiert.
+	Diese Umsetzung erfortert allerdings etwas mehr Vorsicht. Während die Methode invokeLater() ohne Probleme auch im Event Dispatch Thread aufgerufen werden kann, würde ein Aufruf von invokeAndWait() aus dem EDT dazu führen, dass sich der Thread selbst blockiert.
 	
-	Außerdem können bei einem synchronen Aufruf Probleme auftreten, die auf auf den wartenden Thread rückwirken. Füe einen reibungslosen synchronen Aufruf müssen folgende Exceptions abgefangen werden können:
+	Außerdem können bei einem synchronen Aufruf Probleme auftreten, die auf auf den wartenden Thread rückwirken. Für einen reibungslosen synchronen Aufruf müssen folgende Exceptions abgefangen werden können:
 
 \def\arraystretch{2.1}
 \begin{tabular}{|l|l|}
