@@ -234,5 +234,43 @@ Jeder Fehler der auftreten kann hat eine eindeutige Fehlernummer, alle Fehler si
 
 %TODO TODO add some paragraphs about error window, error.xml, and so on
 
+\section{Popups}
+In C Compact gibt es mehrere Anwendungsfälle für Popup-Fenster. Popups werden verwendet, um weitere Informationen zu einem Array oder einem String in der Variablentabelle zu liefern und um Rückgabewerte von Funktionen zu visualisieren (dies ist allerdings optional, siehe auch \ref{sec:win-set} Dabei handelt es sich im Prinzip um kleine Anzeigeflächen, die ein Swing-Element enthält. Ein Popup wird ausgeblendet, sobald auf eine beliebige Fläche in einem Fenster von C Compact geklickt wird (der Event muss erfasst werden können).
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.4\textwidth]{./media/images/gui/popup/popup-example.png}
+\caption{Ein Popup zeigt den Rückgabewert einer Funktion.}
+\label{fig:popup-example}
+\end{figure}
+
+\subsection{Initialisierung eines Popups}
+Die Popup-Funktionen selbst befinden sich in der Klasse \textbf{ImagePopup}. Zum Initialisieren werden aber die statischen Methoden in der Klasse \textbf{ComponentPopup} verwendet; diese Methoden übernehmen auch umständliche Positionsberechnungen für das Popup. Die Methode \textbf{createPopUp(...)} kann auch ohne das Parameter \glqq{}weight\grqq{} verwendet werden.
+\begin{lstlisting}[language=JAVA]
+public static void createPopUp( GUImain main, JComponent component, int x, int y, int w, int h, int orientation, double weight );
+\end{lstlisting}
+
+\begin{table}[h!]
+\begin{tabular}{|ll|l|}
+\hline 
+GUImain & main  & Referenz auf das Hauptfenster, siehe \ref{sec:gui-main-impl} \\
+\hline
+JComponent & component & Das Swing-Element, das angezeigt werden soll \\
+\hline
+int & x & \multirow{2}{8cm}{Die Position, auf die das Popup zeigen soll} \\
+int & y & \\
+\hline 
+int & w & \multirow{2}{8cm}{Höhe und Breite des Popups (Bezogen auf den äußeren Rand, \textbf{component} wird mit 5px Inset platziert)} \\
+int & h & \\
+\hline
+int & orientation & Ausrichtung des Popups (siehe Unten) \\
+\hline
+double [optional] & weight & Position des Zeigers, Wert zwischen 0 und 1, Standard: 0.5\\
+\hline
+\end{tabular}
+\caption{Parameter der Methode \textbf{createPopup(...)}}
+\end{table}
+
+
 
 
