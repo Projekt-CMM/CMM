@@ -55,12 +55,15 @@ Diese Form der Variablendarstellung wurde erstmals im Dokument Ausführungsumgeb
 
 \subsection{Darstellungsschema}
 
-Die Darstellung der Variablen in Form einer Baumstruktur hat den Vorteil, dass alle Variablen in einem Feld untergrbracht sind und die Gültigkeitsbereiche der Variablen sofort ersichtlich sind.
-Alle Elemente befinden sich in einem Ordner, der den Namen der Datei trägt. Dadurch wird symbolisiert, dass die Variablen ein Teil des Programmes sind. Dem Programm selbst untergeordnet sind globale Variablen und Funktionen. Lokale Variablen sind Funktionen untergeordnet, Variablen in Strukturen sind der Struktur untergeordnet.
+Die Darstellung der Variablen in Form einer Baumstruktur hat den Vorteil, dass alle Variablen in einem Feld untergebracht sind und die Gültigkeitsbereiche der Variablen sofort ersichtlich sind.
+
+Die TreeTable besitzt drei Spalten: In der ersten befindet sich der Baum mit den Namen der Variablen. in der zweiten Spalte wird der Datentyp der Variable und in der dritten ihr Wert gezeigt.
+
+Alle Elemente befinden sich in einem Ordner, der den Namen der Datei trägt. Dadurch wird symbolisiert, dass die Variablen ein Teil des Programms sind. Dem Programm selbst untergeordnet sind globale Variablen und Funktionen. Lokale Variablen sind Funktionen untergeordnet, Variablen in Strukturen sind der Struktur untergeordnet.
 Zusätzlich werden folgende Elemente in der Tabelle farbig markiert:
 \begin{itemize}
 \item Funktionen sind hellblau hinterlegt. Sie sollen dadurch optisch von Datenstrukturen und Variablen unterscheidbar sein.
-\item Die Variablen, die zuletzt geändert wurden, sind gelb hinterlegt. Grundsätzlich kann pro Schritt des Debuggers nur eine Variable geändert werden. Werden aber einige Schritte übersprungen, zum Beispiel mit dem Schlüsselwort \glqq library\grqq, so werden mehrere Variablen in einem Debuggerschritt geändert.
+\item Die Variablen, die zuletzt geändert wurden, sind gelb hinterlegt. Grundsätzlich kann pro Schritt des Debuggers nur eine Variable geändert werden. Werden aber einige Schritte übersprungen, zum Beispiel mit dem Schlüsselwort \glqq{}library\grqq{}, so werden mehrere Variablen in einem Debuggerschritt geändert.
 % TODO refer to library
 \item Variablen, die noch nicht initialisiert wurden, sind grau hinterlegt.
 % TODO refer to undef variables
@@ -72,9 +75,6 @@ Zusätzlich werden folgende Elemente in der Tabelle farbig markiert:
 \caption{Beispiel für farbige Hervorhebung von Variablen}
 \label{fig:deb-tt-example}
 \end{figure}
-%TODO erklären, wie Farben funktionieren???
-
-Bei Rechtsklick auf eine Variable im Baum wird ein Kontextmenü geöffnet. Mit der Option \glqq{}Gehe zur Deklaration\grqq{} kann der Benutzer zur Deklaration der Variable im Sourcecode springen. Die entsprechende Zeile wird markiert. Für Funktionen gibt es außerdem den Punkt \glqq{}Gehe zum Aufruf\grqq{}, der die Zeile markiert, in der diese Funktion aufgerufen wurde.
 
 %    ---------------------------------------------------------------------
 %        Grundlegende Komponenten
@@ -82,7 +82,7 @@ Bei Rechtsklick auf eine Variable im Baum wird ein Kontextmenü geöffnet. Mit d
 
 \subsection{Grundlegende Komponenten}
 Die Variablen werden in einer Tabelle mit Baumstruktur, deshalb auch ,,TreeTable'' genannt, angezeigt. Die TreeTable ist eine Kombination aus einem JTree und einer JTable.
-Im Folgenden werden diese Komponenten beschrieben und der Aufbau der TreeTable erläutert:
+Im Folgenden werden diese Komponenten beschrieben und der Aufbau der TreeTable erläutert.
 
 \subsubsection*{JTree - Baum}
 
@@ -258,15 +258,88 @@ public Component getTableCellEditorComponent(JTable table, Object value, boolean
 \subsubsection*{TableCellRenderer.java}
 In diesem Interface sind alle Methoden definiert, die zum Rendern von Zellen einer JTable benötigt werden\footnote{https://docs.oracle.com/javase/7/docs/api/javax/swing/table/TableCellRenderer.html}.
 
+%TODO TODO TODO missing: TableButtonMouseListener, (swing)
+\subsubsection*{TableButtonRenderer.java}
+Diese Klasse sorgt dafür, dass die Zellen der Tabelle die richtige Hintergrundfarbe erhalten und dass AWT- und Swing-Elemente in der Tabelle richtig dargestellt werden. Um Elemente der grafischen Benutzeroberfläche in einer Tabelle zu rendern, muss die Methode \textbf{getTableCellRendererComponent(...)} für die jeweilige Zelle das beinhaltete Element zurückgeben.
+\begin{lstlisting}[language=JAVA]
+public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+	Component c = (Component)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+	
+	// AWT- oder Swing-Komponente verwenden
+	if(value instanceof Component)
+		return (Component)value;
+	
+	// Weitere Anpassungen
+	else if( ... )
+		...
+	
+	return c;
+}
+\end{lstlisting}
+
+\subsubsection*{TreeTableButtonMouseListener.java}
+Diese Klasse implementiert das Interface \textbf{MouseListener} und ist Event Listener der gesamten TreeTable. Dieser Listener muss allerdings manuell zur TreeTable hinzugefügt werden.
+\begin{lstlisting}[language=JAVA]
+treeTable.addMouseListener(new TableButtonMouseListener(main, treeTable));
+\end{lstlisting}
+
+Der Listener \textbf{TreeTableButtonMouseListener} sorgt dafür dass, falls ein Button in der Tabelle angeklickt wird, der entstandene Event an den Button weitergeleitet wird, sodass der Button seinen eigenen EventListener ausführen kann.
+\begin{lstlisting}[language=JAVA]
+public void mouseClicked(MouseEvent e) {
+	// Leitet den Event an den angeklickten Button weiter
+	forwardEventToButton(e, this.treeTable.getTable().rowAtPoint(e.getPoint()), this.treeTable.getTable().columnAtPoint(e.getPoint()));
+}
+\end{lstlisting}
+
 \subsubsection*{TreeTableCellRenderer.java}
 Diese Klasse erbt von JTree und wird verwendet, um einen Baum in die erste Spalte der Treetable, also die Spalte mit de Baum - zu rendern. Außerdem ist diese Klasse dafür verantwortlich, dass die Zeilen der Tabelle und des Baumes die selbe Höhe haben und dass die Zellen die richtige Farbe erhalten.
 %TODO refer to table line colors
 
+An den JTree selbst kann außerdem noch ein eigens erstellter Renderer übergeben werden, um beispielsweise eigene Symbole für jeden Knoten im Baum anzuzeigen. Dieser Renderer muss das Interface \textbf{DefaultTreeCellRenderer} implementieren. Ist ein solcher Renderer nicht vorhanden, wird die standardmäßig \textbf{TreeRenderer} verwendet.
 
-%TODO TODO TODO continue here
-%TODO TODO TODO missing: TreeRenderer, TableButtonMouseListener, (swing)DefaultTreeCellRenderer
-\subsubsection*{TableButtonRenderer.java}
-Diese Klasse wird als Renderer für die zweite und dritte Spalte der TreeTable verwendet. Sie erlaubt das Verwenden von Swing-Komponenten wie etwa JButtons als Zellendaten und sorgt dafür, dass die Zellen die korrekte Hintergrundfarbe haben.
+\subsubsection*{JLabel.java}
+Ein JLabel\footnote{http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html} ist ein einfaches Swing-Element, das einen Text und/oder ein Bild anzeigen kann. Für den Text in der Zelle einer Tabelle oder dem Knoten eines Baumes werden meistens JLabels verwendet (außer die Zelle soll editierbar sein --- dann wird ein JTextField\footnote{http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html} verwendet). JLabels reagieren nicht auf Events, wie etwa Mausklicks.
+
+\subsubsection*{TreeCellRenderer.java}
+Diese Interface definiert Basismethoden für ein Objekt, das den Knoten eines JTree rendern kann\footnote{http://docs.oracle.com/javase/7/docs/api/javax/swing/tree/TreeCellRenderer.html}.
+
+\subsubsection*{DefaultTreeCellRenderer.java}
+Diese Klasse enthält Implementierungen zum Rendern von Knoten eines JTree\footnote{http://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultTreeCellRenderer.html}.
+
+\subsubsection*{TreeRenderer.java}
+Dieser Renderer wird für den JTree der TreeTable verwendet, wenn kein anderer Renderer vorhanden ist. Die Klasse TreeRenderer entfernt alle Hintergrundfarben des JTree, damit die Farbmarkierungen in den Zeilen der Tabelle durchgängig sichtbar sind. Das muss auch bei allen eigenen JTree-Renderern für die TreeTable berücksichtigt werden. In einen neuen Renderer müssen folgende Methoden implementiert werden:
+\begin{lstlisting}[language=JAVA]
+@Override
+public Color getBackgroundNonSelectionColor() {
+    return null;
+}
+
+@Override
+public Color getBackgroundSelectionColor() {
+    return null;
+}
+
+@Override
+public Color getBackground() {
+    return null;
+}
+\end{lstlisting}
+
+Ohne diese Methoden zeichnet der JTree die Texte (JLabel) seiner Knoten nicht mit transparentem Hintergrund.
+
+\begin{figure}[h!]
+\centering
+	\begin{minipage}{0.45\textwidth}
+		\centering
+		\includegraphics[width=1.0\textwidth]{./media/images/gui/var/tt-norender.png}
+		\caption{TreeTable ohne Renderer für den JTree}\label{fig:deb-tt-render-no}
+	\end{minipage}\hfill
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=1.0\textwidth]{./media/images/gui/var/tt-render.png}
+		\caption{TreeTable mit Renderer für den JTree}\label{fig:deb-tt-render-no}
+	\end{minipage}
+\end{figure}
 
 %    ---------------------------------------------------------------------
 %        Spezielle Implementierung
@@ -283,11 +356,12 @@ TreeTableView hat folgende Methoden:
 \item \textbf{update} Aktualisiert das Datenmodell der TreeTable im Debugmodus und zeigt die Variablen im Speicher des Interpreters an.
 \item \textbf{highlightVariable} Mit dieser Methode wird die Addresse einer zuletzt geänderten Variable an die TreeTable übergeben. Diese Variable wird in der Tabelle markiert. Es ist möglich, diese Funktion mehrmals aufzurufen und so mehrere Variablen zu markieren. Wenn das Datenmodell mit \textbf{update} aktualisiert wird, verfallen alle Addressen.
 \item \textbf{updateFontSize} Bei Aufruf dieser Methode wird die Schriftgröße der Tabelle geändert und die gesamte TreeTable neu gezeichnet. Diese Methode wird aufgerufen, wenn die Einstellungen der Benutzeroberfläche geändert wurden.
+\end{itemize}
 
 \subsubsection*{VarDataNode.java}
-%TODO this text is not complete
+Die Klasse VarDataNode erweitert die abstrakte Klasse DataNode und kann deshalb für die Datenstruktur der TreeTable verwendet werden. Ein VarDataNode bildet einen Knoten im Baum bzw. eine Zeile in der TreeTable.
 
-Die Klasse DataNode hat folgende Felder:
+Folgende Daten werden in einem Knoten gespeichert:
 \begin{lstlisting}[language=JAVA]
 // Informationen, die in der Tabelle angezeigt werden
 private final String name;
@@ -296,12 +370,47 @@ private Object value;
 
 // Zusätzliche Informationen
 private int address;
-private int declaration;
 \end{lstlisting}
-Die TreeTable besitzt drei Spalten: In der ersten befindet sich der Baum mit den Namen der Variablen. in der zweiten Spalte wird der Datentyp der Variable und in der dritten ihr Wert gezeigt. Die Felder für Datentyp und Wert haben den Typ Object, da sich in der Tabelle an der Stelle eines Wertes auch ein JButton befinden kann.
+Die Felder für Datentyp und Wert haben den Typ Object, da sich in der Tabelle an der Stelle eines Wertes auch ein JButton befinden kann.
 %TODO refer to JTableButtonRenderer.java
-Zusätzlich werden die Addresse und die Deklarationszeile der Variable gespeichert. Die Adresse dient der eindeutigen Identifikation der Variable, zum Beispiel beim Traversieren durch den Variablenbaum. Dadurch können lokale Variablen auch bei mehrfachem Aufruf einer Funktion unterschieden werden.
-Bei Rechtsklick auf eine Variable in der TreeTable wird ein Kontextmenü mit der Option ''Jump to declaration'' geöffnet. Im Sourcecode wird dann die Zeile markiert, die im Feld ''declaration'' des betreffenden Datenknoten gespeichert ist.
 
-\end{itemize}
-%TODO weitere Elemente der TreeTable: Popup, Kontextmenü
+Zusätzlich werden die Adresse und die Deklarationszeile der Variable gespeichert. Die Adresse dient der eindeutigen Identifikation der Variable, zum Beispiel beim Traversieren durch den Variablenbaum. Dadurch können lokale Variablen auch bei mehrfachem Aufruf einer Funktion unterschieden werden.
+%TODO add more information about Methods, ...
+
+\subsubsection*{TreeStructImageRenderer.java}
+Dieser Renderer wird anstelle des Standardrenderers \textbf{TreeRenderer} der TreeTable verwendet. Wie im TreeRenderer sind auch hier Methoden implementiert, um die Hintergrundfarben der Knoten des JTree zu entfernen. Außerdem ist eine weitere Methode implementiert, die den Knoten des Baumes je nach Datentyp ein anderes Icon gibt.
+
+Zum Ändern des Icons eines Knoten muss im Renderer folgende Methode implementiert werden:
+\begin{lstlisting}[language=JAVA]
+public JComponent getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean exp, boolean leaf, int row, boolean hasFocus) {
+
+	ImageIcon icon = new ImageIcon("images/icon.png");
+
+	setOpenIcon(icon);
+	setClosedIcon(icon);
+	setLeafIcon(icon);
+	
+	super.getTreeCellRendererComponent(tree, value, sel, exp, leaf, row, hasFocus);
+		
+	return this;
+}
+\end{lstlisting}
+
+Für unterschiedliche Arten von Variablen werden unterschiedliche Bilder verwendet:
+\def\arraystretch{1.4}
+\begin{table}[h!]
+\center
+\begin{tabular}{|cl|}
+\hline 
+Bild & Art des Eintrages \\ 
+\hline
+\includegraphics[scale=1.0]{./media/images/gui/var/icons/cmm.png} & Hauptknoten: Die CMM-Datei selbst \\
+\includegraphics[scale=1.0]{./media/images/gui/var/icons/func.png} & Funktionen \\
+\includegraphics[scale=1.0]{./media/images/gui/var/icons/struct.png} & Strukturen \\ 
+\includegraphics[scale=1.0]{./media/images/gui/var/icons/array.png} & Arrays (nur der übergeordnete Knoten, nicht die Indizes) \\ 
+- & Einfache Datentypen haben kein Bild\\
+\hline 
+\end{tabular}
+\caption{Icons für unterschiedliche Strukturen und Einträge in der Variablentabelle}
+\end{table}
+

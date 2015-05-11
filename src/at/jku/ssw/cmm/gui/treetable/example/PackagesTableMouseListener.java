@@ -16,7 +16,7 @@ public class PackagesTableMouseListener extends TableButtonMouseListener {
 	private final TreeTable<?> treeTable;	
 	
 	public PackagesTableMouseListener(GUIquestSelection main, TreeTable<?> t) {
-		super(main.getGUImain(), t);
+		super(t);
 		
 		this.main = main;
 		this.treeTable = t;

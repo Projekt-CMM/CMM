@@ -103,7 +103,7 @@ public class TreeTableView{
 				
 				if( completeUpDate || forceUpdate ){
 					varTreeTable.setTreeModel(InitTreeTableData.readSymbolTable(compiler, main, fileName, columnNames, columnTypes));
-					varTreeTable.addMouseListener(new TableButtonMouseListener(main, varTreeTable));
+					varTreeTable.addMouseListener(new TableButtonMouseListener(varTreeTable));
 						
 					forceUpdate = false;
 				}

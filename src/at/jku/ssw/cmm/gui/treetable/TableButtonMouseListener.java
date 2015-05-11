@@ -21,26 +21,18 @@
  
 package at.jku.ssw.cmm.gui.treetable;
 
-import static at.jku.ssw.cmm.gettext.Language._;
-
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
-import at.jku.ssw.cmm.gui.GUImain;
-import at.jku.ssw.cmm.gui.treetable.context.InitContextMenu;
-import at.jku.ssw.cmm.gui.treetable.var.VarDataNode;
-
 public class TableButtonMouseListener implements MouseListener {
 	
-	public TableButtonMouseListener(GUImain main, TreeTable<?> t) {
-		this.main = main;
+	public TableButtonMouseListener(TreeTable<?> t) {
 		this.treeTable = t;
 	}
 	
-	private final GUImain main;
 	private final TreeTable<?> treeTable;
 
 	protected void forwardEventToButton(MouseEvent e, int row, int column) {
@@ -93,7 +85,8 @@ public class TableButtonMouseListener implements MouseListener {
 		int row = this.treeTable.getTable().rowAtPoint(e.getPoint());
 		int col = this.treeTable.getTable().columnAtPoint(e.getPoint());
 		
-		// Right mouse clicked
+		// NOTE: Inactive, because it is not necessary
+		/*// Right mouse clicked
 		if (SwingUtilities.isRightMouseButton(e)
 				&& this.treeTable.getTreeModel().getRoot() instanceof VarDataNode) {
 			if (row >= 0 && col >= 0) {
@@ -116,7 +109,7 @@ public class TableButtonMouseListener implements MouseListener {
 				
 				System.out.println("mouse entered reference: " + node.getName() + " on " + node.getAddress());
 			}
-		}
+		}*/
 		
 		forwardEventToButton(e,	row, col);
 	}
