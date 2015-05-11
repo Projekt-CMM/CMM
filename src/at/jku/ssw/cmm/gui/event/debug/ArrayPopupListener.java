@@ -46,7 +46,8 @@ public class ArrayPopupListener implements MouseListener {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 		//Invoke popup
-		ComponentPopup.createPopUp(main, table, main.getGlassPane().getMousePosition().x, main.getGlassPane().getMousePosition().y, 250, 120, ImagePopup.SOUTH, 0.85);
+		if( main.getGlassPane().getMousePosition() != null )
+			ComponentPopup.createPopUp(main, table, main.getGlassPane().getMousePosition().x, main.getGlassPane().getMousePosition().y, 250, 120, ImagePopup.SOUTH, 0.85);
 	}
 	
 	@Override
