@@ -49,8 +49,6 @@ public class InitMenuBar {
 	 * This method should only be called when the main GUI is initialized.
 	 * It inits the main GUI's menu bar, including drop-down menus and adds event listeners
 	 * 
-	 * <hr><i>NOT THREAD SAFE, do not call from any other thread than EDT</i><hr>
-	 * 
 	 * @param jFrame The main GUI window frame
 	 * @param jSourcePane A reference to the text area containing the source code
 	 * @param settings A reference to the main GUI's configuration object

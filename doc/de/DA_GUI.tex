@@ -1,6 +1,10 @@
 \documentclass[11pt, oneside]{book}   		% Allgemeine Schriftgröße, Dokumententyp
 \input{./includes/htl_definintions.tex}		% Formatierung der Dokuments, Diverse Befehle
-
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{pifont}
+\usepackage{changepage}
+\usepackage{wrapfig}
 
 %	########################################################
 % 					Allgemeine Informationen			
@@ -20,22 +24,22 @@
 %	--------------------------------------------------------
 % 	Deckblatt
 %	--------------------------------------------------------			
-\input{./chapters/Pre-01-deckblatt.tex}
+%\input{./chapters/Pre-01-deckblatt.tex}
 
 %	--------------------------------------------------------
 % 	Arbeitstitel
 %	--------------------------------------------------------		
-\input{./chapters/Pre-02-arbeitstitel.tex}
+%\input{./chapters/Pre-02-arbeitstitel.tex}
 
 %	--------------------------------------------------------
 % 	Eidesstattliche Erklärung
 %	--------------------------------------------------------			
-\input{./chapters/Pre-03-erklaerung.tex}
+%\input{./chapters/Pre-03-erklaerung.tex}
 
 %	--------------------------------------------------------
 % 	Inhaltsverzeichnis
 %	--------------------------------------------------------			
-\tableofcontents
+%\tableofcontents
 
 %	--------------------------------------------------------
 % 	Vorwort
@@ -69,10 +73,20 @@
 %\input{./chapters/01-aufgabenstellung.tex}
 \pagenumbering{arabic}	% Beginn mit arabischen Seitenzahlen
 
+\input{./chapters/gui/gui.tex}
+\input{./chapters/gui/gui-main.tex}
+
+\input{./chapters/gui/debugger/0-debugger.tex}
+
+\input{./chapters/gui/sci/0-sci.tex}
+
+\input{./chapters/gui/versions.tex}
+
+
 %	--------------------------------------------------------
 % 	Compiler
 %	--------------------------------------------------------	
-\input{./chapters/compiler/compiler.tex}
+%\input{./chapters/compiler/compiler.tex}
 
 %	--------------------------------------------------------
 % 	Interpreter
@@ -107,7 +121,7 @@
 %	--------------------------------------------------------
 % 	Autoren
 %	--------------------------------------------------------
-\input{./chapters/gui/06-autoren.tex}
+%\input{./chapters/gui/06-autoren.tex}
 
 
 %	########################################################
@@ -149,7 +163,7 @@
 %	########################################################
 % 	Abbildungsverzeichnis 		
 %	########################################################
-\addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
-\listoffigures
+%\addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
+%\listoffigures
 
 \end{document}  

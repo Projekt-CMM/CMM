@@ -497,10 +497,17 @@ public class GUIleftPanel {
 		
 		this.jStatePanel.setBackground(new Color(255, 131, 131));
 
-		this.jStateLabel.setText("<html>! ! ! " + (title[0] == null ? _("error") : title[0]) +
+		// Setting error text for state panel
+		this.jStateLabel.setText("<html>! ! ! " +
+			// Error title prefix (if available)
+			(title[0] == null ? _("error") : title[0]) +
+			// File name (if available)
 			(file == null || file != "main" ? "" : " in file " + file) + " " +
+			// Error line (if available)
 			(line >= 0 ? _("in line") + " " + (int)objLine[1] : "") +
-			(title[1] == null ? "" : " " + title[1]) + " ! ! !</html>");
+			// Error title postfix (if available)
+			(title[1] == null ? "" : " " + title[1]) +
+		" ! ! !</html>");
 		
 		if(objLine[0].equals("main") && (int)objLine[1] >= 0)
 			// Do highlighting

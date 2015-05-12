@@ -51,8 +51,8 @@ public class TreeStructImageRenderer extends DefaultTreeCellRenderer {
 			setLeafIcon(null);
 		}
 
-		super.getTreeCellRendererComponent(tree, value, sel, exp, leaf, row,
-				hasFocus);
+		super.getTreeCellRendererComponent(tree, value, sel, exp, leaf, row, hasFocus);
+		
 		return this;
 	}
 	

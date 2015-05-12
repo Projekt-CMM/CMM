@@ -67,6 +67,8 @@ public class Token {
 	 */
 	private String imagePath;
 	
+	private String successDoc;
+	
 	/**
 	 * Static Strings, for reading the XML
 	 */
@@ -74,7 +76,8 @@ public class Token {
 		XML_TOKEN="token",
 		XML_TITLE = "title",
 		XML_DESCRIPTION = "description",
-		XML_IMAGEPATH = "imagepath";
+		XML_IMAGEPATH = "imagepath",
+		XML_SUCCESS = "success";
 	
 	/**
 	 * FolderName of the Tokens
@@ -167,6 +170,13 @@ public class Token {
 						//No Token ImagePath found
 						token.setImagePath(null);
 					}
+			
+				try{
+					token.setSuccessDoc(eElement.getElementsByTagName(Token.XML_SUCCESS).item(0).getTextContent());
+					}catch(NullPointerException e){
+						//No Token ImagePath found
+						token.setSuccessDoc(null);
+					}
 				}
 			}
 		
@@ -215,8 +225,12 @@ public class Token {
 		this.initPath = initPath;
 	}
 	
-	
+	public void setSuccessDoc(String doc) {
+		this.successDoc = doc;
+	}
 
-	
+	public String getSuccessDoc() {
+		return this.successDoc;
+	}
 	
 }
