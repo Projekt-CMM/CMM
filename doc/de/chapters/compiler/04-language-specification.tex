@@ -341,9 +341,10 @@ Wenn der erste Parameter false ist, wird der Interpreter angehalten und eine def
 __assert__(false, "some error occured");
 \end{lstlisting}
 
+\newpage
 \subsection{Operatoren}
 
-C-Compact unterst\"utzt alle Standardoperatoren wie Plus, Minus, aber auch Stiftoperatoren und binäre Operatoren. Zu beachten ist dass Logische Operatoren nur in Bedingungen genutzt werden k\"onnen, nicht aber in normalen Ausdr\"ucken. Es gilt Punkt vor Strich vor Shift vor bin\"are Operatoren. Diese Reihenfolge kann nat\"urlich mit Klammern ver\"andert werden.
+C-Compact unterst\"utzt alle Standardoperatoren wie Plus, Minus, aber auch Stiftoperatoren und binäre Operatoren. Zu beachten ist dass Logische Operatoren nur in Bedingungen genutzt werden k\"onnen, nicht aber in normalen Ausdr\"ucken. Es gilt Punkt vor Strich vor Shift vor bitweise Operatoren. Diese Reihenfolge kann nat\"urlich mit Klammern ver\"andert werden.
 
 \begin{lstlisting}[language=CMM]
  a = ((5 + 2 - 3) / 4) << 2; // a = 4
@@ -352,11 +353,28 @@ C-Compact unterst\"utzt alle Standardoperatoren wie Plus, Minus, aber auch Stift
 
 \subsubsection{Punktoperatoren}
 
+Punktoperatoren sind jeweil der Multiplikationsoperator (*), Divisionsoperator (/) bzw. der Modulooperator (\%) welcher einen Divisionsrest zur\"uckgibt.
+
 \subsubsection{Strichoperatoren}
 
+Als Strichoperator werden in C-Compact Additionen (+) und Subtraktionen (-) unterst\"utzt.
+
+\subsubsection{Bitweiser Operatoren}
+
+Bitweise Operatoren\footnote{\url{https://de.wikipedia.org/wiki/Bitweiser_Operator}} f\"uhren jede Operation einzeln pro Bit aus. Es ist in C-Compact m\"oglich Variablen Bitweise mit UND ($\&$), ODER ($|$), NICHT (\raisebox{-0.9ex}{\~{ }}) bzw. 
+XOR (\^{}) zu verkn\"upfen.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{./media/images/compiler/language_specification_binary_operator_xor.png}
+\caption{Bitweises XOR von 2. Variablen}
+\label{language_specification_binary_operator_xor}
+\end{figure}
+
+\newpage
 \subsubsection{Shiftoperatoren}
 
-Der Logische Shiftoperator\footnote{\url{https://de.wikipedia.org/wiki/Logische_Verschiebung}} verschieben den Inhalt einer Speicherzelle logisch um eine gew\"ahlte L\"ange. Zu beachten ist dass Daten welche außerhalb der Speicherzelle geschrieben werden gel\"oscht werden, und ansonsten undefinierte Bits mit 0 initialisiert werden.
+Der Arithmetische Shiftoperator\footnote{\url{https://de.wikipedia.org/wiki/Bitweiser_Operator\#Arithmetische_Verschiebung}} ist ein spezieller Bitweiser Operator, welcher den Inhalt einer Speicherzelle arithmetisch um eine gew\"ahlte L\"ange verschiebt. Zu beachten ist dass Daten welche außerhalb der Speicherzelle geschrieben werden gel\"oscht werden, und ansonsten undefinierte Bits mit 0 initialisiert werden.
 
 \begin{figure}[h]
 \centering
@@ -365,17 +383,13 @@ Der Logische Shiftoperator\footnote{\url{https://de.wikipedia.org/wiki/Logische_
 \label{language_specification_shift_operator}
 \end{figure}
 
-%arithmetischer shift
-
-\subsubsection{Bin\"are Operatoren}
-
-Bin\"are Operatoren f\"uhren jede Operation einzeln pro Bit aus, ohne Nachtbarbits zu ber\"ucksichtigen.
+Zu beachten ist dass wie in C ein arithmetischer Shift nach rechts nicht eine 0 bei ansonsten undefinierten Bits eingef\"ugt, sondern das Vorzeichenbit kopiert.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.6\textwidth]{./media/images/compiler/language_specification_binary_operator_xor.png}
-\caption{Bitweises XOR von 2. Variablen}
-\label{language_specification_binary_operator_xor}
+\includegraphics[width=0.7\textwidth]{./media/images/compiler/language_specification_shift_operator_right.png}
+\caption{Bitweise Verschiebung einer 1.Byte Variable um 2 nach rechts}
+\label{language_specification_shift_operator_right}
 \end{figure}
 
 \newpage
@@ -451,12 +465,29 @@ while(a >= 1) {
 }
 \end{lstlisting}
 
+Die Schleife wird so lange durchlaufen bis die Variable $a < 1$ ist. Wenn die Variable a von Anfang an bereits kleiner 1 ist wird die Schleife nicht durchlaufen.
+
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.5\textwidth]{./media/images/compiler/language_specification_while.png}
+\includegraphics[width=0.4\textwidth]{./media/images/compiler/language_specification_while.png}
 \caption{m\"ogliches Flussdiagramm einer while Schleife}
 \label{language_specification_while}
 \end{figure}
+
+\htlParagraph{Beispiel}
+
+\begin{lstlisting}[language=CMM]
+while(a >= 1) {
+	a --;
+	if(a == 3)
+		continue;
+	if(a == 5)
+		break;
+	printf("loop: %d\n", a);
+}
+\end{lstlisting}
+
+Die Schleife wird so lange durchlaufen bis die Variable $a < 1$ ist. Des Weiteren wird kein Text ausgegeben falls die Variable a den Wert 3 erreicht, sondern sogleich ein erneuter Schleifendurchlauf begonnen. Falls die Variable den Wert 5 erreicht wird die Schleife vorzeitig abgebrochen.
 
 \newpage
 \subsubsection{do-while Schleife}
@@ -474,6 +505,8 @@ do {
 } while(a >= 1);
 \end{lstlisting}
 
+Die Schleife wird so lange durchlaufen bis die Variable am Ende der Schleife < 1 ist. Wenn die Variable a von Anfang an bereits kleiner 1 ist wird die Schleife trotzdem 1. mal durchlaufen, bevor sie Verlassen wird.
+
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.4\textwidth]{./media/images/compiler/language_specification_do_while.png}
@@ -484,7 +517,11 @@ do {
 \newpage
 \subsubsection{for Schleife}
 
-\footnote{\url{https://de.wikipedia.org/wiki/For-Schleife}}
+Die for Schleife\footnote{\url{https://de.wikipedia.org/wiki/For-Schleife}} erm\"oglicht die einfache Definition von Schleifen, welche zu Beginn Werte initialisieren m\"ussen, und oder einen Schleifen-Iterator besitzen. Die for Schleife erleichtert die Definition von solchen Schleifen, und k\"ummert sich um den Korrekten Umgang der Schleife bei Benutzung eines continue oder break.
+
+Zu beachten ist, dass im Gegensatz zu C keine neuen Variablen zu Beginn der Schleife erstellt werden k\"onnen. Variablendefinitionen m\"ussen immer davor erstellt werden.
+
+Des Weiteren ist es m\"oglich die Variableninitialisierung bzw. den Iterationsoperator leer zu lassen. Die Strichpunkte m\"ussen aber trotzdem geschrieben werden.
 
 \htlParagraph{Beispiel}
 
@@ -494,6 +531,8 @@ for(a = 0; a <= 5; a ++) {
 }
 \end{lstlisting}
 
+Der Schleifeniterator wird in diesem Fall zu beginn auf 0 gesetzt, und dann nach jedem Schleifendurchlauf um 1. inkrementiert, bis die Bedingung nicht mehr erf\"ullt ist. Aus diesem Grund wird diese Schleife immer genau 6 Iterationen durchlaufen bevor sie verlassen wird. 
+
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{./media/images/compiler/language_specification_for.png}
@@ -501,4 +540,5 @@ for(a = 0; a <= 5; a ++) {
 \label{language_specification_for}
 \end{figure}
 
+\newpage
 \subsubsection{return}
