@@ -10,26 +10,33 @@ Der frühere Unterricht wurde so gestaltet, dass der Lehrer vor der Stunde an di
 Bei diesem System, kann der Schüler direkt aus einem Themenblock auswählen und der Fortschritt wird im Profil vermerkt. Dies hat vor allem dann Sinn, wenn Lehrpersonen überprüfen wollen, ob die Aufgaben erledigt wurden. Wenn der Schüler mit die Aufgabe abgeschlossen hat, kann er sogleich mit der nächsten Quest beginnen. Somit wird der Schüler auch beim selbstständigen Lernen unterstützt.
 
 \section{Dateien in einer Quest}
+\begin{figure}[h] 
+  \centering
+     \includegraphics[width=0.8\textwidth]{./media/images/quest/quest_ordnerstruktur}
+  \caption{Struktur einer Quest}
+  \label{fig:struct_quest}
+\end{figure}
+
 Damit eine Quest vom Programm als so welche erkannt wird, müssen mehrere Dateien vorhanden sein. Einige davon werden von der Überprüfungsroutine benötigt. Andere dienen wiederum zur Beschreibung der Quest.
 
 \begin{itemize}
-\item description.html
+\item description.html\\
 Diese Datei beinhaltet die Beschreibung der Quest. Diese muss im .html Format geschrieben werden. Hier kann die Aufgabe ausführlich erklärt werden. Informationen über Tokens müssen manuell in die Beschreibung hinzugefügt werden.
 
-\item ref.cmm
+\item ref.cmm\\
 In der ref.cmm befindet sich das Referenzprogramm. Dieses wird von C-Compact beim Überprüfen der Quest ausgeführt. Wenn die Ausgaben des Programms des Benutzers, den Ausgaben des Referenzfiles gleichen, wird die Aufgabe als Richtig gewertet.
 
-\item default.cmm
+\item default.cmm\\
 In der default.cmm befindet sich eine Quelltext Vorgabe, welche beim erstmaligen öffnen einer Quests angezeigt beziehungsweise zur weiteren Verarbeitung zur Verfügung gestellt wird.
 
-\item input.cmm
+\item input.cmm\\
 Dieses File kann zum Erstellen für Eingabedaten der ref.cmm verwendet.
 \end{itemize}
 
 Optional können noch weitere Dateien hinzugefügt werden. Wenn diese unvollständig oder kaputt sind, so wird eine dieser Dateien einfach nicht verwendet.
 
 \begin{itemize}
-\item quest.xml
+\item quest.xml\\
 In diesem File kann man einige Parameter der Quest definieren, diese werden im Quest- Auswahlfenster genutzt.
 
 \begin{lstlisting}[language=XML]
@@ -49,7 +56,7 @@ Wie aus der Datei bereits ersichtlich sein sollte, kann man einen Titel, ein Att
 \item Bei token, kann man eine zugehörige Auszeichnung wählen. Diese muss im zugehörigen Package im tokens Ordner definiert sein. Wenn dieses nicht vorhanden oder Fehlerhaft ist, wird bei Abschluss der Quest, kein Token hinzugefügt.
 \end{itemize}
 Alle diese hier erwähnten Optionen können optional hinzugefügt werden.
-\item style.css
+\item style.css\\
 Kann als Stylesheet für die dazugehörige description.html verwendet werden. Diese Datei ersetzt das vordefinierte Stylesheet.
 
 \end{itemize}
@@ -82,11 +89,11 @@ Alle hier erwähnten Variablen sind durch Getter und Setter erreichbar.
 
 \section{Questzustände}
 \begin{itemize}
-\item locked: Diese Quest kann nicht bearbeitet werden. Quest wird automatisch auf diesen Zustand gesetzt, falls in der \textit{quest.xml} für \textit{\textbf{previousFolder}} ein Wert gesetzt wurde, und dieser Wert im Profil noch nicht als fertiggestellt markiert wurde.
-\item selectable: Der Benutzer kann diese Quest auswählen. Dies hier ist der Standartzustand.
-\item inprogress: Der Benutzer hat diese Quest bereits begonnen, jedoch noch nicht abgeschlossen.
-\item open: Diese Quest wird gerade vom Benutzer bearbeitet.
-\item finished: Die Quest wurde bereits abgeschlossen.
+\item locked:\\ Diese Quest kann nicht bearbeitet werden. Quest wird automatisch auf diesen Zustand gesetzt, falls in der \textit{quest.xml} für \textit{\textbf{previousFolder}} ein Wert gesetzt wurde, und dieser Wert im Profil noch nicht als fertiggestellt markiert wurde.
+\item selectable:\\ Der Benutzer kann diese Quest auswählen. Dies hier ist der Standartzustand.
+\item inprogress:\\ Der Benutzer hat diese Quest bereits begonnen, jedoch noch nicht abgeschlossen.
+\item open:\\ Diese Quest wird gerade vom Benutzer bearbeitet.
+\item finished:\\ Die Quest wurde bereits abgeschlossen.
 \end{itemize}
 
 \section{Linearer Quest Weg}

@@ -74,8 +74,9 @@ Der Aufbau des Abstrakten Syntaxbaumes ist im Kapitel Compiler zu finden. Dort w
 Knoten näher erläutert.
 
 \subsection{Memory}
-Hier wird das Speichermodell und deren Anforderungen an den Interpreter näher erläutert.
-Ein wichtiger Teil des Speichermodells ist die Aufbewahrung von einzelnen Variablen.
+Ein wesentlicher Teil des Speichermodells ist die Aufbewahrung unterschiedlichster Variablen. Hierbei wird zwischen Variablen in Unterprogrammen und globalen Variablen unterschieden. \\
+Für globale Variablen wird extra ein Platz reserviert. Lokale Variablen werden in einem gewissen Frame immer wieder auf und abgebaut. \\
+Somit bleiben globale Variablen immer enthalten, wobei Lokale Variablen nach dem Unterprogrammaufruf erstellt werden. Sobald das Unterpgramm fertig durchlaufen ist, wird der Speicherplatz der lokalen Variablen wieder freigegeben.
 
 \subsubsection{Aufbau unseres Stack Frames}
 \begin{figure}[Stack Frame]
@@ -88,10 +89,11 @@ Ein wichtiger Teil des Speichermodells ist die Aufbewahrung von einzelnen Variab
 %--\includegraphics[scale=0.3]{./media/images/interpreter/memory/stackframe.png}
 
 \subsection{Aufbau des Memorys}
-Da wir für unser Projekt nicht sehr viel Arbeitsspeicher benötigen, wurden 8 MB Arbeitsspeicher für den Memory reserviert.
-Wie man in \ref{stackframe1} erkennen kann, wurde dieser in 2 Hälften geteilt, wovon der untere Teil für globale Variablen
-und der obere Teil für Methoden verwendet wird.
+Da für kleine Programmieraufgaben, welche man zum Erlernen einer Programmiersprache, nicht viel Arbeitsspeicher benötigt wird, sowie keine Graphische Programmierung in C Compact vorgesehen ist, haben wir uns entschieden 8 MB Arbeitsspeicher für den Memory zu reservieren.
+Wie man in \ref{stackframe1} erkennen kann, wurde dieser in 2 Hälften geteilt. Davon wird der untere Teil für Globale Variablen und der obere Teil für die Unterprogramme verwendet.
 
+\subsection{Speicherinhalte eines Unterprogramms}
+Ein Unterprogramm muss grundsätzlich im Call Frame schon im vorhinein einige Variablen enthalten, welche das zurückspringen auf das letzte Unterprogramm ermöglichen. Hierfür ist der Dynamic Link zuständig. Weiters wird die LineNumber gespeichert, diese wird vom GUI benötigt, damit dieser das Programm schrittweise abarbeiten kann. Weiters ist eine ProcID vorhanden, diese ist für den Namen des Unterprogramms zuständig.
 
 \subsubsection{Aufruf einer neuen Methode}
 \begin{enumerate}
@@ -116,19 +118,19 @@ und der obere Teil für Methoden verwendet wird.
 \subsubsection{Speicherverwaltung}
 Da bei der Speicherverwaltung viele Fehler auftreten könnten, ist es wichtig, dass diese mit verschiedensten Exceptions abgefangen werden.
 
-Die statische Klasse Memory beinhaltet alle Funktionen, welche für den Interpreter notwenig sind.
+Alle vom Interpreter benötigten Funktionen, sind in der statischen Klasse Memory zu finden. 
 
-Es werden verschiedene Datentypen unterstützt:
+Vom Memory werden verschiedenste Datentypen unterstützt.
 \begin{itemize}
  \item int - 4 Byte
  \item float - 4 Byte
  \item char - 2 Byte 
  \item boolean - 1Byte
- \item string - 4 Byte
+ \item string - 4 Byte - beinhaltet jedoch nur die Adresse wo der String zu finden ist.
 \end{itemize}
+Alle Variablen können mit der nötigen Adresse und der zum Variablennamen passenden Funktion abgefragt werden.
 
-Hierbei sind die Bytegrößen zu beachten, wobei bei dem Datentyp String nur die Stringadresse gespeichert wird. Alle Variablen können
-mit der nötigen Adresse und der zum Variablennamen passenden Funktion abgefragt werden.
+Bei der Speicherung einer Variable ist die Größe der Variablen bereits bekannt, und muss nicht extra vom Interpreter herausgefunden werden. Somit muss der Interpreter nur zwischen den verschiedenen Datentypen unterscheiden und durch Aufruf der richtigen Methoden im Memory auf die richtige Adresse schreiben.
 
 \subsection{Interpreter}
 Weil wir eine einfache Darstellung der aktuellen Variablen bezweckten und den Ablauf des Programmes nicht verändern wollten, kam für 
@@ -181,15 +183,16 @@ Hier eine Auflistung dieser Funktionen:
 Hiermit wird ein Char-Zeichen dem StdInOut Interface übergeben. Somit kann dieses danach vom GUI ausgeben werden.
 
 \subsubsection{read}
-Wenn Read aufgerufen wird, werden vom Interface StdInOut Char-Variablen eingelesen und diese als Return Wert gesetzt.
+Wenn Read aufgerufen wird, werden vom Interface StdInOut Char-Variablen eingelesen und diese als Return Wert gesetzt und kann somit zur Weiterverarbeitung verwendet werden.
 
 \subsubsection{length}
 Hier kann man die Länge eines Strings bestimmen lassen, dieser wird wiederum als Return-Wert gesetzt.
 
 \subsubsection{time}
-``time'' dient zum Bestimmen der Zeit, welche wiederum als Return-Wert zurückgegeben wird.
+``time'' dient zum Bestimmen der Zeit, welche wiederum als Return-Wert zurückgegeben wird. Wird für den implementierten Zufallsgenerator bei der Initialisierung benötigt.
 
 \subsubsection{Normaler Aufruf}
+%TODO Neu programmiert
 Sobald ein Aufruf erfolgt, werden alle Variablen, welche übergeben werden sollen, in einem Objekt zwischengespeichert. Nun kann ein
 neues Memoryframe geöffnet werden. Die Variablen, welche in einem Objekt zwischengespeichert wurden, können nun in das neue
 Memoryframe übertragen werden.
@@ -197,17 +200,17 @@ Memoryframe übertragen werden.
 Nun wird eine Startsequenz ausgeführt, damit der Unterprogrammaufruf abgearbeitet werden kann.
 
 \subsection{Designators}
-Auf Designators werden bestimmte Werte gespeichert. Weiters sind sie für die richtige Zuweisung der Adresse notwendig.
-Hier wird in 3 Grundtypen unterschieden:
+Auf Designators werden bestimmte Werte gespeichert. Diese können zum Beispiel normale Variablen, Arrays oder Strukturen sein. Hier ist die richtige Zuweisung der Adresse wichtig.
 
-\subsubsection{Ident}
-Wenn ein Ident aufgerufen wird, werden verschiedene Faktoren geprüft.
+Designators werden in 3 Grundtypen unterschieden:
+\subsubsection{Identifer}
+Ein Identifer ist eine normale einfache Variable. Wenn ein Identifer aufgerufen wird, werden verschiedene Faktoren geprüft.
 \begin{itemize}
- \item Falls der Identifer global ist, wird der Globalpointer mit der Objektadresse addiert.
+ \item Falls diser global ist, wird der Globalpointer mit der Objektadresse addiert.
  \begin{lstlisting}[language=JAVA]
  adr = Memory.getGlobalPointer() + obj.adr;	
   \end{lstlisting}
-  Trifft voriges nicht zu, wird anstatt des Globalpointers der Framepointer des aktuellen Aufrufes zur Objektadresse addiert.
+  Trifft voriges nicht zu, wird anstelle des Globalpointers der Framepointer des aktuellen Aufrufes zur Objektadresse addiert.
    \begin{lstlisting}[language=JAVA]
  adr = Memory.getFramePointer() + obj.adr;
   \end{lstlisting}
@@ -228,21 +231,32 @@ return Adr(p.left) + p.right.val
 
 \subsubsection{Index}
 \includegraphics[width=0.4\textwidth]{./media/images/interpreter/syntaxbaum/designators/index.png}
-
-Um den Index auszurechnen, ist es notwendig, die Expression auf der rechten Seite aufzulösen.
-Nun kann die Adresse berechnet werden. Diese setzt sich aus dem Produkt der Adresse des rechten Knotens und der Größe der Indexelemente zusammen.
+Arrays werden vom Arrays verwendet. Um den Index des gewünschten Arrays auszurechnen, ist es notwendig, die Expression des rechten Knotens aufzulösen.
+Nun kann die Adresse berechnet werden. Diese setzt sich aus dem Produkt der Adresse des rechten Knotens und der  Speicherbedarf eines einzelnen Indexelementes zusammen.
 
 \begin{lstlisting}[language=JAVA]
 return Adr(p.left) + p.left.type.elemType.size * index;
 \end{lstlisting}
 
 \subsection{Expressions}
-Expressions werden grundsätzlich für Berechnungen und Typconvertierungen verwendet, aus diesem Grund ist es wichtig, dass jeder Datentyp seine
-eigene Expressions-Methode besitzt.
+Expressions werden grundsätzlich für Berechnungen und Typconvertierungen verwendet, aus diesem Grund ist es wichtig, dass jeder Datentyp seine eigene Expressions-Methode besitzt. Weiters können hier Konstanten abgefragt werden.
 
 \subsection{Conditions}
-Conditions werden zur Verwendung von if-Bedingungen und für Schleifen benötigt.
+Conditions werden für Vergleiche und für die Verwendung von if-Bedingungen sowie Schleifen benötigt. Weiters dienen sie auch zum verknüpfen mehrerer Conditions.
 
+Hier wird unterschieden zwischen:
+\begin{itemize}
+\item EQL: Überprüft ob das Element auf der rechten Seite gleich dem der Linken Seite ist.
+\item NEQ: Die Variable des Linken Knotens darf die des rechten Knotens nicht gleichen.
+\item LSS: Das Element der Linken Seite muss kleiner sein als das der Rechten.
+\item LEQ: Die Variable des Linken Knotens darf gleich, und kleiner sein als die Variable des Rechten.
+\item GTR: Gibt true zurück, wenn die Variable des Linken Knotens größer ist als die des Rechten Knotens.
+\item GEQ: Überprüft ob das Element auf der rechten Seite gleich oder größer dem der Linken Seite ist.
+\item OR: Überprüft zwei Conditions mithilfe eines oder Operators.
+\item AND: Zwei Conditions werden hiermit mit einem und verknüpft.
+\item NOT: Der gegebene Linke Knoten ist eine Condition. Diese wird negiert zurückgegeben.
+\item CALL: Ruft ein Unterprogramm auf, welches den Rückgabewert, den Datentyp Boolean hat. Dies kann somit für eine Abfrage weiterverwendet werden.
+\end{itemize}
 %	--------------------------------------------------------
 % 	Kalkulation
 %	--------------------------------------------------------
