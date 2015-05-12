@@ -1,5 +1,6 @@
 /bin/
 /log/
+/.metadata/
 *.swp
 *.*~
 CMM.jar

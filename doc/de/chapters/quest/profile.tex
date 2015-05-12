@@ -1,0 +1,39 @@
+\section{Profile}
+Da ein Benutzer vielleicht irgendwann mit den Quests von vorne beginnen möchte oder sich mehrere Personen einen Computer teilen, gibt es Benutzerprofile. Dort werden der Fortschritt der Aufgaben und die Erfolge eines Benutzers gespeichert.
+
+\subsection{Konzept}
+Ein Profil ist das dynamische Gegenstück zu dem "`statisch"' mit dem Programm verknüpften Quest System. Während Quest-Packete im Ordner "`packages"', welcher sich direkt beim Programm befindet, abgelegt werden müssen, kann das Profil überall gespeichert werden. Somit kann das Profil ohne Probleme auf einem USB-Stick gespeichert werden und auf einem beliebigen Computer, wo die benötigten Quest-Packete installiert sind wieder öffnen.
+
+Wenn ein Profil an einem Computer geöffnet wird, an dem im Profil verzeichnete Quests nicht vorhanden sind, werden diese einfach nicht angezeigt und in den Profildaten nicht verändert.
+
+\subsection{Dateien eines Profils}
+Das Herzstück des Profils befindet sich in der profile.cp. Darin sind Benuztername und Bildpfad sowie Statusinformationen zu den Quests vermerkt. Sobald ein Profilbild gesetzt wurde wurde wird dieses in das Profil kopiert und als avatar.<png> abgespeichert.
+
+\begin{lstlisting}[language=XML]
+<profile>
+	<name>TestProfil</name>
+	<profileimage>avatar.jpeg</profileimage>
+	<state id="finished">
+		<quest>01 Simples Hello World</quest>
+		<package>01 Einstieg</package>
+		<date>16-03-2015:15:37:361</date>
+		<filepath>/home/peda/Arbeitsfläche/einstieg1.cmm</filepath>
+		<token>Icon_Craft.xml</token>
+	</state>
+	...
+</profile>
+\end{lstlisting}
+
+Für Errungenschaften, welche man beim Fertigstellen vom Quests erreicht werden, wird die Ordnersturktur bis zum Tokens-Ordner im Profil wiederspiegelt. Somit können Auszeichnungen auch dann angezeigt werden, wenn die Quest, für die der Benutzer die Errungenschaft erhalten hat, nicht mehr verfügbar ist.
+
+\subsection{Variablem in der profile.java}
+\begin{lstlisting}[language=JAVA]
+	private String name;				//Profilname				
+	private String profileimage;		//profilbild
+	private String current;				//derzeit geöffnetes File
+	private String profilePath;			//Pfad zum Profil
+	private Quest quest;				//aktuelle Quest
+
+	private String packagesPath;		//"packages" Ordner
+	private List<Quest> profileQuests;	//Liste aller Quests im Profil
+\end{lstlisting}

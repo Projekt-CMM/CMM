@@ -21,6 +21,7 @@ import at.jku.ssw.cmm.gui.treetable.TreeTableModel;
 import at.jku.ssw.cmm.gui.treetable.var.TreeUtils;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
+import at.jku.ssw.cmm.profile.Package;
 
 public class TreeTableExample {
 	
@@ -88,10 +89,7 @@ public class TreeTableExample {
 	}
 	
 	
-private DataNodeExample getFolderView(String path, DataNodeExample node, int layer){
-	
-	//TODO hide subfolders which don't contains Quest Files
-	
+private DataNodeExample getFolderView(String path, DataNodeExample node, int layer){	
 	List<String> subFolders = Quest.ReadFolderNames(path);
 	if(subFolders == null)
 		return node; //Maybe return null?
@@ -99,6 +97,7 @@ private DataNodeExample getFolderView(String path, DataNodeExample node, int lay
 	DataNodeExample subNode = null;
 	
 	for(String subfolder : subFolders){
+		
 		TreeTableListener tListener = new TreeTableListener(path + File.separator + subfolder,main, subfolder);
 
 		if(isPackage(path + File.separator + subfolder)){
@@ -120,23 +119,18 @@ private DataNodeExample getFolderView(String path, DataNodeExample node, int lay
 				//Adding the Current Node
 				
 				subNode = new DataNodeExample(tListener, b, button);
-				
-				if(subNode != null){
-					getFolderView(path + File.separator + subfolder, subNode, ++layer);
-					node.addChild(subNode);
-				}
+				getFolderView(path + File.separator + subfolder, subNode, ++layer);
+				node.addChild(subNode);
 			}
 			
-		}else{
+		}else
 			if(!Quest.isPathQuest(path + File.separator + subfolder) && Quest.containsQuests(path + File.separator + subfolder)){
 				subNode = new DataNodeExample(tListener, "", "");
-				
-				if(subNode != null){
 					getFolderView(path + File.separator + subfolder, subNode, ++layer);
 					node.addChild(subNode);
-				}
+				
 			}
-		}
+		
 		
 
 					

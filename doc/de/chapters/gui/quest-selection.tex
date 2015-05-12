@@ -1,14 +1,33 @@
 \section{Quest - Selection}
+%TODO Referenz Quest System
 
-Sobald ein Package ausgewählt wurde, kann man im Package die Quest wählen. Wie beim Quest Package wird rechts die Beschreibung der ausgewählten Quest, falls diese vorhanden ist, angezeigt. Der Type beinhaltet kann in der quest.xml definiert werden und bildet ein Attribut. Somit kann man zum Beispiel für verschiedene Aufgabenbereiche, verschiedene Attribute verwenden. Links wird der Status jeweiligen Quest in Symbolen dargestellt.
+Sobald ein Package ausgewählt wurde, kann man darin die Quest wählen. Wie beim Questpackage wird rechts die Beschreibung der ausgewählten Quest, falls diese vorhanden ist, angezeigt. Der \textit{"`Type"'} kann in der \textit{quest.xml} definiert werden und bildet ein Attribut. Somit kann man zum Beispiel für verschiedene Aufgabenbereiche, verschiedene Attribute verwenden. Links wird der Status jeweiligen Quest in Symbolen dargestellt.
+
+\begin{figure}[h] 
+  \centering
+     \includegraphics[width=0.9\textwidth]{./media/images/gui/launcher/package_view.png}
+  \caption{Quest Selection}
+  \label{fig:Bild1}
+\end{figure}
 
 \begin{itemize}
-\item Mit einem Leeren Feld wird eine nicht gestartete Quest symbolisiert.
+\item Mit einem leeren Feld, wird eine nicht gestartete Quest symbolisiert.
 \item Eine Uhr bedeutet, dass die Quest bereits gestartet, jedoch noch nicht abgeschlossen wurde.
 \item Ein Häkchen symbolisiert eine fertiggestellte Quest.
-Durch ein Kreuz wird eine gesperrte Quest dargestellt. 
+\item Ein Kreuz bedeutet eine gesperrte Quest. 
 \end{itemize}
-Sobald eine Quest selektiert wurde, wird der grau hinterlegte Button aktiv, und kann nun geklickt werden. Nun wird die Quest als aktuelle Quest im Profil übernommen und C-Compact dementsprechend angepasst.
 
-Zur Realisierung wurde ein JTable verwendet. Dieser befindet sich wieder in einer JScrollpane.
+Sobald eine Quest selektiert wurde, wird der grau hinterlegte Button aktiv und kann nun geklickt werden. Sobald dies geschehen ist, wird die gewählte Quest als aktuelle Quest ins Profil übernommen und C-Compact dementsprechend angepasst.
 
+Zur Realisierung wurde ein JTable verwendet. Dieser befindet sich wieder in einer JScrollpane. Das Questpackage und die Questselection verwenden grundsätzlich dasselbe JFrame. Aus diesem Grund sieht die Umstellung der Package Auswahl auf die Quest Auswahl dynamischer aus. Somit muss beim Wechseln auf die JTable, die JTree, entfernt werden. Danach kann der neue Komponent hinzugefügt werden.
+\begin{lstlisting}[language=JAVA]
+	public void changetoQuestTable(){
+		splitpane.remove(jTablePanel);
+		splitpane.setLeftComponent(inittable());
+
+		frame.validate();
+		frame.repaint();
+	}
+\end{lstlisting}
+
+Mithilfe der \textit{frame.validate()} Methode wird noch einmal überprüft, ob alle Komponenten ordnungsgemäß zugewiesen werden. Danach muss das gesamte JFrame neu gezeichnet werden, was in diesem Fall von der \textit{frame.repaint()}-Methode durchgeführt wird.

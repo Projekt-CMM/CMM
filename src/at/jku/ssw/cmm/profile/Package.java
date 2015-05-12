@@ -58,16 +58,13 @@ public class Package {
 		FILE_DESCRIPTION = "description.html",
 		FILE_STYLE = "style.css";
 	
-	private static final String
+	public static final String
 		XML_PACKAGE = "package",
-		XML_TITLE = "title",
-		XML_MINLEVEL = "minlevel";
+		XML_TITLE = "title";
 	
 	public static Package readPackage(String initPath, String packagePath){
 		Package package1 = readPackageFile(initPath, packagePath);
 		List<String> fileNames = Quest.ReadFileNames(initPath + sep + packagePath);
-		
-		System.out.println(fileNames);
 		
 		if(fileNames != null){
 			if(fileNames.contains(Package.FILE_DESCRIPTION))
@@ -112,9 +109,23 @@ public class Package {
 		return package1;
 	}
 	
-	private static Package readPackageXML(String initPath,String packagePath, Package package1) throws ParserConfigurationException, SAXException, IOException{
+	public static Package readPackageXML(String packagePath){
 		
-		File file = new File(initPath + sep + packagePath + sep + Package.FILE_PACKAGE);
+		try {
+			return readPackageXML(null, packagePath,new Package());
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private static Package readPackageXML(String initPath,String packagePath, Package package1) throws ParserConfigurationException, SAXException, IOException{
+		File file;
+		if(initPath != null)
+			file = new File(initPath + sep + packagePath + sep + Package.FILE_PACKAGE);
+		else
+			file = new File(packagePath + sep + Package.FILE_PACKAGE);
+		
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		
@@ -144,12 +155,6 @@ public class Package {
 				}catch(NullPointerException e){
 					//If No Title exists setting title to FoderName
 					package1.setTitle(packagePath);
-				}
-				
-				try{
-				package1.setMinLevel(Integer.parseInt(eElement.getElementsByTagName(Package.XML_MINLEVEL).item(0).getTextContent()));
-				}catch(NullPointerException e){
-					//nothing happens...
 				}
 			}
 		}
