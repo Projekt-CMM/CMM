@@ -109,15 +109,78 @@ Node  Condition() {
 
 \subsubsection{Node.java}
 
+Der Abstrakte Syntaxbaum wird aus einzelnen Nodes aufgebaut, welche sich Baumartig verkn\"upfen lassen. In unserer Implementierung verwenden wir einen homogenen Syntaxbaum, in welchem je nach Knotentyp unterschiedliche Daten gespeichert werden.
+
+Jeder Knoten ist von einer speziellen Art, welcher mithilfe einer Nummer definiert wurde. So gibt es einen eigenen Knoten f\"ur eine Variable, ein Bitweises UND oder eines Index. Im Interpreter werden die gleichen Arten von Knoten verwendet, um dann das Programm korrekt zu durchlaufen. Die Werte von Konstanten werden direkt in einem Node gespeichert, Variablen dagegen erhalten einen Verweis auf das dementsprechende Objekt wo diese definiert wurde.
+
+\begin{lstlisting}[language=Java]
+public int kind;        // STATSEQ, ASSIGN, ...
+public Struct type;     // only used in expressions
+public int line;        // only used in statement nodes
+public int col;         // only used in statement nodes
+public int colLength;
+
+public Node left;       // left son
+public Node right;      // right son
+public Node next;       // for linking statements, parameters,.
+
+public Obj obj;         // object node of an IDENT
+public int val;         // value of an INTCON or CHARCON
+public float fVal;      // value of a FLOATCON
+\end{lstlisting}
+
+\subsubsection{Scope.java}
+
+Die Symboltabelle basiert auf mehreren Ebenen, welche unterschiedliche logische Ebenen eines Programmes repr\"asentieren, aus dessen es aufgebaut ist.
+
+Als unterste Ebene gibt es den Universe-Scope, in welchem alle Standardtypen wie auch Standardfunktionen definiert sind. Diese stellen elementare Elemente einer Programmiersprache dar, welche immer verf\"ugbar sind.
+
+Dar\"uber gibt es den Standardscope, in welchem globale Variablen wie auch Prozeduren deklariert sind. Wenn eine Prozedur deklariert wird, wird tempor\"ar ein neuer Scope erstellt, in dem die Variablen deklariert werden. Wenn die Funktion fertig deklariert wurde, wird dessen Inhalt in das Funktionsobjekt kopiert und der Scope geschlossen.
+
+Bei der Namensaufl\"osung von Variablen wird immer zuerst der aktuelle Scope durchsucht, und wenn die suche erfolglos ist der darunterliegende Scope, und wenn die Suche wieder erfolglos ist wieder der n\"achste scope. Dadurch ist es m\"oglich Variablen mit gleichem Namen als globale Variable wie auch als Funktionsvariable zu deklarieren.
+
+\begin{lstlisting}[language=Java]
+public class Scope {
+	public Scope outer;  // to outer scope
+	public Obj   locals; // to local variables of this scope
+	public int   size;   // total size of variables in this scope
+}
+\end{lstlisting}
+
 \subsubsection{Obj.java}
+
+Ein Objektnode wird dazu verwendet definierte Konstanten, Variablen, Typen und Funktionen in die Symboltabelle einzutragen. Dabei wird bei Variablen zum Beispiel gespeichert welchen Offset diese zum FramePointer haben, oder von welchem Typ diese ist.
+
+Bei Prozeduren gibt es eine Referenz zu dem dahinter liegenden Abstrakten Syntaxbaum, welcher durchlaufen wird wenn die Funktion aufgerufen wird. Auch wird vermerkt wie viel Speicher allokiert werden muss, um alle Variablen im Stack speichern zu k\"onnen, oder wie viele Variablen Funktionsargumente darstellen.
+
+\begin{lstlisting}[language=Java]
+public int     kind;      // CON, VAR, TYPE, PROC
+public String  name;      // object name
+public Struct  type;      // object type
+public Obj     next;      // next local object in this scope
+public boolean library;   // is this Obj a library function?
+
+public int     val;       // CON: int or char value
+public float   fVal;      // CON: float value
+
+public int     adr;       // VAR: address
+public int     level;     // VAR: declaration level
+public boolean isRef;     // VAR: ref parameter
+	
+public int     line;      // VAR, CON: line of declaration
+
+public Node    ast;       // PROC: AST of this procedure
+public int     size;      // PROC: frame size in bytes
+public int     nPars;     // PROC: number of formal parameters
+public Obj     locals;    // PROC: parameters and local objects
+public boolean isForward; // PROC: is it a forward declaration
+\end{lstlisting}
 
 \subsubsection{Compiler.java}
 
 \subsubsection{Error.java}
 
 \subsubsection{NodeList.java}
-
-\subsubsection{Scope.java}
 
 \subsubsection{Strings.java}
 

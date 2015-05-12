@@ -258,15 +258,28 @@ int library foo(int a, int b[], int &c) {
 Vorw\"artsdeklarationen werden ben\"otigt wenn auf eine Funktion zugegriffen werden muss, bevor diese vollst\"andig inklusive interner Logik Deklariert wurde. Dabei wird die Funktionsdeklaration kopiert, und anstatt mit geschwungenen Klammern und der Funktionslogik, nur mit einem Strichpunkt abgeschlossen.
 
 \begin{lstlisting}[language=CMM]
-int foo(int a);
+int foo(int a); // forward declaration
 
 int foo(int a) {
-	if(a == 0)
-		return 0;
-	return (a + foo(a-1));
+	// some code
 }
 \end{lstlisting}
 
+\subsubsection{return}
+
+Wenn eine Funktion vorzeitig verlassen werden soll, wird dies mit einem return implementiert. Dabei muss auch ein Wert angegeben werden, welcher als R\"uckgabetyp definiert wurde. Bei void Funktionen wird ein return ohne Variable angegeben.
+
+Jede Funktion mit Ausnahme von void Funktionen m\"ussen mit einem return Beendet werden. Falls dies nicht der Fall ist kommt es zu einen Laufzeitfehler.
+
+\begin{lstlisting}[language=CMM]
+void foo(int a) {
+	if(a == 0)
+		return;
+	print('b');
+}
+\end{lstlisting}
+
+\newpage
 \subsubsection{Vorimplementierte Funktionen}
 
 Es gibt eine gewisse Funktionen welche bereits im Interpreter und Compiler implementiert sind, um C-Compact eine Interaktion mit dem Debugger zu erm\"oglichen.
@@ -289,7 +302,9 @@ char c = read();
 
 \htlParagraph{printf}
 
-Schreibe eine Formatierte Ausgabe in die Ausgabe. Diese Funktion unterst\"utzt beliebig viele Argumente, wobei f\"ur jede Platzhalter im String ein Argument angegeben werden muss.
+Diese Funktion implementiert eine einfache printf Funktion, wie sie auch in C vorhanden  ist. Da diese Funktion eine nicht festgelegte Anzahl von \"ubergabeparamter besitzt, was C-Compact eigentlich nicht unterst\"utzt, ist diese zu den Basisfunktionen hinzugef\"ugt worden.
+
+F\"ur jeden Platzhalter im String muss ein Argument angegeben werden, ansonsten kommt es zu einem Laufzeitfehler.
 
 \begin{lstlisting}[language=CMM]
 printf('a= %d, b=%f\n', 10, 2.2);
@@ -308,6 +323,7 @@ Ein Platzhalter definiert ein Variable welche in einem spezifizierten Ausgabefor
   float & \%f \\
  \end{tabular}
 
+\newpage
 \htlParagraph{length}
 
 Mithilfe der length-Funktion ist es m\"oglich die L\"ange eines Strings zu ermitteln.
@@ -539,6 +555,3 @@ Der Schleifeniterator wird in diesem Fall zu beginn auf 0 gesetzt, und dann nach
 \caption{m\"ogliches Flussdiagramm einer for Schleife}
 \label{language_specification_for}
 \end{figure}
-
-\newpage
-\subsubsection{return}
