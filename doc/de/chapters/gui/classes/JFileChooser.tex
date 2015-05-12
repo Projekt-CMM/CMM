@@ -1,13 +1,13 @@
 \section{JFileChooser}
 \label{sec:JFileChooser}
 
-Mithilfe des JFileChoosers wird es dem Benutzer ermöglicht, Dateien und Ordner auszuwählen. Dieser kann mit den verschiedensten Methoden angepasst werden. Dafür muss dieser jedoch bereits vorher initialisiert werden.
+Der JFileChoosers\footnote{\url{http://docs.oracle.com/javase/7/docs/api/javax/swing/JFileChooser.html}} ermöglicht dem Benutzer, Dateien und Ordner auszuwählen. Dieser kann mit den verschiedensten Methoden angepasst werden. Dazu müssen die veränderten Methoden im Vorhinein initialisiert werden.
 
 \begin{lstlisting}[language=JAVA]
 JFileChooser chooser = new JFileChooser();
 \end{lstlisting}
     
-Nun kann man verschiedenste Einstellungen vornehmen. Sehr oft, wurde von uns ein so genannter FileNameExtensionFilter verwendet. Mit diesem ist es möglich. Dateien mit bestimmten Endungen herauszufiltern und nur diese anzeigen zu lassen.
+Nun kann man verschiedenste Einstellungen vornehmen. Sehr oft wurde von uns ein so genannter FileNameExtensionFilter verwendet. Mit diesem ist es möglich. Dateien mit bestimmten Endungen herauszufiltern und nur diese anzeigen zu lassen.
 
 Dies wurde zum Beispiel beim Suchen nach C-Compact Profilen verwendet!
 \begin{lstlisting}[language=JAVA]
@@ -18,18 +18,11 @@ chooser.setFileFilter(filter);
 
 
 \subsection{Anzeigen einer Vorschau}
-Bei der Implementierung des JFileChoosers, wurde oftmals ein Zusatz hinzugefügt, dem es den Nutzer ermöglicht eine Vorschau eines Bildes sowie den Nutzernamen zu haben.
+Bei der Implementierung des JFileChoosers wurde oftmals ein Zusatz hinzugefügt, der es den Nutzer ermöglicht, eine Vorschau\footnote{\url{http://www.javalobby.org/java/forums/t49462.html}} eines Bildes sowie den Nutzernamen zu sehen.
 
-\begin{figure}[h] 
-  \centering
-     \includegraphics[width=0.9\textwidth]{./media/images/gui/launcher/launcher_finden.png}
-  \caption{ Profilvorschau}
-  \label{fig:Bild1}
-\end{figure}
+Die Vorschau wird in einer Klasse erstellt, welche ein JPanel erweitert und den PropertyChangeListener implementiert. Beim Anlegen des Konstruktors ist darauf zu achten, dass das JPanel bereits im Konstruktor eine geeignete Größe zugewiesen bekommt.
 
-Die Vorschau wird in einer Klasse erstellt, welche ein JPanel erweitert und den PropertyChangeListener implementiert. Beim Anlegen des Konstruktors ist darauf zu achten das das Panel eine geeignete Größe zugewiesen bekommt.
-
-Zuerst wird das PropertyChangeEvent abgerufen, welches beim Klicken auf eine Datei oder einen Ordner auftritt. Nun wird die Variable welche übergeben wurde, auf ein File gecastet. Somit kann nun abgefragt werden, ob es sich hierbei um den gewünschten Datentyp handelt. 
+Zuerst wird die Methode PropertyChange aufgerufen, welches beim Klicken auf eine Datei oder einen Ordner erscheint. Nun wird die Variable, welche der Methode übergeben wurde, auf ein File umgeändert. Somit kann nun abgefragt werden, ob es sich hierbei um den gewünschten Datentyp handelt. 
 \begin{lstlisting}[language=JAVA]
 	public void propertyChange(PropertyChangeEvent e) {
 		String propertyName = e.getPropertyName();
@@ -40,11 +33,16 @@ Zuerst wird das PropertyChangeEvent abgerufen, welches beim Klicken auf eine Dat
 			}
 \end{lstlisting}
 
-Nun muss das Bild nur mehr geladen und skaliert werden, und kann mithilfe der paintComponent Methode in den JFileChooser eingeschleust werden.
-
-Nun kann die neue Klasse eingebunden werden. Dies geschieht indem man mehrere vorgegebene Klassen verwendet. Hierbei ist setAccessory für extra Componenten, und PropertyChangeListener für Events die im JFileChooser ausgeführt werden zuständig.
+% http://www.javalobby.org/java/forums/t49462.html
+In weiterer Folge muss das Bild nur mehr geladen und skaliert werden, und kann mithilfe der paintComponent Methode in den JFileChooser eingeschleust werden.
 \begin{lstlisting}[language=JAVA]
-		ProfilePreviewPanel preview = new ProfilePreviewPanel();
-		chooser.setAccessory(preview);
-		chooser.addPropertyChangeListener(preview);
+public void paintComponent(Graphics g) {
+		g.setColor(bg);
+		g.fillRect(0, 0, ACCSIZE, getHeight());
+		g.drawImage(image, getWidth() / 2 - width / 2 + 5, getHeight() / 2
+				- height / 2, this);
+		
+	}
 \end{lstlisting}
+
+Nun kann die neue Klasse eingebunden werden. Dies geschieht, indem man mehrere vorgegebene Klassen verwendet. Hierbei steht \textit{setAccessory()} für extra Komponenten, und \textit{PropertyChangeListener()} ist für Events, die im JFileChooser ausgeführt werden, zuständig.

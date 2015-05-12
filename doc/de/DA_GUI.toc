@@ -1,0 +1,66 @@
+\contentsline {chapter}{Erkl\IeC {\"a}rung}{ii}{chapter*.4}
+\contentsline {chapter}{\numberline {1}Compiler}{2}{chapter.1}
+\contentsline {section}{\numberline {1.1}Allgemeiner Teil (Theorie)}{2}{section.1.1}
+\contentsline {subsection}{\numberline {1.1.1}Erweiterte Backus-Naur-Form (EBNF)}{2}{subsection.1.1.1}
+\contentsline {subsubsection}{\numberline {1.1.1.1}Terminalsymbol}{3}{subsubsection.1.1.1.1}
+\contentsline {subsubsection}{\numberline {1.1.1.2}Nichtterminalsymbol}{3}{subsubsection.1.1.1.2}
+\contentsline {subsubsection}{\numberline {1.1.1.3}Produktionsregel}{3}{subsubsection.1.1.1.3}
+\contentsline {subsubsection}{\numberline {1.1.1.4}Eindeutigkeit}{4}{subsubsection.1.1.1.4}
+\contentsline {subsubsection}{\numberline {1.1.1.5}EBNF-Beispiele}{5}{subsubsection.1.1.1.5}
+\contentsline {subsection}{\numberline {1.1.2}Lexikalische Analyse - Scanner}{6}{subsection.1.1.2}
+\contentsline {subsection}{\numberline {1.1.3}Syntaxanalyse - Parser}{6}{subsection.1.1.3}
+\contentsline {subsection}{\numberline {1.1.4}Abstrakter Syntaxbaum}{7}{subsection.1.1.4}
+\contentsline {subsubsection}{\numberline {1.1.4.1}homogene und heterogene Syntaxb\IeC {\"a}ume}{7}{subsubsection.1.1.4.1}
+\contentsline {subsection}{\numberline {1.1.5}Attributierte Gramatik}{8}{subsection.1.1.5}
+\contentsline {subsection}{\numberline {1.1.6}Symboltabelle}{8}{subsection.1.1.6}
+\contentsline {section}{\numberline {1.2}Realisierte L\IeC {\"o}sungen}{9}{section.1.2}
+\contentsline {subsection}{\numberline {1.2.1}EBNF Syntax + Kontextbedingungen}{9}{subsection.1.2.1}
+\contentsline {subsection}{\numberline {1.2.2}Lexikalische Struktur}{12}{subsection.1.2.2}
+\contentsline {subsection}{\numberline {1.2.3}Syntaxb\IeC {\"a}ume}{12}{subsection.1.2.3}
+\contentsline {subsection}{\numberline {1.2.4}Basisfunktionen}{12}{subsection.1.2.4}
+\contentsline {subsubsection}{\numberline {1.2.4.1}read}{12}{subsubsection.1.2.4.1}
+\contentsline {subsubsection}{\numberline {1.2.4.2}print}{13}{subsubsection.1.2.4.2}
+\contentsline {subsubsection}{\numberline {1.2.4.3}printf}{13}{subsubsection.1.2.4.3}
+\contentsline {subsubsection}{\numberline {1.2.4.4}length}{13}{subsubsection.1.2.4.4}
+\contentsline {subsubsection}{\numberline {1.2.4.5}time}{13}{subsubsection.1.2.4.5}
+\contentsline {subsection}{\numberline {1.2.5}Standardbibliotek}{13}{subsection.1.2.5}
+\contentsline {subsubsection}{\numberline {1.2.5.1}math.h}{13}{subsubsection.1.2.5.1}
+\contentsline {subsubsection}{\numberline {1.2.5.2}stdio.h}{13}{subsubsection.1.2.5.2}
+\contentsline {subsubsection}{\numberline {1.2.5.3}stdlib.h}{14}{subsubsection.1.2.5.3}
+\contentsline {subsection}{\numberline {1.2.6}Implementierung}{15}{subsection.1.2.6}
+\contentsline {subsubsection}{\numberline {1.2.6.1}CMM.atg}{15}{subsubsection.1.2.6.1}
+\contentsline {subsubsection}{\numberline {1.2.6.2}Scanner.java}{16}{subsubsection.1.2.6.2}
+\contentsline {subsubsection}{\numberline {1.2.6.3}Parser.java}{16}{subsubsection.1.2.6.3}
+\contentsline {subsubsection}{\numberline {1.2.6.4}Node.java}{18}{subsubsection.1.2.6.4}
+\contentsline {subsubsection}{\numberline {1.2.6.5}Obj.java}{18}{subsubsection.1.2.6.5}
+\contentsline {subsubsection}{\numberline {1.2.6.6}Compiler.java}{18}{subsubsection.1.2.6.6}
+\contentsline {subsubsection}{\numberline {1.2.6.7}Error.java}{18}{subsubsection.1.2.6.7}
+\contentsline {subsubsection}{\numberline {1.2.6.8}NodeList.java}{18}{subsubsection.1.2.6.8}
+\contentsline {subsubsection}{\numberline {1.2.6.9}Scope.java}{18}{subsubsection.1.2.6.9}
+\contentsline {subsubsection}{\numberline {1.2.6.10}Strings.java}{18}{subsubsection.1.2.6.10}
+\contentsline {subsubsection}{\numberline {1.2.6.11}Struct.java}{18}{subsubsection.1.2.6.11}
+\contentsline {subsubsection}{\numberline {1.2.6.12}Tab.java}{18}{subsubsection.1.2.6.12}
+\contentsline {subsection}{\numberline {1.2.7}Kontextbedingungen}{18}{subsection.1.2.7}
+\contentsline {subsection}{\numberline {1.2.8}Typkonvertierung}{18}{subsection.1.2.8}
+\contentsline {subsection}{\numberline {1.2.9}Scope}{18}{subsection.1.2.9}
+\contentsline {subsection}{\numberline {1.2.10}Strings}{18}{subsection.1.2.10}
+\contentsline {section}{\numberline {1.3}Sprachspezifikation}{19}{section.1.3}
+\contentsline {subsection}{\numberline {1.3.1}Pr\"aprozessor}{19}{subsection.1.3.1}
+\contentsline {subsubsection}{\numberline {1.3.1.1}\#include Direktive}{19}{subsubsection.1.3.1.1}
+\contentsline {subsubsection}{\numberline {1.3.1.2}\#define Direktive}{19}{subsubsection.1.3.1.2}
+\contentsline {subsubsection}{\numberline {1.3.1.3}\#undef Direktive}{20}{subsubsection.1.3.1.3}
+\contentsline {subsubsection}{\numberline {1.3.1.4}\#ifdef, \#ifndef, \#else und \#endif Direktive}{20}{subsubsection.1.3.1.4}
+\contentsline {subsubsection}{\numberline {1.3.1.5}Beispiel}{20}{subsubsection.1.3.1.5}
+\contentsline {subsection}{\numberline {1.3.2}Kommentare}{21}{subsection.1.3.2}
+\contentsline {subsection}{\numberline {1.3.3}Datentypen}{21}{subsection.1.3.3}
+\contentsline {subsubsection}{\numberline {1.3.3.1}Primitive Datentypen}{21}{subsubsection.1.3.3.1}
+\contentsline {subsubsection}{\numberline {1.3.3.2}Konstanten}{22}{subsubsection.1.3.3.2}
+\contentsline {subsubsection}{\numberline {1.3.3.3}Strukturen}{23}{subsubsection.1.3.3.3}
+\contentsline {subsubsection}{\numberline {1.3.3.4}Arrays}{23}{subsubsection.1.3.3.4}
+\contentsline {subsubsection}{\numberline {1.3.3.5}Typumwandlung}{23}{subsubsection.1.3.3.5}
+\contentsline {subsection}{\numberline {1.3.4}Funktionen}{24}{subsection.1.3.4}
+\contentsline {subsubsection}{\numberline {1.3.4.1}Vorimplementierte Funktionen}{24}{subsubsection.1.3.4.1}
+\contentsline {subsection}{\numberline {1.3.5}Ausdr\IeC {\"u}cke}{24}{subsection.1.3.5}
+\contentsline {chapter}{\numberline {2}Autoren}{25}{chapter.2}
+\contentsline {chapter}{Literaturverzeichnis}{25}{section*.38}
+\contentsline {chapter}{Abbildungsverzeichnis}{25}{section*.38}

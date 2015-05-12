@@ -145,6 +145,7 @@ public class Quest {
 		FILE_INPUT_CMM = "input.cmm",
 		FILE_DEFAULT = "default.cmm",
 		FOLDER_TOKENS = "tokens",
+		FOLDER_PACKAGES = "packages",
 		ATTRIBUTE_EXTRA = "extra",
 		ATTRIBUTE_EXERSICE = "exercise";
 	
@@ -695,29 +696,6 @@ public class Quest {
 	public void setPreviousFolder(String previousFolder) {
 		this.previousFolder = previousFolder;
 	}
-	
-/*	public boolean isOptional() {
-		return optional;
-	}
-
-	public void setOptional(boolean optional) {
-		this.optional = optional;
-	}
-*/
-
-
-	/*public String getInput() {
-		return this.input;
-	}
-
-	public String getRef() {
-		return ref;
-	}
-
-	public void setRef(String ref) {
-		this.ref = ref;
-	}	
-	*/
 	
 	
 	

@@ -21,15 +21,15 @@
  
 package at.jku.ssw.cmm.launcher;
 
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
 
 import at.jku.ssw.cmm.gui.GUImain;
 import at.jku.ssw.cmm.gui.properties.GUImainSettings;
 
-public class FindProfileListener implements MouseListener{
+public class FindProfileListener extends MouseAdapter{
 
 	private final JFrame jFrame;
 	private final GUImainSettings settings;
@@ -57,30 +57,6 @@ public class FindProfileListener implements MouseListener{
 			
 		}
 
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 

@@ -1,0 +1,64 @@
+\contentsline {chapter}{\numberline {1}Benutzeroberfl\IeC {\"a}che}{2}{chapter.1}
+\contentsline {section}{\numberline {1.1}Launcher}{2}{section.1.1}
+\contentsline {subsection}{\numberline {1.1.1}Erstellen eines neuen Profils}{3}{subsection.1.1.1}
+\contentsline {subsection}{\numberline {1.1.2}Finden eines bereits existierenden Profils}{3}{subsection.1.1.2}
+\contentsline {section}{\numberline {1.2}Quest Package}{4}{section.1.2}
+\contentsline {subsection}{\numberline {1.2.1}Auslesen der Packages}{4}{subsection.1.2.1}
+\contentsline {subsection}{\numberline {1.2.2}\IeC {\"U}berpr\IeC {\"u}fungs - Iterationen und Rekursion}{5}{subsection.1.2.2}
+\contentsline {section}{\numberline {1.3}Quest - Selection}{6}{section.1.3}
+\contentsline {section}{\numberline {1.4}JFileChooser}{8}{section.1.4}
+\contentsline {subsection}{\numberline {1.4.1}Anzeigen einer Vorschau}{8}{subsection.1.4.1}
+\contentsline {chapter}{\numberline {2}Questsystem}{10}{chapter.2}
+\contentsline {section}{\numberline {2.1}Unterschiede zur Herk\IeC {\"o}mmlichen Aufgabenverteilung}{10}{section.2.1}
+\contentsline {section}{\numberline {2.2}Dateien in einer Quest}{10}{section.2.2}
+\contentsline {section}{\numberline {2.3}Variablen in der quest.java}{11}{section.2.3}
+\contentsline {section}{\numberline {2.4}Questzust\IeC {\"a}nde}{12}{section.2.4}
+\contentsline {section}{\numberline {2.5}Linearer Quest Weg}{12}{section.2.5}
+\contentsline {section}{\numberline {2.6}Vordefiniertes Stylesheet}{13}{section.2.6}
+\contentsline {section}{\numberline {2.7}Packet}{13}{section.2.7}
+\contentsline {section}{\numberline {2.8}Token}{13}{section.2.8}
+\contentsline {subsection}{\numberline {2.8.1}Variablen in der token.java}{14}{subsection.2.8.1}
+\contentsline {subsection}{\numberline {2.8.2}Odnersturktur der Tokens}{14}{subsection.2.8.2}
+\contentsline {section}{\numberline {2.9}Profile}{14}{section.2.9}
+\contentsline {subsection}{\numberline {2.9.1}Konzept}{14}{subsection.2.9.1}
+\contentsline {subsection}{\numberline {2.9.2}Dateien eines Profils}{15}{subsection.2.9.2}
+\contentsline {subsection}{\numberline {2.9.3}Variablem in der profile.java}{15}{subsection.2.9.3}
+\contentsline {chapter}{\numberline {3}Interpreter}{16}{chapter.3}
+\contentsline {section}{\numberline {3.1}Allgemeiner Teil (Theorie)}{16}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}Aufbaum\IeC {\"o}glichkeiten eines Interpreters}{16}{subsection.3.1.1}
+\contentsline {subsubsection}{\numberline {3.1.1.1}Bytecode Interpreter}{16}{subsubsection.3.1.1.1}
+\contentsline {subsubsection}{\numberline {3.1.1.2}Abstrakter Syntaxbaum Interpreter}{16}{subsubsection.3.1.1.2}
+\contentsline {subsection}{\numberline {3.1.2}Call Stack}{16}{subsection.3.1.2}
+\contentsline {subsubsection}{\numberline {3.1.2.1}Lokale Variablen}{17}{subsubsection.3.1.2.1}
+\contentsline {section}{\numberline {3.2}Realisierte L\IeC {\"o}sungen}{17}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Memory}{17}{subsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.1.1}Aufbau unseres Stack Frames}{17}{subsubsection.3.2.1.1}
+\contentsline {subsection}{\numberline {3.2.2}Aufbau des Memorys}{17}{subsection.3.2.2}
+\contentsline {subsubsection}{\numberline {3.2.2.1}Aufruf einer neuen Methode}{17}{subsubsection.3.2.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2.2}Schlie\IeC {\ss }en einer Methode}{18}{subsubsection.3.2.2.2}
+\contentsline {subsubsection}{\numberline {3.2.2.3}Speicherverwaltung}{18}{subsubsection.3.2.2.3}
+\contentsline {subsection}{\numberline {3.2.3}Interpreter}{19}{subsection.3.2.3}
+\contentsline {subsection}{\numberline {3.2.4}Statements}{19}{subsection.3.2.4}
+\contentsline {subsubsection}{\numberline {3.2.4.1}assign}{19}{subsubsection.3.2.4.1}
+\contentsline {subsubsection}{\numberline {3.2.4.2}startsequenz}{19}{subsubsection.3.2.4.2}
+\contentsline {subsubsection}{\numberline {3.2.4.3}trap}{20}{subsubsection.3.2.4.3}
+\contentsline {subsubsection}{\numberline {3.2.4.4}if}{20}{subsubsection.3.2.4.4}
+\contentsline {subsubsection}{\numberline {3.2.4.5}Ifelse}{20}{subsubsection.3.2.4.5}
+\contentsline {subsubsection}{\numberline {3.2.4.6}while}{21}{subsubsection.3.2.4.6}
+\contentsline {subsection}{\numberline {3.2.5}call}{21}{subsection.3.2.5}
+\contentsline {subsubsection}{\numberline {3.2.5.1}print}{22}{subsubsection.3.2.5.1}
+\contentsline {subsubsection}{\numberline {3.2.5.2}read}{22}{subsubsection.3.2.5.2}
+\contentsline {subsubsection}{\numberline {3.2.5.3}length}{22}{subsubsection.3.2.5.3}
+\contentsline {subsubsection}{\numberline {3.2.5.4}time}{22}{subsubsection.3.2.5.4}
+\contentsline {subsubsection}{\numberline {3.2.5.5}Normaler Aufruf}{22}{subsubsection.3.2.5.5}
+\contentsline {subsection}{\numberline {3.2.6}Designators}{22}{subsection.3.2.6}
+\contentsline {subsubsection}{\numberline {3.2.6.1}Ident}{22}{subsubsection.3.2.6.1}
+\contentsline {subsubsection}{\numberline {3.2.6.2}Dot}{23}{subsubsection.3.2.6.2}
+\contentsline {subsubsection}{\numberline {3.2.6.3}Index}{23}{subsubsection.3.2.6.3}
+\contentsline {subsection}{\numberline {3.2.7}Expressions}{23}{subsection.3.2.7}
+\contentsline {subsection}{\numberline {3.2.8}Conditions}{24}{subsection.3.2.8}
+\contentsline {section}{\numberline {3.3}Kalkulation}{24}{section.3.3}
+\contentsline {section}{\numberline {3.4}Arbeitseinteilung}{24}{section.3.4}
+\contentsline {chapter}{\numberline {4}Autoren}{25}{chapter.4}
+\contentsline {chapter}{Literaturverzeichnis}{25}{section*.10}
+\contentsline {chapter}{Abbildungsverzeichnis}{25}{section*.10}
