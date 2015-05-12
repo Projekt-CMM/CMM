@@ -36,7 +36,7 @@ public class PreprocessorRunTest implements StdInOut {
 		
 		List<Object[]> codeRegister = new ArrayList();
 		List<Integer> breakpoints = new ArrayList();
-		String preprocessorOutput = preprocessorOutput = Preprocessor.expand(new String(code), "./clib", codeRegister, breakpoints);
+		String preprocessorOutput = preprocessorOutput = Preprocessor.expand(new String(code), ".", codeRegister);
 		
 		Compiler compiler = new Compiler();
 
@@ -87,15 +87,15 @@ public class PreprocessorRunTest implements StdInOut {
 		
 		//TODO: fix bug
 		// simple #define which is commented
-		//runCode("/*#define __DEF__ \n"
-		//		+ "*/void main() {\n"
-		//		+ "#ifdef __DEF__\n"
-		//		+ "  print('c');\n"
-		//		+ "#else\n"
-		//		+ "  print('d');\n"
-		//		+ "#endif\n"
-		//		+ "}");
-		//assertEquals(output, "d");
+		runCode("/*#define __DEF__ \n"
+				+ "*/void main() {\n"
+				+ "#ifdef __DEF__\n"
+				+ "  print('c');\n"
+				+ "#else\n"
+				+ "  print('d');\n"
+				+ "#endif\n"
+				+ "}");
+		assertEquals(output, "d");
 		
 		// simple #define which is commented
 		runCode("/* cda */#define __DEF__/* asdf */\n"
@@ -107,6 +107,48 @@ public class PreprocessorRunTest implements StdInOut {
 				+ "#endif\n"
 				+ "}");
 		assertEquals(output, "e");
+		
+		// string with inlined comment
+		runCode("//#define __DEF__\n"
+				+ "void main() {\n"
+				+ "  printf(\"/*test*/\");\n"
+				+ "}");
+		assertEquals(output, "/*test*/");
+		
+		// string with inlined comment and real Qotation mark inside string
+		runCode("void main() {\n"
+				+ "  printf(\"ta\\\"//\");\n"
+				+ "}");
+		assertEquals(output, "ta\"//");
+		
+		// single comment after command
+		runCode("void main() {\n"
+				+ "  print('a'); // testcomment\n"
+				+ "}");
+		assertEquals(output, "a");
+		
+		// single comment after command with end of multi-line comment
+		runCode("void main() {\n"
+				+ "  print('a'); // testcomment */ asdf\n"
+				+ "}");
+		assertEquals(output, "a");
+		
+		// multiline-comment which should not deactivated inside single comment
+		runCode("void main() {\n"
+				+ "  print('a');\n"
+				+ "/*  print('b');\n"
+				+ "  print('c'); // testcomment\n"
+				+ "// test */\n"
+				+ "  print('d');*/\n"
+				+ "  print('e');\n"
+				+ "}");
+		assertEquals(output, "ae");
+		
+		// single comment inside multiline comment
+		runCode("void main() {\n"
+				+ "  print('a'); /* // testcomment */\n"
+				+ "*/}");
+		assertEquals(output, "a");
 	}
 	
 	@Test(timeout=1000)
@@ -169,6 +211,123 @@ public class PreprocessorRunTest implements StdInOut {
 			fail("PreprocessorException not thrown");
 		} catch(PreprocessorException e) {}
 		
+		// no end tag
+		try {
+			runCode("void main() {\n"
+					+ "#ifdef asdf\n"
+					+ "}");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
+		
+	}
+	
+	@Test(timeout=1000)
+	public void testPreprocessor() throws Exception {
+		// empty preprocessor command
+		try {
+			runCode("void main() {\n"
+					+ "}\n"
+					+ "#\n");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
+		
+		// invalide preprocessor command
+		try {
+			runCode("void main() {\n"
+					+ "}\n"
+					+ "#dafane 10\n");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
+	}
+	
+	@Test(timeout=1000)
+	public void testDefine() throws Exception {
+		// simple define without value
+		runCode("#define __DEF__\n"
+				+ "void main() {\n"
+				+ "#ifdef __DEF__\n"
+				+ "  print('e');\n"
+				+ "#else\n"
+				+ "  print('f');\n"
+				+ "#endif\n"
+				+ "}\n");
+		assertEquals(output, "e");
+		
+		// simple define without value
+		runCode("#define test 2\n"
+				+ "void main() {\n"
+				+ "}\n");
+		
+		// define without identifier
+		try {
+			runCode("#define\n"
+					+ "void main() {\n"
+					+ "}\n");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
+		
+		// define which is filled with an non integer
+		try {
+			runCode("#define test asdf\n"
+					+ "void main() {\n"
+					+ "}\n");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
+	}
+	
+	@Test(timeout=1000)
+	public void testUndef() throws Exception {
+		// simple undef
+		runCode("#define __DEF__\n"
+				+ "#undef __DEF__\n"
+				+ "void main() {\n"
+				+ "#ifdef __DEF__\n"
+				+ "  print('e');\n"
+				+ "#else\n"
+				+ "  print('f');\n"
+				+ "#endif\n"
+				+ "}\n");
+		assertEquals(output, "f");
+		
+		// undef without identifier
+		try {
+			runCode("#undef\n"
+					+ "void main() {\n"
+					+ "}\n");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
+	}
+	
+	@Test(timeout=1000)
+	public void testInclude() throws Exception {
+		/*runCode("#include \"testinclude.h\"\n"
+				+ "void main() {\n"
+				+ "  testfunction();"
+				+ "}\n");*/ // TODO
+		
+		// empty include
+		try {
+			runCode("#include \"\"\n"
+					+ "void main() {\n"
+					+ "}\n");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
+		
+		// empty include
+		try {
+			runCode("#include <>\n"
+					+ "void main() {\n"
+					+ "}\n");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
+		
+		// invalid include
+		try {
+			runCode("#include\n"
+					+ "void main() {\n"
+					+ "}\n");
+			fail("PreprocessorException not thrown");
+		} catch(PreprocessorException e) {}
 	}
 
 }

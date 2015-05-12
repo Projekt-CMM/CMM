@@ -15,7 +15,7 @@ public class CompileManager {
 		// Assemble complete source code using preprocessor
 		try {
 			code = Preprocessor.expand(code, main.getSettings().getWorkingDirectory(),
-					main.getLeftPanel().getSourceCodeRegister(), new ArrayList<Integer>());
+					main.getLeftPanel().getSourceCodeRegister());
 		}
 		// Preprocessor exception, reason ins known
 		catch (PreprocessorException e1) {

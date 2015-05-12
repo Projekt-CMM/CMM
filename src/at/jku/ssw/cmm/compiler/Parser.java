@@ -1357,7 +1357,7 @@ public class Parser {
 		while (la.kind == 40 || la.kind == 41) {
 			kind = Addop();
 			n = Term();
-			if(res == null || (!res.type.isPrimitive() && !res.type.equals(Tab.stringType)) || n==null || (!n.type.isPrimitive() && !n.type.equals(Tab.stringType)) || n.type.equals(Tab.boolType))
+			if(res == null || res.type == null || (!res.type.isPrimitive() && !res.type.equals(Tab.stringType)) || n==null || n.type == null || (!n.type.isPrimitive() && !n.type.equals(Tab.stringType)) || n.type.equals(Tab.boolType))
 			   SemErr("type is not a primitive or string except bool");
 			else if(res.type.equals(Tab.stringType) && n.type.equals(Tab.stringType) && kind != Node.PLUS)
 			   SemErr("for string operations, only + is allowed");

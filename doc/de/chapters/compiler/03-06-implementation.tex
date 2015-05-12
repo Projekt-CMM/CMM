@@ -7,14 +7,13 @@
 %	--------------------------------------------------------
 % 	Implementierung
 %	--------------------------------------------------------
-\newpage
 \subsection{Implementierung}
 
 \subsubsection{CMM.atg}
 
-In CMM.atg ist die gesammte attributierte Grammatik von C-Compact enthalten. Mit Hilfe der darin enthaltenen Information kann Coco/R eine Scanner und einen Parser generieren\footnote{\url{http://www.ssw.uni-linz.ac.at/Coco/Doc/UserManual.pdf}}, welche nach der definierten EBNF-Syntax arbeitet.
+In CMM.atg ist die gesamte Attributierte Grammatik von C-Compact enthalten. Mit Hilfe der darin enthaltenen Information kann Coco/R eine Scanner und einen Parser generieren\footnote{\url{http://www.ssw.uni-linz.ac.at/Coco/Doc/UserManual.pdf}}, welche nach der definierten EBNF-Syntax arbeitet.
 
-Die Datei enth\"alt unter anderem die EBNF-Syntax, welche den grundlegenden Aufbau der Programmiersprache definiert. Desweiteren kann Java-Code eingebettet werden, welcher ausgef\"uhrt wird wenn bestimmte Teile der EBNF durchlaufen werden. So ist es m\"oglich einen abstrakten Syntaxbaum und eine Symboltabelle aufzubauen, und den durchlaufenen Code auf Syntaxbedingungen zu \"uberpr\"ufen, welche von der EBNF nicht erkannt werden k\"onnen. Da Coco/R einen LL(1) Parser generiert, gewisse Teile der Programmiersprache aber nicht mithilfe eines LL(1) Parsers implementiert werden k\"onnen gibt es LL(1) conflict resolvers, welche den Parser an bestimmten Stellen mitteilen k\"onnen, wie dieser weiter zu Verfahren hat.
+Die Datei enth\"alt unter anderem die EBNF-Syntax, welche den grundlegenden Aufbau der Programmiersprache definiert. Des Weiteren kann Java-Code eingebettet werden, welcher ausgef\"uhrt wird wenn bestimmte Teile der EBNF durchlaufen werden. So ist es m\"oglich einen abstrakten Syntaxbaum und eine Symboltabelle aufzubauen, und den durchlaufenen Code auf Syntaxbedingungen zu \"uberpr\"ufen, welche von der EBNF nicht erkannt werden k\"onnen. Da Coco/R einen LL(1) Parser generiert, gewisse Teile der Programmiersprache aber nicht mithilfe eines LL(1) Parsers implementiert werden k\"onnen gibt es LL(1) conflict resolvers, welche den Parser an bestimmten Stellen mitteilen k\"onnen, wie dieser weiter zu Verfahren hat.
 
 \htlParagraph{Beispiel}
 
@@ -57,13 +56,23 @@ Es kann dann dieser LL(1) conflict resolvers genutzt werden, um auf Basis der vo
 
 \subsubsection{Scanner.java}
 
-Diese Datei wird auf Grundlage von CMM.atg und Scanner.frame durch den Parsergenerator Coco/R generiert. Diese Datei ist ein Scanner bassierend auf einem endlichen Automaten\footnote{\url{https://de.wikipedia.org/wiki/Coco/R}}, welcher die in CMM.atg definierten Tokens extrahiert.
+Diese Datei wird auf Grundlage von CMM.atg und Scanner.frame durch den Parsergenerator Coco/R generiert. Diese Datei ist ein Scanner basierend auf einem endlichen Automaten\footnote{\url{https://de.wikipedia.org/wiki/Coco/R}}, welcher die in CMM.atg definierten Tokens extrahiert.
 
 Diese Tokens k\"onnen einerseits explizit definiert sein, oder werden ansonsten aus der definierten EBNF extrahiert.
 
 \subsubsection{Parser.java}
 
 Der Parser wird auch auf Grundlagen von CMM.atg und Parser.frame generiert. Dieser Parser arbeitet dabei auf Basis des rekursiven Abstiegs\footnote{\url{https://de.wikipedia.org/wiki/Rekursiver_Abstieg}}, in der jede Produktionsregel eine eigene Funktion darstellt, welche rekursiv aufgerufen werden k\"onnen.
+
+\htlParagraph{WEAK Token}
+
+Um bessere Fehlermeldungen ausgeben zu k\"onnen ist es m\"oglich sogenannte schwache Token zu definieren. Diese befinden sich meist am Anfang von Iterationen, und werden gerne vergessen oder falsch geschrieben. Das definieren eines sogenannten schwachen Token kann f\"ur bessere Fehlermeldungen sorgen, da der Parser dieses wenn n\"otig ignoriert und dann versucht sich neu zu synchronisieren.
+
+\htlParagraph{Synchronisation}
+
+Wenn im Parser ein Fehler auftritt, da ein unbekanntes Token im Tokenstrom auftritt, muss sich dieser neu synchronisieren, um weiter Code Parsen zu k\"onnen. Dass Programm ist nicht l\"anger valide, aber so ist es m\"oglich weitere Fehler im Code zu erkennen.
+
+Dies wird durch das Keyword SYNC in Coco/R realisiert, welches sichere Tokens spezifiziert, welche normalerweise daf\"ur sorgen dass das Programm von einem sicheren Zustand weiter geparst werden kann. Solch ein Token stellt z.B. ein Semikolon dar.
 
 \htlParagraph{Beispiel}
 
@@ -78,11 +87,11 @@ CondTerm<out con>
 }.
 \end{lstlisting}
 
-Der generierte Code ist eine Funktion welcher die obige Attributierte Gramatik repr\"sentiert. Dabei wird zuerst die Variable f\"ur den R\"uckgabewert definiert, und darauffolgend kommt noch die Variablendefinition welche in der Attributierten Gramatik angegeben wurde.
+Der generierte Code ist eine Funktion welcher die obige Attributierte Grammatik repr\"sentiert. Dabei wird zuerst die Variable f\"ur den R\"uckgabewert definiert, und darauf folgend kommt noch die Variablendefinition welche in der Attributierten Grammatik angegeben wurde.
 
 Die EBNF beginnt zwingend mit einem CondTerm, welcher in einer eigenen Funktion definiert wurde (rekursiver Aufruf von Produktionsregeln), und einen R\"uckgabewert besitzt. Wenn der CondTerm durchlaufen ist wird \"uberpr\"uft ob das n\"achste Token ein bin\"ares ODER darstellt, welches \"uber die Tokennummer eindeutig identifiziert werden kann.
 
-Falls das folgende Token dem gesuchtem entspricht, wird die Schleife durchlaufen, wobei zuerst das n\"achste Token abgerufen wird, und danach wiederum ein CondTerm folgen muss. Zuletzt wird der Abstrakte Syntaxbaum erweitert, wie es bereits in der Attributierten Gramatik angegeben wurde.
+Falls das folgende Token dem gesuchtem entspricht, wird die Schleife durchlaufen, wobei zuerst das n\"achste Token abgerufen wird, und danach wiederum ein CondTerm folgen muss. Zuletzt wird der Abstrakte Syntaxbaum erweitert, wie es bereits in der Attributierten Grammatik angegeben wurde.
 
 \begin{lstlisting}[language=Java]
 Node  Condition() {
@@ -97,16 +106,6 @@ Node  Condition() {
 	return con;
 }
 \end{lstlisting}
-
-\htlParagraph{Synchronisation}
-
-Wenn im Parser ein Fehler auftritt, da ein unbekanntes Token im Tokenstrom auftritt, muss sich dieser neu synchronisieren, um weiter Code Parsen zu k\"onnen. Dass Programm ist nicht l\"anger valide, aber so ist es m\"oglich weitere Fehler im Code zu erkennen.
-
-Dies wird durch das Keyword SYNC in Coco/R relaisiert, welches sichere Tokens spezifiert, welche normalerweise daf\"ur sorgen dass das Programm von einem sicheren Zustand weiter geparst werden kann. Solch ein Token stellt z.B. ein Semikolon dar.
-
-\htlParagraph{WEAK Token}
-
-Um bessere Fehlermeldungen ausgeben zu k\"onnen ist es m\"oglich sogenannte schwachen Token zu definieren. Diese befinden sich meist am Anfang von Iterationen, und werden gerne vergessen oder falsch geschrieben. Das definieren eines sogenannten schwachen Token kann f\"ur bessere Fehlermeldungen sorgen, da der Parser dieses wenn n\"otig ignoriert und dann versucht sich neu zu syncronisieren.
 
 \subsubsection{Node.java}
 

@@ -12,7 +12,7 @@
 
 \subsection{Pr\"aprozessor}
 
-Unser Pr\"aprozessor erm\"oglicht die Nutzung mehrer Dateien und verf\"ugt \"uber die funktion einzelne Codeteile zu deaktivieren, wie es auch in C der Fall ist. Pr\"aprozessorargumente beginnen dabei jeweils mit einem Hashtag, gefolgt von der jeweiligen Direktive und einem oder mehreren Argumenten.
+Unser Pr\"aprozessor erm\"oglicht die Nutzung mehrer Dateien und verf\"ugt \"uber die Funktion einzelne Codeteile zu deaktivieren, wie es auch in C der Fall ist. Pr\"aprozessorargumente beginnen dabei jeweils mit einem Hashtag, gefolgt von der jeweiligen Direktive und einem oder mehreren Argumenten.
 
 \subsubsection{\#include Direktive}
 
@@ -20,7 +20,7 @@ Mithilfe eines \#include k\"onnen andere Dateien eingebunden werden. Es gibt dab
 
 \htlParagraph{Suche im Standard-Include-Pfad}
 
-Der Standard-Include-Pfad stellt der Ordner clib dar, in welchem sich die Standardbibliotek befindet.
+Der Standard-Include-Pfad stellt der Ordner clib dar, in welchem sich die Standardbibliothek befindet.
 
 \begin{lstlisting}[language=C]
 #include <stdio.h>
@@ -28,7 +28,7 @@ Der Standard-Include-Pfad stellt der Ordner clib dar, in welchem sich die Standa
 
 \htlParagraph{Suche im aktuellen Verzeichnis}
 
-Wenn selbstgeschriebene Programmdateien eingebunden werden sollen wird der Pfad relativ zum aktuellen Verzeichnis angegeben. So ist es m\"oglich gro\"o\ss{}ere Projekte auf Basis mehrer Dateien zu entwickeln.
+Wenn selbst geschriebene Programmdateien eingebunden werden sollen wird der Pfad relativ zum aktuellen Verzeichnis angegeben. So ist es m\"oglich gro\"o\ss{}ere Projekte auf Basis mehrere Dateien zu entwickeln.
 
 \begin{lstlisting}[language=C]
 #include "foo.cmm"
@@ -45,7 +45,7 @@ Es ist m\"oglich einem Define einen Wert zuzuweisen, welcher eine Ganze Zahl sei
 #define __DEFINE_WITH_VALUE__ 0
 \end{lstlisting}
 
-Falls ein \#define mit dem gleichen Namen bereits exisitiert, wird dieses \"uberschrieben.
+Falls ein \#define mit dem gleichen Namen bereits existiert, wird dieses \"uberschrieben.
 
 \subsubsection{\#undef Direktive}
 
@@ -57,7 +57,7 @@ Mithilfe eines \#undef kann eine definierte Variable gel\"oscht werden. Die Vari
 
 \subsubsection{\#ifdef, \#ifndef, \#else und \#endif Direktive}
 
-Es ist m\"oglich abzufragen ob es eine bestimmte Variablendefinition gibt, oder nicht gibt. Diese Abfrage wird mit den Pr\"aprozessorargumenten \#ifdef bzw. \#ifndef eingeleitet, und muss mit einem \#endif enden. Falls es notwendig ist auch f\"ur das gegenargument code auszuf\"uhren kann dies mithilfe eines \#else eingeleitet werden.
+Es ist m\"oglich abzufragen ob es eine bestimmte Variablendefinition gibt, oder nicht gibt. Diese Abfrage wird mit den Pr\"aprozessorargumenten \#ifdef bzw. \#ifndef eingeleitet, und muss mit einem \#endif enden. Falls es notwendig ist auch f\"ur das Gegenargument code auszuf\"uhren kann dies mithilfe eines \#else eingeleitet werden.
 
 Eine Variable gilt als definiert wenn sie mithilfe eines \#define erzeugt wurde, und einen Wert ungleich 0 besitzt.
 
@@ -71,7 +71,7 @@ Eine Variable gilt als definiert wenn sie mithilfe eines \#define erzeugt wurde,
 
 \subsubsection{Beispiel}
 
-Der Pr\"aprozessor wird besonders daf\"ur ben\"otigt, dass Biblioteken bei mehrfachen \#include keine Fehler verursachen. Dazu ist es notwendig dass die Bibliotek bei mehrfachen \#include die nachfolgenden Ignoriert. Dies stellt ein standardkonstrukt in der C Programmierung dar.
+Der Pr\"aprozessor wird besonders daf\"ur ben\"otigt, dass Bibliotheken bei mehrfachen \#include keine Fehler verursachen. Dazu ist es notwendig dass die Bibliothek bei mehrfachen \#include die nachfolgenden Ignoriert. Dies stellt ein Standardkonstrukt in der C Programmierung dar.
 
 \begin{lstlisting}[language=C]
 #ifndef __CLIB_EXAMPLE__
@@ -86,9 +86,9 @@ Der Pr\"aprozessor wird besonders daf\"ur ben\"otigt, dass Biblioteken bei mehrf
 #endif /* __CLIB_EXAMPLE__ */
 \end{lstlisting}
 
-Zuerst wird ermittelt, ob die Bibliotek bereits eingebunden wurde (falls dies der Fall ist, ist die jeweilige Variable definiert), und \#ifndef igoriert infolge den folgenden Code bis zum \#endif.
+Zuerst wird ermittelt, ob die Bibliothek bereits eingebunden wurde (falls dies der Fall ist, ist die jeweilige Variable definiert), und \#ifndef ignoriert infolge den folgenden Code bis zum \#endif.
 
-Falls der Code aber das erste mal eingebunden wurde, ist die Variable (in diesem Beispiel $\_\_CLIB\_EXAMPLE\_\_$) noch nicht definiert worden. Folglich wird der Code welcher sich in \#ifndef befindet ausgef\"uhrt, wo unter anderem die jeweilige Variable definiert wird, welche einzigartig f\"ur die jeweilige Bibliotek sein muss.
+Falls der Code aber das erste mal eingebunden wurde, ist die Variable (in diesem Beispiel $\_\_CLIB\_EXAMPLE\_\_$) noch nicht definiert worden. Folglich wird der Code welcher sich in \#ifndef befindet ausgef\"uhrt, wo unter anderem die jeweilige Variable definiert wird, welche einzigartig f\"ur die jeweilige Bibliothek sein muss.
 
 \subsection{Kommentare}
 
@@ -174,6 +174,10 @@ float foo() {
 
 \htlParagraph{string}
 
+Strings stellen Zeichenketten dar, welche nicht verändert werden können (sie Sind Konstant. Wenn also ein String verändert werden soll muss ein neuer erstellt werden. Des Weiteren ist es möglich Strings mithilfe des Additionsoperator zusammenzufügen.
+
+Es k\"onnen die Sonderzeichen \textbackslash{}r, \textbackslash{}n, \textbackslash{}t, \textbackslash{}0, \textbackslash{}'' und \textbackslash{}\textbackslash{} in Strings verwendet werden.
+
 \begin{lstlisting}[language=CMM]
 string s;
 
@@ -194,7 +198,7 @@ const int i = 1234;
 
 Strukturen sind zusammengesetzte Datentypen welche aus 1. oder mehreren Datentypen bestehen. Eine definierte Struktur stellt einen neuer Datentyp dar, von welchem Variablen definiert werden k\"onnen, welche man auch an Funktionen \"ubergeben kann.
 
-Strukturen k\"onnen nicht auf sich selbst verweisen, da es ansonsten eine endlosen Rekursion darstellen w\"urde. Desweiteren k\"onnen keine Werte bei der Definition einer Struktur angegeben werden.
+Strukturen k\"onnen nicht auf sich selbst verweisen, da es ansonsten eine endlosen Rekursion darstellen w\"urde. Des weiteren k\"onnen keine Werte bei der Definition einer Struktur angegeben werden.
 
 \begin{lstlisting}[language=CMM]
 struct Point {
@@ -209,7 +213,7 @@ Point p;
 
 Arrays sind Felder von Datentypen, wobei ein einzelnes Feld mithilfe eines sogenannten Index spezifiziert werden kann.
 
-Falls ein Array in einer Funktion definiert wird, kann diesem ein initialisierungswert zugewiesen werden, welcher das Array mit definierten Werten f\"ullt.
+Falls ein Array in einer Funktion definiert wird, kann diesem ein Initialisierungswert zugewiesen werden, welcher das Array mit definierten Werten f\"ullt.
 
 \begin{lstlisting}[language=CMM]
 char cArr[10];
@@ -230,7 +234,7 @@ float f = 1 + 2.5; // 1 is implicit converted to float
 
 \htlParagraph{Explizite Typumwandlung}
 
-Die explizite Typumwandlung ist besonders dann notwendig, falls ein Datentyp in einen anderen umgewandelt werden muss, welcher weniger Daten speichern kann als sein ursprungstyp.
+Die explizite Typumwandlung ist besonders dann notwendig, falls ein Datentyp in einen anderen umgewandelt werden muss, welcher weniger Daten speichern kann als sein Ursprungstyp.
 
 \begin{lstlisting}[language=CMM]
 char ch = (char)48; // explicite conversation of int to char
@@ -238,7 +242,263 @@ char ch = (char)48; // explicite conversation of int to char
 
 \subsection{Funktionen}
 
+Funktionen k\"onnen maximal 1. R\"uckgabewert besitzen, und beliebig viele Argumente. Es ist m\"oglich Referenzen auf Variablen zu \"ubergeben, wobei dies bei Arrays immer der Fall ist.
+
+Zus\"atzlich ist es m\"oglich die Funktion mit dem Schl\"usselwort library in eine Bibliotheksfunktion umzuwandeln, welche vom Debugger immer \"ubersprungen wird.
+
+\begin{lstlisting}[language=CMM]
+int library foo(int a, int b[], int &c) {
+	c = 3;
+	return b[3];
+}
+\end{lstlisting}
+
+\subsubsection{Vorw\"artsdeklarationen}
+
+Vorw\"artsdeklarationen werden ben\"otigt wenn auf eine Funktion zugegriffen werden muss, bevor diese vollst\"andig inklusive interner Logik Deklariert wurde. Dabei wird die Funktionsdeklaration kopiert, und anstatt mit geschwungenen Klammern und der Funktionslogik, nur mit einem Strichpunkt abgeschlossen.
+
+\begin{lstlisting}[language=CMM]
+int foo(int a);
+
+int foo(int a) {
+	if(a == 0)
+		return 0;
+	return (a + foo(a-1));
+}
+\end{lstlisting}
+
 \subsubsection{Vorimplementierte Funktionen}
 
-\subsection{Ausdrücke}
+Es gibt eine gewisse Funktionen welche bereits im Interpreter und Compiler implementiert sind, um C-Compact eine Interaktion mit dem Debugger zu erm\"oglichen.
 
+\htlParagraph{print}
+
+Schreibt 1. Zeichen in die Ausgabe. 
+
+\begin{lstlisting}[language=CMM]
+print('a');
+\end{lstlisting}
+
+\htlParagraph{read}
+
+Lese das n\"achste Zeichen vom Eingabestrom.
+
+\begin{lstlisting}[language=CMM]
+char c = read();
+\end{lstlisting}
+
+\htlParagraph{printf}
+
+Schreibe eine Formatierte Ausgabe in die Ausgabe. Diese Funktion unterst\"utzt beliebig viele Argumente, wobei f\"ur jede Platzhalter im String ein Argument angegeben werden muss.
+
+\begin{lstlisting}[language=CMM]
+printf('a= %d, b=%f\n', 10, 2.2);
+\end{lstlisting}
+
+\subhtlParagraph{Platzhalter}
+
+Ein Platzhalter definiert ein Variable welche in einem spezifizierten Ausgabeformat ausgegeben wird. 
+
+ \begin{tabular}{l | l}
+  Typ & Platzhalter \\
+  \hline
+  char & \%c \\
+  int & \%d \\
+  hex & \%x \\
+  float & \%f \\
+ \end{tabular}
+
+\htlParagraph{length}
+
+Mithilfe der length-Funktion ist es m\"oglich die L\"ange eines Strings zu ermitteln.
+
+\begin{lstlisting}[language=CMM]
+int l = length("Hello World");
+\end{lstlisting}
+
+\htlParagraph{time}
+
+Diese Funktion gibt die vergangenen Sekunden aus beginnend mit dem 1. Januar 1970. Diese Funktion wird unter anderem f\"ur den Zufallsgenerator ben\"otigt.
+
+\begin{lstlisting}[language=CMM]
+int timestamp = time();
+\end{lstlisting}
+
+\htlParagraph{\_\_is\_def\_***\_\_}
+
+Dies is ist eine interne Funktion, welche f\"ur die Bibliothek ben\"otigt wird, und zugriff auf den Speicher gibt. Es gibt dabei f\"ur jeden Datentyp eine eigene Funktion, welche true zur\"uckliefert wenn die Variable bereits initialisiert wurde. Ansonsten wird false zur\"uckgegeben.
+
+\begin{lstlisting}[language=CMM]
+bool test;
+bool isTestInitialized = __is_def_bool__(test);
+\end{lstlisting}
+
+\htlParagraph{\_\_assert\_\_}
+
+Wenn der erste Parameter false ist, wird der Interpreter angehalten und eine definierte Fehlermeldung ausgegeben. diese Funktion wird auch nur in Bibliotheksfunktionen verwendet, um unter anderem Eingabedaten auf Grenzwerte und Valid\"at zu zu pr\"ufen.
+
+\begin{lstlisting}[language=CMM]
+__assert__(false, "some error occured");
+\end{lstlisting}
+
+\subsection{Operatoren}
+
+C-Compact unterst\"utzt alle Standardoperatoren wie Plus, Minus, aber auch Stiftoperatoren und binäre Operatoren. Zu beachten ist dass Logische Operatoren nur in Bedingungen genutzt werden k\"onnen, nicht aber in normalen Ausdr\"ucken. Es gilt Punkt vor Strich vor Shift vor bin\"are Operatoren. Diese Reihenfolge kann nat\"urlich mit Klammern ver\"andert werden.
+
+\begin{lstlisting}[language=CMM]
+ a = ((5 + 2 - 3) / 4) << 2; // a = 4
+ b = 0x000f & 0x1003; // b = 0x0003
+\end{lstlisting}
+
+\subsubsection{Punktoperatoren}
+
+\subsubsection{Strichoperatoren}
+
+\subsubsection{Shiftoperatoren}
+
+Der Logische Shiftoperator\footnote{\url{https://de.wikipedia.org/wiki/Logische_Verschiebung}} verschieben den Inhalt einer Speicherzelle logisch um eine gew\"ahlte L\"ange. Zu beachten ist dass Daten welche außerhalb der Speicherzelle geschrieben werden gel\"oscht werden, und ansonsten undefinierte Bits mit 0 initialisiert werden.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{./media/images/compiler/language_specification_shift_operator.png}
+\caption{Bitweise Verschiebung einer 1.Byte Variable um 2 nach links}
+\label{language_specification_shift_operator}
+\end{figure}
+
+%arithmetischer shift
+
+\subsubsection{Bin\"are Operatoren}
+
+Bin\"are Operatoren f\"uhren jede Operation einzeln pro Bit aus, ohne Nachtbarbits zu ber\"ucksichtigen.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{./media/images/compiler/language_specification_binary_operator_xor.png}
+\caption{Bitweises XOR von 2. Variablen}
+\label{language_specification_binary_operator_xor}
+\end{figure}
+
+\newpage
+\subsection{Kontrollstrukturen}
+
+Kontrollstrukturen\footnote{\url{https://de.wikipedia.org/wiki/Kontrollstruktur} } werden ben\"otigt um den Ablauf eines Programmes zu steuern.
+
+\subsubsection{Bedingung (if-else)}
+
+Bedingungen\footnote{\url{https://de.wikipedia.org/wiki/Bedingte_Anweisung_und_Verzweigung}} werden genutzt um Aktionen durchzuf\"uhren wenn eine Bedingung erf\"ullt oder nicht erf\"ullt ist. Das else ist dabei Optional, und wenn nur 1. Befehl ausgef\"urht wird, kann die Klammer weggelassen werden.
+
+\htlParagraph{Beispiel}
+
+\begin{lstlisting}[language=CMM]
+if(a == 20)
+	printf("a has the value 20");
+else {
+	printf("a has not the value 20");
+}
+\end{lstlisting}
+
+Wenn die Variable a den Wert 20 hat wird der Text \glqq{}a has the value 20\grqq{} ausgegeben, ansonsten wird der Text \glqq{}a has not the value 20\grqq{} ausgegeben.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{./media/images/compiler/language_specification_if_condition.png}
+\caption{Flussdiagramm des Beispieles zur if-Bedingung}
+\label{language_specification_if_condition}
+\end{figure}
+
+\newpage
+\subsubsection{Mehrfache Verzweigung (switch-case)}
+
+Mithilfe eines switch-case\footnote{\url{https://de.wikipedia.org/wiki/Bedingte_Anweisung_und_Verzweigung\#Erste_Form}} ist es m\"oglich eine mehrfache Verzweigung aufzubauen, ohne mit else-if Konstrukte zu arbeiten. Es muss beachtet werden das nur konkrete Werte als Bedingung verwendet werden k\"onnen. Falls kein case-Staement mit dem \"ubergebenen Wert \"ubereinstimmt wird die default-Bedingung wenn m\"oglich aufgerufen.
+
+\htlParagraph{Beispiel}
+
+\begin{lstlisting}[language=CMM]
+switch(a) {
+	case 1:
+		printf("a has the value 1");
+		break;
+	case 2:
+	case 3:
+		printf("a has the value 2 or 3");
+		break;
+	default:
+		printf("a has some other value");
+		break;
+}
+\end{lstlisting}
+
+Es muss beachtet werden die Kontrollstruktur mit break zu verlassen, wenn der nachfolgende Code im switch nicht ausgef\"uhrt werden soll. Ansonsten kann es zu unerwarteten Ergebnissen kommen, da auch die nachfolgenden case-Statements aufgerufen werden.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{./media/images/compiler/language_specification_switch_case.png}
+\caption{m\"ogliches Flussdiagramm eines switch-case}
+\label{language_specification_switch_case}
+\end{figure}
+
+\newpage
+\subsubsection{while Schleife}
+
+Die while Schleife\footnote{\url{https://de.wikipedia.org/wiki/Schleife_(Programmierung)\#While-Do-Schleife}} wird verwendet um Anweisungen so lange zu wiederholen bis eine Bedingung nicht mehr erf\"ullt ist. Des Weiteren ist es m\"oglich die Schleife vorzeitig zu wiederholen oder abzubrechen. 
+
+\htlParagraph{Beispiel}
+
+\begin{lstlisting}[language=CMM]
+while(a >= 1) {
+	a --;
+	printf("loop: %d\n", a);
+}
+\end{lstlisting}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{./media/images/compiler/language_specification_while.png}
+\caption{m\"ogliches Flussdiagramm einer while Schleife}
+\label{language_specification_while}
+\end{figure}
+
+\newpage
+\subsubsection{do-while Schleife}
+
+Die do-while Schleife\footnote{\url{https://de.wikipedia.org/wiki/Schleife_(Programmierung)\#Do-While-Schleife}} ist \"ahnlich der while Schleife, mit dem unterschied dass die Bedingung am Ende abgepr\"uft wird. Aus diesem Grund wird die do-while schleife mindestens 1. mal durchlaufen bevor sie verlassen wird.
+
+Wie bei der while-Schleife ist es des Weiteren m\"oglich die Schl\"usselw\"orter break; und continue; zu verwenden, um den Schleifendurchlauf zu ver\"andern.
+
+\htlParagraph{Beispiel}
+
+\begin{lstlisting}[language=CMM]
+do {
+	a --;
+	printf("loop: %d\n", a);
+} while(a >= 1);
+\end{lstlisting}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.4\textwidth]{./media/images/compiler/language_specification_do_while.png}
+\caption{m\"ogliches Flussdiagramm einer do-while Schleife}
+\label{language_specification_do_while}
+\end{figure}
+
+\newpage
+\subsubsection{for Schleife}
+
+\footnote{\url{https://de.wikipedia.org/wiki/For-Schleife}}
+
+\htlParagraph{Beispiel}
+
+\begin{lstlisting}[language=CMM]
+for(a = 0; a <= 5; a ++) {
+	printf("loop: %d\n", a);
+}
+\end{lstlisting}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{./media/images/compiler/language_specification_for.png}
+\caption{m\"ogliches Flussdiagramm einer for Schleife}
+\label{language_specification_for}
+\end{figure}
+
+\subsubsection{return}

@@ -38,7 +38,7 @@ import at.jku.ssw.cmm.gui.file.FileManagerCode;
 
 public class Preprocessor {
 
-	public static String expand( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints ) throws PreprocessorException { // Debug message
+	public static String expand( String sourceCode, String workingDirectory, List<Object[]> codeRegister) throws PreprocessorException { // Debug message
 		DebugShell.out(State.LOG, Area.COMPILER, "Starting preprocessor");
 	
 		// Init new SourceCode storage
@@ -46,18 +46,15 @@ public class Preprocessor {
 		
 		// Reset code register list
 		codeRegister.clear();
-		
-		// Reset breakpoints list
-		breakpoints.clear();
 
 		Map<String, Integer> defines = new HashMap<>();
 		
-		newSourceCode = parseFile(sourceCode, workingDirectory, codeRegister, breakpoints, defines, 0, "main");
+		newSourceCode = parseFile(sourceCode, workingDirectory, codeRegister, defines, 0, "main");
 		
 		return newSourceCode;
 	}
 	
-	public static String parseFile( String sourceCode, String workingDirectory, List<Object[]> codeRegister, List<Integer> breakpoints, Map<String, Integer> defines, int offset, String file) throws PreprocessorException {
+	public static String parseFile( String sourceCode, String workingDirectory, List<Object[]> codeRegister, Map<String, Integer> defines, int offset, String file) throws PreprocessorException {
 		// Debug message
 		DebugShell.out(State.LOG, Area.PREPROCESSOR, "parse File");
 		
@@ -66,6 +63,7 @@ public class Preprocessor {
 		
 		// is parser inside comment?
 		boolean insideComment = false;
+		boolean insideString = false;
     	
 		// TODO check if code inside string
 		//boolean insideString = false;
@@ -77,55 +75,81 @@ public class Preprocessor {
 		// parse code
 		int line = offset;		
 		int fileLine = 0;
+		
 		if(sourceCode != null)
-		for( String s : sourceCode.split("\n") ){
+		for( String s : sourceCode.split("\n") ) {
 			line ++;
 			fileLine ++;
 
-			String commentString = null;
+			String commentString = "";
 			
 			boolean parseAllCode = true;
+			
+			commentString.replace('\r', ' ');
 			
 			// if one of the preprocessor if is not true, parsing of all code is not possible
 			for(int i=0; i< ifConditions.size(); i++) {
 				if(ifConditions.get(i) == false)
 					parseAllCode = false;
 			}
-			
-			if(s.contains("//")) {
-				commentString = s.substring(s.indexOf("//"));
-				s = s.substring(0, s.indexOf("//"));
-			}
-			
-			// check if code is inside comment
-			if(insideComment) {
-				// check if comment end in this line
-				if(s.contains("*/")) {
-					insideComment = false;
-					s += s.substring(0, s.indexOf("*/"));
-					s = s.substring(0, s.indexOf("*/")+2);
-				} else {
-					if(parseAllCode == false)
-						newSourceCode += addString("// ign " + s,commentString);
-					else
-						newSourceCode += addString(s,commentString);
-					continue;
-				}
-			}
 
-			// parse multiline comments
-			while(s.contains("/*")) {
-				if(s.contains("*/")) {
-					String newS = s.substring(0, s.indexOf("/*"));
-					newS += s.substring(s.indexOf("*/")+2);
-					s = newS;
+			// Parse Comments
+			for(int i = 0;i < s.length();) {
+				if(insideComment) {
+					if(s.regionMatches(i, "//", 0, 2)) {
+						commentString += s.substring(i);
+						if(i != 0)
+							s = s.substring(0, i-1);
+						else
+							s = "";
+						break;
+					} else if(s.regionMatches(i, "*/", 0, 2)) {
+						if(i != 0) {
+							s = s.subSequence(0, i) + s.substring(i+2);
+						} else {
+							s = s.substring(i+2);
+						}
+						insideComment = false;
+					} else {
+						if(i != 0) {
+							commentString += s.charAt(i);
+							s = s.subSequence(0, i) + s.substring(i+1);
+						} else {
+							commentString += s.charAt(0);
+							s = s.substring(1);
+						}
+					}
+				} else if(insideString) {
+					if(s.regionMatches(i, "\"", 0, 1)) {
+						if(i != 0) {
+							if(!s.regionMatches(i-1, "\\\"", 0, 1))
+								insideString = false;
+						} else {
+							insideString = false;
+						}
+					}
+					i++;
 				} else {
-					insideComment = true;
-					if(commentString != null)
-						commentString = s.substring(s.indexOf("/*")) + commentString;
-					else
-						commentString = s.substring(s.indexOf("/*")) ;
-					s = s.substring(0, s.indexOf("/*"));
+					if(s.regionMatches(i, "/*", 0, 2)) {
+						if(i != 0) {
+							s = s.subSequence(0, i) + s.substring(i+2);
+						} else {
+							s = s.substring(i+2);
+						}
+						insideComment = true;
+					} else if(s.regionMatches(i, "//", 0, 2)) {
+						commentString += s.substring(i);
+						if(i != 0)
+							s = s.substring(0, i-1);
+						else
+							s = "";
+						break;
+					} else if(s.regionMatches(i, "\"", 0, 1)) {
+						insideString = true;
+						i++;
+					} else {
+						i++;
+					}
 				}
 			}
 			
@@ -235,7 +259,7 @@ public class Preprocessor {
 							// parse file
 							String newSourceCodeHelp = "";
 							try {
-								newSourceCodeHelp = parseFile(includeCode, workingDirectory, codeRegister, breakpoints, defines, line, path);
+								newSourceCodeHelp = parseFile(includeCode, workingDirectory, codeRegister, defines, line, path);
 							} catch(StackOverflowError e) {
 								throw new PreprocessorException("cyclic includes" , file, fileLine);
 							}
@@ -259,10 +283,6 @@ public class Preprocessor {
 					} else {
 						throw new PreprocessorException("no include path specified", file, fileLine);
 					}
-				} else if(preString.matches("^\\s*(pause|wait)\\s*$")) {
-					// TODO 
-					// add breakpoint
-					breakpoints.add(line);
 				} else {
 					throw new PreprocessorException("unknow preprocessor command", file, fileLine);
 				}
@@ -287,8 +307,8 @@ public class Preprocessor {
 	}
 	
 	public static String addString(String s, String commentString) {
-		if(commentString != null) 
-			return s + commentString + "\n";
+		if(commentString != null && !commentString.isEmpty()) 
+			return s + "// comment " + commentString + "\n";
 		else
 			return s + "\n";
 	}

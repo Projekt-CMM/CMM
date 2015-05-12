@@ -929,6 +929,7 @@ public final class Interpreter {
 								} 
 								break;
 							default:
+								// TODO %s - string
 								break;
 						}
 						for(int y=0;y<sHelp.length();y++) {

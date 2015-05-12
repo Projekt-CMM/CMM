@@ -558,7 +558,7 @@ public class Tab {
 			return new Node(Node.B2I, element, null, Tab.intType);
 		
 		else if(type.kind == Struct.BOOL && element.type.kind == Struct.INT)
-			return new Node(Node.I2B, element, null, Tab.boolType); 
+			return new Node(Node.I2B, element, null, Tab.boolType);
 		
 		else if(type.kind == Struct.FLOAT && element.type.kind == Struct.CHAR) {
 			element =new Node(Node.C2I, element, null, Tab.intType);

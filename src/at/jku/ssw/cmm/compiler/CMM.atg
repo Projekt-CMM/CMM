@@ -959,7 +959,7 @@ Expr<out Node res>                  (.  int kind;
 =
 Term<out res>
 { Addop<out kind>
-  Term<out n>                       (.  if(res == null || (!res.type.isPrimitive() && !res.type.equals(Tab.stringType)) || n==null || (!n.type.isPrimitive() && !n.type.equals(Tab.stringType)) || n.type.equals(Tab.boolType))
+  Term<out n>                       (.  if(res == null || res.type == null || (!res.type.isPrimitive() && !res.type.equals(Tab.stringType)) || n==null || n.type == null || (!n.type.isPrimitive() && !n.type.equals(Tab.stringType)) || n.type.equals(Tab.boolType))
                                             SemErr("type is not a primitive or string except bool");
                                         else if(res.type.equals(Tab.stringType) && n.type.equals(Tab.stringType) && kind != Node.PLUS)
                                             SemErr("for string operations, only + is allowed");
