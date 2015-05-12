@@ -19,7 +19,7 @@ Wir haben uns f\"ur Apache Ant entschieden da die Kompilierung von Java-Projekte
 
 \subsubsection{Ausf\"uhren von Ant Prozessen}
 
-Ein ausf\"uhrbarer Teil innerhalb der Build-Datei wird als target bezeichnet.
+Ein ausf\"uhrbarer Teil innerhalb der Build-Datei wird als target bezeichnet. Diese k\"onnen wiederum Abh\"angigkeiten zu anderen target besitzen.
 
 \begin{lstlisting}[language=XML]
 <!-- clean project and then build it from scratch -->
@@ -27,6 +27,8 @@ Ein ausf\"uhrbarer Teil innerhalb der Build-Datei wird als target bezeichnet.
 	depends="clean, build, test"
 	description="build project from scrach"/>
 \end{lstlisting}
+
+Ein Target kann dann einfach \"uber die Komandozeile ausgef\"urt werden:
 
 \begin{lstlisting}[language=bash]
 ant all

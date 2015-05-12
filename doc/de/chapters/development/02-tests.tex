@@ -64,7 +64,7 @@ public void testCharVal() {
 
 \subsection{Fuzzing}
 
-Bei Programmen, welche mit umfangreichen Eingabedaten umgehen m\"ussen, ist schwer m\"oglich alle Testf\"alle abzudecken. Fuzzing\footnote{\url{https://de.wikipedia.org/wiki/Fuzzing}} stellt eine Art Stresstest f\"ur ein Programm dar, welches das Programm mit zuf\"alligen Eingabedaten f\"uttert. Dadurch k\"onnen Probleme entdeckt werden, welche bei anderen Tests nicht bemerkt worden sind.
+Bei Programmen, welche mit umfangreichen Eingabedaten umgehen m\"ussen, ist es schwer m\"oglich alle Testf\"alle abzudecken. Fuzzing\footnote{\url{https://de.wikipedia.org/wiki/Fuzzing}} stellt eine Art Stresstest f\"ur ein Programm dar, welches das Programm mit zuf\"alligen Eingabedaten f\"uttert. Dadurch k\"onnen Probleme entdeckt werden, welche bei anderen Tests nicht bemerkt worden sind.
 
 Wir nutzen Fuzzing daf\"ur um den Compiler mit Zuf\"alligen Kombination von Zeichen zu konfrontieren, welcher dieser ohne Abst\"urze Verarbeiten muss.
 
@@ -78,7 +78,7 @@ Wir nutzen das Programm FindBugs\footnote{\url{https://de.wikipedia.org/wiki/Fin
 
 \htlParagraph{Stringvergleich}
 
-In Java gilt das Prinzip Copy by Reference. Dies stellt ein h\"aufiger Fehler f\"ur Vergleichsoperationen bei Strings dar, da der Vergleichsoperator nicht den Inhalt des Strings, sondern die Objektadressen vergleicht.
+In Java gilt das Prinzip \glqq{}Copy by Reference\grqq{}. Dies stellt ein h\"aufiger Fehler f\"ur Vergleichsoperationen bei Strings dar, da der Vergleichsoperator nicht den Inhalt des Strings, sondern die Objektadressen vergleicht.
 
 \begin{lstlisting}[language=Java]
 String s1 = "Hello World";
@@ -96,10 +96,10 @@ if(s1.equals(s2))
 	System.out.println("s1 is equal to s2");
 \end{lstlisting}
 
-\htlParagraph{Uninitialisiertes Objekt}
+%\htlParagraph{Uninitialisiertes Objekt}
 
-...
+%...
 
-Dieser Fehler kann sehr einfach mithilfe einer Statischen Codeanalyse gefunden werden
+%Dieser Fehler kann sehr einfach mithilfe einer Statischen Codeanalyse gefunden werden
 
-...
+%...
