@@ -213,10 +213,6 @@ public class Quest {
 				quest.setQuestPath(questFolder);
 				
 				//Setting default Values:
-				quest.setTitle(quest.getQuestPath());
-				quest.setState(STATE_SELECTABLE);
-				quest.setAttribute(Quest.ATTRIBUTE_EXERSICE);
-				
 				try {
 					//Reading the XML File
 					quest = ReadQuestXML(path,quest);
@@ -226,6 +222,15 @@ public class Quest {
 					//For Debugging diseases
 					e.printStackTrace();
 				}
+				
+				if(quest.getTitle() == null)
+					quest.setTitle(quest.getQuestPath());
+				
+				if(quest.getState() == null)
+					quest.setState(STATE_SELECTABLE);
+				
+				if(quest.getAttribute() == null)
+					quest.setAttribute(Quest.ATTRIBUTE_EXERSICE);
 				
 				
 				//Returning the loaded Quest

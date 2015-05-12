@@ -22,7 +22,7 @@ Bei der Implementierung des JFileChoosers wurde oftmals ein Zusatz hinzugefügt,
 
 Die Vorschau wird in einer Klasse erstellt, welche ein JPanel erweitert und den PropertyChangeListener implementiert. Beim Anlegen des Konstruktors ist darauf zu achten, dass das JPanel bereits im Konstruktor eine geeignete Größe zugewiesen bekommt.
 
-Zuerst wird die Methode PropertyChange aufgerufen, welches beim Klicken auf eine Datei oder einen Ordner erscheint. Nun wird die Variable, welche der Methode übergeben wurde, auf ein File umgeändert. Somit kann nun abgefragt werden, ob es sich hierbei um den gewünschten Datentyp handelt. 
+Zuerst wird die Methode PropertyChange aufgerufen, welches beim Klicken auf eine Datei oder einen Ordner erscheint. Nun wird die Variable, welche der Methode übergeben wurde, auf ein File umgeändert. Somit kann nun abgefragt werden, ob es sich hierbei um den gewünschten Datentyp handelt. Danach wird die \textit{repaint()} Methode benötigt, um die \textit{paintComponent()} Methode aufzurufen.
 \begin{lstlisting}[language=JAVA]
 	public void propertyChange(PropertyChangeEvent e) {
 		String propertyName = e.getPropertyName();
@@ -34,7 +34,7 @@ Zuerst wird die Methode PropertyChange aufgerufen, welches beim Klicken auf eine
 \end{lstlisting}
 
 % http://www.javalobby.org/java/forums/t49462.html
-In weiterer Folge muss das Bild nur mehr geladen und skaliert werden, und kann mithilfe der paintComponent Methode in den JFileChooser eingeschleust werden.
+In weiterer Folge muss das Bild nur mehr geladen und skaliert werden. Mithilfe der paintComponent Methode, kann das Bild nun eingeschleust werden. Hierfür wird die \textit{drawImage} Methode verwendet. Dabei ist zu beachten, dass das Bild im JPanel auf der richtigen Position gezeichnet wird.
 \begin{lstlisting}[language=JAVA]
 public void paintComponent(Graphics g) {
 		g.setColor(bg);
@@ -46,3 +46,11 @@ public void paintComponent(Graphics g) {
 \end{lstlisting}
 
 Nun kann die neue Klasse eingebunden werden. Dies geschieht, indem man mehrere vorgegebene Klassen verwendet. Hierbei steht \textit{setAccessory()} für extra Komponenten, und \textit{PropertyChangeListener()} ist für Events, die im JFileChooser ausgeführt werden, zuständig.
+
+\begin{lstlisting}[language=JAVA]
+		ProfilePreviewPanel preview = new ProfilePreviewPanel();
+		chooser.setAccessory(preview);
+		chooser.addPropertyChangeListener(preview);
+\end{lstlisting}
+
+Wenn alle veränderungen vorgenommen wurden, kann der FileChooser mit der \textit{showdialog()}- angezeigt und die gewünschten Daten abgefragt werden.
