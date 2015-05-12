@@ -11,15 +11,16 @@ Bei der Entwicklung eines Programms und der Gestaltung der Benutzeroberfläche i
 \section{Versuche mit SchülerInnen}
 Um sicherzustellen, dass C Compact für den Unterricht tatsächlich geeignet ist und die Schülerinnen und Schüler auch gut mit der Entwicklungsumgebung umgehen können, haben wir beschlossen, Versuche mit Schülerinnen und Schülern der ersten und zweiten Klassen durchzuführen. Während unseres Projektes hatten wir insgesamt vier mal die Möglichkeit, unser Programm mit einer FSST-Gruppe (14-16 SchülerInnen) zu testen.
 
+\def\arraystretch{1.6}
 \begin{table}[h!]
-\begin{tabular}{|l|l|l||l|l|}
+\begin{tabular}{|l|l|l|l||l|l|}
 \hline
-Datum & Klasse & Lehrer & Version & Testgegenstand \\
+Datum & Klasse & \parbox{1.3cm}{Anzahl Schüler} & Lehrer & Version & Testgegenstand \\
 \hline
-4. November 2014 & 2AHELS & Franz Matejka & Alpha 1.2 & Benutzeroberfläche \\
-3. Dezember 2014 & 2BHELS & Kurt Kreilinger & Alpha 1.3 & Benutzeroberfläche \\
-18. März 2015 & 2BHELS & Christian Hanl & Alpha 1.4.2 & Benutzeroberfläche \\
-22. April 2015 & 1AHELS & Reinhard Pfoser & Alpha 1.4.5 & Questsystem \\
+4. 11. 2014 & 2AHELS & 14 & Franz Matejka & Alpha 1.1 & Benutzeroberfläche \\
+3. 12. 2014 & 2BHELS & 16 & Kurt Kreilinger & Alpha 1.2 & Benutzeroberfläche \\
+18. 3. 2015 & 2BHELS & 15 & Christian Hanl & Alpha 1.4.2 & Benutzeroberfläche \\
+22. 4. 2015 & 1AHELS & 16 & Reinhard Pfoser & Alpha 1.4.5 & Questsystem \\
 \hline
 \end{tabular}
 \caption{Versuche mit Schülern der ersten und zweiten Klassen}
@@ -35,6 +36,7 @@ Die Versuche sollten nicht nur die grundsätzliche Anwendbarkeit von C Compact u
 Die Benutzeroberfläche kann, im Gegensatz zum Compiler oder Interpreter, nur beschränkt durch statische Codeanalysen und Testroutinen verbessert werden, da ein wichtiger Faktor für eine reibungslose Funktionalität der Benutzer ist. Wir konnten mit den Versuchen viele neue Ansätze sammeln und sahen, welche Funktionen und Features für die Schüler tatsächlich von Bedeutung sind.
 
 \subsection{Ablauf eines Versuches}
+\label{sec:sci-trials-gui-sched}
 Die Versuche begannen immer mit einer Einführungsphase. Zuerst stellten wir uns vor und erklärten den Versuch und seinen Zweck. Dann folgte eine Einführung in C Compact, einerseits in die Verwendete Sprache, andererseits auch in die Benutzeroberfläche. Im zweiten Versuch fanden wir heraus, dass es in der Einführungsphase besonders wichtig ist, auf den Debugger hinzuweisen, da die Schüler diesen nicht gewohnt sind. Besonders Schüler mit schlechteren Programmierkenntnissen machten wenig Gebrauch vom Debugger und benutzten C Compact wie einen einfachen Texteditor. Im dritten und vierten Versuch machten wir zu Beginn eine einfache Übung mit der Klasse gemeinsam, bei der wir explizit auf den Debugger hinwiesen und seine Funktionen erklärten. Dafür konnten wir einen zuvor noch wichtigeren Teil der Einführung zu Spracheigenheiten von C Compact kürzen, da Compiler und Präprozessor im Laufe des Projektes große Fortschritte erzielen konnten.
 
 Den größte Teil der Versuchszeit arbeiteten die Schüler selbstständig an von uns gestellten Aufgaben. Bei den ersten drei Versuchen wurden Übungsblätter in Form eines PDF-Dokumentes gemeinsam mit C Compact verteilt; beim letzten Test wurden die Aufgaben vom Questsystem gestellt. In dieser Übungszeit beobachteten wir die Schüler, notierten Probleme und Programmfehler und halfen bei Schwierigkeiten. Auf diese Weise bekamen wir einen guten Eindruck von Problemen sowie Vor- und Nachteilen bei der Anwendung.
@@ -87,8 +89,103 @@ Diese Übung bearbeiteten die Schüler selbstständig. Wir erklärten die Aufgab
 \item Wieso steht in der Bedingung $if(a[i] > a[i+1])$ und nicht                          $if(a[i] >= a[i+1])$?
 \item Was ist der günstigste Fall? Mit welchen Eingabedaten ist die Sortierung am schnellsten?
 \item Was ist der ungünstigste Fall? Bei welchen Eingabedaten dauert die Sortierung am längsten?
-\item Anzahl der Durchläufe. Erstelle eine Formel für die (im ungünstigsten Fall) Anzahl der Durchläufe, die zur Sortierung benötigt werden, wenn n Elemente sortiert werden.
+\item Erstelle eine Formel für die (im ungünstigsten Fall) Anzahl der Durchläufe, die zur Sortierung benötigt werden, wenn n Elemente sortiert werden.
 \end{enumerate}}
 Mit diesen Fragen wollten wir die \glqq{}schnelleren\grqq{} Schüler dazu bewegen, sich noch weitere Gedanken zum Sortieralgorithmus zu machen.
 \end{enumerate}
 
+%TODO Anhang: Fragebogen
+\subsubsection*{Aufbau des Fragebogens}
+
+Bei den meisten Fragen waren fünf Möglichkeiten zum Ankreuzen vorhanden, die Schüler wurden also gebeten, einen bestimmten Teil von C Compact innerhalb eines Spektrums von fünf Antwortmöglichkeiten zu Bewerten. Bei diesem Fragebogen gehören immer zwei Fragen zu einem bestimmten Bereich. Einerseits konnten wir so den Trend in einem Bereich etwas besser feststellen (wenn viele Fehler auftreten, sollten die Schüler auch angeben, Probleme bei der Bedienung gehabt zu haben), andererseits konnten wir zwischen unterschiedlichen Aspekten eines Themas differenzieren (z.B. Anwendung im Unterricht vs. Anwendung zu Hause).
+
+Es wurden immer alle Fragen dieser Kategorie beantwortet.
+
+Die Fragen wurden in den Auswertungen immer wie folgt aufgeteilt:
+\begin{itemize}
+\item \textbf{Fragen 1 und 3:} Bedienung der Benutzeroberfläche
+\item \textbf{Fragen 4 und 5:} Bewertung des Debuggers
+\item \textbf{Fragen 2 und 6:} Probleme bei der Bedienung
+\item \textbf{Fragen 9 und 10:} Anwendung in der Ausbildung (im Unterricht oder zu Hause)
+\end{itemize}
+
+Bei zwei Freitextfragen wurden die Schüler gebeten, ihre eigene Meinung und ihre Ideen für weitere Entwicklungsschritte einzubringen.
+
+\subsubsection*{Ergebnisse: Fragen 1 und 3}
+
+\emph{Frage 1: Ist die Entwicklungsumgebung intuitiv zu bedienen?\\
+Frage 3: Wie gut ist das Programm im Allgemeinen zu Bedienen?}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.95\textwidth]{./media/images/gui/trials/gui-f1-3.png}
+\caption{Ergebnisse der Fragen 1 und 3}
+\end{figure}
+
+Hier ist besonders nach dem ersten Versuch ein deutlicher Fortschritt zu erkennen. Da bei dem Test mit der 2AHELS vor Allem am Anfang einige Probleme aufgetreten sind, haben wir uns nachher intensiver auf das Ausbessern dieser Fehler und das Verbessern der Stabilität von C Compact konzentriert.
+
+Wir haben durch den ersten Versuch auch viele neue Ansichten und Ideen erhalten und konnten die Bedienbarkeit so sehr gut verbessern. Zum Beispiel war ein wichtiges Anliegen der ersten Versuchsgruppe eine bessere Fehleranzeige. Daraufhin führten wir in Version Alpha 1.2 anschauliche Fehlerbeschreibungen ein.
+%TODO ref Versionsgeschichte, Fehlerbeschreibungen
+
+Die letzte Versuchsgruppe hat gezeigt, dass die Benutzeroberfläche von C Compact sehr weit fortgeschritten ist. Immerhin haben 4 von 5 SchülerInnen angegeben, dass die Benutzeroberfläche \glqq{}gut\grqq{} oder \glqq{}sehr gut\grqq{} bewertet (Frage 1). Mehr als die Hälfte dieser Versuchsgruppe hat die C Compact als \glqq{}sehr intuitiv zu bedienen\grqq{} bewertet (Frage 3).
+
+\subsubsection*{Ergebnisse: Fragen 4 und 5}
+
+\emph{Frage 4: Wie anschaulich ist die Darstellung der Programmabläufe?\\
+Frage 5: Wie verständlich werden die Variablen während des Programmablaufes dargestellt?}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.95\textwidth]{./media/images/gui/trials/gui-f4-5.png}
+\caption{Ergebnisse der Fragen 4 und 5}
+\end{figure}
+
+Der Debugger von C Compact wurde von Beginn an sehr positiv bewertet. Schon die erste Versuchsgruppe gab uns --- auch während der Übungsphase --- sehr positive Rückmeldungen. Eines der zentralen Konzepte von C Compact ist also erfolgreich aufgegangen.
+
+Dass die Antworten der dritten Versuchsgruppe deutlich besser ausgefallen sind liegt einerseits daran, dass wir bis zur Version Alpha 1.4.2 einige Verbesserungen und zusätzliche Features zum Debugger hinzufügten. Andererseits vermuten wir, dass die SchülerInnen auch durch die eigene Einführungsübung (siehe Kapitel \ref{sec:sci-trials-gui-sched}) für den Debugger ein besseres Verständnis für dieses Tool entwickeln konnten. Ein wichtiger Aspekt für die Verwendung von C Compact im Unterricht ist also trotz der intuitiven Bedienbarkeit eine anschauliche Einführung.
+
+\subsubsection*{Ergebnisse: Fragen 2 und 6}
+
+\emph{Frage 2: Hast du Hilfe bei der Bedienung des Programms benötigt?\\
+Frage 6: Häufigkeit von Bugs}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.95\textwidth]{./media/images/gui/trials/gui-f2-6.png}
+\caption{Ergebnisse der Fragen 2 und 6}
+\end{figure}
+
+Obwohl besonders beim ersten Versuch einige Fehler aufgetreten sind, zeigte sich diese Versuchsgruppe sehr flexibel im Umgang mit Schwierigkeiten und in der Bedienung einer neuen Entwicklungsumgebung.
+
+Nachdem wir viele Fehler notieren konnten, konzentrierten wir uns für die Version Alpha 1.2 vor Allem auf die Beseitigung von kleinen Abstürzen und Problemen. Im zweiten Versuch stürzte C Compact kein einziges mal ab. Größere Fehler zeigten sich nur vereinzelt. Dementsprechend fielen auch die Bewertungen positiver aus.
+
+In der Version Alpha 1.4.2, die für den dritten Versuch verwendet wurde, gab es leider einen Bug, den wir durch eine Modifikation einige Tage zuvor verursachten und nicht bemerkten: Bei Fehlermeldungen wurde die falsche Zeile angezeigt. Dadurch hatten einige Schülerinnen und Schüler Probleme, die Fehler in ihrem Quelltext zu finden. Die Antworten auf Frage 6 sind dadurch wieder etwas negativer ausgefallen.
+
+Einige Schülerinnen und Schüler gaben in Frage 2 an, hin und wieder Hilfe benötigt zu haben. Allerdings konnten zwei Drittel der Schüler laut eigenen Angaben fast selbstständig arbeiten und mussten nur selten Hilfe in Anspruch nehmen. Das lässt vor Allem auf eine gut durchdachte Aufgabenstellung und gute Erklärungen der benötigten Theorie und der Entwicklungsumgebung schließen.
+
+\subsubsection*{Ergebnisse: Fragen 9 und 10}
+
+\emph{Frage 9: Würde dir diese Entwicklungsumgebung im Unterricht helfen?\\
+Frage 10: Würde dir diese Entwicklungsumgebung beim selbstständigen Lernen helfen?}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.95\textwidth]{./media/images/gui/trials/gui-f9-10.png}
+\caption{Ergebnisse der Fragen 9 und 10}
+\end{figure}
+
+Mit dem Fortschritt von C Compact konnten sich auch immer mehr Schüler vorstellen, C Compact im Unterricht oder zum Üben zu verwenden. Wir erhielten immer wieder --- auch von den Lehrern der Versuchsgruppe --- positive Rückmeldungen. Im Prinzip zeigen diese Antworten, ob das Gesamtkonzept aufgegangen ist.
+
+Wir vermuten, dass die schlechteren Bewertungen bei diesen Fragen von Schülern stammen, die sehr gute Programmierer sind und die mit einer professionellen Entwicklungsumgebung mehr anfangen können. Beispielsweise waren in der dritten Versuchsgruppe drei sehr gute Programmierer und bei den Fragen 9 und 10 in dieser Gruppe jeweils genau 3 schlechtere Bewertungen. Allerdings können wir in keinem der Fälle feststellen, ob diese Bewertungen tatsächlich von guten Programmierern kommen.
+%TODO letzten Absatz nochmal lesen
+
+\subsubsection*{Auswertung der Freitextfragen}
+
+\emph{Frage 7: Welcher Bereich muss am dringendsten verbessert werden?\\
+Frage 8: Was würdest du als nächstes hinzufügen?}
+
+Die Antworten auf diese Fragen zeigten oft sehr gut die aktuellen Defizite von C Compact und brachten uns auch auf neue Ideen. Großteils waren die Antworten für beide Fragen sehr ähnlich.
+
+Beim ersten und dritten Versuch zeigte sich das höhere Verbesserdungspotential auch dadurch, dass viele Schüler ähnliche Antworten gaben. Beim ersten Versuch 
+gaben immerhin 9 Schüler an, dass als nächstes die Fehlermeldungen verbessert werden sollten (was wir dann auch taten) und 8 Schüler wünschten sich \textbf{for}-Schleifen als nächstes Feature. Beim dritten Versuch waren die wichtigsten Anliegen der Schüler einen Verbesserung der Fehlerkennzeichnung und -anzeige (die in der Version Alpha 1.4.2 nicht korrekt funktionierte). Die zweite Versuchsgruppe listete hingegen sehr unterschiedliche Ideen auf, was darauf hindeutet, dass keine signifikanten Probleme aufgetreten sind.
+%TODO Anhang: Versuchsauswertungen.

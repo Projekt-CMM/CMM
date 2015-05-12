@@ -5,3 +5,5 @@
 CMM.jar
 bruteforce.c
 config.cfg
+/.metadata/*
+/TestFiles/*

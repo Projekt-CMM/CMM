@@ -116,18 +116,18 @@ public void run() {
 Ein Thread wird beendet, indem die Methode \textbf{run} verlassen wird. Dies ist die einfachste und sicherste Möglichkeit einen Thread zu stoppen. Wenn der Thread von Außen beendet wird, kann nicht sichergestellt werden, dass er zu dieser Zeit nicht gerade auf eine Variable zugreift und durch den Abbruch einen Schreibprozess nicht abschließen kann.
 
 \subsection{Probleme beim Arbeiten mit Threads}
-Das Verwenden mehrerer Threads erfordert generell Vorsicht; vor Allem wenn eine Variable oder eine Referenz von mehreren Threads verwendet wird können unerwartete Komplikationen auftreten. Um Probleme zu vermeiden, sollten folgende Regeln beachtet werden:
+Das Verwenden mehrerer Threads erfordert generell Vorsicht; vor Allem wenn eine Variable oder eine Referenz von mehreren Threads verwendet wird können unerwartete Komplikationen auftreten.
 
-\begin{enumerate}
 %TODO ref "Sprechen Sie Java?"
-\item Auf eine Datenstruktur oder Variable sollte immer nur ein Thread gleichzeitig zugreifen können. Da die Wechsel zwischen Threads praktisch nicht vorhersehbar sind, ist es bei unvorsichtiger Implementierung möglich, dass mehrere Threads gleichzeitig auf einem Speicherplatz schreiben oder lesen (Threadinterferenz). Im schlimmsten Fall führt dies zu Exceptions und Abstürzen, deren Ursache dann meistens schwer nachvollziehbar ist.
+Auf eine Datenstruktur oder Variable sollte immer nur ein Thread gleichzeitig zugreifen können. Da die Wechsel zwischen Threads praktisch nicht vorhersehbar sind, ist es bei unvorsichtiger Implementierung möglich, dass mehrere Threads gleichzeitig auf einem Speicherplatz schreiben oder lesen (Threadinterferenz). Im schlimmsten Fall führt dies zu Exceptions und Abstürzen, deren Ursache dann meistens schwer nachvollziehbar ist.
 
 Es kann auch vorkommen, dass ein Thread eine Variable ausliest, bevor sie durch einen anderen Thread aktualisiert wurde (Speicherinkonsistenz\footnote{https://docs.oracle.com/javase/tutorial/essential/concurrency/memconsist.html}).
 
 Um Variablen und Instanzen in mehreren Threads zu verweden, gibt es --- je nach Anwendungsfall --- unterschiedliche Möglichkeiten:
 
-\begin{enumerate}%TODO ist "inskonsistener Speicher" korrekt?, "threadübergreifenden"?
-\item Für alle Variablen und Referenzen, die zusätzlich mit dem Schlüsselwort $\textbf{volatile}\footnote{https://docs.oracle.com/javase/tutorial/essential/concurrency/atomic.html}$ deklariert werden, werden Lese- und Schreibvorgänge in einem Schritt ausgeführt (die Operation ist nicht unterbrechbar, also atomar\footnote{http://www.angelikalanger.com/Articles/EffectiveJava/42.JMM-volatileIdioms/42.JMM-volatileIdioms.html}). Dadurch werden Threadinterferenzen vermieden, allerdings sind Probleme durch Speicherinkonsistenz immer noch möglich.
+\subsubsection*{volatile}
+%TODO ist "inskonsistener Speicher" korrekt?, "threadübergreifenden"?
+Für alle Variablen und Referenzen, die zusätzlich mit dem Schlüsselwort $\textbf{volatile}\footnote{https://docs.oracle.com/javase/tutorial/essential/concurrency/atomic.html}$ deklariert werden, werden Lese- und Schreibvorgänge in einem Schritt ausgeführt (die Operation ist nicht unterbrechbar, also atomar\footnote{http://www.angelikalanger.com/Articles/EffectiveJava/42.JMM-volatileIdioms/42.JMM-volatileIdioms.html}). Dadurch werden Threadinterferenzen vermieden, allerdings sind Probleme durch Speicherinkonsistenz immer noch möglich.
 Ein Zugriff auf eine mit \textbf{volatile} deklarierte Variable ist dafür schneller als ein Zugriff über eine \textbf{synchronzied}-Methode (siehe unten).
 
 \begin{lstlisting}[language=JAVA]
@@ -136,7 +136,8 @@ volatile double d;
 
 Bei \textbf{volatile} ist Außerdem zu beachten, dass erstens nur einfache Lese- und Schreibvorgänge atomar sein können (beispielsweise ist eine Inkrementation keine atomare Operation) und sich die atomaren Eigenschaften zweitens nur auf die Variable oder Referenz selbst beziehen, nicht auf das Objekt.
 
-\item Variablen und Referenzen, die als $\textbf{final}$ deklariert werden, können von allen Threads problemlos verwendet werden, da diese Variablen nach dem Initialisieren nicht mehr verändert werden können. Dieses Schlüsselwort wird oft für Funktionsparameter (einfache Wertübergaben) von threadübergreifenden Methoden oder in Kombination mit dem Schlüsselwort \textbf{static} verwendet.
+\subsubsection*{final}
+Variablen und Referenzen, die als $\textbf{final}$ deklariert werden, können von allen Threads problemlos verwendet werden, da diese Variablen nach dem Initialisieren nicht mehr verändert werden können. Dieses Schlüsselwort wird oft für Funktionsparameter (einfache Wertübergaben) von threadübergreifenden Methoden oder in Kombination mit dem Schlüsselwort \textbf{static} verwendet.
 
 \begin{lstlisting}[language=JAVA]
 static final double PI = 3.1415;
@@ -159,7 +160,8 @@ panel = new JLabel("World");
 panel = null;
 \end{lstlisting}
 
-\item Für die Kommunikation zwischen Threads ist das Schlüsselwort $\textbf{synchronized}$ unerlässlich. 
+\subsection*{sychronized}
+Für die Kommunikation zwischen Threads ist das Schlüsselwort $\textbf{synchronized}$ unerlässlich. 
 \begin{quote}%TODO correct quote
 \emph{Synchronized methods enable a simple strategy for preventing thread interference and memory consistency errors: if an object is visible to more than one thread, all reads or writes to that object's variables are done through synchronized methods}
 \begin{flushright}Oracle, The Java Turorials\footnote{https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html}\end{flushright}
@@ -195,14 +197,16 @@ public void doSomething() {
 Dem \textbf{synchronized}-Block muss ein sogenanntes \glqq{}Monitor Object\grqq{} übergeben werden. Dieses Objekt fungiert als \glqq{}Lock\grqq{} (Schloss) für diesen \textbf{synchronized}-Block. Ein Thread erhält nur über dieses Objekt Zugriff auf einen geschützten Block. Will ein anderer Thread auf diesen Block zugreifen, muss er warten, bis das \glqq{}Schloss\grqq{} freigegeben ist.
 
 Grundsätzlich kann jedes beliebige Objekt diese Funktion übernehmen; in den meisten Fällen bietet sich aber \textbf{this} an, da dies auch von \textbf{synchronized}-Mothoden verwendet wird. Werden verschiedene Lock-Objekte verwendet, können diese auch gleichzeitig vergeben werden --- Zugriffe durch mehrere Threads sind dann wieder möglich.
-\end{enumerate}
 
-\item Objekte, die Teile der Benutzeroebrfläche sind, sollten niemals von einem anderen Thread  als dem EDT aus initialisiert oder verändert werden. Dies betrifft Objekte und Instanzen von Klassen aus der AWT- oder Swing-Bibliothek oder daraus abgeleiteten Klassen.%TODO dat grammatics
+\subsection{Mehrere Threads in Swing}
+
+Objekte, die Teile der Benutzeroebrfläche sind, sollten niemals von einem anderen Thread  als dem EDT aus initialisiert oder verändert werden. Dies betrifft Objekte und Instanzen von Klassen aus der AWT- oder Swing-Bibliothek oder daraus abgeleiteten Klassen.%TODO dat grammatics
 
 Um von einem anderen Thread aus ein Swing-Objekt zu verändern, muss dieser Teil des Quellcodes in den Event Dispatch Thread eingereiht werden. Dafür gibt es zwei Möglichkeiten:
-\begin{enumerate}
+
+\subsubsection*{Asynchroner Aufruf}
 %TODO kann man hier "Methode" sagen?
-\item Meistens sollte die Methode \textbf{invokeLater()}\footnote{http://docs.oracle.com/javase/7/docs/api/javax/swing/SwingUtilities.html\#invokeLater\%28java.lang.Runnable\%29} verwendet werden.
+Meistens sollte die Methode \textbf{invokeLater()}\footnote{http://docs.oracle.com/javase/7/docs/api/javax/swing/SwingUtilities.html\#invokeLater\%28java.lang.Runnable\%29} verwendet werden.
 \begin{lstlisting}[language=JAVA]
 java.awt.EventQueue.invokeLater(new Runnable() {
 	public void run() {
@@ -217,7 +221,8 @@ java.awt.EventQueue.invokeLater(new Runnable() {
 	
 	Unter den meisten Umständen ist diese Implementierung geeignet, da der Benutzer den Zeitunterschied zwischen Initialisierung des Runnable-Objektes und Änderung in der Benutzeroberfläche nicht wahrnehmen kann. 
 	
-\item Es gibt allerdings auch Anwendungsfälle, die eine \textbf{synchrone} Aktualisierung der Benutzeroberfläche erfordern. Ein Beispiel ist das Textfeld für Eingabedaten im Hauptfenster von C Compact (Siehe Kapitel \ref{sec:gui-main-left-io}). Wenn der Debugger sehr schnell mehrere Lesebefehle hintereinander ausführt, können bei asynchroner Aktualisierung der Benutzeroberfläche Probleme auftreten, indem ein weiteres Zeichen abgelesen wird während das vorhergehende noch nicht als gelesen markiert wurde (Speicherinkonsistenz). Deshalb wird das Eingabedatenfeld während beim Debuggen immer synchron aktualisiert.
+\subsection*{Synchroner Aufruf}
+Es gibt allerdings auch Anwendungsfälle, die eine \textbf{synchrone} Aktualisierung der Benutzeroberfläche erfordern. Ein Beispiel ist das Textfeld für Eingabedaten im Hauptfenster von C Compact (Siehe Kapitel \ref{sec:gui-main-left-io}). Wenn der Debugger sehr schnell mehrere Lesebefehle hintereinander ausführt, können bei asynchroner Aktualisierung der Benutzeroberfläche Probleme auftreten, indem ein weiteres Zeichen abgelesen wird während das vorhergehende noch nicht als gelesen markiert wurde (Speicherinkonsistenz). Deshalb wird das Eingabedatenfeld während des Debuggen immer synchron aktualisiert.
 \begin{lstlisting}[language=JAVA]
 java.awt.EventQueue.invokeAndWait(new Runnable() {
 	public void run() {
@@ -227,7 +232,7 @@ java.awt.EventQueue.invokeAndWait(new Runnable() {
 \end{lstlisting}
 	Der Thread, von dem aus das Runnable-Objekt instanziert wurde, wird so lange angehalten, bis die Methode run() ausgeführt wurde.
 
-	Diese Umsetzung erfortert allerdings etwas mehr Vorsicht. Während die Methode invokeLater() ohne Probleme auch im Event Dispatch Thread aufgerufen werden kann, würde ein Aufruf von invokeAndWait() aus dem EDT dazu führen, dass sich der Thread selbst blockiert.
+	Diese Umsetzung erfordert allerdings etwas mehr Vorsicht. Während die Methode invokeLater() ohne Probleme auch im Event Dispatch Thread aufgerufen werden kann, würde ein Aufruf von invokeAndWait() aus dem EDT dazu führen, dass sich der Thread selbst blockiert.
 	
 	Außerdem können bei einem synchronen Aufruf Probleme auftreten, die auf auf den wartenden Thread rückwirken. Für einen reibungslosen synchronen Aufruf müssen folgende Exceptions abgefangen werden können:
 
@@ -239,8 +244,6 @@ java.awt.EventQueue.invokeAndWait(new Runnable() {
 	InterruptedException & \parbox{7cm}{Der Event Dispatch Thread wurde unterbrochen}\\
 	\hline
 \end{tabular}
-\end{enumerate}
-\end{enumerate}
 
 
 %   --------------------------------------------------------
