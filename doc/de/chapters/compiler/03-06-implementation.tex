@@ -278,3 +278,14 @@ public Obj insert(int kind, String name, Struct type, int line) {
 %\subsubsection{Error.java}
 
 %\subsubsection{NodeList.java}
+
+\subsubsection{Preprocessor.java}
+
+Der Compiler wurde nur dazu entwickelt, einzelne Dateien in einen Abstrakten Syntaxbaum zu \"ubersetzen. Um eine mehrere Dateien einzubinden(z.B. Standardbiblioteken) ist es aber notwendig Dateien vor dem Kompilieren zusammenzuf\"ugen, und Mehrfachincludes korrekt zu verarbeiten.
+
+Um dies umzusetzen, wurde ein Pr\"aprozessor implementiert welcher alle grundlegenden Funktionen des C-Pr\"aprozessors nachbildet. Bewusst wurde bei dieser Implementierung die urspr\"ungliche Funktionsweise von \#define ver\"andert, um die Verwendung der Sprach-internen Konstanten zu erzwingen.
+%Eines der Hauptprobleme von \#define sind die Fehlenden Typinformationen bei der Verwendung als Konstante, welche bei einer Programmierumgebung f\"ur Anf\"anger am besten von Anfang an vermieden 
+
+Der Pr\"aprozessor umfasst einen einfachen Scanner und Parser. Er ist in der Lage Kommentare wie auch Kommentare in Strings korrekt auszuwerten, und gesteuert mithilfe von Pr\"aprozessorfunktionen eine Quellcodedatei aufzubauen, die dann vom Compiler \"ubersetzt werden kann.
+
+Um Fehlermeldungen wieder in eine korrekte Form zu bringen, ist es notwendig die Position im generierten Quelltext auf den urspr\"unglichen Quelltext zur\"ukmapen zu k\"onnen. Dazu wird eine Datenstruktur erstellt welche angibt welche Quelldatei an einer bestimmten Position im generierten Quelltext genutzt wird. Diese Information reicht aus um die urspr\"ungliche Zeile im Quelltext zur\"uckzurechnen, da der Pr\"aprozessor keine Zeilen einf\"ugt oder l\"oscht, sondern diese nur ver\"andert.

@@ -164,6 +164,8 @@ int foo() {
 
 \htlParagraph{float}
 
+Eine float ist eine Fließkommazahl, welche einen Wert zwischen $\pm1.4^{-45}$ bis $\pm3.4^{+38}$ annehmen kann.
+
 \begin{lstlisting}[language=CMM]
 float f;
 
@@ -218,6 +220,15 @@ Falls ein Array in einer Funktion definiert wird, kann diesem ein Initialisierun
 \begin{lstlisting}[language=CMM]
 char cArr[10];
 int arr[5][5];
+\end{lstlisting}
+
+\htlParagraph{Initialisieren von Arrays}
+
+Wenn ein Array innerhalb einer Funktion definiert wurde, ist es m\"oglich diesen bereits bei der Deklaration mit Werten zu f\"ullen. Zu beachten ist dass diese Funktion derzeit nur bei eindimensionalen Arrays unterst\"utzt wird.
+
+\begin{lstlisting}[language=CMM]
+int arr1[5] {1,2,3,4,5};  // arr1 = [1,2,3,4,5]
+int arr2[10] {3};	// fill all elements with 3
 \end{lstlisting}
 
 \subsubsection{Typumwandlung}
@@ -279,7 +290,6 @@ void foo(int a) {
 }
 \end{lstlisting}
 
-\newpage
 \subsubsection{Vorimplementierte Funktionen}
 
 Es gibt eine gewisse Funktionen welche bereits im Interpreter und Compiler implementiert sind, um C-Compact eine Interaktion mit dem Debugger zu erm\"oglichen.
@@ -323,7 +333,6 @@ Ein Platzhalter definiert ein Variable welche in einem spezifizierten Ausgabefor
   float & \%f \\
  \end{tabular}
 
-\newpage
 \htlParagraph{length}
 
 Mithilfe der length-Funktion ist es m\"oglich die L\"ange eines Strings zu ermitteln.
@@ -411,7 +420,7 @@ Zu beachten ist dass wie in C ein arithmetischer Shift nach rechts nicht eine 0 
 \newpage
 \subsection{Kontrollstrukturen}
 
-Kontrollstrukturen\footnote{\url{https://de.wikipedia.org/wiki/Kontrollstruktur} } werden ben\"otigt um den Ablauf eines Programmes zu steuern.
+Kontrollstrukturen\footnote{\url{https://de.wikipedia.org/wiki/Kontrollstruktur} } werden ben\"otigt um den Ablauf eines Programmes zu steuern. Dies k\"onnen Verzweigungen wie auch Schleifen sein.
 
 \subsubsection{Bedingung (if-else)}
 
