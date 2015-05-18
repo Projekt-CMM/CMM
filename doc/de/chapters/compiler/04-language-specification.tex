@@ -12,11 +12,11 @@
 
 \subsection{Pr\"aprozessor}
 
-Unser Pr\"aprozessor erm\"oglicht die Nutzung mehrer Dateien und verf\"ugt \"uber die Funktion einzelne Codeteile zu deaktivieren, wie es auch in C der Fall ist. Pr\"aprozessorargumente beginnen dabei jeweils mit einem Hashtag, gefolgt von der jeweiligen Direktive und einem oder mehreren Argumenten.
+Der Pr\"aprozessor erm\"oglicht die Nutzung mehrer Dateien und verf\"ugt \"uber die Funktion einzelne Codeteile zu deaktivieren, wie es auch in C der Fall ist. Pr\"aprozessorargumente beginnen dabei jeweils mit einem Hashtag, gefolgt von der jeweiligen Direktive und einem oder mehreren Argumenten.
 
 \subsubsection{\#include Direktive}
 
-Mithilfe eines \#include k\"onnen andere Dateien eingebunden werden. Es gibt dabei 2. Arten von \#include, welche sich durch den jeweiligen Suchpfad unterscheiden. Aus Technischer Sicht kopiert der Pr\"aprozessor die jeweilige Datei an die Stelle wo das \#include geschrieben ist.
+Mithilfe eines \#include k\"onnen andere Dateien eingebunden werden. Es gibt dabei 2 Arten von \#include, welche sich durch den jeweiligen Suchpfad unterscheiden. Aus technischer Sicht kopiert der Pr\"aprozessor die jeweilige Datei an die Stelle wo das \#include geschrieben ist.
 
 \htlParagraph{Suche im Standard-Include-Pfad}
 
@@ -28,7 +28,7 @@ Der Standard-Include-Pfad stellt der Ordner clib dar, in welchem sich die Standa
 
 \htlParagraph{Suche im aktuellen Verzeichnis}
 
-Wenn selbst geschriebene Programmdateien eingebunden werden sollen wird der Pfad relativ zum aktuellen Verzeichnis angegeben. So ist es m\"oglich gro\"o\ss{}ere Projekte auf Basis mehrere Dateien zu entwickeln.
+Wenn selbst geschriebene Programmdateien eingebunden werden, wird der Pfad relativ zum aktuellen Verzeichnis angegeben. So ist es m\"oglich Programme zu entwickeln, welche aus mehrere Dateien nutzen.
 
 \begin{lstlisting}[language=C]
 #include "foo.cmm"
@@ -36,7 +36,7 @@ Wenn selbst geschriebene Programmdateien eingebunden werden sollen wird der Pfad
 
 \subsubsection{\#define Direktive}
 
-Es ist m\"oglich den w\"ahrend des Pr\"aprozessorvorganges Variablen zu definieren, welche aber nur im Pr\"aprozessor ausgewertet werden k\"onnen. Es ist nicht m\"oglich mithilfe eines \#define Quelltext zu ver\"andern, wie es in C m\"oglich ist!
+Es ist m\"oglich w\"ahrend des Pr\"aprozessorvorganges Variablen zu definieren, welche aber nur im Pr\"aprozessor ausgewertet werden k\"onnen. Es ist nicht m\"oglich mithilfe eines \#define Quelltext zu ver\"andern, wie es in C m\"oglich ist!
 
 Es ist m\"oglich einem Define einen Wert zuzuweisen, welcher eine Ganze Zahl sein muss. Falls kein Wert angegeben ist wird 1 angenommen.
 
@@ -57,7 +57,7 @@ Mithilfe eines \#undef kann eine definierte Variable gel\"oscht werden. Die Vari
 
 \subsubsection{\#ifdef, \#ifndef, \#else und \#endif Direktive}
 
-Es ist m\"oglich abzufragen ob es eine bestimmte Variablendefinition gibt, oder nicht gibt. Diese Abfrage wird mit den Pr\"aprozessorargumenten \#ifdef bzw. \#ifndef eingeleitet, und muss mit einem \#endif enden. Falls es notwendig ist auch f\"ur das Gegenargument code auszuf\"uhren kann dies mithilfe eines \#else eingeleitet werden.
+Es ist m\"oglich abzufragen ob es eine bestimmte Variablendefinition gibt, oder nicht gibt. Diese Abfrage wird mit den Pr\"aprozessorargumenten \#ifdef bzw. \#ifndef eingeleitet, und muss mit einem \#endif enden. Falls es notwendig ist spezifischen code auszuf\"uhren, wenn die Bedingung nicht erf\"ullt ist, kann dies mithilfe eines \#else eingeleitet werden.
 
 Eine Variable gilt als definiert wenn sie mithilfe eines \#define erzeugt wurde, und einen Wert ungleich 0 besitzt.
 
@@ -71,7 +71,7 @@ Eine Variable gilt als definiert wenn sie mithilfe eines \#define erzeugt wurde,
 
 \subsubsection{Beispiel}
 
-Der Pr\"aprozessor wird besonders daf\"ur ben\"otigt, dass Bibliotheken bei mehrfachen \#include keine Fehler verursachen. Dazu ist es notwendig dass die Bibliothek bei mehrfachen \#include die nachfolgenden Ignoriert. Dies stellt ein Standardkonstrukt in der C Programmierung dar.
+Der Pr\"aprozessor wird besonders daf\"ur ben\"otigt, dass Bibliotheken bei mehrfachen \#include keine Fehler verursachen. Dazu ist es notwendig dass die Bibliothek bei mehrfachen \#include die nachfolgenden ignoriert. Dies stellt ein Standardkonstrukt in der C Programmierung dar.
 
 \begin{lstlisting}[language=C]
 #ifndef __CLIB_EXAMPLE__
@@ -88,11 +88,11 @@ Der Pr\"aprozessor wird besonders daf\"ur ben\"otigt, dass Bibliotheken bei mehr
 
 Zuerst wird ermittelt, ob die Bibliothek bereits eingebunden wurde (falls dies der Fall ist, ist die jeweilige Variable definiert), und \#ifndef ignoriert infolge den folgenden Code bis zum \#endif.
 
-Falls der Code aber das erste mal eingebunden wurde, ist die Variable (in diesem Beispiel $\_\_CLIB\_EXAMPLE\_\_$) noch nicht definiert worden. Folglich wird der Code welcher sich in \#ifndef befindet ausgef\"uhrt, wo unter anderem die jeweilige Variable definiert wird, welche einzigartig f\"ur die jeweilige Bibliothek sein muss.
+Falls der Code aber das erste mal eingebunden wurde, ist die Variable (in diesem Beispiel $\_\_CLIB\_EXAMPLE\_\_$) noch nicht definiert worden. Folglich wird der Code welcher sich in \#ifndef befindet ausgef\"uhrt, wo unter anderem die jeweilige Variable definiert wird. Diese Variable muss f\"ur die jeweilige Bibliothek einzigartig sein.
 
 \subsection{Kommentare}
 
-Bereiche welche als Kommentar\footnote{\url{https://de.wikipedia.org/wiki/Kommentar_(Programmierung)}} deklariert sind, werden vom Pr\"aprozessor und vom Compiler ignoriert. Es gibt dabei 2. Arten von Kommentare.
+Bereiche welche als Kommentar\footnote{\url{https://de.wikipedia.org/wiki/Kommentar_(Programmierung)}} deklariert sind, werden vom Pr\"aprozessor und vom Compiler ignoriert. Es gibt dabei 2 Arten von Kommentare.
 
 \htlParagraph{Zeilenkommentar}
 
@@ -113,7 +113,7 @@ Ein Blockkommentar beginnt mit einem /* und enden bei dem ersten auftreten eines
 
 \subsection{Datentypen}
 
-Der gew\"ahlte Datentyp\footnote{\url{https://de.wikipedia.org/wiki/Datentyp}} gibt an welche Art von Daten gespeichert werden k\"onnen. Es gibt primitive Datentypen, welche gro\"ss{}teils auch Arithmetische Datenoperationen unterst\"utzen, und Zusammengesetzte Datentypen welche aus einem oder mehreren primitiven Datentypen aufgebaut sind.
+Der gew\"ahlte Datentyp\footnote{\url{https://de.wikipedia.org/wiki/Datentyp}} gibt an welche Art von Daten gespeichert werden k\"onnen. Es gibt primitive Datentypen, welche gro\ss{}teils auch arithmetische Datenoperationen unterst\"utzen, und Zusammengesetzte Datentypen welche aus einem oder mehreren primitiven Datentypen aufgebaut sind.
 
 \subsubsection{Primitive Datentypen}
 
@@ -140,7 +140,7 @@ bool foo() {
 
 \htlParagraph{char}
 
-Ein char stellt ein einzelnes alphanumerisches Zeichen, ein Leerzeichen oder das Sonderzeichen \textbackslash{}r, \textbackslash{}n, \textbackslash{}t, \textbackslash{}0, \textbackslash{}' oder \textbackslash{}\textbackslash{} dar.
+Ein char stellt ein einzelnes alphanumerisches Zeichen, ein Leerzeichen oder das Sonderzeichen \textbackslash{}r, \textbackslash{}n, \textbackslash{}t, \textbackslash{}0, \textbackslash{}\verb+'+ oder \textbackslash{}\textbackslash{} dar.
 
 \begin{lstlisting}[language=CMM]
 char ch;
@@ -164,7 +164,7 @@ int foo() {
 
 \htlParagraph{float}
 
-Eine float ist eine Fließkommazahl, welche einen Wert zwischen $\pm1.4^{-45}$ bis $\pm3.4^{+38}$ annehmen kann.
+Ein float ist eine Fließkommazahl, welche einen Wert zwischen $\pm1.4^{-45}$ bis $\pm3.4^{+38}$ annehmen kann.
 
 \begin{lstlisting}[language=CMM]
 float f;
@@ -176,7 +176,7 @@ float foo() {
 
 \htlParagraph{string}
 
-Strings stellen Zeichenketten dar, welche nicht verändert werden können (sie Sind Konstant. Wenn also ein String verändert werden soll muss ein neuer erstellt werden. Des Weiteren ist es möglich Strings mithilfe des Additionsoperator zusammenzufügen.
+Strings stellen Zeichenketten dar, welche nicht verändert werden können (sie sind Konstant. Wenn also ein String verändert werden soll muss ein neuer erstellt werden. Des Weiteren ist es möglich Strings mithilfe des Additionsoperator zusammenzufügen.
 
 Es k\"onnen die Sonderzeichen \textbackslash{}r, \textbackslash{}n, \textbackslash{}t, \textbackslash{}0, \textbackslash{}'' und \textbackslash{}\textbackslash{} in Strings verwendet werden.
 
@@ -198,7 +198,7 @@ const int i = 1234;
 
 \subsubsection{Strukturen}
 
-Strukturen sind zusammengesetzte Datentypen welche aus 1. oder mehreren Datentypen bestehen. Eine definierte Struktur stellt einen neuer Datentyp dar, von welchem Variablen definiert werden k\"onnen, welche man auch an Funktionen \"ubergeben kann.
+Strukturen sind zusammengesetzte Datentypen welche aus 1. oder mehreren Datentypen bestehen. Eine definierte Struktur stellt einen neuen Datentyp dar, welcher als Variablen definiert werden kann. Diesen neue Datentyp kann man auch an Funktionen \"ubergeben.
 
 Strukturen k\"onnen nicht auf sich selbst verweisen, da es ansonsten eine endlosen Rekursion darstellen w\"urde. Des weiteren k\"onnen keine Werte bei der Definition einer Struktur angegeben werden.
 
@@ -213,9 +213,9 @@ Point p;
 
 \subsubsection{Arrays}
 
-Arrays sind Felder von Datentypen, wobei ein einzelnes Feld mithilfe eines sogenannten Index spezifiziert werden kann.
+Arrays sind Felder von Datentypen, wobei ein einzelnes Feld mithilfe eines sogenannten Index abgerufen werden kann.
 
-Falls ein Array in einer Funktion definiert wird, kann diesem ein Initialisierungswert zugewiesen werden, welcher das Array mit definierten Werten f\"ullt.
+Falls ein Array in einer Funktion definiert wird, kann diesem ein Initialisierungswert zugewiesen werden, welcher das Array mit definierten Werten f\"ullt. Ansonsten gelten die einzelnen Arrayelemente als undefiniert, und m\"ussen vor einem Lesevorgang mit einem Wert initialisiert werden.
 
 \begin{lstlisting}[language=CMM]
 char cArr[10];
@@ -233,11 +233,11 @@ int arr2[10] {3};	// fill all elements with 3
 
 \subsubsection{Typumwandlung}
 
-Es ist m\"oglich Datentypen in einen anderen Umzuwandeln. Dies kann einerseits implizit geschehen, oder muss explizit angegeben werden. Es ist nicht m\"oglich jeden Datentyp in jeden anderen umzuwandeln. Strukturen und Arrays können bis auf besondere ausnahmef\"alle nicht umgewandelt werden.
+Es ist m\"oglich Datentypen in einen anderen umzuwandeln. Dies kann einerseits implizit geschehen, oder muss explizit angegeben werden. Es ist nicht m\"oglich jeden Datentyp in jeden anderen umzuwandeln. Strukturen und Arrays können bis auf besondere Ausnahmef\"alle nicht umgewandelt werden.
 
 \htlParagraph{Implizite Typumwandlung}
 
-Bei der Impliziten Typumwandlung wird diese automatisch w\"ahrend des Compiliervorganges durchgef\"urt.
+Bei der impliziten Typumwandlung wird diese automatisch w\"ahrend des Compiliervorganges durchgef\"urt.
 
 \begin{lstlisting}[language=CMM]
 float f = 1 + 2.5; // 1 is implicit converted to float
@@ -245,7 +245,7 @@ float f = 1 + 2.5; // 1 is implicit converted to float
 
 \htlParagraph{Explizite Typumwandlung}
 
-Die explizite Typumwandlung ist besonders dann notwendig, falls ein Datentyp in einen anderen umgewandelt werden muss, welcher weniger Daten speichern kann als sein Ursprungstyp.
+Die explizite Typumwandlung ist besonders dann notwendig, falls ein Datentyp in einen anderen umgewandelt werden muss, und dieser weniger Informationen speichern kann als sein Ursprungstyp.
 
 \begin{lstlisting}[language=CMM]
 char ch = (char)48; // explicite conversation of int to char
@@ -266,7 +266,7 @@ int library foo(int a, int b[], int &c) {
 
 \subsubsection{Vorw\"artsdeklarationen}
 
-Vorw\"artsdeklarationen werden ben\"otigt wenn auf eine Funktion zugegriffen werden muss, bevor diese vollst\"andig inklusive interner Logik Deklariert wurde. Dabei wird die Funktionsdeklaration kopiert, und anstatt mit geschwungenen Klammern und der Funktionslogik, nur mit einem Strichpunkt abgeschlossen.
+Vorw\"artsdeklarationen werden ben\"otigt wenn auf eine Funktion zugegriffen werden muss, bevor diese vollst\"andig deklariert wurde. Folglich kann auch eine Funktion nicht auf sich selbst zugreifen, solange keine Vorw\"artsdeklaration verwendet wird. Dabei wird die Funktionsdeklaration kopiert, und anstatt mit geschwungenen Klammern und der Funktionslogik, nur mit einem Strichpunkt abgeschlossen.
 
 \begin{lstlisting}[language=CMM]
 int foo(int a); // forward declaration
@@ -280,7 +280,7 @@ int foo(int a) {
 
 Wenn eine Funktion vorzeitig verlassen werden soll, wird dies mit einem return implementiert. Dabei muss auch ein Wert angegeben werden, welcher als R\"uckgabetyp definiert wurde. Bei void Funktionen wird ein return ohne Variable angegeben.
 
-Jede Funktion mit Ausnahme von void Funktionen m\"ussen mit einem return Beendet werden. Falls dies nicht der Fall ist kommt es zu einen Laufzeitfehler.
+Jede Funktion mit Ausnahme von void Funktionen m\"ussen mit einem return beendet werden. Falls dies nicht der Fall ist kommt es zu einen Laufzeitfehler.
 
 \begin{lstlisting}[language=CMM]
 void foo(int a) {
@@ -312,7 +312,7 @@ char c = read();
 
 \htlParagraph{printf}
 
-Diese Funktion implementiert eine einfache printf Funktion, wie sie auch in C vorhanden  ist. Da diese Funktion eine nicht festgelegte Anzahl von \"ubergabeparamter besitzt, was C-Compact eigentlich nicht unterst\"utzt, ist diese zu den Basisfunktionen hinzugef\"ugt worden.
+Diese Funktion implementiert eine einfache printf Funktion, wie sie auch in C vorhanden  ist. Da diese Funktion eine nicht festgelegte Anzahl von \"Ubergabeparamter besitzt, was C-Compact eigentlich nicht unterst\"utzt, ist diese zu den Basisfunktionen hinzugef\"ugt worden.
 
 F\"ur jeden Platzhalter im String muss ein Argument angegeben werden, ansonsten kommt es zu einem Laufzeitfehler.
 
@@ -322,7 +322,7 @@ printf('a= %d, b=%f\n', 10, 2.2);
 
 \subhtlParagraph{Platzhalter}
 
-Ein Platzhalter definiert ein Variable welche in einem spezifizierten Ausgabeformat ausgegeben wird. 
+Ein Platzhalter definiert eine Variable welche in einem spezifizierten Ausgabeformat ausgegeben wird. 
 
  \begin{tabular}{l | l}
   Typ & Platzhalter \\
@@ -369,7 +369,7 @@ __assert__(false, "some error occured");
 \newpage
 \subsection{Operatoren}
 
-C-Compact unterst\"utzt alle Standardoperatoren wie Plus, Minus, aber auch Stiftoperatoren und binäre Operatoren. Zu beachten ist dass Logische Operatoren nur in Bedingungen genutzt werden k\"onnen, nicht aber in normalen Ausdr\"ucken. Es gilt Punkt vor Strich vor Shift vor bitweise Operatoren. Diese Reihenfolge kann nat\"urlich mit Klammern ver\"andert werden.
+C-Compact unterst\"utzt alle Standardoperatoren wie Plus, Minus, aber auch Shiftoperatoren und binäre Operatoren. Zu beachten ist dass logische Operatoren nur in Bedingungen genutzt werden k\"onnen, nicht aber in normalen Ausdr\"ucken. Es gilt Punkt vor Strich vor Shift vor bitweise Operatoren. Diese Reihenfolge kann nat\"urlich mit Klammern ver\"andert werden.
 
 \begin{lstlisting}[language=CMM]
  a = ((5 + 2 - 3) / 4) << 2; // a = 4
@@ -424,7 +424,7 @@ Kontrollstrukturen\footnote{\url{https://de.wikipedia.org/wiki/Kontrollstruktur}
 
 \subsubsection{Bedingung (if-else)}
 
-Bedingungen\footnote{\url{https://de.wikipedia.org/wiki/Bedingte_Anweisung_und_Verzweigung}} werden genutzt um Aktionen durchzuf\"uhren wenn eine Bedingung erf\"ullt oder nicht erf\"ullt ist. Das else ist dabei Optional, und wenn nur 1. Befehl ausgef\"urht wird, kann die Klammer weggelassen werden.
+Bedingungen\footnote{\url{https://de.wikipedia.org/wiki/Bedingte_Anweisung_und_Verzweigung}} werden genutzt um Aktionen durchzuf\"uhren wenn eine Bedingung erf\"ullt oder nicht erf\"ullt ist. Das else ist dabei Optional, und wenn nur 1 Befehl ausgef\"uhrt wird, k\"onnen die geschwungenen Klammern weggelassen werden.
 
 \htlParagraph{Beispiel}
 
