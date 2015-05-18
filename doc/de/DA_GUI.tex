@@ -22,6 +22,8 @@
 %	########################################################
 \pagenumbering{roman}	% Beginn mit römischen Seitenzahlen
 
+\tableofcontents
+
 %	--------------------------------------------------------
 % 	Deckblatt
 %	--------------------------------------------------------			
@@ -75,13 +77,13 @@
 \pagenumbering{arabic}	% Beginn mit arabischen Seitenzahlen
 
 \input{./chapters/gui/gui.tex}
-%\input{./chapters/gui/gui-main.tex}
+\input{./chapters/gui/gui-main.tex}
 
-%\input{./chapters/gui/debugger/0-debugger.tex}
+\input{./chapters/gui/debugger/0-debugger.tex}
 
 \input{./chapters/gui/sci/0-sci.tex}
 
-%\input{./chapters/gui/versions.tex}
+\input{./chapters/gui/versions.tex}
 
 
 %	--------------------------------------------------------
@@ -130,6 +132,8 @@
 %	########################################################
 \appendix
 \renewcommand{\thechapter}{\Alph{chapter}} 
+
+\includepdf{./media/docs/Fragebogen-gui.pdf}
 %%%\setcounter{chapter}{0}
 
 %	--------------------------------------------------------

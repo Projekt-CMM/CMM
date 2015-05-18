@@ -11,6 +11,7 @@
 %   --------------------------------------------------------
 
 \subsection{Die grundlegende Idee}
+\label{sec:deb-idea}
 Ein wichtiger Bestandteil von C Compact ist der integrierte Debugger, der speziell für die Bedürfnisse von Anfängern ausgelegt ist. Während das Programm Schritt für Schritt abgearbeitet wird, sind alle Variablen und der Call Stack in übersichtlicher Form dargestellt. In der Variablentabelle werden Wertänderungen farbig hervorgehoben. Dadurch soll ein fundiertes Verständnis für den Programmablauf und die Logik dahinter entstehen.
 
 \begin{figure}[h]
@@ -30,17 +31,13 @@ Abbildung \ref{fig:deb-intro-m1} zeigt die vier Komponenten des Debuggers in der
 \item Ein- und Ausgabe des laufenden Programmes befinden sich in getrennten Textfeldern, eingelesene Zeichen werden gelb markiert.
 \end{enumerate}
 
-%TODO somewhere else:
-% Fehler im Präprozessor, Compiler oder Interpreter werden dem Benutzer übersichtlich angezeigt und verständlich erklärt. Außerdem werden Hinweise zur Fehlersuche und -behebung gegeben.
-%TODO ref: nicht verwechseln mit internen Fehlern
-
 %   --------------------------------------------------------
 %   Bedienung des Debuggers
 %   --------------------------------------------------------
 
 \subsection{Bedienung des Debuggers}
-
-Mit den Kontrollelementen kann der Debugger intuitiv und einfach bedient werden. Die Bedienelemente (Abbildung \ref{fig:deb-gui-ctrl}) sind im rechten Teil des Hauptfensters im Tab \glqq{}Debug\grqq{} (Siehe Kapitel \ref{sec:gui-main-right-reg-deb}) zu finden.
+\label{sec:deb-use}
+Mit den Kontrollelementen kann der Debugger intuitiv und einfach bedient werden. Die Bedienelemente (Abbildung \ref{fig:deb-gui-ctrl}) sind im rechten Teil des Hauptfensters im Tab \glqq{}Debug\grqq{} (siehe Kapitel \ref{sec:gui-main-right-reg-deb}) zu finden.
 
 \def\arraystretch{1.4}
 \begin{table}[h]
@@ -66,7 +63,7 @@ Mit den Kontrollelementen kann der Debugger intuitiv und einfach bedient werden.
 \label{fig:deb-gui-ctrl}
 \end{figure}
 
-Der Debugger hat vier unterschiedliche Modi, die im linken Teil des Hauptfensters durch eine Zustandsanzeige visualisiert werden (Siehe Kapitel \ref{sec:gui-main-left-zust}). Der Wechsel zwischen diesen Zuständen erfolgt durch Eingaben des Benutzers, entweder mit den Kontrollelementen (Buttons) in der Benutzeroberfläche, oder mit Keyboard Shortcuts.
+Der Debugger hat vier unterschiedliche Modi, die im linken Teil des Hauptfensters durch eine Zustandsanzeige visualisiert werden (siehe Kapitel \ref{sec:gui-main-left-zust}). Der Wechsel zwischen diesen Zuständen erfolgt durch Eingaben des Benutzers, entweder mit den Kontrollelementen (Buttons) in der Benutzeroberfläche, oder mit Keyboard Shortcuts.
 %TODO ref keyboard shortcuts
 
 Die vier Zustände sind:
@@ -114,11 +111,9 @@ Das Programm des Benuters wird Schritt für Schritt abgearbeitet. Zwischen den B
 
 %Obwohl der Debugger selbst zwischen Modus Editormodus (1) und Fehlermodus (2) unterscheidet, gibt es in der Benutzeroberfläche nur mehr den Editormodus. Der Fehlermodus wird trotzdem im Zustandspanel des Debuggers im Hauptfenster angezeigt, damit der Benutzer auf den aufgetretenen Fehler aufmerksam gemacht wird. Wie in Abbildung \ref{fig:deb-zust-simple} ersichtlich ist, erfüllen die beiden Modi die selben Funktionen.
 
-Der Pausemodus (3) hat zwei Funktionen: einerseits entspricht dieser Modus einer Pausierung (bezogen auf Zustand 4, in dem der Debugger automatisch durchläuft) und andererseits kann in diesem Modus mit dem mittleren Button auch direkt zum nächsten Schritt gesprungen werden.
+Der Pausemodus (3) hat zwei Funktionen: einerseits entspricht dieser Modus einer Pausierung (bezogen auf Zustand 4, in dem der Debugger automatisch durchläuft) und andererseits kann in diesem Modus mit dem \glqq{}Nächster Schritt\grqq{} Button auch direkt zum nächsten Befehl gesprungen werden.
 
 Ein Sonderfall des run mode ist der \glqq{}quick run mode\grqq{}. Wenn der Regler für die Zeitabstände zwischen den Schritten des Debuggers auf null gestellt wird, werden die folgenden Schritte so schnell wie möglich abgearbeitet, bis entweder das Programm zu Ende ist oder der Debugger auf einen \glqq{}wait\grqq{}-Befehl stößt.
-
-%TODO ref commands
 
 %   --------------------------------------------------------
 %   Schlüsselwörter
@@ -126,13 +121,11 @@ Ein Sonderfall des run mode ist der \glqq{}quick run mode\grqq{}. Wenn der Regle
 
 \subsection{Schlüsselwörter}
 %TODO ref compiler
-%TODO ref panelRunListener
 In der Sprache von C Compact gibt es zwei spezielle Schlüsselwörter, die Einfluss auf das Verhalten des Debuggers nehmen: \textbf{wait} und \textbf{library}.
 
 \subsubsection*{wait}
 %TODO ref AST
-%TODO check version number, ref versions
-In C Compact gibt es seit der Verion 1.2 keine Breakpoints als Option in der Benutzeroberfläche mehr. Anstatt dessen wird der Befehl \textbf{wait} verwendet. Dieser Befehl kann in jeder Funktion verwendet werden. Stößt der Debugger diesen Befehl, geht er in den \textbf{Pausemodus}. An dieser Stelle kann der Debugger dann entweder Schritt für Schritt, oder wieder im automatischen Debugmodus fortgesetzt werden.
+In C Compact gibt es seit der Version Alpha 1.2 keine Breakpoints als Option in der Benutzeroberfläche mehr. Anstatt dessen wird der Befehl \textbf{wait} verwendet. Dieser Befehl kann in jeder Funktion verwendet werden. Stößt der Debugger diesen Befehl, geht er in den \textbf{Pausemodus}. An dieser Stelle kann der Debugger dann entweder Schritt für Schritt, oder wieder im automatischen Debugmodus fortgesetzt werden.
 
 \begin{lstlisting}[language=CMM]
 wait;
@@ -141,7 +134,6 @@ wait;
 Durch die Umsetzung der Breakpoint-Funktion als Befehl in der Sprache besteht immer ein klarer Zusammenhang zwischen Aktionen des Debuggers und dem Quelltext.
 
 \subsubsection*{library}
-%TODO read this paragraph
 Funktionen und Variablen können vor dem Debugger \glqq{}versteckt\grqq{} werden. Das Attribut \textbf{library} kann sowohl für eine Variable, als auch für eine Funktion verwendet werden. Das Schlüsselwort muss immer zwischen Typ und Name der Variable bzw. Funktion stehen.
 
 \begin{lstlisting}[language=CMM]

@@ -12,7 +12,7 @@
 
 \subsection{Interfaces}
 \label{sec:deb-impl-interfaces}
-Für die Kommunikation mit dem Interpreter sind zwei Interfaces wichtig. Im Package \textbf{at.jku.ssw.cmm.debugger} befinden sich das Interface \textbf{Debugger} und das Interface \textbf{StdInOut}. Die benötigten Methoden sind in zwei Interfaces aufgeteilt, da sie unterschiedliche Teile der Benutzeroberfläche betreffen. Bei einfacheren Anwendungen des Interpreters, wie etwa beim Testen von Quests, werden aber beide Interfaces in der selben Klasse implelemtiert.
+Für die Kommunikation mit dem Interpreter sind zwei Interfaces wichtig. Im Package \textbf{at.jku.ssw.cmm.debugger} befinden sich das Interface \textbf{Debugger} und das Interface \textbf{StdInOut}. Die benötigten Methoden sind in zwei Interfaces aufgeteilt, da sie unterschiedliche Teile der Benutzeroberfläche betreffen. Bei einfacheren Anwendungen des Interpreters, wie etwa beim Testen von Quests, werden beide Interfaces in der selben Klasse implelemtiert.
 %TODO ref quest test
 
 Über das Interface \textbf{Debugger} übergibt der Interpreter jeweils den aktuellen Knoten im abstrakten Syntaxbaum. In der Methode \textbf{step} werden außerdem eine Liste der Variablen, die im letzten Schritt ausgelesen wurden und eine Liste der Variablen, die im letzten Schritt geändert wurden übergeben. Die geänderten Variablen werden in der Variablenliste im Hauptfenster gelb markiert. Es ist möglich, dass in einem Schritt mehrere Variablen geändert werden, da mit dem Befehl \textbf{library} eine ganze Funktion auf einmal abgearbeitet werden kann.
@@ -25,7 +25,7 @@ public interface Debugger {
 
 Die Methode \textbf{step} muss \textbf{true} zurückgeben, ansonsten bricht der Interpreter ab. Auf diese Weise kann der Interpreter beendet werden.
 
-Das Interface \textbf{StdInOut} enthält Methoden zur Ein- und Ausgabe im Programm. Die Methode \textbf{in} kann eine \textbf{RunTimeException} verursachen, um den Interpreter anzuhalten, wenn keine Eingabedaten vorhanden sind. Die Methode \textbf{out} übergibt einfach das Zeichen, das ausgegeben werden soll.
+Das Interface \textbf{StdInOut} enthält Methoden zur Ein- und Ausgabe im Programm. Die Methode \textbf{in} kann eine \textbf{RunTimeException} verursachen, um den Interpreter anzuhalten, wenn keine Eingabedaten vorhanden sind. Die Methode \textbf{out} übergibt das Zeichen, das ausgegeben werden soll. Siehe auch Kapitel \ref{sec:gui-main-left-io}.
 
 \begin{lstlisting}[language=JAVA]
 public interface StdInOut {
@@ -83,7 +83,7 @@ public void setNotRunning() {
 \end{lstlisting}
 
 %TODO keep code ref up to date
-Die Klasse \textbf{CMMrun} erbt von der Klasse Thread\footnote{https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.html}. Ein neuer Thread wird gestartet, indem die Methode \textbf{start()}, die von der Klasse Thread vererbt wurde, aufgerufen wird (Siehe erstes Codebeispiel dieses Abschnitts, Zeile 17). Der Thread führt dann die Methode \textbf{run()} aus, die ebenfalls vererbt wird und in der Kindklasse überschrieben werden muss.
+Die Klasse \textbf{CMMrun} erbt von der Klasse Thread\footnote{https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.html}. Ein neuer Thread wird gestartet, indem die Methode \textbf{start()}, die von der Klasse Thread vererbt wurde, aufgerufen wird (siehe erstes Codebeispiel dieses Abschnitts, Zeile 17). Der Thread führt dann die Methode \textbf{run()} aus, die ebenfalls vererbt wird und in der Kindklasse überschrieben werden muss.
 \begin{lstlisting}[language=JAVA]
 @Override
 public void run() {
@@ -116,6 +116,7 @@ public void run() {
 Ein Thread wird beendet, indem die Methode \textbf{run} verlassen wird. Dies ist die einfachste und sicherste Möglichkeit einen Thread zu stoppen. Wenn der Thread von Außen beendet wird, kann nicht sichergestellt werden, dass er zu dieser Zeit nicht gerade auf eine Variable zugreift und durch den Abbruch einen Schreibprozess nicht abschließen kann.
 
 \subsection{Probleme beim Arbeiten mit Threads}
+\label{sec:deb-impl-thread-problems}
 Das Verwenden mehrerer Threads erfordert generell Vorsicht; vor Allem wenn eine Variable oder eine Referenz von mehreren Threads verwendet wird können unerwartete Komplikationen auftreten.
 
 %TODO ref "Sprechen Sie Java?"
@@ -126,7 +127,6 @@ Es kann auch vorkommen, dass ein Thread eine Variable ausliest, bevor sie durch 
 Um Variablen und Instanzen in mehreren Threads zu verweden, gibt es --- je nach Anwendungsfall --- unterschiedliche Möglichkeiten:
 
 \subsubsection*{volatile}
-%TODO ist "inskonsistener Speicher" korrekt?, "threadübergreifenden"?
 Für alle Variablen und Referenzen, die zusätzlich mit dem Schlüsselwort $\textbf{volatile}\footnote{https://docs.oracle.com/javase/tutorial/essential/concurrency/atomic.html}$ deklariert werden, werden Lese- und Schreibvorgänge in einem Schritt ausgeführt (die Operation ist nicht unterbrechbar, also atomar\footnote{http://www.angelikalanger.com/Articles/EffectiveJava/42.JMM-volatileIdioms/42.JMM-volatileIdioms.html}). Dadurch werden Threadinterferenzen vermieden, allerdings sind Probleme durch Speicherinkonsistenz immer noch möglich.
 Ein Zugriff auf eine mit \textbf{volatile} deklarierte Variable ist dafür schneller als ein Zugriff über eine \textbf{synchronzied}-Methode (siehe unten).
 
@@ -193,19 +193,17 @@ public void doSomething() {
 }
 \end{lstlisting}
 
-%TODO is this correct?
 Dem \textbf{synchronized}-Block muss ein sogenanntes \glqq{}Monitor Object\grqq{} übergeben werden. Dieses Objekt fungiert als \glqq{}Lock\grqq{} (Schloss) für diesen \textbf{synchronized}-Block. Ein Thread erhält nur über dieses Objekt Zugriff auf einen geschützten Block. Will ein anderer Thread auf diesen Block zugreifen, muss er warten, bis das \glqq{}Schloss\grqq{} freigegeben ist.
 
 Grundsätzlich kann jedes beliebige Objekt diese Funktion übernehmen; in den meisten Fällen bietet sich aber \textbf{this} an, da dies auch von \textbf{synchronized}-Mothoden verwendet wird. Werden verschiedene Lock-Objekte verwendet, können diese auch gleichzeitig vergeben werden --- Zugriffe durch mehrere Threads sind dann wieder möglich.
 
 \subsection{Mehrere Threads in Swing}
 
-Objekte, die Teile der Benutzeroebrfläche sind, sollten niemals von einem anderen Thread  als dem EDT aus initialisiert oder verändert werden. Dies betrifft Objekte und Instanzen von Klassen aus der AWT- oder Swing-Bibliothek oder daraus abgeleiteten Klassen.%TODO dat grammatics
+Objekte, die Teile der Benutzeroberfläche sind, sollten niemals von einem anderen Thread  als dem EDT aus initialisiert oder verändert werden. Dies betrifft Objekte und Instanzen von Klassen aus der AWT- oder Swing-Bibliothek oder daraus abgeleiteten Klassen.%TODO dat grammatics
 
 Um von einem anderen Thread aus ein Swing-Objekt zu verändern, muss dieser Teil des Quellcodes in den Event Dispatch Thread eingereiht werden. Dafür gibt es zwei Möglichkeiten:
 
 \subsubsection*{Asynchroner Aufruf}
-%TODO kann man hier "Methode" sagen?
 Meistens sollte die Methode \textbf{invokeLater()}\footnote{http://docs.oracle.com/javase/7/docs/api/javax/swing/SwingUtilities.html\#invokeLater\%28java.lang.Runnable\%29} verwendet werden.
 \begin{lstlisting}[language=JAVA]
 java.awt.EventQueue.invokeLater(new Runnable() {
@@ -214,7 +212,6 @@ java.awt.EventQueue.invokeLater(new Runnable() {
 	}
 });
 \end{lstlisting}
-	%TODO is this a nested class???
 	Als Parameter wird der Methode invokeLater() ein Objekt des Interfaces \textbf{Runnable}\footnote{http://docs.oracle.com/javase/7/docs/api/java/lang/Runnable.html} übergeben. Das Interface Runnable wird verwendet, um Instanzen oder Methoden in einem Thread auszuführen. Die Klasse Thread selbst implementiert Runnable ebenfalls. Von Runnable abgeleitete Klassen müssen die Methode \textbf{run()} implementieren.
 	
 	Bei der Verwendung von invokeLater() wird die Methode run() in die Eventliste des Event Dispatch Threads eingereiht. Wenn alle zuvor registrierten Events abgearbeitet wurden, wird diese Methode ausgeführt. Man spricht hier auch von einem \textbf{asynchronen} Aufruf, da die Methode etwas später aufgerufen wird und der Thread, der diese Methode initialisiert hat, möglicherweise bereits andere Programmteile abarbeitet.
@@ -222,7 +219,7 @@ java.awt.EventQueue.invokeLater(new Runnable() {
 	Unter den meisten Umständen ist diese Implementierung geeignet, da der Benutzer den Zeitunterschied zwischen Initialisierung des Runnable-Objektes und Änderung in der Benutzeroberfläche nicht wahrnehmen kann. 
 	
 \subsection*{Synchroner Aufruf}
-Es gibt allerdings auch Anwendungsfälle, die eine \textbf{synchrone} Aktualisierung der Benutzeroberfläche erfordern. Ein Beispiel ist das Textfeld für Eingabedaten im Hauptfenster von C Compact (Siehe Kapitel \ref{sec:gui-main-left-io}). Wenn der Debugger sehr schnell mehrere Lesebefehle hintereinander ausführt, können bei asynchroner Aktualisierung der Benutzeroberfläche Probleme auftreten, indem ein weiteres Zeichen abgelesen wird während das vorhergehende noch nicht als gelesen markiert wurde (Speicherinkonsistenz). Deshalb wird das Eingabedatenfeld während des Debuggen immer synchron aktualisiert.
+Es gibt allerdings auch Anwendungsfälle, die eine \textbf{synchrone} Aktualisierung der Benutzeroberfläche erfordern. Ein Beispiel ist das Textfeld für Eingabedaten im Hauptfenster von C Compact (siehe Kapitel \ref{sec:gui-main-left-io}). Wenn der Debugger sehr schnell mehrere Lesebefehle hintereinander ausführt, können bei asynchroner Aktualisierung der Benutzeroberfläche Probleme auftreten, indem ein weiteres Zeichen abgelesen wird während das vorhergehende noch nicht als gelesen markiert wurde (Speicherinkonsistenz). Deshalb wird das Eingabedatenfeld während des Debuggen immer synchron aktualisiert.
 \begin{lstlisting}[language=JAVA]
 java.awt.EventQueue.invokeAndWait(new Runnable() {
 	public void run() {
@@ -250,27 +247,23 @@ java.awt.EventQueue.invokeAndWait(new Runnable() {
 %   Abarbeiten von Schritten
 %   --------------------------------------------------------
 
-%TODO is ref to leftpanel->io necessary???
 \subsection{Abarbeiten von Knoten im Abstrakten Syntaxbaum}
-Die Schnittstelle zwischen Benutzeroberfläche und Interpreter bildet die Klasse \textbf{PanelRunListener} im Packet \textbf{at.jku.ssw.cmm.gui.event.debug}. Sie implementiert einerseits das Interface \textbf{Debugger} (Siehe Kapitel \ref{sec:deb-impl-interfaces}) zum Ausführen von Schritten des Debuggers, andererseits enthält sie Listener für Bedienelemente des Debuggers und den zugehörigen Hotkeys. Außerdem wird hier festgelegt und gespeichert, in welchem Modus sich der Debugger befindet.
-%TODO red ctrl-elements, mode
+Die Schnittstelle zwischen Benutzeroberfläche und Interpreter bildet die Klasse \textbf{PanelRunListener} im Package \textbf{at.jku.ssw.cmm.gui.event.debug}. Sie implementiert einerseits das Interface \textbf{Debugger} (siehe Kapitel \ref{sec:deb-impl-interfaces}) zum Ausführen von Schritten des Debuggers, andererseits enthält sie Listener für Bedienelemente des Debuggers und den zugehörigen Hotkeys. Außerdem wird hier festgelegt und gespeichert, in welchem Modus sich der Debugger befindet.
+%TODO ref ctrl-elements, mode
 
 %TODO ref interpreter, ast
 Die einzelnen Schritte im Abstrakten Syntaxbaum werden mit der Methode \textbf{step()} übergeben. Diese Methode wird vom thread des Interpreters aufgerufen und wie folgt abgearbeitet:
 
 \begin{enumerate}
 \item Ist der Knoten ein \textbf{wait}-Befehl, wird der Debugger in den \textbf{Pausemodus} versetzt.
-%TODO ref wait, pause
-\item Ist der Knoten eine Funktionsrückgabe, wird ein Popup im Sourcecode mit dem Rückgabewert angezeigt (falls diese Funktion aktiviert ist).
-%TODO ref return popup, properties
-\item Befindet sich der Debugger im \textbf{Schnelldurchlauf} (keine Verzögerung), wird der Thread des Interpreters nur eine Millisekunde lang verzögert. Danach wird die Methode verlassen.
+\item Ist der Knoten eine Funktionsrückgabe, wird --- sofern diese Funktion aktiviert ist --- ein Popup im Sourcecode mit dem Rückgabewert angezeigt (siehe Kapitel \ref{sec:deb-popup}).
+\item Befindet sich der Debugger im \textbf{Schnelldurchlauf} (minimale Verzögerung), wird der Thread des Interpreters nur eine Millisekunde lang verzögert. Danach wird die Methode verlassen.
 \begin{lstlisting}[language=JAVA]
 Thread.sleep(1);
 \end{lstlisting}
 Diese Verzögerung ist notwendig, damit die Benutzeroberfläche zwischen den einzelnen Schritten des Interpreters Zeit hat, auf Events zu reagieren.
 
 \item Aktualisierung der Benutzeroberfläche: Die Tabelle mit den Variablen wird aktualisiert, die aktuelle Zeile im Quelltext wird markiert.
-%TODO ref treetable
 \begin{lstlisting}[language=JAVA]
 /* --- Variable table update --- */
 this.master.updateVariableTables(Memory.getFramePointer() != this.lastAdress);
@@ -302,8 +295,6 @@ waitForUserReply();
 		
 this.timer = null;
 \end{lstlisting}
-Die Methode \textbf{waitForUserReply} hält den Thread des Interpreters an, bis die Methode \textbf{userReply} aufgerufen wird. Dies kann --- je nach Modus --- entweder durch den Timer oder durch eine Eingabe in der Benutzeroebrfläche geschehen.
+Die Methode \textbf{waitForUserReply} hält den Thread des Interpreters an, bis die Methode \textbf{userReply} aufgerufen wird. Dies kann --- je nach Modus --- entweder durch den Timer oder durch eine Eingabe in der Benutzeroberfläche geschehen.
 \end{enumerate}
-
-
 
