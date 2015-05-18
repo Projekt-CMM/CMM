@@ -9,4 +9,22 @@
 %	--------------------------------------------------------
 \section{Git}
 
+Git\footnote{\url{https://de.wikipedia.org/wiki/Git}} ist eine dezentrales Versionsverwaltungssystem\footnote{\url{https://de.wikipedia.org/wiki/Versionsverwaltung}} welches urspr\"unglich f\"ur die Entwicklung des Linux-Kernels entwickelt wurde. Es geh\"ort zu den meistgenutzten Systemen in der OpenSource Softwareentwicklung, da es gegen\"uber zentralen Versionsverwaltungssystemen diverse Vorteile besitzt:
+
+\begin{itemize}
+  \item kein zentraler Server notwendig
+  \subitem Versionshistory ist lokal verf\"ugbar
+  \subitem Alle Operationen sind lokal
+  \item Kryptographische Sicherheit der Projektgeschichte
+  \item Gute Performance
+\end{itemize}
+
+Nachteilig ist, dass es zu Merge-Konflikten kommen kann, wenn mehrere Personen die gleiche Datei ver\"andert haben, und diese von Git nicht automatisch miteinander Verschmolzen werden kann. In diesem Fall muss dies manuell durchgef\"uhrt werden. Bei einer Zentralen Versionsverwaltung w\"are dies nicht m\"oglich, da dort nur jeweils 1. Person pro Datei arbeiten darf.
+
+Wir haben uns f\"ur Git entschieden, da wir einerseits durch die Dezentralit\"at gleichzeitig, auch ohne Internetverbindung an dem Projekt arbeiten k\"onnen. Des Weiteren wird uns die M\"oglichkeit gegeben Quellcode\"anderungen mehrerer Personen zu Mergen, sobald eine Funktion ausreichend stabil ist.
+
+\subsection{Grundlegende Funktionsweise}
+
+Bei git besitzt jeder Programmierer ein eigenes Repository, auf welchem er \"anderen commitet. Diese k\"onnen dann gesammelt auf einen Zentrales Repository geladen werden, welche den aktuellen Projektstand repr\"asentiert.
+
 \subsection{Github}
