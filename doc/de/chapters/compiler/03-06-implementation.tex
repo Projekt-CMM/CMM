@@ -109,18 +109,183 @@ Node  Condition() {
 
 \subsubsection{Node.java}
 
-\subsubsection{Obj.java}
+Der Abstrakte Syntaxbaum wird aus einzelnen Nodes aufgebaut, welche sich Baumartig verkn\"upfen lassen. In unserer Implementierung verwenden wir einen homogenen Syntaxbaum, in welchem je nach Knotentyp unterschiedliche Daten gespeichert werden.
 
-\subsubsection{Compiler.java}
+Jeder Knoten ist von einer speziellen Art, welcher mithilfe einer Nummer definiert wurde. So gibt es einen eigenen Knoten f\"ur eine Variable, ein Bitweises UND oder eines Index. Im Interpreter werden die gleichen Arten von Knoten verwendet, um dann das Programm korrekt zu durchlaufen. Die Werte von Konstanten werden direkt in einem Node gespeichert, Variablen dagegen erhalten einen Verweis auf das dementsprechende Objekt wo diese definiert wurde.
 
-\subsubsection{Error.java}
+\begin{lstlisting}[language=Java]
+public int kind;        // STATSEQ, ASSIGN, ...
+public Struct type;     // only used in expressions
+public int line;        // only used in statement nodes
+public int col;         // only used in statement nodes
+public int colLength;
 
-\subsubsection{NodeList.java}
+public Node left;       // left son
+public Node right;      // right son
+public Node next;       // for linking statements, parameters,.
+
+public Obj obj;         // object node of an IDENT
+public int val;         // value of an INTCON or CHARCON
+public float fVal;      // value of a FLOATCON
+\end{lstlisting}
 
 \subsubsection{Scope.java}
 
-\subsubsection{Strings.java}
+Die Symboltabelle basiert auf mehreren Ebenen, welche unterschiedliche logische Ebenen eines Programmes repr\"asentieren, aus dessen es aufgebaut ist.
+
+Als unterste Ebene gibt es den Universe-Scope, in welchem alle Standardtypen wie auch Standardfunktionen definiert sind. Diese stellen elementare Elemente einer Programmiersprache dar, welche immer verf\"ugbar sind.
+
+Dar\"uber gibt es den Global-Scope, in welchem globale Variablen wie auch Prozeduren deklariert sind. Wenn eine Prozedur deklariert wird, wird tempor\"ar ein Local-Scope erstellt, in dem die Variablen deklariert werden. Wenn die Funktion fertig deklariert wurde, wird dessen Inhalt in das Funktionsobjekt kopiert und der Scope geschlossen.
+
+Bei der Namensaufl\"osung von Variablen wird immer zuerst der aktuelle Scope durchsucht, und wenn die suche erfolglos ist der darunterliegende Scope, und wenn die Suche wieder erfolglos ist wieder der n\"achste scope. Dadurch ist es m\"oglich Variablen mit gleichem Namen als globale Variable wie auch als Funktionsvariable zu deklarieren.
+
+\begin{lstlisting}[language=Java]
+public class Scope {
+	public Scope outer;  // to outer scope
+	public Obj   locals; // to local variables of this scope
+	public int   size;   // total size of variables in this scope
+}
+\end{lstlisting}
+
+\subsubsection{Obj.java}
+
+Ein Objektnode wird dazu verwendet definierte Konstanten, Variablen, Typen und Funktionen in die Symboltabelle einzutragen. Dabei wird bei Variablen zum Beispiel gespeichert welchen Offset diese zum FramePointer haben, oder von welchem Typ diese ist.
+
+Bei Prozeduren gibt es eine Referenz zu dem dahinter liegenden Abstrakten Syntaxbaum, welcher durchlaufen wird wenn die Funktion aufgerufen wird. Auch wird vermerkt wie viel Speicher allokiert werden muss, um alle Variablen im Stack speichern zu k\"onnen, oder wie viele Variablen Funktionsargumente darstellen.
+
+\begin{lstlisting}[language=Java]
+public int     kind;      // CON, VAR, TYPE, PROC
+public String  name;      // object name
+public Struct  type;      // object type
+public Obj     next;      // next local object in this scope
+public boolean library;   // is this Obj a library function?
+
+public int     val;       // CON: int or char value
+public float   fVal;      // CON: float value
+
+public int     adr;       // VAR: address
+public int     level;     // VAR: declaration level
+public boolean isRef;     // VAR: ref parameter
+	
+public int     line;      // VAR, CON: line of declaration
+
+public Node    ast;       // PROC: AST of this procedure
+public int     size;      // PROC: frame size in bytes
+public int     nPars;     // PROC: number of formal parameters
+public Obj     locals;    // PROC: parameters and local objects
+public boolean isForward; // PROC: is it a forward declaration
+\end{lstlisting}
+
 
 \subsubsection{Struct.java}
 
+Die grundlegenden Eigenschaften von Datentypen werden in dem Objekt Struct definiert. Dabei handelt es sich um Informationen wie der Art des Typs, dessen Gr\"ose, und bei zusammengesetzte Datentypen auch weiterf\"urende Informationen wie alle Definierten Variablen einer Struktur oder den Grundlegenden Datentyp eines Arrays (welcher wiederum ein Array sein kann).
+
+\begin{lstlisting}[language=Java]
+public int    kind;       // NONE, INT, FLOAT, CHAR, ARR, ...
+public int    size;       // size of this type in bytes
+public int    elements;   // ARR: number of elements
+public Struct elemType;   // ARR: element type
+public Obj    fields;     // STRUCT: fields
+\end{lstlisting}
+
+\subsubsection{Strings.java}
+
+Strings sind bei uns konstant. Das hei\ss{}t dass ein neuer String angelegt werden muss, falls ein bestehender ver\"andert wird. Gespeichert wird ein null-terminierter String in einem char Array, welches wenn n\"otig automatisch vergr\"o\ss{}ert wird. Wenn ein String abgerufen werden soll, muss die eindeutige id des Strings angegeben werden. Es ist auch m\"oglich einzelne Zeichen eines Strings abzufragen, wobei die Anfangsposition ben\"otigt wird.
+
+Um gleiche Strings nicht doppelt anzulegen gibt es eine HashMap, in der alle verf\"ugbaren Strings, und dessen Anfangsposition vermerkt sind. So ist es m\"oglich Speicherverbrauch zu verringern indem Duplikate verhindert werden.
+
+\begin{lstlisting}[language=Java]
+static private char[] data = new char[4096];
+static private int top = 0;
+static private Map<String, Integer> map = new HashMap<>();
+\end{lstlisting}
+
 \subsubsection{Tab.java}
+
+Diese Datei ist die Zentrale Datei welche f\"ur viele Aktionen im Compiler verwendet werden. Hier wird der Universe-Scope mit allen Standard-Typen und -Funktionen zu Beginn initialisiert. Des Weiteren sind hier die Methoden deklariert, welche f\"ur Aktionen wie Typkonvertierung, hinzuf\"ugen neuer Objekte in den aktuellen Scope oder das Suchen von Variablen welche im Aktuellen oder einem darunterliegenden Scope deklariert wurde.
+
+\begin{lstlisting}[language=Java]
+public Obj find(String name) {
+	for(Scope scp = curScope; scp != null; scp = scp.outer) {
+		for (Obj p = scp.locals; p != null ; p = p.next) {
+			if (p.name.equals(name))
+				return p;
+		}
+	}
+	parser.SemErr(name + " not found");
+	return noObj;
+}
+\end{lstlisting}
+
+\htlParagraph{Beispiel}
+
+Wenn ein Objekt in die Symboltabelle eingef\"ugt wird muss einerseits das Objekt erstellt werden. Des Weiteren ist es notwendig je nach Art des Objekts zus\"atzliche Informationen einzutragen, welche sp\"ater unter anderem vom Compiler wie auch vom Interpreter ben\"otigt werden.
+
+Auch kann es passieren dass versehentlich der gleiche Identifier verwendet wurde, weshalb \"uberpr\"uft werden muss ob eine Variable, Funktion oder Typ bereits definiert worden ist. Es gibt jedoch auch bei Funktionen Vorw\"artsfunktionen, welche jedoch pro Funktion nur 1. mal zugelassen sind.
+
+Dabei muss wiederum beachtet werden, das Variablen im globalen wie auch im lokalen Skope definiert werden k\"onnen, ohne sich gegenseitig zu beeinflussen. Dagegen darf es nicht m\"oglich sein Funktionen oder Typen zu \"uberschreiben.
+
+\begin{lstlisting}[language=Java]
+public Obj insert(int kind, String name, Struct type, int line) {
+	//--- create
+	Obj obj = new Obj(kind, name, type, line);
+	if (kind == Obj.VAR) {
+		obj.adr = curScope.size;
+		curScope.size += type.size;
+		obj.level = curLevel;
+	}
+	
+	//--- check if function or type already exists in universe
+	if(kind == Obj.PROC || kind == Obj.TYPE) {
+		Scope checkScope = curScope;
+		while(checkScope.outer != null) {
+			checkScope = checkScope.outer;
+			Obj p =  checkScope.locals;
+			while (p != null) {
+				if (p.name.equals(name)) {
+					if(p.isForward) {
+						return p;
+					}
+					parser.SemErr(name + " declared twice");
+				}
+				p = p.next;
+			}
+		}
+	}
+	//--- insert
+	Obj p = curScope.locals, last = null;
+	while (p != null) {
+		if (p.name.equals(name)) {
+			if(p.isForward) {
+				return p;
+			}
+			parser.SemErr(name + " declared twice");
+		}
+		last = p;
+		p = p.next;
+	}
+	if (last == null)
+		curScope.locals = obj;
+	else
+		last.next = obj;
+	return obj;
+}
+\end{lstlisting}
+
+%\subsubsection{Compiler.java}
+
+%\subsubsection{Error.java}
+
+%\subsubsection{NodeList.java}
+
+\subsubsection{Preprocessor.java}
+
+Der Compiler wurde nur dazu entwickelt, einzelne Dateien in einen Abstrakten Syntaxbaum zu \"ubersetzen. Um eine mehrere Dateien einzubinden(z.B. Standardbiblioteken) ist es aber notwendig Dateien vor dem Kompilieren zusammenzuf\"ugen, und Mehrfachincludes korrekt zu verarbeiten.
+
+Um dies umzusetzen, wurde ein Pr\"aprozessor implementiert welcher alle grundlegenden Funktionen des C-Pr\"aprozessors nachbildet. Bewusst wurde bei dieser Implementierung die urspr\"ungliche Funktionsweise von \#define ver\"andert, um die Verwendung der Sprach-internen Konstanten zu erzwingen.
+%Eines der Hauptprobleme von \#define sind die Fehlenden Typinformationen bei der Verwendung als Konstante, welche bei einer Programmierumgebung f\"ur Anf\"anger am besten von Anfang an vermieden 
+
+Der Pr\"aprozessor umfasst einen einfachen Scanner und Parser. Er ist in der Lage Kommentare wie auch Kommentare in Strings korrekt auszuwerten, und gesteuert mithilfe von Pr\"aprozessorfunktionen eine Quellcodedatei aufzubauen, die dann vom Compiler \"ubersetzt werden kann.
+
+Um Fehlermeldungen wieder in eine korrekte Form zu bringen, ist es notwendig die Position im generierten Quelltext auf den urspr\"unglichen Quelltext zur\"ukmapen zu k\"onnen. Dazu wird eine Datenstruktur erstellt welche angibt welche Quelldatei an einer bestimmten Position im generierten Quelltext genutzt wird. Diese Information reicht aus um die urspr\"ungliche Zeile im Quelltext zur\"uckzurechnen, da der Pr\"aprozessor keine Zeilen einf\"ugt oder l\"oscht, sondern diese nur ver\"andert.
