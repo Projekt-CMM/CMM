@@ -25,6 +25,36 @@ Wir haben uns f\"ur Git entschieden, da wir einerseits durch die Dezentralit\"at
 
 \subsection{Grundlegende Funktionsweise}
 
-Bei git besitzt jeder Programmierer ein eigenes Repository, auf welchem er \"anderen commitet. Diese k\"onnen dann gesammelt auf einen Zentrales Repository geladen werden, welche den aktuellen Projektstand repr\"asentiert.
+Bei git besitzt jeder Programmierer ein eigenes Repository, auf welchem er \"anderen commitet. Diese k\"onnen dann gesammelt auf einen Zentrales Repository geladen werden, welches dann den aktuellen Projektstand repr\"asentiert.
 
-\subsection{Github}
+Wenn ein aktueller Projektstand in das eigene Repository eingecheckt wird, nennt man dies einen Commit. Dieser umfasst die ge\"anderten Dateien, wie auch einen Text welcher die \"Anderungen repr\"asentiert.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{./media/images/development/git_file_status_livecycle.png}
+\caption{grundlegender Zyklus, in der sich der Dateistatus laufend \"andert}
+\label{git_file_status_livecycle}
+\end{figure}
+
+
+\htlParagraph{Vormerken aller ge\"anderten Dateien}
+
+\begin{lstlisting}[language=bash]
+git add -u
+\end{lstlisting}
+
+\htlParagraph{Einchecken  aller Vorgemerkten Dateien}
+
+\begin{lstlisting}[language=bash]
+git commit -m 'this is my first commit'
+\end{lstlisting}
+
+\section{GitHub}
+
+GitHub\footnote{\url{https://github.com}} ist eine der am weitesten verbreitetsten Hosting-Dienst welcher in der Open-Source Software Entwicklung genutzt wird. Als grundlegende Versionsverwaltung wird git genutzt, welches mithilfe der Webbasierten Oberfl\"ache von GitHub einfach verwaltet wird.
+
+\subsection{Grundlegender Arbeitszyklus}
+
+Wir haben uns auf ein grundlegendes Arbeitsverfahren geeinigt, welches sicherstellt das das Projekt m\"oglichst fehlerfrei verwaltet werden kann. Dazu hat jedes Projektmitglied einen fork des Projektes auf seinem eigenen GitHub-Repository, mithilfe dessen er dann Pull-Requests an das zentrale Repository stellen kann.
+
+Vorteile dieses Verfahrens sind unter anderem, dass das Mergen im Normalfall auf dem Server geschieht. Desweiteren wird jedes Pull-Request automatisch getestet, und wird erst nach einem erfolgreichem Test in das zentrale Repository eingecheckt. So werden auftretende Probleme wie fehlende Dateien oder Inkompatibilit\"aten mit anderen \"Anderungen besonders schnell gefunden.
