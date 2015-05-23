@@ -7,7 +7,7 @@
 
 \section{Popups}
 \label{sec:deb-popup}
-Im Debugger von C Compact gibt es mehrere Anwendungsfälle für Popup-Fenster. Popups werden verwendet, um weitere Informationen zu einem Array oder einem String in der Variablentabelle zu liefern und um Rückgabewerte von Funktionen zu visualisieren (dies ist allerdings optional, siehe auch \ref{sec:win-set}). Dabei handelt es sich im Prinzip um kleine Anzeigeflächen, die ein Swing-Element enthält. Ein Popup wird ausgeblendet, sobald auf eine beliebige Fläche in einem Fenster von C Compact geklickt wird (der Event muss erfasst werden können).
+Im Debugger von C Compact gibt es mehrere Anwendungsfälle für Popup-Fenster. Popups werden verwendet, um weitere Informationen zu einem Array oder einem String in der Variablentabelle zu liefern und um Rückgabewerte von Funktionen zu visualisieren (dies ist allerdings optional, siehe auch \ref{sec:win-set}). Dabei handelt es sich im Prinzip um kleine Anzeigeflächen, die ein Swing-Element enthält (siehe Abbildung \ref{fig:popup-example}). Ein Popup wird ausgeblendet, sobald auf eine beliebige Fläche in einem Fenster von C Compact --- außerhalb des Popups --- geklickt wird.
 
 \begin{figure}[htp]
 \centering
@@ -17,7 +17,7 @@ Im Debugger von C Compact gibt es mehrere Anwendungsfälle für Popup-Fenster. P
 \end{figure}
 
 \subsection{Initialisierung eines Popups}
-Alle für das Popup relenanten Klassen befinden sich im Package \textbf{at.jku.ssw.cmm.gui.popup}. Die Popup-Funktionen selbst befinden sich in der Klasse \textbf{ImagePopup}. Zum Initialisieren werden aber die statischen Methoden in der Klasse \textbf{ComponentPopup} verwendet; diese Methoden übernehmen auch umständliche Positionsberechnungen für das Popup. Die Methode \textbf{createPopUp(...)} kann auch ohne das Parameter \glqq{}weight\grqq{} verwendet werden.
+Alle für das Popup relevanten Klassen befinden sich im Package \textbf{at.jku.ssw.cmm.gui.popup}. Die Popup-Funktionen selbst befinden sich in der Klasse \textbf{ImagePopup}. Zum Initialisieren werden aber die statischen Methoden in der Klasse \textbf{ComponentPopup} verwendet; diese Methoden übernehmen auch umständliche Positionsberechnungen für das Popup. Die Methode \textbf{createPopUp(...)} kann auch ohne das Parameter \glqq{}weight\grqq{} verwendet werden.
 \begin{lstlisting}[language=JAVA]
 public static void createPopUp( GUImain main, JComponent component, int x, int y, int w, int h, int orientation, double weight );
 \end{lstlisting}
@@ -37,7 +37,7 @@ int & h & \\
 \hline
 int & orientation & Ausrichtung des Popups (siehe Unten) \\
 \hline
-double [optional] & weight & Position des Zeigers, Wert zwischen 0 und 1, Standard: 0.5\\
+double & weight [optional] & Position des Zeigers, Wert zwischen 0 und 1, Standard: 0.5\\
 \hline
 \end{tabular}
 \caption{Parameter der Methode \textbf{createPopup(...)}}
@@ -46,10 +46,10 @@ double [optional] & weight & Position des Zeigers, Wert zwischen 0 und 1, Standa
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.4\textwidth]{./media/images/gui/popup/popup-pos.png}
-\caption{Positionierung eines Popups}
+\caption{Positionierung eines Popups}\label{fig:deb-popup-pos}
 \end{figure}
 
-Für das Parameter \textbf{orientation} stehen vier Möglichkeiten zur Verfügung. Die Konstanten sind in der Klasse \textbf{ImagePopup} definiert.
+Der Parameter \textbf{orientation} legt fest, in welche Richtung das Popup zeigt. Das Popup hat immer einen Zeiger, der auf die mit \textbf{x} und \textbf{y} angegebene Position zeigt (siehe Abbildung \ref{fig:deb-popup-pos}). Für den Parameter \textbf{orientation} stehen vier Möglichkeiten zur Verfügung. Die Konstanten sind in der Klasse \textbf{ImagePopup} definiert:
 \begin{itemize}
 \item \textbf{NORTH:} Zeiger befindet sich am oberen Rand
 \item \textbf{SOUTH:} Zeiger befindet sich am unteren Rand
@@ -57,19 +57,17 @@ Für das Parameter \textbf{orientation} stehen vier Möglichkeiten zur Verfügun
 \item \textbf{EAST:} Zeiger befindet sich am rechten Rand
 \end{itemize}
 
-Mit dem Parameter \textbf{weight} kann die Position des Zeigers am Popup bestimmt werden. Der Wert 0 bedeutet, dass der Zeiger --- je nach Ausrichtung --- ganz links oder ganz oben ist.
-
-Unabhängig von Ausrichtung und Positionierung des Zeigers befindet sich dessen Spitze immer an dem mit den Parametern \textbf{x} und \textbf{y} angegebenen Punkt.
+Mit dem Parameter \textbf{weight} kann die Position des Zeigers am Popup bestimmt werden. Der Wert 0 bedeutet, dass der Zeiger --- je nach Ausrichtung --- ganz links oder ganz oben ist. Wird dieser Parameter nicht angegeben, hat \textbf{weight} den Wert \textbf{0.5}.
 
 \subsection{Implementierung}
-Die eigentliche Popup-Klasse, \textbf{ImagePopup}, muss mit weniger praktischen Parametern initialisiert werden: mit x und y ist beispielsweise die linke obere Ecke des Popups anzugeben. Deshalb werden zum Initialisieren die statischen Methoden in der Klasse ComponentPopup verwendet. Diese rechnen die angegebenen Parameter auf die Popup-Positionen um.
+Die Methoden zum Erstellen und Zeichnen des Popups befinden sich in der Klasse \textbf{ImagePopup}. Diese muss mit weniger praktischen Parametern initialisiert werden: mit x und y ist beispielsweise die linke obere Ecke des Popups anzugeben. Deshalb werden zum Initialisieren die statischen Methoden in der Klasse ComponentPopup verwendet. Diese rechnen die angegebenen Parameter auf die Popup-Positionen um.
 
 \subsubsection*{Das Popup in das Hauptfenster zeichnen}
-In Swing besteht jedes Fenster aus mehreren Schichten\footnote{https://docs.oracle.com/javase/tutorial/uiswing/components/rootpane.html}, die unterschiedliche Aufgaben übernehmen. Die oberste Schicht ist das sogenannte \textbf{GlassPane}. Dieses ist standardmäßig deaktiviert. Wird es aktiviert, kann es verwendet werden, um über die Komponenten des Hauptfensters zu zeichnen und Events des Fensters abzufangen\footnote{https://docs.oracle.com/javase/tutorial/uiswing/components/rootpane.html\#glasspane}.
+In Swing besteht jedes Fenster aus mehreren Schichten\footnote{https://docs.oracle.com/javase/tutorial/uiswing/components/rootpane.html}, die unterschiedliche Aufgaben übernehmen. Die oberste Schicht ist das sogenannte \textbf{GlassPane}. Dieses Panel ist standardmäßig deaktiviert. Wird es aktiviert, kann es verwendet werden, um über die Komponenten des Hauptfensters zu zeichnen und Events des Fensters abzufangen\footnote{https://docs.oracle.com/javase/tutorial/uiswing/components/rootpane.html\#glasspane}.
 
-Die Klasse \textbf{ImagePopup} erbt von \textbf{JPanel} und ist daher eine einfache Swing-Komponente. 
+Die Klasse \textbf{ImagePopup(...)} erbt von \textbf{JPanel} und ist daher eine einfache Swing-Komponente. 
 
-Mit der Methode \textbf{invokePopup} wird eine beliebige Komponente zum GlassPane hinzugefügt und dort gezeichnet. Diese Methode befindet sich in der Klasse \textbf{GUImain} (siehe Kapitel \ref{sec:gui-main}), die das Hauptfenster von C Compact verwaltet.
+Mit der Methode \textbf{invokePopup(...)} wird eine beliebige Komponente zum GlassPane hinzugefügt und dort gezeichnet. Diese Methode befindet sich in der Klasse \textbf{GUImain} (siehe Kapitel \ref{sec:gui-main}), die das Hauptfenster von C Compact verwaltet.
 \begin{lstlisting}[language=JAVA]
 public void invokePopup(JPanel popup, int x, int y, int width, int height) {
 

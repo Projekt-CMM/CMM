@@ -19,15 +19,13 @@
  *  Copyright (c) 2014-2015 Peter Wassermair
  */
  
-package at.jku.ssw.cmm.gui.treetable;
+package at.jku.ssw.cmm.gui.treetable.var;
 
 import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
-
-import at.jku.ssw.cmm.gui.treetable.var.VarDataNode;
 
 public class TableButtonRenderer implements TableCellRenderer {
 	private TableCellRenderer defaultRenderer;
