@@ -1,0 +1,146 @@
+%!TEX root = "../../DA_GUI.tex"
+
+\chapter{Einleitung}
+
+\section{Die Projektidee}
+Für Firmen ist es schwierig, gut ausgebildete Programmierer zu finden, eine Reihe von Stellen bleiben unbesetzt. Etliche Firmen werden dadurch daran gehindert, zu expandieren oder wichtige Aufträge anzunehmen.
+Ein wesentlicher Grund für diese Misere ist, dass das Erlernen einer Programmiersprache eine anspruchsvolle Tätigkeit ist. Besonders Anfänger stoßen oft auf Schwierigkeiten.
+
+Im Rahmen des Projektes C Compact wurde eine speziell für die Ausbildung konzipierte Entwicklungsumgebung erarbeitet. Diese soll den Einstieg in C durch intuitive Bedienung und anschauliche Darstellung von Programmabläufen erleichtern.
+
+\section{Projektorganisation}
+
+Das Projekt C Compact wurde in Zusammenarbeit mit dem Institut für Systemsoftware\footnote{http://ssw.jku.at/} der Johannes Kepler Universität Linz durchgeführt. Jeder Projektschüler ist für einen Bereich des Projektes verantwortlich und wird dabei von einem Projektbetreuer der Universität unterstützt. Das Diplomprojekt selbst wird von Herrn Dipl.Ing. Franz Matejka betreut. Tabelle \ref{tab:intro-work-1} zeigt die Aufgabenverteilung, wie sie zu Beginn des Projektes festgelegt wurde.
+
+\def\arraystretch{1.4}
+\begin{table}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Projektschüler}&\textbf{Projektbetreuer}&\textbf{Aufgabenbereich}\\
+\hline
+Thomas Pointhuber & Univ.Prof. Hanspeter Mössenböck & Compiler \\
+Peter Wassermair & Dipl.Ing. Matthias Grimmer & Interpreter \\
+Fabian Hummer & Univ.Prof. Günther Blaschek & Benutzeroberfläche\\
+\hline
+\end{tabular}
+\caption{Ursprüngliche Aufgabeneinteilung}
+\label{tab:intro-work-1}
+\end{table}
+
+\section{Terminübersicht}
+
+Der Großteil der Projektarbeit wurde als Freizeitleistung durchgeführt. Eine genaue Aufstellung der Arbeitszeiten ist in Anhang \ref{} zu finden.
+
+Die Entwicklung von C Compact wurde in den Sommerferien 2014 --- in Form eines Praktikums der Projektschüler am Institut für Systemsoftware --- begonnen. Bereits im Vorfeld wurden einige Projektanforderungen festgelegt (siehe Kapitel \ref{sec:intro.anf}). Das Praktikum begann am 7. Juli 2014 und dauerte 2 bzw. 4 Wochen\footnote{Praktikum an der JKU von 7.7.2014 bis 18.7.2014, bzw. Peter Wassermair von 7.7.2014 bis 1.8.2014}. Wir erlernten zu Beginn die Grundlagen und Techniken von Compiler und Interpreter und konnten schnell mit der Entwicklung starten.
+
+Im Laufe des Schuljahres wurde C Compact mit unterschiedlichen Funktionen und Bestandteilen erweitert. Tabelle \ref{tab:intro-milestones} zeigt eine grobe Einteilung der Projektarbeit in einzelne Meilensteine.
+
+\begin{table}[h!]
+\def\arraystretch{1.6}
+\begin{tabularx}{\columnwidth}{|l|XXX|}
+\hline
+  \textbf{Zeitraum}&\textbf{Thomas Pointhuber}&\textbf{Peter Wassermair}&\textbf{Fabian Hummer}\\
+  \hline
+  Sommerferien 2014\footnote{Praktikum an der JKU von 7.7.2014 bis 18.7.2014, bzw. Peter Wassermair von 7.7.2014 bis 1.8.2014} & Compiler & Interpreter & Benutzeroberfläche, Entwicklugnsumgebung \\
+  Sept. - Dez. 2014 & Implementierung weiterer Sprachfunktionen & Grundgerüst des Aufgabensystens, Dateistruktur & Verbesserung der Benutzeroberfläche, Versuche mit Schülergruppen \\
+  Januar - März 2015 & Testen und Dokumentieren von Sprachfunktionen & Integration des Aufgabensystems in die Entwicklungsumgebung & Abschließen der Entwicklungsumgebung, Hilfe bei Questsystem\\
+  April - Mai 2015 & \multicolumn{3}{c}{Fehlerbehebung, kleine Erweiterungen und Dokumentation}\\
+  \hline
+\end{tabularx}
+\caption{Meilensteine in der Entwicklung von C Compact}
+\label{tab:intro-milestones}
+\end{table}
+
+
+\section{C Compact im Überblick}
+
+\subsection*{Die Sprache}
+Die Benutzer arbeiten bei C Compact mit einer Programmiersprache, die C sehr ähnlich ist. Trotz des äußerlich simplen Aufbaus kann sie den vollen Umfang einer anspruchsvollen Programmiersprache und die damit verbundenen Programmiertechniken vermitteln. Siehe Kapitel \ref{} und \ref{}.
+%TODO add ref
+
+Bekannte C-Bibliotheken wie \glqq{}stdlib.h\grqq{}sind in C Compact ebenfalls vorhanden, um auch komplexere Programme einfach umsetzen zu können. Außerdem wurde ein einfacher Präprozessor implementiert, um Projekte mit mehreren Dateien zu ermöglichen. Siehe Kapitel \ref{}
+%TODO add ref
+
+\subsection*{Die Umgebung}
+Viele Irrtümer und Verständnisprobleme, die bei angehenden Programmierern immer wieder auftreten, sollen bereits durch die Entwicklungsumgebung selbst ausgeschlossen werden. Deshalb ist die Benutzeroberfläche ein essenzieller Bereich von C Compact. %Wir haben häufig auftretende Missverständnisse und Denkfehler analysiert und Features erarbeitet, die eben jene Probleme ausschließen sollen.
+
+%TODO add ref to common mistakes
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\textwidth]{./media/images/gui/main/CCompactAlpha1-4-5-guimain.png}
+	\caption{Die Benutzeroberfläche von C Compact}
+	\label{fig:intro-over-gui}
+\end{figure}
+
+Ein wichtiger Bestandteil der Benutzeroberfläche ist der integrierte Debugger (in Abbildung \ref{fig:intro-over-gui} rechts), der speziell für die Bedürfnisse von Anfängern ausgelegt ist. Während das Programm Schritt für Schritt abgearbeitet wird, sind alle Variablen und der Call Stack in übersichtlicher Form dargestellt. In der Variablentabelle werden Wertänderungen farbig hervorgehoben. Dadurch soll ein fundiertes Verständnis für den Programmablauf und die Logik dahinter entstehen.
+Ein weiterer daraus resultierender Vorteil ist, dass Schüler von Anfang an mit einem Debugger arbeiten und ähnliche Tools später auch in anderen Entwicklungsumgebungen verwenden werden. Der Debugger wird in Kapitel \ref{sec:deb} beschrieben.
+
+Um sicherzustellen, dass die Entwicklungsumgebung wirkungsvoll ist und zuverlässig funktioniert, wurde sie regelmäßig mit Gruppen der zweiten Klassen der HTL Braunau getestet. Bei diesen Versuchen lösten die Schülerinnen und Schüler komplexe Aufgaben mithilfe von C Compact und bewerten Benutzerfreundlichkeit und Bedienbarkeit nachher in einem Fragebogen. Siehe Kapitel \ref{sec:sci-trial-intro}.
+
+\subsection*{Integration im Unterricht}
+Um den Programmierunterricht zu verbessern und effektiver zu gestalten, wurde auf aktuellen und bewährten Unterrichtsmethoden aufgebaut werden. C Compact soll Lehrer wie Schüler unterstützen. Zu diesem Zweck wurden einige FSST-Lehrer (Fachspezifische Softwaretechnik) unserer Schule zum Aufbau und Ablauf ihrer Stunden befragt, um Einsatzmöglichkeiten für C Compact zu erkennen. Gewonnene Erkenntnisse flossen laufend in den Entwicklungsprozess von C Compact ein. Siehe Kapitel \ref{}.
+%TODO add ref
+
+C Compact enthält außerdem ein Aufgaben- und Belohnungssystem (auch genannt Questsystem). Mit diesem System können Schüler kleine und größere Aufgaben, die in Themenblöcke gegliedert sind, lösen. Eine ausgewählte Aufgabe wird bei der Fertigstellung automatisch auf Richtigkeit überprüft. Durch den individuellen Fortschritt soll selbstständiges Lernen gefördert werden. Um kleine Erfolgserlebnisse zu vermitteln, erhalten die Benutzer für gelöste Aufgaben Auszeichnungen. Siehe Kapitel \ref{}.
+%TODO add ref
+
+\subsection*{Verwendung und Erhältlichkeit}
+Unseren Recherchen zufolge gibt es derzeit keine vergleichbare Entwicklungsumgebung für die Ausbildung. Projekte mit ähnlichen Zielen besitzen oft einen rein spielerischen Charakter oder unterstützen nur einen sehr grundlegenden Befehlssatz. In C Compact dagegen ist es möglich, komplexere Algorithmen zu entwickeln, zu visualisieren, und diese auch in späteren Projekten einzusetzen.
+
+Wir hoffen zwar, dass C Compact vor Allem im Unterricht Verwendung findet, sind aber auch für viele andere Anwendungsbereiche offen, wie etwa bei Kursen und Schulungen oder für Hobbyprogrammierer. Deshalb haben wir beschlossen, C Compact unter der GNU General Public License\footnote{http://www.gnu.org/copyleft/gpl.html} öffentlich zur Verfügung zu stellen. Das gesamte Projekt kann auf GitHub\footnote{https://github.com/Projekt-CMM/CMM} angesehen werden.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.3\textwidth]{./media/images/intro/GPLv3-Logo.png}
+	\caption{Logo der GNU General Public License}
+\end{figure}
+
+\section{Anforderungen an C Compact}
+\label{sec:intro.anf}
+Für die Anwendung im Unterricht und insbesondere für die Anwendung von unerfahrenen Programmierern muss die Entwicklungsumgebung C Compact einige besondere Eigenschaften aufweisen. Die Anforderungen an diese Entwicklungsumgebung unterscheiden sich von den Anforderungen an professionelle Tools.
+
+Die Anforderungen für die erste Version von C Compact --- die bereits im Sommer 2014 entwickelt wurde --- wurden von den Projektbetreuern an der JKU gestellt. Herr Professor Mössenböck erstellte ein Anforderungsdokument für Compiler und Interpreter, das im Laufe des Projektes erweitert wurde (siehe Anhang \ref{app:anf-comp}). Herr Professor Blaschek definierte vor Projektbeginn die grundlegenden Anforderungen an die Benutzeroberfläche von C Compact und legte ihren grundlegenden Aufbau fest (siehe Anhang \ref{app:anf-gui}). Im Laufe des Projektes wurde die Benutzeroberfläche ausgebaut.
+
+\subsection*{Anforderungen an das Programm an sich}
+Für die Anwendung im Unterricht --- insbesondere als Hilfestellung für unerfahrene Benutzer --- sind folgende Punkte besonders wichtig:
+\begin{itemize}
+\item \textbf{Das Programm soll auf möglichst vielen Betriebssystemen funktionieren}\\
+Läuft ohne Probleme auf Windows 7, Windows 8, Mac OSX, Ubuntu 14.04, Ubuntu 14.10, Linux Mint 17.1\\
+Leichte Probleme auf Windows 10 (Technical Preview)
+\item \textbf{Das Programm soll einfach zu installieren sein}\\
+Eine Installation ist nicht erforderlich.
+\item \textbf{Das Programm soll einfach erhältlich sein}\\
+C Compact ist freie Software und kann kostenlos heruntergeladen werden.
+\end{itemize}
+
+\subsection*{Anforderungen an den Compiler und den Interpreter}
+Compiler und Interpreter sind grundlegende Bausteine von C Compact. Hier sind besonders Stabilität und Effizienz gefragt.
+\begin{itemize}
+\item \textbf{Der Compiler muss stabil laufen}\\
+Durch ausführiche Tests wurden sehr viele Fehler behoben. Der Compiler läuft praktisch ohne Probleme.
+\item \textbf{Die verwendete Sprache soll C möglichst ähnlich sein}\\
+Es gibt leichte Unterschiede zu C, auf die im Unterricht eventuell hingewiesen werden muss. Einige der Änderungen bringen aber auch Voreteile mit sich.
+\item \textbf{Die verwendete Sprache soll gegenüber C keine wesentlichen Einschränkungen enthalten}\\
+C Compact kann bis in die dritte Klasse problemlos verwendet werden. Nur bei einigen sehr fortgeschrittenen Themen muss auf professionelle Compiler zurückgegriffen werden.
+\end{itemize}
+
+\subsection*{Anforderungen an die Benutzeroberfläche}
+Die Benutzeroberfläche ist die Schnittstelle zwischen Mensch und Maschine. Um Programmieranfänger nicht zu überfordern, muss die Oberfläche möglichst einfach und intuitiv zu bedienen sein.
+\begin{itemize}
+\item \textbf{C Comapct muss einfach zu Bedienen sein}\\
+Durch eine Reihe von Versuchen mit Schülerinnen und Schülern der ersten und zweiten Klassen konnten wir die Benutzeroberfläche immer wieder optimieren, sodass C Compact nun sehr übersichtlich und angenehm zu Bedienen ist.
+\item \textbf{C Compact soll den Schülerinnen und Schülern helfen, Programmabläufe besser zu verstehen}\\
+Der intuitiv zu bedienende Debugger von C Compact zeigt den Ablauf und die Logik eines Programmes sehr anschaulich. In unseren Versuchen haben wir herausgefunden, dass C Compact tatsächlich eine Verbesserung des FSST-Unterrichts darstellt.
+\item \textbf{Die Fehlermeldungen des Compilers müssen verständlich und ersichtlich sein}\\
+Wenn ein Fehler auftritt erhält der Benutzer sowohl eine Angabe, wo der Fehler aufgetreten ist, als auch eine ausführliche Beschreibung des Fehlers und möglicher Fehlerursachen.
+\end{itemize}
+
+\subsection*{Anforderungen an das Questsystem}
+Mit dem Questsystem können die Schülerinnen und Schüler Probleme zu einem bestimmten Thema selbstständig erarbeiten. Die Schülerinnen und Schüler lösen Aufgaben, die von C Compact gestellt werden. Das Programm überprüft auch, ob die Lösungen der Schülerinnen und Schüler korrekt ist. Für korrekte Lösungen werden Auszeichnungen vergeben.
+\begin{itemize}
+\item \textbf{Aufgaben müssen in Themenbereiche strukturierbar sein}\\
+Aufgaben sind in beliebig viele Packete und Bereiche --- auch mit mehreren Ebenen --- strukturierbar. Lehrer können Aufgabensammlunglen erstellen, die an ihren Unterricht angepasst sind
+\item \textbf{Die Aufgaben sollten eine Verbesserung für den Unterricht darstellen}\\
+Bei einem Versuch mit einer Gruppte der 1AHLES hat sich gezeigt, dass die Schüler gerne Aufgaben aus dem Questsystem erarbeiten. Durch Auszeichnungen und Anzeige des Fortschritts in einem bestimmten Themenbereich können die Schüler gezielt motiviert werden.
+\end{itemize}
