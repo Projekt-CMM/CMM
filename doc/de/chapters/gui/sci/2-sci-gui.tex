@@ -15,10 +15,10 @@ Der gesamte Algorithmus wurde in einige Aufgaben unterteilt, damit die Schüler 
 
 Die gestellten Aufgaben waren:
 \begin{enumerate}
-\item \emph{Schreibe ein Programm, das die folgende Zahlenreihe in ein Array speichert: 2, 4, 6, 8, … usw. Beobachte dabei im Debugger, wie sich die Variablenwerte während des Programmablaufes verändern.}\\
+\item \emph{\textbf{Einstiegsaufgabe:} Schreibe ein Programm, das die folgende Zahlenreihe in ein Array speichert: 2, 4, 6, 8, … usw. Beobachte dabei im Debugger, wie sich die Variablenwerte während des Programmablaufes verändern.}\\
 Diese Aufgabe führten wir Anfangs gemeinsam mit den Schülern durch, um sie mit C Compact vertraut zu machen.
 
-\item \emph{Die Eingabe funktioniert in CMM etwas anders als in C. Eingabedaten werden vorher in das Feld „input“ geschrieben. Die Funktion scanf() liest dann die Eingabedaten jeweils bis zum nächsten Leerzeichen und gibt einen String mit den gelesenen Daten zurück. Ein Array wird also wie folgt initialisiert:}
+\item \emph{\textbf{Ein- und Ausgabe in C Compact:} Die Eingabe funktioniert in C Compact etwas anders als in C. Eingabedaten werden vorher in das Feld \glqq{}input\grqq{} geschrieben. Die Funktion \textbf{scanf()} liest dann die Eingabedaten jeweils bis zum nächsten Leerzeichen und gibt einen String mit den gelesenen Daten zurück. Ein Array wird also wie folgt initialisiert:}
 \begin{lstlisting}[language=C]
 int i;
 for(i = 0; i < aLength; i ++)
@@ -30,16 +30,16 @@ for(i = 0; i < aLength; i ++)
 Die Ausgabe von Daten ist genau wie in C; es kann printf(...) wie gewohnt verwendet werden, allerdings mit der Ausnahme dass spezielle Operatoren wie etwa \glqq{}\%.2f\grqq{} nicht unterstützt werden.}\\
 Auch diese Übung führten wir gemeinsam mit den Schülern durch. Da Ein- und Ausgaben in C Compact mit dem Datentyp \textbf{string} umgesetzt wurden, mussten wir auf einige Unterschiede zu C aufmerksam machen.
 
-\item \emph{Schreibe ein Programm, das ein Array durchläuft und immer zwei benachbarte Elemente vergleicht. Wenn das rechte Element kleiner als das linke ist, sollen beide ausgetauscht werden.}\\
+\item \emph{\textbf{Einführung zu Bubblesort: }Schreibe ein Programm, das ein Array durchläuft und immer zwei benachbarte Elemente vergleicht. Wenn das rechte Element kleiner als das linke ist, sollen beide ausgetauscht werden.}\\
 Diese Übung bearbeiteten die Schüler selbstständig. Wir erklärten die Aufgabenstellung --- die Grundlage von Bubblesort --- zu Beginn allerdings etwas genauer. Im dritten Versuch verwendeten wir zum Darstellen der Arraywerte Spielkarten. Damit konnten wir die Idee von Bubblesort sehr anschaulich vermitteln. Auch bei Schwierigkeiten während der Übungsphase verwendeten wir teilweise die Karten, um ein Problem zu veranschaulichen. Zwei Schülerinnen verwendeten die Karten, um ihren Algorithmus während der Entwicklung theoretisch abzuarbeiten.
 
-\item \emph{Das Programm aus Übung 1 soll nun so erweitert werden, dass das Array komplett sortiert wird. Dazu muss der Sourcecode um eine zusätzliche Schleife erweitert werden. Wenn das zu sortierende Array \textbf{n} Elemente hat, muss die Schleife aus Beispiel 3 maximal \textbf{n-1} mal durchlaufen werden, damit das Array vollständig sortiert ist.}
+\item \emph{\textbf{Vollständiger Sortieralgorithmus:} Das Programm aus Übung 1 soll nun so erweitert werden, dass das Array komplett sortiert wird. Dazu muss der Sourcecode um eine zusätzliche Schleife erweitert werden. Wenn das zu sortierende Array \textbf{n} Elemente hat, muss die Schleife aus Beispiel 3 maximal \textbf{n-1} mal durchlaufen werden, damit das Array vollständig sortiert ist.}
 
-\item \emph{Bubblesort sortiert alle Elemente im idealsten Fall bereits nach einem Durchlauf. Der Algorithmus kann wesentlich verbessert werden, wenn er abbricht, sobald alle Elemente sortiert sind.\\
+\item \emph{\textbf{Verfrühter Abbruch:} Bubblesort sortiert alle Elemente im idealsten Fall bereits nach einem Durchlauf. Der Algorithmus kann wesentlich verbessert werden, wenn er abbricht, sobald alle Elemente sortiert sind.\\
 \textbf{Frage:} Woran erkennt man, dass alle Elemente sortiert sind?\\
 \textbf{Antwort:} Wenn die innere Schleife durchläuft, ohne einmal zwei Elemente auszutauschen, muss das Array sortiert sein.}
 
-\item \emph{Überlege dir Antworten zu folgenden Fragen:
+\item \emph{\textbf{Weiterführende Fragen:} Überlege dir Antworten zu folgenden Fragen:
 \begin{enumerate}
 \item Was passiert, wenn zwei gleiche Elemente vorkommen?
 \item Wieso steht in der Bedingung $if(a[i] > a[i+1])$ und nicht                          $if(a[i] >= a[i+1])$?
@@ -47,7 +47,7 @@ Diese Übung bearbeiteten die Schüler selbstständig. Wir erklärten die Aufgab
 \item Was ist der ungünstigste Fall? Bei welchen Eingabedaten dauert die Sortierung am längsten?
 \item Erstelle eine Formel für die (im ungünstigsten Fall) Anzahl der Durchläufe, die zur Sortierung benötigt werden, wenn n Elemente sortiert werden.
 \end{enumerate}}
-Mit diesen Fragen wollten wir die \glqq{}schnelleren\grqq{} Schüler dazu bewegen, sich noch weitere Gedanken zum Sortieralgorithmus zu machen.
+Mit diesen Fragen wollten wir die \glqq{}schnelleren\grqq{} Schüler dazu bewegen, sich noch weitere Gedanken zu Bubblesort zu machen.
 \end{enumerate}
 
 %TODO Anhang: Fragebogen
