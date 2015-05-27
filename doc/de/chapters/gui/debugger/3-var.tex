@@ -137,13 +137,13 @@ public TreeTable( TreeTableDataModel<TreeNode> treeTableModel ){
     super();
     this.setTreeModel(treeTableModel);
         
-    //Do not allow column reordering
+    // Spalten können nicht vertauscht werden
     getTableHeader().setReorderingAllowed(false);
         
-    //Do not show the table grid
+    // Kein Tabellengitter anzeigen
     setShowGrid(false);
         
-    //No spacing
+    //Kein Abstand zwischen den Zellen
 	setIntercellSpacing(new Dimension(0, 0));
 }
 \end{lstlisting}
@@ -170,8 +170,7 @@ public abstract class DataNode {
 	@Override
 	public abstract String toString();
 	public void add(DataNode subNode) {
-		// TODO Auto-generated method stub
-		
+	
 	}
 }
 \end{lstlisting}

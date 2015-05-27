@@ -47,27 +47,27 @@ Der Interpreter wird mit folgender Methode in einem eigenen Thread gestartet:
 \begin{lstlisting}[language=JAVA]
 public boolean runInterpreter(PanelRunListener listener, IOstream stream, Tab table) {
 
-	// Check if another interpreter thread is already running
+	// Überprüfen, ob bereits ein Interpreterthread läuft
 	if ( table != null && this.thread == null ) {
 			
 		this.table = table;
 
-		// Reset the output text panel
+		// Ausgabetextfeld zurücksetzen
 		this.main.getLeftPanel().resetOutputTextPane();
 
 		this.interpreter = new Interpreter(listener, stream);
 
-		// Create new interpreter object
+		// Neuen Thread erstellen
 		this.thread = new CMMrun(table, interpreter, this, debug);
 
-		// Run interpreter thread
+		// Thread starten
 		this.thread.start();
 
 		return true;
 	}
-	// Another thread is already running
+	// Ein anderer Thread läuft bereits
 	else {
-		// Error message
+		// Fehlermeldung
 		DebugShell.out(State.ERROR, Area.INTERPRETER, "Already running or not compiled!");
 
 		return false;
@@ -88,14 +88,13 @@ Die Klasse \textbf{CMMrun} erbt von der Klasse Thread\footnote{https://docs.orac
 @Override
 public void run() {
 
-	// Allocating memory for interpreter
+	// Speicher für den Interpreter wird initialisiert
 	Memory.initialize();
 
-	// Run main function
+	// "main"-Funktion des Programms wird gestartet
 	try {
 		interpreter.run(table);
 	}
-	// Thrown when runtime error occurs
 	catch (final RunTimeException e) {
 		// Laufzeitfehler abfangen
 		... 
@@ -265,11 +264,11 @@ Diese Verzögerung ist notwendig, damit die Benutzeroberfläche zwischen den ein
 
 \item Aktualisierung der Benutzeroberfläche: Die Tabelle mit den Variablen wird aktualisiert, die aktuelle Zeile im Quelltext wird markiert.
 \begin{lstlisting}[language=JAVA]
-/* --- Variable table update --- */
+/* --- Variablentabelle aktualisieren --- */
 this.master.updateVariableTables(Memory.getFramePointer() != this.lastAdress);
 this.lastAdress = Memory.getFramePointer();
 		
-/* --- Highlight the changed variables --- */
+/* --- Geänderte Variablen markieren --- */
 for( int i : changedVariables )
 	this.master.highlightVariable(i, true);
 \end{lstlisting}
@@ -277,10 +276,10 @@ for( int i : changedVariables )
 
 \item Thread wartet auf Freigabe zum nächsten Schritt. Befindet sich der Debugger im \textbf{automatischen Debugmodus}, wird vorher ein Timer initialisiert, der den nächsten Schritt nach einiger Zeit von selbst auslöst.
 \begin{lstlisting}[language=JAVA]
-/* --- Initialize auto-debugging delay timer --- */
+/* --- Timer initialisieren --- */
 if (this.isRunMode() && this.delay > 0) {
 	this.timer = new Timer();
-	// Start timer
+	// Timer starten
 	this.timer.schedule(new TimerTask() {
 		@Override
 		public void run() {
@@ -290,7 +289,8 @@ if (this.isRunMode() && this.delay > 0) {
 	}, (int)(delayScale(delay)*1000) );
 }
 
-// Wait until timer runs out or user presses "next step" button
+// Warten, bis der Timer abgelaufen ist oder der
+// "next step"-Button gedrückt wurde
 waitForUserReply();
 		
 this.timer = null;
