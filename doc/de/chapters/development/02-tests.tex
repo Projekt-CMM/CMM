@@ -9,34 +9,34 @@
 %	--------------------------------------------------------
 \section{Tests}
 
-W\"ahrend der Softwareentwicklung ist es leicht m\"oglich, ungewollt Fehler zu produzieren welche schwer nachvollziehbar sind und unbemerkt falsche Daten liefern. Dem kann durch umfangreiche Tests\footnote{\url{https://de.wikipedia.org/wiki/Modultest}} entgegengewirkt werden, welche einzelne Teile des Programmes auf die korrekte Funktionalit\"at \"uberpr\"ufen.
+W\"ahrend der Softwareentwicklung ist es leicht m\"oglich, ungewollt Fehler zu produzieren welche schwer nachvollziehbar sind und unbemerkt falsche Daten liefern. Dem kann durch umfangreiche Tests\footnote{\url{https://de.wikipedia.org/wiki/Modultest}} entgegengewirkt werden, die einzelne Teile des Programmes auf die korrekte Funktionalit\"at \"uberpr\"ufen.
 
 \subsection{Therorie}
 
 \subsubsection{Testabdeckung}
 
-Die ideale Testabdeckung eines Projektes liegt bei 100\%. Im Detail bedeutet dass das alle m\"oglichen Ausf\"uhrungswege einer Funktion durchlaufen werden. Um die Testabdeckung zu \"uberpr\"ufen gibt es z.B. Tools welche sich in die Testfunktion einklinken und dann \"uberpr\"ufen welche Codezeilen ausgef\"uhrt wurde. Wir verwenden EclEmma\footnote{\url{http://www.eclemma.org}}, welches grafisch anzeigt welche Teile des Codes durchlaufen wurden. Auf Basis dieser Informationen k\"onnen dann zus\"atzliche Testf\"alle entworfen werden.
+Die ideale Testabdeckung eines Projektes liegt bei 100\%. Im Detail bedeutet dass das alle m\"oglichen Ausf\"uhrungswege einer Funktion durchlaufen werden. Um die Testabdeckung zu \"uberpr\"ufen gibt es z.B. Tools die sich in die Testfunktion einklinken und dann \"uberpr\"ufen welche Codezeilen ausgef\"uhrt wurde. Wir verwenden EclEmma\footnote{\url{http://www.eclemma.org}}, das grafisch anzeigt welche Teile des Codes durchlaufen wurden. Auf Basis dieser Informationen k\"onnen dann zus\"atzliche Testf\"alle entworfen werden.
 
 \subsubsection{Testf\"alle}
 
-Bei der Entwicklung von Tests ist es unm\"oglich alle Testf\"alle abzudecken. Deshalb beschr\"ankt man sich auf einen Untergruppe von Eingabedaten welche f\"ur den jeweiligen Test relevant erscheinen.
+Bei der Entwicklung von Tests ist es unm\"oglich, alle Testf\"alle abzudecken. Deshalb beschr\"ankt man sich auf einen Untergruppe von Eingabedaten die f\"ur den jeweiligen Test relevant erscheinen.
 
 Dies umfasst nicht nur durchschnittliche Eingabedaten, sondern in besonderem Umfang auch Grenzwerte und fehlerhafte Eingabedaten. Die Testf\"alle sollen daher besonders stark die Teile abdecken, bei denen die Funktion fehlerhaft reagieren kann.
 
 \subsubsection{White-Box-Test}
 
-Bei White-Box-Tests\footnote{\url{https://de.wikipedia.org/wiki/White-Box-Test}} wird auch die innere Struktur des Programmes f\"ur die erstellung von Testf\"alle genutzt. Dadurch k\"onnen unter anderem unbenutzte Codeteile identifiziert werden oder Probleme beim Ablaufpfad aufgedeckt werden. 
+Bei White-Box-Tests\footnote{\url{https://de.wikipedia.org/wiki/White-Box-Test}} wird auch die innere Struktur des Programmes f\"ur die Erstellung von Testf\"alle genutzt. Dadurch k\"onnen unter anderem unbenutzte Codeteile identifiziert werden oder Probleme beim Ablaufpfad aufgedeckt werden. 
 
 \subsubsection{Black-Box-Test}
 
-Im gegensatz dazu wird beim Black-Box-Test\footnote{\url{https://de.wikipedia.org/wiki/Black-Box-Test}} die Funktion nach ihren Anforderungen gepr\"uft. Dabei wird die innere Strukture der Funktion unbeachtet gelassen, und es ist eine reine Funktionspr\"ufung ob die Spezifikation eingehalten werden.
+Im Gegensatz dazu wird beim Black-Box-Test\footnote{\url{https://de.wikipedia.org/wiki/Black-Box-Test}} die Funktion nach ihren Anforderungen gepr\"uft. Dabei wird die innere Struktur der Funktion unbeachtet gelassen. Da Black-Box-Tests ohne Ber\"ucksichtigung der inneren Struktur geschrieben werden sollen, ist es zielf\"uhrend diese von Personen schreiben zu lassen, welche die innere Struktur der Funktion nicht entwickelt haben. Ansonsten kann es passieren das unbewusst \glqq{}um Fehler herum\grqq{} getestet wird.
 
 \newpage
 \subsection{JUnit}
 
-JUnit ist ein Framework welches dazu verwendet wird automatisierte Unit-Tests zu entwickeln.\footnote{\url{https://de.wikipedia.org/wiki/JUnit}} Es werden verschiedene Testf\"alle entwickelt, welche mithilfe sogenannter Assertion\footnote{\url{https://de.wikipedia.org/wiki/Assertion_(Informatik)}} auf korrekte Ergebnisse \"uberpr\"uft werden k\"onnen.
+JUnit ist ein Framework das dazu verwendet wird automatisierte Unit-Tests zu entwickeln.\footnote{\url{https://de.wikipedia.org/wiki/JUnit}} Es werden verschiedene Testf\"alle entwickelt, welche mithilfe sogenannter Assertion\footnote{\url{https://de.wikipedia.org/wiki/Assertion_(Informatik)}} auf korrekte Ergebnisse \"uberpr\"uft werden k\"onnen.
 
-Ein Funktion wird mithilfe der Annotation\footnote{\url{https://de.wikipedia.org/wiki/Annotation_(Java)}}  @Test als Test definiert. Falls ein Test tempor\"ar deaktiviert werden soll, schreibt man ein @Ignore wodurch der Test einerseits deaktiviert ist, bei der Visualisierung der Testergebnisse aber unter Skipped aufscheint. Dadurch ist im Gegensatz zum Auskommentieren eines Testfalles gew\"ahrleistet, dass ein Programmierer darauf aufmerksam gemacht wird dass bestimmte Testf\"alle nicht durchlaufen werden.
+Ein Funktion wird mithilfe der Annotation\footnote{\url{https://de.wikipedia.org/wiki/Annotation_(Java)}}  \textbf{@Test} als Test definiert. Falls ein Test tempor\"ar deaktiviert werden soll, schreibt man ein \textbf{@Ignore} wodurch der Test einerseits deaktiviert ist, bei der Visualisierung der Testergebnisse aber unter \glqq{}Skipped\grqq{} aufscheint. Dadurch ist im Gegensatz zum Auskommentieren eines Testfalles gew\"ahrleistet, dass ein Programmierer darauf aufmerksam gemacht wird, dass bestimmte Testf\"alle nicht durchlaufen werden.
 
 \begin{lstlisting}[language=Java]
 @Test
@@ -64,13 +64,13 @@ public void testCharVal() {
 
 \subsection{Fuzzing}
 
-Bei Programmen, welche mit umfangreichen Eingabedaten umgehen m\"ussen, ist es schwer m\"oglich alle Testf\"alle abzudecken. Fuzzing\footnote{\url{https://de.wikipedia.org/wiki/Fuzzing}} stellt eine Art Stresstest f\"ur ein Programm dar, welches das Programm mit zuf\"alligen Eingabedaten f\"uttert. Dadurch k\"onnen Probleme entdeckt werden, welche bei anderen Tests nicht bemerkt worden sind.
+Bei Programmen, welche mit umfangreichen Eingabedaten umgehen m\"ussen, ist es schwer m\"oglich alle Testf\"alle abzudecken. Fuzzing\footnote{\url{https://de.wikipedia.org/wiki/Fuzzing}} stellt eine Art \glqq{}Stresstest\grqq{} f\"ur ein Programm dar, welches dieses mit zuf\"alligen Eingabedaten f\"uttert. Dadurch k\"onnen Probleme entdeckt werden, welche bei anderen Tests nicht bemerkt worden sind.
 
-Wir nutzen Fuzzing daf\"ur um den Compiler mit Zuf\"alligen Kombination von Zeichen zu konfrontieren, welcher dieser ohne Abst\"urze Verarbeiten muss.
+Wir nutzen Fuzzing um den Compiler mit zuf\"alligen Kombination von Zeichen zu konfrontieren, welcher dieser ohne Abst\"urze Verarbeiten muss.
 
 \subsection{Statische Codeanalyse}
 
-Es gibt diverse Arten von Fehlern, welche mithilfe einer statischen Codeanalyse\footnote{\url{https://de.wikipedia.org/wiki/Statische_Code-Analyse}} gefunden werden k\"onnen. Diese kann zum Beispiel erkennen ob es m\"oglich ist dass auf ein uninitialisiertes Objekt zugegriffen wird, oder ein Programmierkonstrukt eingesetzt wird, welches im Normalfall nicht das gewollte Verhalten aufweist.
+Es gibt diverse Arten von Fehlern, die mithilfe einer statischen Codeanalyse\footnote{\url{https://de.wikipedia.org/wiki/Statische_Code-Analyse}} gefunden werden k\"onnen. Diese kann zum Beispiel erkennen ob es m\"oglich ist dass auf ein uninitialisiertes Objekt zugegriffen wird, oder ein Programmierkonstrukt eingesetzt wird, welches im Normalfall nicht das gewollte Verhalten aufweist.
 
 Wir nutzen das Programm FindBugs\footnote{\url{https://de.wikipedia.org/wiki/FindBugs}}, welches den Java-Bytecode auf bekannte Fehlermuster untersucht.
 
@@ -78,12 +78,12 @@ Wir nutzen das Programm FindBugs\footnote{\url{https://de.wikipedia.org/wiki/Fin
 
 \htlParagraph{Stringvergleich}
 
-In Java gilt das Prinzip \glqq{}Copy by Reference\grqq{}. Dies stellt ein h\"aufiger Fehler f\"ur Vergleichsoperationen bei Strings dar, da der Vergleichsoperator nicht den Inhalt des Strings, sondern die Objektadressen vergleicht.
+In Java gilt das Prinzip \glqq{}Copy by Reference\grqq{}. Unachtsame Programmierer verwechseln den Vergleich von Strings manchmal mit dem elementarer Datentypen. Mit dem Vergleichsoperator werden aber die Adressen der String-Objekte verglichen, und nicht die Inhalte.
 
 \begin{lstlisting}[language=Java]
 String s1 = "Hello World";
 String s2 = "Hello World";
-if(s1 == s2)
+if(s1 == s2) // wrong equality check of two strings
 	System.out.println("s1 is equal to s2");
 \end{lstlisting}
 
