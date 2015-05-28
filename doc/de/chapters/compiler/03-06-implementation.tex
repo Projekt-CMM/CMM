@@ -11,15 +11,15 @@
 
 \subsubsection{CMM.atg}
 
-In CMM.atg ist die gesamte Attributierte Grammatik von C-Compact enthalten. Mit Hilfe der darin enthaltenen Information kann Coco/R eine Scanner und einen Parser generieren\footnote{\url{http://www.ssw.uni-linz.ac.at/Coco/Doc/UserManual.pdf}}, welche nach der definierten EBNF-Syntax arbeitet.
+In CMM.atg ist die gesamte attributierte Grammatik von C Compact enthalten. Mit Hilfe der darin enthaltenen Information kann Coco/R einen Scanner und einen Parser generieren\footnote{\url{http://www.ssw.uni-linz.ac.at/Coco/Doc/UserManual.pdf}}, welche nach der definierten EBNF-Syntax arbeitet.
 
-Die Datei enth\"alt unter anderem die EBNF-Syntax, welche den grundlegenden Aufbau der Programmiersprache definiert. Des Weiteren kann Java-Code eingebettet werden, welcher ausgef\"uhrt wird wenn bestimmte Teile der EBNF durchlaufen werden. So ist es m\"oglich einen abstrakten Syntaxbaum und eine Symboltabelle aufzubauen, und den durchlaufenen Code auf Syntaxbedingungen zu \"uberpr\"ufen, welche von der EBNF nicht erkannt werden k\"onnen. Da Coco/R einen LL(1) Parser generiert, gewisse Teile der Programmiersprache aber nicht mithilfe eines LL(1) Parsers implementiert werden k\"onnen gibt es LL(1) conflict resolvers, welche den Parser an bestimmten Stellen mitteilen k\"onnen, wie dieser weiter zu Verfahren hat.
+Die Datei enth\"alt unter anderem die EBNF-Syntax, welche den grundlegenden Aufbau der Programmiersprache definiert. Des Weiteren kann Java-Code eingebettet werden, welcher ausgef\"uhrt wird wenn bestimmte Teile der EBNF durchlaufen werden. So ist es m\"oglich, einen abstrakten Syntaxbaum und eine Symboltabelle aufzubauen, und den durchlaufenen Code auf Syntaxbedingungen zu \"uberpr\"ufen, welche von der EBNF nicht erkannt werden k\"onnen. Da Coco/R einen LL(1) Parser generiert, gewisse Teile der Programmiersprache aber nicht mithilfe eines LL(1) Parsers implementiert werden k\"onnen gibt es LL(1) conflict resolvers, welche den Parser an bestimmten Stellen mitteilen k\"onnen, wie dieser weiter zu verfahren hat.
 
 \htlParagraph{Beispiel}
 
-Es ist in C-Compact m\"oglich explizite Typenumwandlung durchzuf\"uhren. Dies wird wie in C realisiert, indem der gew\"unschte Typ in Klammern angegeben wird. Es ist aber genauso m\"oglich in Gleichungen Klammern einzusetzen, wodurch Coco/R nicht in der Lage ist zwischen einer Typumwandlung, und einer Gleichung (oder auch einer geklammerten Variable) zu unterscheiden.
+Es ist in C Compact m\"oglich explizite Typenumwandlung durchzuf\"uhren. Dies wird wie in C realisiert, indem der gew\"unschte Typ in Klammern angegeben wird. Es ist aber genauso m\"oglich, in Gleichungen Klammern einzusetzen, wodurch Coco/R nicht in der Lage ist, zwischen einer Typumwandlung, und einer Gleichung (oder auch einer geklammerten Variable) zu unterscheiden.
 
-Um dieses Problem zu l\"osen wird ein LL(1) conflict resolvers eingesetzt. Dieser kann einerseits mehrere Tokens nach vorne schauen, und anderseits den Token auf bereits bekannten Informationen \"uberpr\"ufen (z.B. ist dieser Identifier ein Typ oder eine Variable). Auf Basis dieser Informationen wird dann der weitere Parservorgang gesteuert.
+Um dieses Problem zu l\"osen wird ein LL(1) conflict resolvers eingesetzt. Dieser kann einerseits mehrere Tokens nach vorne schauen, und anderseits den Token auf bereits bekannte Informationen \"uberpr\"ufen (z.B. ist dieser Identifier ein Typ oder eine Variable). Auf Basis dieser Informationen wird dann der weitere Parservorgang gesteuert.
 
 \begin{lstlisting}[language=Java]
 boolean isCast() {
@@ -38,9 +38,9 @@ boolean isCast() {
 }
 \end{lstlisting}
 
-Um zu \"uberpr\"ufen ob eine Typumwandlung oder ein normaler Klammerausdruck vorliegt wird zuerst der n\"achste Token ermittelt. Dann wird \"uberpr\"uft ob \"uberhaupt ein korrekter Token vorliegt (ident), und falls dies zutrifft wird mit hilfe der Symboltabelle \"uberpr\"uft ob der vorliegende Identifier einen g\"ultigen Typen darstellt.
+Um zu \"uberpr\"ufen, ob eine Typumwandlung oder ein normaler Klammerausdruck vorliegt, wird zuerst der n\"achste Token ermittelt. Dann wird \"uberpr\"uft, ob \"uberhaupt ein korrekter Token vorliegt (ident) und falls dies zutrifft wird mit Hilfe der Symboltabelle \"uberpr\"uft, ob der vorliegende Identifier einen g\"ultigen Typen darstellt.
 
-Es kann dann dieser LL(1) conflict resolvers genutzt werden, um auf Basis der vorliegenden Informationen zu entscheiden, wie bei dem weiteren Parservorgang vorgegangen werden soll. In diesem Fall wird bei vorliegen einer Typkonvertierung eine Explizite Typumwandlung durchgef\"uhrt, welche wenn n\"otig den Abstrakten Syntaxbaum erweitert.
+Es kann dann der LL(1) conflict resolver genutzt werden, um auf Basis der vorliegenden Informationen zu entscheiden, wie bei dem weiteren Parservorgang vorgegangen werden soll. In diesem Fall wird bei vorliegen einer Typkonvertierung eine explizite Typumwandlung durchgef\"uhrt, welche wenn n\"otig den abstrakten Syntaxbaum erweitert.
 
 \begin{lstlisting}[language=EBNF]
 //...
@@ -62,15 +62,15 @@ Diese Tokens k\"onnen einerseits explizit definiert sein, oder werden ansonsten 
 
 \subsubsection{Parser.java}
 
-Der Parser wird auch auf Grundlagen von CMM.atg und Parser.frame generiert. Dieser Parser arbeitet dabei auf Basis des rekursiven Abstiegs\footnote{\url{https://de.wikipedia.org/wiki/Rekursiver_Abstieg}}, in der jede Produktionsregel eine eigene Funktion darstellt, welche rekursiv aufgerufen werden k\"onnen.
+Der Parser wird auch auf Grundlage von CMM.atg und Parser.frame generiert. Dieser Parser arbeitet dabei auf Basis des rekursiven Abstiegs\footnote{\url{https://de.wikipedia.org/wiki/Rekursiver_Abstieg}}, in der jede Produktionsregel eine eigene Funktion darstellt, welche rekursiv aufgerufen werden k\"onnen.
 
 \htlParagraph{WEAK Token}
 
-Um bessere Fehlermeldungen ausgeben zu k\"onnen ist es m\"oglich sogenannte schwache Token zu definieren. Diese befinden sich meist am Anfang von Iterationen, und werden gerne vergessen oder falsch geschrieben. Das definieren eines sogenannten schwachen Token kann f\"ur bessere Fehlermeldungen sorgen, da der Parser dieses wenn n\"otig ignoriert und dann versucht sich neu zu synchronisieren.
+Um bessere Fehlermeldungen ausgeben zu k\"onnen ist es m\"oglich sogenannte schwache Token zu definieren. Diese befinden sich meist am Anfang von Iterationen, und werden gerne vergessen oder falsch geschrieben. Das Definieren eines sogenannten schwachen Token kann f\"ur bessere Fehlermeldungen sorgen, da der Parser dieses wenn n\"otig ignoriert und dann versucht sich neu zu synchronisieren.
 
 \htlParagraph{Synchronisation}
 
-Wenn im Parser ein Fehler auftritt, da ein unbekanntes Token im Tokenstrom auftritt, muss sich dieser neu synchronisieren, um weiter Code Parsen zu k\"onnen. Dass Programm ist nicht l\"anger valide, aber so ist es m\"oglich weitere Fehler im Code zu erkennen.
+Wenn im Parser ein Fehler auftritt, da ein unbekanntes Token im Tokenstrom auftritt, muss sich dieser neu synchronisieren, um weiter Code Parsen zu k\"onnen. Das Programm ist nicht l\"anger valide, aber so ist es m\"oglich, weitere Fehler im Code zu erkennen.
 
 Dies wird durch das Keyword SYNC in Coco/R realisiert, welches sichere Tokens spezifiziert, welche normalerweise daf\"ur sorgen dass das Programm von einem sicheren Zustand weiter geparst werden kann. Solch ein Token stellt z.B. ein Semikolon dar.
 
@@ -87,11 +87,11 @@ CondTerm<out con>
 }.
 \end{lstlisting}
 
-Der generierte Code ist eine Funktion welcher die obige Attributierte Grammatik repr\"sentiert. Dabei wird zuerst die Variable f\"ur den R\"uckgabewert definiert, und darauf folgend kommt noch die Variablendefinition welche in der Attributierten Grammatik angegeben wurde.
+Der generierte Code ist eine Funktion welcher die obige attributierte Grammatik repr\"asentiert. Dabei wird zuerst die Variable f\"ur den R\"uckgabewert definiert und darauf folgend kommt noch die Variablendefinition welche in der attributierten Grammatik angegeben wurde.
 
-Die EBNF beginnt zwingend mit einem CondTerm, welcher in einer eigenen Funktion definiert wurde (rekursiver Aufruf von Produktionsregeln), und einen R\"uckgabewert besitzt. Wenn der CondTerm durchlaufen ist wird \"uberpr\"uft ob das n\"achste Token ein bin\"ares ODER darstellt, welches \"uber die Tokennummer eindeutig identifiziert werden kann.
+Die EBNF beginnt zwingend mit einem CondTerm, welcher in einer eigenen Funktion definiert wurde (rekursiver Aufruf von Produktionsregeln) und einen R\"uckgabewert besitzt. Wenn der CondTerm durchlaufen ist wird \"uberpr\"uft, ob das n\"achste Token ein bin\"ares ODER darstellt, welches \"uber die Tokennummer eindeutig identifiziert werden kann.
 
-Falls das folgende Token dem gesuchtem entspricht, wird die Schleife durchlaufen, wobei zuerst das n\"achste Token abgerufen wird, und danach wiederum ein CondTerm folgen muss. Zuletzt wird der Abstrakte Syntaxbaum erweitert, wie es bereits in der Attributierten Grammatik angegeben wurde.
+Falls das folgende Token dem Gesuchtem entspricht, wird die Schleife durchlaufen, wobei zuerst das n\"achste Token abgerufen wird und danach wiederum ein CondTerm folgen muss. Zuletzt wird der abstrakte Syntaxbaum erweitert, wie es bereits in der attributierten Grammatik angegeben wurde.
 
 \begin{lstlisting}[language=Java]
 Node  Condition() {
@@ -109,7 +109,7 @@ Node  Condition() {
 
 \subsubsection{Node.java}
 
-Der Abstrakte Syntaxbaum wird aus einzelnen Nodes aufgebaut, welche sich Baumartig verkn\"upfen lassen. In unserer Implementierung verwenden wir einen homogenen Syntaxbaum, in welchem je nach Knotentyp unterschiedliche Daten gespeichert werden.
+Der abstrakte Syntaxbaum wird aus einzelnen Nodes aufgebaut, welche sich baumartig verkn\"upfen lassen. In unserer Implementierung verwenden wir einen homogenen Syntaxbaum, in welchem je nach Knotentyp unterschiedliche Daten gespeichert werden.
 
 Jeder Knoten ist von einer speziellen Art, welcher mithilfe einer Nummer definiert wurde. So gibt es einen eigenen Knoten f\"ur eine Variable, ein Bitweises UND oder eines Index. Im Interpreter werden die gleichen Arten von Knoten verwendet, um dann das Programm korrekt zu durchlaufen. Die Werte von Konstanten werden direkt in einem Node gespeichert, Variablen dagegen erhalten einen Verweis auf das dementsprechende Objekt wo diese definiert wurde.
 
@@ -135,9 +135,9 @@ Die Symboltabelle basiert auf mehreren Ebenen, welche unterschiedliche logische 
 
 Als unterste Ebene gibt es den Universe-Scope, in welchem alle Standardtypen wie auch Standardfunktionen definiert sind. Diese stellen elementare Elemente einer Programmiersprache dar, welche immer verf\"ugbar sind.
 
-Dar\"uber gibt es den Global-Scope, in welchem globale Variablen wie auch Prozeduren deklariert sind. Wenn eine Prozedur deklariert wird, wird tempor\"ar ein Local-Scope erstellt, in dem die Variablen deklariert werden. Wenn die Funktion fertig deklariert wurde, wird dessen Inhalt in das Funktionsobjekt kopiert und der Scope geschlossen.
+Dar\"uber gibt es den Global-Scope, in welchem globale Variablen wie auch Prozeduren deklariert sind. Wenn eine Prozedur deklariert wird, wird tempor\"ar ein Local-Scope erstellt, in dem die Variablen deklariert werden. Wenn die Funktion vollst\"andig deklariert wurde, wird dessen Inhalt in das Funktionsobjekt kopiert und der Scope geschlossen.
 
-Bei der Namensaufl\"osung von Variablen wird immer zuerst der aktuelle Scope durchsucht, und wenn die suche erfolglos ist der darunterliegende Scope, und wenn die Suche wieder erfolglos ist wieder der n\"achste scope. Dadurch ist es m\"oglich Variablen mit gleichem Namen als globale Variable wie auch als Funktionsvariable zu deklarieren.
+Bei der Namensaufl\"osung von Variablen wird immer zuerst der aktuelle Scope durchsucht, und wenn die suche erfolglos ist der darunterliegende Scope, und wenn die Suche wieder erfolglos ist wieder der n\"achste scope. Dadurch ist es m\"oglich, Variablen mit gleichem Namen als globale Variable wie auch als Funktionsvariable zu deklarieren.
 
 \begin{lstlisting}[language=Java]
 public class Scope {
@@ -149,9 +149,9 @@ public class Scope {
 
 \subsubsection{Obj.java}
 
-Ein Objektnode wird dazu verwendet definierte Konstanten, Variablen, Typen und Funktionen in die Symboltabelle einzutragen. Dabei wird bei Variablen zum Beispiel gespeichert welchen Offset diese zum FramePointer haben, oder von welchem Typ diese ist.
+Ein Objektnode wird dazu verwendet, definierte Konstanten, Variablen, Typen und Funktionen in die Symboltabelle einzutragen. Dabei wird bei Variablen zum Beispiel gespeichert, welchen Offset diese zum FramePointer besitzen, oder von welchem Typ diese sind.
 
-Bei Prozeduren gibt es eine Referenz zu dem dahinter liegenden Abstrakten Syntaxbaum, welcher durchlaufen wird wenn die Funktion aufgerufen wird. Auch wird vermerkt wie viel Speicher allokiert werden muss, um alle Variablen im Stack speichern zu k\"onnen, oder wie viele Variablen Funktionsargumente darstellen.
+Bei Prozeduren gibt es eine Referenz zu dem dahinter liegenden abstrakten Syntaxbaum, welcher durchlaufen wird wenn die Funktion aufgerufen wird. Auch wird vermerkt, wie viel Speicher allokiert werden muss, um alle Variablen im Stack speichern zu k\"onnen, oder wie viele Variablen Funktionsargumente darstellen.
 
 \begin{lstlisting}[language=Java]
 public int     kind;      // CON, VAR, TYPE, PROC
@@ -179,7 +179,7 @@ public boolean isForward; // PROC: is it a forward declaration
 
 \subsubsection{Struct.java}
 
-Die grundlegenden Eigenschaften von Datentypen werden in dem Objekt Struct definiert. Dabei handelt es sich um Informationen wie der Art des Typs, dessen Gr\"ose, und bei zusammengesetzte Datentypen auch weiterf\"urende Informationen wie alle Definierten Variablen einer Struktur oder den Grundlegenden Datentyp eines Arrays (welcher wiederum ein Array sein kann).
+Die grundlegenden Eigenschaften von Datentypen werden in dem Objekt Struct definiert. Dabei handelt es sich um Informationen wie der Art des Typs, dessen Gr\"o\ss{}e, und bei zusammengesetzte Datentypen auch weiterf\"urende Informationen wie alle definierten Variablen einer Struktur oder den grundlegenden Datentyp eines Arrays (welcher wiederum ein Array sein kann).
 
 \begin{lstlisting}[language=Java]
 public int    kind;       // NONE, INT, FLOAT, CHAR, ARR, ...
@@ -191,9 +191,9 @@ public Obj    fields;     // STRUCT: fields
 
 \subsubsection{Strings.java}
 
-Strings sind bei uns konstant. Das hei\ss{}t dass ein neuer String angelegt werden muss, falls ein bestehender ver\"andert wird. Gespeichert wird ein null-terminierter String in einem char Array, welches wenn n\"otig automatisch vergr\"o\ss{}ert wird. Wenn ein String abgerufen werden soll, muss die eindeutige id des Strings angegeben werden. Es ist auch m\"oglich einzelne Zeichen eines Strings abzufragen, wobei die Anfangsposition ben\"otigt wird.
+Strings sind in C Compact konstant. Das hei\ss{}t dass ein neuer String angelegt werden muss, falls ein bestehender ver\"andert wird. Gespeichert wird ein null-terminierter String in einem char Array, welches wenn n\"otig automatisch vergr\"o\ss{}ert wird. Wenn ein String abgerufen werden soll, muss die eindeutige id des Strings angegeben werden. Es ist auch m\"oglich, einzelne Zeichen eines Strings abzufragen, wobei die Anfangsposition ben\"otigt wird.
 
-Um gleiche Strings nicht doppelt anzulegen gibt es eine HashMap, in der alle verf\"ugbaren Strings, und dessen Anfangsposition vermerkt sind. So ist es m\"oglich Speicherverbrauch zu verringern indem Duplikate verhindert werden.
+Um gleiche Strings nicht doppelt anzulegen gibt es eine HashMap, in der alle verf\"ugbaren Strings und dessen Anfangsposition vermerkt sind. So ist es m\"oglich, den Speicherverbrauch zu verringern indem Duplikate verhindert werden.
 
 \begin{lstlisting}[language=Java]
 static private char[] data = new char[4096];
@@ -203,7 +203,7 @@ static private Map<String, Integer> map = new HashMap<>();
 
 \subsubsection{Tab.java}
 
-Diese Datei ist die Zentrale Datei welche f\"ur viele Aktionen im Compiler verwendet werden. Hier wird der Universe-Scope mit allen Standard-Typen und -Funktionen zu Beginn initialisiert. Des Weiteren sind hier die Methoden deklariert, welche f\"ur Aktionen wie Typkonvertierung, hinzuf\"ugen neuer Objekte in den aktuellen Scope oder das Suchen von Variablen welche im Aktuellen oder einem darunterliegenden Scope deklariert wurde.
+Diese Datei ist die zentrale Datei welche f\"ur viele Aktionen im Compiler verwendet werden. Hier wird der Universe-Scope mit allen Standard-Typen und Funktionen zu Beginn initialisiert. Des Weiteren sind hier die Methoden deklariert, welche f\"ur Aktionen wie Typkonvertierung, hinzuf\"ugen neuer Objekte in den aktuellen Scope oder das Suchen von Variablen welche im Aktuellen oder einem darunterliegenden Scope deklariert wurde.
 
 \begin{lstlisting}[language=Java]
 public Obj find(String name) {
@@ -220,11 +220,11 @@ public Obj find(String name) {
 
 \htlParagraph{Beispiel}
 
-Wenn ein Objekt in die Symboltabelle eingef\"ugt wird muss einerseits das Objekt erstellt werden. Des Weiteren ist es notwendig je nach Art des Objekts zus\"atzliche Informationen einzutragen, welche sp\"ater unter anderem vom Compiler wie auch vom Interpreter ben\"otigt werden.
+Wenn ein Objekt in die Symboltabelle eingef\"ugt wird, muss einerseits das Objekt erstellt werden, anderseits ist es notwendig, je nach Art des Objekts zus\"atzliche Informationen einzutragen, welche sp\"ater unter anderem vom Compiler oder vom Interpreter ben\"otigt werden.
 
-Auch kann es passieren dass versehentlich der gleiche Identifier verwendet wurde, weshalb \"uberpr\"uft werden muss ob eine Variable, Funktion oder Typ bereits definiert worden ist. Es gibt jedoch auch bei Funktionen Vorw\"artsfunktionen, welche jedoch pro Funktion nur 1. mal zugelassen sind.
+Auch kann es passieren, dass versehentlich der gleiche Identifier verwendet wurde, weshalb \"uberpr\"uft werden muss ob eine Variable, Funktion oder Typ bereits definiert worden ist. Es gibt jedoch auch bei Funktionen Vorw\"artsdeklarationen, welche jedoch pro Funktion nur 1 mal zugelassen sind.
 
-Dabei muss wiederum beachtet werden, das Variablen im globalen wie auch im lokalen Skope definiert werden k\"onnen, ohne sich gegenseitig zu beeinflussen. Dagegen darf es nicht m\"oglich sein Funktionen oder Typen zu \"uberschreiben.
+Dabei muss wiederum beachtet werden, das Variablen im globalen wie auch im lokalen Skope definiert werden k\"onnen, ohne sich gegenseitig zu beeinflussen. Dagegen darf es nicht m\"oglich sein, Funktionen oder Typen zu \"uberschreiben.
 
 \begin{lstlisting}[language=Java]
 public Obj insert(int kind, String name, Struct type, int line) {
@@ -281,11 +281,11 @@ public Obj insert(int kind, String name, Struct type, int line) {
 
 \subsubsection{Preprocessor.java}
 
-Der Compiler wurde nur dazu entwickelt, einzelne Dateien in einen Abstrakten Syntaxbaum zu \"ubersetzen. Um eine mehrere Dateien einzubinden(z.B. Standardbiblioteken) ist es aber notwendig Dateien vor dem Kompilieren zusammenzuf\"ugen, und Mehrfachincludes korrekt zu verarbeiten.
+Der Compiler wurde nur dazu entwickelt, einzelne Dateien in einen abstrakten Syntaxbaum zu \"ubersetzen. Um eine mehrere Dateien einzubinden (z.B. Standardbiblioteken) ist es aber notwendig, Dateien vor dem kompilieren zusammenzuf\"ugen, und Mehrfachincludes korrekt zu verarbeiten.
 
-Um dies umzusetzen, wurde ein Pr\"aprozessor implementiert welcher alle grundlegenden Funktionen des C-Pr\"aprozessors nachbildet. Bewusst wurde bei dieser Implementierung die urspr\"ungliche Funktionsweise von \#define ver\"andert, um die Verwendung der Sprach-internen Konstanten zu erzwingen.
+Um dies umzusetzen, wurde ein Pr\"aprozessor implementiert welcher alle grundlegenden Funktionen des C-Pr\"aprozessors nachbildet. Bewusst wurde bei dieser Implementierung die urspr\"ungliche Funktionsweise von \#define ver\"andert, um die Verwendung der sprach-internen Konstanten zu erzwingen.
 %Eines der Hauptprobleme von \#define sind die Fehlenden Typinformationen bei der Verwendung als Konstante, welche bei einer Programmierumgebung f\"ur Anf\"anger am besten von Anfang an vermieden 
 
-Der Pr\"aprozessor umfasst einen einfachen Scanner und Parser. Er ist in der Lage Kommentare wie auch Kommentare in Strings korrekt auszuwerten, und gesteuert mithilfe von Pr\"aprozessorfunktionen eine Quellcodedatei aufzubauen, die dann vom Compiler \"ubersetzt werden kann.
+Der Pr\"aprozessor umfasst einen einfachen Scanner und Parser. Er ist in der Lage, Kommentare wie auch Kommentare in Strings korrekt auszuwerten und gesteuert mithilfe von Pr\"aprozessorfunktionen eine Quellcodedatei aufzubauen, die dann vom Compiler \"ubersetzt werden kann.
 
-Um Fehlermeldungen wieder in eine korrekte Form zu bringen, ist es notwendig die Position im generierten Quelltext auf den urspr\"unglichen Quelltext zur\"ukmapen zu k\"onnen. Dazu wird eine Datenstruktur erstellt welche angibt welche Quelldatei an einer bestimmten Position im generierten Quelltext genutzt wird. Diese Information reicht aus um die urspr\"ungliche Zeile im Quelltext zur\"uckzurechnen, da der Pr\"aprozessor keine Zeilen einf\"ugt oder l\"oscht, sondern diese nur ver\"andert.
+Um Fehlermeldungen wieder in eine korrekte Form zu bringen, ist es notwendig, die Position im generierten Quelltext auf den urspr\"unglichen Quelltext zur\"ukzurechnen. Dazu wird eine Datenstruktur erstellt welche angibt, welche Quelldatei an einer bestimmten Position im generierten Quelltext genutzt wird. Diese Information reicht aus, um die urspr\"ungliche Zeile im Quelltext zur\"uckzurechnen, da der Pr\"aprozessor keine Zeilen einf\"ugt oder l\"oscht, sondern diese nur ver\"andert.

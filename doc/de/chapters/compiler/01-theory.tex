@@ -15,13 +15,26 @@ Die sogenannte Erweiterte Backus-Naur-Form (EBNF)\footnote{\url{https://de.wikip
 
 Bei kontextfreier Grammatik wird jeweils ein Nichtterminalsymbol auf eine beliebige Folge von Terminal- bzw. Nichtterminalsymbolen abgeleitet ($V \rightarrow w$). Wenn das Nichtterminalsymbol $V$ in einem anderem Nichtterminalsymbol verwendet wird, wird nicht auf den Kontext geachtet, in welcher das Nichtterminalsymbol $V$ eingebettet ist. Die Regel ist daher kontextfrei.
 
-Vorteile der EBNF gegen\"uber der BNF sind unter anderem:
+Vorteile der EBNF gegen\"uber der BNF sind unter anderem\footnote{\url{http://cuiwww.unige.ch/db-research/Enseignement/analyseinfo/AboutBNF.html}}:
 
 \begin{itemize}
-  \item einfacheres erstellen von Rekursionen und optionalen Ausdr\"ucken
-  \item bessere Lesbarkeit
-  \item einfaches und eindeutiges Definieren von Terminalsymbolen
+  \item Einfacheres erstellen von Rekursionen und optionalen Ausdr\"ucken
+  \item Bessere Lesbarkeit
+  \item Einfaches und eindeutiges Definieren von Terminalsymbolen
 \end{itemize}
+
+\htlParagraph{Rekursion geschrieben in BNF}
+
+\begin{lstlisting}[language=EBNF]
+<Identifier> ::= <letter> |
+                 <identifier> [ <letter> | <digit> ];
+\end{lstlisting}
+
+\htlParagraph{Rekursion geschrieben in EBNF}
+
+\begin{lstlisting}[language=EBNF]
+Identifier = letter { letter | digit }.
+\end{lstlisting}
 
 \newpage
 
@@ -49,7 +62,7 @@ Nichtterminalsymbole werden normalerweise gro\ss{} geschrieben. In diesem Beispi
 
 \subsubsection{Produktionsregel}
 
-Die Produktionsregel\footnote{\url{https://de.wikipedia.org/wiki/Produktionsregel}} ist eine Regel, welche angibt wie aus W\"ortern neue W\"orter produziert werden.
+Die Produktionsregel\footnote{\url{https://de.wikipedia.org/wiki/Produktionsregel}} ist eine Regel, welche angibt, wie aus W\"ortern neue W\"orter produziert werden.
 
 \begin{lstlisting}[language=EBNF, backgroundcolor=\color{highlight}]
 Expr = Term { ( "+" | "-" ) Term }.
@@ -62,7 +75,7 @@ Die Produktionsregel gibt an wie z.B. das Nichtterminalsymbol ``Expr'' aufgebaut
 
 \subsubsection{Eindeutigkeit}
 
-Die Grammatik muss so aufgebaut sein, dass es für einen Tokenstrom nur eine eindeutige Möglichkeit gibt diesen zu parsen.\footnote{\url{http://www.iai.uni-bonn.de/III//lehre/vorlesungen/Informatik_I/WS05/Folien/VLWS0506-10.pdf}} Beim Parsen wird ein Tokenstrom in eine andere Darstellung \"uberf\"uhrt, welcher die weitere Verarbeitung erm\"oglicht. Dies kann aber nur dann reproduzierbar funktionieren, wenn der Parser einen bestimmten Tokenstrom nur in einem eindeutigen Weg durchlaufen darf.
+Die Grammatik muss so aufgebaut sein, dass es für einen Tokenstrom nur eine eindeutige Möglichkeit gibt diesen zu parsen\footnote{\url{http://www.iai.uni-bonn.de/III//lehre/vorlesungen/Informatik_I/WS05/Folien/VLWS0506-10.pdf}} (siehe Kapitel \ref{compiler_parser}). Beim Parsen wird ein Tokenstrom in eine andere Darstellung \"uberf\"uhrt, welcher die weitere Verarbeitung erm\"oglicht. Dies kann aber nur dann reproduzierbar funktionieren, wenn der Parser einen bestimmten Tokenstrom nur in einem eindeutigen Weg durchlaufen darf.
 
 \htlParagraph{Mehrdeutige EBNF Regel}
 
@@ -154,11 +167,11 @@ Designator = ident { "." ident | "[" BinExpr "]" }.
 \newpage
 \subsection{Lexikalische Analyse - Scanner}
 
-Bei der lexikalischen Analyse zerlegt der sogenannt Scanner\footnote{\url{https://de.wikipedia.org/wiki/Tokenizer}} den Zeichenstrom in einen sogenannten Tokenstrom. Ein Token\footnote{\url{https://de.wikipedia.org/wiki/Token_(\%C3\%9Cbersetzerbau)}} stellt dabei eine logische Einheit dar (z.B.: eine Variable, oder ein Operatorzeichen), und wird nicht mehr weiter zerlegt (Terminalsymbol).
+Bei der lexikalischen Analyse zerlegt der Scanner\footnote{\url{https://de.wikipedia.org/wiki/Tokenizer}} den Zeichenstrom in einen sogenannten Tokenstrom. Ein Token\footnote{\url{https://de.wikipedia.org/wiki/Token_(\%C3\%9Cbersetzerbau)}} stellt dabei eine logische Einheit dar (z.B.: eine Variable, oder ein Operatorzeichen), und wird nicht mehr weiter zerlegt (Terminalsymbol).
 
 \htlParagraph{Zeichenstrom}
 
-Der Scanner bekommt einen Zeichenstrom, welcher aus einzelnen Zeichen besteht. Ein Zeichen ist z.B. ein Buchstabe, eine Zahl oder Sonderzeichen wie ``='', oder ``+''.
+Der Scanner empf\"angt einen Zeichenstrom, welcher aus einzelnen Zeichen besteht. Ein Zeichen ist z.B. ein Buchstabe, eine Zahl oder Sonderzeichen wie ``='', oder ``+''.
 
 \begin{figure}[h]
 \centering
@@ -169,9 +182,9 @@ Der Scanner bekommt einen Zeichenstrom, welcher aus einzelnen Zeichen besteht. E
 
 \htlParagraph{Resultierender Tokenstrom}
 
-Aus diesem Zeichenstrom werden dann die Tokens extrahiert, welche dann die sogenannten Terminalsymbole in der EBNF bzw. BNF darstellen. Tokens k\"onnen dabei aus 1. oder mehreren Zeichen bestehen.
+Aus diesem Zeichenstrom werden dann die Tokens extrahiert, welche dann die sogenannten Terminalsymbole in der EBNF bzw. BNF darstellen. Tokens k\"onnen dabei aus 1 oder mehreren Zeichen bestehen.
 
-Manche Tokens wie z.B. Variablen oder Konstanten besitzen au\ss{}er der Tokennummer(welche definiert, um welchen Token es sich handelt) des-weiteren noch einen Tokenwert, mit dem sp\"ater z.B. der Variablenname, oder der Wert einer Variable ausgelesen werden kann.
+Manche Tokens wie z.B. Variablen oder Konstanten besitzen au\ss{}er der Tokennummer (welche definiert, um welchen Token es sich handelt) des Weiteren noch einen Tokenwert, mit dem sp\"ater z.B. der Variablenname, oder der Wert einer Variable ausgelesen werden kann.
 
 \begin{figure}[h]
 \centering
@@ -181,6 +194,7 @@ Manche Tokens wie z.B. Variablen oder Konstanten besitzen au\ss{}er der Tokennum
 \end{figure}
 
 \subsection{Syntaxanalyse - Parser}
+\label{compiler_parser}
 
 Der Parser\footnote{\url{https://de.wikipedia.org/wiki/Parser}} wandelt danach den Tokenstrom in einen Syntaxbaum um, welcher das Programm repräsentiert.
 
@@ -216,9 +230,9 @@ Der abstrakte Syntaxbaum wird explitzit w\"ahrend des Parsens gebaut; z.B. mithi
 \label{compiler_parser_syntaxtree}
 \end{figure}
 
-\subsubsection{homogene und heterogene Syntaxbäume}
+\subsubsection{Homogene und heterogene Syntaxbäume}
 
-Der Abstrakte Syntaxbaum kann entweder aus einheitlichen Knoten (homogen) oder aus verschiedenen Knoten (heterogen) aufgebaut sein.\footnote{\url{https://wiki.fernuni-hagen.de/eclipse/index.php/Abstract_Syntax_Tree_(AST)\#Konzept_des_Syntaxbaums}}
+Der abstrakte Syntaxbaum kann entweder aus einheitlichen Knoten (homogen) oder aus verschiedenen Knoten (heterogen) aufgebaut sein.\footnote{\url{https://wiki.fernuni-hagen.de/eclipse/index.php/Abstract_Syntax_Tree_(AST)\#Konzept_des_Syntaxbaums}}
 
 \subsection{Attributierte Gramatik}
 
@@ -241,17 +255,17 @@ ident     (.  // check if a type with the given name exist
 . 
 \end{lstlisting}
 
-In diesem Beispiel pr\"uft die Berechnungsvorschrift ob bereits ein Identifier mit dem gew\"ahlten Namen definiert wurde (passiert in der Funktion tab.find(t.val);), und ob der gefundene Identifier ein Typ ist. 
+In diesem Beispiel pr\"uft die Berechnungsvorschrift, ob bereits ein Identifier mit dem gew\"ahlten Namen definiert wurde (passiert in der Funktion tab.find(t.val);), und ob der gefundene Identifier ein Typ ist. 
 
 Falls eine dieser Syntaxbedingungen fehlschl\"agt, wird ein semantischer Fehler geworfen. So werden w\"ahrend des Parsens nicht nur Syntaxfehler, sondern auch logische Fehler detektiert (z.B. fehlende Variablendeklaration).
 
-Desweiteren kann durch diese Berechnungsvorschriften ein Abstraker Syntaxbaum aufgebaut werden. Eine EBNF-Regel stellt nicht unbedingt einen Knoten im Abstrakten Syntaxbaum dar, da z.b. Variablendeklarationen oft in sogenannte Symboltabellen gespeichert werden.
+Des Weiteren kann durch diese Berechnungsvorschriften ein abstraker Syntaxbaum aufgebaut werden. Eine EBNF-Regel stellt nicht unbedingt einen Knoten im abstrakten Syntaxbaum dar, da z.b. Variablendeklarationen oft in sogenannte Symboltabellen gespeichert werden.
 
 \subsection{Symboltabelle}
 
-Die Symboltabelle\footnote{\url{https://de.wikipedia.org/wiki/Symboltabelle}} ist eine Datenstruktur in der Variablen und Funktionsdeklarationen gespeichert werden. Sie umfasst dabei Informationen wie z.b. die Zeilennummer, in der die Variable/Funktion deklariert wurde, die Gr\"o\ss{}e des Datentypes, oder auch den Wert mit welchem die Variable deklariert wurde (Konstanten).
+Die Symboltabelle\footnote{\url{https://de.wikipedia.org/wiki/Symboltabelle}} ist eine Datenstruktur, in der Variablen und Funktionsdeklarationen gespeichert werden. Sie umfasst dabei Informationen wie z.b. die Zeilennummer, in der die Variable/Funktion deklariert wurde, die Gr\"o\ss{}e des Datentypes, oder auch den Wert mit welchem die Variable deklariert wurde (Konstanten).
 
-Mithilfe der Symboltabelle wird unter anderem festgestellt, ob eine Variablen deklariert wurde, oder wie viel Speicher f\"ur eine Funktion reserviert werden muss.
+Mithilfe der Symboltabelle wird unter anderem festgestellt, ob eine Variablen deklariert wurde oder wie viel Speicher f\"ur eine Funktion reserviert werden muss.
 
 %, und l\"ost m\"ogliche Namensprobleme auf.\footnote{\url{https://de.wikipedia.org/wiki/Namensraum}}
 
