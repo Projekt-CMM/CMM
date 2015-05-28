@@ -45,10 +45,12 @@
 %	--------------------------------------------------------			
 \input{./chapters/Pre-03-erklaerung.tex}
 
+\iffabian
 %	--------------------------------------------------------
 % 	Vorwort
 %	--------------------------------------------------------	
 \input{./chapters/Pre-04-vorwort.tex}
+
 
 %	--------------------------------------------------------
 % 	Zusammenfassung
@@ -59,6 +61,7 @@
 % 	Abstract
 %	--------------------------------------------------------		
 \input{./chapters/Pre-06-abstract.tex}
+\fi
 
 %	--------------------------------------------------------
 % 	Inhaltsverzeichnis
@@ -103,12 +106,14 @@
 	\input{./chapters/gui/gui-main.tex}
 	\input{./chapters/gui/debugger/0-debugger.tex}
 \else
+\ifpeter
 	\chapter{Benutzeroberfläche}
 	\input{./chapters/gui/launcher-main.tex}
 	\input{./chapters/gui/quest-package.tex}
 	\input{./chapters/gui/quest-selection.tex}
 	\input{./chapters/gui/classes/JFileChooser.tex}
 	\input{./chapters/gui/profile.tex}
+\fi
 \fi
 
 % Questsystem
@@ -129,7 +134,9 @@
 \iffabian
 	\input{./chapters/gui/sci/0-sci.tex}
 \else
+\ifpeter
 	\input{./chapters/lehrerinterviews.tex}
+\fi
 \fi
 
 % Entwicklung
@@ -140,12 +147,12 @@
 % Versionsgeschichte
 \iffabian
 	\input{./chapters/gui/versions.tex}
-\fi
 
 %	--------------------------------------------------------
 % 	Persönliche Erfahrungen
 %	--------------------------------------------------------
 \input{./chapters/05-erfahrungen.tex}
+\fi
 
 %	--------------------------------------------------------
 % 	Autoren
