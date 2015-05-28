@@ -36,7 +36,6 @@ Wenn ein aktueller Projektstand in das eigene Repository eingecheckt wird, nennt
 \label{git_file_status_livecycle}
 \end{figure}
 
-
 \htlParagraph{Vormerken aller ge\"anderten Dateien}
 
 \begin{lstlisting}[language=bash]
@@ -48,6 +47,19 @@ git add -u
 \begin{lstlisting}[language=bash]
 git commit -m 'this is my first commit'
 \end{lstlisting}
+
+\newpage
+
+Durch den dezentralen Aufbau besitzt jeder Programmierer zumindest 1 Branch, in welchen commitet wird. Wenn neue Features entwickelt werden kann dies auf einem eigenen Branch geschehen, wodurch das Hauptprojekt bis zum Merge unbeeinflusst weiterentwickelt werden kann. Sobald das Feature fertig ist wird dieses gemergt, und alle \"Anderungen sind so im Hauptzweig vorhanden.
+
+So ist es auch m\"oglich eine Entwicklungsversion wie auch eine Produktivversion als eigenen Branch zu f\"uhren, und so wichtige Patches auf einfache Weise nicht nur in die Entwicklungsversion sondern auch in die Produktivversion anzuwenden, ohne jedoch nicht notwendige \"Anderungen in die Produktivversion zu \"ubernehmen.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{./media/images/development/git_history.png}
+\caption{Grafische Ansicht des Projektverlaufes, inklusive Branches und  Merges}
+\label{development_git_history}
+\end{figure}
 
 \section{GitHub}
 
