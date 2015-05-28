@@ -1,7 +1,7 @@
 \section{Quest - Selection}
 %TODO Referenz Quest System
 
-Sobald ein Package ausgewählt wurde, kann man darin die Quest wählen. Wie beim Questpackage wird rechts die Beschreibung der ausgewählten Quest, falls diese vorhanden ist, angezeigt. Der \textit{"`Type"'} kann in der \textit{quest.xml} definiert werden und bildet ein Attribut. Somit kann man zum Beispiel für verschiedene Aufgabenbereiche, verschiedene Attribute verwenden. Links wird der Status jeweiligen Quest in Symbolen dargestellt.
+Sobald ein Package ausgewählt wurde, kann man darin die Quest wählen. Wie beim Questpackage wird rechts die Beschreibung der ausgewählten Quest angezeigt. Der \textit{"`Type"'} kann in der \textit{quest.xml} definiert werden. Somit kann man zum Beispiel für verschiedene Aufgabenbereiche verschiedene Attribute verwenden. Links wird der Status der jeweiligen Quest in Symbolen dargestellt.
 
 \begin{figure}[h] 
   \centering
@@ -11,7 +11,7 @@ Sobald ein Package ausgewählt wurde, kann man darin die Quest wählen. Wie beim
 \end{figure}
 
 \begin{itemize}
-\item Mit einem leeren Feld, wird eine nicht gestartete Quest symbolisiert.
+\item Mit einem leeren Feld wird eine nicht gestartete Quest symbolisiert.
 \item Eine Uhr bedeutet, dass die Quest bereits gestartet, jedoch noch nicht abgeschlossen wurde.
 \item Ein Häkchen symbolisiert eine fertiggestellte Quest.
 \item Ein Kreuz bedeutet eine gesperrte Quest. 
@@ -19,7 +19,7 @@ Sobald ein Package ausgewählt wurde, kann man darin die Quest wählen. Wie beim
 
 Sobald eine Quest selektiert wurde, wird der grau hinterlegte Button aktiv und kann nun geklickt werden. Sobald dies geschehen ist, wird die gewählte Quest als aktuelle Quest ins Profil übernommen und C-Compact dementsprechend angepasst.
 
-Zur Realisierung wurde ein JTable verwendet. Dieser befindet sich wieder in einer JScrollpane. Das Questpackage und die Questselection verwenden grundsätzlich dasselbe JFrame. Aus diesem Grund sieht die Umstellung der Package Auswahl auf die Quest Auswahl dynamischer aus. Somit muss beim Wechseln auf die JTable, die JTree, entfernt werden. Danach kann der neue Komponent hinzugefügt werden.
+Zur Realisierung wurde ein JTable verwendet. Dieser befindet sich wieder in einer JScrollpane. Das Questpackage und die Questselection verwenden grundsätzlich dasselbe JFrame. Beim Wechseln auf die JTable, muss die JTreeTable entfernt werden. Danach kann der neue JTable hinzugefügt werden.
 \begin{lstlisting}[language=JAVA]
 	public void changetoQuestTable(){
 		splitpane.remove(jTablePanel);
@@ -30,4 +30,4 @@ Zur Realisierung wurde ein JTable verwendet. Dieser befindet sich wieder in eine
 	}
 \end{lstlisting}
 
-Mithilfe der \textit{frame.validate()} Methode wird noch einmal überprüft, ob alle Komponenten ordnungsgemäß zugewiesen werden. Danach muss das gesamte JFrame neu gezeichnet werden, was in diesem Fall von der \textit{frame.repaint()}-Methode durchgeführt wird.
+%Mithilfe der \textit{frame.validate()} Methode wird noch einmal überprüft, ob alle Komponenten ordnungsgemäß zugewiesen werden. Danach muss das gesamte JFrame neu gezeichnet werden, was in diesem Fall von der \textit{frame.repaint()}-Methode durchgeführt wird.

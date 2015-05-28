@@ -1,13 +1,12 @@
 \section{JFileChooser}
 \label{sec:JFileChooser}
 
-Der JFileChoosers\footnote{\url{http://docs.oracle.com/javase/7/docs/api/javax/swing/JFileChooser.html}} ermöglicht dem Benutzer, Dateien und Ordner auszuwählen. Dieser kann mit den verschiedensten Methoden angepasst werden. Dazu müssen die veränderten Methoden im Vorhinein initialisiert werden.
-
+Der JFileChoosers\footnote{\url{http://docs.oracle.com/javase/7/docs/api/javax/swing/JFileChooser.html}} ermöglicht dem Benutzer, Dateien und Ordner auszuwählen. Dieser kann mit den verschiedensten Methoden angepasst werden.
 \begin{lstlisting}[language=JAVA]
 JFileChooser chooser = new JFileChooser();
 \end{lstlisting}
     
-Nun kann man verschiedenste Einstellungen vornehmen. Sehr oft wurde von uns ein so genannter FileNameExtensionFilter verwendet. Mit diesem ist es möglich. Dateien mit bestimmten Endungen herauszufiltern und nur diese anzeigen zu lassen.
+Nun kann man verschiedenste Einstellungen vornehmen. Sehr oft wurde von uns ein sogenannter FileNameExtensionFilter verwendet. Mit diesem ist es möglich, Dateien mit bestimmten Endungen herauszufiltern und nur diese anzeigen zu lassen.
 
 Dies wurde zum Beispiel beim Suchen nach C-Compact Profilen verwendet!
 \begin{lstlisting}[language=JAVA]
@@ -18,10 +17,11 @@ chooser.setFileFilter(filter);
 
 
 \subsection{Anzeigen einer Vorschau}
-Bei der Implementierung des JFileChoosers wurde oftmals ein Zusatz hinzugefügt, der es den Nutzer ermöglicht, eine Vorschau\footnote{\url{http://www.javalobby.org/java/forums/t49462.html}} eines Bildes sowie den Nutzernamen zu sehen.
+Bei der Verwendung des JFileChoosers wurde oftmals ein Zusatz hinzugefügt, der es dem Nutzer ermöglicht, eine Vorschau\footnote{\url{http://www.javalobby.org/java/forums/t49462.html}} eines Bildes sowie den Nutzernamen zu sehen.
 
 Die Vorschau wird in einer Klasse erstellt, welche ein JPanel erweitert und den PropertyChangeListener implementiert. Beim Anlegen des Konstruktors ist darauf zu achten, dass das JPanel bereits im Konstruktor eine geeignete Größe zugewiesen bekommt.
 
+%TODO FIX
 Zuerst wird die Methode PropertyChange aufgerufen, welches beim Klicken auf eine Datei oder einen Ordner erscheint. Nun wird die Variable, welche der Methode übergeben wurde, auf ein File umgeändert. Somit kann nun abgefragt werden, ob es sich hierbei um den gewünschten Datentyp handelt. Danach wird die \textit{repaint()} Methode benötigt, um die \textit{paintComponent()} Methode aufzurufen.
 \begin{lstlisting}[language=JAVA]
 	public void propertyChange(PropertyChangeEvent e) {
@@ -34,7 +34,7 @@ Zuerst wird die Methode PropertyChange aufgerufen, welches beim Klicken auf eine
 \end{lstlisting}
 
 % http://www.javalobby.org/java/forums/t49462.html
-In weiterer Folge muss das Bild nur mehr geladen und skaliert werden. Mithilfe der paintComponent Methode, kann das Bild nun eingeschleust werden. Hierfür wird die \textit{drawImage} Methode verwendet. Dabei ist zu beachten, dass das Bild im JPanel auf der richtigen Position gezeichnet wird.
+In weiterer Folge muss das Bild nur mehr geladen und skaliert werden. Mithilfe der paintComponent Methode kann das Bild nun eingeschleust werden. Hierfür wird die \textit{drawImage} Methode verwendet. Dabei ist zu beachten, dass das Bild im JPanel in der richtigen Position gezeichnet wird.
 \begin{lstlisting}[language=JAVA]
 public void paintComponent(Graphics g) {
 		g.setColor(bg);
@@ -53,4 +53,4 @@ Nun kann die neue Klasse eingebunden werden. Dies geschieht, indem man mehrere v
 		chooser.addPropertyChangeListener(preview);
 \end{lstlisting}
 
-Wenn alle veränderungen vorgenommen wurden, kann der FileChooser mit der \textit{showdialog()}- angezeigt und die gewünschten Daten abgefragt werden.
+Wenn alle Veränderungen vorgenommen wurden, kann der FileChooser mit \textit{showdialog()}- angezeigt und die gewünschten Daten abgefragt werden.
