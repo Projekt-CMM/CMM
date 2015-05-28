@@ -21,6 +21,7 @@
  
 package at.jku.ssw.cmm.profile;
 
+import static at.jku.ssw.cmm.gettext.Language._;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -147,7 +148,7 @@ public class Quest {
 		FOLDER_TOKENS = "tokens",
 		FOLDER_PACKAGES = "packages",
 		ATTRIBUTE_EXTRA = "extra",
-		ATTRIBUTE_EXERSICE = "exercise";
+		ATTRIBUTE_EXERSICE = _("exercise");
 	
 	/**
 	 * Strings for reading the XML file
@@ -177,6 +178,14 @@ public class Quest {
 	 */
 	public static final String TIME_FORMAT = "dd-MM-yyyy:HH:mm:SS";
 		
+	public Quest(){}	
+	public Quest(String allPackagesFolder, String packageFolder,
+			String questFolder) {
+		this.packagePath = packageFolder; 
+		this.questPath = questFolder;
+		this.initPath = allPackagesFolder;
+	}
+
 	/**
 	 * Reads only one Quest, but only the .xml file.
 	 * @param allPackagesPath: the path where all Packages are saved
@@ -186,7 +195,7 @@ public class Quest {
 	 */
 	public static Quest ReadQuest(String allPackagesFolder, String packageFolder, String questFolder) {	
 			
-			Quest quest = new Quest();
+			Quest quest = new Quest(allPackagesFolder, packageFolder,questFolder);
 			String path = allPackagesFolder + sep + packageFolder + sep + questFolder;
 			
 			//Read all FileNames of the current path set before

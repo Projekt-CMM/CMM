@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
 
 import at.jku.ssw.cmm.gui.file.LoadStatics;
 
-public class Profile {
+public class Profile implements Cloneable{
 	
 	/**
 	 * System specific file separator
@@ -127,6 +127,7 @@ public class Profile {
 		IMAGE_DEFAULT = "images/prodef.png";
 	
 	public Profile(){}
+	
 	
 	public Profile(String profilePath, String packagePath){
 		this.profilePath = profilePath;
@@ -219,7 +220,7 @@ public static Profile UpdateOpen(Profile profile, Quest quest){
 			return null;
 		
 		if(profileQuests == null){
-			package1.setQuestList(sortQuestList(packageQuests));
+			package1.setQuestList(/*sortQuestList(*/packageQuests/*)*/);
 			return package1;
 		}
 				
@@ -237,14 +238,11 @@ public static Profile UpdateOpen(Profile profile, Quest quest){
 			for(Quest prevQ : packageQuests){
 				if(quest.getPreviousFolder().equals(prevQ.getQuestPath())){
 					if(prevQ.getState().equals(Quest.STATE_FINISHED) ){
-						if(!quest.getState().equals(Quest.STATE_OPEN) && 
-								!quest.getState().equals(Quest.STATE_INPROGRESS) && 
-								!quest.getState().equals(Quest.STATE_FINISHED))
+						if(quest.getState().equals(Quest.STATE_LOCKED)){
 						quest.setState(Quest.STATE_SELECTABLE);
-						System.err.println("Test");
+						}
 					}
 				}
-				
 			}
 		}
 		
@@ -481,6 +479,8 @@ public static Profile UpdateOpen(Profile profile, Quest quest){
             Transformer transformer;
 			transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            
             DOMSource source = new DOMSource(doc);
             
             //Writing into file

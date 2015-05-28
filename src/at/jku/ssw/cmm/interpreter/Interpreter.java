@@ -350,7 +350,7 @@ public final class Interpreter {
 	
 	/**
 	 * BoolExpr: boolcon, call, ref, i2b,
-	 * ident, dot, index
+	 * ident, dot, index 
 	 * @throws RunTimeException 
 	 */
 	boolean BoolExpr(Node p) throws ReturnException, AbortException, RunTimeException {

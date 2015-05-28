@@ -1,0 +1,56 @@
+\section{Lesen von XML Dateien}
+Um das Lesen von XML Dateien zu ermöglichen, sind in Java mehrere Klassen implementiert. Wir haben hierfür den Dom Parser\footnote{\url{http://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/}} verwendet. Dieser ladet die gesamte XML Datei und lädt diese in den Arbeitsspeicher. Nun wird er in eine Baumstruktur modelliert. Nun kann dieser Knoten für Knoten abgearbeitet werden, um an die notwendigen Informationen zu gelangen. Somit wurde der DOM-Parser von uns gewählt, da Dateien gut aufgeschlüsselt werden.
+
+Zuerst muss die gesamte XML Datei eingelesen werden. Dies kann mit diesen Befehlen erledigt werden.
+\begin{lstlisting}[language=JAVA]
+	File fXmlFile = new File("packages/datei.xml");
+	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+	Document doc = dBuilder.parse(fXmlFile);
+\end{lstlisting}
+
+Nun ist es wichtig, dass das gesamte Dokument in eine einheitliche Form gebracht wird. Dies ist notwendig damit nicht für jede einzelne Zeile ein neuer Knoten erstellt wird.
+\begin{lstlisting}[language=JAVA]
+	doc.getDocumentElement().normalize();
+\end{lstlisting}
+
+Die Liste der gewünschten Knoten und Unterknoten kann man nun mithilfe eines einfachen Befehls bekommen.
+\begin{lstlisting}[language=JAVA]
+	NodeList nList = doc.getElementsByTagName("quest");
+\end{lstlisting}
+Durch die neue Liste können wir nun anhand eine schleife iterativ durchgehen. Nun kann die gewünschte Informationen auslesen werden. 
+\begin{lstlisting}[language=JAVA]
+title = eElement.getElementsByTagName("title").item(0).getTextContent();
+\end{lstlisting}
+
+\section{Schreiben von XML Dateien}
+Um Konfigurationen zu speichern zu können, haben wir uns für das gängige XML entschieden. Somit wird das Profil oder veränderte Einstellungen der Benutzeroberfläche in XML Dateien gespeichert.
+
+Um dies zu realisieren haben wir wiederum den DOM XML Parser\footnote{\url{http://www.mkyong.com/java/how-to-create-xml-file-in-java-dom/}} verwendet. Hierbei muss der Baum zuerst im Programm aufgebaut werden, und dieser wird danach in einer XML Datei gespeichert.
+
+Zuerst muss er Hauptknoten erstellt werden. Vom diesem ausgehend können dann weiter Knoten angebracht werden.
+\begin{lstlisting}[language=JAVA]
+		Document doc = docBuilder.newDocument();
+		Element rootElement = doc.createElement("profile");
+		doc.appendChild(rootElement);
+\end{lstlisting}
+
+Nun kann man an den erstellen Knoten weitere Elemente hinzufügen. Somit kann man dadurch eine Baumstruktur erstellen.
+\begin{lstlisting}[language=JAVA]
+Element name = doc.createElement("name");
+		name.appendChild(doc.createTextNode("Test Name"));
+		rootElement.appendChild(name);
+\end{lstlisting}
+
+Nun kann der erstellte Baum als xml Datei abgespeichert werden. Hierbei wird jedoch setOutputProperty verwendet, um bei dem erzeugtem Dokument eine schönere Auflistung zu bekommen.
+\begin{lstlisting}[language=JAVA]
+TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+		DOMSource source = new DOMSource(doc);
+		
+		StreamResult result = new StreamResult(new File("/home/peda/file.xml"));
+		transformer.transform(source, result);
+\end{lstlisting}
