@@ -1,8 +1,9 @@
 \section{Erstellung einer Quest}
-Zuerst sollten die Dateien erstellt werden welche vom Programm benötigt werden. Diese sind: ref.cmm,input.cmm und description.html.
+Zuerst sollten die Dateien erstellt werden welche vom Programm benötigt werden. Diese sind: \textbf{ref.cmm,input.cmm} und \textbf{description.html}.
 
-Hierbei ist zu beachten dass input.cmm Inputdaten für die ref.cmm und die zu testende Datei erstellt.
+Hierbei ist zu beachten dass \textbf{input.cmm} Inputdaten für die \textbf{ref.cmm} und die zu testende Datei erstellt.
 \begin{lstlisting}[language=C]
+//input.cmm
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -12,19 +13,18 @@ void main(){
 }
 
 \end{lstlisting}
-Im der hier gezeigten input.cmm wird eine Zufallszahl erzeugt, diese kann nun in der ref.cmm eingelesen und weiterverarbeitet werden. 
+In der hier gegebenen \textbf{input.cmm} wird eine Zufallszahl erzeugt, diese kann nun in der \textbf{ref.cmm} eingelesen und weiterverarbeitet werden. 
 \begin{lstlisting}[language=C]
 	//Initialisierung des Zufallsgenerators
 	srand(atoi(scanf()));
 \end{lstlisting}
+In der hier gezeigten Codezeile wird von der \textbf{input.cmm} die Zufallszahl übernommen und im \textbf{ref.cmm} weiterverarbeitet. Die hier gezeigte Codezeile muss nun auch im Programm des Benutzers vorhanden sein. Damit es dadurch für den Benutzer zu keiner Verwirrung kommt, kann man eine \textbf{default.cmm} erstellen. Diese beinhaltet einen vordefinierten Quelltext. Darin sollte auch die vorher gezeigte Zeile enthalten sein.
 
-Da die hier gezeigte Zeile nun auch im Programm des Benutzers vorhanden sein muss, kann man eine default.cmm erstellen. Diese beinhaltet einen vordefinierten Quelltext. Darin sollte auch die vorher gezeigte Zeile enthalten sein, damit es bei der Benutzung der Quest zu keiner Verwirrung kommt.
-
-Der Aufbau einer guten Beschreibung einer Quest ist oftmals nicht einfach. Hierfür müssen mehrere Punkte beachtet werden. 
+Der Aufbau einer guten Beschreibung einer Quest ist oftmals nicht einfach. Hierfür sollten mehrere Punkte beachtet werden. 
 
 \begin{itemize}
 \item Die Beschreibung sollte einfach und verständlich sein. 
 \item Zuerst sollte ein theoretischer Teil beschrieben werden, danach die Aufgabenstellung.
-\item Es sollte versucht werden, dass für die Textblöcke die richtigen Klassen des Stylesheets verwendet werden, sodass ein duchgängiges Design entstehen kann.
-\item Überschiften mit dem html Tag "<h1"> oder "<h2"> kennzeichnen.
+\item Es sollte versucht werden, dass für die Textblöcke die richtigen Klassen des Stylesheets verwendet werden, sodass ein durchgängiges Design entstehen kann.
+\item Überschriften mit dem HTML-Tag \textbf{"<h1">} oder \textbf{"<h2">} kennzeichnen.
 \end{itemize}
