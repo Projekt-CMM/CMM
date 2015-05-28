@@ -1,85 +1,85 @@
 \contentsline {chapter}{Erkl\IeC {\"a}rung}{ii}{chapter*.4}
-\contentsline {chapter}{Vorwort}{viii}{chapter*.6}
-\contentsline {chapter}{Zusammenfassung}{ix}{chapter*.7}
-\contentsline {chapter}{Abstract}{1}{chapter*.8}
-\contentsline {chapter}{\numberline {1}Compiler}{2}{chapter.1}
-\contentsline {section}{\numberline {1.1}Allgemeiner Teil (Theorie)}{2}{section.1.1}
-\contentsline {subsection}{\numberline {1.1.1}Erweiterte Backus-Naur-Form (EBNF)}{2}{subsection.1.1.1}
-\contentsline {subsubsection}{\numberline {1.1.1.1}Terminalsymbol}{3}{subsubsection.1.1.1.1}
-\contentsline {subsubsection}{\numberline {1.1.1.2}Nichtterminalsymbol}{3}{subsubsection.1.1.1.2}
-\contentsline {subsubsection}{\numberline {1.1.1.3}Produktionsregel}{3}{subsubsection.1.1.1.3}
-\contentsline {subsubsection}{\numberline {1.1.1.4}Eindeutigkeit}{4}{subsubsection.1.1.1.4}
-\contentsline {subsubsection}{\numberline {1.1.1.5}EBNF-Beispiele}{5}{subsubsection.1.1.1.5}
-\contentsline {subsection}{\numberline {1.1.2}Lexikalische Analyse - Scanner}{6}{subsection.1.1.2}
-\contentsline {subsection}{\numberline {1.1.3}Syntaxanalyse - Parser}{6}{subsection.1.1.3}
-\contentsline {subsection}{\numberline {1.1.4}Abstrakter Syntaxbaum}{7}{subsection.1.1.4}
-\contentsline {subsubsection}{\numberline {1.1.4.1}Homogene und heterogene Syntaxb\IeC {\"a}ume}{7}{subsubsection.1.1.4.1}
-\contentsline {subsection}{\numberline {1.1.5}Attributierte Gramatik}{8}{subsection.1.1.5}
-\contentsline {subsection}{\numberline {1.1.6}Symboltabelle}{8}{subsection.1.1.6}
-\contentsline {section}{\numberline {1.2}Realisierte L\IeC {\"o}sungen}{9}{section.1.2}
-\contentsline {subsection}{\numberline {1.2.1}Implementierung}{9}{subsection.1.2.1}
-\contentsline {subsubsection}{\numberline {1.2.1.1}CMM.atg}{9}{subsubsection.1.2.1.1}
-\contentsline {subsubsection}{\numberline {1.2.1.2}Scanner.java}{10}{subsubsection.1.2.1.2}
-\contentsline {subsubsection}{\numberline {1.2.1.3}Parser.java}{10}{subsubsection.1.2.1.3}
-\contentsline {subsubsection}{\numberline {1.2.1.4}Node.java}{12}{subsubsection.1.2.1.4}
-\contentsline {subsubsection}{\numberline {1.2.1.5}Scope.java}{12}{subsubsection.1.2.1.5}
-\contentsline {subsubsection}{\numberline {1.2.1.6}Obj.java}{13}{subsubsection.1.2.1.6}
-\contentsline {subsubsection}{\numberline {1.2.1.7}Struct.java}{13}{subsubsection.1.2.1.7}
-\contentsline {subsubsection}{\numberline {1.2.1.8}Strings.java}{14}{subsubsection.1.2.1.8}
-\contentsline {subsubsection}{\numberline {1.2.1.9}Tab.java}{14}{subsubsection.1.2.1.9}
-\contentsline {subsubsection}{\numberline {1.2.1.10}Preprocessor.java}{16}{subsubsection.1.2.1.10}
-\contentsline {section}{\numberline {1.3}Sprachspezifikation}{17}{section.1.3}
-\contentsline {subsection}{\numberline {1.3.1}Pr\"aprozessor}{17}{subsection.1.3.1}
-\contentsline {subsubsection}{\numberline {1.3.1.1}\#include Direktive}{17}{subsubsection.1.3.1.1}
-\contentsline {subsubsection}{\numberline {1.3.1.2}\#define Direktive}{17}{subsubsection.1.3.1.2}
-\contentsline {subsubsection}{\numberline {1.3.1.3}\#undef Direktive}{18}{subsubsection.1.3.1.3}
-\contentsline {subsubsection}{\numberline {1.3.1.4}\#ifdef, \#ifndef, \#else und \#endif Direktive}{18}{subsubsection.1.3.1.4}
-\contentsline {subsubsection}{\numberline {1.3.1.5}Beispiel}{18}{subsubsection.1.3.1.5}
-\contentsline {subsection}{\numberline {1.3.2}Kommentare}{19}{subsection.1.3.2}
-\contentsline {subsection}{\numberline {1.3.3}Datentypen}{19}{subsection.1.3.3}
-\contentsline {subsubsection}{\numberline {1.3.3.1}Primitive Datentypen}{19}{subsubsection.1.3.3.1}
-\contentsline {subsubsection}{\numberline {1.3.3.2}Konstanten}{21}{subsubsection.1.3.3.2}
-\contentsline {subsubsection}{\numberline {1.3.3.3}Strukturen}{21}{subsubsection.1.3.3.3}
-\contentsline {subsubsection}{\numberline {1.3.3.4}Arrays}{21}{subsubsection.1.3.3.4}
-\contentsline {subsubsection}{\numberline {1.3.3.5}Typumwandlung}{22}{subsubsection.1.3.3.5}
-\contentsline {subsection}{\numberline {1.3.4}Funktionen}{22}{subsection.1.3.4}
-\contentsline {subsubsection}{\numberline {1.3.4.1}Vorw\"artsdeklarationen}{22}{subsubsection.1.3.4.1}
-\contentsline {subsubsection}{\numberline {1.3.4.2}return}{23}{subsubsection.1.3.4.2}
-\contentsline {subsubsection}{\numberline {1.3.4.3}Vorimplementierte Funktionen}{23}{subsubsection.1.3.4.3}
-\contentsline {subsection}{\numberline {1.3.5}Operatoren}{25}{subsection.1.3.5}
-\contentsline {subsubsection}{\numberline {1.3.5.1}Punktoperatoren}{25}{subsubsection.1.3.5.1}
-\contentsline {subsubsection}{\numberline {1.3.5.2}Strichoperatoren}{25}{subsubsection.1.3.5.2}
-\contentsline {subsubsection}{\numberline {1.3.5.3}Bitweiser Operatoren}{25}{subsubsection.1.3.5.3}
-\contentsline {subsubsection}{\numberline {1.3.5.4}Shiftoperatoren}{26}{subsubsection.1.3.5.4}
-\contentsline {subsection}{\numberline {1.3.6}Kontrollstrukturen}{27}{subsection.1.3.6}
-\contentsline {subsubsection}{\numberline {1.3.6.1}Bedingung (if-else)}{27}{subsubsection.1.3.6.1}
-\contentsline {subsubsection}{\numberline {1.3.6.2}Mehrfache Verzweigung (switch-case)}{28}{subsubsection.1.3.6.2}
-\contentsline {subsubsection}{\numberline {1.3.6.3}while Schleife}{29}{subsubsection.1.3.6.3}
-\contentsline {subsubsection}{\numberline {1.3.6.4}do-while Schleife}{30}{subsubsection.1.3.6.4}
-\contentsline {subsubsection}{\numberline {1.3.6.5}for Schleife}{31}{subsubsection.1.3.6.5}
-\contentsline {chapter}{\numberline {2}Interpreter}{32}{chapter.2}
-\contentsline {section}{\numberline {2.1}Einf\IeC {\"u}hrung}{32}{section.2.1}
-\contentsline {section}{\numberline {2.2}Aufbau unseres Abstrakten Syntax Baumes}{32}{section.2.2}
-\contentsline {subsection}{\numberline {2.2.1}Statements}{33}{subsection.2.2.1}
-\contentsline {subsection}{\numberline {2.2.2}Designators}{33}{subsection.2.2.2}
-\contentsline {subsection}{\numberline {2.2.3}Expressions}{33}{subsection.2.2.3}
-\contentsline {subsection}{\numberline {2.2.4}Conditions}{33}{subsection.2.2.4}
-\contentsline {subsection}{\numberline {2.2.5}Memory System}{33}{subsection.2.2.5}
-\contentsline {subsection}{\numberline {2.2.6}Von uns gew\IeC {\"a}hltes Memory System}{34}{subsection.2.2.6}
-\contentsline {subsubsection}{\numberline {2.2.6.1}Aufruf einer neuen Methode}{35}{subsubsection.2.2.6.1}
-\contentsline {subsubsection}{\numberline {2.2.6.2}Schlie\IeC {\ss }en einer Methode}{35}{subsubsection.2.2.6.2}
-\contentsline {subsubsection}{\numberline {2.2.6.3}Speicherverwaltung}{36}{subsubsection.2.2.6.3}
-\contentsline {subsection}{\numberline {2.2.7}Aufbau des Interpreters}{36}{subsection.2.2.7}
-\contentsline {subsubsection}{\numberline {2.2.7.1}Designator}{37}{subsubsection.2.2.7.1}
-\contentsline {subsection}{\numberline {2.2.8}Aufbau einer Condition}{38}{subsection.2.2.8}
-\contentsline {subsubsection}{\numberline {2.2.8.1}Abarbeitung einer Expression}{38}{subsubsection.2.2.8.1}
-\contentsline {subsubsection}{\numberline {2.2.8.2}Das Aufrufen eines Calls}{39}{subsubsection.2.2.8.2}
-\contentsline {chapter}{\numberline {3}Einleitung}{42}{chapter.3}
-\contentsline {section}{\numberline {3.1}Die Projektidee}{42}{section.3.1}
-\contentsline {section}{\numberline {3.2}Projektorganisation}{42}{section.3.2}
-\contentsline {section}{\numberline {3.3}Termin\IeC {\"u}bersicht}{43}{section.3.3}
-\contentsline {section}{\numberline {3.4}C Compact im \IeC {\"U}berblick}{43}{section.3.4}
-\contentsline {section}{\numberline {3.5}Anforderungen an C Compact}{45}{section.3.5}
+\contentsline {chapter}{Vorwort}{iii}{chapter*.5}
+\contentsline {chapter}{Zusammenfassung}{iv}{chapter*.6}
+\contentsline {chapter}{Abstract}{v}{chapter*.7}
+\contentsline {chapter}{\numberline {1}Einleitung}{2}{chapter.1}
+\contentsline {section}{\numberline {1.1}Die Projektidee}{2}{section.1.1}
+\contentsline {section}{\numberline {1.2}Projektorganisation}{2}{section.1.2}
+\contentsline {section}{\numberline {1.3}Termin\IeC {\"u}bersicht}{3}{section.1.3}
+\contentsline {section}{\numberline {1.4}C Compact im \IeC {\"U}berblick}{3}{section.1.4}
+\contentsline {section}{\numberline {1.5}Anforderungen an C Compact}{5}{section.1.5}
+\contentsline {chapter}{\numberline {2}Compiler}{8}{chapter.2}
+\contentsline {section}{\numberline {2.1}Allgemeiner Teil (Theorie)}{8}{section.2.1}
+\contentsline {subsection}{\numberline {2.1.1}Erweiterte Backus-Naur-Form (EBNF)}{8}{subsection.2.1.1}
+\contentsline {subsubsection}{\numberline {2.1.1.1}Terminalsymbol}{9}{subsubsection.2.1.1.1}
+\contentsline {subsubsection}{\numberline {2.1.1.2}Nichtterminalsymbol}{9}{subsubsection.2.1.1.2}
+\contentsline {subsubsection}{\numberline {2.1.1.3}Produktionsregel}{9}{subsubsection.2.1.1.3}
+\contentsline {subsubsection}{\numberline {2.1.1.4}Eindeutigkeit}{10}{subsubsection.2.1.1.4}
+\contentsline {subsubsection}{\numberline {2.1.1.5}EBNF-Beispiele}{11}{subsubsection.2.1.1.5}
+\contentsline {subsection}{\numberline {2.1.2}Lexikalische Analyse - Scanner}{12}{subsection.2.1.2}
+\contentsline {subsection}{\numberline {2.1.3}Syntaxanalyse - Parser}{12}{subsection.2.1.3}
+\contentsline {subsection}{\numberline {2.1.4}Abstrakter Syntaxbaum}{13}{subsection.2.1.4}
+\contentsline {subsubsection}{\numberline {2.1.4.1}Homogene und heterogene Syntaxb\IeC {\"a}ume}{13}{subsubsection.2.1.4.1}
+\contentsline {subsection}{\numberline {2.1.5}Attributierte Gramatik}{14}{subsection.2.1.5}
+\contentsline {subsection}{\numberline {2.1.6}Symboltabelle}{14}{subsection.2.1.6}
+\contentsline {section}{\numberline {2.2}Realisierte L\IeC {\"o}sungen}{15}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Implementierung}{15}{subsection.2.2.1}
+\contentsline {subsubsection}{\numberline {2.2.1.1}CMM.atg}{15}{subsubsection.2.2.1.1}
+\contentsline {subsubsection}{\numberline {2.2.1.2}Scanner.java}{16}{subsubsection.2.2.1.2}
+\contentsline {subsubsection}{\numberline {2.2.1.3}Parser.java}{16}{subsubsection.2.2.1.3}
+\contentsline {subsubsection}{\numberline {2.2.1.4}Node.java}{18}{subsubsection.2.2.1.4}
+\contentsline {subsubsection}{\numberline {2.2.1.5}Scope.java}{18}{subsubsection.2.2.1.5}
+\contentsline {subsubsection}{\numberline {2.2.1.6}Obj.java}{19}{subsubsection.2.2.1.6}
+\contentsline {subsubsection}{\numberline {2.2.1.7}Struct.java}{19}{subsubsection.2.2.1.7}
+\contentsline {subsubsection}{\numberline {2.2.1.8}Strings.java}{20}{subsubsection.2.2.1.8}
+\contentsline {subsubsection}{\numberline {2.2.1.9}Tab.java}{20}{subsubsection.2.2.1.9}
+\contentsline {subsubsection}{\numberline {2.2.1.10}Preprocessor.java}{22}{subsubsection.2.2.1.10}
+\contentsline {section}{\numberline {2.3}Sprachspezifikation}{23}{section.2.3}
+\contentsline {subsection}{\numberline {2.3.1}Pr\"aprozessor}{23}{subsection.2.3.1}
+\contentsline {subsubsection}{\numberline {2.3.1.1}\#include Direktive}{23}{subsubsection.2.3.1.1}
+\contentsline {subsubsection}{\numberline {2.3.1.2}\#define Direktive}{23}{subsubsection.2.3.1.2}
+\contentsline {subsubsection}{\numberline {2.3.1.3}\#undef Direktive}{24}{subsubsection.2.3.1.3}
+\contentsline {subsubsection}{\numberline {2.3.1.4}\#ifdef, \#ifndef, \#else und \#endif Direktive}{24}{subsubsection.2.3.1.4}
+\contentsline {subsubsection}{\numberline {2.3.1.5}Beispiel}{24}{subsubsection.2.3.1.5}
+\contentsline {subsection}{\numberline {2.3.2}Kommentare}{25}{subsection.2.3.2}
+\contentsline {subsection}{\numberline {2.3.3}Datentypen}{25}{subsection.2.3.3}
+\contentsline {subsubsection}{\numberline {2.3.3.1}Primitive Datentypen}{25}{subsubsection.2.3.3.1}
+\contentsline {subsubsection}{\numberline {2.3.3.2}Konstanten}{27}{subsubsection.2.3.3.2}
+\contentsline {subsubsection}{\numberline {2.3.3.3}Strukturen}{27}{subsubsection.2.3.3.3}
+\contentsline {subsubsection}{\numberline {2.3.3.4}Arrays}{27}{subsubsection.2.3.3.4}
+\contentsline {subsubsection}{\numberline {2.3.3.5}Typumwandlung}{28}{subsubsection.2.3.3.5}
+\contentsline {subsection}{\numberline {2.3.4}Funktionen}{28}{subsection.2.3.4}
+\contentsline {subsubsection}{\numberline {2.3.4.1}Vorw\"artsdeklarationen}{28}{subsubsection.2.3.4.1}
+\contentsline {subsubsection}{\numberline {2.3.4.2}return}{29}{subsubsection.2.3.4.2}
+\contentsline {subsubsection}{\numberline {2.3.4.3}Vorimplementierte Funktionen}{29}{subsubsection.2.3.4.3}
+\contentsline {subsection}{\numberline {2.3.5}Operatoren}{31}{subsection.2.3.5}
+\contentsline {subsubsection}{\numberline {2.3.5.1}Punktoperatoren}{31}{subsubsection.2.3.5.1}
+\contentsline {subsubsection}{\numberline {2.3.5.2}Strichoperatoren}{31}{subsubsection.2.3.5.2}
+\contentsline {subsubsection}{\numberline {2.3.5.3}Bitweiser Operatoren}{31}{subsubsection.2.3.5.3}
+\contentsline {subsubsection}{\numberline {2.3.5.4}Shiftoperatoren}{32}{subsubsection.2.3.5.4}
+\contentsline {subsection}{\numberline {2.3.6}Kontrollstrukturen}{33}{subsection.2.3.6}
+\contentsline {subsubsection}{\numberline {2.3.6.1}Bedingung (if-else)}{33}{subsubsection.2.3.6.1}
+\contentsline {subsubsection}{\numberline {2.3.6.2}Mehrfache Verzweigung (switch-case)}{34}{subsubsection.2.3.6.2}
+\contentsline {subsubsection}{\numberline {2.3.6.3}while Schleife}{35}{subsubsection.2.3.6.3}
+\contentsline {subsubsection}{\numberline {2.3.6.4}do-while Schleife}{36}{subsubsection.2.3.6.4}
+\contentsline {subsubsection}{\numberline {2.3.6.5}for Schleife}{37}{subsubsection.2.3.6.5}
+\contentsline {chapter}{\numberline {3}Interpreter}{38}{chapter.3}
+\contentsline {section}{\numberline {3.1}Einf\IeC {\"u}hrung}{38}{section.3.1}
+\contentsline {section}{\numberline {3.2}Aufbau unseres Abstrakten Syntax Baumes}{38}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Statements}{39}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}Designators}{39}{subsection.3.2.2}
+\contentsline {subsection}{\numberline {3.2.3}Expressions}{39}{subsection.3.2.3}
+\contentsline {subsection}{\numberline {3.2.4}Conditions}{39}{subsection.3.2.4}
+\contentsline {subsection}{\numberline {3.2.5}Memory System}{39}{subsection.3.2.5}
+\contentsline {subsection}{\numberline {3.2.6}Von uns gew\IeC {\"a}hltes Memory System}{40}{subsection.3.2.6}
+\contentsline {subsubsection}{\numberline {3.2.6.1}Aufruf einer neuen Methode}{41}{subsubsection.3.2.6.1}
+\contentsline {subsubsection}{\numberline {3.2.6.2}Schlie\IeC {\ss }en einer Methode}{41}{subsubsection.3.2.6.2}
+\contentsline {subsubsection}{\numberline {3.2.6.3}Speicherverwaltung}{42}{subsubsection.3.2.6.3}
+\contentsline {subsection}{\numberline {3.2.7}Aufbau des Interpreters}{42}{subsection.3.2.7}
+\contentsline {subsubsection}{\numberline {3.2.7.1}Designator}{43}{subsubsection.3.2.7.1}
+\contentsline {subsection}{\numberline {3.2.8}Aufbau einer Condition}{44}{subsection.3.2.8}
+\contentsline {subsubsection}{\numberline {3.2.8.1}Abarbeitung einer Expression}{44}{subsubsection.3.2.8.1}
+\contentsline {subsubsection}{\numberline {3.2.8.2}Das Aufrufen eines Calls}{45}{subsubsection.3.2.8.2}
 \contentsline {chapter}{\numberline {4}Elemente der Benutzeroberfl\IeC {\"a}che}{48}{chapter.4}
 \contentsline {section}{\numberline {4.1}Das Konzept}{48}{section.4.1}
 \contentsline {subsection}{\numberline {4.1.1}Daraus resultierende Einschr\IeC {\"a}nkungen}{49}{subsection.4.1.1}
@@ -180,9 +180,8 @@
 \contentsline {section}{\numberline {8.2}Versuche mit Sch\IeC {\"u}lerInnen}{126}{section.8.2}
 \contentsline {subsection}{\numberline {8.2.1}Ziel der Versuche}{127}{subsection.8.2.1}
 \contentsline {subsection}{\numberline {8.2.2}Ablauf eines Versuches}{127}{subsection.8.2.2}
-\contentsline {subsection}{\numberline {8.2.3}Pers\IeC {\"o}nliche Erfahrungen}{128}{subsection.8.2.3}
-\contentsline {subsection}{\numberline {8.2.4}Versuche zur Benutzeroberfl\IeC {\"a}che}{128}{subsection.8.2.4}
-\contentsline {subsection}{\numberline {8.2.5}Versuch zum Questsystem}{134}{subsection.8.2.5}
+\contentsline {subsection}{\numberline {8.2.3}Versuche zur Benutzeroberfl\IeC {\"a}che}{128}{subsection.8.2.3}
+\contentsline {subsection}{\numberline {8.2.4}Versuch zum Questsystem}{133}{subsection.8.2.4}
 \contentsline {section}{\numberline {8.3}Interviews mit Lehrpersonen}{138}{section.8.3}
 \contentsline {subsection}{\numberline {8.3.1}Einleitung}{138}{subsection.8.3.1}
 \contentsline {subsection}{\numberline {8.3.2}Grunds\IeC {\"a}tzlicher Ablauf eines FSST Unterrichts}{138}{subsection.8.3.2}
@@ -212,9 +211,10 @@
 \contentsline {section}{\numberline {9.5}Travis CI}{147}{section.9.5}
 \contentsline {chapter}{\numberline {10}Versionsgeschichte}{148}{chapter.10}
 \contentsline {chapter}{\numberline {11}Pers\IeC {\"o}nliche Erfahrungen}{152}{chapter.11}
-\contentsline {section}{\numberline {11.1}Zusammenarbeit mit dem Institut f\IeC {\"u}r Systemsoftware}{152}{section.11.1}
+\contentsline {section}{\numberline {11.1}Zusammenarbeit mit dem Institut f\IeC {\"u}r\\ Systemsoftware}{152}{section.11.1}
 \contentsline {section}{\numberline {11.2}Zusammenarbeit mit unserem Projektbetreuer}{152}{section.11.2}
 \contentsline {section}{\numberline {11.3}Teamarbeit bei der Softwareentwicklung}{152}{section.11.3}
+\contentsline {section}{\numberline {11.4}Versuche mit Sch\IeC {\"u}lerInnen}{153}{section.11.4}
 \contentsline {chapter}{\numberline {12}Autoren}{154}{chapter.12}
 \contentsline {chapter}{\numberline {13}Projektbetreuer}{155}{chapter.13}
 \contentsline {chapter}{\numberline {A}Dokumente}{157}{appendix.A}
@@ -222,4 +222,8 @@
 \contentsline {section}{\numberline {A.2}Urspr\IeC {\"u}ngliche Anforderungen an die Benutzeroberfl\IeC {\"a}che}{168}{section.A.2}
 \contentsline {section}{\numberline {A.3}Fragebogen zur Entwicklungsumgebung}{174}{section.A.3}
 \contentsline {section}{\numberline {A.4}Fragebogen zum Questsystem}{175}{section.A.4}
-\contentsline {chapter}{Literaturverzeichnis}{175}{figure.caption.232}
+\contentsline {chapter}{\numberline {B}Projekttagebuch}{176}{appendix.B}
+\contentsline {section}{\numberline {B.1}Fabian Hummer}{176}{section.B.1}
+\contentsline {section}{\numberline {B.2}Thomas Pointhuber}{183}{section.B.2}
+\contentsline {section}{\numberline {B.3}Peter Wassermair}{188}{section.B.3}
+\contentsline {chapter}{\numberline {C}Literaturverzeichnis}{192}{appendix.C}

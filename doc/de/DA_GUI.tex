@@ -82,6 +82,11 @@
 %\input{./chapters/01-aufgabenstellung.tex}
 \pagenumbering{arabic}	% Beginn mit arabischen Seitenzahlen
 
+% Einleitung
+\iffabian
+	\input{./chapters/intro/0-intro.tex}
+\fi
+
 % Compiler
 \ifthomas
 	\input{./chapters/compiler/compiler.tex}
@@ -94,7 +99,6 @@
 
 % Benutzeroberfläche, Debugger
 \iffabian
-	\input{./chapters/intro/0-intro.tex}
 	\input{./chapters/gui/gui.tex}
 	\input{./chapters/gui/gui-main.tex}
 	\input{./chapters/gui/debugger/0-debugger.tex}
@@ -207,15 +211,20 @@ Verwendet beim vierten Versuch (siehe Kapitel \ref{sec:sci-trial-quest}).
 	\label{fig:app-doc-fb-quest}
 \end{figure}
 
+\input{./chapters/App-01-anhaenge.tex}	
+
 %\includepdf{./media/docs/Fragebogen-gui.pdf}
 
 
 %	########################################################
 % 	Quellenverzeichnis 		
 %	########################################################
-\addcontentsline{toc}{chapter}{Literaturverzeichnis}
-\bibliographystyle{ieeetr}
-\bibliography{./includes/literatur}
+\chapter{Literaturverzeichnis}
+
+Niklaus Wirth, Grundlagen und Techniken des Compilerbaus, 3. Auflage, Oldenborg Verlag, München 2011, 
+ISBN: 978-3-486-70951-3
+
+Hanspeter Mössenböck, Sprechen Sie Java?, eine Einführung in das Systematische Programmieren, 5. Auflage, d.verlag, 2014, ISBN: 978-3-86490-099-0
 
 
 %	########################################################
