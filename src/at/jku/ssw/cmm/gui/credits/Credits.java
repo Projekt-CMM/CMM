@@ -32,7 +32,7 @@ public class Credits {
 		JFrame jFrame = new JFrame(_("About C Compact"));
 		jFrame.setLocationRelativeTo(null);
 		jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		jFrame.setPreferredSize(new Dimension(400, 400));
+		jFrame.setPreferredSize(new Dimension(400, 450));
 		jFrame.setResizable(false);
 		
 		//Load resource for stylesheet
@@ -72,6 +72,8 @@ public class Credits {
 		// Set style information
 		if( doc != null )
 			editorPane.setDocument(doc);
+		
+		editorPane.setEditable(false);
 		
 		// Load credits text into text pane
 		try {

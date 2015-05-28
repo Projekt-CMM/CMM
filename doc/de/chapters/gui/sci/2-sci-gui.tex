@@ -1,0 +1,145 @@
+%!TEX root = "../../../DA_GUI.tex"
+
+%	--------------------------------------------------------
+% 		Wissenschaftliche Analyse: Benutzeroberfläche
+%	--------------------------------------------------------
+
+\subsection{Versuche zur Benutzeroberfläche}
+\label{sec:sci-trial-gui}
+Mit den ersten drei Versuchen wurden Stabilität, Bedienbarkeit und Organisation der Benutzeroberfläche optimiert. Besonders wichtig war bei der Entwicklung von C Compact, den Debugger so zu gestalten, dass er den Programmablauf möglichst verständlich und anschaulich vermitteln kann.
+
+\subsubsection*{Gestellte Aufgaben}
+Bei den ersten drei Versuchen bearbeiteten die Schülerinnen und Schüler Aufgaben rund um den Sortieralgorithmus \glqq{}Bubblesort\grqq{}. Dies passte einerseits gut in das Stoffgebiet der jeweiligen Klassen und ist andererseits kein zu einfaches Thema, sodass der Debugger durchaus eine nützliche Hilfestellung sein kann.
+
+Der gesamte Algorithmus wurde in einige Aufgaben unterteilt, damit die Schüler dieses am Anfang doch eher schwierige Stoffgebiet Schritt für Schritt erarbeiten konnten. Manche Schüler konnten alle Aufgaben in weniger als zwei Stunden lösen, andere konnten nicht alle Aufgaben in der vorgegebenen Zeit abschließen. Dies hatte aber keinen wesentlichen Einfluss auf den Versuch, da hier vor allem auf das Arbeiten mit der Entwicklungsumgebung geachtet wurde.
+
+Die gestellten Aufgaben waren:
+\begin{enumerate}
+\item \emph{\textbf{Einstiegsaufgabe:} Schreibe ein Programm, das die folgende Zahlenreihe in ein Array speichert: 2, 4, 6, 8, … usw. Beobachte dabei im Debugger, wie sich die Variablenwerte während des Programmablaufes verändern.}\\
+Diese Aufgabe führten wir Anfangs gemeinsam mit den Schülern durch, um sie mit C Compact vertraut zu machen.
+
+\item \emph{\textbf{Ein- und Ausgabe in C Compact:} Die Eingabe funktioniert in C Compact etwas anders als in C. Eingabedaten werden vorher in das Feld \glqq{}input\grqq{} geschrieben. Die Funktion \textbf{scanf()} liest dann die Eingabedaten jeweils bis zum nächsten Leerzeichen und gibt einen String mit den gelesenen Daten zurück. Ein Array wird also wie folgt initialisiert:}
+\begin{lstlisting}[language=C]
+int i;
+for(i = 0; i < aLength; i ++)
+{
+    a[i] = atoi(scanf());
+}
+\end{lstlisting}
+\emph{Die Funktion atoi wandelt den zurückgegebenen String von scanf() in eine Zahl um.
+Die Ausgabe von Daten ist genau wie in C; es kann printf(...) wie gewohnt verwendet werden, allerdings mit der Ausnahme dass spezielle Operatoren wie etwa \glqq{}\%.2f\grqq{} nicht unterstützt werden.}\\
+Auch diese Übung führten wir gemeinsam mit den Schülern durch. Da Ein- und Ausgaben in C Compact mit dem Datentyp \textbf{string} umgesetzt wurden, mussten wir auf einige Unterschiede zu C aufmerksam machen.
+
+\item \emph{\textbf{Einführung zu Bubblesort: }Schreibe ein Programm, das ein Array durchläuft und immer zwei benachbarte Elemente vergleicht. Wenn das rechte Element kleiner als das linke ist, sollen beide ausgetauscht werden.}\\
+Diese Übung bearbeiteten die Schüler selbstständig. Wir erklärten die Aufgabenstellung --- die Grundlage von Bubblesort --- zu Beginn allerdings etwas genauer. Im dritten Versuch verwendeten wir zum Darstellen der Arraywerte Spielkarten. Damit konnten wir die Idee von Bubblesort sehr anschaulich vermitteln. Auch bei Schwierigkeiten während der Übungsphase verwendeten wir teilweise die Karten, um ein Problem zu veranschaulichen. Zwei Schülerinnen verwendeten die Karten, um ihren Algorithmus während der Entwicklung theoretisch abzuarbeiten.
+
+\item \emph{\textbf{Vollständiger Sortieralgorithmus:} Das Programm aus Übung 1 soll nun so erweitert werden, dass das Array komplett sortiert wird. Dazu muss der Sourcecode um eine zusätzliche Schleife erweitert werden. Wenn das zu sortierende Array \textbf{n} Elemente hat, muss die Schleife aus Beispiel 3 maximal \textbf{n-1} mal durchlaufen werden, damit das Array vollständig sortiert ist.}
+
+\item \emph{\textbf{Verfrühter Abbruch:} Bubblesort sortiert alle Elemente im idealsten Fall bereits nach einem Durchlauf. Der Algorithmus kann wesentlich verbessert werden, wenn er abbricht, sobald alle Elemente sortiert sind.\\
+\textbf{Frage:} Woran erkennt man, dass alle Elemente sortiert sind?\\
+\textbf{Antwort:} Wenn die innere Schleife durchläuft, ohne einmal zwei Elemente auszutauschen, muss das Array sortiert sein.}
+
+\item \emph{\textbf{Weiterführende Fragen:} Überlege dir Antworten zu folgenden Fragen:
+\begin{enumerate}
+\item Was passiert, wenn zwei gleiche Elemente vorkommen?
+\item Wieso steht in der Bedingung $if(a[i] > a[i+1])$ und nicht                          $if(a[i] >= a[i+1])$?
+\item Was ist der günstigste Fall? Mit welchen Eingabedaten ist die Sortierung am schnellsten?
+\item Was ist der ungünstigste Fall? Bei welchen Eingabedaten dauert die Sortierung am längsten?
+\item Erstelle eine Formel für die (im ungünstigsten Fall) Anzahl der Durchläufe, die zur Sortierung benötigt werden, wenn n Elemente sortiert werden.
+\end{enumerate}}
+Mit diesen Fragen wollten wir die \glqq{}schnelleren\grqq{} Schüler dazu bewegen, sich noch weitere Gedanken zu Bubblesort zu machen.
+\end{enumerate}
+
+%TODO Anhang: Fragebogen
+\subsubsection*{Aufbau des Fragebogens}
+
+Bei den meisten Fragen wurden die Schüler gebeten, einen bestimmten Teil von C Compact innerhalb eines Spektrums von fünf Stufen zu Bewerten (ankreuzen). Bei dem hier verwendeten Fragebogen gehören immer zwei Fragen zu einem bestimmten Bereich. Einerseits konnten wir so den Trend in einem Bereich etwas besser feststellen (wenn viele Fehler auftreten, sollten die Schüler auch angeben, Probleme bei der Bedienung gehabt zu haben), andererseits konnten wir zwischen unterschiedlichen Aspekten eines Themas differenzieren (z.B. Anwendung im Unterricht und Anwendung zu Hause).
+
+Die Fragen wurden in den Auswertungen immer wie folgt aufgeteilt:
+\begin{itemize}
+\item \textbf{Fragen 1 und 3:} Bedienung der Benutzeroberfläche
+\item \textbf{Fragen 4 und 5:} Bewertung des Debuggers
+\item \textbf{Fragen 2 und 6:} Probleme bei der Bedienung
+\item \textbf{Fragen 9 und 10:} Anwendung in der Ausbildung (im Unterricht oder zu Hause)
+\end{itemize}
+
+Bei zwei Freitextfragen wurden die Schüler gebeten, ihre eigene Meinung und ihre Ideen für weitere Entwicklungsschritte einzubringen.
+
+\subsubsection*{Ergebnisse: Fragen 1 und 3}
+
+\emph{Frage 1: Ist die Entwicklungsumgebung intuitiv zu bedienen?\\
+Frage 3: Wie gut ist das Programm im Allgemeinen zu Bedienen?}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.95\textwidth]{./media/images/gui/trials/gui-f1-3.png}
+\caption{Ergebnisse der Fragen 1 und 3}
+\end{figure}
+
+Hier ist besonders nach dem ersten Versuch ein deutlicher Fortschritt zu erkennen. Da bei dem Test mit der 2AHELS vor allem am Anfang einige Probleme aufgetreten sind, haben wir uns nachher intensiver auf das Ausbessern dieser Fehler und das Verbessern der Stabilität von C Compact konzentriert.
+
+Wir haben durch den ersten Versuch auch viele neue Ansichten und Ideen erhalten und konnten die Bedienbarkeit so sehr gut verbessern. Zum Beispiel war ein wichtiges Anliegen der ersten Versuchsgruppe eine bessere Fehleranzeige. Daraufhin führten wir in Version Alpha 1.2 anschauliche Fehlerbeschreibungen ein (siehe Kapitel \ref{sec:deb-error}).
+
+Die letzte Versuchsgruppe hat gezeigt, dass die Benutzeroberfläche von C Compact sehr weit fortgeschritten ist. Immerhin haben 4 von 5 SchülerInnen angegeben, dass die Benutzeroberfläche \glqq{}gut\grqq{} oder \glqq{}sehr gut\grqq{} zu bedienen ist (Frage 1). Mehr als die Hälfte der Schüler dieser Versuchsgruppe hat die C Compact als \glqq{}sehr intuitiv zu bedienen\grqq{} bewertet (Frage 3).
+
+\subsubsection*{Ergebnisse: Fragen 4 und 5}
+
+\emph{Frage 4: Wie anschaulich ist die Darstellung der Programmabläufe?\\
+Frage 5: Wie verständlich werden die Variablen während des Programmablaufes dargestellt?}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.95\textwidth]{./media/images/gui/trials/gui-f4-5.png}
+\caption{Ergebnisse der Fragen 4 und 5}
+\end{figure}
+
+Der Debugger von C Compact wurde von Beginn an sehr positiv bewertet. Schon die erste Versuchsgruppe gab uns --- auch während der Übungsphase --- sehr positive Rückmeldungen. Eines der zentralen Konzepte von C Compact ist also erfolgreich aufgegangen.
+
+Dass die Antworten der dritten Versuchsgruppe deutlich besser ausgefallen sind liegt einerseits daran, dass wir bis zur Version Alpha 1.4.2 einige Verbesserungen und zusätzliche Features zum Debugger hinzufügten. Andererseits vermuten wir, dass die \mbox{SchülerInnen} auch durch die eigene Einführungsübung für den Debugger ein besseres Verständnis für dieses Tool entwickeln konnten. Ein wichtiger Punkt für die Verwendung von C Compact im Unterricht ist offensichtlich --- trotz intuitiver Bedienung --- eine anschauliche Einführung in die Funktionen der Benutzeroberfläche.
+
+\subsubsection*{Ergebnisse: Fragen 2 und 6}
+
+\emph{Frage 2: Hast du Hilfe bei der Bedienung des Programms benötigt?\\
+Frage 6: Häufigkeit von Bugs}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.95\textwidth]{./media/images/gui/trials/gui-f2-6.png}
+\caption{Ergebnisse der Fragen 2 und 6}
+\end{figure}
+
+Obwohl besonders beim ersten Versuch einige Fehler aufgetreten sind, zeigte sich die Versuchsgruppe sehr flexibel im Umgang mit Schwierigkeiten und bei der Bedienung einer neuen Entwicklungsumgebung.
+
+Bei der Entwicklung der Version die Version Alpha 1.2 wurde vor allem auf Stabilität geachtet. Im zweiten Versuch stürzte C Compact daher kein einziges mal ab. Größere Fehler zeigten sich nur vereinzelt. Dementsprechend fielen auch die Bewertungen positiver aus.
+
+In der Version Alpha 1.4.2, die für den dritten Versuch verwendet wurde, gab es leider einen Bug, der durch eine Modifikation einige Tage zuvor verursacht und nicht bemerkt wurde: Bei Fehlermeldungen wurde die falsche Zeile angezeigt. Dadurch hatten einige Schülerinnen und Schüler Probleme, die Fehler in ihrem Quelltext zu finden. Die Antworten auf Frage 6 sind dadurch wieder etwas negativer ausgefallen.
+
+Beim dritten Versuch gaben einige Schülerinnen und Schüler in Frage 2 an, hin und wieder Hilfe benötigt zu haben. Allerdings konnten zwei Drittel der Schüler laut eigenen Angaben fast selbstständig arbeiten und mussten nur selten Hilfe in Anspruch nehmen. Das lässt vor allem auf eine gut durchdachte Aufgabenstellung und gute Erklärungen der benötigten Theorie und der Entwicklungsumgebung schließen.
+
+\subsubsection*{Ergebnisse: Fragen 9 und 10}
+
+\emph{Frage 9: Würde dir diese Entwicklungsumgebung im Unterricht helfen?\\
+Frage 10: Würde dir diese Entwicklungsumgebung beim selbstständigen Lernen helfen?}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.95\textwidth]{./media/images/gui/trials/gui-f9-10.png}
+\caption{Ergebnisse der Fragen 9 und 10}
+\end{figure}
+
+Mit dem Fortschritt von C Compact konnten sich auch immer mehr Schüler vorstellen, C Compact im Unterricht oder zum Üben zu verwenden. Wir erhielten immer wieder --- auch von den Lehrern der Versuchsgruppe --- positive Rückmeldungen. Im Prinzip zeigen diese Antworten, ob das Gesamtkonzept von C Compact aufgegangen ist.
+
+Die Verwendbarkeit von C Compact wurde mit zunehmenden Verbesserungen und Fortschritten in der Entwicklung immer positiver bewertet.
+
+Wir vermuten, dass die schlechteren Bewertungen bei diesen Fragen von Schülern stammen, die sehr gute Programmierer sind und die mit einer professionellen Entwicklungsumgebung besser umgehen können. Beispielsweise waren in der dritten Versuchsgruppe drei sehr gute Programmierer und bei den Fragen 9 und 10 in dieser Gruppe jeweils genau 3 schlechtere Bewertungen. Allerdings können wir in keinem der Fälle feststellen, ob diese Bewertungen tatsächlich von guten Programmierern kommen, da die Fragebögen anonym ausgewertet wurden.
+
+\subsubsection*{Auswertung der Freitextfragen}
+
+\emph{Frage 7: Welcher Bereich muss am dringendsten verbessert werden?\\
+Frage 8: Was würdest du als nächstes hinzufügen?}
+
+Die Antworten auf diese Fragen zeigten oft sehr gut die aktuellen Defizite von C Compact und brachten uns auch auf neue Ideen. Großteils waren die Antworten für beide Fragen sehr ähnlich.
+
+Beim ersten und dritten Versuch zeigte sich das höhere Verbesserdungspotential auch dadurch, dass viele Schüler ähnliche Antworten gaben. Beim ersten Versuch 
+gaben immerhin 9 Schüler an, dass als nächstes die Fehlermeldungen verbessert werden sollten und 8 Schüler wünschten sich \textbf{for}-Schleifen als nächstes Feature. Beim dritten Versuch waren die wichtigsten Anliegen der Schüler einen Verbesserung der Fehlerkennzeichnung und -anzeige. Die zweite Versuchsgruppe listete hingegen sehr unterschiedliche Ideen auf, was darauf hindeutet, dass keine signifikanten Probleme aufgetreten sind.
+%TODO Anhang: Versuchsauswertungen.

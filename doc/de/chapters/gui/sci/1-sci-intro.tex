@@ -8,87 +8,46 @@
 
 Bei der Entwicklung eines Programms und der Gestaltung der Benutzeroberfläche ist es wichtig, die Anforderungen beziehungsweise die Anwendung zu kennen und den Fortschritt des Programms regelmäßig zu überprüfen.
 
-\section{Versuche mit SchülerInnen}
-Um sicherzustellen, dass C Compact für den Unterricht tatsächlich geeignet ist und die Schülerinnen und Schüler auch gut mit der Entwicklungsumgebung umgehen können, haben wir beschlossen, Versuche mit Schülerinnen und Schülern der ersten und zweiten Klassen durchzuführen. Während unseres Projektes hatten wir insgesamt vier mal die Möglichkeit, unser Programm mit einer FSST-Gruppe (14-16 SchülerInnen) zu testen.
+Um sicherzustellen, dass C Compact für den Unterricht tatsächlich geeignet ist und die Schülerinnen und Schüler auch gut mit der Entwicklungsumgebung umgehen können, haben wir beschlossen, Versuche mit Schülerinnen und Schülern der ersten und zweiten Klassen durchzuführen.
 
+\section{Versuche mit SchülerInnen}
+\label{sec:sci-trial-intro}
+Während unseres Projektes hatten wir insgesamt vier mal die Möglichkeit, unser Programm mit einer FSST-Gruppe (14-16 SchülerInnen) zu testen.
+
+\def\arraystretch{1.6}
 \begin{table}[h!]
-\begin{tabular}{|l|l|l||l|l|}
+\begin{tabular}{|l|l|l|l||l|l|}
 \hline
-Datum & Klasse & Lehrer & Version & Testgegenstand \\
+Datum & Klasse & \parbox{1.3cm}{Anzahl Schüler} & Lehrer & Version & Testgegenstand \\
 \hline
-4. November 2014 & 2AHELS & Franz Matejka & Alpha 1.2 & Benutzeroberfläche \\
-3. Dezember 2014 & 2BHELS & Kurt Kreilinger & Alpha 1.3 & Benutzeroberfläche \\
-18. März 2015 & 2BHELS & Christian Hanl & Alpha 1.4.2 & Benutzeroberfläche \\
-22. April 2015 & 1AHELS & Reinhard Pfoser & Alpha 1.4.5 & Questsystem \\
+4. 11. 2014 & 2AHELS & 14 & Franz Matejka & Alpha 1.1 & Benutzeroberfläche \\
+3. 12. 2014 & 2BHELS & 16 & Kurt Kreilinger & Alpha 1.2 & Benutzeroberfläche \\
+18. 3. 2015 & 2BHELS & 15 & Christian Hanl & Alpha 1.4.2 & Benutzeroberfläche \\
+22. 4. 2015 & 1AHELS & 16 & Reinhard Pfoser & Alpha 1.4.5 & Questsystem \\
 \hline
 \end{tabular}
 \caption{Versuche mit Schülern der ersten und zweiten Klassen}
 \end{table}
-%TODO ref Versionsgeschichte?
+Siehe auch Kapitel \ref{sec:versions}, Versionsgeschichte.
 
-Bei den ersten drei Versuchen wollten wir vor Allem die Benutzeroberfläche und den Debugger verbessern, beim letzten Versuch sollte hingegen das Questsystem getestet und optimiert werden. Dieser Versuch wurde dementsprechend anders gestaltet (beispielsweise durch andere Aufgabenstellungen).
+Bei den ersten drei Versuchen sollte vor allem die Benutzeroberfläche und der Debugger verbessert werden, beim letzten Versuch sollte hingegen das Questsystem getestet und optimiert werden. Dieser Versuch wurde dementsprechend anders gestaltet (beispielsweise durch andere Aufgabenstellungen).
 
 \subsection{Ziel der Versuche}
-Die Versuche sollten nicht nur die grundsätzliche Anwendbarkeit von C Compact unter Beweis stellen, sondern auch Programmfehler, Bugs und Probleme bei der Bedienung aufzeigen. Als Programmierer ist es oft schwer, die Ansätze und Bedienungsvorgänge anderer Benutzer nachzuvollziehen. So entstehen zwangsläufig Fehler, die der Programmierer selbst nicht bemerkt, da er das Programm immer so bedient, wie er es für logisch erachtet.
+Die Versuche sollten nicht nur die grundsätzliche Anwendbarkeit von C Compact unter Beweis stellen, sondern auch Programmfehler, Bugs und Probleme bei der Bedienung aufzeigen. Als Entwickler ist es oft schwer, die Ansätze und Bedienungsvorgänge anderer Benutzer nachzuvollziehen. So entstehen zwangsläufig Fehler, die der Programmierer selbst nicht bemerkt, da er das Programm immer so bedient, wie er es für logisch erachtet.
 
 %TODO kein Widerspruch mit Pointhi
 Die Benutzeroberfläche kann, im Gegensatz zum Compiler oder Interpreter, nur beschränkt durch statische Codeanalysen und Testroutinen verbessert werden, da ein wichtiger Faktor für eine reibungslose Funktionalität der Benutzer ist. Wir konnten mit den Versuchen viele neue Ansätze sammeln und sahen, welche Funktionen und Features für die Schüler tatsächlich von Bedeutung sind.
 
 \subsection{Ablauf eines Versuches}
-Die Versuche begannen immer mit einer Einführungsphase. Zuerst stellten wir uns vor und erklärten den Versuch und seinen Zweck. Dann folgte eine Einführung in C Compact, einerseits in die Verwendete Sprache, andererseits auch in die Benutzeroberfläche. Im zweiten Versuch fanden wir heraus, dass es in der Einführungsphase besonders wichtig ist, auf den Debugger hinzuweisen, da die Schüler diesen nicht gewohnt sind. Besonders Schüler mit schlechteren Programmierkenntnissen machten wenig Gebrauch vom Debugger und benutzten C Compact wie einen einfachen Texteditor. Im dritten und vierten Versuch machten wir zu Beginn eine einfache Übung mit der Klasse gemeinsam, bei der wir explizit auf den Debugger hinwiesen und seine Funktionen erklärten. Dafür konnten wir einen zuvor noch wichtigeren Teil der Einführung zu Spracheigenheiten von C Compact kürzen, da Compiler und Präprozessor im Laufe des Projektes große Fortschritte erzielen konnten.
+\label{sec:sci-trials-gui-sched}
+Die Versuche begannen immer mit einer Einführungsphase. Zuerst stellten wir uns vor und erklärten den Versuch und seinen Zweck. Dann folgte eine Einführung in C Compact, einerseits in die verwendete Sprache, andererseits auch in die Funktionsweise der Benutzeroberfläche. Im zweiten Versuch fanden wir heraus, dass es in der Einführungsphase besonders wichtig ist, auf den Debugger hinzuweisen. Besonders Schüler mit schlechteren Programmierkenntnissen waren mit der Funktionsweise eines Debuggers nicht vertraut und benutzten C Compact wie einen einfachen Texteditor. Im dritten und vierten Versuch führten wir zu Beginn eine einfache Übung zum Debugger mit der Klasse gemeinsam durch. Dafür konnten wir einen zuvor noch umfangreicheren Teil der Einführung zu Spracheigenheiten von C Compact kürzen, da Compiler und Präprozessor im Laufe des Projektes große Fortschritte erzielen konnten und die Sprache C immer ähnlicher wurde.
 
-Den größte Teil der Versuchszeit arbeiteten die Schüler selbstständig an von uns gestellten Aufgaben. Bei den ersten drei Versuchen wurden Übungsblätter in Form eines PDF-Dokumentes gemeinsam mit C Compact verteilt; beim letzten Test wurden die Aufgaben vom Questsystem gestellt. In dieser Übungszeit beobachteten wir die Schüler, notierten Probleme und Programmfehler und halfen bei Schwierigkeiten. Auf diese Weise bekamen wir einen guten Eindruck von Problemen sowie Vor- und Nachteilen bei der Anwendung.
+Den größte Teil der Versuchszeit arbeiteten die Schüler selbstständig an von uns gestellten Aufgaben. Bei den ersten drei Versuchen wurden Übungsblätter in Form eines PDF-Dokumentes gemeinsam mit C Compact verteilt; beim letzten Test wurden die Aufgaben mit dem Questsystem gestellt. In dieser Übungszeit beobachteten wir die Schüler, notierten Probleme und Programmfehler und halfen bei Schwierigkeiten. Auf diese Weise erhielten wir einen guten Eindruck von Problemen sowie Vor- und Nachteilen bei der Anwendung.
 
-Im letztlich vergleichbare Ergebnisse zu erzielen und einen objektiven Gesamteindruck zu erhalten, verteilten wir in den letzten 10 bis 15 Minuten der verwendeten Unterrichtszeit Fragebögen mit Fragen zum jeweiligen Versuchsthema. Während die in der Übungszeit aufgenommenen Informationen vor Allem einzelne Probleme aufzeigen, hatten wir durch die Fragebögen die Möglichkeit, unsere weitere Arbeit an C Compact nach einem allgemeinen Trend zu orientieren. Zum Beispiel zeigte der erste Versuch, als nächstes die Stabilität des Programms gegen Fehler erhöht werden sollte).
+Im letztlich vergleichbare Ergebnisse zu erzielen und einen objektiven Gesamteindruck zu erhalten, wurden in den letzten 10 bis 15 Minuten der verwendeten Unterrichtszeit Fragebögen mit Fragen zum jeweiligen Versuchsthema ausgeteilt. Während die in der Übungszeit aufgenommenen Informationen vor allem einzelne Probleme aufzeigen, hatten wir durch die Fragebögen die Möglichkeit, die weitere Arbeit an C Compact nach einem allgemeinen Trend zu orientieren.
 %TODO ref Anhang-> Versuchsunterlagen, FRAGEBÖGEN
 
 \subsection{Persönliche Erfahrungen}
-Bei den Versuchen mit Schülergruppen konnten wir auch außerhalb des Projekts viele hilfreiche Erfahrungen sammeln. Wir mussten die für den Versuch verwendeten Unterrichtsstunden selbst vorbereiten und ein Thema aus der Informatik, wie etwa den Sortieralgorithmus \glqq{}Bubblesort\grqq{} und die zugehörigen Übungen, erklären. Anschließend unterstützten wir die Schülerinnen und Schüler der Unterrichtsgruppe beim Lösen der Aufgaben.
+Bei den Versuchen mit Schülergruppen konnten wir auch außerhalb des Projekts viele hilfreiche Erfahrungen sammeln. Wir mussten die für den Versuch verwendeten Unterrichtsstunden selbst vorbereiten und ein Thema aus der Informatik, wie etwa den Sortieralgorithmus \glqq{}Bubblesort\grqq{} und die zugehörigen Übungen erklären. Anschließend unterstützten wir die Schülerinnen und Schüler der Unterrichtsgruppe beim Lösen der Aufgaben.
 
-Dadurch konnten wir einerseits ein besseres Verständnis für den Programmierunterricht und die Aufgabe des Lehrers erreichen, was auch für weitere Entwicklungen des Projektes hilfreich ist. Andererseits ist es auch eine interessante persönliche Erfahrung, nicht unter den Schülern zu sitzen, sondern vor der Klasse zu stehen.
-
-\subsection{Versuche zur Benutzeroberfläche}
-Bei den ersten drei Versuchen wollten wir Stabilität, Bedienbarkeit und Organisation der Benutzeroberfläche optimieren. Besonders wichtig war uns dabei, den Debugger so zu gestalten, dass er den Programmablauf möglichst verständlich und anschaulich vermitteln kann.
-
-\subsubsection*{Gestellte Aufgaben}
-Das Thema des Versuches war Bubblesort, da dies einerseits in das Stoffgebiet der jeweiligen Klassen passte und andererseits kein zu einfaches Thema ist, sodass ein anschaulicher Debugger durchaus eine Hilfestellung sein kann. C Compact ist in vieler Hinsicht sowieso gut zum Lösen von kleineren Aufgaben und Entwickeln von Algorithmen geeignet.
-
-Der gesamte Algorithmus wurde in einige Aufgaben zerteilt, damit die Schüler dieses am Anfang doch eher schwierige Thema Schritt für Schritt erarbeiten konnten. Manche Schüler konnten alle Aufgaben in weniger als zwei Stunden lösen, andere konnten nicht alle Aufgaben in der vorgegebenen Zeit abschließen. Dies hatte aber keinen Einfluss auf den Versuch, da wir hier auf das Arbeiten mit der Entwicklungsumgebung und nicht um den Fortschritt im Unterricht an sich achten wollten.
-
-Die gestellten Aufgaben waren:
-\begin{enumerate}
-\item \emph{Schreibe ein Programm, das die folgende Zahlenreihe in ein Array speichert: 2, 4, 6, 8, … usw. Beobachte dabei im Debugger, wie sich die Variablenwerte während des Programmablaufes verändern.}\\
-Diese Aufgabe führten wir Anfangs gemeinsam mit den Schülern durch, um sie mit C Compact vertraut zu machen.
-
-\item \emph{Die Eingabe funktioniert in CMM etwas anders als in C. Eingabedaten werden vorher in das Feld „input“ geschrieben. Die Funktion scanf() liest dann die Eingabedaten jeweils bis zum nächsten Leerzeichen und gibt einen String mit den gelesenen Daten zurück. Ein Array wird also wie folgt initialisiert:}
-\begin{lstlisting}[language=C]
-int i;
-for(i = 0; i < aLength; i ++)
-{
-    a[i] = atoi(scanf());
-}
-\end{lstlisting}
-\emph{Die Funktion atoi wandelt den zurückgegebenen String von scanf() in eine Zahl um.
-Die Ausgabe von Daten ist genau wie in C; es kann printf(...) wie gewohnt verwendet werden, allerdings mit der Ausnahme dass spezielle Operatoren wie etwa \glqq{}\%.2f\grqq{} nicht unterstützt werden.}\\
-Auch diese Übung führten wir gemeinsam mit den Schülern durch. Da Ein- und Ausgaben in C Compact mit dem Datentyp \textbf{string} umgesetzt wurden, mussten wir auf einige Unterschiede zu C aufmerksam machen.
-
-\item \emph{Schreibe ein Programm, das ein Array durchläuft und immer zwei benachbarte Elemente vergleicht. Wenn das rechte Element kleiner als das linke ist, sollen beide ausgetauscht werden.}\\
-Diese Übung bearbeiteten die Schüler selbstständig. Wir erklärten die Aufgabenstellung --- die Grundlage von Bubblesort --- zu Beginn allerdings etwas genauer. Im dritten Versuch verwendeten wir zum Darstellen der Arraywerte Spielkarten. Damit konnten wir die Idee von Bubblesort sehr anschaulich vermitteln. Auch bei Schwierigkeiten während der Übungsphase verwendeten wir teilweise die Karten, um ein Problem zu veranschaulichen. Zwei Schülerinnen verwendeten die Karten regelmäßig, um ihren aktuellen Algorithmus theoretisch abzuarbeiten.
-
-\item \emph{Das Programm aus Übung 1 soll nun so erweitert werden, dass das Array komplett sortiert wird. Dazu muss der Sourcecode um eine zusätzliche Schleife erweitert werden. Wenn das zu sortierende Array \textbf{n} Elemente hat, muss die Schleife aus Beispiel 3 maximal \textbf{n-1} mal durchlaufen werden, damit das Array vollständig sortiert ist.}
-
-\item \emph{Bubblesort sortiert alle Elemente im idealsten Fall bereits nach einem Durchlauf. Der Algorithmus kann wesentlich verbessert werden, wenn er abbricht, sobald alle Elemente sortiert sind.\\
-\textbf{Frage:} Woran erkennt man, dass alle Elemente sortiert sind?\\
-\textbf{Antwort:} Wenn die innere Schleife durchläuft, ohne einmal zwei Elemente auszutauschen, muss das Array sortiert sein.}
-
-\item \emph{Überlege dir Antworten zu folgenden Fragen:
-\begin{enumerate}
-\item Was passiert, wenn zwei gleiche Elemente vorkommen?
-\item Wieso steht in der Bedingung $if(a[i] > a[i+1])$ und nicht                          $if(a[i] >= a[i+1])$?
-\item Was ist der günstigste Fall? Mit welchen Eingabedaten ist die Sortierung am schnellsten?
-\item Was ist der ungünstigste Fall? Bei welchen Eingabedaten dauert die Sortierung am längsten?
-\item Anzahl der Durchläufe. Erstelle eine Formel für die (im ungünstigsten Fall) Anzahl der Durchläufe, die zur Sortierung benötigt werden, wenn n Elemente sortiert werden.
-\end{enumerate}}
-Mit diesen Fragen wollten wir die \glqq{}schnelleren\grqq{} Schüler dazu bewegen, sich noch weitere Gedanken zum Sortieralgorithmus zu machen.
-\end{enumerate}
-
+Dadurch konnten wir einerseits ein besseres Verständnis für den Programmierunterricht und die Aufgabe des Lehrers erreichen, was auch für weitere Entwicklungen des Projektes hilfreich war. Andererseits ist es auch eine interessante persönliche Erfahrung, nicht unter den Schülern zu sitzen, sondern vor der Klasse zu stehen.

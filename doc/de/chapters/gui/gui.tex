@@ -5,24 +5,27 @@
 %	--------------------------------------------------------
 
 \chapter{Elemente der Benutzeroberfläche}
-In diesem Kapitel wird der grundlegende Aufbau aller Fenster und Benutzeroberflächen von C Compact beschrieben - sowohl die konzeptuelle Konstruktion als auch die Implementierung.
+In diesem Kapitel wird der grundlegende Aufbau der Fenster und Benutzeroberflächen von C Compact beschrieben - sowohl die konzeptuelle Konstruktion als auch die Implementierung.
 \section{Das Konzept}
-Die Erscheinung und Bedienung von C Compact folgt durchgehend der grundlegenden Idee, eine einfach und intuitiv zu bedienende Entwichlungsumgebung zu schaffen. Das bedeutet, Features möglichst Zielgruppenorientiert zu integrieren und überflüssige Funktionen zu vermeiden. Durch besondere Rücksicht auf Vollständigkeit und logische Bedienvorgänge haben wir ein durchgängig logisches Bedienerlebnis angestrebt.
-Konkret haben wir uns dabei an folgende Ŕegeln gehalten:
+Das Aussehen und die Bedienung von C Compact folgt durchgehend der grundlegenden Idee, eine einfach und intuitiv zu bedienende Entwicklungsumgebung zu schaffen. Das bedeutet, Features möglichst zielgruppenorientiert zu integrieren und überflüssige Funktionen zu vermeiden. Bei der Entwicklung wurde besonders auf Vollständigkeit und logische Bedienvorgänge geachtet, um eine konsistente und verständliche Bedienung zu ermöglichen.
+%TODO TODO read last sentence
+%Durch besondere Rücksicht auf Vollständigkeit und logische Bedienvorgänge haben wir ein durchgängig logisches Bedienerlebnis angestrebt.
+%Konkret haben wir uns dabei an folgende Regeln gehalten:
+
+C Compact wurde deshalb nach folgenden Richtlinien entwickelt:
 \begin{itemize}
-\item Das Erscheinen von Elementen in der Benutzeroberfläche soll logisch begründbar und verständlich vermittelbar sein
-\item Funktionen, die im FSST-Unterricht der ersten und zweiten Klassen wahrscheinlich nicht benötigt werden, werden vermieden oder sind standardmäßig deaktiviert; Bedienelemente werden also auf das wesentlichste reduziert
-\item Wir sind der Meinung, dass eine intuitiv zu bedinenede Oberfläche nicht durch Animationen und große Symbole erzeilt werden kann, sondern durch einfache, bereits bekannte Konzepte. So sind in C Compact bekannte Elemente wie beispielsweise eine Menüleiste mit gewohnten Datei- und Dokumentoperationen zu finden (Siehe Kapitel \ref{sec:gui-main-menu}).
-%TODO reference GUImain
+\item Das Aussehen und die Positionierung von Elementen in der Benutzeroberfläche soll logisch begründbar sein
+\item Funktionen, die im FSST-Unterricht der ersten und zweiten Klassen wahrscheinlich nicht benötigt werden, werden vermieden oder sind standardmäßig deaktiviert; Bedienelemente werden also auf das Wesentlichste reduziert
+\item Wir sind der Meinung, dass eine intuitiv zu bedienende Oberfläche nicht durch Animationen und große Symbole erzielt werden kann, sondern durch einfache, bereits bekannte Konzepte. So sind in C Compact bekannte Elemente wie beispielsweise eine Menüleiste mit gewohnten Datei- und Dokumentoperationen zu finden (Siehe Kapitel \ref{sec:gui-main-menu}).
 \end{itemize}
 
 \subsection{Daraus resultierende Einschränkungen}
-Durch diese Reduktion der gesamten Oberfläche ist C Compact auf einen bestimmten Zweck, also die Ausbildung, beschränkt. Das sehen wir allerdings nicht als Nachteil, sondern als besondere Stärke. Mit C Compact wollen wir eine Entwicklungsumgebung schaffen, die Anfänger nicht überfordert und ihnen hilft, sich auf das wesentliche zu konzentrieren.
-Das Konzept einer anfängerfreundlichen Entwichlungsumgebung ist mit dem Aufbau einer Umgebung für die professionelle Entwicklung nicht vereinbar. C Compact soll aber auf späteres Arbeiten mit komplexeren Programmen vorbereiten. Schüler, die ihre erste Programmiersprache mit C Compact erlernen, kennen bereits den Umgang mit einem Debugger und haben ein tieferes verständnis für den Ablauf von Programmen.
+Durch diese Reduktion der gesamten Oberfläche ist C Compact auf einen bestimmten Zweck, die Ausbildung, beschränkt. Das sehen wir allerdings nicht als Nachteil, sondern als besondere Stärke. Mit C Compact wollen wir eine Entwicklungsumgebung schaffen, die Anfänger nicht überfordert und ihnen hilft, sich auf das Wesentliche zu konzentrieren.
+Das Konzept einer anfängerfreundlichen Entwicklungsumgebung ist mit dem Aufbau einer Umgebung für die professionelle Entwicklung nicht vereinbar. C Compact soll aber auf späteres Arbeiten mit komplexeren Programmen vorbereiten. Schüler, die ihre erste Programmiersprache mit C Compact erlernen, kennen bereits den Umgang mit einem Debugger und haben ein tieferes Verständnis für den Ablauf von Programmen.
 
 %TODO add window desc. for launcher, quest seleter, package selecter
-\section{Elemente und Fenster Der Benutzeroberfläche}
-Neben dem Hauptfenster, das den Kern der Benutzeroberfläche darstellt, gibt es eine Reihe von kleineren Aktionsfenster, Dialogen und Einstellungsfenstern, die zum reibungslosen Ablauf bei der Bedienung von C Comapct beitragen. Das Hauptfenster selbst wird in Kapitel \ref{sec:gui-main} beschrieben.
+\section{Fenster Der Benutzeroberfläche}
+Neben dem Hauptfenster, das den Kern der Benutzeroberfläche darstellt, gibt es eine Reihe von kleineren Aktionsfenster, Dialogen und Einstellungsfenstern, die zum reibungslosen Ablauf bei der Bedienung von C Compact beitragen. Das Hauptfenster selbst wird in Kapitel \ref{sec:gui-main} beschrieben.
 
 \subsection{Launcher}
 \label{sec:win-launcher}
@@ -30,8 +33,7 @@ Neben dem Hauptfenster, das den Kern der Benutzeroberfläche darstellt, gibt es 
 
 \subsection{Einstellung der Sprache}
 \label{sec:win-lang}
-Wenn C Compact zum ersten Mal gestartet wird, wird zu allererst dieses fenster angezeigt. Der Benutzer wird gebeten, eine Sprache zu wählen. Später kann die Sprache über das Menü ,,Datei'' im Hauptfenster (Siehe Kapitel \ref{sec:gui-main-menu-file}) geändert werden. Die Änderungen werden erst wirksam, wenn der Benutzer die neue Sprache mit ,,OK'' bestätigt. Dann wird C Compact neu gestartet.
-%TODO ref translations, Sprache
+Wenn C Compact zum ersten Mal gestartet wird, wird zuallererst dieses Fenster (Abbildung \ref{fig:win-lang}) angezeigt. Der Benutzer wird gebeten, eine Sprache zu wählen. Später kann die Sprache über das Menü \glqq{}Datei\grqq{} im Hauptfenster (Siehe Kapitel \ref{sec:gui-main-menu-file}) geändert werden. Die Änderungen werden erst wirksam, wenn der Benutzer die neue Sprache mit \glqq{}OK\grqq{} bestätigt (siehe auch Kapitel \ref{sec:lang}). Dann wird C Compact neu gestartet.
 
 \begin{figure}[htp]
 \centering
@@ -44,8 +46,8 @@ Dieses Fenster ist in der Klasse \textbf{GUILanguage} im Package \textbf{at.jku.
 
 \subsection{Allgemeine Einstellungen}
 \label{sec:win-set}
-Dieses Fenster enthält allgemeine Optionen zum Haupfenster der Benutzeroberfläche. Es kann im Menü des Hauptfensters unter ,,Datei'' -> ,,Einstelungen'' aufgerufen werden (Siehe Kapitel \ref{sec:gui-main-menu-file}). Änderungen an den Einstellungen werden sofort wirksam (ausgenommen sind Änderungen an der Schriftgröße von Dokumenten). Da C Compact beim Ändern dieser Einstellungen nicht neu gestartet werden muss, sind diese Optionen und die Spracheinstellungen in zwei unterschiedliche Fenster aufgeteilt.
-%TODO ref GUImainSettings
+Dieses Fenster (Abbildung \ref{fig:win-set}) enthält allgemeine Optionen zum Haupfenster der Benutzeroberfläche (siehe Kapitel \ref{sec:guimainsettings}). Es kann im Menü des Hauptfensters unter \glqq{}Datei\grqq{} - \glqq{}Einstellungen\grqq{} aufgerufen werden (Siehe Kapitel \ref{sec:gui-main-menu-file}). Änderungen an den Einstellungen werden sofort wirksam (ausgenommen sind Änderungen an der Schriftgröße von Dokumenten). Da C Compact beim Ändern dieser Einstellungen nicht neu gestartet werden muss, sind diese Optionen und die Spracheinstellungen in zwei unterschiedliche Fenster aufgeteilt.
+%TODO ref load html->font size
 
 \begin{figure}[htp]
 \centering
@@ -57,14 +59,11 @@ Dieses Fenster enthält allgemeine Optionen zum Haupfenster der Benutzeroberflä
 Im Einstellungsfenster können folgende Optionen verändert werden:
 \begin{enumerate}
 \item \textbf{Ansicht:} Ändert den Aufbau des Hauptfensters. Elemente werden je nach gewähltem Layout unterschiedlich angeordnet. Siehe Kapitel \ref{sec:gui-main-left-ord}.
-\item \textbf{Schriftgröße des Sourcecode:} Ändert die Schriftgröße des Textfeldes für den Sourcecode im Hauptfenster. Siehe Kapitel \ref{sec:gui-main-left-code}.
+\item \textbf{Schriftgröße des Sourcecode:} Ändert die Schriftgröße des Textfeldes für den Quellcode im Hauptfenster. Siehe Kapitel \ref{sec:gui-main-left-code}.
 \item \textbf{Schriftgröße der Textfelder:} Ändert die Schriftgröße der Textfelder für Ein- und Ausgabedaten im Hauptfenster. Siehe Kapitel \ref{sec:gui-main-left-io}.
-\item \textbf{Schriftgröße von Dokumenten:} Dokumente, wie etwa Beschreibungstexte von Fehlern, können mit unterschiedlichen Textgrößen angezeigt werden. Da die Schriftgröße beim Initialisieren der Textfelder festgelegt wird, betrifft die Einstellung immer nur die Dokumente, die in Zukunft geöffnet werden.
+\item \textbf{Schriftgröße von Dokumenten:} Dokumente, wie etwa Beschreibungstexte von Fehlern (siehe Kapitel \ref{sec:deb-error}), können mit unterschiedlichen Textgrößen angezeigt werden. Da die Schriftgröße beim Initialisieren der Textfelder festgelegt wird, betrifft die Einstellung immer nur die Dokumente, die in Zukunft geöffnet werden.
 %TODO ref Fehlerdokumente
-\item \textbf{Rückgabewerte anzeigen:} Hier kann eine Funktion des Debuggers aktiviert werden, die noch nicht ausgereift und auch nicht immer hilfreich ist: Wenn das Programm aus einer Funktion zurückspringt und in die Aufrufzeile einen Rückgabewert übergibt, wird dieser in einem Popup dargestellt.
-%TODO Absatz nochmal lesen
-%TODO ref popup
-%TODO ref return popup
+\item \textbf{Rückgabewerte anzeigen:} Der Debugger kann den Rückgabewert einer Funktion in einem Popup (siehe auch Kapitel \ref{sec:deb-popup}) darstellen. Da dieses Feature nicht immer hilfreich ist, ist es standardmäßig deaktiviert.
 \end{enumerate}
 
 Alle Klassen des Einstellungsfensters befinden sich im Package \textbf{at.jku.ssw.cmm.gui.properties}. Das Fenster selbst wird in der Klasse \textbf{GUIProperties} initialisiert, Listener für alle Schieberregler befinden sich in der Klasse \textbf{PropertiesSliderListener}. Die Combobox für das Layout der Benutzeroberfläche (Option 1) wird mit der Klasse \textbf{PropertiesComboListener} überwacht, die Checkbox für das Anzeigen von Rückgabewerten im Debugger ist mit dem ActionListener \textbf{PropertiesActionListener} verknüpft.
@@ -83,8 +82,7 @@ public void stateChanged(ChangeEvent e) {
 }
 \end{lstlisting}
 
-Tatsächlich wird beim aktuakisieren der Schriftgrößen einfach ein neuer Font mit der entsprechenden Größe aus dem bereits verwendeten Font abgeleitet und angewandt.
-%TODO ref GUIleftPanel
+Tatsächlich wird beim Aktualisieren der Schriftgrößen in Textfeldern einfach ein neuer Font mit der entsprechenden Größe aus dem bereits verwendeten Font abgeleitet und für das Textfeld verwendet.
 \begin{lstlisting}[language=JAVA]
 // Schriftart (font) ändern
 this.jSourcePane.setFont(
@@ -96,16 +94,14 @@ this.jSourcePane.setFont(
 );
 \end{lstlisting}
 
-Die Schriftgröße von Dokumenten wird, wie in Punkt 4 bereits erwähnt, beim laden des Dokumentes festgelegt.
-%TODO ref Dokumente laden
-
 \subsection{Über C Compact}
+\label{sec:win-credits}
 % !!! TODO mention SSW in credits !!!
-Dieses Fenster enthält den Lizenztext von C Compact sowie die Namen der beteiligten Personen. Auch dieses Fenster kann im Menü der Entwicklungsumgebung aufgerufen werden (Menü siehe Kapitel \ref{sec:gui-main-menu-file}). Alle Bestandteile dieses Elementes befinden sich im Package \textbf{at.jku.ssw.cmm.gui.credits}:
+Dieses Fenster (Abbildung \ref{fig:win-about}) enthält den Lizenztext von C Compact sowie die Namen der beteiligten Personen. Auch dieses Fenster kann im Menü der Entwicklungsumgebung aufgerufen werden (Menü siehe Kapitel \ref{sec:gui-main-menu-file}). Alle Bestandteile dieses Elementes befinden sich im Package \textbf{at.jku.ssw.cmm.gui.credits}:
 \begin{itemize}
 \item \textbf{Credits.java:} Initialisiert das Fenster und regelt sein Verhalten.
 \item \textbf{credits.html:} Enthält den Lizenztext.
-\item \textbf{credits.css:} Enthält formatierungsinformationen zum Lizenztext.
+\item \textbf{credits.css:} Enthält Formatierungsinformationen zum Lizenztext.
 \end{itemize}
 %TODO ref Dokumente laden
 
@@ -129,7 +125,7 @@ Die Resourcen sind im Package eingebunden und deshalb auch Teil der generierten 
 
 \subsection{Dialoge}
 \label{sec:win-dialog}
-In C Compact werden viele verschiedene Dialogfenster verwendet. Der Begriff Dialogfenster\footnote{http://de.wikipedia.org/wiki/Dialog\_(Benutzeroberfläche)} umfasst eine Reihe von unterschiedlichen Anwendungen, bei denen ein Fenster werwendet wird, um Informationen oder Befehle vom Benutzer einzuholen. Dialoge werden in C Compact beispielsweise verwendet, um zu fragen, ob eine Datei gespeichert werden soll (Abbildung \ref{fig:win-dialog}), oder um den Benutzer auf ein Problem aufmerksam zu machen. Swing enthält bereits einige Funktionen zum Erstellen von Dialogen\footnote{http://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html}, anhand dieses Tutorials können einfache Dialoge sehr schnell erstellt werden.
+In C Compact werden viele verschiedene Dialogfenster verwendet. Der Begriff Dialogfenster\footnote{http://de.wikipedia.org/wiki/Dialog\_(Benutzeroberfläche)} umfasst eine Reihe von unterschiedlichen Anwendungen, bei denen ein Fenster verwendet wird, um Informationen oder Befehle vom Benutzer einzuholen. Dialoge werden in C Compact beispielsweise verwendet, um zu fragen, ob eine Datei gespeichert werden soll (Abbildung \ref{fig:win-dialog}), oder um den Benutzer auf ein Problem aufmerksam zu machen. Swing enthält bereits einige Funktionen zum Erstellen von Dialogen\footnote{http://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html}, anhand der offiziellen Tutorials können einfache Dialoge sehr schnell erstellt werden.
 
 \begin{figure}[htp]
 \centering
@@ -144,14 +140,13 @@ In C Compact werden viele verschiedene Dialogfenster verwendet. Der Begriff Dial
 %TODO add information about info saved in profiles
 \section{Einstellungen}
 \label{sec:guimainsettings}
-Für den Betrieb einer fortgeschrittenen Benutzeroberfläche ist es unerlässlich, diese anpassbar zu machen und Anpassungen des Benutzers zu speichern. Im Package \textbf{at.jku.ssw.cmm.gui.properites} befindet sich die Klasse \textbf{GUImainSettings}, die alle globalen Einstellungen überwacht. Diese Einstellungen umfassen:
+Für den Betrieb einer Benutzeroberfläche ist es unerlässlich, diese anpassbar zu machen und Änderungen des Benutzers zu speichern. Im Package \textbf{at.jku.ssw.cmm.gui.properites} befindet sich die Klasse \textbf{GUImainSettings}, die alle globalen Einstellungen verwaltet und speichert. Diese Einstellungen umfassen:
 \begin{itemize}
 \item Die zuletzt geöffneten Dateien
 \item Die gerade geöffnete Datei
 \item Die zuletzt geöffneten Benutzerprofile
-\item Das aktuell aktive Benutzerprofil
-\item Die vom Benutzer gewählte Sprache
-%TODO ref language
+\item Das gerade aktive Benutzerprofil
+\item Die vom Benutzer gewählte Sprache (siehe Kapitel \ref{sec:lang})
 \item Einstellungen, die der Benutzer direkt verändern kann (Siehe Kapitel \ref{sec:win-set})
 \begin{itemize}
 \item Schriftgrößen
@@ -159,9 +154,9 @@ Für den Betrieb einer fortgeschrittenen Benutzeroberfläche ist es unerlässlic
 \end{itemize}
 \end{itemize}
 
-Bevor das Hauptfenster der Entwicklungsumgebung gestartet werden kann, muss ein Objekt der Klasse \textbf{GUImainSettings} erstellt werden (Siehe dazu Kapitel \ref{sec:gui-main-impl}). Dabei werden die zuletzt gespeicherten Einstellungen geladen.
+Bevor das Hauptfenster der Entwicklungsumgebung gestartet werden kann, muss ein Objekt der Klasse \textbf{GUImainSettings} erstellt werden (Siehe dazu Kapitel \ref{sec:gui-main-impl}). Dabei werden die zuletzt gespeicherten Konfigurationen geladen.
 
-Die Einstellungen werden in der Datei \textbf{settings.xml} im Hauptverzeichnis von C Compact gespeichert. Bevor diese Datei ausgelesen wird, werden alle Einstellungsvariablen auf einen definierten Standardwert gesetzt. Sollten also bestimmte Informationen oder alle Einstellungen fehlen, werden die Standardwerte wieder hergestellt. Die Einstellungen werden beim Beenden von C Comapct gespeichert.
+Die Einstellungen werden in der Datei \textbf{settings.xml} im Hauptverzeichnis von C Compact gespeichert. Bevor diese Datei ausgelesen wird, werden alle Einstellungsvariablen auf einen definierten Standardwert gesetzt. Sollten bestimmte Informationen oder die Datei selbst fehlen, werden die Standardwerte wieder hergestellt. Die Einstellungen werden beim Beenden von C Comapct gespeichert.
 
 Die Einstellungsdatei \textbf{settings.xml} ist wie folgt aufgebaut:
 \begin{lstlisting}[language=XML]
@@ -183,12 +178,62 @@ Die Einstellungsdatei \textbf{settings.xml} ist wie folgt aufgebaut:
 </settings>
 \end{lstlisting}
 
-Unter ,,properties'' befinden sich alle Parameter, die der Benutzer direkt einstellen kann (die Sprache bei den Spracheinstellungen, siehe Kapitel \ref{sec:win-lang} und alle anderen Einstellungen bei den allgemeinen Einstellungen, siehe Kapitel \ref{sec:win-set}). Darunter werden die zuletzt gewählten Profile aufgelistet (diese werden im Launcher angezeigt, siehe Kapitel \ref{sec:win-launcher}) und dann die zuletzt geöffneten Dateien (für die Auflistung im Menü der Entwicklungsumgebung, siehe Kapitel \ref{sec:gui-main-menu-ctrl}). Damit die Listen nicht zu lang werden, werden nur die letzten 10 geöffneten Dateien und die letzten 10 aktiven Profile gespeichert und angezeigt.
+Unter \glqq{}properties\grqq{} befinden sich alle Parameter, die der Benutzer direkt ändern kann (die Sprache bei den Spracheinstellungen, siehe Kapitel \ref{sec:win-lang} und alle anderen Einstellungen bei den allgemeinen Einstellungen, siehe Kapitel \ref{sec:win-set}). Darunter werden die zuletzt gewählten Profile aufgelistet (diese werden im Launcher angezeigt, siehe Kapitel \ref{sec:win-launcher}) und dann die zuletzt geöffneten Dateien (für die Auflistung im Menü der Entwicklungsumgebung, siehe Kapitel \ref{sec:gui-main-menu-ctrl}). Damit die Listen nicht zu lang werden, werden nur die letzten 10 geöffneten Dateien und die letzten 10 aktiven Profile gespeichert und angezeigt.
 %TODO appendix: how to read XML file
 
+\section{Übersetzungen}
+\label{sec:lang}
+C Compact ist derzeit in zwei Sprachen erhältlich: Englisch und Deutsch. Die Texte in der jeweiligen Sprache werden beim Initialisieren der Benutzeroberfläche geladen. Deshalb muss C Compact neu gestartet werden, wenn eine andere Sprache ausgewählt wird (siehe Kapitel \ref{sec:win-lang}).
+
+Zum Erstellen der Übersetzungsdateien wurde GNU gettext\footnote{http://www.gnu.org/software/gettext/} verwendet. Auf Debian-basierten Linux-Systemen (wie zum Beispiel Ubuntu oder Linux Mint) kann gettext einfach über die Paketverwaltung installiert werden:
+\begin{lstlisting}[language=sh]
+apt-get install gettext
+\end{lstlisting}
+%TODO check if package is correct
+
+Dieses Projekt beinhaltet Programme zum Extrahieren von zu übersetzenden Strings aus Quelldateien. Mit dem Befehl \textbf{xgettext}\footnote{http://www.gnu.org/savannah-checkouts/gnu/gettext/manual/html\_node/xgettext-Invocation.html} werden alle zu übersetzenden Strings aus den Quelldateien ausgelesen und in eine externe Datei gespeichert.
+\begin{lstlisting}[language=sh]
+xgettext -k_ -o po/keys.pot $(find src -name "*.java")
+\end{lstlisting}
+Dieser Befehl muss aus dem Projektordner ausgeführt werden. Dabei wird im Quelltext des Projektes nach Schlüsselwörtern gesucht, die auf einen zu übersetzenden Text hindeuten. Mit dem Parameter \emph{-k[keyword]} wird das Schlüsselwort angegeben, in diesem Fall \glqq{}\_\grqq{}. Mit dem Parameter \emph{-o file} wird die Ausgabedatei angegeben. Die zu übersetzenden Strings werden hier in die Datei po/keys.pot gespeichert.
+
+Der Befehl \textbf{msgmerge} fügt die Texte aus dieser Datei in eine Datei für Übersetzungen ein. Befinden sich in dieser Datei bereits übersetzte Texte, werden die neuen Strings einfach hinzugefügt.
+\begin{lstlisting}[language=sh]
+msgmerge -U po/de.po po/keys.pot
+\end{lstlisting}
+
+In der erstellten Datei --- in diesem Fall \textbf{de.po} im Ordner \textbf{po} --- werden die Texte nacheinander aufgelistet. Neben dem Schlüsselword \textbf{msgid} steht immer der Originaltext, der übersetzte Text ist in \textbf{msgstr} einzutragen. Über jeder Übersetzung stehen außerdem Kommentare mit den Ursprungsdateien dieses Textes.
+\begin{lstlisting}[language=sh]
+#: src/at/jku/ssw/cmm/launcher/GUILauncherMain.java:135
+#: src/at/jku/ssw/cmm/gui/properties/GUILanguage.java:40
+msgid "Welcome"
+msgstr "Willkommen"
+\end{lstlisting}
+
+Damit das Einfügen von neuen Strings mit dem Befehl \textbf{msgmerge} auch mit Umlauten funktioniert, müssen bei den allgemeinen Informationen zu Beginn der Übersetzungsdatei Codierungsvorschriften eingefügt werden.
+\begin{lstlisting}[language=sh]
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+\end{lstlisting}
+
+Die Übersetzungsfunktionen sind in der Klasse \textbf{at.jku.ssw.cmm.gettext.Language} impementiert. Vor dem Initialisieren muss die Methode \textbf{loadLanguage} aufgerufen werden. Als Parameter wird der Name der Datei mit den Übersetzungen übergeben, zum Beispiel \glqq{}de.po\grqq{}.
+\begin{lstlisting}[language=JAVA]
+Language.loadLanguage("de.po");
+\end{lstlisting}
+
+Alle Übersetzungen werden in eine HashMap gespeichert. Der Schlüssel ist der Text in Originalsprache (Englisch), zugehöriger Datenwert ist der übersetzte String. Mit der Methode \glqq{}\_(...)\grqq{} können Übersetzungen abgefragt werden. Wurde keine Sprache geladen, wird der Originalstring zurückgegeben. Ist keine Übersetzung für einen bestimmten Text vorhanden, wird ebenfalls der Schlüsseltext zurückgegeben, allerdings wird auch eine Warnung in der Konsole ausgegeben. Nicht übersetzte Strings werden also einfach in Originalsprache angezeigt.
+\begin{lstlisting}[language=JAVA]
+jLabel.setText(_("Wilkommen"));
+\end{lstlisting}
+
+Um die Übersetzungsmethode verwenden zu können, ohne davor den Klassennamen zu schreiben, muss die Methode statisch importiert werden:
+\begin{lstlisting}[language=JAVA]
+import static at.jku.ssw.cmm.gettext.Language._;
+\end{lstlisting}
+
 \section{Anzeigen von internen Fehlern}
-Unter Unständen kann es bei C Compact zu internen Fehlern kommen. Zu diesen Zählen auch Probleme die entstehen, wenn eine wichtige Datei gelöscht wurde oder nicht gefunden werden kann. Die in diesem Abschnitt beschriebenen Fehlermeldungen sollten nicht mit den Fehlerbeschreibungen des Debuggers verwechselt werden (Siehe Kapitel \ref{}). Wenn ein Fehler auftritt, wird die Fehlermeldung in Form eines Dialoges (Siehe Kapitel \ref{sec:win-dialog} angezeigt.
-%TODO ref debugger error docs
+\label{sec:gui-int-error}
+Unter Umständen kann es bei C Compact zu internen Fehlern kommen. Zu diesen zählen Probleme die entstehen, wenn eine wichtige Datei nicht gefunden werden kann. Die in diesem Abschnitt beschriebenen Fehlermeldungen sollten nicht mit den Fehlerbeschreibungen des Debuggers verwechselt werden (Siehe Kapitel \ref{sec:deb-error}). Wenn ein Fehler auftritt, wird die Fehlermeldung in Form eines Dialoges (Siehe Kapitel \ref{sec:win-dialog}) angezeigt.
 
 \begin{figure}[htp]
 \centering
@@ -196,8 +241,17 @@ Unter Unständen kann es bei C Compact zu internen Fehlern kommen. Zu diesen Zä
 \caption{Eine interne Fehlereldung}
 \end{figure}
 
-Jeder Fehler der auftreten kann hat eine eindeutige Fehlernummer, alle Fehler sind in der C Compact Projektwiki auf GitHub\footnote{https://github.com/Projekt-CMM/CMM/wiki/List-of-internal-error-numbers} aufgelistet. Eine Fehlernummer besteht immer aus 4 Zahlen; die erste gibt den Bereich an, in dem der Fehler aufgetreten ist.
-%TODO keep this thable up to date
+Jeder Fehler der auftreten kann hat eine eindeutige Fehlernummer. Alle Fehler sind in der C Compact Projektwiki auf GitHub\footnote{https://github.com/Projekt-CMM/CMM/wiki/List-of-internal-error-numbers} aufgelistet. Eine Fehlernummer besteht immer aus 4 Zahlen; die erste gibt den Bereich von C Compact an, in dem der Fehler aufgetreten ist.
+
+Die Anzeigetexte und Fehlernummern werden in der Datei \textbf{systemerror.xml} gespeichert. Diese Datei befindet sich im Package \textbf{at.jku.ssw.cmm.gui.debug} und wird damit auch in die fertige JAR-Datei eingebunden. So kann sie nicht aus Versehen gelöscht werden.
+
+Um eine Fehlermeldung anzeigen zu können muss einfach folgender Befehl ausgeführt werden:
+\begin{lstlisting}[language=JAVA]
+// Parameter: JFrame des Hauptfensters, Fehlernummer, Sprachcode (zum Beispiel "de" oder "en")
+new ErrorMessage().showErrorMessage(jFrame, "#2001", settings.getLanguage());
+\end{lstlisting}
+
+%TODO keep this table up to date
 %TODO add references to different files/chapters
 \def\arraystretch{1.6}
 \begin{minipage}{14cm}
@@ -206,15 +260,15 @@ Jeder Fehler der auftreten kann hat eine eindeutige Fehlernummer, alle Fehler si
 	Bereich&Nummer&Beschreibung\\
 	\hline
 	&1001&Datei \textbf{error/table.xml} fehlt\\
-	\multirow{5}{15mm}{\begin{sideways}\parbox{35mm}{Dateien fehlen oder sind beschädigt}\end{sideways}}&1002&\multirow{2}{*}{Inhalt der Datei \textbf{error/table.xml} ist ungültig}\\
-	&1003&\\
+	\multirow{5}{15mm}{\begin{sideways}\parbox{35mm}{Dateien fehlen oder sind beschädigt}\end{sideways}}&1002&Inhalt der Datei \textbf{error/table.xml} ist ungültig (ParserException)\\
+	&1003&Inhalt der Datei \textbf{error/table.xml} ist ungültig (SAXException)\\
 	&1011&Datei \textbf{error/style.css} fehlt oder ist beschädigt\\
 	&1012&Inhalt der Datei \textbf{error/style.css} ist ungültig\\
 	&1021&Fehlerbeschreibungsdokument nicht gefunden\\
 	\hline
 	&2001&Aktuelle Datei konnte nicht gespeichert werden\\
 	\multirow{4}{15mm}{\begin{sideways}\parbox{25mm}{Dateien öffnen oder speichern}\end{sideways}}&2011&[inactive]\footnote{Dieser Fehler kann nicht mehr auftreten, da der zugehörige Bereich deaktiviert wurde}\\
-	&2012&Datei konne nicht geöffnet werden\\
+	&2012&Datei konnte nicht geöffnet werden\\
 	&2013&Bibliothek konnte nicht gefunden werden\footnote{Dieser Fehler wird als Fehlermeldung im Debugger angezeigt. Die fehlernummer existiert nur formell}\\%TODO ref debugger error doc
 	&2014&Datei \textbf{default.cmm} einer Quest konnte nicht geöffnet werden\\%TODO ref quest
 	\hline
@@ -233,44 +287,3 @@ Jeder Fehler der auftreten kann hat eine eindeutige Fehlernummer, alle Fehler si
 \end{minipage}
 
 %TODO TODO add some paragraphs about error window, error.xml, and so on
-
-\section{Popups}
-In C Compact gibt es mehrere Anwendungsfälle für Popup-Fenster. Popups werden verwendet, um weitere Informationen zu einem Array oder einem String in der Variablentabelle zu liefern und um Rückgabewerte von Funktionen zu visualisieren (dies ist allerdings optional, siehe auch \ref{sec:win-set} Dabei handelt es sich im Prinzip um kleine Anzeigeflächen, die ein Swing-Element enthält. Ein Popup wird ausgeblendet, sobald auf eine beliebige Fläche in einem Fenster von C Compact geklickt wird (der Event muss erfasst werden können).
-
-\begin{figure}[htp]
-\centering
-\includegraphics[width=0.4\textwidth]{./media/images/gui/popup/popup-example.png}
-\caption{Ein Popup zeigt den Rückgabewert einer Funktion.}
-\label{fig:popup-example}
-\end{figure}
-
-\subsection{Initialisierung eines Popups}
-Die Popup-Funktionen selbst befinden sich in der Klasse \textbf{ImagePopup}. Zum Initialisieren werden aber die statischen Methoden in der Klasse \textbf{ComponentPopup} verwendet; diese Methoden übernehmen auch umständliche Positionsberechnungen für das Popup. Die Methode \textbf{createPopUp(...)} kann auch ohne das Parameter \glqq{}weight\grqq{} verwendet werden.
-\begin{lstlisting}[language=JAVA]
-public static void createPopUp( GUImain main, JComponent component, int x, int y, int w, int h, int orientation, double weight );
-\end{lstlisting}
-
-\begin{table}[h!]
-\begin{tabular}{|ll|l|}
-\hline 
-GUImain & main  & Referenz auf das Hauptfenster, siehe \ref{sec:gui-main-impl} \\
-\hline
-JComponent & component & Das Swing-Element, das angezeigt werden soll \\
-\hline
-int & x & \multirow{2}{8cm}{Die Position, auf die das Popup zeigen soll} \\
-int & y & \\
-\hline 
-int & w & \multirow{2}{8cm}{Höhe und Breite des Popups (Bezogen auf den äußeren Rand, \textbf{component} wird mit 5px Inset platziert)} \\
-int & h & \\
-\hline
-int & orientation & Ausrichtung des Popups (siehe Unten) \\
-\hline
-double [optional] & weight & Position des Zeigers, Wert zwischen 0 und 1, Standard: 0.5\\
-\hline
-\end{tabular}
-\caption{Parameter der Methode \textbf{createPopup(...)}}
-\end{table}
-
-
-
-

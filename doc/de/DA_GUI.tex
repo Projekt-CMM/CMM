@@ -5,6 +5,20 @@
 \usepackage{pifont}
 \usepackage{changepage}
 \usepackage{wrapfig}
+\usepackage{pdfpages}
+\usepackage{amsmath}
+\usepackage{ifthen}
+
+%	########################################################
+% 					Autoren		
+%	########################################################
+\newboolean{fabian}
+\newboolean{thomas}
+\newboolean{peter}
+
+\setboolean{fabian}{true}
+\setboolean{thomas}{true}
+\setboolean{peter}{true}
 
 %	########################################################
 % 					Allgemeine Informationen			
@@ -12,6 +26,8 @@
 \def\htlArbeit{Diplomarbeit }
 \def\htlArbeitsthema{C Compact }	% Thema oder Titel der Arbeit
 \def\htlArbeitstitel{C Compact }			% Arbeitstitel
+
+%\lstset{basicstyle=\small}
 
 
 \begin{document}
@@ -24,37 +40,38 @@
 %	--------------------------------------------------------
 % 	Deckblatt
 %	--------------------------------------------------------			
-%\input{./chapters/Pre-01-deckblatt.tex}
+%
+\input{./chapters/Pre-01-deckblatt.tex}
 
 %	--------------------------------------------------------
 % 	Arbeitstitel
 %	--------------------------------------------------------		
-%\input{./chapters/Pre-02-arbeitstitel.tex}
+\input{./chapters/Pre-02-arbeitstitel.tex}
 
 %	--------------------------------------------------------
 % 	Eidesstattliche Erklärung
 %	--------------------------------------------------------			
-%\input{./chapters/Pre-03-erklaerung.tex}
+\input{./chapters/Pre-03-erklaerung.tex}
 
 %	--------------------------------------------------------
 % 	Inhaltsverzeichnis
 %	--------------------------------------------------------			
-%\tableofcontents
+\tableofcontents
 
 %	--------------------------------------------------------
 % 	Vorwort
 %	--------------------------------------------------------	
-%\input{./chapters/Pre-04-vorwort.tex}
+\input{./chapters/Pre-04-vorwort.tex}
 
 %	--------------------------------------------------------
 % 	Zusammenfassung
-%	--------------------------------------------------------		
-%\input{./chapters/Pre-05-kurzfassung.tex}
+%	--------------------------------------------------------		 	  
+\input{./chapters/Pre-05-kurzfassung.tex}
 
 %	--------------------------------------------------------
 % 	Abstract
 %	--------------------------------------------------------		
-%\input{./chapters/Pre-06-abstract.tex}
+\input{./chapters/Pre-06-abstract.tex}
 
 
 
@@ -73,7 +90,11 @@
 %\input{./chapters/01-aufgabenstellung.tex}
 \pagenumbering{arabic}	% Beginn mit arabischen Seitenzahlen
 
+\iffabian
+\input{./chapters/intro/0-intro.tex}
+
 \input{./chapters/gui/gui.tex}
+
 \input{./chapters/gui/gui-main.tex}
 
 \input{./chapters/gui/debugger/0-debugger.tex}
@@ -81,75 +102,76 @@
 \input{./chapters/gui/sci/0-sci.tex}
 
 \input{./chapters/gui/versions.tex}
-
-
-%	--------------------------------------------------------
-% 	Compiler
-%	--------------------------------------------------------	
-%\input{./chapters/compiler/compiler.tex}
-
-%	--------------------------------------------------------
-% 	Interpreter
-%	--------------------------------------------------------	
-%\input{./chapters/interpreter/interpreter.tex}
-
-%	--------------------------------------------------------
-% 	GUI
-%	--------------------------------------------------------	
-%\input{./chapters/gui/gui.tex}
-
-%	--------------------------------------------------------
-% 	Projektbeschreibung
-%	--------------------------------------------------------	
-%\input{./chapters/02-projektbeschreibung.tex}
-
-%	--------------------------------------------------------
-% 	Bedienungsanleitung
-%	--------------------------------------------------------
-%\input{./chapters/03-bedienungsanleitung.tex}
-
-%	--------------------------------------------------------
-% 	Evaluierung
-%	--------------------------------------------------------
-%\input{./chapters/04-evaluierung.tex}
+\fi
 
 %	--------------------------------------------------------
 % 	Persönliche Erfahrungen
 %	--------------------------------------------------------
-%\input{./chapters/05-erfahrungen.tex}
+\input{./chapters/05-erfahrungen.tex}
 
 %	--------------------------------------------------------
 % 	Autoren
 %	--------------------------------------------------------
-%\input{./chapters/gui/06-autoren.tex}
+\input{./chapters/gui/06-autoren.tex}
 
 
 %	########################################################
 % 	Anhang		
 %	########################################################
 \appendix
-\renewcommand{\thechapter}{\Alph{chapter}} 
-%%%\setcounter{chapter}{0}
+\renewcommand{\thechapter}{\Alph{chapter}}
 
-%	--------------------------------------------------------
-% 	Diverse Anhänge
-%	--------------------------------------------------------
-%%%\input{./chapters/App-01-anhaenge.tex}	
+\setcounter{chapter}{0} 
 
-%	--------------------------------------------------------
-% 	Richtlinien für die Erstellung
-%	--------------------------------------------------------	
-%\input{./chapters/App-02-richtlinien.tex}
+\chapter{Dokumente}
+Beschreibungstext...
 
-%	--------------------------------------------------------
-% 	Standards für Ingenieurprojekte
-%	--------------------------------------------------------	
-%\input{./chapters/App-03-standard-ing.tex}
+Dieses Dokument wurde von Herrn Professor Mössenböck zu Beginn des Projektes erstellt. Hier werden die grundlegenden Anforderungen an Compiler und Interpreter festgelegt.
 
-%	--------------------------------------------------------
-% 	Standards für Technikerprojekte
-%	--------------------------------------------------------	
-%\input{./chapters/App-04-standard-tech.tex}
+Dieses Dokument wurde von Herrn Professor Blaschek zu Beginn des Projektes erstellt. Hier werden die Funktionen und das Aussehen der ersten Benutzeroberfläche festgelegt.
+
+\pagebreak
+\section{Ursprüngliche Anforderungen an Compiler und Interpreter}
+\label{app:anf-comp}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1.0\textwidth]{./media/docs/Anforderung-compiler.pdf}
+\end{figure}
+
+\includepdf[pages=2-last]{./media/docs/Anforderung-compiler.pdf}
+
+\pagebreak
+
+\section{Ursprüngliche Anforderungen an die Benutzeroberfläche}
+\label{app:anf-gui}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1.0\textwidth]{./media/docs/Anforderung-gui.pdf}
+\end{figure}
+
+\pagebreak
+\section{Fragebogen zur Entwicklungsumgebung}
+Verwendet bei den ersten drei Versuchen (siehe Kapitel \ref{sec:sci-trial-gui}).
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1.0\textwidth]{./media/docs/Fragebogen-gui.pdf}
+	\label{fig:app-doc-fb-gui}
+\end{figure}
+
+\pagebreak
+\section{Fragebogen zum Questsystem}
+Verwendet beim vierten Versuch (siehe Kapitel \ref{sec:sci-trial-quest}).
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1.0\textwidth]{./media/docs/Fragebogen-quest.pdf}
+	\label{fig:app-doc-fb-quest}
+\end{figure}
+
+%\includepdf{./media/docs/Fragebogen-gui.pdf}
 
 
 %	########################################################

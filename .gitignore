@@ -6,3 +6,10 @@
 CMM.jar
 bruteforce.c
 config.cfg
+/.metadata/*
+/TestFiles/*
+/doc/de/DA_GUI.*
+/doc/de/Vorlage_DA.*
+*.autosave
+/profiles/*
+

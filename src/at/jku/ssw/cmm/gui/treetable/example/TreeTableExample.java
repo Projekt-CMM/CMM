@@ -14,10 +14,10 @@ import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
 import at.jku.ssw.cmm.gui.quest.GUIquestSelection;
-import at.jku.ssw.cmm.gui.treetable.TableButtonRenderer;
 import at.jku.ssw.cmm.gui.treetable.TreeTable;
 import at.jku.ssw.cmm.gui.treetable.TreeTableDataModel;
 import at.jku.ssw.cmm.gui.treetable.TreeTableModel;
+import at.jku.ssw.cmm.gui.treetable.var.TableButtonRenderer;
 import at.jku.ssw.cmm.gui.treetable.var.TreeUtils;
 import at.jku.ssw.cmm.profile.Profile;
 import at.jku.ssw.cmm.profile.Quest;
