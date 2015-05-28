@@ -19,7 +19,7 @@ Grundsätzlich ist der Launcher ein JFrame\footnote{\url{http://www.java-tutoria
 \end{itemize}
 
 \subsection{Erstellen eines neuen Profils}
-Durch einen Klick auf den Button "`\textit{Neu}"' wird ein Fenster geöffnet, in dem man sein Profil erstellen kann.  
+Durch einen Klick auf den Button "`\textit{Neu}"' wird ein Fenster geöffnet, in dem man ein Profil erstellen kann.  
 
 %TODO Anhang Referenzieren
 Zuerst wird der Ordnerpfad mithilfe eines JFileChoosers (siehe Kapitel \ref{sec:JFileChooser}) abgefragt. Unter Verwendung einer JOptionPane\footnote{\url{http://docs.oracle.com/javase/7/docs/api/javax/swing/JOptionPane.html}}  (Abbildung: \ref{fig:JOptionPane}) kann nun der gewünschte Nutzername gewählt werden.
@@ -42,9 +42,9 @@ Wenn die Eingabe erfolgreich war, wird nun im gewählten Pfad ein neuer Ordner e
 Tritt bei der Erstellung eines Profils ein Fehler auf, zeigt eine JOptionpane die zugehörige Fehlermeldung an. Danach öffnet sich automatisch wieder der Lauchner. 
 
 \subsection{Finden eines bereits existierenden Profils}
-Damit ein Profil geöffnet werden kann, welches nicht in der Liste der Profile im Launcher vorhanden ist, muss eine Funktion vorhanden sein, mit welcher Profile gefunden werden kann.
+Damit ein Profil geöffnet werden kann, welches nicht in der Liste der Profile im Launcher vorhanden ist, muss eine Funktion vorhanden sein, mit welcher Profile gefunden werden können.
 
-Sobald man auf den Button "`\textbf{Finden}"' klickt, wird ein veränderter JFileChooser geöffnet. Hier kann nur eine "`\textit{\textbf{.cp}}"' Datei ausgewählt werden. Sobald diese angeklickt wird, werden das Profilbild und der Profilname als Vorschau auf der rechten Seite angezeigt. Wenn der Nutzer kein Profilbild eingestellt hat, wird hier ein voreingestelltes Profilbild angezeigt.
+Sobald man auf den Button "`\textbf{Finden}"' klickt, wird ein veränderter JFileChooser geöffnet. Hier kann nur eine "`\textit{\textbf{.cp}}"' Datei ausgewählt werden. Sobald diese angeklickt wird, werden das Profilbild und der Profilname als Vorschau auf der rechten Seite des JFileChoosers angezeigt. Wenn der Nutzer kein Profilbild eingestellt hat, wird hier ein voreingestelltes Profilbild angezeigt.
 
 \begin{figure}[h] 
    \centering
@@ -53,4 +53,4 @@ Sobald man auf den Button "`\textbf{Finden}"' klickt, wird ein veränderter JFil
   \label{fig:Bild1}
 \end{figure}
 
-Indem man auf den "`\textbf{Öffnen}"'-Button klickt, startet man nun C-Compact mit dem gerade ausgewählten Profil und es wird zu den zuletzt verwendeten Profilen hinzugefügt.
+Indem man auf den "`\textbf{Öffnen}"'-Button klickt, startet man nun C Compact mit dem gerade ausgewählten Profil und es wird zu den zuletzt verwendeten Profilen hinzugefügt.

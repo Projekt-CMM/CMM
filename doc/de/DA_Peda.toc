@@ -36,7 +36,7 @@
 \contentsline {subsection}{\numberline {2.1.1}Erstellen eines neuen Profils}{20}{subsection.2.1.1}
 \contentsline {subsection}{\numberline {2.1.2}Finden eines bereits existierenden Profils}{20}{subsection.2.1.2}
 \contentsline {section}{\numberline {2.2}Questpackage}{21}{section.2.2}
-\contentsline {section}{\numberline {2.3}Quest - Selection}{22}{section.2.3}
+\contentsline {section}{\numberline {2.3}Quest - Selection}{21}{section.2.3}
 \contentsline {section}{\numberline {2.4}JFileChooser}{23}{section.2.4}
 \contentsline {subsection}{\numberline {2.4.1}Anzeigen einer Vorschau}{23}{subsection.2.4.1}
 \contentsline {subsection}{\numberline {2.4.2}Integration des Profils in die Benutzeroberfl\IeC {\"a}che}{24}{subsection.2.4.2}
@@ -48,7 +48,7 @@
 \contentsline {subsection}{\numberline {3.2.3}Expressions}{27}{subsection.3.2.3}
 \contentsline {subsection}{\numberline {3.2.4}Conditions}{27}{subsection.3.2.4}
 \contentsline {subsection}{\numberline {3.2.5}Memory System}{27}{subsection.3.2.5}
-\contentsline {subsection}{\numberline {3.2.6}Von uns gew\IeC {\"a}hltes Memory System}{28}{subsection.3.2.6}
+\contentsline {subsection}{\numberline {3.2.6}Von uns gew\IeC {\"a}hltes Memory System}{27}{subsection.3.2.6}
 \contentsline {subsubsection}{\numberline {3.2.6.1}Speicherverwaltung}{29}{subsubsection.3.2.6.1}
 \contentsline {subsubsection}{\numberline {3.2.6.2}Aufruf einer neuen Methode}{29}{subsubsection.3.2.6.2}
 \contentsline {subsubsection}{\numberline {3.2.6.3}Schlie\IeC {\ss }en einer Methode}{30}{subsubsection.3.2.6.3}

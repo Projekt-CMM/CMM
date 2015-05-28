@@ -1,5 +1,5 @@
 \section{Lesen von XML Dateien}
-Um Konfigurationen lesen speichern zu können, haben wir uns für das gängige XML entschieden. Somit wird das Profil, Quests oder Einstellungen der Benutzeroberfläche im XML Format gespeichert.
+Um Konfigurationen lesen und speichern zu können, haben wir uns für das gängige XML entschieden. Somit wird das Profil, Quests oder Einstellungen der Benutzeroberfläche im XML Format gespeichert.
 
 Um das Lesen von XML Dateien zu ermöglichen, sind in Java mehrere Klassen implementiert. Wir haben hierfür den Dom Parser\footnote{\url{http://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/}} verwendet. Dieser lest die gesamte XML Datei ein und lädt diese in den Arbeitsspeicher. Nun wird er in eine Baumstruktur modelliert. Danach kann dieser Knoten für Knoten abgearbeitet werden, um an die notwendigen Informationen zu gelangen.
 
@@ -20,7 +20,7 @@ Die Liste der gewünschten Knoten und Unterknoten kann man nun mithilfe eines ei
 \begin{lstlisting}[language=JAVA]
 	NodeList nList = doc.getElementsByTagName("quest");
 \end{lstlisting}
-Durch die neue Liste können wir nun anhand eine schleife iterativ durchgehen. Nun kann die gewünschte Informationen auslesen werden. Hier wird beispielweise der Tag \textbf{"<title">} eingelesen.
+Durch die neue Liste können wir nun anhand eine schleife iterativ durchgehen. Nun kann die gewünschte Informationen ausgelesen werden. Hier wird beispielweise der Tag \textbf{"<title">} eingelesen.
 \begin{lstlisting}[language=JAVA]
 title = eElement.getElementsByTagName("title").item(0).getTextContent();
 \end{lstlisting}
@@ -28,7 +28,7 @@ title = eElement.getElementsByTagName("title").item(0).getTextContent();
 \section{Schreiben von XML Dateien}
 Um dies zu realisieren haben wir den DOM XML Parser\footnote{\url{http://www.mkyong.com/java/how-to-create-xml-file-in-java-dom/}} verwendet. Hierbei muss der Baum zuerst im Programm aufgebaut werden, und dieser wird danach in einer XML Datei gespeichert.
 
-Zuerst muss er Hauptknoten erstellt werden. Vom diesem ausgehend können dann weitere Knoten angebracht werden.
+Zuerst muss der Hauptknoten erstellt werden. Vom diesem ausgehend können dann weitere Knoten angebracht werden.
 \begin{lstlisting}[language=JAVA]
 		Document doc = docBuilder.newDocument();
 		Element rootElement = doc.createElement("profile");
