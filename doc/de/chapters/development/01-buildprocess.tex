@@ -9,7 +9,7 @@
 %	--------------------------------------------------------
 \section{Buildprozess}
 
-Um aus Quelltext ein ausf\"uhrbaren Anwendungsprogramm zu erstellen sind meist viele Schritte nötig.\footnote{\url{https://de.wikipedia.org/wiki/Erstellungsprozess}} Diese Aufgabe wird dabei in der Regel von einem sogenannten Build-Management-Tool \"ubernommen um Arbeitszeit zu sparen und die Entwicklung zu erleichtern.
+Um aus Quelltext ein ausf\"uhrbaren Anwendungsprogramm zu erstellen sind meist viele Schritte nötig.\footnote{\url{https://de.wikipedia.org/wiki/Erstellungsprozess}} Diese Aufgabe wird dabei in der Regel von einem sogenannten Build-Management-Tool \"ubernommen, um Arbeitszeit zu sparen und die Entwicklung zu erleichtern.
 
 \subsection{Apache Ant}
 
@@ -32,4 +32,40 @@ Ein Target kann dann einfach \"uber die Komandozeile ausgef\"urt werden:
 
 \begin{lstlisting}[language=bash]
 ant all
+\end{lstlisting}
+
+\subsection{Buildprozess von C Compact}
+
+C Compact ben\"otigt diverse Programme und Bibliotheken um compiliert werden zu k\"onnen. Des Weiteren gibt es noch optionale Abh\"angigkeiten welche nur f\"ur spezifische T\"atigkeiten, wie das extrahieren der \"Ubersetzungen (siehe Kapitel \ref{}), ben\"otigt werden. Die grundlegenden Abh\"angigkeiten sind:
+
+\begin{tabular}{l | l}
+ ant & Build-Management-Tool\\
+ Java 7 oder h\"oher & Laufzeitumgebung \\
+ Coco/R & Compilergenerator f\"ur die Programmiersprache C Compact\\
+ Flex & Scannergenerator welcher f\"ur den Syntaxhighlighter ben\"otigt wird\\
+ gettext & Extrahieren von \"ubersetzbaren Textfragmente\\
+\end{tabular}
+
+\subsubsection{Installation der Abh\"angigkeiten auf Debian/Ubuntu}
+
+Auf Linux basierenden Systemen ist es besonders einfach alle Abh\"angigkeiten zu installieren, da der Paketmanager genutzt werden kann. Die folgende Zeile zeigt die Nutzung des Paketmanagers von Debian bzw. Ubuntu um alle ben\"otigten Abh\"angigkeiten zu installieren:
+
+\begin{lstlisting}[language=bash]
+sudo apt-get install ant coco-java jflex openjdk-7-jdk gettext
+\end{lstlisting}
+
+\subsubsection{Kompilieren von C Compact}
+
+Es werden mehrere ausf\"urhbare Jar-Dateien generiert. Dies ist einerseits C Compact mit bzw. ohne Questsystem. Der folgende Befehl kompiliert alle Jar-Dateien neu und kopiert diese in das Hauptverzeichnis von C Compact. 
+
+\begin{lstlisting}[language=bash]
+ant build
+\end{lstlisting}
+
+\subsubsection{Testen von C Compact}
+
+Es wurden eine Reihe von Grey-Box-Tests\footnote{\url{https://de.wikipedia.org/wiki/Grey-Box-Test}} implementiert, die einfach mithilfe von ant ausgef\"uhrt werden k\"onnen. Des Weiteren gibt es auch einen einfachen Test der das korrekte Starten der Benutzeroberfl\"ache testet, und so fehlende Grafiken und Dateien detektieren kann, welche f\"ur eine korrekte Funktion ben\"otigt werden.
+
+\begin{lstlisting}[language=bash]
+ant test
 \end{lstlisting}

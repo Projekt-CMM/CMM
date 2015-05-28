@@ -12,15 +12,15 @@
 
 \subsection{Pr\"aprozessor}
 
-Der Pr\"aprozessor erm\"oglicht die Nutzung mehrer Dateien und verf\"ugt \"uber die Funktion einzelne Codeteile zu deaktivieren, wie es auch in C der Fall ist. Pr\"aprozessorargumente beginnen dabei jeweils mit einem Hashtag, gefolgt von der jeweiligen Direktive und einem oder mehreren Argumenten.
+Der Pr\"aprozessor erm\"oglicht die Nutzung mehrer Dateien und verf\"ugt \"uber die Funktion einzelne Codeteile zu deaktivieren, wie es auch in C der Fall ist. Pr\"aprozessorargumente beginnen dabei jeweils mit einem Hashtag, gefolgt von der jeweiligen Direktive und teilweise einem oder mehreren Argumenten.
 
 \subsubsection{\#include Direktive}
 
-Mithilfe eines \#include k\"onnen andere Dateien eingebunden werden. Es gibt dabei 2 Arten von \#include, welche sich durch den jeweiligen Suchpfad unterscheiden. Aus technischer Sicht kopiert der Pr\"aprozessor die jeweilige Datei an die Stelle wo das \#include geschrieben ist.
+Mithilfe eines \textbf{\#include} k\"onnen andere Dateien eingebunden werden. Es gibt dabei 2 Arten von \textbf{\#include}, welche sich durch den jeweiligen Suchpfad unterscheiden. Aus technischer Sicht kopiert der Pr\"aprozessor die jeweilige Datei an die Stelle wo das \textbf{\#include} geschrieben ist.
 
 \htlParagraph{Suche im Standard-Include-Pfad}
 
-Der Standard-Include-Pfad stellt der Ordner clib dar, in welchem sich die Standardbibliothek befindet.
+Der Standard-Include-Pfad stellt der Ordner clib dar, in welchem sich die Standardbibliothek befindet. Dieser befindet sich standardm\"a\ss{}ig im Hauptverzeichnis von C Compact.
 
 \begin{lstlisting}[language=C]
 #include <stdio.h>
@@ -36,20 +36,20 @@ Wenn selbst geschriebene Programmdateien eingebunden werden, wird der Pfad relat
 
 \subsubsection{\#define Direktive}
 
-Es ist m\"oglich w\"ahrend des Pr\"aprozessorvorganges Variablen zu definieren, welche aber nur im Pr\"aprozessor ausgewertet werden k\"onnen. Es ist nicht m\"oglich mithilfe eines \#define Quelltext zu ver\"andern, wie es in C m\"oglich ist!
+Es ist m\"oglich w\"ahrend des Pr\"aprozessorvorganges Variablen zu definieren, welche aber nur im Pr\"aprozessor ausgewertet werden k\"onnen. Es ist nicht m\"oglich mithilfe eines \textbf{\#define} Quelltext zu ver\"andern, wie es in C m\"oglich ist!
 
-Es ist m\"oglich einem Define einen Wert zuzuweisen, welcher eine Ganze Zahl sein muss. Falls kein Wert angegeben ist wird 1 angenommen.
+Es ist m\"oglich, einem Define einen Wert zuzuweisen, welcher eine Ganze Zahl sein muss. Falls kein Wert angegeben ist wird 1 angenommen.
 
 \begin{lstlisting}[language=C]
 #define __DEFINE_WITHOUT_VALUE__
 #define __DEFINE_WITH_VALUE__ 0
 \end{lstlisting}
 
-Falls ein \#define mit dem gleichen Namen bereits existiert, wird dieses \"uberschrieben.
+Falls ein \textbf{\#define} mit dem gleichen Namen bereits existiert, wird dieses \"uberschrieben.
 
 \subsubsection{\#undef Direktive}
 
-Mithilfe eines \#undef kann eine definierte Variable gel\"oscht werden. Die Variable steht somit nicht mehr zur verf\"ugung, bis die Variable erneut definiert wird.
+Mithilfe eines \textbf{\#undef} kann eine definierte Variable gel\"oscht werden. Die Variable steht somit nicht mehr zur Verf\"ugung, bis die Variable erneut definiert wird.
 
 \begin{lstlisting}[language=C]
 #undef __DEFINE_WHICH_IS_NOW_DELETED__
@@ -57,9 +57,9 @@ Mithilfe eines \#undef kann eine definierte Variable gel\"oscht werden. Die Vari
 
 \subsubsection{\#ifdef, \#ifndef, \#else und \#endif Direktive}
 
-Es ist m\"oglich abzufragen ob es eine bestimmte Variablendefinition gibt, oder nicht gibt. Diese Abfrage wird mit den Pr\"aprozessorargumenten \#ifdef bzw. \#ifndef eingeleitet, und muss mit einem \#endif enden. Falls es notwendig ist spezifischen code auszuf\"uhren, wenn die Bedingung nicht erf\"ullt ist, kann dies mithilfe eines \#else eingeleitet werden.
+Es ist m\"oglich abzufragen, ob es eine bestimmte Variablendefinition gibt oder nicht gibt. Diese Abfrage wird mit den Pr\"aprozessorargumenten \textbf{\#ifdef} bzw. \textbf{\#ifndef} eingeleitet, und muss mit einem \textbf{\#endif} enden. Falls es notwendig ist spezifischen code auszuf\"uhren, wenn die Bedingung nicht erf\"ullt ist, kann dies mithilfe eines \textbf{\#else} eingeleitet werden.
 
-Eine Variable gilt als definiert wenn sie mithilfe eines \#define erzeugt wurde, und einen Wert ungleich 0 besitzt.
+Eine Pr\"aprozessorvariable gilt als definiert, wenn sie mithilfe eines \textbf{\#define} erzeugt wurde und einen Wert ungleich 0 besitzt.
 
 \begin{lstlisting}[language=C]
 #ifdef __SOME_DEFINE__
@@ -71,7 +71,7 @@ Eine Variable gilt als definiert wenn sie mithilfe eines \#define erzeugt wurde,
 
 \subsubsection{Beispiel}
 
-Der Pr\"aprozessor wird besonders daf\"ur ben\"otigt, dass Bibliotheken bei mehrfachen \#include keine Fehler verursachen. Dazu ist es notwendig dass die Bibliothek bei mehrfachen \#include die nachfolgenden ignoriert. Dies stellt ein Standardkonstrukt in der C Programmierung dar.
+Der Pr\"aprozessor wird besonders daf\"ur ben\"otigt, dass Bibliotheken bei mehrfachen \textbf{\#include} keine Fehler verursachen. Dazu ist es notwendig, dass die Bibliothek bei mehrfachen \textbf{\#include} die nachfolgenden ignoriert. Dies stellt ein Standardkonstrukt in der C Programmierung dar.
 
 \begin{lstlisting}[language=C]
 #ifndef __CLIB_EXAMPLE__
@@ -86,13 +86,13 @@ Der Pr\"aprozessor wird besonders daf\"ur ben\"otigt, dass Bibliotheken bei mehr
 #endif /* __CLIB_EXAMPLE__ */
 \end{lstlisting}
 
-Zuerst wird ermittelt, ob die Bibliothek bereits eingebunden wurde (falls dies der Fall ist, ist die jeweilige Variable definiert), und \#ifndef ignoriert infolge den folgenden Code bis zum \#endif.
+Zuerst wird ermittelt, ob die Bibliothek bereits eingebunden wurde (falls dies der Fall ist, ist die jeweilige Variable definiert), und \textbf{\#ifndef} ignoriert infolge den folgenden Code bis zum \textbf{\#endif}.
 
-Falls der Code aber das erste mal eingebunden wurde, ist die Variable (in diesem Beispiel $\_\_CLIB\_EXAMPLE\_\_$) noch nicht definiert worden. Folglich wird der Code welcher sich in \#ifndef befindet ausgef\"uhrt, wo unter anderem die jeweilige Variable definiert wird. Diese Variable muss f\"ur die jeweilige Bibliothek einzigartig sein.
+Falls der Code aber das erste mal eingebunden wurde, ist die Variable (in diesem Beispiel $\_\_CLIB\_EXAMPLE\_\_$) noch nicht definiert worden. Folglich wird der Code welcher sich in \textbf{\#ifndef} befindet ausgef\"uhrt, wo unter anderem die jeweilige Variable definiert wird. Diese Variable muss f\"ur die jeweilige Bibliothek einzigartig sein.
 
 \subsection{Kommentare}
 
-Bereiche welche als Kommentar\footnote{\url{https://de.wikipedia.org/wiki/Kommentar_(Programmierung)}} deklariert sind, werden vom Pr\"aprozessor und vom Compiler ignoriert. Es gibt dabei 2 Arten von Kommentare.
+Bereiche die als Kommentar\footnote{\url{https://de.wikipedia.org/wiki/Kommentar_(Programmierung)}} deklariert sind, werden vom Pr\"aprozessor und vom Compiler ignoriert. Es gibt dabei 2 Arten von Kommentare.
 
 \htlParagraph{Zeilenkommentar}
 
@@ -119,7 +119,7 @@ Der gew\"ahlte Datentyp\footnote{\url{https://de.wikipedia.org/wiki/Datentyp}} g
 
 \htlParagraph{void}
 
-void bezeichnet keinen eigentlichen Typen, und ist nur f\"ur die Definition von Funktionen erlaubt, welche nichts zur\"uckgeben.
+\textbf{void} bezeichnet keinen eigentlichen Typen, und ist nur f\"ur die Definition von Funktionen erlaubt, welche nichts zur\"uckgeben.
 
 \begin{lstlisting}[language=C]
 void foo() {
@@ -128,7 +128,7 @@ void foo() {
 
 \htlParagraph{bool}
 
-bool unterst\"utzt die beiden Wahrheitswerte true und false. Wenn ein int als bool ausgewertet wird, stellt 0 false dar, und ungleich 0 ist true.
+bool unterst\"utzt die beiden Wahrheitswerte \textbf{true} und \textbf{false}. Wenn ein \textbf{int} als \textbf{bool} ausgewertet wird, stellt 0 \textbf{false} dar, und ungleich 0 ist \textbf{true}.
 
 \begin{lstlisting}[language=CMM]
 bool b;
@@ -140,7 +140,7 @@ bool foo() {
 
 \htlParagraph{char}
 
-Ein char stellt ein einzelnes alphanumerisches Zeichen, ein Leerzeichen oder das Sonderzeichen \textbackslash{}r, \textbackslash{}n, \textbackslash{}t, \textbackslash{}0, \textbackslash{}\verb+'+ oder \textbackslash{}\textbackslash{} dar.
+Ein \textbf{char} stellt ein einzelnes alphanumerisches Zeichen, ein Leerzeichen oder eines der Sonderzeichen \textbackslash{}r, \textbackslash{}n, \textbackslash{}t, \textbackslash{}0, \textbackslash{}\verb+'+ oder \textbackslash{}\textbackslash{} dar.
 
 \begin{lstlisting}[language=CMM]
 char ch;
@@ -152,7 +152,7 @@ char foo() {
 
 \htlParagraph{int}
 
-Ein int stellt eine ganzzahlige Zahl dar, welche einen Wert zwischen $-2147483648$ und $2147483647$ haben muss.
+Ein Integer stellt eine ganzzahlige Zahl dar, welche einen Wert zwischen $-2147483648$ und $2147483647$ haben muss.
 
 \begin{lstlisting}[language=CMM]
 int i;
@@ -164,7 +164,7 @@ int foo() {
 
 \htlParagraph{float}
 
-Ein float ist eine Fließkommazahl, welche einen Wert zwischen $\pm1.4^{-45}$ bis $\pm3.4^{+38}$ annehmen kann.
+Ein \textbf{float} ist eine Fließkommazahl, welche einen Wert zwischen $\pm1.4 \cdot 10^{-45}$ bis $\pm3.4 \cdot 10^{+38}$ annehmen kann.
 
 \begin{lstlisting}[language=CMM]
 float f;
@@ -176,7 +176,7 @@ float foo() {
 
 \htlParagraph{string}
 
-Strings stellen Zeichenketten dar, welche nicht verändert werden können (sie sind Konstant. Wenn also ein String verändert werden soll muss ein neuer erstellt werden. Des Weiteren ist es möglich Strings mithilfe des Additionsoperator zusammenzufügen.
+Strings stellen Zeichenketten dar, welche nicht verändert werden können (sie sind konstant). Wenn also ein String verändert werden soll, muss ein neuer erstellt werden. Au\ss{}erdem ist es möglich, Strings mithilfe des Additionsoperator zusammenzufügen.
 
 Es k\"onnen die Sonderzeichen \textbackslash{}r, \textbackslash{}n, \textbackslash{}t, \textbackslash{}0, \textbackslash{}'' und \textbackslash{}\textbackslash{} in Strings verwendet werden.
 
@@ -198,7 +198,7 @@ const int i = 1234;
 
 \subsubsection{Strukturen}
 
-Strukturen sind zusammengesetzte Datentypen welche aus 1. oder mehreren Datentypen bestehen. Eine definierte Struktur stellt einen neuen Datentyp dar, welcher als Variablen definiert werden kann. Diesen neue Datentyp kann man auch an Funktionen \"ubergeben.
+Strukturen sind zusammengesetzte Datentypen welche aus 1 oder mehreren Datentypen bestehen. Eine definierte Struktur stellt einen neuen Datentyp dar, welcher als Variable definiert werden kann. Diesen neue Datentyp kann man auch an Funktionen \"ubergeben.
 
 Strukturen k\"onnen nicht auf sich selbst verweisen, da es ansonsten eine endlosen Rekursion darstellen w\"urde. Des weiteren k\"onnen keine Werte bei der Definition einer Struktur angegeben werden.
 
@@ -224,7 +224,7 @@ int arr[5][5];
 
 \htlParagraph{Initialisieren von Arrays}
 
-Wenn ein Array innerhalb einer Funktion definiert wurde, ist es m\"oglich diesen bereits bei der Deklaration mit Werten zu f\"ullen. Zu beachten ist dass diese Funktion derzeit nur bei eindimensionalen Arrays unterst\"utzt wird.
+Wenn ein Array innerhalb einer Funktion definiert wurde, ist es m\"oglich, diesen bereits bei der Deklaration mit Werten zu f\"ullen. Zu beachten ist, dass dieses Feature derzeit nur bei eindimensionalen Arrays unterst\"utzt wird.
 
 \begin{lstlisting}[language=CMM]
 int arr1[5] {1,2,3,4,5};  // arr1 = [1,2,3,4,5]
@@ -233,7 +233,7 @@ int arr2[10] {3};	// fill all elements with 3
 
 \subsubsection{Typumwandlung}
 
-Es ist m\"oglich Datentypen in einen anderen umzuwandeln. Dies kann einerseits implizit geschehen, oder muss explizit angegeben werden. Es ist nicht m\"oglich jeden Datentyp in jeden anderen umzuwandeln. Strukturen und Arrays können bis auf besondere Ausnahmef\"alle nicht umgewandelt werden.
+Es ist m\"oglich, Datentypen in einen anderen umzuwandeln. Dies kann einerseits implizit geschehen, oder explizit angegeben werden. Es ist nicht m\"oglich, jeden beliebigen Datentyp in jeden anderen umzuwandeln. Strukturen und Arrays können bis auf besondere Ausnahmef\"alle ebenfalls nicht umgewandelt werden.
 
 \htlParagraph{Implizite Typumwandlung}
 
@@ -253,9 +253,9 @@ char ch = (char)48; // explicite conversation of int to char
 
 \subsection{Funktionen}
 
-Funktionen k\"onnen maximal 1. R\"uckgabewert besitzen, und beliebig viele Argumente. Es ist m\"oglich Referenzen auf Variablen zu \"ubergeben, wobei dies bei Arrays immer der Fall ist.
+Funktionen k\"onnen maximal 1 R\"uckgabewert besitzen, und beliebig viele Argumente. Es ist m\"oglich, Referenzen auf Variablen zu \"ubergeben, wobei dies bei Arrays immer der Fall ist.
 
-Zus\"atzlich ist es m\"oglich die Funktion mit dem Schl\"usselwort library in eine Bibliotheksfunktion umzuwandeln, welche vom Debugger immer \"ubersprungen wird.
+Zus\"atzlich ist es m\"oglich, die Funktion mit dem Schl\"usselwort \textbf{library} in eine Bibliotheksfunktion umzuwandeln, welche vom Debugger immer \"ubersprungen wird.
 
 \begin{lstlisting}[language=CMM]
 int library foo(int a, int b[], int &c) {
@@ -266,7 +266,7 @@ int library foo(int a, int b[], int &c) {
 
 \subsubsection{Vorw\"artsdeklarationen}
 
-Vorw\"artsdeklarationen werden ben\"otigt wenn auf eine Funktion zugegriffen werden muss, bevor diese vollst\"andig deklariert wurde. Folglich kann auch eine Funktion nicht auf sich selbst zugreifen, solange keine Vorw\"artsdeklaration verwendet wird. Dabei wird die Funktionsdeklaration kopiert, und anstatt mit geschwungenen Klammern und der Funktionslogik, nur mit einem Strichpunkt abgeschlossen.
+Vorw\"artsdeklarationen werden ben\"otigt, wenn auf eine Funktion zugegriffen werden muss bevor diese vollst\"andig deklariert wurde. Folglich kann auch eine Funktion nicht auf sich selbst zugreifen, solange keine Vorw\"artsdeklaration verwendet wird. Dabei wird die Funktionsdeklaration kopiert und anstatt mit geschwungenen Klammern und der Funktionslogik nur mit einem Strichpunkt abgeschlossen.
 
 \begin{lstlisting}[language=CMM]
 int foo(int a); // forward declaration
@@ -278,9 +278,9 @@ int foo(int a) {
 
 \subsubsection{return}
 
-Wenn eine Funktion vorzeitig verlassen werden soll, wird dies mit einem return implementiert. Dabei muss auch ein Wert angegeben werden, welcher als R\"uckgabetyp definiert wurde. Bei void Funktionen wird ein return ohne Variable angegeben.
+Wenn eine Funktion vorzeitig verlassen werden soll, wird dies mit einem \textbf{return} implementiert. Dabei muss auch ein Wert angegeben werden, welcher als R\"uckgabetyp definiert wurde. Bei \textbf{void} Funktionen wird ein \textbf{return} ohne Variable angegeben.
 
-Jede Funktion mit Ausnahme von void Funktionen m\"ussen mit einem return beendet werden. Falls dies nicht der Fall ist kommt es zu einen Laufzeitfehler.
+Jede Funktion mit Ausnahme von \textbf{void} Funktionen m\"ussen mit einem \textbf{return} beendet werden. Falls dies nicht der Fall ist, kommt es zu einen Laufzeitfehler.
 
 \begin{lstlisting}[language=CMM]
 void foo(int a) {
@@ -292,7 +292,7 @@ void foo(int a) {
 
 \subsubsection{Vorimplementierte Funktionen}
 
-Es gibt eine gewisse Funktionen welche bereits im Interpreter und Compiler implementiert sind, um C-Compact eine Interaktion mit dem Debugger zu erm\"oglichen.
+Es gibt gewisse Funktionen welche bereits im Interpreter und Compiler implementiert sind, um C Compact eine Interaktion mit dem Debugger zu erm\"oglichen.
 
 \htlParagraph{print}
 
@@ -312,7 +312,7 @@ char c = read();
 
 \htlParagraph{printf}
 
-Diese Funktion implementiert eine einfache printf Funktion, wie sie auch in C vorhanden  ist. Da diese Funktion eine nicht festgelegte Anzahl von \"Ubergabeparamter besitzt, was C-Compact eigentlich nicht unterst\"utzt, ist diese zu den Basisfunktionen hinzugef\"ugt worden.
+Diese Funktion implementiert eine einfache printf Funktion, wie sie auch in C vorhanden  ist. Da diese Funktion eine nicht festgelegte Anzahl von \"Ubergabeparamtern besitzt, was C Compact eigentlich nicht unterst\"utzt, ist diese zu den Basisfunktionen hinzugef\"ugt worden.
 
 F\"ur jeden Platzhalter im String muss ein Argument angegeben werden, ansonsten kommt es zu einem Laufzeitfehler.
 
@@ -322,7 +322,7 @@ printf('a= %d, b=%f\n', 10, 2.2);
 
 \subhtlParagraph{Platzhalter}
 
-Ein Platzhalter definiert eine Variable welche in einem spezifizierten Ausgabeformat ausgegeben wird. 
+Ein Platzhalter definiert eine Variable, welche in einem spezifizierten Ausgabeformat ausgegeben wird. 
 
  \begin{tabular}{l | l}
   Typ & Platzhalter \\
@@ -351,7 +351,7 @@ int timestamp = time();
 
 \htlParagraph{\_\_is\_def\_***\_\_}
 
-Dies is ist eine interne Funktion, welche f\"ur die Bibliothek ben\"otigt wird, und zugriff auf den Speicher gibt. Es gibt dabei f\"ur jeden Datentyp eine eigene Funktion, welche true zur\"uckliefert wenn die Variable bereits initialisiert wurde. Ansonsten wird false zur\"uckgegeben.
+Dies is ist eine interne Funktion, welche f\"ur die Bibliothek ben\"otigt wird und Zugriff auf den Speicher gibt. Es gibt dabei f\"ur jeden Datentyp eine eigene Funktion, welche true zur\"uckliefert wenn die Variable bereits initialisiert wurde. Ansonsten wird false zur\"uckgegeben.
 
 \begin{lstlisting}[language=CMM]
 bool test;
@@ -369,7 +369,7 @@ __assert__(false, "some error occured");
 \newpage
 \subsection{Operatoren}
 
-C-Compact unterst\"utzt alle Standardoperatoren wie Plus, Minus, aber auch Shiftoperatoren und binäre Operatoren. Zu beachten ist dass logische Operatoren nur in Bedingungen genutzt werden k\"onnen, nicht aber in normalen Ausdr\"ucken. Es gilt Punkt vor Strich vor Shift vor bitweise Operatoren. Diese Reihenfolge kann nat\"urlich mit Klammern ver\"andert werden.
+C Compact unterst\"utzt alle Standardoperatoren wie Plus, Minus, aber auch Shiftoperatoren und binäre Operatoren. Zu beachten ist, dass logische Operatoren nur in Bedingungen genutzt werden k\"onnen, nicht aber in normalen Ausdr\"ucken. Es gilt Punkt vor Strich vor Shift vor bitweise Operatoren. Diese Reihenfolge kann nat\"urlich mit Klammern ver\"andert werden.
 
 \begin{lstlisting}[language=CMM]
  a = ((5 + 2 - 3) / 4) << 2; // a = 4
@@ -382,11 +382,11 @@ Punktoperatoren sind jeweil der Multiplikationsoperator (*), Divisionsoperator (
 
 \subsubsection{Strichoperatoren}
 
-Als Strichoperator werden in C-Compact Additionen (+) und Subtraktionen (-) unterst\"utzt.
+Als Strichoperator werden in C Compact Additionen (+) und Subtraktionen (-) unterst\"utzt.
 
 \subsubsection{Bitweiser Operatoren}
 
-Bitweise Operatoren\footnote{\url{https://de.wikipedia.org/wiki/Bitweiser_Operator}} f\"uhren jede Operation einzeln pro Bit aus. Es ist in C-Compact m\"oglich Variablen Bitweise mit UND ($\&$), ODER ($|$), NICHT (\raisebox{-0.9ex}{\~{ }}) bzw. 
+Bitweise Operatoren\footnote{\url{https://de.wikipedia.org/wiki/Bitweiser_Operator}} f\"uhren jede Operation einzeln pro Bit aus. Es ist in C Compact m\"oglich Variablen Bitweise mit UND ($\&$), ODER ($|$), NICHT (\raisebox{-0.9ex}{\~{ }}) bzw. 
 XOR (\^{}) zu verkn\"upfen.
 
 \begin{figure}[h]
@@ -399,7 +399,7 @@ XOR (\^{}) zu verkn\"upfen.
 \newpage
 \subsubsection{Shiftoperatoren}
 
-Der Arithmetische Shiftoperator\footnote{\url{https://de.wikipedia.org/wiki/Bitweiser_Operator\#Arithmetische_Verschiebung}} ist ein spezieller Bitweiser Operator, welcher den Inhalt einer Speicherzelle arithmetisch um eine gew\"ahlte L\"ange verschiebt. Zu beachten ist dass Daten welche außerhalb der Speicherzelle geschrieben werden gel\"oscht werden, und ansonsten undefinierte Bits mit 0 initialisiert werden.
+Der arithmetische Shiftoperator\footnote{\url{https://de.wikipedia.org/wiki/Bitweiser_Operator\#Arithmetische_Verschiebung}} ist ein spezieller Bitweiser Operator, welcher den Inhalt einer Speicherzelle arithmetisch um eine gew\"ahlte L\"ange verschiebt. Zu beachten ist, dass Daten welche außerhalb des Speicherbereiches der Variable geschrieben werden gel\"oscht werden, und ansonsten undefinierte Bits mit 0 initialisiert werden.
 
 \begin{figure}[h]
 \centering
@@ -408,7 +408,7 @@ Der Arithmetische Shiftoperator\footnote{\url{https://de.wikipedia.org/wiki/Bitw
 \label{language_specification_shift_operator}
 \end{figure}
 
-Zu beachten ist dass wie in C ein arithmetischer Shift nach rechts nicht eine 0 bei ansonsten undefinierten Bits eingef\"ugt, sondern das Vorzeichenbit kopiert.
+Es muss beachtet werden, dass wie in C ein arithmetischer Shift nach rechts nicht eine 0 bei ansonsten undefinierten Bits eingef\"ugt, sondern das Vorzeichenbit kopiert wird.
 
 \begin{figure}[h]
 \centering
@@ -420,11 +420,11 @@ Zu beachten ist dass wie in C ein arithmetischer Shift nach rechts nicht eine 0 
 \newpage
 \subsection{Kontrollstrukturen}
 
-Kontrollstrukturen\footnote{\url{https://de.wikipedia.org/wiki/Kontrollstruktur} } werden ben\"otigt um den Ablauf eines Programmes zu steuern. Dies k\"onnen Verzweigungen wie auch Schleifen sein.
+Kontrollstrukturen\footnote{\url{https://de.wikipedia.org/wiki/Kontrollstruktur} } werden ben\"otigt, um den Ablauf eines Programmes zu steuern. Dies k\"onnen Verzweigungen wie auch Schleifen sein.
 
 \subsubsection{Bedingung (if-else)}
 
-Bedingungen\footnote{\url{https://de.wikipedia.org/wiki/Bedingte_Anweisung_und_Verzweigung}} werden genutzt um Aktionen durchzuf\"uhren wenn eine Bedingung erf\"ullt oder nicht erf\"ullt ist. Das else ist dabei Optional, und wenn nur 1 Befehl ausgef\"uhrt wird, k\"onnen die geschwungenen Klammern weggelassen werden.
+Bedingungen\footnote{\url{https://de.wikipedia.org/wiki/Bedingte_Anweisung_und_Verzweigung}} werden genutzt, um Aktionen durchzuf\"uhren wenn eine Bedingung erf\"ullt oder nicht erf\"ullt ist. Das else ist dabei Optional, und wenn nur 1 Befehl ausgef\"uhrt wird, k\"onnen die geschwungenen Klammern weggelassen werden.
 
 \htlParagraph{Beispiel}
 
@@ -448,7 +448,7 @@ Wenn die Variable a den Wert 20 hat wird der Text \glqq{}a has the value 20\grqq
 \newpage
 \subsubsection{Mehrfache Verzweigung (switch-case)}
 
-Mithilfe eines switch-case\footnote{\url{https://de.wikipedia.org/wiki/Bedingte_Anweisung_und_Verzweigung\#Erste_Form}} ist es m\"oglich eine mehrfache Verzweigung aufzubauen, ohne mit else-if Konstrukte zu arbeiten. Es muss beachtet werden das nur konkrete Werte als Bedingung verwendet werden k\"onnen. Falls kein case-Staement mit dem \"ubergebenen Wert \"ubereinstimmt wird die default-Bedingung wenn m\"oglich aufgerufen.
+Mithilfe eines switch-case\footnote{\url{https://de.wikipedia.org/wiki/Bedingte_Anweisung_und_Verzweigung\#Erste_Form}} ist es m\"oglich, eine mehrfache Verzweigung aufzubauen, ohne mit else-if Konstrukten zu arbeiten. Es muss beachtet werden das nur konkrete Werte als Bedingung verwendet werden k\"onnen. Falls kein case-Staement mit dem \"ubergebenen Wert \"ubereinstimmt wird die default-Bedingung wenn verf\"ugbar aufgerufen.
 
 \htlParagraph{Beispiel}
 
@@ -472,14 +472,14 @@ Es muss beachtet werden die Kontrollstruktur mit break zu verlassen, wenn der na
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.7\textwidth]{./media/images/compiler/language_specification_switch_case.png}
-\caption{m\"ogliches Flussdiagramm eines switch-case}
+\caption{M\"ogliches Flussdiagramm eines switch-case}
 \label{language_specification_switch_case}
 \end{figure}
 
 \newpage
 \subsubsection{while Schleife}
 
-Die while Schleife\footnote{\url{https://de.wikipedia.org/wiki/Schleife_(Programmierung)\#While-Do-Schleife}} wird verwendet um Anweisungen so lange zu wiederholen bis eine Bedingung nicht mehr erf\"ullt ist. Des Weiteren ist es m\"oglich die Schleife vorzeitig zu wiederholen oder abzubrechen. 
+Die while Schleife\footnote{\url{https://de.wikipedia.org/wiki/Schleife_(Programmierung)\#While-Do-Schleife}} wird verwendet, um Anweisungen so lange zu wiederholen bis eine Bedingung nicht mehr erf\"ullt ist. Des Weiteren ist es m\"oglich, die Schleife vorzeitig zu wiederholen oder abzubrechen. 
 
 \htlParagraph{Beispiel}
 
@@ -517,9 +517,9 @@ Die Schleife wird so lange durchlaufen bis die Variable $a < 1$ ist. Des Weitere
 \newpage
 \subsubsection{do-while Schleife}
 
-Die do-while Schleife\footnote{\url{https://de.wikipedia.org/wiki/Schleife_(Programmierung)\#Do-While-Schleife}} ist \"ahnlich der while Schleife, mit dem unterschied dass die Bedingung am Ende abgepr\"uft wird. Aus diesem Grund wird die do-while schleife mindestens 1. mal durchlaufen bevor sie verlassen wird.
+Die do-while Schleife\footnote{\url{https://de.wikipedia.org/wiki/Schleife_(Programmierung)\#Do-While-Schleife}} ist \"ahnlich der while Schleife, mit dem Unterschied, dass die Bedingung am Ende des Durchlaufs abgepr\"uft wird. Aus diesem Grund wird die do-while schleife mindestens 1 mal durchlaufen bevor sie verlassen wird.
 
-Wie bei der while-Schleife ist es des Weiteren m\"oglich die Schl\"usselw\"orter break; und continue; zu verwenden, um den Schleifendurchlauf zu ver\"andern.
+Wie bei der while-Schleife ist es au\ss{}erdem m\"oglich, die Schl\"usselw\"orter \textbf{break;} und \textbf{continue;} zu verwenden, um den Schleifendurchlauf zu ver\"andern.
 
 \htlParagraph{Beispiel}
 
@@ -530,7 +530,7 @@ do {
 } while(a >= 1);
 \end{lstlisting}
 
-Die Schleife wird so lange durchlaufen bis die Variable am Ende der Schleife < 1 ist. Wenn die Variable a von Anfang an bereits kleiner 1 ist wird die Schleife trotzdem 1. mal durchlaufen, bevor sie Verlassen wird.
+Die Schleife wird so lange durchlaufen, bis die Variable am Ende der Schleife $< 1$ ist. Wenn die Variable a von Anfang an bereits kleiner 1 ist wird die Schleife trotzdem 1 mal durchlaufen, bevor sie Verlassen wird.
 
 \begin{figure}[h]
 \centering
@@ -542,11 +542,11 @@ Die Schleife wird so lange durchlaufen bis die Variable am Ende der Schleife < 1
 \newpage
 \subsubsection{for Schleife}
 
-Die for Schleife\footnote{\url{https://de.wikipedia.org/wiki/For-Schleife}} erm\"oglicht die einfache Definition von Schleifen, welche zu Beginn Werte initialisieren m\"ussen, und oder einen Schleifen-Iterator besitzen. Die for Schleife erleichtert die Definition von solchen Schleifen, und k\"ummert sich um den Korrekten Umgang der Schleife bei Benutzung eines continue oder break.
+Die for Schleife\footnote{\url{https://de.wikipedia.org/wiki/For-Schleife}} erm\"oglicht die einfache Definition von Schleifen, welche zu Beginn Werte initialisieren m\"ussen, und oder einen Schleifen-Iterator besitzen. Die for Schleife erleichtert die Definition von solchen Schleifen und k\"ummert sich um den korrekten Umgang der Schleife bei Benutzung eines \textbf{continue} oder \textbf{break}.
 
 Zu beachten ist, dass im Gegensatz zu C keine neuen Variablen zu Beginn der Schleife erstellt werden k\"onnen. Variablendefinitionen m\"ussen immer davor erstellt werden.
 
-Des Weiteren ist es m\"oglich die Variableninitialisierung bzw. den Iterationsoperator leer zu lassen. Die Strichpunkte m\"ussen aber trotzdem geschrieben werden.
+Des Weiteren ist es m\"oglich, die Variableninitialisierung bzw. den Iterationsoperator leer zu lassen. Die Strichpunkte m\"ussen aber trotzdem geschrieben werden.
 
 \htlParagraph{Beispiel}
 
