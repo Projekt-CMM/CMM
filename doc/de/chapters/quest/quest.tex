@@ -18,7 +18,7 @@ Bei C Compact kann der Schüler die Aufgaben selbst aus einem Themenblock auswä
   \label{fig:struct_quest}
 \end{figure}
 
-Damit eine Quest vom Programm als solche erkannt wird, müssen mehrere Dateien vorhanden sein. Einige davon werden von der Überprüfungsroutine benötigt. Andere dienen wiederum zur Beschreibung der Quest.
+Damit eine Quest vom Programm als solche erkannt wird, müssen mehrere Dateien vorhanden sein. Einige davon werden von der Überprüfungsroutine benötigt. Andere dienen wiederum zur Beschreibung der Quest. Dies ist in Abbildung \ref{fig:struct_quest} ersichtlich.
 
 \begin{itemize}
 \item \textbf{description.html}\\
@@ -64,7 +64,7 @@ Man kann einen Titel, ein Attribut, die dazugehörige Auszeichnung und einen Sta
 %TODO
 \item Wenn eine Quest erst dann gestartet werden soll, wenn eine andere abgeschlossen wurde, so kann dies im \textbf{previousFolder} unter Angabe des Ordnernamens der Quest definieren.
 \item Bei \textbf{token}, kann man eine Auszeichnung wählen. Diese Auszeichnung ist ein Bild, Titel und eine Beschreibung, welche in der Benutzeroberfläche angezeigt wird. Sie muss im zugehörigen Package im Ordner \textbf{tokens} definiert sein. Wenn dieses nicht vorhanden oder fehlerhaft ist, wird bei Abschluss der Quest, kein Token hinzugefügt.
-\item Mithilfe des \textbf{matcher} Tags, kann man reguläre Expressionen definieren, diese wird von der Überprüfungsroutine verwendet. Damit ist es möglich, dass das Benutzerprogramm eine leicht abgeänderte Ausgabe, als die Überprüfungsroutine, erzeugen darf. Indem man diesen Tag in verwendet, überschreibt man einen vordefinierten matcher.
+\item Mithilfe des \textbf{matcher} Tags, kann man eine reguläre Expressionen definieren, welche von der Überprüfungsroutine verwendet wird. Damit ist es möglich, dass das Benutzerprogramm eine leicht abgeänderte Ausgabe, als die Überprüfungsroutine, erzeugen darf. Indem man diesen Tag in verwendet, überschreibt man einen vordefinierten matcher.
 
 \begin{lstlisting}[language=JAVA]
 	public String DEFAULT_MATCHER = "([,;:\n\t])";
