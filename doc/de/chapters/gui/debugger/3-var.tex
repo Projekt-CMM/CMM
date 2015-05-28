@@ -22,7 +22,7 @@ Zur Darstellung der Variablen während des Programmablaufes wurden zwei Konzepte
 		\includegraphics[width=1.0\textwidth]{./media/images/gui/var/callstack.png}
 		\caption{Darstellung der Variablen als Liste}\label{fig:deb-var-m1}
 	\end{minipage}\hfill
-	\begin{minipage}{0.45\textwidth}
+	\begin{minipage}{0.444\textwidth}
 		\centering
 		\includegraphics[width=1.0\textwidth]{./media/images/gui/var/treetable2.png}
 		\caption{Darstellung der Variablen als Baum}\label{fig:deb-var-m2}
@@ -31,7 +31,8 @@ Zur Darstellung der Variablen während des Programmablaufes wurden zwei Konzepte
 
 In den ersten Versionen der Benutzeroberfläche wurden die Variablen wie in Punkt 1 beschrieben dargestellt. Bereits während unseres Praktikums am Institut für Systemsoftware der JKU wurde die zweite Form der Variablendarstellung theoretisch entworfen. Die erste grundlegende Implementierung erfolgte noch während der Sommerferien.
 
-In der ersten nummerierten Version, Alpha 1.0 (siehe \ref{sec:versions}), waren noch beide Darstellungsformen vorhanden und konnten vom Benutzer ausgewählt und gewechselt werden. Allerdings waren diese beiden Darstellungsformen sehr unterschiedlich implementiert, was Anfangs dazu führte, dass die Darstellung der Variablen als Baum nicht mehr als ein zusätzliches Feature ohne den vollen Funktionsumfang der Variablendarstellung als Call Stack war.
+In der ersten nummerierten Version, Alpha 1.0 (siehe Kapitel \ref{sec:versions}), waren noch beide Darstellungsformen vorhanden und konnten vom Benutzer ausgewählt und gewechselt werden. Allerdings waren diese beiden Darstellungsformen sehr unterschiedlich implementiert. So hatte die Variablendarstellung als Baum anfangs nur einen Bruchteil an Funktionen der Variablendarstellung als Listen.
+%, was Anfangs dazu führte, dass die Darstellung der Variablen als Baum nicht mehr als ein zusätzliches Feature ohne den vollen Funktionsumfang der Variablendarstellung als Call Stack war.
 
 Für die Version Alpha 1.1 sollte ursprünglich das Variablendarstellungssystem so verändert werden, dass beide Anzeigemodi über ein gemeinsames Interface angesprochen werden können. Nach ausführlicher Besprechung und Evaluierung der unterschiedlichen Variablendarstellungen haben wir aber beschlossen, die Variablen nur als Baum darzustellen. Dadurch haben sich folgende Vorteile ergeben:
 \begin{enumerate}
@@ -70,7 +71,7 @@ Zusätzlich werden folgende Elemente in der Tabelle farbig markiert:
 
 \begin{figure}[htp]
 \centering
-\includegraphics[width=0.5\textwidth]{media/images/gui/debugger/gui-treetable.png}
+\includegraphics[width=0.5\textwidth]{/home/fabian/Dokumente/C--/CMM/doc/de/media/images/gui/debugger/gui-treetable.png}
 \caption{Beispiel für farbige Hervorhebung von Variablen}
 \label{fig:deb-tt-example}
 \end{figure}
