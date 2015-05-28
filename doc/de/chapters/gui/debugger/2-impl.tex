@@ -75,7 +75,7 @@ public boolean runInterpreter(PanelRunListener listener, IOstream stream, Tab ta
 }
 \end{lstlisting}
 
-Die Variable \textbf{thread} der Klasse \textbf{CMMwrapper} ist eine Referenz auf den aktuell laufenden Interpreter-Thread. Wenn diese Variable nicht \textbf{null} ist, bedeuted das, dass bereits ein anderer Thread läuft. Wenn der Thread des Interpreters richtig beendet wird, ruft er die Methode \textbf{setNotRunning()} auf. Die Referenz auf diesen Thread wird gelöscht und ein neuer Thread kann bei bedarf gestartet werden.
+Die Variable \textbf{thread} der Klasse \textbf{CMMwrapper} ist eine Referenz auf den aktuell laufenden Interpreter-Thread. Wenn diese Variable nicht \textbf{null} ist, bedeuted das, dass bereits ein anderer Thread läuft. Wenn der Thread des Interpreters richtig beendet wird, ruft er die Methode \textbf{setNotRunning()} auf. Die Referenz auf diesen Thread wird gelöscht und ein neuer Thread kann bei Bedarf gestartet werden.
 \begin{lstlisting}[language=JAVA]
 public void setNotRunning() {
 	this.thread = null;
@@ -165,7 +165,7 @@ Für die Kommunikation zwischen Threads ist das Schlüsselwort $\textbf{synchron
 \emph{Synchronized methods enable a simple strategy for preventing thread interference and memory consistency errors: if an object is visible to more than one thread, all reads or writes to that object's variables are done through synchronized methods}
 \begin{flushright}Oracle, The Java Turorials\footnote{https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html}\end{flushright}
 \end{quote}
-\textbf{synchronized} kann entweder auf eine komplette Methode oder auf einen Programmblock innerhalb einer Methode angewandt werden.
+\textbf{Synchronized} kann entweder auf eine komplette Methode oder auf einen Programmblock innerhalb einer Methode angewandt werden.
 
 Eine mit \textbf{synchronized} deklarierte Methode wird immer abgeschlossen, bevor eine andere \textbf{synchronized}-Methode dieser Klasse abgearbeitet werden kann. Es wird also sichergestellt, dass keine gleichzeitigen Zugriffe erfolgen.
 \begin{lstlisting}[language=JAVA]
@@ -211,14 +211,14 @@ java.awt.EventQueue.invokeLater(new Runnable() {
 	}
 });
 \end{lstlisting}
-	Als Parameter wird der Methode invokeLater() ein Objekt des Interfaces \textbf{Runnable}\footnote{http://docs.oracle.com/javase/7/docs/api/java/lang/Runnable.html} übergeben. Das Interface Runnable wird verwendet, um Instanzen oder Methoden in einem Thread auszuführen. Die Klasse Thread selbst implementiert Runnable ebenfalls. Von Runnable abgeleitete Klassen müssen die Methode \textbf{run()} implementieren.
+	Als Parameter wird der Methode \textbf{invokeLater()} ein Objekt des Interfaces \textbf{Runnable}\footnote{http://docs.oracle.com/javase/7/docs/api/java/lang/Runnable.html} übergeben. Das Interface Runnable wird verwendet, um Instanzen oder Methoden in einem Thread auszuführen. Die Klasse Thread selbst implementiert Runnable ebenfalls. Von Runnable abgeleitete Klassen müssen die Methode \textbf{run()} implementieren.
 	
-	Bei der Verwendung von invokeLater() wird die Methode run() in die Eventliste des Event Dispatch Threads eingereiht. Wenn alle zuvor registrierten Events abgearbeitet wurden, wird diese Methode ausgeführt. Man spricht hier auch von einem \textbf{asynchronen} Aufruf, da die Methode etwas später aufgerufen wird und der Thread, der diese Methode initialisiert hat, möglicherweise bereits andere Programmteile abarbeitet.
+	Bei der Verwendung von \textbf{invokeLater()} wird die Methode \textbf{run()} in die Eventliste des Event Dispatch Threads eingereiht. Wenn alle zuvor registrierten Events abgearbeitet wurden, wird diese Methode ausgeführt. Man spricht hier auch von einem \textbf{asynchronen} Aufruf, da die Methode etwas später aufgerufen wird und der Thread, der diese Methode initialisiert hat, möglicherweise bereits andere Programmteile abarbeitet.
 	
 	Unter den meisten Umständen ist diese Implementierung geeignet, da der Benutzer den Zeitunterschied zwischen Initialisierung des Runnable-Objektes und Änderung in der Benutzeroberfläche nicht wahrnehmen kann. 
 	
 \subsection*{Synchroner Aufruf}
-Es gibt allerdings auch Anwendungsfälle, die eine \textbf{synchrone} Aktualisierung der Benutzeroberfläche erfordern. Ein Beispiel ist das Textfeld für Eingabedaten im Hauptfenster von C Compact (siehe Kapitel \ref{sec:gui-main-left-io}). Wenn der Debugger sehr schnell mehrere Lesebefehle hintereinander ausführt, können bei asynchroner Aktualisierung der Benutzeroberfläche Probleme auftreten, indem ein weiteres Zeichen abgelesen wird während das vorhergehende noch nicht als gelesen markiert wurde (Speicherinkonsistenz). Deshalb wird das Eingabedatenfeld während des Debuggen immer synchron aktualisiert.
+Es gibt allerdings auch Anwendungsfälle, die eine \textbf{synchrone} Aktualisierung der Benutzeroberfläche erfordern. Ein Beispiel ist das Textfeld für Eingabedaten im Hauptfenster von C Compact (siehe Kapitel \ref{sec:gui-main-left-io}). Wenn der Debugger sehr schnell mehrere Lesebefehle hintereinander ausführt, können bei asynchroner Aktualisierung der Benutzeroberfläche Probleme auftreten, indem ein weiteres Zeichen abgelesen wird, während das vorhergehende noch nicht als gelesen markiert wurde (Speicherinkonsistenz). Deshalb wird das Eingabedatenfeld während des Debuggen immer synchron aktualisiert.
 \begin{lstlisting}[language=JAVA]
 java.awt.EventQueue.invokeAndWait(new Runnable() {
 	public void run() {
@@ -226,16 +226,16 @@ java.awt.EventQueue.invokeAndWait(new Runnable() {
 	}
 });
 \end{lstlisting}
-	Der Thread, von dem aus das Runnable-Objekt instanziert wurde, wird so lange angehalten, bis die Methode run() ausgeführt wurde.
+	Der Thread, von dem aus das Runnable-Objekt instanziert wurde, wird so lange angehalten, bis die Methode \textbf{run()} ausgeführt wurde.
 
-	Diese Umsetzung erfordert allerdings etwas mehr Vorsicht. Während die Methode invokeLater() ohne Probleme auch im Event Dispatch Thread aufgerufen werden kann, würde ein Aufruf von invokeAndWait() aus dem EDT dazu führen, dass sich der Thread selbst blockiert.
+	Diese Umsetzung erfordert allerdings etwas mehr Vorsicht. Während die Methode \textbf{invokeLater()} ohne Probleme auch im Event Dispatch Thread aufgerufen werden kann, würde ein Aufruf von \textbf{invokeAndWait()} aus dem EDT dazu führen, dass sich der Thread selbst blockiert.
 	
 	Außerdem können bei einem synchronen Aufruf Probleme auftreten, die auf auf den wartenden Thread rückwirken. Für einen reibungslosen synchronen Aufruf müssen folgende Exceptions abgefangen werden können:
 
 \def\arraystretch{2.1}
 \begin{tabular}{|l|l|}
 	\hline
-	InvocationTargetException & \parbox{7cm}{Ein Fehler tritt beim Ausführen der Methode run() auf}\\
+	InvocationTargetException & \parbox{7cm}{Ein Fehler tritt beim Ausführen der Methode \textbf{run()} auf}\\
 	\hline
 	InterruptedException & \parbox{7cm}{Der Event Dispatch Thread wurde unterbrochen}\\
 	\hline
@@ -247,7 +247,7 @@ java.awt.EventQueue.invokeAndWait(new Runnable() {
 %   --------------------------------------------------------
 
 \subsection{Abarbeiten von Knoten im Abstrakten Syntaxbaum}
-Die Schnittstelle zwischen Benutzeroberfläche und Interpreter bildet die Klasse \textbf{PanelRunListener} im Package \textbf{at.jku.ssw.cmm.gui.event.debug}. Sie implementiert einerseits das Interface \textbf{Debugger} (siehe Kapitel \ref{sec:deb-impl-interfaces}) zum Ausführen von Schritten des Debuggers, andererseits enthält sie Listener für Bedienelemente des Debuggers und den zugehörigen Hotkeys. Außerdem wird hier festgelegt und gespeichert, in welchem Modus sich der Debugger befindet.
+Die Schnittstelle zwischen Benutzeroberfläche und Interpreter bildet die Klasse \textbf{PanelRunListener} im Package \textbf{at.jku.ssw.cmm.gui.event.debug}. Sie verwendet einerseits das Interface \textbf{Debugger} (siehe Kapitel \ref{sec:deb-impl-interfaces}) zum Ausführen von Schritten des Debuggers, andererseits enthält sie Listener für Bedienelemente des Debuggers und den zugehörigen Hotkeys. Außerdem wird hier festgelegt und gespeichert, in welchem Modus sich der Debugger befindet.
 %TODO ref ctrl-elements, mode
 
 %TODO ref interpreter, ast

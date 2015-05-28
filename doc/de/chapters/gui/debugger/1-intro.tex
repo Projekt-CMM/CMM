@@ -27,8 +27,8 @@ Abbildung \ref{fig:deb-intro-m1} zeigt die vier Komponenten des Debuggers in der
 \begin{enumerate}
 \item Im Quelltext wird die gerade abgearbeitete Zeile markiert
 \item Mit den Kontrollelementen kann der Debugger gestartet und angehalten werden
-\item Die Variablen des Programmes werden übersichtlich angezeigt
-\item Ein- und Ausgabe des laufenden Programmes befinden sich in getrennten Textfeldern, eingelesene Zeichen werden gelb markiert.
+\item Die Variablen des Programms werden übersichtlich angezeigt
+\item Ein- und Ausgabe des laufenden Programms befinden sich in getrennten Textfeldern, eingelesene Zeichen werden gelb markiert.
 \end{enumerate}
 
 %   --------------------------------------------------------
@@ -126,7 +126,7 @@ In der Sprache von C Compact gibt es zwei spezielle Schlüsselwörter, die Einfl
 
 \subsubsection*{wait}
 %TODO ref AST
-In C Compact gibt es seit der Version Alpha 1.2 keine Breakpoints als Option in der Benutzeroberfläche mehr. Anstatt dessen wird der Befehl \textbf{wait} verwendet. Dieser Befehl kann in jeder Funktion verwendet werden. Stößt der Debugger diesen Befehl, geht er in den \textbf{Pausemodus}. An dieser Stelle kann der Debugger dann entweder Schritt für Schritt, oder wieder im automatischen Debugmodus fortgesetzt werden.
+In C Compact gibt es seit der Version Alpha 1.2 keine Breakpoints als Option in der Benutzeroberfläche mehr. Anstatt dessen wird der Befehl \textbf{wait} verwendet. Dieser Befehl kann in jeder Funktion verwendet werden. Stößt der Debugger auf diesen Befehl, geht er in den \textbf{Pausemodus}. An dieser Stelle kann der Debugger dann entweder Schritt für Schritt, oder wieder im automatischen Debugmodus fortgesetzt werden.
 
 \begin{lstlisting}[language=CMM]
 wait;
