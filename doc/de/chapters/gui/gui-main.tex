@@ -420,12 +420,13 @@ public ProfilePanel2 getProfilePanel() {
 }
 \end{lstlisting}
 
+\input{./chapters/gui/profile.tex}
+
 \section{Menüleiste}
 \label{sec:gui-main-menu}
 Menüs sind bei der Gestaltung einer Benutzeroberfläche nahezu unerlässlich. Eine Menüleiste, bzw. ein Menü erleichtert dem Benutzer die Orientierung, da alle Funktionen auf einen Blick zu finden sind. Die Menüleiste wird auch in den \emph{Common User Access}\footnote{http://de.wikipedia.org/wiki/Common\_User\_Access} Richtlinien für die Gestaltung von Benutzeroberflächen definiert; diese Standards wurden 1989 von der Firma IBM festgelegt. Sie sind mittlerweile weit verbreitet und wurden in einer Reihe von Systemen umgesetzt.
 
 Die Menüleiste wird in der statischen Methode \textbf{initFileM()} in der Klasse \\ \textbf{at.jku.ssw.cmm.gui.init.InitMenuBar} angelegt. Die Tastaturkürzel - \emph{\glqq{}Keyboard Shortcuts\grqq{}} - zum Beispiel \emph{Strg + S} zum Speichern, werden ebenfalls hier definiert. Beim Verwenden eines Tastaturkürzels wird der Event Listener des zugehörigen Menüeintrages aufgerufen.
-%TODO ref to keyboard shortcuts in GUIcontrolPanel
 
 Initialisieren eines Menüeintrages:
 \begin{lstlisting}[language=JAVA]
