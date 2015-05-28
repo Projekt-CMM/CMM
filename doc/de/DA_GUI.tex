@@ -7,6 +7,18 @@
 \usepackage{wrapfig}
 \usepackage{pdfpages}
 \usepackage{amsmath}
+\usepackage{ifthen}
+
+%	########################################################
+% 					Autoren		
+%	########################################################
+\newboolean{fabian}
+\newboolean{thomas}
+\newboolean{peter}
+
+\setboolean{fabian}{true}
+\setboolean{thomas}{true}
+\setboolean{peter}{true}
 
 %	########################################################
 % 					Allgemeine Informationen			
@@ -25,42 +37,41 @@
 %	########################################################
 \pagenumbering{roman}	% Beginn mit römischen Seitenzahlen
 
-\tableofcontents
-
 %	--------------------------------------------------------
 % 	Deckblatt
 %	--------------------------------------------------------			
-%\input{./chapters/Pre-01-deckblatt.tex}
+%
+\input{./chapters/Pre-01-deckblatt.tex}
 
 %	--------------------------------------------------------
 % 	Arbeitstitel
 %	--------------------------------------------------------		
-%\input{./chapters/Pre-02-arbeitstitel.tex}
+\input{./chapters/Pre-02-arbeitstitel.tex}
 
 %	--------------------------------------------------------
 % 	Eidesstattliche Erklärung
 %	--------------------------------------------------------			
-%\input{./chapters/Pre-03-erklaerung.tex}
+\input{./chapters/Pre-03-erklaerung.tex}
 
 %	--------------------------------------------------------
 % 	Inhaltsverzeichnis
 %	--------------------------------------------------------			
-%\tableofcontents
+\tableofcontents
 
 %	--------------------------------------------------------
 % 	Vorwort
 %	--------------------------------------------------------	
-%\input{./chapters/Pre-04-vorwort.tex}
+\input{./chapters/Pre-04-vorwort.tex}
 
 %	--------------------------------------------------------
 % 	Zusammenfassung
-%	--------------------------------------------------------		
-%\input{./chapters/Pre-05-kurzfassung.tex}
+%	--------------------------------------------------------		 	  
+\input{./chapters/Pre-05-kurzfassung.tex}
 
 %	--------------------------------------------------------
 % 	Abstract
 %	--------------------------------------------------------		
-%\input{./chapters/Pre-06-abstract.tex}
+\input{./chapters/Pre-06-abstract.tex}
 
 
 
@@ -79,6 +90,7 @@
 %\input{./chapters/01-aufgabenstellung.tex}
 \pagenumbering{arabic}	% Beginn mit arabischen Seitenzahlen
 
+\iffabian
 \input{./chapters/intro/0-intro.tex}
 
 \input{./chapters/gui/gui.tex}
@@ -90,47 +102,17 @@
 \input{./chapters/gui/sci/0-sci.tex}
 
 \input{./chapters/gui/versions.tex}
-
-
-%	--------------------------------------------------------
-% 	Compiler
-%	--------------------------------------------------------	
-%\input{./chapters/compiler/compiler.tex}
-
-%	--------------------------------------------------------
-% 	Interpreter
-%	--------------------------------------------------------	
-%\input{./chapters/interpreter/interpreter.tex}
-
-%	--------------------------------------------------------
-% 	GUI
-%	--------------------------------------------------------	
-%\input{./chapters/gui/gui.tex}
-
-%	--------------------------------------------------------
-% 	Projektbeschreibung
-%	--------------------------------------------------------	
-%\input{./chapters/02-projektbeschreibung.tex}
-
-%	--------------------------------------------------------
-% 	Bedienungsanleitung
-%	--------------------------------------------------------
-%\input{./chapters/03-bedienungsanleitung.tex}
-
-%	--------------------------------------------------------
-% 	Evaluierung
-%	--------------------------------------------------------
-%\input{./chapters/04-evaluierung.tex}
+\fi
 
 %	--------------------------------------------------------
 % 	Persönliche Erfahrungen
 %	--------------------------------------------------------
-%\input{./chapters/05-erfahrungen.tex}
+\input{./chapters/05-erfahrungen.tex}
 
 %	--------------------------------------------------------
 % 	Autoren
 %	--------------------------------------------------------
-%\input{./chapters/gui/06-autoren.tex}
+\input{./chapters/gui/06-autoren.tex}
 
 
 %	########################################################
@@ -190,26 +172,6 @@ Verwendet beim vierten Versuch (siehe Kapitel \ref{sec:sci-trial-quest}).
 \end{figure}
 
 %\includepdf{./media/docs/Fragebogen-gui.pdf}
-
-%	--------------------------------------------------------
-% 	Diverse Anhänge
-%	--------------------------------------------------------
-%\input{./chapters/App-01-anhaenge.tex}	
-
-%	--------------------------------------------------------
-% 	Richtlinien für die Erstellung
-%	--------------------------------------------------------	
-%\input{./chapters/App-02-richtlinien.tex}
-
-%	--------------------------------------------------------
-% 	Standards für Ingenieurprojekte
-%	--------------------------------------------------------	
-%\input{./chapters/App-03-standard-ing.tex}
-
-%	--------------------------------------------------------
-% 	Standards für Technikerprojekte
-%	--------------------------------------------------------	
-%\input{./chapters/App-04-standard-tech.tex}
 
 
 %	########################################################

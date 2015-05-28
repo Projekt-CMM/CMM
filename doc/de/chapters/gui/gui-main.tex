@@ -14,6 +14,7 @@
 Zu diesem Bereich zählen alle Elemente des Hauptfensters. Der grundlegende Aufbau wurde bereits vor dem Projektstart entworfen und in unserem Praktikum im Sommer 2014 implementiert. Vom Herbst 2014 bis Ende Januar 2015 wurde der Aufbau und die Bedienung dieser Oberfläche erweitert und verbessert. Eine besondere Hilfestellung dabei waren die Versuche mit SchülerInnen der ersten und zweiten Klassen, die an unseren Versuchen teilgenommen haben (siehe Kapitel \ref{sec:sci-trial-intro}).
 
 \section{Basispanel des Hauptfensters}
+\label{sec:gui-main-1}
 Die Entwicklungsumgebung selbst ist in zwei Hälften geteilt (siehe Abbildung \ref{fig:gui-main-1}). Im linken Teil befinden sich die Textfelder für den Quelltext und für die Ein- und Ausgabe des CMM-Programmes. Im rechten Teil befinden sich Registerkarten mit unterschiedlichen Aktionsfeldern.
 
 Die beiden Teile sind durch einen Balken getrennt, der mit der Maus verschoben werden kann.% Diese Funktionen wurden mit dem Swing-Element JSplitPane\footnote{http://docs.oracle.com/javase/7/docs/api/javax/swing/JSplitPane.html} implementiert.
@@ -90,7 +91,7 @@ Der gesamte linke Teil der Benutzeroberfläche ist in der Klasse \textbf{GUIleft
 Für die Kommunikation mit anderen Klassen wurden einige Methoden implementiert, die wichtigsten werden in Tabelle \ref{tab:gui-main-left-methods} aufgelistet.
 
 \def\arraystretch{1.6}
-\begin{table}
+\begin{table}[h!]
 \begin{tabular}{|l|p{9cm}|}
 \hline
 \textbf{Name}&\textbf{Beschreibung}\\
@@ -117,12 +118,13 @@ public void updateFontSize()&Ändert die Schriftgröße in allen Textfeldern\\
 
 Die Textfelder in diesem Teil der Benutzeroberfläche werden mit statischen Methoden initialisiert, die in der Klasse \textbf{InitLeftPanel} im Package \textbf{at.jku.ssw.cmm.gui.init} zu finden sind. Im Folgenden wird bei dem jeweiligen Element erwähnt, in welcher Methode es initialisiert wird.
 
+\pagebreak
 \subsection{Anordnung der Elemente}
 \label{sec:gui-main-left-ord}
 
 Um C Compact für alle Bildschirmformate optimal anzupassen, sind in den Einstellungen unterschiedliche Optionen zur Anordnung der Elemente im linken Panel zu finden. Die Abbildungen \ref{fig:gui-main-left-o1} bis \ref{fig:gui-main-left-o4} zeigen die möglichen Konfigurationen (siehe auch Kapitel \ref{sec:guimainsettings}).
 
-\begin{figure}
+\begin{figure}[h!]
 \centering
 	\begin{minipage}{0.45\textwidth}
 		\centering
@@ -136,7 +138,7 @@ Um C Compact für alle Bildschirmformate optimal anzupassen, sind in den Einstel
 	\end{minipage}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h!]
 \centering
 	\begin{minipage}{0.45\textwidth}
 		\centering
@@ -193,10 +195,11 @@ Mit der Methode \textbf{setOrientation} kann die Anordnung der Elemente im linke
   \label{fig:gui-main-left-panel}
 \end{figure}
 
-Die Benutzeroberfläche der Entwicklungsumgebung kann vier unterschiedliche Zustände annehmen. Diese Zustände (siehe auch \ref{sec:deb-use}) beziehen sich nur auf die Basisfunktionen der Entwicklungsumgebung und des Debuggers, nicht aber auf den Zustand der zu bearbeitenden Quest. Es sind folgende Zustände möglich:
-\begin{enumerate}
-\item \textbf{Editormodus:} Der Benutzer kann den Quelltext wie bei einem Texteditor bearbeiten. Auch Eingabedaten für den Debugger können eingegeben werden. Dies ist der Standardzustand, das Zustandspanel ist grau.
-\item \textbf{Fehlermodus:} Es ist ein Fehler im Quellcode des Benutzers aufgetreten. Der Fehler wurde entweder im Präprozessor, im Compiler oder im Interpreter erkannt. Das Zustandspanel ist rot und zeigt zusätzliche Informationen zum Fehler, wie etwa die Art des Fehlers und die Zeile, in der der Fehler aufgetreten ist. Im rechten Teil des Hauptfensters wird eine detaillierte Beschreibung des Fehlers gezeigt (siehe Kapitel \ref{sec:deb-error}). In diesem Modus kann der Sourcecode bearbeitet werden, um den Fehler zu beheben.
+Die Benutzeroberfläche der Entwicklungsumgebung kann vier unterschiedliche Zustände annehmen. Diese Zustände (siehe auch \ref{sec:deb-use}) beziehen sich nur auf die Basisfunktionen der Entwicklungsumgebung und des Debuggers, nicht aber auf den Zustand der zu bearbeitenden Quest.
+
+\subsubsection*{Editormodus}
+Der Benutzer kann den Quelltext wie bei einem Texteditor bearbeiten. Auch Eingabedaten für den Debugger können eingegeben werden. Dies ist der Standardzustand, das Zustandspanel ist grau.
+\subsubsection*{Fehlermodus} Es ist ein Fehler im Quellcode des Benutzers aufgetreten. Der Fehler wurde entweder im Präprozessor, im Compiler oder im Interpreter erkannt. Das Zustandspanel ist rot und zeigt zusätzliche Informationen zum Fehler, wie etwa die Art des Fehlers und die Zeile, in der der Fehler aufgetreten ist. Im rechten Teil des Hauptfensters wird eine detaillierte Beschreibung des Fehlers gezeigt (siehe Kapitel \ref{sec:deb-error}). In diesem Modus kann der Sourcecode bearbeitet werden, um den Fehler zu beheben.
 
 Der Text im Zustandspanel wird im Fehlermodus aus folgenden Informationen zusammengesetzt:
 \begin{enumerate}
@@ -236,10 +239,9 @@ Präfix und Postfix können zu Beginn der Fehlerbeschreibungsdatei definiert wer
 </head>
 \end{lstlisting}
 
-\item \textbf{Schritt für Schritt debuggen:} Dies ist einer der beiden möglichen Modi des Debuggers. In diesem Fall wird das Programm so ausgeführt, dass der Benutzer jeden Schritt des Interpreters selbst initiieren muss (mit dem \glqq{}Nächster Schritt\grqq{}-Button oder die Taste F6). Das Bearbeiten des Sourcecode ist nicht möglich. Das Zustandspanel ist gelb.
+\subsubsection*{Schritt für Schritt debuggen} Dies ist einer der beiden möglichen Modi des Debuggers. In diesem Fall wird das Programm so ausgeführt, dass der Benutzer jeden Schritt des Interpreters selbst initiieren muss (mit dem \glqq{}Nächster Schritt\grqq{}-Button oder die Taste F6). Das Bearbeiten des Sourcecode ist nicht möglich. Das Zustandspanel ist gelb.
 
-\item \textbf{Austomatisches debuggen:} In diesem Modus spring der Debugger  in gewissen Zeitabständen automatisch weiter. Auch hier ist das Bearbeiten des Quelltexts nicht möglich. Das Zustandspanel ist grün.
-\end{enumerate}
+\subsubsection*{Austomatisches debuggen} In diesem Modus spring der Debugger  in gewissen Zeitabständen automatisch weiter. Auch hier ist das Bearbeiten des Quelltexts nicht möglich. Das Zustandspanel ist grün.
 
 Das Zustandspanel wird in der Methode \textbf{init()} der Klasse \textbf{GUIleftPanel} initialisiert.
 
@@ -328,13 +330,12 @@ Für das Textfeld für die Eingabedaten wurde die Klasse \textbf{JInputDataPane}
 Die Textfelder werden mit den statischen Methoden \textbf{initInputPane()} und \textbf{initOutputPane()} der Klasse \textbf{InitLeftPanel} initialisiert.
 
 \section{Rechter Teil der Benutzeroberfläche}
-Der rechte Teil der Benutzeroberfläche besteht aus einem Zustandspanel für die aktuelle Aufgabe (Quest) und einem Panel mit mehreren Registerkarten, die unterschiedliche Bedienelemente enthalten, zum Beispiel für den Debugger.
+Der rechte Teil der Benutzeroberfläche besteht aus einem Zustandspanel für die aktuelle Aufgabe (Quest) und einem Panel mit mehreren Registerkarten, die unterschiedliche Bedienelemente enthalten, zum Beispiel für den Debugger (siehe Tabelle \ref{tab:gui-main-right-reg}).
 
-Ähnlich wie der linke Teil der Benutzeroberfläche wird auch dieser Bereich von einer eigenen Klasse verwaltet. Die Klasse \textbf{GUIrightPanel} im Package \textbf{at.jku.ssw.cmm.gui} bildet eine Schnittstelle zwischen dem Hauptteil der Benutzeroberfläche (der Klasse \textbf{GUImain}, siehe Kapitel \ref{gui-main}) und den Komponenten, die in den Registerkarten des rechten Panels eingebettet sind.
+Ähnlich wie der linke Teil der Benutzeroberfläche wird auch dieser Bereich von einer eigenen Klasse verwaltet. Die Klasse \textbf{GUIrightPanel} im Package \textbf{at.jku.ssw.cmm.gui} bildet eine Schnittstelle zwischen dem Hauptteil der Benutzeroberfläche (der Klasse \textbf{GUImain}, siehe Kapitel \ref{sec:gui-main-1}) und den Komponenten, die in den Registerkarten des rechten Panels eingebettet sind.
 
 Wie bei der Klasse \textbf{GUIleftPanel} wird die Benutzeroberfläche dieses Bereiches mit der Methode \textbf{init} erstellt. Als Parameter wird eine Referenz auf \textbf{GUImain} übergeben, der Rückgabewert ist das fertig initialisierte rechte Panel.
 
-In den Registerkarten können folgende Inhalte vorhanden sein:
 \def\arraystretch{1.6}
 \begin{table}[h!]
 \begin{tabular}{|l|p{2.5cm}|p{6.6cm}|l|}
@@ -367,7 +368,7 @@ Folgende Zustände können angezeigt werden:
 Der angezeigte Zustand wird mit folgenden Methoden der Klasse \textbf{GUIrightPanel} initialisiert. Diese Methoden sind wirkungslos, wenn das Questsystem deaktiviert ist.
 \begin{lstlisting}[language=JAVA]
 public void setIdleMode();
-public void setQuestMode(String title);
+public void setQuestMode(String title);  // Titel der Quest
 public void setTestMode();
 public void setSuccessMode();
 public void setFailedMode();
@@ -396,7 +397,7 @@ public String[] showErrorPanel(String errorCode);
 Eine detaillierte Beschreibung zu der Verwaltung von Fehlerdokumenten ist in Kapitel \ref{sec:deb-error} zu finden.
 
 \subsection{Registerkarte \glqq{}Quest\grqq{}}
-In dieser Registerkarte werden Informationen und Bedienelemente zum Ausführen einer Aufgabe des Questsystems (siehe Kapitel \ref{sec:deb-error}) angezeigt.
+In dieser Registerkarte werden Informationen und Bedienelemente zum Ausführen einer Aufgabe des Questsystems (siehe Kapitel \ref{}) angezeigt.
 
 Eine Referenz auf das Panel in dieser Registerkarte wird von folgender Methode übergeben:
 \begin{lstlisting}[language=JAVA]
@@ -406,10 +407,10 @@ public GUITestPanel getTestPanel(){
 \end{lstlisting}
 
 %TODO also mention this in chapter "quest panel"
-Anmerkung: Dieses Panel wird - vor allem im Sourcecode von C Compact - auch als \glqq{}testPanel\grqq{} bezeichnet, da der Benutzer mit Elementen dieses Komponenten überprüfen kann, ob er die aktuelle Aufgabe richtig gelöst hat.
+Anmerkung: Dieses Panel wird - vor allem im Quelltext von C Compact - auch als \glqq{}testPanel\grqq{} bezeichnet, da der Benutzer mit Elementen dieses Komponenten überprüfen kann, ob er die aktuelle Aufgabe richtig gelöst hat.
 
 \subsection{Registerkarte \glqq{}Profile\grqq{}}
-Hier werden Informationen zum aktuellen Spielerprofil angezeigt. Siehe Kapitel \ref{}.
+Hier werden Informationen zum aktuellen Benutzerprofil angezeigt. Siehe Kapitel \ref{}.
 %TODO ref
 
 Eine Referenz auf das Panel in dieser Registerkarte wird von folgender Methode übergeben:
@@ -462,19 +463,19 @@ public void lockAll();
 public void unlockAll();
 \end{lstlisting}
 
-Des Weiteren kann in dieser Kontrollklasse ein Menüeintrag definiert werden, der eine Liste der zuletzt geöffneten Dateien enthält. Mit der Methode \textbf{setRecentMenu} wird dieser Menüeintrag definiert:
+Des Weiteren kann in dieser Kontrollklasse ein Menüeintrag definiert werden, der eine Liste der zuletzt geöffneten Dateien enthält. Mit der Methode \textbf{setRecentMenu(...)} wird dieser Menüeintrag definiert:
 \begin{lstlisting}[language=JAVA]
 public void setRecentMenu( JMenu mi ){
 	this.recentMI = mi;
 }
 \end{lstlisting}
 
-Dieses Untermenü wird mit der Methode \textbf{updateRecentFiles} aktualisiert.
+Dieses Untermenü wird mit der Methode \textbf{updateRecentFiles(...)} aktualisiert.
 \begin{lstlisting}[language=JAVA]
 public void updateRecentFiles( List<String> recentFiles, String currentFile );
 \end{lstlisting}
 
-Im Untermenü \glqq{}Sourcecode\grqq{} (siehe Kapitel \ref{sec:gui-menu-code}) gibt es Funktionen zum Aufheben bzw. Wiederholen der letzten Aktion (\emph{undo and redo}). Diese Menüeinträge sollen aber nur aktiviert sein, wenn eine solche Aktion tatsächlich möglich ist. Beispielsweise kann nach dem Start des Programmes nichts rückgängig gemacht werden, da noch keine Aktionen durchgeführt wurden. Außerdem dürfen diese Aktionen nicht ausgeführt werden, wenn der Debugger gerade läuft, da der Sourcecode sonst während der Laufzeit verändert werden würde.
+Im Untermenü \glqq{}Sourcecode\grqq{} (siehe Kapitel \ref{sec:gui-menu-code}) gibt es Funktionen zum Aufheben bzw. Wiederholen der letzten Aktion der Textbearbeitung (\emph{undo} und \emph{redo}). Diese Menüeinträge sollen aber nur aktiviert sein, wenn eine solche Aktion tatsächlich möglich ist. Beispielsweise kann nach dem Start des Programmes nichts rückgängig gemacht werden, da noch keine Aktionen durchgeführt wurden. Außerdem dürfen diese Aktionen nicht ausgeführt werden, wenn der Debugger gerade läuft, da der Sourcecode sonst während der Laufzeit verändert werden würde.
 
 Referenzen auf die beiden entsprechenden Menüeinträge werden in der Klasse MenuBarControl separat gespeichert.
 \begin{lstlisting}[language=JAVA]
@@ -487,7 +488,7 @@ public void setRedo(JMenuItem redo){
 }
 \end{lstlisting}
 
-Mit der Methode \textbf{updateUndoRedo()} werden die Zustände dieser Menüeinträge aktualisiert. Als Parameter werden eine Referenz auf das Textfeld mit dem Sourcecode und eine boolean-Variable übergeben. Letztere ist \textbf{true} wenn der Debugger gerade läuft.
+Mit der Methode \textbf{updateUndoRedo(...)} werden die Zustände dieser Menüeinträge aktualisiert. Als Parameter werden eine Referenz auf das Textfeld mit dem Sourcecode und eine boolean-Variable übergeben. Letztere ist \textbf{true}, wenn der Debugger gerade läuft.
 \begin{lstlisting}[language=JAVA]
 public void updateUndoRedo( RSyntaxTextArea tArea, boolean running ){
 	this.undo.setEnabled(!running & tArea.canUndo());
@@ -497,11 +498,11 @@ public void updateUndoRedo( RSyntaxTextArea tArea, boolean running ){
 
 \subsection{Menü \glqq{}Datei\grqq{}}
 \label{sec:gui-main-menu-file}
-Das wohl bekannteste Menü in jedem Programm ist das Menü \glqq{}Datei\grqq{}. In C Compact enthält es neben den grundlegenden Funktionen zum Öffnen oder Speichern einer vorhandenen oder neuen Datei auch noch weitere Funktionen. Der Eintrag \glqq{}Drucken\grqq{} verwendet eine Methode, die in der RSyntaxTextArea implementiert ist (siehe Kapitel \ref{sec:gui-main-left-code}; allerdings treten bei der Formatierung oft Fehler auf. Wesentlich wichtiger sind die Menüpunkte \glqq{}Einstellungen\grqq{} (siehe Kapitel \ref{sec:win-set}), \glqq{}Sprache\grqq{} (siehe Kapitel \ref{sec:win-lang}) und \glqq{}Über C Compact\grqq{} (siehe Kapitel \ref{sec:win-credits}). Schließlich gibt es noch dem Menüpunkt \glqq{}Beenden\grqq{}, C Compact kann aber auch mit der Tastenkombination \emph{Alt + F4} (diese Kombination ist in den meisten Betriebssystemen und Oberflächen bereits standardmäßig verwendet) oder über entsprechende Bedienelemente im Fensterrahmen geschlossen werden.
+Das wohl bekannteste Menü in jedem Programm ist das Menü \glqq{}Datei\grqq{}. In C Compact enthält es neben den grundlegenden Funktionen zum Öffnen oder Speichern einer vorhandenen oder neuen Datei auch noch weitere Funktionen. Der Eintrag \glqq{}Drucken\grqq{} verwendet eine Methode, die in der RSyntaxTextArea implementiert ist, allerdings treten bei der Formatierung oft Probleme auf. Wesentlich wichtiger sind die Menüpunkte \glqq{}Einstellungen\grqq{} (siehe Kapitel \ref{sec:win-set}), \glqq{}Sprache\grqq{} (siehe Kapitel \ref{sec:win-lang}) und \glqq{}Über C Compact\grqq{} (siehe Kapitel \ref{sec:win-credits}). Schließlich gibt es noch dem Menüpunkt \glqq{}Beenden\grqq{}, C Compact kann aber auch mit der Tastenkombination \emph{Alt + F4} (diese Kombination wird in den meisten Betriebssystemen und Oberflächen bereits standardmäßig verwendet) oder über entsprechende Bedienelemente im Fensterrahmen geschlossen werden.
 
 \subsection{Menü \glqq{}Sourcecode\grqq{}}
 \label{sec:gui-menu-code}
-Dieses Menü würde in den meisten Programmen dem Menü \glqq{}Bearbeiten\grqq{} entsprechen. Allerdings beziehen sich die Menüeinträge wie \glqq{}Kopieren\grqq{}, \glqq{}Einfügen\grqq{}, \glqq{}Rückgängig\grqq{}, etc. immer auf das Textfeld für den Sourcecode --- mit dem Menünamen sollen also Verwechslungen vermieden werden --- und andererseits enthält dieses Menü auch Einträge zum Steuern des Debuggers. Diese Einträge werden vom Benutzer kognitiv mit dem Sourcecode verknüpft.
+Dieses Menü würde in den meisten Programmen dem Menü \glqq{}Bearbeiten\grqq{} entsprechen. Allerdings beziehen sich die Menüeinträge wie \glqq{}Kopieren\grqq{}, \glqq{}Einfügen\grqq{}, \glqq{}Rückgängig\grqq{}, etc. immer auf das Textfeld für den Sourcecode --- mit dem Menünamen sollen also Verwechslungen vermieden werden --- und andererseits enthält dieses Menü auch Einträge zum Steuern des Debuggers. Diese Einträge sollen vom Benutzer kognitiv mit dem Sourcecode verknüpft werden.
 
 \subsection{Menü \glqq{}Fortschritt\grqq{}}
 Dieses Menü enthält Einträge, die das Questsystem (siehe Kapitel \ref{}) betreffen. Mit \glqq{}Profil Wählen\grqq{} Wird C Compact beendet und der Launcher (siehe Kapitel \ref{}) gestartet, sodass der Benutzer ein anderes Profil wählen kann. Mit dem Befehl \glqq{}Profil Exportieren\grqq{} kann der Benutzer sein Profil an einem anderen Ort speichern (siehe Kapitel \ref{}). Der Menüeintrag \glqq{}Quest wählen\grqq{} öffnet ein Fenster zum Auswählen eines Questpaketes; im Anschluss kann der Benutzer eine Aufgabe zum Bearbeiten wählen (siehe Kapitel \ref{}). Mit \glqq{}Questpaket importieren\grqq{} kann ein Package importiert werden (siehe Kapitel \ref{} und \ref{}).
