@@ -1,10 +1,12 @@
 \section{Importieren und Exportieren}
 \subsection{Importieren von Quests}
+\label{sec:quest-import}
 Um es Lehrpersonen einfacher zu machen, Packete auszuteilen, wurde eine Funktion ins Quest-System eingebaut, welches dem Nutzer erlaubt, Quests in C-Compact zu importietren.
 
-Damit dies funktioniert, muss das gewünschte Package als .zip Datei gepackt sein. Diese kann nun vom Schüler durch Klick auf folgende Felder importiert werden: Fortschritt, Questpacket importieren. Nun wird ein JFileChooser geöffnet. Hier muss das gewünschte .zip File ausgewählt werden. Wenn das File nun Quests enthält, wird das File in den packages Ordner entpackt.
+Damit dies funktioniert, muss das gewünschte Package als \textbf{.zip} Datei gepackt sein. Diese kann nun vom Schüler durch Klick auf folgende Felder importiert werden: Fortschritt, Questpacket importieren. Nun wird ein JFileChooser geöffnet. Hier muss das gewünschte \textbf{.zip} File ausgewählt werden. Wenn das File nun Quests enthält, wird das File in den packages Ordner entpackt.
 
 \subsection{Exportieren eines Profils}
+\label{sec:quest-export}
 Es kann vorkommen, dass ein Schüler sein Profil, welches er vom Launcher aus geöffnet hat, nicht mehr findet oder es auf seinen USB Stick kopieren möchte. Aus diesem Grund wurde eine Funktion eingebaut, welche das Exportieren von Profilen ermöglicht.
 
 Diese Funktion kopiert den gesamten existierenden Ordner in welchem das Profil gespeichert ist. Somit werden auch andere Daten, welche von einem Schüler im Profil gespeichert wurden mitexportiert. Sobald ein Profil exportiert wird, werden auch automatisch die zugehörigen Lösungen zu Quests in den richtigen Packages im Profil gegliedert und mitexportiert. Somit exportiert man das Profil mitsamt den gesamten selbst geschriebenen Programmen.

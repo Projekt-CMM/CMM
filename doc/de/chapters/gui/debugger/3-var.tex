@@ -64,9 +64,7 @@ Zusätzlich werden folgende Elemente in der Tabelle farbig markiert:
 \begin{itemize}
 \item Funktionen sind hellblau hinterlegt. Sie sollen dadurch optisch von Datenstrukturen und Variablen unterscheidbar sein.
 \item Die Variablen, die zuletzt geändert wurden, sind gelb hinterlegt. Grundsätzlich kann pro Schritt des Debuggers nur eine Variable geändert werden. Werden aber einige Schritte übersprungen, zum Beispiel mit dem Schlüsselwort \textbf{library}, so werden mehrere Variablen in einem Debuggerschritt geändert.
-% TODO refer to library
 \item Variablen, die noch nicht initialisiert wurden, sind grau hinterlegt.
-% TODO refer to undef variables
 \end{itemize}
 
 \begin{figure}[htp]
@@ -178,8 +176,7 @@ public abstract class DataNode {
 
 DataNode selbst enthält keine Datenstruktur, die Referenzen zu untergeordneten Knoten im Baum speichert. Die Methode \textbf{getChildren()} muss aber eine Liste mit Referenzen zurückgeben. Diese Liste sollte in einer von DataNode abgeleiteten Klasse implementiert werden.
 
-Die \textbf{toString}-Methode muss überschrieben werden, da diese beim Rendern des Baumes verwendet wird. \textbf{toString()} sollte den Anzeigenamen des Datenknoten (der Name, der im Baum der TreeTable angezeigt wird) übergeben. Die Implementierung der Methode \textbf{add()} ist empfehlenswert (da der Baum irgendwie aufgebaut werden muss) aber nicht erforderlich.
-%TODO read first two sentences
+Die \textbf{toString()}-Methode muss überschrieben werden, da diese beim Rendern des Baumes verwendet wird. \textbf{toString()} sollte den Anzeigenamen des Datenknoten (der Name, der im Baum der TreeTable angezeigt wird) übergeben. Die Implementierung der Methode \textbf{add()} ist empfehlenswert (da der Baum irgendwie aufgebaut werden muss) aber nicht erforderlich.
 
 \subsubsection*{TreeModel}
 TreeModel ist ein Interface für alle Datenmodelle eines JTree.
@@ -191,7 +188,6 @@ Dieses Interface erweitert das Interface \textbf{TreeModel} so, dass es mit eine
 Diese abstrakte Basisklasse implementiert einige konkrete Methoden für die Verwendung als Datenmodell eines JTree. In Objekten dieser Klasse wird der Basisknoten (root) des Baumes gespeichert. Außerdem regelt AbstractTreeModel den Ablauf von Änderungsevents in der Datenstruktur des Baumes.
 
 \subsubsection*{TreeTableDataModel}
-%TODO read this subsubsection
 TreeTableDataModel erbt von AbstractTreeTableModel und ist ein vollständiges Tabellen-Datenmodell. Außerdem wird in dieser Klasse das konkrete Aussehen der TreeTable festgelegt, indem die Tabellenspalten definiert werden.
 \begin{lstlisting}[language=JAVA]
 public class TreeTableDataModel<TreeNode extends DataNode> extends AbstractTreeTableModel<TreeNode> {
@@ -367,7 +363,6 @@ private int address;
 Die Felder für Datentyp und Wert haben den Typ Object, da sich in der Tabelle an der Stelle eines Wertes auch ein JButton befinden kann (zum Beispiel bei Strings).
 
 Zusätzlich wird die Adresse der Variable gespeichert. Die Adresse dient der eindeutigen Identifikation der Variable, zum Beispiel beim Traversieren durch den Variablenbaum.
-%TODO mention treeUtils
 
 \subsubsection*{TableButtonRenderer}
 Diese Klasse sorgt dafür, dass die Zellen der Tabelle die vorgesehene Hintergrundfarbe erhalten und dass AWT- und Swing-Elemente in der Tabelle gerendert dargestellt werden. Um Elemente der grafischen Benutzeroberfläche in einer Tabelle zu rendern, muss die Methode \textbf{getTableCellRendererComponent(...)} für die jeweilige Zelle das beinhaltete Element zurückgeben.
@@ -428,10 +423,7 @@ Bild & Art des Eintrages \\
 \end{table}
 
 \section{Auslesen der Variablen}
-
-%TODO ref speicher, call stack, Symboltabelle
-Die Variablen des laufenden Programms werden nach jedem Schritt des Interpreters neu ausgelesen. Dabei wird zuerst der \textbf{Call Stack} abgearbeitet. Für jede Funktion wird durch die \textbf{Symboltabelle} iteriert. Dabei werden Knoten für die Variablentabelle (siehe Kapitel \ref{sec:deb-var-special}, VarDataNode) angelegt. Die Werte der Variablen werden aus dem \textbf{Speicher} ausgelesen.
-%TODO hier noch codebeispiele?
+Die Variablen des laufenden Programms werden nach jedem Schritt des Interpreters neu ausgelesen. Dabei wird zuerst der \textbf{Call Stack} (siehe Kapitel \ref{sec:memory_system}) abgearbeitet. Für jede Funktion wird durch die \textbf{Symboltabelle} (siehe Kapitel \ref{sec:comp-symbtab}) iteriert. Dabei werden Knoten für den Variablenbaum (VarDataNode) angelegt. Die Werte der Variablen werden aus dem \textbf{Speicher} ausgelesen.
 
 Das Datenmodell für die TreeTable wird von Methoden der Klasse \textbf{InitTreeTableDate} im Package \textbf{at.jku.ssw.cmm.debugger} erstellt. Um ein neues Datenmodell zu erstellen, muss die Methode \textbf{readSymbolTable} aufgerufen werden.
 \begin{lstlisting}[language=JAVA]

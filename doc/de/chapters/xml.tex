@@ -1,4 +1,6 @@
 \section{Lesen von XML Dateien}
+\label{sec:xml-read}
+
 Um Konfigurationen lesen speichern zu können, haben wir uns für das gängige XML entschieden. Somit wird das Profil, Quests oder Einstellungen der Benutzeroberfläche im XML Format gespeichert.
 
 Um das Lesen von XML Dateien zu ermöglichen, sind in Java mehrere Klassen implementiert. Wir haben hierfür den Dom Parser\footnote{\url{http://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/}} verwendet. Dieser lest die gesamte XML Datei ein und lädt diese in den Arbeitsspeicher. Nun wird er in eine Baumstruktur modelliert. Danach kann dieser Knoten für Knoten abgearbeitet werden, um an die notwendigen Informationen zu gelangen.
@@ -26,6 +28,8 @@ title = eElement.getElementsByTagName("title").item(0).getTextContent();
 \end{lstlisting}
 
 \section{Schreiben von XML Dateien}
+\label{sec:xml-write}
+
 Um dies zu realisieren haben wir den DOM XML Parser\footnote{\url{http://www.mkyong.com/java/how-to-create-xml-file-in-java-dom/}} verwendet. Hierbei muss der Baum zuerst im Programm aufgebaut werden, und dieser wird danach in einer XML Datei gespeichert.
 
 Zuerst muss er Hauptknoten erstellt werden. Vom diesem ausgehend können dann weitere Knoten angebracht werden.
