@@ -50,7 +50,7 @@
 \contentsline {subsection}{\numberline {3.2.5}Memory System}{27}{subsection.3.2.5}
 \contentsline {subsection}{\numberline {3.2.6}Von uns gew\IeC {\"a}hltes Memory System}{28}{subsection.3.2.6}
 \contentsline {subsubsection}{\numberline {3.2.6.1}Speicherverwaltung}{29}{subsubsection.3.2.6.1}
-\contentsline {subsubsection}{\numberline {3.2.6.2}Aufruf einer neuen Methode}{30}{subsubsection.3.2.6.2}
+\contentsline {subsubsection}{\numberline {3.2.6.2}Aufruf einer neuen Methode}{29}{subsubsection.3.2.6.2}
 \contentsline {subsubsection}{\numberline {3.2.6.3}Schlie\IeC {\ss }en einer Methode}{30}{subsubsection.3.2.6.3}
 \contentsline {subsection}{\numberline {3.2.7}Aufbau des Interpreters}{30}{subsection.3.2.7}
 \contentsline {subsubsection}{\numberline {3.2.7.1}Designator}{31}{subsubsection.3.2.7.1}
@@ -58,5 +58,5 @@
 \contentsline {subsubsection}{\numberline {3.2.8.1}Abarbeitung einer Expression}{32}{subsubsection.3.2.8.1}
 \contentsline {subsubsection}{\numberline {3.2.8.2}Das Aufrufen eines Calls}{33}{subsubsection.3.2.8.2}
 \contentsline {chapter}{\numberline {4}Autoren}{36}{chapter.4}
-\contentsline {chapter}{Literaturverzeichnis}{36}{section*.37}
-\contentsline {chapter}{Abbildungsverzeichnis}{36}{section*.37}
+\contentsline {chapter}{Literaturverzeichnis}{36}{section*.36}
+\contentsline {chapter}{Abbildungsverzeichnis}{36}{section*.36}
