@@ -8,7 +8,7 @@
 In diesem Kapitel wird der grundlegende Aufbau der Fenster und Benutzeroberflächen von C Compact beschrieben - sowohl die konzeptuelle Konstruktion als auch die Implementierung.
 \section{Das Konzept}
 Das Aussehen und die Bedienung von C Compact folgt durchgehend der grundlegenden Idee, eine einfach und intuitiv zu bedienende Entwicklungsumgebung zu schaffen. Das bedeutet, Features möglichst zielgruppenorientiert zu integrieren und überflüssige Funktionen zu vermeiden. Bei der Entwicklung wurde besonders auf Vollständigkeit und logische Bedienvorgänge geachtet, um eine konsistente und verständliche Bedienung zu ermöglichen.
-%TODO TODO read last sentence
+% read last sentence
 %Durch besondere Rücksicht auf Vollständigkeit und logische Bedienvorgänge haben wir ein durchgängig logisches Bedienerlebnis angestrebt.
 %Konkret haben wir uns dabei an folgende Regeln gehalten:
 
@@ -23,12 +23,9 @@ C Compact wurde deshalb nach folgenden Richtlinien entwickelt:
 Durch diese Reduktion der gesamten Oberfläche ist C Compact auf einen bestimmten Zweck, die Ausbildung, beschränkt. Das sehen wir allerdings nicht als Nachteil, sondern als besondere Stärke. Mit C Compact wollen wir eine Entwicklungsumgebung schaffen, die Anfänger nicht überfordert und ihnen hilft, sich auf das Wesentliche zu konzentrieren.
 Das Konzept einer anfängerfreundlichen Entwicklungsumgebung ist mit dem Aufbau einer Umgebung für die professionelle Entwicklung nicht vereinbar. C Compact soll aber auf späteres Arbeiten mit komplexeren Programmen vorbereiten. Schüler, die ihre erste Programmiersprache mit C Compact erlernen, kennen bereits den Umgang mit einem Debugger und haben ein tieferes Verständnis für den Ablauf von Programmen.
 
-%TODO add window desc. for launcher, quest seleter, package selecter
 \section{Fenster Der Benutzeroberfläche}
 Neben dem Hauptfenster, das den Kern der Benutzeroberfläche darstellt, gibt es eine Reihe von kleineren Aktionsfenster, Dialogen und Einstellungsfenstern, die zum reibungslosen Ablauf bei der Bedienung von C Compact beitragen. Das Hauptfenster selbst wird in Kapitel \ref{sec:gui-main} beschrieben.
 
-\subsection{Launcher}
-\label{sec:win-launcher}
 \input{./chapters/gui/launcher-main.tex}
 
 \subsection{Einstellung der Sprache}
@@ -47,7 +44,6 @@ Dieses Fenster ist in der Klasse \textbf{GUILanguage} im Package \textbf{at.jku.
 \subsection{Allgemeine Einstellungen}
 \label{sec:win-set}
 Dieses Fenster (Abbildung \ref{fig:win-set}) enthält allgemeine Optionen zum Haupfenster der Benutzeroberfläche (siehe Kapitel \ref{sec:guimainsettings}). Es kann im Menü des Hauptfensters unter \glqq{}Datei\grqq{} - \glqq{}Einstellungen\grqq{} aufgerufen werden (Siehe Kapitel \ref{sec:gui-main-menu-file}). Änderungen an den Einstellungen werden sofort wirksam (ausgenommen sind Änderungen an der Schriftgröße von Dokumenten). Da C Compact beim Ändern dieser Einstellungen nicht neu gestartet werden muss, sind diese Optionen und die Spracheinstellungen in zwei unterschiedliche Fenster aufgeteilt.
-%TODO ref load html->font size
 
 \begin{figure}[htp]
 \centering
@@ -62,7 +58,6 @@ Im Einstellungsfenster können folgende Optionen verändert werden:
 \item \textbf{Schriftgröße des Sourcecode:} Ändert die Schriftgröße des Textfeldes für den Quellcode im Hauptfenster. Siehe Kapitel \ref{sec:gui-main-left-code}.
 \item \textbf{Schriftgröße der Textfelder:} Ändert die Schriftgröße der Textfelder für Ein- und Ausgabedaten im Hauptfenster. Siehe Kapitel \ref{sec:gui-main-left-io}.
 \item \textbf{Schriftgröße von Dokumenten:} Dokumente, wie etwa Beschreibungstexte von Fehlern (siehe Kapitel \ref{sec:deb-error}), können mit unterschiedlichen Textgrößen angezeigt werden. Da die Schriftgröße beim Initialisieren der Textfelder festgelegt wird, betrifft die Einstellung immer nur die Dokumente, die in Zukunft geöffnet werden.
-%TODO ref Fehlerdokumente
 \item \textbf{Rückgabewerte anzeigen:} Der Debugger kann den Rückgabewert einer Funktion in einem Popup (siehe auch Kapitel \ref{sec:deb-popup}) darstellen. Da dieses Feature nicht immer hilfreich ist, ist es standardmäßig deaktiviert.
 \end{enumerate}
 
@@ -96,14 +91,12 @@ this.jSourcePane.setFont(
 
 \subsection{Über C Compact}
 \label{sec:win-credits}
-% !!! TODO mention SSW in credits !!!
 Dieses Fenster (Abbildung \ref{fig:win-about}) enthält den Lizenztext von C Compact sowie die Namen der beteiligten Personen. Auch dieses Fenster kann im Menü der Entwicklungsumgebung aufgerufen werden (Menü siehe Kapitel \ref{sec:gui-main-menu-file}). Alle Bestandteile dieses Elementes befinden sich im Package \textbf{at.jku.ssw.cmm.gui.credits}:
 \begin{itemize}
 \item \textbf{Credits.java:} Initialisiert das Fenster und regelt sein Verhalten.
 \item \textbf{credits.html:} Enthält den Lizenztext.
 \item \textbf{credits.css:} Enthält Formatierungsinformationen zum Lizenztext.
 \end{itemize}
-%TODO ref Dokumente laden
 
 Die Resourcen sind im Package eingebunden und deshalb auch Teil der generierten JAR-Datei. Dadurch kann der Lizenztext nicht einfach verändert werden.
 
@@ -114,10 +107,8 @@ Die Resourcen sind im Package eingebunden und deshalb auch Teil der generierten 
 \label{fig:win-about}
 \end{figure}
 
-\subsection{Questpaket auswählen}
 \input{./chapters/gui/quest-package.tex}
 
-\subsection{Quest auswählen}
 \input{./chapters/gui/quest-selection.tex}
 
 \subsection{Dialoge}
@@ -134,7 +125,6 @@ In C Compact werden viele verschiedene Dialogfenster verwendet. Der Begriff Dial
 \subsection{Dateimanager}
 \input{./chapters/gui/classes/JFileChooser.tex}
 
-%TODO add information about info saved in profiles
 \section{Einstellungen}
 \label{sec:guimainsettings}
 Für den Betrieb einer Benutzeroberfläche ist es unerlässlich, diese anpassbar zu machen und Änderungen des Benutzers zu speichern. Im Package \textbf{at.jku.ssw.cmm.gui.properites} befindet sich die Klasse \textbf{GUImainSettings}, die alle globalen Einstellungen verwaltet und speichert. Diese Einstellungen umfassen:
@@ -154,6 +144,8 @@ Für den Betrieb einer Benutzeroberfläche ist es unerlässlich, diese anpassbar
 Bevor das Hauptfenster der Entwicklungsumgebung gestartet werden kann, muss ein Objekt der Klasse \textbf{GUImainSettings} erstellt werden (Siehe dazu Kapitel \ref{sec:gui-main-impl}). Dabei werden die zuletzt gespeicherten Konfigurationen geladen.
 
 Die Einstellungen werden in der Datei \textbf{settings.xml} im Hauptverzeichnis von C Compact gespeichert. Bevor diese Datei ausgelesen wird, werden alle Einstellungsvariablen auf einen definierten Standardwert gesetzt. Sollten bestimmte Informationen oder die Datei selbst fehlen, werden die Standardwerte wieder hergestellt. Die Einstellungen werden beim Beenden von C Comapct gespeichert.
+
+Das Lesen von XML-Dateien wird in Kapitel \ref{sec:xml-read} beschrieben, das Schreiben in Kapitel \ref{sec:xml-write}. 
 
 Die Einstellungsdatei \textbf{settings.xml} ist wie folgt aufgebaut:
 \begin{lstlisting}[language=XML]
@@ -176,7 +168,6 @@ Die Einstellungsdatei \textbf{settings.xml} ist wie folgt aufgebaut:
 \end{lstlisting}
 
 Unter \glqq{}properties\grqq{} befinden sich alle Parameter, die der Benutzer direkt ändern kann (die Sprache bei den Spracheinstellungen, siehe Kapitel \ref{sec:win-lang} und alle anderen Einstellungen bei den allgemeinen Einstellungen, siehe Kapitel \ref{sec:win-set}). Darunter werden die zuletzt gewählten Profile aufgelistet (diese werden im Launcher angezeigt, siehe Kapitel \ref{sec:win-launcher}) und dann die zuletzt geöffneten Dateien (für die Auflistung im Menü der Entwicklungsumgebung, siehe Kapitel \ref{sec:gui-main-menu-ctrl}). Damit die Listen nicht zu lang werden, werden nur die letzten 10 geöffneten Dateien und die letzten 10 aktiven Profile gespeichert und angezeigt.
-%TODO appendix: how to read XML file
 
 \section{Übersetzungen}
 \label{sec:lang}
@@ -186,7 +177,6 @@ Zum Erstellen der Übersetzungsdateien wurde GNU gettext\footnote{http://www.gnu
 \begin{lstlisting}[language=sh]
 apt-get install gettext
 \end{lstlisting}
-%TODO check if package is correct
 
 Dieses Projekt beinhaltet Programme zum Extrahieren von zu übersetzenden Strings aus Quelldateien. Mit dem Befehl \textbf{xgettext}\footnote{http://www.gnu.org/savannah-checkouts/gnu/gettext/manual/html\_node/xgettext-Invocation.html} werden alle zu übersetzenden Strings aus den Quelldateien ausgelesen und in eine externe Datei gespeichert.
 \begin{lstlisting}[language=sh]
@@ -248,8 +238,6 @@ Um eine Fehlermeldung anzeigen zu können muss einfach folgender Befehl ausgefü
 new ErrorMessage().showErrorMessage(jFrame, "#2001", settings.getLanguage());
 \end{lstlisting}
 
-%TODO keep this table up to date
-%TODO add references to different files/chapters
 \def\arraystretch{1.6}
 \begin{minipage}{14cm}
 %\begin{table}[ht]
@@ -266,10 +254,9 @@ new ErrorMessage().showErrorMessage(jFrame, "#2001", settings.getLanguage());
 	&2001&Aktuelle Datei konnte nicht gespeichert werden\\
 	\multirow{4}{15mm}{\begin{sideways}\parbox{25mm}{Dateien öffnen oder speichern}\end{sideways}}&2011&[inactive]\footnote{Dieser Fehler kann nicht mehr auftreten, da der zugehörige Bereich deaktiviert wurde}\\
 	&2012&Datei konnte nicht geöffnet werden\\
-	&2013&Bibliothek konnte nicht gefunden werden\footnote{Dieser Fehler wird als Fehlermeldung im Debugger angezeigt. Die fehlernummer existiert nur formell}\\%TODO ref debugger error doc
-	&2014&Datei \textbf{default.cmm} einer Quest konnte nicht geöffnet werden\\%TODO ref quest
+	&2013&Bibliothek konnte nicht gefunden werden\footnote{Dieser Fehler wird als Fehlermeldung im Debugger angezeigt. Die Fehlernummer existiert nur formell}\\
+	&2014&Datei \textbf{default.cmm} einer Quest konnte nicht geöffnet werden\\
 	\hline
-	%TODO add refs to quest testing
 	&3001&Exception im Präprozessor\\
 	\multirow{4}{15mm}{\begin{sideways}\parbox{25mm}{Testen einer Quest}\end{sideways}}&3002&[inactive]\footnote{Dieser Fehler kann nicht mehr auftreten} IOException im Präprozessor\\
 	&3003&Unbekannter Fehler im Präprozessor\\
@@ -282,5 +269,3 @@ new ErrorMessage().showErrorMessage(jFrame, "#2001", settings.getLanguage());
 %\label{tab:int-err}
 %\end{table}
 \end{minipage}
-
-%TODO TODO add some paragraphs about error window, error.xml, and so on

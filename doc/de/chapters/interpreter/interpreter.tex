@@ -20,15 +20,16 @@
 %Durch die Verwendung des Just-in-time-compilation Verfahrens kann die Geschwindigkeit wieder verbessert werden.
 
 \htlParagraph{Abstrakter Syntaxbaum Interpreter}\\
-Ein Programm muss in einer konkreten Syntax geschrieben werden. Diese Syntax ist jedoch nur für den Menschen, sie kann nicht einfach vom Computer übernommen werden. Damit der Interpreter verstehen kann, was mit einem vom Benutzer geschriebenen Programm ausdrückt werden soll, muss dieses zuerst in einen Abstrakten Syntax Baum\footnote{\url{http://de.wikipedia.org/wiki/Abstrakter_Syntaxbaum}} umgewandelt werden. Diese Umwandlung geschieht beim Parser\ref{kap:Parser}.
+Ein Programm muss in einer konkreten Syntax geschrieben werden. Diese Syntax ist jedoch nur für den Menschen, sie kann nicht einfach vom Computer übernommen werden. Damit der Interpreter verstehen kann, was mit einem vom Benutzer geschriebenen Programm ausdrückt werden soll, muss dieses zuerst in einen Abstrakten Syntax Baum\footnote{\url{http://de.wikipedia.org/wiki/Abstrakter_Syntaxbaum}} umgewandelt werden. Diese Umwandlung geschieht beim Parser (siehe Kapitel \ref{compiler_parser}).
 
 Nun kommt der Interpreter zum Einsatz. Er liest dem vom Parser erzeugten Code ein und arbeitet diesen zeilenweise ab. Der Interpreter, kann somit nur funktionieren, wenn der Abstrakte Syntax Baum korrekt erstellt wurde. Der Interpreter erzeugt hierbei keinen Maschinencode.
 
 \htlParagraph{Aufbau eines Interpreters:}\\
 Um eine Programmiersprache zu erstellen sind mehrere Punkte zu beachten. Zuerst sollte, eine konkrete Syntax und der Abstrakte Syntax Baum definiert werden. Nun kann ein geeignetes Memory System (Kapitel \ref{sec:memory_system}) gewählt werden. Schlussendlich, muss die Abarbeitung des Abstrakten Syntax Baumes überlegt werden.
 
-\section{Aufbau unseres Abstrakten Syntax Baumes}
-Der Abstrakte Syntax Baum wird vom Parser generiert und hat einen definierten Aufbau. Er besteht jeweils aus Knoten, welche einen Linken und einen Rechten, beziehungsweise einen weiterführenden Knoten besitzen. Die Knoten haben wiederum eine definierte Reihenfolge in welcher sie auftreten können. 
+\section{Aufbau des Abstrakten Syntaxbaumes}
+\label{sec:interpr-ast}
+Der Abstrakte Syntaxbaum wird vom Parser generiert und hat einen definierten Aufbau. Er besteht jeweils aus Knoten, welche einen Linken und einen Rechten, beziehungsweise einen weiterführenden Knoten besitzen. Die Knoten haben wiederum eine definierte Reihenfolge in welcher sie auftreten können. 
 
 \subsection{Statements}
 Statment-Knoten sind grundsätzlich immer Anweisungen. Somit können von diesem Knotentypen aus Zuweisungen, Unterprogrammaufrufe, Schleifen und If- Abfragen getätigt werden. Auch wird hier, bei Schließung eines Unterprogramms der nötige "`return"' oder bei einer Funktion mit fehlenden Rückgabewert ein "`trap"' Knoten aufgerufen.
@@ -59,7 +60,7 @@ Conditions werden von if, und Schleifen Anfragen benötigt. Mit ihnen können Ve
 %während der Laufzeit kompiliert und für einen späteren Gebrauch zwischengespeichert. Hierbei ist es wichtig, dass die Compilation nicht
 %zu aufwendig ist, da sonst die Geschwindigkeit des Programmes darunter leiden könnte.
 
-\subsection{Memory System}
+\section{Memory System}
 \label{sec:memory_system}
 Während der Interpreter läuft, muss er irgendwo seine Variablen, speichern. Aus diesem Grund ist es notwendig ein geeignetes Memory System zu wählen.
 
@@ -295,7 +296,7 @@ Sobald eine Variable gespeichert wurde, wird zusätzlich noch gespeichert, ob di
 %\item CALL: Ruft ein Unterprogramm auf, welches den Rückgabewert, den Datentyp Boolean hat. Dies kann somit für eine Abfrage weiterverwendet werden.
 %\end{itemize}
 
-\subsection{Aufbau des Interpreters}
+\section{Aufbau des Interpreters}
 Der Interpreter wurde so gestaltet, dass der Abstrakte Syntax Baum systematisch abgearbeitet wird. Damit dies möglich ist wurde er in mehrere Methoden gespaltet. Jede Methode ist für die Verarbeitung eines kleinen Teils des AST zuständig. Dies ist notwendig, da sich oftmals Methoden selbst wieder aufrufen.
 
 Zum Starten des Interpreters wird zuerst Startseq() gestartet und der dazugehörige Knoten übergeben. Die Methode sorgt mit einer for Schleife dafür, dass alle verfügbaren Knoten verarbeitet werden. Nun wird ein Statement aufgerufen. 
@@ -309,7 +310,7 @@ Zum Starten des Interpreters wird zuerst Startseq() gestartet und der dazugehör
 %TODO Switch CASE
 \end{itemize}
 
-\subsubsection{Designator}
+\subsection{Designator}
 Designators verweisen auf bestimmte Adressen im Memory. Dort werden Variablen des Benutzerprogramms gespeichert. Ein Designator kann zum Beispiel eine normale Variable, ein Array oder eine Struktur sein. Grundsätzlich werden Designators in drei Grundtypen unterschieden.
 
 \htlParagraph{Identifer}\\
@@ -361,7 +362,7 @@ case Node.NOT:
 
 Hier kann auch ein Call aufgerufen werden, welcher als Rückgabe-Wert boolean besitzt.
 
-\subsubsection{Abarbeitung einer Expression}
+\subsection{Abarbeitung einer Expression}
 Jeder Datentyp hat seine eigene Expression. Grundsätzlich werden diese für Rechenoperationen und Typ-Konvertierungen benötigt. Für Berechnungen werden jeweils der linke Knoten und der fechte Knoten wieder an die eigene Klasse weitergegeben. Dies geschieht um komplexere Rechenbeispiele lösen zu können. 
 \begin{lstlisting}[language=JAVA]
 case Node.PLUS:
@@ -403,8 +404,8 @@ case Node.INTCON:
 		return p.val;
 \end{lstlisting}
 
-%TODO
-\subsubsection{Das Aufrufen eines Calls}
+
+\subsection{Das Aufrufen eines Calls}
 Ein Call besitzt mehrere Basisfunktionen, diese können nicht erneut vom Benutzer als Funktion definiert werden und besitzen einen vorgegebenen Ablauf.
 
 \htlParagraph{print}\\
@@ -442,7 +443,7 @@ Auf der Linken Seite des Knotens, wird der String ausgewertet. Nun werden an den
 Schlussendlich kann der zusammengesetzte String vom dem InOut Interface an die Benutzeroberfläche übergeben werden.
 
 \htlParagraph{Normaler Aufruf}\\
-Wird ein im Benutzerprogramm erstelltes Unterprogramm aufgerufen wird ein normaler Call ausgeführt. Als erstes wird der aktuelle Framepointer zwischengespeichert. Nun wird im Memory ein neues Frame angelegt[\ref{}], dadurch wird der Framepointer und der Stackpointer auf das neue Frame gesetzt.
+Wird ein im Benutzerprogramm erstelltes Unterprogramm aufgerufen wird ein normaler Call ausgeführt. Als erstes wird der aktuelle Framepointer zwischengespeichert. Nun wird im Memory ein neuer Frame angelegt, dadurch wird der Framepointer und der Stackpointer auf das neue Frame gesetzt.
 
 Nun können die Parameter ins neue Frame geschrieben werden. Jetzt wird ein Node erstellt, welcher die Expressions des Calls beinhaltet. Diese werden aufgelöst und in das neue Frame übertragen. 
 \begin{lstlisting}[language=JAVA]

@@ -1,4 +1,5 @@
 \section{Lesen von XML Dateien}
+\label{sec:xml-read}
 Um das Lesen von XML Dateien zu ermöglichen, sind in Java mehrere Klassen implementiert. Wir haben hierfür den Dom Parser\footnote{\url{http://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/}} verwendet. Dieser ladet die gesamte XML Datei und lädt diese in den Arbeitsspeicher. Nun wird er in eine Baumstruktur modelliert. Nun kann dieser Knoten für Knoten abgearbeitet werden, um an die notwendigen Informationen zu gelangen. Somit wurde der DOM-Parser von uns gewählt, da Dateien gut aufgeschlüsselt werden.
 
 Zuerst muss die gesamte XML Datei eingelesen werden. Dies kann mit diesen Befehlen erledigt werden.
@@ -24,6 +25,7 @@ title = eElement.getElementsByTagName("title").item(0).getTextContent();
 \end{lstlisting}
 
 \section{Schreiben von XML Dateien}
+\label{sec:xml-write}
 Um Konfigurationen zu speichern zu können, haben wir uns für das gängige XML entschieden. Somit wird das Profil oder veränderte Einstellungen der Benutzeroberfläche in XML Dateien gespeichert.
 
 Um dies zu realisieren haben wir wiederum den DOM XML Parser\footnote{\url{http://www.mkyong.com/java/how-to-create-xml-file-in-java-dom/}} verwendet. Hierbei muss der Baum zuerst im Programm aufgebaut werden, und dieser wird danach in einer XML Datei gespeichert.
