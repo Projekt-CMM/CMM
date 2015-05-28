@@ -13,7 +13,6 @@
 \subsection{Interfaces}
 \label{sec:deb-impl-interfaces}
 Für die Kommunikation mit dem Interpreter sind zwei Interfaces wichtig. Im Package \textbf{at.jku.ssw.cmm.debugger} befinden sich das Interface \textbf{Debugger} und das Interface \textbf{StdInOut}. Die benötigten Methoden sind in zwei Interfaces aufgeteilt, da sie unterschiedliche Teile der Benutzeroberfläche betreffen. Bei einfacheren Anwendungen des Interpreters, wie etwa beim Testen von Quests, werden beide Interfaces in der selben Klasse implelemtiert.
-%TODO ref quest test
 
 Über das Interface \textbf{Debugger} übergibt der Interpreter jeweils den aktuellen Knoten im abstrakten Syntaxbaum. In der Methode \textbf{step} werden außerdem eine Liste der Variablen, die im letzten Schritt ausgelesen wurden und eine Liste der Variablen, die im letzten Schritt geändert wurden übergeben. Die geänderten Variablen werden in der Variablenliste im Hauptfenster gelb markiert. Es ist möglich, dass in einem Schritt mehrere Variablen geändert werden, da mit dem Befehl \textbf{library} eine ganze Funktion auf einmal abgearbeitet werden kann.
 
@@ -82,7 +81,6 @@ public void setNotRunning() {
 }
 \end{lstlisting}
 
-%TODO keep code ref up to date
 Die Klasse \textbf{CMMrun} erbt von der Klasse Thread\footnote{https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.html}. Ein neuer Thread wird gestartet, indem die Methode \textbf{start()}, die von der Klasse Thread vererbt wurde, aufgerufen wird (siehe erstes Codebeispiel dieses Abschnitts, Zeile 17). Der Thread führt dann die Methode \textbf{run()} aus, die ebenfalls vererbt wird und in der Kindklasse überschrieben werden muss.
 \begin{lstlisting}[language=JAVA]
 @Override
@@ -118,7 +116,6 @@ Ein Thread wird beendet, indem die Methode \textbf{run} verlassen wird. Dies ist
 \label{sec:deb-impl-thread-problems}
 Das Verwenden mehrerer Threads erfordert generell Vorsicht; vor Allem wenn eine Variable oder eine Referenz von mehreren Threads verwendet wird können unerwartete Komplikationen auftreten.
 
-%TODO ref "Sprechen Sie Java?"
 Auf eine Datenstruktur oder Variable sollte immer nur ein Thread gleichzeitig zugreifen können. Da die Wechsel zwischen Threads praktisch nicht vorhersehbar sind, ist es bei unvorsichtiger Implementierung möglich, dass mehrere Threads gleichzeitig auf einem Speicherplatz schreiben oder lesen (Threadinterferenz). Im schlimmsten Fall führt dies zu Exceptions und Abstürzen, deren Ursache dann meistens schwer nachvollziehbar ist.
 
 Es kann auch vorkommen, dass ein Thread eine Variable ausliest, bevor sie durch einen anderen Thread aktualisiert wurde (Speicherinkonsistenz\footnote{https://docs.oracle.com/javase/tutorial/essential/concurrency/memconsist.html}).
@@ -161,7 +158,7 @@ panel = null;
 
 \subsection*{sychronized}
 Für die Kommunikation zwischen Threads ist das Schlüsselwort $\textbf{synchronized}$ unerlässlich. 
-\begin{quote}%TODO correct quote
+\begin{quote}
 \emph{Synchronized methods enable a simple strategy for preventing thread interference and memory consistency errors: if an object is visible to more than one thread, all reads or writes to that object's variables are done through synchronized methods}
 \begin{flushright}Oracle, The Java Turorials\footnote{https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html}\end{flushright}
 \end{quote}
@@ -198,7 +195,7 @@ Grundsätzlich kann jedes beliebige Objekt diese Funktion übernehmen; in den me
 
 \subsection{Mehrere Threads in Swing}
 
-Objekte, die Teile der Benutzeroberfläche sind, sollten niemals von einem anderen Thread  als dem EDT aus initialisiert oder verändert werden. Dies betrifft Objekte und Instanzen von Klassen aus der AWT- oder Swing-Bibliothek oder daraus abgeleiteten Klassen.%TODO dat grammatics
+Objekte, die Teile der Benutzeroberfläche sind, sollten niemals von einem anderen Thread  als dem EDT aus initialisiert oder verändert werden. Dies betrifft Objekte und Instanzen von Klassen aus der AWT- oder Swing-Bibliothek oder daraus abgeleitete Klassen.
 
 Um von einem anderen Thread aus ein Swing-Objekt zu verändern, muss dieser Teil des Quellcodes in den Event Dispatch Thread eingereiht werden. Dafür gibt es zwei Möglichkeiten:
 
@@ -247,11 +244,9 @@ java.awt.EventQueue.invokeAndWait(new Runnable() {
 %   --------------------------------------------------------
 
 \subsection{Abarbeiten von Knoten im Abstrakten Syntaxbaum}
-Die Schnittstelle zwischen Benutzeroberfläche und Interpreter bildet die Klasse \textbf{PanelRunListener} im Package \textbf{at.jku.ssw.cmm.gui.event.debug}. Sie verwendet einerseits das Interface \textbf{Debugger} (siehe Kapitel \ref{sec:deb-impl-interfaces}) zum Ausführen von Schritten des Debuggers, andererseits enthält sie Listener für Bedienelemente des Debuggers und den zugehörigen Hotkeys. Außerdem wird hier festgelegt und gespeichert, in welchem Modus sich der Debugger befindet.
-%TODO ref ctrl-elements, mode
+Die Schnittstelle zwischen Benutzeroberfläche und Interpreter bildet die Klasse \textbf{PanelRunListener} im Package \textbf{at.jku.ssw.cmm.gui.event.debug}. Sie verwendet einerseits das Interface \textbf{Debugger} zum Ausführen von Schritten des Debuggers, andererseits enthält sie Listener für Bedienelemente des Debuggers und den zugehörigen Hotkeys. Außerdem wird hier festgelegt und gespeichert, in welchem Modus sich der Debugger befindet.
 
-%TODO ref interpreter, ast
-Die einzelnen Schritte im Abstrakten Syntaxbaum werden mit der Methode \textbf{step()} übergeben. Diese Methode wird vom thread des Interpreters aufgerufen und wie folgt abgearbeitet:
+Die einzelnen Schritte im Abstrakten Syntaxbaum (siehe Kapitel \ref{sec:interpr-ast}) werden mit der Methode \textbf{step()} übergeben. Diese Methode wird vom thread des Interpreters aufgerufen und wie folgt abgearbeitet:
 
 \begin{enumerate}
 \item Ist der Knoten ein \textbf{wait}-Befehl, wird der Debugger in den \textbf{Pausemodus} versetzt.

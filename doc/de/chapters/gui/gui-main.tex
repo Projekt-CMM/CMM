@@ -45,8 +45,7 @@ Wenn C Compact ohne Benutzerprofil gestartet werden soll, wird als Parameter \te
 	}
 \end{lstlisting}
 
-Um das Hauptfenster zu initialisieren und C Compact zu starten, muss danach die Methode \textbf{void start(boolean test)} aufgerufen werden. Diese Methode wurde vom Interface GUIExecutable übernommen. Als Parameter sollte normalerweise \textbf{false} übergeben werden. Wenn \textbf{true} übergeben wird, wird das Fenster gleich nach dem Initialisieren geschlossen. Diese Funktion wird für automatisierte Tests mit ANT verwendet.
-%TODO ref ant tests
+Um das Hauptfenster zu initialisieren und C Compact zu starten, muss danach die Methode \textbf{void start(boolean test)} aufgerufen werden. Diese Methode wurde vom Interface GUIExecutable übernommen. Als Parameter sollte normalerweise \textbf{false} übergeben werden. Wenn \textbf{true} übergeben wird, wird das Fenster gleich nach dem Initialisieren geschlossen. Diese Funktion wird für automatisierte Tests mit ANT verwendet (siehe Kapitel \ref{sec:dev-build-ant}).
 
 \begin{lstlisting}[language=JAVA]
 @Override
@@ -82,7 +81,6 @@ Außerdem implementiert die Klasse GUImain die Methode \textbf{saveAndDispose()}
 \label{sec:gui-main-left-0}
 Zum linken Bereich der Benutzeroberfläche gehören Textfelder für Ein- und Ausgabedaten des CMM-Programmes, das Textfeld für den Sourcecode, sowie ein farbiges Panel, das den aktuellen Zustand der Benutzeroberfläche visualisiert.
 
-%TODO check SplitPane info consistency: guimain <---> here
 Unterschiedliche Elemente oder Gruppen von Bedienelementen werden mit JSplitPanes\footnote{https://docs.oracle.com/javase/tutorial/uiswing/components/splitpane.html} getrennt. Ein JSplitPane enthält immer zwei Swing-Komponenten, die durch einen verschiebbaren Balken getrennt werden. In diesem Fall werden zwei verschachtelte SplitPanes verwendet. Das äußere Panel enthält einerseits das Zustandspanel (siehe Kapitel \ref{sec:gui-main-left-zust}) und das Textfeld für den Sourcecode (siehe Kapitel \ref{sec:gui-main-left-code}), andererseits auch ein zweites SplitPane, das Ein- und Ausgabefeld trennt (Kapitel \ref{sec:gui-main-left-io}).
 
 \subsection{Allgemeine Implementierung}
@@ -183,10 +181,8 @@ Mit der Methode \textbf{setOrientation} kann die Anordnung der Elemente im linke
 	}
 \end{lstlisting}
 
-\subsection{Zustandspanel}
+\subsection{Zustandspanel des Debuggers}
 \label{sec:gui-main-left-zust}
-%TODO ref GUI states
-%TODO ref right state panel
 
 \begin{figure}[htbp] 
   \centering
@@ -250,7 +246,6 @@ Das Zustandspanel wird in der Methode \textbf{init()} der Klasse \textbf{GUIleft
 Das Feld für den Quellcode wurde als \textbf{RSyntaxTextArea}\footnote{http://bobbylight.github.io/RSyntaxTextArea/} implementiert. Dieses Projekt wurde von Robert Futrell veröffentlicht und steht unter einer modifizierten BSD-Lizenz\footnote{https://github.com/bobbylight/RSyntaxTextArea/blob/master/src/main/dist/RSyntaxTextArea.License.txt}.
 
 Das verwendete Textfeld ermöglicht Syntax Highlighting für viele bekannte Programmiersprachen. Anfangs wurde der Standardhighlighter für C-Code verwendet; seit der Version Alpha 1.2 (siehe Kapitel \ref{sec:versions}) wird ein an die Sprache von C Compact angepasster Syntax Highlighter verwendet. Dadurch werden auch Funktionen und Schlüsselwörter, die nur in C Compact vorkommen, markiert.
-%TODO ref JFlex/Syntax Highlighter [pointhi]
 
 RSyntaxTextArea stellt noch eine Reihe weiterer praktischer Funktionen zur Verfügung, wie etwa das Einklappen (verstecken) von Kommentaren oder Funktionsrümpfen. Manche Features, wie etwa automatische Vervollständigung beim Tippen oder das Erkennen von gleichen Variablennamen haben wir vorerst deaktiviert, um Kompatibilitätsprobleme zu vermeiden und die Benutzeroberfläche nicht mit Features zu überfrachten.
 
@@ -325,7 +320,6 @@ public void out(final char arg0) {
 Da der Interpreter in einem separaten Thread ausgeführt wird, muss die Ausgabe der übergebenen Daten in den \textbf{Event Dispatcher Thread} eingereiht werden. Für die Eingabedaten ist das nicht notwendig, da der Eingabestring in in einem Feld dieser Klasse gespeichert wird und als \textbf{final} deklariert wurde (siehe Kapitel \ref{sec:deb-impl-thread-problems}).
 
 Für das Textfeld für die Eingabedaten wurde die Klasse \textbf{JInputDataPane} erstellt. Diese Klasse erbt von \textbf{JTextPane}\footnote{http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextPane.html}. Die Klasse JInputDataPane ist im Package \textbf{at.jku.ssw.cmm.gui.init} zu finden. 
-%TODO TODO beschreiben, wozu JInputTextPane da ist?
 
 Die Textfelder werden mit den statischen Methoden \textbf{initInputPane()} und \textbf{initOutputPane()} der Klasse \textbf{InitLeftPanel} initialisiert.
 
@@ -344,23 +338,21 @@ Wie bei der Klasse \textbf{GUIleftPanel} wird die Benutzeroberfläche dieses Ber
 \hline
 Debug&Immer&Enthält Elemente zum Bedienen des Debuggers&\ref{sec:deb-use}\\
 Error&Fehler aufgetreten&Zeigt detaillierte Informationen zu einem Fehler an&\ref{sec:deb-error}\\
-Quest&Questsystem aktiv&Zeigt die aktuelle Aufgabenstellung an und ermöglicht das Überprüfen der Aufgabe&0.0.0\\ %TODO ref Questsystem (instead of 0.0.0)
-Profile&Questsystem aktiv&Zeigt das Profil des Benutzers: Benutzerbild, Name und Auszeichnungen&0.0.0\\ %TODO ref Profile, profilePanel (instead of 0.0.0)
+Quest&Questsystem aktiv&Zeigt die aktuelle Aufgabenstellung an und ermöglicht das Überprüfen der Aufgabe&\ref{sec:quest}\\
+Profile&Questsystem aktiv&Zeigt das Profil des Benutzers: Benutzerbild, Name und Auszeichnungen&\ref{sec:gui-main-right-questpanel}\\
 \hline
 \end{tabular}
 \caption{Registerkarten im rechten Teil des Hauptfensters}\label{tab:gui-main-right-reg}
 \end{table}
 
 \subsection{Zustandspanel des Questsystems}
-Dieses Zustandspanel visualisiert den aktuellen Status des Questsystems und ist daher auch nur gemeinsam mit diesem verfügbar (in Kapitel \ref{sec:gui-main-impl} wurde dargelegt, wie C Compact ohne den Funktionen des Questsystems gestartet werden kann). Die Zustände des Questsystems sind vollkommen unabhängig von denen des Debuggers.
-%TODO ref quest system, quest tester
+Dieses Zustandspanel visualisiert den aktuellen Status des Questsystems (siehe Kapitel \ref{sec:quest}) und ist daher auch nur gemeinsam mit diesem verfügbar (in Kapitel \ref{sec:gui-main-impl} wurde dargelegt, wie C Compact ohne den Funktionen des Questsystems gestartet werden kann). Die Zustände des Questsystems sind vollkommen unabhängig von denen des Debuggers.
 
 Folgende Zustände können angezeigt werden:
 \begin{enumerate}
 \item \textbf{Keine Quest ausgewählt (Idle):} Zu Beginn hat der Benutzer noch keine Aufgabe ausgewählt, das Zustandspanel ist grau.
 \item \textbf{Quest wird bearbeitet:} Während der Benutzer eine ausgewählte Aufgabe bearbeitet, ist das Panel blau.
 \item \textbf{Quest wird getestet:} Wenn der Benutzer überprüfen will, ob er eine Aufgabe richtig erfüllt hat, startet er einen Test. Während des Tests wird das Zustandspanel gelb, im Regelfall ist dieser Status aber sehr kurz. Wenn während des Tests ein Fehler auftritt (wie etwa eine Endlosschleife), kann der Test in diesem Zustand abgebrochen werden.
-%TODO ref Quest test, quest test panel
 \item \textbf{Test erfolgreich:} Verläuft der Test erfolgreich, wird das Zustandspanel grün.
 \item \textbf{Test fehlgeschlagen:} In diesem Fall ist entweder ein Fehler im Sourcecode des Benutzers erkannt worden (eine detaillierte Beschreibung wird im Fehlerpanel angezeigt, siehe Kapitel \ref{sec:deb-error}) oder das Programm des Benutzers erfüllt die gestellte Aufgabe nicht.
 \end{enumerate}
@@ -389,7 +381,7 @@ public GUIdebugPanel getDebugPanel() {
 \label{sec:gui-main-right-error}
 Wenn beim Debuggen ein Fehler im Compiler, Präprozessor oder Interpreter auftritt, wird dieses Panel sichtbar. Fehler im Quelltext des Benutzers, die beim Überprüfen einer Quest bemerkt werden, werden ebenfalls hier angezeigt. Ist der Fehler behoben und wurde das Programm erfolgreich ausgeführt, verschwindet diese Registerkarte automatisch.
 
-Mit folgender Methode werden Fehlernachrichten eingeblendet. Als Parameter wird die Fehlernachricht des Compiler, Präprozessor oder Interpreter übergeben. Der Rückgabewert ist der Name (Präfix und Postfix) des Fehlers, wie er im Zustandspanel des Debuggers angezeigt wird. Siehe dazu Kapitel \ref{sec:gui-main-left-zust}.%TODO also ref debugger:states
+Mit folgender Methode werden Fehlernachrichten eingeblendet. Als Parameter wird die Fehlernachricht des Compiler, Präprozessor oder Interpreter übergeben. Der Rückgabewert ist der Name (Präfix und Postfix) des Fehlers, wie er im Zustandspanel des Debuggers angezeigt wird. Siehe dazu Kapitel \ref{sec:gui-main-left-zust}.
 \begin{lstlisting}[language=JAVA]
 public String[] showErrorPanel(String errorCode);
 \end{lstlisting}
@@ -397,7 +389,7 @@ public String[] showErrorPanel(String errorCode);
 Eine detaillierte Beschreibung zu der Verwaltung von Fehlerdokumenten ist in Kapitel \ref{sec:deb-error} zu finden.
 
 \subsection{Registerkarte \glqq{}Quest\grqq{}}
-In dieser Registerkarte werden Informationen und Bedienelemente zum Ausführen einer Aufgabe des Questsystems (siehe Kapitel \ref{}) angezeigt.
+In dieser Registerkarte werden Informationen und Bedienelemente zum Ausführen einer Aufgabe des Questsystems (siehe Kapitel \ref{sec:quest}) angezeigt.
 
 Eine Referenz auf das Panel in dieser Registerkarte wird von folgender Methode übergeben:
 \begin{lstlisting}[language=JAVA]
@@ -406,12 +398,11 @@ public GUITestPanel getTestPanel(){
 }
 \end{lstlisting}
 
-%TODO also mention this in chapter "quest panel"
 Anmerkung: Dieses Panel wird - vor allem im Quelltext von C Compact - auch als \glqq{}testPanel\grqq{} bezeichnet, da der Benutzer mit Elementen dieses Komponenten überprüfen kann, ob er die aktuelle Aufgabe richtig gelöst hat.
 
 \subsection{Registerkarte \glqq{}Profile\grqq{}}
-Hier werden Informationen zum aktuellen Benutzerprofil angezeigt. Siehe Kapitel \ref{}.
-%TODO ref
+\label{sec:gui-main-right-questpanel}
+Hier werden Informationen zum aktuellen Benutzerprofil angezeigt.
 
 Eine Referenz auf das Panel in dieser Registerkarte wird von folgender Methode übergeben:
 \begin{lstlisting}[language=JAVA]
@@ -506,10 +497,5 @@ Das wohl bekannteste Menü in jedem Programm ist das Menü \glqq{}Datei\grqq{}. 
 Dieses Menü würde in den meisten Programmen dem Menü \glqq{}Bearbeiten\grqq{} entsprechen. Allerdings beziehen sich die Menüeinträge wie \glqq{}Kopieren\grqq{}, \glqq{}Einfügen\grqq{}, \glqq{}Rückgängig\grqq{}, etc. immer auf das Textfeld für den Sourcecode --- mit dem Menünamen sollen also Verwechslungen vermieden werden --- und andererseits enthält dieses Menü auch Einträge zum Steuern des Debuggers. Diese Einträge sollen vom Benutzer kognitiv mit dem Sourcecode verknüpft werden.
 
 \subsection{Menü \glqq{}Fortschritt\grqq{}}
-Dieses Menü enthält Einträge, die das Questsystem (siehe Kapitel \ref{}) betreffen. Mit \glqq{}Profil Wählen\grqq{} Wird C Compact beendet und der Launcher (siehe Kapitel \ref{}) gestartet, sodass der Benutzer ein anderes Profil wählen kann. Mit dem Befehl \glqq{}Profil Exportieren\grqq{} kann der Benutzer sein Profil an einem anderen Ort speichern (siehe Kapitel \ref{}). Der Menüeintrag \glqq{}Quest wählen\grqq{} öffnet ein Fenster zum Auswählen eines Questpaketes; im Anschluss kann der Benutzer eine Aufgabe zum Bearbeiten wählen (siehe Kapitel \ref{}). Mit \glqq{}Questpaket importieren\grqq{} kann ein Package importiert werden (siehe Kapitel \ref{} und \ref{}).
-%TODO ref Questsystem
-%TODO ref launcher
-%TODO ref profil exportieren
-%TODO ref select quest window
-%TODO ref package, import package
+Dieses Menü enthält Einträge, die das Questsystem (siehe Kapitel \ref{sec:quest}) betreffen. Mit \glqq{}Profil Wählen\grqq{} Wird C Compact beendet und der Launcher (siehe Kapitel \ref{sec:win-launcher}) gestartet, sodass der Benutzer ein anderes Profil wählen kann. Mit dem Befehl \glqq{}Profil Exportieren\grqq{} kann der Benutzer sein Profil an einem anderen Ort speichern (siehe Kapitel \ref{sec:quest-export}). Der Menüeintrag \glqq{}Quest wählen\grqq{} öffnet ein Fenster zum Auswählen eines Questpaketes; im Anschluss kann der Benutzer eine Aufgabe zum Bearbeiten wählen (siehe Kapitel \ref{sec:gui-elements-package-sel}). Mit \glqq{}Questpaket importieren\grqq{} kann ein Package importiert werden (siehe Kapitel \ref{sec:quest-import}).
 

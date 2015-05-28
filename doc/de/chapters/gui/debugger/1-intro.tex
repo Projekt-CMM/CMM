@@ -64,7 +64,6 @@ Mit den Kontrollelementen kann der Debugger intuitiv und einfach bedient werden.
 \end{figure}
 
 Der Debugger hat vier unterschiedliche Modi, die im linken Teil des Hauptfensters durch eine Zustandsanzeige visualisiert werden (siehe Kapitel \ref{sec:gui-main-left-zust}). Der Wechsel zwischen diesen Zuständen erfolgt durch Eingaben des Benutzers, entweder mit den Kontrollelementen (Buttons) in der Benutzeroberfläche, oder mit Keyboard Shortcuts.
-%TODO ref keyboard shortcuts
 
 Die vier Zustände sind:
 \begin{enumerate}
@@ -121,11 +120,9 @@ Ein Sonderfall des run mode ist der \glqq{}quick run mode\grqq{}. Wenn der Regle
 
 \subsection{Schlüsselwörter}
 \label{sec:deb-keywords}
-%TODO ref compiler
 In der Sprache von C Compact gibt es zwei spezielle Schlüsselwörter, die Einfluss auf das Verhalten des Debuggers nehmen: \textbf{wait} und \textbf{library}.
 
 \subsubsection*{wait}
-%TODO ref AST
 In C Compact gibt es seit der Version Alpha 1.2 keine Breakpoints als Option in der Benutzeroberfläche mehr. Anstatt dessen wird der Befehl \textbf{wait} verwendet. Dieser Befehl kann in jeder Funktion verwendet werden. Stößt der Debugger auf diesen Befehl, geht er in den \textbf{Pausemodus}. An dieser Stelle kann der Debugger dann entweder Schritt für Schritt, oder wieder im automatischen Debugmodus fortgesetzt werden.
 
 \begin{lstlisting}[language=CMM]

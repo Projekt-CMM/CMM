@@ -12,6 +12,7 @@
 Um aus Quelltext ein ausf\"uhrbaren Anwendungsprogramm zu erstellen sind meist viele Schritte nötig.\footnote{\url{https://de.wikipedia.org/wiki/Erstellungsprozess}} Diese Aufgabe wird dabei in der Regel von einem sogenannten Build-Management-Tool \"ubernommen, um Arbeitszeit zu sparen und die Entwicklung zu erleichtern.
 
 \subsection{Apache Ant}
+\label{sec:dev-build-ant}
 
 Apache Ant\footnote{\url{https://de.wikipedia.org/wiki/Apache_Ant}} ist ein in Java geschriebenes Build-Management-Tool welches auf Basis von XML-Dateien funktioniert.
 
@@ -36,7 +37,7 @@ ant all
 
 \subsection{Buildprozess von C Compact}
 
-C Compact ben\"otigt diverse Programme und Bibliotheken um compiliert werden zu k\"onnen. Des Weiteren gibt es noch optionale Abh\"angigkeiten welche nur f\"ur spezifische T\"atigkeiten, wie das extrahieren der \"Ubersetzungen (siehe Kapitel \ref{}), ben\"otigt werden. Die grundlegenden Abh\"angigkeiten sind:
+C Compact ben\"otigt diverse Programme und Bibliotheken um compiliert werden zu k\"onnen. Des Weiteren gibt es noch optionale Abh\"angigkeiten welche nur f\"ur spezifische T\"atigkeiten, wie das extrahieren der \"Ubersetzungen (siehe Kapitel \ref{sec:lang}), ben\"otigt werden. Die grundlegenden Abh\"angigkeiten sind:
 
 \begin{tabular}{l | l}
  ant & Build-Management-Tool\\
