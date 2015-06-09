@@ -2,5 +2,6 @@
 <quest>
 	<title>Lottozahlen-2</title>
 	<attribute>★★★★☆</attribute>
+	<token>master.xml</token>
 	<previousFolder>n-Lotto1</previousFolder>
 </quest>

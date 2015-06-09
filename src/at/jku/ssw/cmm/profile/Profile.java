@@ -90,7 +90,7 @@ public class Profile implements Cloneable{
 	/**
 	 * name of the packages Folder
 	 */
-	private String packagesPath;
+	private String packagesPath = "packages";
 	
 	/**
 	 * list of profile Quests

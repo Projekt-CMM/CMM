@@ -67,7 +67,7 @@ public class AddProfileListener extends MouseAdapter {
 		p.setName(name);
 		
 		if(name == null) {
-			new GUILauncherMain(new GUImainSettings(null));
+			new GUILauncherMain(new GUImainSettings(null)).start(false);
 			return;
 		}
 	
@@ -85,7 +85,7 @@ public class AddProfileListener extends MouseAdapter {
         		JOptionPane.showMessageDialog(frame,"An Error Occured while creating a Profile there","Warning:",
         			    JOptionPane.WARNING_MESSAGE);
         		
-        		new GUILauncherMain(new GUImainSettings(null));
+        		new GUILauncherMain(new GUImainSettings(null)).start(false);
         		return;
 		    }
 			
